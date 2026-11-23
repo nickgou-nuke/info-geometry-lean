@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
 import InfoGeometry.Prequantum.AlgebraicGNSState
 import InfoGeometry.Meta.MarkovJonesInduction
@@ -74,11 +79,11 @@ theorem matrixTraceRealAlgebraicState_positive (n : ℕ) (A : MatrixStage n) :
     0 ≤ (matrixTraceRealAlgebraicState n).eval (star A * A) :=
   (matrixTraceRealAlgebraicState n).positive A
 
-def realInductiveNet (T : Data) :
+def realInductiveNet (T : TraceCompatibleData) :
     InductiveAlgebraNet (𝕜 := ℝ) (A := MatrixStage) where
   embed n := (T.step n).toAlgHom.restrictScalars ℝ
 
-def realTraceNet (T : Data) :
+def realTraceNet (T : TraceCompatibleData) :
     MarkovTraceNet (realInductiveNet T) where
   trace := matrixTraceRealLinearMap
   trace_one := by
@@ -90,14 +95,14 @@ def realTraceNet (T : Data) :
     have h := congrArg Complex.re (T.trace_compatible n A)
     exact h
 
-def compatibleRealStateNet (T : Data) :
+def compatibleRealStateNet (T : TraceCompatibleData) :
     CompatibleAlgebraicStateNet (realInductiveNet T) :=
   CompatibleAlgebraicStateNet.ofMarkovTraceNet
     (realTraceNet T) (by
       intro n A
       exact matrixTraceState_nonneg n A)
 
-theorem compatibleRealStateNet_state (T : Data) (n : ℕ) (A : MatrixStage n) :
+theorem compatibleRealStateNet_state (T : TraceCompatibleData) (n : ℕ) (A : MatrixStage n) :
     (compatibleRealStateNet T).state n A =
       (matrixTraceRealAlgebraicState n).toLinearMap A :=
   rfl

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorCuntzBasis
@@ -172,7 +177,7 @@ are the existing abstract Cuntz `O₂` operators.
 -/
 structure BoundaryCuntzShiftPacket
     (Op : Type*) [Ring Op] [StarRing Op] where
-  cuntz : CuntzO2Carrier Op
+  cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
 
 namespace BoundaryCuntzShiftPacket
 
@@ -186,11 +191,11 @@ def rightBoundary : CantorBoundary → CantorBoundary := rightShift
 
 /-- The left algebraic Cuntz branch operator. -/
 def leftOperator : Op :=
-  P.cuntz.S_left
+  CuntzO2Carrier.S_left P.cuntz
 
 /-- The right algebraic Cuntz branch operator. -/
 def rightOperator : Op :=
-  P.cuntz.S_right
+  CuntzO2Carrier.S_right P.cuntz
 
 theorem leftBoundary_apply (x : CantorBoundary) :
     leftBoundary x = leftShift x := by
@@ -201,11 +206,11 @@ theorem rightBoundary_apply (x : CantorBoundary) :
   rfl
 
 theorem leftOperator_eq_cuntz :
-    P.leftOperator = P.cuntz.S_left := by
+    P.leftOperator = CuntzO2Carrier.S_left P.cuntz := by
   rfl
 
 theorem rightOperator_eq_cuntz :
-    P.rightOperator = P.cuntz.S_right := by
+    P.rightOperator = CuntzO2Carrier.S_right P.cuntz := by
   rfl
 
 /-- The Cuntz-derived CAR generator is nilpotent. -/
@@ -225,26 +230,26 @@ end BoundaryCuntzShiftPacket
 variable {Op : Type*} [Ring Op] [StarRing Op]
 
 theorem orbit_left_branch
-    (B : CantorCuntzBasis.CantorCuntzBasisPacket Op)
-    (w : CantorCuntzBasis.BinaryWord) :
-    CantorCuntzBasis.CantorCuntzBasisPacket.orbit B (false :: w) =
-      B.cuntz.S_left * CantorCuntzBasis.CantorCuntzBasisPacket.orbit B w :=
-  CantorCuntzBasis.CantorCuntzBasisPacket.orbit_cons_false_action B w
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) (seed : Op)
+    (w : List Bool) :
+    CantorCuntzBasis.orbit C seed (false :: w) =
+      CuntzO2Carrier.S_left C * CantorCuntzBasis.orbit C seed w :=
+  CantorCuntzBasis.orbit_cons_false_action C seed w
 
 theorem orbit_right_branch
-    (B : CantorCuntzBasis.CantorCuntzBasisPacket Op)
-    (w : CantorCuntzBasis.BinaryWord) :
-    CantorCuntzBasis.CantorCuntzBasisPacket.orbit B (true :: w) =
-      B.cuntz.S_right * CantorCuntzBasis.CantorCuntzBasisPacket.orbit B w :=
-  CantorCuntzBasis.CantorCuntzBasisPacket.orbit_cons_true_action B w
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) (seed : Op)
+    (w : List Bool) :
+    CantorCuntzBasis.orbit C seed (true :: w) =
+      CuntzO2Carrier.S_right C * CantorCuntzBasis.orbit C seed w :=
+  CantorCuntzBasis.orbit_cons_true_action C seed w
 
 theorem orbit_branch_recursion_readout
-    (B : CantorCuntzBasis.CantorCuntzBasisPacket Op)
-    (b : Bool) (w : CantorCuntzBasis.BinaryWord) :
-    CantorCuntzBasis.CantorCuntzBasisPacket.orbit B (b :: w) =
-      (if b then B.cuntz.S_right else B.cuntz.S_left) *
-        CantorCuntzBasis.CantorCuntzBasisPacket.orbit B w :=
-  CantorCuntzBasis.CantorCuntzBasisPacket.orbit_branch_recursion B b w
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) (seed : Op)
+    (b : Bool) (w : List Bool) :
+    CantorCuntzBasis.orbit C seed (b :: w) =
+      (if b then CuntzO2Carrier.S_right C else CuntzO2Carrier.S_left C) *
+        CantorCuntzBasis.orbit C seed w :=
+  CantorCuntzBasis.orbit_branch_recursion C seed b w
 
 end InfoGeometry.Canonical.CantorBoundaryCuntzShift
 

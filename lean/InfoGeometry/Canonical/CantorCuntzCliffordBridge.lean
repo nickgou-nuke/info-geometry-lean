@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
@@ -42,7 +47,7 @@ abbrev BitStream := ℕ → Bool
 /-- Reuse the topology owner for abstract Cuntz `O₂` data. -/
 abbrev CantorCuntzO2Carrier
     (Op : Type*) [Ring Op] [StarRing Op] :=
-  InfoGeometry.Topology.CuntzO2Carrier Op
+  InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
 
 /-- Anticommutator in an abstract ring. -/
 @[rep_depth operator]
@@ -60,14 +65,14 @@ The first CAR generator obtained from Cuntz generators:
 def carFromCuntz
     {Op : Type*} [Ring Op] [StarRing Op]
     (C : CantorCuntzO2Carrier Op) : Op :=
-  C.S_left * star C.S_right
+  CuntzO2Carrier.S_left C * star (CuntzO2Carrier.S_right C)
 
 /-- The adjoint of the Cuntz-derived CAR generator is `S_right * S_left*`. -/
 @[rep_depth operator]
 theorem star_carFromCuntz
     {Op : Type*} [Ring Op] [StarRing Op]
     (C : CantorCuntzO2Carrier Op) :
-    star (carFromCuntz C) = C.S_right * star C.S_left := by
+    star (carFromCuntz C) = CuntzO2Carrier.S_right C * star (CuntzO2Carrier.S_left C) := by
   unfold carFromCuntz
   rw [star_mul, star_star]
 
@@ -79,11 +84,11 @@ theorem carFromCuntz_sq_eq_zero
     carFromCuntz C * carFromCuntz C = 0 := by
   unfold carFromCuntz
   calc
-    (C.S_left * star C.S_right) * (C.S_left * star C.S_right)
-        = C.S_left * (star C.S_right * C.S_left) * star C.S_right := by
+    (CuntzO2Carrier.S_left C * star (CuntzO2Carrier.S_right C)) * (CuntzO2Carrier.S_left C * star (CuntzO2Carrier.S_right C))
+        = CuntzO2Carrier.S_left C * (star (CuntzO2Carrier.S_right C) * CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_right C) := by
           noncomm_ring
-    _ = C.S_left * 0 * star C.S_right := by
-          rw [C.orthogonal_ranges.2]
+    _ = CuntzO2Carrier.S_left C * 0 * star (CuntzO2Carrier.S_right C) := by
+          rw [(CuntzO2Carrier.orthogonal_ranges C).2]
     _ = 0 := by
           simp
 
@@ -96,17 +101,17 @@ theorem carFromCuntz_anticommutator_star_eq_one
   unfold cantorAnticommutator carFromCuntz
   rw [star_mul, star_star]
   calc
-    (C.S_left * star C.S_right) * (C.S_right * star C.S_left)
-        + (C.S_right * star C.S_left) * (C.S_left * star C.S_right)
-        = C.S_left * (star C.S_right * C.S_right) * star C.S_left
-          + C.S_right * (star C.S_left * C.S_left) * star C.S_right := by
+    (CuntzO2Carrier.S_left C * star (CuntzO2Carrier.S_right C)) * (CuntzO2Carrier.S_right C * star (CuntzO2Carrier.S_left C))
+        + (CuntzO2Carrier.S_right C * star (CuntzO2Carrier.S_left C)) * (CuntzO2Carrier.S_left C * star (CuntzO2Carrier.S_right C))
+        = CuntzO2Carrier.S_left C * (star (CuntzO2Carrier.S_right C) * CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_left C)
+          + CuntzO2Carrier.S_right C * (star (CuntzO2Carrier.S_left C) * CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_right C) := by
             noncomm_ring
-    _ = C.S_left * 1 * star C.S_left
-          + C.S_right * 1 * star C.S_right := by
-            rw [C.right_isometry, C.left_isometry]
-    _ = C.S_left * star C.S_left + C.S_right * star C.S_right := by
+    _ = CuntzO2Carrier.S_left C * 1 * star (CuntzO2Carrier.S_left C)
+          + CuntzO2Carrier.S_right C * 1 * star (CuntzO2Carrier.S_right C) := by
+            rw [CuntzO2Carrier.right_isometry C, CuntzO2Carrier.left_isometry C]
+    _ = CuntzO2Carrier.S_left C * star (CuntzO2Carrier.S_left C) + CuntzO2Carrier.S_right C * star (CuntzO2Carrier.S_right C) := by
             simp
-    _ = 1 := C.range_sum
+    _ = 1 := CuntzO2Carrier.range_sum C
 
 /-- CAR witness for one fermionic generator. -/
 @[rep_depth operator]

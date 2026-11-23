@@ -1,0 +1,22 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction
+
+/-! Axiom audit for the concrete statewise prime Fock bridge. -/
+
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.numberOp_primeFockState
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.parityOp_primeFockState
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.cMajorana_primeFockState
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.localFockParity_product_eq_fermionParity
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.realLocalCARPair
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.numberOp_idempotent
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.epsilon_eq_component10_numberOp
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.iota_eq_component01_numberOp
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.numberOp_commutator_epsilon
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.numberOp_commutator_iota
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.realLocalCARPair_numberOp_primeFockState
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.realLocalCARPair_parityOp_primeFockState
+#print axioms InfoGeometry.Arithmetic.PrimeBooleanCubeFockAction.no_integer_ring_readout_of_realLocalCARPair

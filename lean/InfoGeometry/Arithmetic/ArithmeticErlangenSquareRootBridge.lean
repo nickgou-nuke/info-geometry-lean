@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Finset.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Defs
@@ -146,5 +151,13 @@ theorem probabilityProduct_eq_amplitudeProduct_sq :
 end FiniteAmplitudeSquareRootPacket
 
 
+
+structure FiniteAmplitudeSquareRootData
+    (α R : Type*) [CommMonoid R] where
+  support : Finset α
+  amplitude : α → R
+  probability : α → R
+  local_square :
+    ∀ a ∈ support, probability a = amplitude a ^ 2
 
 end InfoGeometry.Arithmetic.ArithmeticErlangenSquareRootBridge

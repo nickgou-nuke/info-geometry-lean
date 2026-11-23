@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Analysis.FiniteSpectralHeatMellin
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.FiniteSpectralMellinTaylor
@@ -122,5 +127,18 @@ theorem prefix_succ (P : SpectralTaylorMellinPacket ι) (N : ℕ) :
     P.data P.coeff N
 
 end SpectralTaylorMellinPacket
+
+structure SpectralTaylorMellinData (ι : Type*) where
+  /-- Finite spectral datum. -/
+  data : FiniteSpectralData ι ℂ
+  /-- Taylor coefficient family. -/
+  coeff : ℕ → ℂ
+  /-- Scalar heat/Mellin transform. -/
+  heatMellinScalar : ℂ → ℂ
+  /-- Scalar scaling readout. -/
+  scaleScalar : ℂ → ℂ
+  /-- Pointwise agreement on the finite spectrum. -/
+  hpoint : ∀ i : ι, heatMellinScalar (data.spectralValue i) =
+    scaleScalar (data.spectralValue i)
 
 end InfoGeometry.Analysis.SpectralTaylorMellinBridge

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.MellinTransform
@@ -200,5 +205,21 @@ theorem mellinZetaScaling_packet
         =
       finiteMultiplicativeWeightProduct A D.weight * D.Mellin f ^ A.card :=
   mellinZetaScalingOwnerTarget D A f
+
+/-! The finite orbit-sum and orbit-product factorizations. -/
+theorem finite_mellin_scaling_factorization :
+  ∀ {Func R : Type*} [AddCommMonoid Func] [CommSemiring R]
+    (D : FiniteMellinScalingDatum Func R)
+    (A : Finset ℕ) (f : Func),
+      D.Mellin (Finset.sum A (fun n => D.sample n f))
+        =
+      finiteDirichletWeightSum A D.weight * D.Mellin f
+      ∧
+      (∏ n ∈ A, D.Mellin (D.sample n f))
+        =
+      finiteMultiplicativeWeightProduct A D.weight * D.Mellin f ^ A.card := by
+  intro Func R inst1 inst2 D A f
+  exact ⟨D.finite_sample_sum_factor A f,
+    finite_sample_product_factor_as_multiplicative_weight D A f⟩
 
 end InfoGeometry.Analysis.MellinZetaScaling

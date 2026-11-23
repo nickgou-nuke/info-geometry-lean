@@ -256,4 +256,12 @@ theorem splitClifford_invariant_iff_scalar (n : ℕ) (x : Cl_nn n) :
   rw [hiff]
   exact isInvariant_cliffordSymmetryAction_iff_mem_range (splitQuadraticForm n) x
 
+
+abbrev iso {n : ℕ} (S : SplitQuadraticSymmetry n) :=
+  S
+
+
+abbrev lift {n : ℕ} (S : SplitCliffordSymmetry n) :=
+  S
+
 end InfoGeometry.Algebraic.SplitSignature

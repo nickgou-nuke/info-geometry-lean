@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.PrimeHurwitzLimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -81,6 +86,15 @@ theorem zeroPredicate_maps_to_unitCircle_of_root_limit
     OnUnitCircle (cayley s) :=
   approximant_root_limit_onUnitCircle A (root s) (cayley s)
     (hroot s hs) (hlim s hs)
+
+
+theorem onUnitCircle_iff_norm_eq_one {z : ℂ} :
+    OnUnitCircle z ↔ ‖z‖ = 1 := by
+  constructor
+  · exact norm_eq_one_of_onUnitCircle
+  · intro hz
+    rw [OnUnitCircle, Complex.normSq_eq_norm_sq, hz]
+    norm_num
 
 end InfoGeometry.Analysis.LeeYangRootLimit
 

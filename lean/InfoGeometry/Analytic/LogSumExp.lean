@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Field
@@ -739,5 +744,42 @@ lemma logSumExp_contDiff
     simpa [mul_assoc] using (contDiff_const.mul hExp)
   · intro θ
     exact (logSumExp_sum_pos w a hw θ).ne'
+
+
+lemma weightedVariance_eq_centered
+    {ι : Type _} [Fintype ι]
+    (p f : ι → ℝ) (hp : ∑ i, p i = 1) :
+    (∑ i, p i * (f i) ^ (2 : ℕ)) - (∑ i, p i * f i) ^ (2 : ℕ) =
+    ∑ i, p i * (f i - ∑ j, p j * f j) ^ (2 : ℕ) := by
+  have H :
+      (∑ i, p i * (f i - ∑ j, p j * f j) ^ (2 : ℕ)) =
+        (∑ i, p i * (f i) ^ (2 : ℕ)) -
+          (∑ i, p i * f i) ^ (2 : ℕ) := by
+    have h_expand :
+        (∑ i, p i * (f i - ∑ j, p j * f j) ^ (2 : ℕ)) =
+          ∑ i, (p i * (f i) ^ (2 : ℕ) -
+            2 * (∑ j, p j * f j) * (p i * f i) +
+            (∑ j, p j * f j) ^ (2 : ℕ) * p i) := by
+      apply Finset.sum_congr rfl
+      intro i _
+      have hi : (f i - ∑ j, p j * f j) ^ (2 : ℕ) =
+          (f i) ^ (2 : ℕ) - 2 * (∑ j, p j * f j) * f i +
+            (∑ j, p j * f j) ^ (2 : ℕ) := by ring
+      rw [hi]
+      ring
+    rw [h_expand]
+    have h_split :
+        (∑ i, (p i * (f i) ^ (2 : ℕ) -
+          2 * (∑ j, p j * f j) * (p i * f i) +
+          (∑ j, p j * f j) ^ (2 : ℕ) * p i)) =
+          (∑ i, p i * (f i) ^ (2 : ℕ)) -
+            (∑ i, 2 * (∑ j, p j * f j) * (p i * f i)) +
+            ∑ i, (∑ j, p j * f j) ^ (2 : ℕ) * p i := by
+      rw [Finset.sum_add_distrib, Finset.sum_sub_distrib]
+    rw [h_split]
+    rw [← Finset.mul_sum, ← Finset.mul_sum]
+    rw [hp, mul_one]
+    ring
+  exact H.symm
 
 end InfoGeometry.Analytic

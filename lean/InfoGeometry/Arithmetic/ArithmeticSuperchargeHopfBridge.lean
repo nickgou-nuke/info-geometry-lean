@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Defs
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Basic
@@ -101,5 +106,17 @@ theorem supercharge_commutes_with_hamiltonian :
           rw [P.squareLaw]
 
 end ParitySuperchargePacket
+
+structure ParitySuperchargeData
+    (Op : Type*) [Ring Op] where
+  parity : Op
+  supercharge : Op
+  hamiltonian : Op
+  parity_sq :
+    parity * parity = 1
+  supercharge_odd :
+    supercharge * parity = -parity * supercharge
+  squareLaw :
+    supercharge * supercharge = hamiltonian
 
 end InfoGeometry.Arithmetic.ArithmeticSuperchargeHopfBridge

@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Adjugate
 import InfoGeometry.Synthesis.ShirokovCliffordTraceDetInverseBridge
+import InfoGeometry.Clifford.ShirokovBasisFreeCore
 
 /-!
 # Basis-free Shirokov inverse: recursive Faddeev–LeVerrier construction
@@ -80,6 +81,38 @@ theorem shirokovC_succ (φ : A → R) (N : ℕ) (a : A) (k : ℕ) :
       ((N : R) / (k + 2 : R)) *
         φ (a * (shirokovU φ N a k - algebraMap R A (shirokovC φ N a k))) := by
   rfl
+
+/-!
+## Basis-free instantiation on `CliffordAlgebra Q`
+
+The generic recursion accepts any grade-0 readout.  Instantiating `φ` with the
+basis-free normalized Clifford trace owned by `ShirokovBasisFreeCore` gives a
+recursion on `CliffordAlgebra Q` itself, with no matrix representation chosen.
+The correctness of the final determinant/inverse readout still requires the
+representation-degree Cayley–Hamilton hypothesis; the concrete `N = 2` case is
+proved below in the matrix model.
+-/
+
+open InfoGeometry.Clifford.ShirokovBasisFreeCore
+
+/-- The basis-free grade-0 readout `⟨·⟩₀ = shirokovTrace Q 1`. -/
+def basisFreeGrade0 {R M : Type*} [Field R] [AddCommGroup M] [Module R M]
+    [Invertible (2 : R)] (Q : QuadraticForm R M) : CliffordAlgebra Q →ₗ[R] R :=
+  InfoGeometry.Clifford.ShirokovBasisFreeCore.shirokovTrace Q 1
+
+/-- Shirokov recursion on a genuine Clifford algebra, with no chosen matrix carrier. -/
+def basisFreeShirokovSequence {R M : Type*} [Field R] [AddCommGroup M] [Module R M]
+    [Invertible (2 : R)] (Q : QuadraticForm R M) (N : ℕ) (a : CliffordAlgebra Q) :
+    ℕ → CliffordAlgebra Q × R :=
+  shirokovSequence (basisFreeGrade0 Q) N a
+
+/-- First scalar coefficient of the basis-free recursion: `c₁ = N⟨a⟩₀`. -/
+theorem basisFreeShirokov_c_one {R M : Type*} [Field R] [AddCommGroup M] [Module R M]
+    [Invertible (2 : R)] (Q : QuadraticForm R M) (N : ℕ) (a : CliffordAlgebra Q) :
+    (basisFreeShirokovSequence Q N a 0).2 =
+      (N : R) * InfoGeometry.Riemannian.hTrace_cl Q a := by
+  simp [basisFreeShirokovSequence, shirokovSequence, basisFreeGrade0,
+    InfoGeometry.Clifford.ShirokovBasisFreeCore.shirokovTrace_apply]
 
 /-!
 ## Concrete correctness in `Cl(1,1) ≅ M₂(ℝ)` with `N = 2`

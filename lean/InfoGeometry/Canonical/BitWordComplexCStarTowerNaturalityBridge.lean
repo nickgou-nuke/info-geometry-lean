@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BitWordComplexStageReindex
@@ -117,6 +122,6 @@ theorem stageStarAlgEquiv_bond_trace
         (stageStarAlgEquiv (n + 1) (ComplexMatrixStage.bondFun n A)) =
       matrixTraceState n (stageStarAlgEquiv n A) := by
   rw [stageStarAlgEquiv_bond]
-  exact concreteData.trace_compatible n (stageStarAlgEquiv n A)
+  exact concreteTraceCompatibleData.trace_compatible n (stageStarAlgEquiv n A)
 
 end InfoGeometry.Canonical.BitWordComplexCStarTowerNaturalityBridge

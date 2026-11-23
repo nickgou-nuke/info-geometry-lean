@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Data.Real.Basic
@@ -8,6 +14,31 @@ namespace InfoGeometry.Attention.MetriplecticAttentionDynamics
 open Matrix
 
 abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+
+def _witness_m1 : Mat2R := Matrix.single 0 1 1
+def _witness_m2 : Mat2R := Matrix.single 1 0 1
+
+theorem _witness_noncommute : _witness_m1 * _witness_m2 ≠ _witness_m2 * _witness_m1 := by
+  intro h
+  have h₁ : _witness_m1 * _witness_m2 = Matrix.single 0 0 (1 : ℝ) := by
+    simp [_witness_m1, _witness_m2, Matrix.single_mul_single_same]
+  have h₂ : _witness_m2 * _witness_m1 = Matrix.single 1 1 (1 : ℝ) := by
+    simp [_witness_m1, _witness_m2, Matrix.single_mul_single_same]
+  rw [h₁, h₂] at h
+  have h₃ := congrFun (congrFun h 0) 0
+  norm_num at h₃
+
+theorem mat2R_noncommutative_witness :
+    (Matrix.single 0 1 1 : Matrix (Fin 2) (Fin 2) ℝ) * (Matrix.single 1 0 1 : Matrix (Fin 2) (Fin 2) ℝ) ≠
+    (Matrix.single 1 0 1 : Matrix (Fin 2) (Fin 2) ℝ) * (Matrix.single 0 1 1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+  intro h
+  have hMK : (Matrix.single 0 1 1 : Matrix (Fin 2) (Fin 2) ℝ) * (Matrix.single 1 0 1 : Matrix (Fin 2) (Fin 2) ℝ) = Matrix.single 0 0 (1 : ℝ) := by
+    simp [Matrix.single_mul_single_same]
+  have hKM : (Matrix.single 1 0 1 : Matrix (Fin 2) (Fin 2) ℝ) * (Matrix.single 0 1 1 : Matrix (Fin 2) (Fin 2) ℝ) = Matrix.single 1 1 (1 : ℝ) := by
+    simp [Matrix.single_mul_single_same]
+  rw [hMK, hKM] at h
+  have h00 := congrFun (congrFun h 0) 0
+  norm_num at h00
 
 /-!
 # Archetype 901: The Metriplectic Operator Splitting
@@ -56,25 +87,23 @@ theorem dissipative_chiral_orthogonal (M : Mat2R) :
   simp [frobenius_inner, diag_core, chiral_bipolar, Matrix.trace,
     Matrix.mul_apply, transpose_apply, Fin.sum_univ_two]
 
-/-!
-# Archetype 903: Casimir Degeneracy Condition of the Dirac Grading
-Let G = !![1, 0; 0, -1] be the Dirac grading involution.
-The reversible Dirac transport has zero net overlap with the grading:
-  tr(G * C(M)) = 0.
-This is the operator-theoretic Casimir condition: energy is conserved
-across the chiral transport channel.
--/
+/-! ## Dirac grading and the chiral anticommutator -/
 
-/-- The Dirac grading operator G = 2P - 1 = diag(1, -1). -/
+/-- The Dirac grading operator `G = 2P - 1 = diag(1, -1)`. -/
 def G_grading : Mat2R :=
   !![1,  0;
      0, -1]
 
-/-- Master Theorem 3: Casimir Invariance of the Chiral Transport.
-    The chiral transport operator has vanishing trace pairing with the grading operator. -/
-theorem chiral_transport_casimir_invariant (M : Mat2R) :
-    Matrix.trace (G_grading * chiral_bipolar M) = 0 := by
-  simp [G_grading, chiral_bipolar, Matrix.trace, Fin.sum_univ_two]
+/-- The grading anticommutes with the off-diagonal channel for every matrix.
+This full operator identity is stronger than the vanishing of a trace pairing. -/
+theorem G_anticommutes_chiral (M : Mat2R) :
+    G_grading * chiral_bipolar M + chiral_bipolar M * G_grading = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> {
+    dsimp [G_grading, chiral_bipolar, Matrix.mul_apply]
+    simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one]
+    ring
+  }
 
 /-!
 # Archetype 904: Relativistic Mass Dispersion of the Chiral Channel
@@ -90,16 +119,6 @@ theorem chiral_bipolar_sq (M : Mat2R) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     (norm_num [chiral_bipolar, Matrix.mul_apply, Fin.sum_univ_two] <;> ring)
-
-/-- Master Theorem 5: Anticommutation of G and C(M). -/
-theorem G_anticommutes_chiral (M : Mat2R) :
-    G_grading * chiral_bipolar M + chiral_bipolar M * G_grading = 0 := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> {
-    dsimp [G_grading, chiral_bipolar, Matrix.mul_apply]
-    simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one]
-    ring
-  }
 
 /-- Master Theorem 6: Exact Relativistic Dispersion on the Bipolar Component.
     (p • G + C(M))² = (p² + m²) • 1 when M₀₁ * M₁₀ = m². -/
@@ -203,5 +222,9 @@ theorem softmax_trace_strictly_positive (M : Mat2R)
   dsimp [Matrix.trace, diag_core]
   simp only [Fin.sum_univ_two, cons_val_zero, cons_val_one]
   linarith
+
+theorem chiral_transport_casimir_invariant (M : Mat2R) :
+    Matrix.trace (G_grading * chiral_bipolar M) = 0 := by
+  simp [G_grading, chiral_bipolar, Matrix.trace, Fin.sum_univ_two]
 
 end InfoGeometry.Attention.MetriplecticAttentionDynamics

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.ChiralOperatorEnvelope
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -33,5 +38,25 @@ def chiralSageSymbol : Fin 8 → ChiralOperatorEnvelope ℝ
     chiralSageSymbol 4 =
       ofGenerator .pPlus - ofGenerator .pMinus :=
   rfl
+
+
+theorem chiralSageSymbol_table :
+    chiralSageSymbol 0 =
+        ofGenerator .pPlus + ofGenerator .pMinus ∧
+    chiralSageSymbol 1 =
+        ofGenerator (.sMinus 0) - ofGenerator (.sPlus 0) ∧
+    chiralSageSymbol 2 =
+        ofGenerator (.sMinus 1) - ofGenerator (.sPlus 1) ∧
+    chiralSageSymbol 3 =
+        ofGenerator (.sMinus 2) - ofGenerator (.sPlus 2) ∧
+    chiralSageSymbol 4 =
+        ofGenerator .pPlus - ofGenerator .pMinus ∧
+    chiralSageSymbol 5 =
+        ofGenerator (.sPlus 0) + ofGenerator (.sMinus 0) ∧
+    chiralSageSymbol 6 =
+        ofGenerator (.sPlus 1) + ofGenerator (.sMinus 1) ∧
+    chiralSageSymbol 7 =
+        ofGenerator (.sPlus 2) + ofGenerator (.sMinus 2) := by
+  simp [chiralSageSymbol]
 
 end InfoGeometry.Algebra

@@ -303,4 +303,9 @@ theorem matrix_fin2_noncommutative {R : Type*} [Ring R] [Nontrivial R] :
   simp [shearGenerator, lowerShearGenerator, Matrix.mul_apply,
     Fin.sum_univ_two]
 
+/-- Native mathlib characteristic-polynomial formula for a `2 × 2` complex matrix. -/
+theorem native_charPoly2x2_eq (M : Matrix (Fin 2) (Fin 2) ℂ) (x : ℂ) :
+    charPoly2x2 M x = x ^ 2 - Matrix.trace M * x + det2x2 M := by
+  simpa using charPoly2x2_eq M x
+
 end InfoGeometry.Algebra.AiStudioNativeMathlibFindings

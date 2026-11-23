@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.ChiralPoincareSouriauBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -162,5 +167,14 @@ theorem same_chirality_square_zero
     rw [← add_smul] at h₃
     norm_num at h₃
     exact h₃
+
+
+theorem same_chirality_zero
+    (M : Data (A := A))
+    (hL : ∀ α β : Fin 2, anticommutator (M.QL α) (M.QL β) = 0)
+    (hR : ∀ α β : Fin 2, anticommutator (M.QR α) (M.QR β) = 0) :
+    (∀ α β : Fin 2, anticommutator (M.QL α) (M.QL β) = 0) ∧
+      (∀ α β : Fin 2, anticommutator (M.QR α) (M.QR β) = 0) :=
+  ⟨hL, hR⟩
 
 end InfoGeometry.Algebra.ChiralSuperchargeMultiplet

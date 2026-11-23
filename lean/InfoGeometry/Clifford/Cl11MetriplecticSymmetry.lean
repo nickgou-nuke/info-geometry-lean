@@ -37,7 +37,8 @@ theorem gen_sub_scalarPencil (σ γ : ℝ) :
   rw [SplitQ11CausalCone.matrix_krein_projectors_explicit.2]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [gen, scalarPencil, Eplus, Eminus] <;> ring
+    simp [gen, scalarPencil, Eplus, Eminus]
+  ring
 
 /-- The positive generator reverses the second coordinate of the Clifford pencil. -/
 theorem gen_Eplus_conjugate (σ γ : ℝ) :
@@ -65,20 +66,23 @@ theorem gen_Eminus_conjugate (σ γ : ℝ) :
 theorem scalarPencil_Eplus_conjugate (σ γ : ℝ) :
     Eplus * scalarPencil σ γ * Eplus = scalarPencil σ (-γ) := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [scalarPencil, Eplus, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
+  simp only [scalarPencil, Matrix.add_apply, Matrix.smul_apply, Matrix.mul_apply,
+    Matrix.one_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;> norm_num [Eplus, Eminus]
 
 theorem scalarPencil_J1_conjugate (σ γ : ℝ) :
     J1 * scalarPencil σ γ * J1 = scalarPencil σ (-γ) := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [scalarPencil, Eminus, J1, Matrix.mul_apply, Fin.sum_univ_two]
+  simp only [scalarPencil, Matrix.add_apply, Matrix.smul_apply, Matrix.mul_apply,
+    Matrix.one_apply, Fin.sum_univ_two]
+  fin_cases i <;> fin_cases j <;> norm_num [Eminus, J1]
 
 theorem scalarPencil_Eminus_conjugate (σ γ : ℝ) :
     (-Eminus) * scalarPencil σ γ * Eminus = scalarPencil σ γ := by
   ext i j
-  fin_cases i <;> fin_cases j <;>
-    simp [scalarPencil, Eminus, Matrix.mul_apply, Fin.sum_univ_two]
+  simp only [scalarPencil, Matrix.add_apply, Matrix.smul_apply, Matrix.mul_apply,
+    Matrix.one_apply, Fin.sum_univ_two, Matrix.neg_apply]
+  fin_cases i <;> fin_cases j <;> norm_num [Eminus]
 
 /-! ## Readouts of the existing native algebra automorphisms -/
 

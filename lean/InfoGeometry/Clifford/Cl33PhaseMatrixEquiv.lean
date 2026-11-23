@@ -57,4 +57,4 @@ def cl33ToMatrix8 :
   cl33AlgEquiv.trans
     (InfoGeometry.Clifford.SplitCliffordMatrixEquiv.splitSpinorAlgEquiv 3)
 
-end Scratch.Cl33Equiv
+end InfoGeometry.Clifford.Cl33PhaseMatrixEquiv

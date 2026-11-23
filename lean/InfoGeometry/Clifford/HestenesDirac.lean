@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
+import Mathlib.LinearAlgebra.Matrix.Notation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
 
@@ -468,7 +474,7 @@ physical `3+1` Minkowski signature.
 theorem determinant_pauliChiralOperator (t x y z : ℝ) :
     determinant (pauliChiralOperator t x y z) = t * t - x * x - z * z + y * y := by
   simp [determinant, pauliChiralOperator]
-  ring
+  ring_nf
 
 /-- The trace of the real Pauli/chiral operator recovers twice the scalar coordinate. -/
 theorem trace_pauliChiralOperator (t x y z : ℝ) :
@@ -499,7 +505,7 @@ theorem determinant_normalizedPauliChiralOperator {t x y z : ℝ} (ht : t ≠ 0)
       (t * t - x * x - z * z + y * y) / (4 * t * t) := by
   unfold determinant normalizedPauliChiralOperator
   field_simp [ht]
-  ring
+  ring_nf
 
 end RealMatrix2
 
@@ -539,6 +545,13 @@ structure RealMatrix4 where
   m33 : ℝ
 
 namespace RealMatrix4
+
+/-- The coordinate matrix represented by the explicit `RealMatrix4` record. -/
+def toMatrix (A : RealMatrix4) : Matrix (Fin 4) (Fin 4) ℝ :=
+  !![A.m00, A.m01, A.m02, A.m03;
+    A.m10, A.m11, A.m12, A.m13;
+    A.m20, A.m21, A.m22, A.m23;
+    A.m30, A.m31, A.m32, A.m33]
 
 @[ext] theorem ext {A B : RealMatrix4}
     (h00 : A.m00 = B.m00) (h01 : A.m01 = B.m01) (h02 : A.m02 = B.m02) (h03 : A.m03 = B.m03)
@@ -658,6 +671,15 @@ def trace (A : RealMatrix4) : ℝ :=
 def pfaffianSkew4 (A : RealMatrix4) : ℝ :=
   A.m01 * A.m23 - A.m02 * A.m13 + A.m03 * A.m12
 
+/-- Determinant of the coordinate matrix represented by `A`. -/
+def determinant (A : RealMatrix4) : ℝ :=
+  Matrix.det (toMatrix A)
+
+/-- The explicit Laplace expansion agrees with Mathlib's determinant. -/
+theorem determinant_eq_matrix_det (A : RealMatrix4) :
+    determinant A = Matrix.det (toMatrix A) := by
+  rfl
+
 end RealMatrix4
 
 
@@ -692,9 +714,9 @@ def concreteSpacetimeMatrix (c : MinkowskiCoordinates) : RealMatrix4 := {
   m30 := c.y,       m31 := 0,         m32 := c.x,       m33 := c.t - c.z
 }
 
-/-- Determinant of the realified Hermitian slice, concretely `(t²-x²-y²-z²)²`. -/
-def concreteSpacetimeDeterminant (c : MinkowskiCoordinates) (_A : RealMatrix4) : ℝ :=
-  c.interval * c.interval
+/-- The determinant readout is computed from the supplied real matrix. -/
+def concreteSpacetimeDeterminant (A : RealMatrix4) : ℝ :=
+  RealMatrix4.determinant A
 
 theorem concreteComplexStructureJ_sq :
     concreteComplexStructureJ * concreteComplexStructureJ = -1 := by
@@ -737,8 +759,11 @@ theorem concrete_pfaffianSJ_eq_neg_interval (c : MinkowskiCoordinates) :
   ring_nf
 
 theorem concrete_det_realification_eq_interval_sq (c : MinkowskiCoordinates) :
-    concreteSpacetimeDeterminant c (concreteSpacetimeMatrix c) = c.interval * c.interval := by
-  rfl
+    concreteSpacetimeDeterminant (concreteSpacetimeMatrix c) = c.interval * c.interval := by
+  simp [concreteSpacetimeDeterminant, RealMatrix4.determinant, RealMatrix4.toMatrix,
+    concreteSpacetimeMatrix, MinkowskiCoordinates.interval,
+    Matrix.det_succ_row_zero, Fin.sum_univ_succ, Fin.succAbove, Fin.castSucc]
+  ring_nf
 
 theorem concrete_null_cone_iff_pfaffian_zero (c : MinkowskiCoordinates) :
     c.interval = 0 ↔
@@ -756,7 +781,7 @@ def concreteBiquaternionSlice (c : MinkowskiCoordinates) :
   spacetimeMatrix := concreteSpacetimeMatrix c
   complexStructureJ := concreteComplexStructureJ
   transpose := RealMatrix4.transpose
-  determinant := concreteSpacetimeDeterminant c
+  determinant := concreteSpacetimeDeterminant
   pfaffian := RealMatrix4.pfaffianSkew4
   minkowskiInterval := c.interval
   J_sq := concreteComplexStructureJ_sq

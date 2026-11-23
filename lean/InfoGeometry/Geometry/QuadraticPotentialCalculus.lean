@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Calculus.FDeriv.Bilinear
 import Mathlib.Analysis.Calculus.DifferentialForm.Basic
 import Mathlib.Tactic
@@ -47,6 +52,37 @@ theorem potential_smul (g : E →L[ℝ] E →L[ℝ] ℝ) (r : ℝ) (x : E) :
     potential g (r • x) = r ^ 2 * potential g x := by
   simp [potential, pow_two]; ring
 
+/-- A quadratic potential that is nonzero at some point cannot be globally
+Lipschitz on its vector-space carrier. Its degree-two scaling along the ray
+through that point grows faster than the distance from the origin. -/
+theorem potential_not_lipschitzWith_of_ne_zero
+    (g : E →L[ℝ] E →L[ℝ] ℝ) {x : E} (hx : potential g x ≠ 0) :
+    ∀ C : NNReal, ¬ LipschitzWith C (potential g) := by
+  intro C hLip
+  let a : ℝ := |potential g x|
+  have ha : 0 < a := abs_pos.mpr hx
+  let t : ℝ := (C : ℝ) * ‖x‖ / a + 1
+  have ht : 0 < t := by
+    dsimp [t]
+    positivity
+  have hta : (C : ℝ) * ‖x‖ < t * a := by
+    dsimp [t]
+    rw [add_mul, div_mul_cancel₀ _ ha.ne']
+    nlinarith
+  have hdist := hLip.dist_le_mul (t • x) 0
+  rw [dist_eq_norm, dist_eq_norm] at hdist
+  have hvalue : potential g (t • x) = t ^ 2 * potential g x :=
+    potential_smul g t x
+  have hzero : potential g (0 : E) = 0 := by simp [potential]
+  rw [hvalue, hzero] at hdist
+  have hbound : t ^ 2 * a ≤ (C : ℝ) * t * ‖x‖ := by
+    simpa [a, Real.norm_eq_abs, abs_mul, abs_of_nonneg (sq_nonneg t),
+      abs_of_pos ht, pow_pos ht, norm_smul, sub_zero, mul_assoc] using hdist
+  have hstrict := mul_lt_mul_of_pos_left hta ht
+  have hstrict' : (C : ℝ) * t * ‖x‖ < t ^ 2 * a := by
+    nlinarith [hstrict]
+  linarith
+
 theorem euler_identity (g : E →L[ℝ] E →L[ℝ] ℝ)
     (hs : ∀ u v, g u v = g v u) (x : E) :
     fderiv ℝ (potential g) x x = 2 * potential g x := by
@@ -62,7 +98,7 @@ theorem metric_gradient_unique (g : E →L[ℝ] E →L[ℝ] ℝ)
   apply sub_eq_zero.mp
   apply hn
   intro v
-  simp only [map_sub, ContinuousLinearMap.sub_apply]
+  simp only [map_sub, sub_apply]
   rw [hy, fderiv_potential g hs]
   exact sub_self _
 

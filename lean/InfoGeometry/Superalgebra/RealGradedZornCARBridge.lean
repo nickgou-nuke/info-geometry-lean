@@ -54,6 +54,27 @@ theorem threeMode_supercolor_rightRegular_action (X Y : SZ) :
     realThreeMatrixTensorOnH4.apply_symm_apply,
     supercolor_rightRegular_action]
 
+/-- The real graded-tensor encoding of the supercolor right-regular action is
+faithful as a linear representation of the underlying Zorn carrier. Evaluating
+the represented operator at the transported unit recovers the element itself.
+This is injectivity of the action map; it does not assert multiplicativity of
+right regular operators for the nonassociative Zorn product. -/
+theorem supercolorRightRegularInThreeMode_injective :
+    Function.Injective supercolorRightRegularInThreeMode := by
+  intro X Y h
+  have h₁ := congrArg
+    (fun T : realThreeMatrixGradedTensor =>
+      realThreeMatrixTensorOnH4 T
+        (supercolorToDoubleKrein
+          InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.one)) h
+  rw [threeMode_supercolor_rightRegular_action X
+      InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.one,
+    threeMode_supercolor_rightRegular_action Y
+      InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.one] at h₁
+  rw [InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.one_mul X,
+    InfoGeometry.Superalgebra.PeirceDeWittZornQuantization.ZornAlgebra.one_mul Y] at h₁
+  exact supercolorToDoubleKrein.injective h₁
+
 /-- The encoded right-regular operators satisfy the CAR anticommutator on
 the doubled Krein carrier for every pair of corresponding circular roots. -/
 theorem threeMode_supercolor_root_CAR (i : Fin 3) :

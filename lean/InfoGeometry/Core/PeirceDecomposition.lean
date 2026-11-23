@@ -135,6 +135,21 @@ def component01 (f x : A) : A :=
 def component00 (f x : A) : A :=
   complementIdempotent f * x * complementIdempotent f
 
+/-- The commutator with a cut is the difference of its two directed Peirce
+corners. The diagonal blocks cancel, so noncommutation is exactly an imbalance
+between the two directions; it does not imply that both directions are nonzero. -/
+theorem commutator_eq_component10_sub_component01 (f x : A) :
+    f * x - x * f = component10 f x - component01 f x := by
+  simp only [component10, component01, complementIdempotent]
+  noncomm_ring
+
+/-- A coefficient commutes with the cut precisely when its two directed
+off-diagonal Peirce components agree. -/
+theorem commutes_with_idempotent_iff_component10_eq_component01 (f x : A) :
+    f * x = x * f ↔ component10 f x = component01 f x := by
+  rw [← sub_eq_zero, commutator_eq_component10_sub_component01]
+  exact sub_eq_zero
+
 @[simp]
 theorem component11_mem (f x : A) :
     component11 f x ∈ peirce11 f := by
@@ -188,8 +203,14 @@ theorem idempotencyDefect_peirce_components
     complementIdempotent]
   have hcomp : complementIdempotent f * complementIdempotent f = complementIdempotent f := by
     rw [complementIdempotent_sq f hf]
-  constructor <;> noncomm_ring [hf, hcomp] <;>
-    simp only [idempotent_mul_nested f hf] <;> abel_nf <;> simp
+  constructor
+  · noncomm_ring [hf, hcomp]
+    simp only [idempotent_mul_nested f hf]
+    abel_nf
+  · noncomm_ring [hf, hcomp]
+    simp only [idempotent_mul_nested f hf]
+    abel_nf
+    simp
 
 /-- An element is idempotent exactly when each of its four Peirce defect
 components vanishes. The diagonal conditions include the two ordered
@@ -438,6 +459,110 @@ theorem peirce00_absorb_right
   rcases hx with ⟨a, rfl⟩
   simp [mul_assoc, complementIdempotent_sq f hf]
 
+/-- The two ordered round trips through opposite Peirce corners form a
+block-diagonal sum, hence commute with the cut. -/
+theorem opposite_corner_roundtrip_sum_commutes
+    (f : A) (hf : f * f = f)
+    {x y : A} (hx : x ∈ peirce10 f) (hy : y ∈ peirce01 f) :
+    f * (x * y + y * x) = (x * y + y * x) * f := by
+  have hxy : x * y ∈ peirce11 f := peirce10_mul_peirce01 f hf hx hy
+  have hyx : y * x ∈ peirce00 f := peirce01_mul_peirce10 f hf hy hx
+  have hleft : f * (y * x) = 0 := by
+    have hq := peirce00_absorb_left f hf hyx
+    calc
+      f * (y * x) = f * (complementIdempotent f * (y * x)) :=
+        congrArg (fun z => f * z) hq.symm
+      _ = 0 := by rw [← mul_assoc, idempotent_mul_complement f hf, zero_mul]
+  have hright : (y * x) * f = 0 := by
+    have hq := peirce00_absorb_right f hf hyx
+    calc
+      (y * x) * f = ((y * x) * complementIdempotent f) * f :=
+        congrArg (fun z => z * f) hq.symm
+      _ = 0 := by rw [mul_assoc, complement_mul_idempotent f hf, mul_zero]
+  calc
+    f * (x * y + y * x) = x * y + 0 := by
+      rw [mul_add, peirce11_absorb_left f hf hxy, hleft]
+    _ = (x * y) * f + (y * x) * f := by
+      rw [peirce11_absorb_right f hf hxy, hright]
+    _ = (x * y + y * x) * f := (add_mul _ _ _).symm
+
+/-- The ordered round-trip difference also lies in the diagonal Peirce
+algebra and therefore commutes with the cut. -/
+theorem opposite_corner_roundtrip_difference_commutes
+    (f : A) (hf : f * f = f)
+    {x y : A} (hx : x ∈ peirce10 f) (hy : y ∈ peirce01 f) :
+    f * (y * x - x * y) = (y * x - x * y) * f := by
+  have hxy : x * y ∈ peirce11 f := peirce10_mul_peirce01 f hf hx hy
+  have hyx : y * x ∈ peirce00 f := peirce01_mul_peirce10 f hf hy hx
+  have hleft : f * (y * x) = 0 := by
+    have hq := peirce00_absorb_left f hf hyx
+    calc
+      f * (y * x) = f * (complementIdempotent f * (y * x)) :=
+        congrArg (fun z => f * z) hq.symm
+      _ = 0 := by rw [← mul_assoc, idempotent_mul_complement f hf, zero_mul]
+  have hright : (y * x) * f = 0 := by
+    have hq := peirce00_absorb_right f hf hyx
+    calc
+      (y * x) * f = ((y * x) * complementIdempotent f) * f :=
+        congrArg (fun z => z * f) hq.symm
+      _ = 0 := by rw [mul_assoc, complement_mul_idempotent f hf, mul_zero]
+  calc
+    f * (y * x - x * y) = 0 - x * y := by
+      rw [mul_sub, hleft, peirce11_absorb_left f hf hxy]
+    _ = (y * x) * f - (x * y) * f := by
+      rw [peirce11_absorb_right f hf hxy, hright]
+    _ = (y * x - x * y) * f := (sub_mul _ _ _).symm
+
+/-- With the grading `f - (1-f)`, the directed commutator is the
+negative graded anticommutator. This fixes the order-sensitive sign. -/
+theorem opposite_corner_commutator_eq_neg_graded_roundtrip_sum
+    (f : A) (hf : f * f = f)
+    {x y : A} (hx : x ∈ peirce10 f) (hy : y ∈ peirce01 f) :
+    y * x - x * y =
+      -((f - complementIdempotent f) * (x * y + y * x)) := by
+  rcases hx with ⟨a, rfl⟩
+  rcases hy with ⟨b, rfl⟩
+  let q := complementIdempotent f
+  have hxy : (f * a * q) * (q * b * f) ∈ peirce11 f :=
+    peirce10_mul_peirce01 f hf ⟨a, rfl⟩ ⟨b, rfl⟩
+  have hyx : (q * b * f) * (f * a * q) ∈ peirce00 f :=
+    peirce01_mul_peirce10 f hf ⟨b, rfl⟩ ⟨a, rfl⟩
+  have hxyFix := peirce11_absorb_left f hf hxy
+  have hyxFix := peirce00_absorb_left f hf hyx
+  have hqxy : q * ((f * a * q) * (q * b * f)) = 0 := by
+    calc
+      q * ((f * a * q) * (q * b * f)) = q * (f * ((f * a * q) * (q * b * f))) :=
+        congrArg (fun z => q * z) hxyFix.symm
+      _ = 0 := by rw [← mul_assoc, complement_mul_idempotent f hf, zero_mul]
+  have hfyx : f * ((q * b * f) * (f * a * q)) = 0 := by
+    calc
+      f * ((q * b * f) * (f * a * q)) = f * (q * ((q * b * f) * (f * a * q))) :=
+        congrArg (fun z => f * z) hyxFix.symm
+      _ = 0 := by rw [← mul_assoc, idempotent_mul_complement f hf, zero_mul]
+  have hleft : (f - q) *
+      ((f * a * q) * (q * b * f) + (q * b * f) * (f * a * q)) =
+        (f * a * q) * (q * b * f) - (q * b * f) * (f * a * q) := by
+    rw [sub_mul, mul_add, mul_add, hxyFix, hfyx, hqxy, hyxFix]
+    abel
+  change (q * b * f) * (f * a * q) - (f * a * q) * (q * b * f) =
+    -((f - q) * ((f * a * q) * (q * b * f) + (q * b * f) * (f * a * q)))
+  rw [hleft]
+  abel
+
+/-- For `X ∈ (1-f)Af` and `Y ∈ fA(1-f)`, the order used by the
+graded operator convention gives `[Y,X] = (f-(1-f)){X,Y}`. -/
+theorem peirce01_peirce10_commutator_eq_graded_roundtrip_sum
+    (f : A) (hf : f * f = f)
+    {x y : A} (hx : x ∈ peirce01 f) (hy : y ∈ peirce10 f) :
+    y * x - x * y =
+      (f - complementIdempotent f) * (x * y + y * x) := by
+  have h := opposite_corner_commutator_eq_neg_graded_roundtrip_sum f hf hy hx
+  calc
+    y * x - x * y = -(x * y - y * x) := by noncomm_ring
+    _ = -(-((f - complementIdempotent f) * (y * x + x * y))) := by rw [h]
+    _ = (f - complementIdempotent f) * (x * y + y * x) := by
+      rw [neg_neg, add_comm]
+
 /-! ## Elementwise Peirce corners -/
 
 /-- The `(p, q)`-Peirce corner `p * x * q`. -/
@@ -453,6 +578,20 @@ theorem peirceCorner_sq_eq_zero {p q x : A} (h : q * p = 0) :
     (p * x * q) * (p * x * q) = p * x * (q * p) * x * q := by
       noncomm_ring
     _ = 0 := by rw [h, mul_zero, zero_mul, zero_mul]
+
+/-- The `10` component of a cut is square-zero. -/
+theorem component10_sq_eq_zero (f x : A) (hf : f * f = f) :
+    component10 f x * component10 f x = 0 := by
+  simpa [component10, peirceCorner, complementIdempotent] using
+    (peirceCorner_sq_eq_zero (p := f) (q := complementIdempotent f) (x := x)
+      (complement_mul_idempotent f hf))
+
+/-- The `01` component of a cut is square-zero. -/
+theorem component01_sq_eq_zero (f x : A) (hf : f * f = f) :
+    component01 f x * component01 f x = 0 := by
+  simpa [component01, peirceCorner, complementIdempotent] using
+    (peirceCorner_sq_eq_zero (p := complementIdempotent f) (q := f) (x := x)
+      (idempotent_mul_complement f hf))
 
 /-- A Peirce corner is left-absorbed by its left idempotent. -/
 theorem peirceCorner_absorb_left {p q x : A} (hp : p * p = p) :

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangMillsContinuum
@@ -77,9 +82,10 @@ theorem modularFlow_add (s t : ℝ) (A : EndH) :
   simpa [modularFlow] using
     (R.hTypeIII.2.2.1 s t A)
 
-/-- The Type-III modular generator on the RN lane. -/
+/-- The logarithmic generator `log Δ` on the RN lane. The Hamiltonian
+convention remains `K = -log Δ`; the Tomita datum stores `log Δ` itself. -/
 @[rep_depth transport]
-noncomputable def modularGenerator : EndH := R.rn.modularHamiltonian
+noncomputable def modularGenerator : EndH := -R.rn.modularHamiltonian
 
 @[rep_depth transport]
 theorem modularOperator_eq_rn :
@@ -91,26 +97,44 @@ theorem modularHamiltonian_eq_neg_log_rn :
     R.rn.modularHamiltonian = (-Real.log R.rn.rnDerivative) • YangMillsContinuum.idEndH E :=
   R.hTypeIII.2.1
 
+/-- The real Tomita logarithm is `log(r) • 1`, opposite in sign to the
+thermodynamic modular Hamiltonian `-log(r) • 1`. -/
+@[rep_depth transport]
+theorem modularGenerator_eq_log_rn :
+    R.modularGenerator = Real.log R.rn.rnDerivative • YangMillsContinuum.idEndH E := by
+  rw [modularGenerator, R.modularHamiltonian_eq_neg_log_rn]
+  simp [neg_smul]
+
+/-- Exponentiating the owner-defined logarithmic generator recovers the RN
+modular operator. This follows from the positive scalar RN derivative. -/
+@[rep_depth transport]
+theorem exp_modularGenerator_eq_modularOperator :
+    NormedSpace.exp R.modularGenerator = R.rn.modularOperator := by
+  rw [R.modularGenerator_eq_log_rn, R.modularOperator_eq_rn]
+  change NormedSpace.exp
+      (algebraMap ℝ EndH (Real.log R.rn.rnDerivative)) =
+    algebraMap ℝ EndH R.rn.rnDerivative
+  rw [← NormedSpace.map_exp (algebraMap ℝ EndH)
+    (continuous_algebraMap ℝ EndH) (Real.log R.rn.rnDerivative)]
+  rw [← Real.exp_eq_exp_ℝ, Real.exp_log R.rn.rnDerivative_pos]
+
 /--
 Bridge hook into the real Tomita `δ = log Δ` package.
 
-`hExp` is the explicit witness that the chosen generator exponentiates to `Δ`.
+The generator and RN owner derive the exponential identity directly.
 -/
 @[rep_depth transport]
-noncomputable def toRealModularLogData
-    (hExp : NormedSpace.exp R.modularGenerator = R.rn.modularOperator) :
+noncomputable def toRealModularLogData :
     RealTomitaCore.RealModularLogData (E := E) where
   Delta := R.rn.modularOperator
   deltaLog := R.modularGenerator
-  exp_deltaLog := by
-    simpa [modularGenerator] using hExp
+  exp_deltaLog := R.exp_modularGenerator_eq_modularOperator
 
 @[rep_depth transport]
 theorem modularTransportFlow_eq_realTomitaFlow
-    (hExp : NormedSpace.exp R.modularGenerator = R.rn.modularOperator)
     (t : ℝ) :
     InfoGeometry.Canonical.BogoliubovTransport.modularTransportFlow (E := E) R.modularGenerator t
-      = (R.toRealModularLogData hExp).flow t := by
+      = R.toRealModularLogData.flow t := by
   rfl
 
 /--
@@ -253,10 +277,10 @@ theorem modularFlow_preserves_modularFixed
 @[rep_depth transport]
 theorem trace_constant_on_dualFixed
     (x : C.Core)
-    (_hfix : C.IsDualFixed x)
+    (hfix : C.IsDualFixed x)
     (t : ℝ) :
     C.coreTrace (C.dualAction t x) = C.coreTrace x := by
-  simpa using C.trace_dualAction_invariant t x
+  rw [hfix t]
 
 /--
 Downstream CP-003 consumer on the Type-III core lane:

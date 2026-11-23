@@ -2,9 +2,10 @@
 
 > Status: `current authority`
 > Source reviewed: 2026-11-15 at [`abd5826b3676`](https://github.com/nickgou-nuke/info-geometry-lean/commit/abd5826b3676fab6231c66b646ec1cc5aeed6732)
-> plus scoped working-tree kernel verification of
-> [`InfoGeometry.Foundations.InfoGeometryCoreLibrary`](../lean/InfoGeometry/Foundations/InfoGeometryCoreLibrary.lean) and
-> [`InfoGeometry.OperatorAlgebra.PeirceBiSandwich.All`](../lean/InfoGeometry/OperatorAlgebra/PeirceBiSandwich/All.lean).
+> (historical scoped kernel check of [`InfoGeometry.Foundations.InfoGeometryCoreLibrary`](../lean/InfoGeometry/Foundations/InfoGeometryCoreLibrary.lean) and
+> [`InfoGeometry.OperatorAlgebra.PeirceBiSandwich.All`](../lean/InfoGeometry/OperatorAlgebra/PeirceBiSandwich/All.lean)),
+> plus 2026-11-22 scoped verification at `317f5f3537de` of all 14 M1–M5 Leibniz–Derivation–Fréchet–Onsager bridge, capstone, and audit modules
+> ([`LeibnizDerivationFrechetOnsagerCapstone`](../lean/InfoGeometry/Canonical/LeibnizDerivationFrechetOnsagerCapstone.lean)) and `Canonical.All` static reachability (`audit_default_lean_sources.py`; `SuperMetriplectic.All`, `Canonical.All` Lake build, and untouched `InfoGeometryCoreLibrary` remain blocked/unverified at `317f5f3537de` on unrelated upstream `RelativeSurprisalOperatorLift`, `MobiusKleinStatisticalZornPacket`, `G2FlagFactorizationRecursion`, and `NoncommutativeDiracSheetMixingAndEntropyTower`).
 > Scope: maintained entry points and source routing. Linked research notes and
 > historical reports retain their own scope and verification dates.
 

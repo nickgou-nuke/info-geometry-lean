@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SymmetryInvariants
@@ -12,8 +17,9 @@ This file records the theorem-safe foundation layer:
 * an observable algebra comes first;
 * symmetries act by algebra automorphisms;
 * states/weights supply physical readouts;
-* modular/logarithmic data and Legendre/exponential-family readouts are
-  downstream of a state choice;
+* a supplied operator generator induces an inner derivation on the full
+  observable ring;
+* Legendre/exponential-family readouts are downstream of a state choice;
 * spectra, determinants, and diagonal coordinates are readouts, not primitive
   ontology.
 
@@ -33,9 +39,9 @@ Operator Erlangen--Legendre packet.
 
 The source object is an observable algebra with symmetry action.  A state or
 weight then selects a sector/polarization and supplies expectation and
-correlation readouts.  Modular and exponential/Legendre data are carried as
-explicit laws, because the analytic operator-algebraic substrate is not proved
-in this file.
+correlation readouts. The inner derivation is constructed from the supplied
+generator and its algebraic derivation laws are proved below. The analytic
+modular-flow substrate is not constructed in this file.
 -/
 structure OperatorErlangenLegendrePacket
     (Obs : Type uObs)
@@ -67,51 +73,13 @@ structure OperatorErlangenLegendrePacket
   modularGenerator :
     StateSpace → Obs
 
-  /-- Modular derivation readout. -/
-  modularDerivation :
-    StateSpace → Obs → Obs
-
-  /--
-  Concrete modular-derivation compatibility with the supplied modular
-  generator.
-  -/
-  modularDerivation_eq_commutator :
-    ∀ ω x,
-      modularDerivation ω x =
-        modularGenerator ω * x - x * modularGenerator ω
-
   /-- A polarization/sector is chosen downstream of a state. -/
   Polarization :
     StateSpace → Type uPol
 
-  /-- Stabilizer predicate for a state under the symmetry action. -/
-  stabilizer :
-    StateSpace → Sym → Prop
-
-  /--
-  Concrete stabilizer criterion: a symmetry stabilizes a state precisely when
-  it preserves all expectation readouts of that state.
-  -/
-  stabilizer_iff_eval_invariant :
-    ∀ ω g,
-      stabilizer ω g ↔
-        ∀ x : Obs, eval ω ((symmetryAction.act g) x) = eval ω x
-
   /-- Exponential-family positive weight/readout shadow. -/
   exponentialWeight :
     StateSpace → Obs
-
-  /-- Free-energy / Massieu / Legendre readout shadow. -/
-  freeEnergyReadout :
-    StateSpace → ℝ
-
-  /--
-  Concrete Legendre readout criterion used by this finite interface: the
-  free-energy readout is the state evaluation of the supplied exponential
-  weight.
-  -/
-  freeEnergyReadout_eq_eval_exponentialWeight :
-    ∀ ω, freeEnergyReadout ω = eval ω (exponentialWeight ω)
 
   /--
   Guard: spectra and determinant counts are downstream readouts, not the
@@ -138,13 +106,50 @@ variable
 
 variable (P : OperatorErlangenLegendrePacket Obs Sym StateSpace)
 
+/-- The inner derivation determined by a packet's supplied operator
+generator. Its carrier remains the full, possibly noncommutative observable
+ring. -/
+def modularDerivation (ω : StateSpace) (x : Obs) : Obs :=
+  P.modularGenerator ω * x - x * P.modularGenerator ω
+
+/-- The observable stabilizer is defined by invariance of every evaluation;
+there is no independent predicate whose equivalence has to be postulated. -/
+def stabilizer (ω : StateSpace) (g : Sym) : Prop :=
+  ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x
+
+/-- The free-energy readout is the evaluation of the packet's exponential
+weight. -/
+def freeEnergyReadout (ω : StateSpace) : ℝ :=
+  P.eval ω (P.exponentialWeight ω)
+
 /-- The modular derivation is the commutator with the supplied generator. -/
 theorem modular_derivation_eq_commutator
     (ω : StateSpace)
     (x : Obs) :
     P.modularDerivation ω x =
       P.modularGenerator ω * x - x * P.modularGenerator ω :=
-  P.modularDerivation_eq_commutator ω x
+  rfl
+
+/-- Every inner commutator on an associative ring satisfies the Leibniz rule.
+This is the substantive derivation law for the packet's modular operator. -/
+theorem modular_derivation_leibniz (ω : StateSpace) (x y : Obs) :
+    P.modularDerivation ω (x * y) =
+      P.modularDerivation ω x * y + x * P.modularDerivation ω y := by
+  dsimp [modularDerivation]
+  noncomm_ring
+
+/-- Inner derivations are additive in the observable argument. -/
+theorem modular_derivation_add (ω : StateSpace) (x y : Obs) :
+    P.modularDerivation ω (x + y) =
+      P.modularDerivation ω x + P.modularDerivation ω y := by
+  dsimp [modularDerivation]
+  noncomm_ring
+
+/-- An inner derivation annihilates the identity operator. -/
+theorem modular_derivation_one (ω : StateSpace) :
+    P.modularDerivation ω (1 : Obs) = 0 := by
+  dsimp [modularDerivation]
+  noncomm_ring
 
 /-- Stabilizer membership is expectation invariance under the symmetry action. -/
 theorem stabilizer_iff_eval_invariant_readback
@@ -152,13 +157,13 @@ theorem stabilizer_iff_eval_invariant_readback
     (g : Sym) :
     P.stabilizer ω g ↔
       ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x :=
-  P.stabilizer_iff_eval_invariant ω g
+  Iff.rfl
 
 /-- The free-energy readout is evaluation of the supplied exponential weight. -/
 theorem freeEnergyReadout_eq_eval_exponentialWeight_readback
     (ω : StateSpace) :
     P.freeEnergyReadout ω = P.eval ω (P.exponentialWeight ω) :=
-  P.freeEnergyReadout_eq_eval_exponentialWeight ω
+  rfl
 
 /-- The state stabilizer as a set of symmetries. -/
 def StateStabilizer
@@ -204,6 +209,9 @@ def OperatorErlangenLegendreTarget
     (∀ (ω : StateSpace) (x : Obs),
       P.modularDerivation ω x =
         P.modularGenerator ω * x - x * P.modularGenerator ω) ∧
+    (∀ (ω : StateSpace) (x y : Obs),
+      P.modularDerivation ω (x * y) =
+        P.modularDerivation ω x * y + x * P.modularDerivation ω y) ∧
     (∀ (ω : StateSpace) (g : Sym),
       P.stabilizer ω g ↔
         ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x) ∧
@@ -221,6 +229,7 @@ theorem operatorErlangenLegendreTarget
   intro P
   exact ⟨
     (fun ω x => P.modular_derivation_eq_commutator ω x),
+    (fun ω x y => P.modular_derivation_leibniz ω x y),
     (fun ω g => P.stabilizer_iff_eval_invariant_readback ω g),
     (fun ω => P.freeEnergyReadout_eq_eval_exponentialWeight_readback ω)⟩
 

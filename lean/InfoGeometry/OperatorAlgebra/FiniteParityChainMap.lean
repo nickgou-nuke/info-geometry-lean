@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.OperatorAlgebra.FiniteParityEulerPoincare
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -66,6 +72,27 @@ def comp (g : Hom D E) (f : Hom C D) : Hom C E where
             f.positive (C.dMinus x) by
           simpa only [LinearMap.comp_apply] using
             LinearMap.congr_fun f.commutes_dMinus x]
+
+/-- The `n`-fold self-composition of a chain endomorphism. -/
+def iterate (f : Hom C C) : ℕ → Hom C C
+  | 0 => id C
+  | n + 1 => comp f (iterate f n)
+
+@[simp]
+theorem iterate_positive (f : Hom C C) (n : ℕ) :
+    (iterate f n).positive = f.positive ^ n := by
+  induction n with
+  | zero => simp [iterate, id, Module.End.one_eq_id]
+  | succ n ih =>
+    simp [iterate, comp, ih, Module.End.mul_eq_comp, pow_succ']
+
+@[simp]
+theorem iterate_negative (f : Hom C C) (n : ℕ) :
+    (iterate f n).negative = f.negative ^ n := by
+  induction n with
+  | zero => simp [iterate, id, Module.End.one_eq_id]
+  | succ n ih =>
+    simp [iterate, comp, ih, Module.End.mul_eq_comp, pow_succ']
 
 def positiveCycleMap (f : Hom C D) :
     LinearMap.ker C.dPlus →ₗ[ℝ] LinearMap.ker D.dPlus :=
@@ -180,6 +207,26 @@ theorem negativeCohomologyMap_comp
   intro q
   obtain ⟨x, rfl⟩ := C.negativeBoundaries.mkQ_surjective q
   rfl
+
+@[simp]
+theorem iterate_positiveCohomologyMap (f : Hom C C) (n : ℕ) :
+    (iterate f n).positiveCohomologyMap = f.positiveCohomologyMap ^ n := by
+  induction n with
+  | zero =>
+    rw [iterate, positiveCohomologyMap_id, pow_zero, Module.End.one_eq_id]
+  | succ n ih =>
+    simp [iterate, positiveCohomologyMap_comp, ih,
+      Module.End.mul_eq_comp, pow_succ']
+
+@[simp]
+theorem iterate_negativeCohomologyMap (f : Hom C C) (n : ℕ) :
+    (iterate f n).negativeCohomologyMap = f.negativeCohomologyMap ^ n := by
+  induction n with
+  | zero =>
+    rw [iterate, negativeCohomologyMap_id, pow_zero, Module.End.one_eq_id]
+  | succ n ih =>
+    simp [iterate, negativeCohomologyMap_comp, ih,
+      Module.End.mul_eq_comp, pow_succ']
 
 end Hom
 

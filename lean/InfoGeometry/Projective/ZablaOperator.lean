@@ -1,12 +1,20 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Projective.SplitQuaternionMatrix
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Analysis.Calculus.Deriv.Add
+import Mathlib.Analysis.Calculus.Deriv.Mul
 
 /-!
 # InfoGeometry.Projective.ZablaOperator
 
 This file defines the `Zabla` (split-nabla) differential operator and `zarmonic` functions.
-These tools use the split-quaternion structure to represent vortex motions such as
-those found in the Couette-Taylor system.
+Coordinate partials are actual one-variable derivatives on `ℝ³`; the previous
+zero maps made every potential zarmonic by definition. The split Laplacian is
+the genuine ultrahyperbolic expression `-∂ₓ² + ∂ᵧ² + ∂𝓏²`.
 
 Unlike the classical harmonic functions ($\nabla^2 f = 0$), zarmonic functions
 satisfy a split-signature Laplace equation corresponding to the squares of the
@@ -15,20 +23,25 @@ split-quaternion basis elements $i, j, k$.
 
 namespace InfoGeometry.Projective
 
+noncomputable section
+
 /-- A velocity potential is a scalar field over $\mathbb{R}^3$. -/
 abbrev VelocityPotential := (ℝ × ℝ × ℝ) → ℝ
 
 /-- A velocity field is a vector field over $\mathbb{R}^3$, often represented via quaternions. -/
 abbrev VelocityField := (ℝ × ℝ × ℝ) → SplitQuaternion
 
-/-- Concrete placeholder-free `x`-partial used by the split-zabla layer. -/
-def partial_x (_f : VelocityPotential) : VelocityPotential := fun _ => 0
+/-- The partial derivative in the first coordinate. -/
+def partial_x (f : VelocityPotential) : VelocityPotential := fun p =>
+  deriv (fun x => f (x, p.2.1, p.2.2)) p.1
 
-/-- Concrete placeholder-free `y`-partial used by the split-zabla layer. -/
-def partial_y (_f : VelocityPotential) : VelocityPotential := fun _ => 0
+/-- The partial derivative in the second coordinate. -/
+def partial_y (f : VelocityPotential) : VelocityPotential := fun p =>
+  deriv (fun y => f (p.1, y, p.2.2)) p.2.1
 
-/-- Concrete placeholder-free `z`-partial used by the split-zabla layer. -/
-def partial_z (_f : VelocityPotential) : VelocityPotential := fun _ => 0
+/-- The partial derivative in the third coordinate. -/
+def partial_z (f : VelocityPotential) : VelocityPotential := fun p =>
+  deriv (fun z => f (p.1, p.2.1, z)) p.2.2
 
 /--
 The `Zabla` differential operator for split-quaternions.
@@ -61,5 +74,27 @@ $\nabla^2 f = 0$
 -/
 def IsZarmonic (f : VelocityPotential) : Prop :=
   zabla_sq f = 0
+
+@[simp] theorem partial_x_firstCoordinate :
+    partial_x (fun p => p.1) = fun _ => 1 := by
+  funext p
+  simp [partial_x]
+
+@[simp] theorem partial_y_secondCoordinate :
+    partial_y (fun p => p.2.1) = fun _ => 1 := by
+  funext p
+  simp [partial_y]
+
+@[simp] theorem partial_z_thirdCoordinate :
+    partial_z (fun p => p.2.2) = fun _ => 1 := by
+  funext p
+  simp [partial_z]
+
+theorem affine_potential_zarmonic (a b c d : ℝ) :
+    IsZarmonic (fun p => a * p.1 + b * p.2.1 + c * p.2.2 + d) := by
+  funext p
+  simp [zabla_sq, partial_x, partial_y, partial_z]
+
+end
 
 end InfoGeometry.Projective

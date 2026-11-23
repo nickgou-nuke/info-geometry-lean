@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.OperatorAlgebra.FiniteParityHomotopySupertrace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.LinearAlgebra.TraceKernelRangeTransport
@@ -189,6 +195,22 @@ theorem hopfTrace
     positiveBoundaryTrace_eq_range,
     negativeBoundaryTrace_eq_range]
   ring
+
+/-- The finite Hopf trace identity applies to every iterate of a chain
+endomorphism. Its terms are the actual traces of the iterated carrier and
+induced cohomology maps. -/
+theorem hopfTrace_iterate
+    (f : Hom C C) (n : ℕ)
+    [FiniteDimensional ℝ Vplus]
+    [FiniteDimensional ℝ Vminus] :
+    LinearMap.trace ℝ Vplus (f.positive ^ n) -
+        LinearMap.trace ℝ Vminus (f.negative ^ n) =
+      LinearMap.trace ℝ C.PositiveCohomology
+          (f.positiveCohomologyMap ^ n) -
+        LinearMap.trace ℝ C.NegativeCohomology
+          (f.negativeCohomologyMap ^ n) := by
+  simpa [carrierSupertrace, cohomologySupertrace] using
+    (hopfTrace (Hom.iterate f n))
 
 end Hom
 

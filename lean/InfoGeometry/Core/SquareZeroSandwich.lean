@@ -52,6 +52,27 @@ theorem ring_anticomm_mul_commutator (hx : X * X = 0) (hy : Y * Y = 0) :
   have hcy : Commute (X * Y + Y * X) Y := ring_anticomm_mul_right hy
   exact (hcx.mul_right hcy).sub_right (hcy.mul_right hcx)
 
+/-- In an arbitrary associative ring, the difference between the squares of the
+sum and difference of two ordered products is controlled by the two middle
+square terms. This retains the order of every operator factor and uses no
+commutativity or division assumption. -/
+theorem ring_sum_difference_square_identity (X Y : A) :
+    (X * Y + Y * X) * (X * Y + Y * X) -
+        (X * Y - Y * X) * (X * Y - Y * X) =
+      2 • (X * (Y * Y) * X + Y * (X * X) * Y) := by
+  noncomm_ring
+
+/-- For two square-zero operators, the anticommutator-square and
+commutator-square agree. -/
+theorem ring_sum_difference_squares_eq_of_square_zero
+    (hx : X * X = 0) (hy : Y * Y = 0) :
+    (X * Y + Y * X) * (X * Y + Y * X) =
+      (X * Y - Y * X) * (X * Y - Y * X) := by
+  have h := ring_sum_difference_square_identity X Y
+  rw [hy, hx] at h
+  simp only [mul_zero, zero_mul, add_zero, nsmul_zero] at h
+  exact sub_eq_zero.mp h
+
 /-- In any noncommutative ring `[Ring A]`, the division-free symmetric dissipator identity
 `2 • (X * Z * Y + Y * Z * X) - ((X * Y + Y * X) * Z + Z * (X * Y + Y * X))` equals the
 negative double commutator sum. -/

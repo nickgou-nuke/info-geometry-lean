@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import InfoGeometry.Core.PeirceDecomposition
 
 /-!
 # Exact 2×2 Krein, Oblique-Projector, and Parabolic-Coalescence Obstruction Witnesses
@@ -138,5 +139,32 @@ theorem peirceCut_nilpotent_noncommute :
 theorem peirceCut2_noncommute :
     peirceCut2 * nilpotentLower2 ≠ nilpotentLower2 * peirceCut2 :=
   peirceCut_nilpotent_noncommute.2.2
+
+/-- The noncommuting cut witness occupies only one directed Peirce corner.
+Thus idempotence of the cut and noncommutation alone do not force a reciprocal
+pair of nonzero off-diagonal channels. -/
+theorem peirceCut_nilpotent_one_sided_corner :
+    InfoGeometry.Core.PeirceDecomposition.component10 peirceCut2 nilpotentLower2 = 0 ∧
+    InfoGeometry.Core.PeirceDecomposition.component01 peirceCut2 nilpotentLower2 =
+      nilpotentLower2 := by
+  constructor <;> ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [InfoGeometry.Core.PeirceDecomposition.component10,
+      InfoGeometry.Core.PeirceDecomposition.component01,
+      InfoGeometry.Core.PeirceDecomposition.complementIdempotent,
+      peirceCut2, nilpotentLower2, Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- A noncommuting idempotent cut can have only one nonzero Peirce arrow.
+This concrete `2 × 2` witness rules out deriving reciprocal coupling from
+idempotence and noncommutation alone. -/
+theorem peirceCut_nilpotent_one_sided_counterexample :
+    peirceCut2 * peirceCut2 = peirceCut2 ∧
+    peirceCut2 * nilpotentLower2 ≠ nilpotentLower2 * peirceCut2 ∧
+    InfoGeometry.Core.PeirceDecomposition.component10 peirceCut2 nilpotentLower2 = 0 ∧
+    InfoGeometry.Core.PeirceDecomposition.component01 peirceCut2 nilpotentLower2 =
+      nilpotentLower2 := by
+  refine ⟨?_, peirceCut2_noncommute, peirceCut_nilpotent_one_sided_corner⟩
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [peirceCut2, Matrix.mul_apply, Fin.sum_univ_two]
 
 end InfoGeometry.Canonical.KreinParabolicSpectralObstructions

@@ -218,6 +218,65 @@ def weylToWord {L : FormalPrimeRootLattice}
     BinaryWord L.primes.card :=
   fun i => decide ((e i : ℕ) ∈ w.support)
 
+/-- Encode a binary word as the Boolean Weyl element supported on the
+corresponding enumerated prime modes. -/
+def wordToWeyl {L : FormalPrimeRootLattice}
+    (e : Fin L.primes.card ≃ L.primes) (w : BinaryWord L.primes.card) :
+    BooleanWeylGroup L where
+  support := (Finset.univ.filter fun i => w i = true).image fun i => (e i : ℕ)
+  support_subset := by
+    intro p hp
+    rcases Finset.mem_image.mp hp with ⟨i, _, rfl⟩
+    exact (e i).property
+
+/-- Encoding a word as a Weyl support and reading it back recovers the word. -/
+@[simp] theorem weylToWord_wordToWeyl {L : FormalPrimeRootLattice}
+    (e : Fin L.primes.card ≃ L.primes) (w : BinaryWord L.primes.card) :
+    weylToWord e (wordToWeyl e w) = w := by
+  funext i
+  simp [weylToWord, wordToWeyl]
+
+/-- Reading a Weyl support as a word and encoding it recovers the Weyl element. -/
+private theorem booleanWeylGroup_ext {L : FormalPrimeRootLattice}
+    {a b : BooleanWeylGroup L} (h : a.support = b.support) : a = b := by
+  cases a with
+  | mk sa ha =>
+    cases b with
+    | mk sb hb =>
+      cases h
+      rfl
+
+@[simp] theorem wordToWeyl_weylToWord {L : FormalPrimeRootLattice}
+    (e : Fin L.primes.card ≃ L.primes) (w : BooleanWeylGroup L) :
+    wordToWeyl e (weylToWord e w) = w := by
+  cases w with
+  | mk support hsubset =>
+    have hSupport : (wordToWeyl e (weylToWord e ⟨support, hsubset⟩)).support = support := by
+      ext p
+      constructor
+      · intro hp
+        rcases Finset.mem_image.mp hp with ⟨i, hi, hip⟩
+        subst p
+        have hi' : (e i : ℕ) ∈ support := by
+          simpa [weylToWord] using hi
+        exact hi'
+      · intro hp
+        have hpL : p ∈ L.primes := hsubset hp
+        refine Finset.mem_image.mpr ⟨e.symm ⟨p, hpL⟩, ?_, ?_⟩
+        · simp [weylToWord, hp]
+        · simp
+    exact booleanWeylGroup_ext hSupport
+
+/-- The finite Boolean Weyl carrier is equivalent to the bit-vector carrier
+after choosing an enumeration of the finite prime cutoff. -/
+def booleanWeylEquivBinaryWord {L : FormalPrimeRootLattice}
+    (e : Fin L.primes.card ≃ L.primes) :
+    BooleanWeylGroup L ≃ BinaryWord L.primes.card where
+  toFun := weylToWord e
+  invFun := wordToWeyl e
+  left_inv := wordToWeyl_weylToWord e
+  right_inv := weylToWord_wordToWeyl e
+
 /-- The Hamming weight of `weylToWord e w` equals the cardinality of `w.support`. -/
 theorem wordWeight_weylToWord {L : FormalPrimeRootLattice}
     (e : Fin L.primes.card ≃ L.primes) (w : BooleanWeylGroup L) :

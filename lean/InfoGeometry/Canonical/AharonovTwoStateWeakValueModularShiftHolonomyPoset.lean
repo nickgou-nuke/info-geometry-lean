@@ -3,6 +3,12 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 -- [HIVE-MINDPROVENANCE HEADER]
 -- LAYER: Canonical Finite Algebraic Model (Two-Boundary Sandwich and Modular Shifts)
 -- ARCHITECTURAL ROLE: Noncommutative Ring Identities and Explicit Finite Matrix Readouts
@@ -784,6 +790,33 @@ theorem archetype_R1_walsh_hadamard_localization_shift_duality
       diagScalar (d1 + d2) + modularShift (d1 - d2) (d1 - d2) := by
   refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;>
   · simp only [H_Walsh, localObs, diagScalar, modularShift, Ex, Ey, Ez]; nc_mat2
+
+/-- The full four-channel Hadamard block transform, valid for arbitrary
+operator blocks in a possibly noncommutative ring.  The order of every
+operator product is inherited from matrix multiplication; no determinant or
+commutation assumption on the entries is used. -/
+theorem hadamard_block_transform (M : Mat2 B) :
+    (H_Walsh : Mat2 B) * M * H_Walsh =
+      ⟨(M.a11 + M.a22) + (M.a12 + M.a21),
+        (M.a11 - M.a22) - (M.a12 - M.a21),
+        (M.a11 - M.a22) + (M.a12 - M.a21),
+        (M.a11 + M.a22) - (M.a12 + M.a21)⟩ := by
+  simp only [H_Walsh, Ez, Ex]
+  nc_mat2
+
+/-- Applying the same unnormalised Hadamard block transform twice recovers
+`4 • M` over every ring, including noncommutative operator rings. -/
+theorem hadamard_block_transform_reconstruct (M : Mat2 B) :
+    (H_Walsh : Mat2 B) * ((H_Walsh : Mat2 B) * M * H_Walsh) * H_Walsh =
+      M + M + M + M := by
+  have hH : (H_Walsh : Mat2 B) * H_Walsh = (1 : Mat2 B) + 1 :=
+    archetype_R1_walsh_hadamard_localization_shift_duality 0 0 |>.1
+  calc
+    (H_Walsh : Mat2 B) * ((H_Walsh : Mat2 B) * M * H_Walsh) * H_Walsh =
+        ((H_Walsh : Mat2 B) * H_Walsh) * M * ((H_Walsh : Mat2 B) * H_Walsh) := by
+      nc_mat2
+    _ = (1 + 1) * M * (1 + 1) := by rw [hH]
+    _ = M + M + M + M := by nc_mat2
 
 /-- Left-associated idempotent absorption $P (P Z) = P Z$ when $P^2 = P$. -/
 lemma idem_assoc {P : B} (hP : P * P = P) (Z : B) : P * (P * Z) = P * Z := by

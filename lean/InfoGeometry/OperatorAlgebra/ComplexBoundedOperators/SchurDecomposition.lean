@@ -1,8 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
+import Mathlib.LinearAlgebra.Eigenspace.Triangularizable
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.ExtraJordanNormalForm
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.RingHomMatrix
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CharPoly
+
+set_option linter.style.haveILetI false
 
 /-!
 # InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SchurDecomposition
@@ -16,10 +24,12 @@ and `Q` such that `A = P * B * Q`, `P * Q = 1`, `B` is upper triangular, and
 the diagonal of `B` is the supplied eigenvalue list.
 
 In this repository the low-level finite complex inverse row construction is
-already formalized in `ExtraJordanNormalForm`.  This file packages the Schur
-decomposition result in a finite-type Lean API, exposes the upper-triangular
-readout, and records the block characteristic-polynomial consequences used by
-the Jordan-normal-form existence corridor.
+already formalized in `ExtraJordanNormalForm`.  This file provides conditional
+finite-type Schur packets, their upper-triangular readouts, and block
+characteristic-polynomial consequences. It also proves existence of the first
+Schur step for every nonempty finite complex matrix by constructing an
+eigenpair and completing its eigenvector to a basis. Recursive existence of a
+full triangularization remains a separate theorem and is not asserted here.
 -/
 
 noncomputable section
@@ -424,6 +434,37 @@ theorem exists_basis_completion
   intro x
   exact Module.Basis.extend_apply_self hs x
 
+/-- Reindex a basis extension of a nonzero vector so that the given vector is
+the zeroth coordinate. This is the finite-coordinate form consumed by the
+recursive Schur step. -/
+theorem exists_fin_basis_with_first_vector {K : Type*} [DivisionRing K]
+    {n : ℕ} (v : Fin (n + 1) → K)
+    (hv : v ≠ 0) :
+    ∃ b : Module.Basis (Fin (n + 1)) K (Fin (n + 1) → K), b 0 = v := by
+  classical
+  let s : Set (Fin (n + 1) → K) := {v}
+  have hs : LinearIndepOn K id s := by
+    simpa [s] using
+      (LinearIndepOn.singleton (R := K) (v := id) (i := v) hv)
+  obtain ⟨b, hb⟩ := exists_basis_completion s hs
+  let I := hs.extend (Set.subset_univ s)
+  letI : Fintype I := FiniteDimensional.fintypeBasisIndex b
+  have hcard : Fintype.card I = n + 1 := by
+    calc
+      Fintype.card I = Module.finrank K (Fin (n + 1) → K) :=
+        (Module.finrank_eq_card_basis b).symm
+      _ = n + 1 := by simp
+  let e0 : I ≃ Fin (n + 1) := Fintype.equivFinOfCardEq hcard
+  let head : I := ⟨v, hs.subset_extend (Set.subset_univ s) (by simp [s])⟩
+  let e : I ≃ Fin (n + 1) := e0.trans (Equiv.swap (e0 head) 0)
+  let b' : Module.Basis (Fin (n + 1)) K (Fin (n + 1) → K) := b.reindex e
+  refine ⟨b', ?_⟩
+  rw [Module.Basis.reindex_apply]
+  have he : e head = 0 := by simp [e]
+  have hhead : e.symm 0 = head := e.injective (by simp [he])
+  rw [hhead]
+  exact hb head
+
 /--
 One recursive AFP Schur step: an eigenvector is completed to an orthogonal
 basis, conjugated into the first column, and the tail block is passed to the
@@ -486,7 +527,7 @@ theorem of_basis [Nontrivial K]
     (eigval : K)
     (heig : A.mulVec eigenvector = fun i => eigval * eigenvector i) :
     ∃ S : SchurStepPacket K n,
-      S.A' 0 0 = eigval ∧
+      S.A' 0 0 = S.eigenvalue ∧
         (∀ i : Fin (n + 1), i ≠ 0 → S.A' i 0 = 0) := by
   classical
   let std : Module.Basis (Fin (n + 1)) K (Fin (n + 1) → K) :=
@@ -525,6 +566,38 @@ theorem of_basis [Nontrivial K]
   · intro i hi
     rw [S.first_col_eq]
     simp [hi]
+
+/-- Construct the Schur first-step packet directly from a nonzero eigenvector;
+the basis completion and the conjugated first-column identity are both proved. -/
+theorem exists_of_nonzero_eigenvector {K₀ : Type*} [Field K₀]
+    (A : Matrix (Fin (n + 1)) (Fin (n + 1)) K₀)
+    (eigenvector : Fin (n + 1) → K₀) (eigval : K₀)
+    (heig : A.mulVec eigenvector = fun i => eigval * eigenvector i)
+    (hne : eigenvector ≠ 0) :
+    ∃ S : SchurStepPacket K₀ n,
+      S.A' 0 0 = S.eigenvalue ∧
+        (∀ i : Fin (n + 1), i ≠ 0 → S.A' i 0 = 0) := by
+  obtain ⟨basis, hhead⟩ :=
+    exists_fin_basis_with_first_vector (n := n) eigenvector hne
+  exact of_basis (K := K₀) A eigenvector basis hhead eigval heig
+
+/-- Every nonempty finite complex matrix has a proved first Schur step: an
+eigenvalue exists, its nonzero eigenvector is extended to a basis, and the
+basis change produces the triangular first column. -/
+theorem exists_complex_first_step (A : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) :
+    ∃ S : SchurStepPacket ℂ n,
+      S.A' 0 0 = S.eigenvalue ∧
+        (∀ i : Fin (n + 1), i ≠ 0 → S.A' i 0 = 0) := by
+  let F : Module.End ℂ (Fin (n + 1) → ℂ) := A.toLin'
+  obtain ⟨eig, hEigVal⟩ := Module.End.exists_eigenvalue F
+  obtain ⟨v, hv⟩ := hEigVal.exists_hasEigenvector
+  have hv_ne : v ≠ 0 := (Module.End.hasEigenvector_iff.mp hv).2
+  have hEig : A.mulVec v = fun i => eig * v i := by
+    have hF : F v = eig • v := hv.apply_eq_smul
+    change A.mulVec v = eig • v at hF
+    ext i
+    simpa [Pi.smul_apply] using congrFun hF i
+  exact exists_of_nonzero_eigenvector (K₀ := ℂ) A v eig hEig hv_ne
 
 theorem first_col_zero_of_ne_zero
     (S : SchurStepPacket K n) {i : Fin (n + 1)} (hi : i ≠ 0) :

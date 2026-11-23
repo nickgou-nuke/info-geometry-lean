@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.BridgeTarget
@@ -134,6 +139,71 @@ theorem cayleyToFugacity_mem_unitCircle_iff_criticalLine
     (s : ℂ) :
     OnLeeYangCircle (cayleyToFugacity s) ↔ OnCriticalLine s := by
   simpa using (criticalLine_iff_cayley_unitCircle s).symm
+
+/-- The signed squared-radius defect of the Cayley coordinate is controlled by
+the signed real-part displacement from the critical line, divided by a positive
+denominator. The pole `s = 1` is excluded because Lean's totalized division
+maps it to zero. -/
+theorem cayleyToFugacity_normSq_sub_one
+    (s : ℂ) (hs : s ≠ 1) :
+    Complex.normSq (cayleyToFugacity s) - 1 =
+      (2 * s.re - 1) / Complex.normSq (1 - s) := by
+  have hden : Complex.normSq (1 - s) ≠ 0 := by
+    intro h
+    have hz : (1 - s : ℂ) = 0 := Complex.normSq_eq_zero.mp h
+    exact hs (sub_eq_zero.mp hz).symm
+  have hnum : Complex.normSq s - Complex.normSq (1 - s) = 2 * s.re - 1 := by
+    simp only [Complex.normSq_apply, Complex.sub_re, Complex.one_re,
+      Complex.sub_im, Complex.one_im]
+    ring
+  unfold cayleyToFugacity
+  rw [Complex.normSq_div]
+  rw [← hnum]
+  field_simp [hden]
+
+/-- Away from its pole, the right half-plane maps outside the unit disk under
+`s ↦ s / (1-s)`, and the critical line is the boundary. -/
+theorem cayleyToFugacity_normSq_gt_one_iff
+    (s : ℂ) (hs : s ≠ 1) :
+    1 < Complex.normSq (cayleyToFugacity s) ↔ (1 / 2 : ℝ) < s.re := by
+  rw [← sub_pos, cayleyToFugacity_normSq_sub_one s hs]
+  have hden : 0 < Complex.normSq (1 - s) :=
+    Complex.normSq_pos.mpr (sub_ne_zero.mpr hs.symm)
+  constructor
+  · intro h
+    have hsign := (div_pos_iff_of_pos_right hden).mp h
+    linarith
+  · intro h
+    exact div_pos (by linarith) hden
+
+/-- Away from its pole, the left half-plane maps inside the unit disk under
+`s ↦ s / (1-s)`, and the critical line is the boundary. -/
+theorem cayleyToFugacity_normSq_lt_one_iff
+    (s : ℂ) (hs : s ≠ 1) :
+    Complex.normSq (cayleyToFugacity s) < 1 ↔ s.re < (1 / 2 : ℝ) := by
+  have hden : 0 < Complex.normSq (1 - s) :=
+    Complex.normSq_pos.mpr (sub_ne_zero.mpr hs.symm)
+  have hformula := cayleyToFugacity_normSq_sub_one s hs
+  constructor
+  · intro h
+    have hsigned : Complex.normSq (cayleyToFugacity s) - 1 < 0 :=
+      sub_lt_zero.mpr h
+    have hquot : (2 * s.re - 1) / Complex.normSq (1 - s) < 0 := by
+      rw [← hformula]
+      exact hsigned
+    have hnum : 2 * s.re - 1 < 0 := by
+      have hmul := (div_lt_iff₀ hden).mp hquot
+      simpa using hmul
+    linarith
+  · intro h
+    have hnum : 2 * s.re - 1 < 0 := by linarith
+    have hquot : (2 * s.re - 1) / Complex.normSq (1 - s) < 0 := by
+      apply (div_lt_iff₀ hden).2
+      simpa using hnum
+    have hsigned : Complex.normSq (cayleyToFugacity s) - 1 < 0 := by
+      rw [hformula]
+      exact hquot
+    exact sub_lt_zero.mp hsigned
 
 theorem subset_cayley_unitCircle_iff_subset_criticalLine (S : Set ℂ) :
     (∀ s ∈ S, OnLeeYangCircle (cayleyToFugacity s)) ↔

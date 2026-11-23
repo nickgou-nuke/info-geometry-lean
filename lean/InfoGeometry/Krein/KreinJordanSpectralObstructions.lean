@@ -9,6 +9,7 @@ import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Bounds
 import Mathlib.Analysis.Real.Pi.Bounds
+import InfoGeometry.Core.PeirceDecomposition
 
 /-!
 # InfoGeometry.Krein.KreinJordanSpectralObstructions
@@ -258,6 +259,70 @@ theorem obliqueProj_frobNormSq_unbounded (M : ℝ) :
 def jordanApproachMat (ρ₁ ρ₂ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   Matrix.of ![![ρ₁, 1], ![0, ρ₂]]
 
+/-- The eigenvector matrix for the distinct eigenvalues of `jordanApproachMat`. -/
+def jordanApproachEigenbasis (ρ₁ ρ₂ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  Matrix.of ![![1, 1], ![0, ρ₂ - ρ₁]]
+
+/-- The inverse eigenvector matrix when the two eigenvalues are distinct. -/
+def jordanApproachEigenbasisInv (ρ₁ ρ₂ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  Matrix.of ![![1, -(ρ₂ - ρ₁)⁻¹], ![0, (ρ₂ - ρ₁)⁻¹]]
+
+/-- The diagonal operator in the ordered eigenbasis. -/
+def jordanApproachDiagonal (ρ₁ ρ₂ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  Matrix.diagonal (fun i => if i = 0 then ρ₁ else ρ₂)
+
+/-- The displayed eigenvector matrix and its inverse multiply to the identity off
+the repeated-eigenvalue locus. -/
+theorem jordanApproachEigenbasis_inverse_identities (ρ₁ ρ₂ : ℝ)
+    (hne : ρ₁ ≠ ρ₂) :
+    jordanApproachEigenbasisInv ρ₁ ρ₂ * jordanApproachEigenbasis ρ₁ ρ₂ = 1 ∧
+      jordanApproachEigenbasis ρ₁ ρ₂ * jordanApproachEigenbasisInv ρ₁ ρ₂ = 1 := by
+  have hsub : ρ₂ - ρ₁ ≠ 0 := sub_ne_zero.mpr (Ne.symm hne)
+  constructor
+  · ext i j
+    fin_cases i <;> fin_cases j
+    all_goals
+      simp [jordanApproachEigenbasisInv, jordanApproachEigenbasis,
+        Matrix.mul_apply, Fin.sum_univ_two]
+    all_goals field_simp [hsub]
+    all_goals ring
+  · ext i j
+    fin_cases i <;> fin_cases j
+    all_goals
+      simp [jordanApproachEigenbasis, jordanApproachEigenbasisInv,
+        Matrix.mul_apply, Fin.sum_univ_two]
+    all_goals field_simp [hsub]
+
+/-- In the eigenvector basis, `jordanApproachMat` acts by the two eigenvalues. -/
+theorem jordanApproachMat_mul_eigenbasis (ρ₁ ρ₂ : ℝ) :
+    jordanApproachMat ρ₁ ρ₂ * jordanApproachEigenbasis ρ₁ ρ₂ =
+      jordanApproachEigenbasis ρ₁ ρ₂ * jordanApproachDiagonal ρ₁ ρ₂ := by
+  ext i j
+  fin_cases i <;> fin_cases j
+  all_goals
+    simp [jordanApproachMat, jordanApproachEigenbasis, jordanApproachDiagonal,
+      Matrix.mul_apply, Fin.sum_univ_two, Matrix.diagonal]
+  all_goals ring
+
+/-- For distinct diagonal entries, the upper triangular family is similar to a
+diagonal matrix. Its coalescence at equal entries is the defective Jordan case
+recorded by `parabolic_jordan_coalescence_witness`. -/
+theorem jordanApproachMat_diagonalizable_of_ne (ρ₁ ρ₂ : ℝ)
+    (hne : ρ₁ ≠ ρ₂) :
+    jordanApproachEigenbasisInv ρ₁ ρ₂ * jordanApproachMat ρ₁ ρ₂ *
+      jordanApproachEigenbasis ρ₁ ρ₂ = jordanApproachDiagonal ρ₁ ρ₂ := by
+  have hInv := jordanApproachEigenbasis_inverse_identities ρ₁ ρ₂ hne
+  calc
+    _ = jordanApproachEigenbasisInv ρ₁ ρ₂ *
+        (jordanApproachMat ρ₁ ρ₂ * jordanApproachEigenbasis ρ₁ ρ₂) := by
+          simp [Matrix.mul_assoc]
+    _ = jordanApproachEigenbasisInv ρ₁ ρ₂ *
+        (jordanApproachEigenbasis ρ₁ ρ₂ * jordanApproachDiagonal ρ₁ ρ₂) := by
+          rw [jordanApproachMat_mul_eigenbasis]
+    _ = (jordanApproachEigenbasisInv ρ₁ ρ₂ * jordanApproachEigenbasis ρ₁ ρ₂) *
+        jordanApproachDiagonal ρ₁ ρ₂ := by rw [← Matrix.mul_assoc]
+    _ = jordanApproachDiagonal ρ₁ ρ₂ := by rw [hInv.1, Matrix.one_mul]
+
 /-- Rank-1 spectral idempotent onto the `ρ₁`-eigenspace for `ρ₁ ≠ ρ₂`:
 `P_{ρ₁} = [[1, (ρ₁ - ρ₂)⁻¹], [0, 0]]`. -/
 def jordanSpectralProj (ρ₁ ρ₂ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
@@ -266,6 +331,88 @@ def jordanSpectralProj (ρ₁ ρ₂ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
 /-- Nilpotent `2 × 2` Jordan block `N = [[0, 1], [0, 0]]` at coalescence `ρ₁ = ρ₂`. -/
 def jordanNilpotent : Matrix (Fin 2) (Fin 2) ℝ :=
   Matrix.of ![![0, 1], ![0, 0]]
+
+/-- The distinct-eigenvalue spectral projector is the diagonal Peirce projection
+plus its singular upper-right bridge component. -/
+theorem jordanSpectralProj_eq_peirceCut_add_scaled_nilpotent (ρ₁ ρ₂ : ℝ) :
+    jordanSpectralProj ρ₁ ρ₂ =
+      peirceCutP0 + (ρ₁ - ρ₂)⁻¹ • jordanNilpotent := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [jordanSpectralProj, peirceCutP0, jordanNilpotent, Matrix.add_apply,
+      smul_eq_mul]
+
+/-- The coalesced Jordan nilpotent is the upper-right Peirce corner of `peirceCutP0`. -/
+theorem jordanNilpotent_eq_component10 :
+    jordanNilpotent =
+      InfoGeometry.Core.PeirceDecomposition.component10 peirceCutP0 jordanNilpotent := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [jordanNilpotent, peirceCutP0,
+      InfoGeometry.Core.PeirceDecomposition.component10,
+      InfoGeometry.Core.PeirceDecomposition.complementIdempotent,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- The earlier lower-left nilpotent is the opposite Peirce corner. -/
+theorem outwardNilpotentX_eq_component01 :
+    outwardNilpotentX =
+      InfoGeometry.Core.PeirceDecomposition.component01 peirceCutP0 outwardNilpotentX := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [outwardNilpotentX, peirceCutP0,
+      InfoGeometry.Core.PeirceDecomposition.component01,
+      InfoGeometry.Core.PeirceDecomposition.complementIdempotent,
+      Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- These two nilpotents occupy opposite Peirce corners, square to zero by the
+generic corner theorem, and their two products recover the complementary idempotents. -/
+theorem jordan_and_outward_nilpotents_are_reciprocal_peirce_corners :
+    jordanNilpotent ∈ InfoGeometry.Core.PeirceDecomposition.peirce10 peirceCutP0 ∧
+    outwardNilpotentX ∈ InfoGeometry.Core.PeirceDecomposition.peirce01 peirceCutP0 ∧
+    jordanNilpotent * jordanNilpotent = 0 ∧
+    outwardNilpotentX * outwardNilpotentX = 0 ∧
+    jordanNilpotent * outwardNilpotentX = peirceCutP0 ∧
+    outwardNilpotentX * jordanNilpotent =
+      InfoGeometry.Core.PeirceDecomposition.complementIdempotent peirceCutP0 := by
+  have hp : peirceCutP0 * peirceCutP0 = peirceCutP0 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [peirceCutP0, Matrix.mul_apply, Fin.sum_univ_two]
+  have hq : InfoGeometry.Core.PeirceDecomposition.complementIdempotent peirceCutP0 =
+      Matrix.of ![![0, 0], ![0, 1]] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [InfoGeometry.Core.PeirceDecomposition.complementIdempotent,
+        peirceCutP0, Matrix.one_apply]
+  constructor
+  · rw [jordanNilpotent_eq_component10]
+    exact InfoGeometry.Core.PeirceDecomposition.component10_mem _ _
+  constructor
+  · rw [outwardNilpotentX_eq_component01]
+    exact InfoGeometry.Core.PeirceDecomposition.component01_mem _ _
+  constructor
+  · rw [jordanNilpotent_eq_component10]
+    exact InfoGeometry.Core.PeirceDecomposition.peirceCorner_sq_eq_zero
+      (p := peirceCutP0)
+      (q := InfoGeometry.Core.PeirceDecomposition.complementIdempotent peirceCutP0)
+      (x := jordanNilpotent) (InfoGeometry.Core.PeirceDecomposition.complement_mul_idempotent
+        peirceCutP0 hp)
+  constructor
+  · rw [outwardNilpotentX_eq_component01]
+    exact InfoGeometry.Core.PeirceDecomposition.peirceCorner_sq_eq_zero
+      (p := InfoGeometry.Core.PeirceDecomposition.complementIdempotent peirceCutP0)
+      (q := peirceCutP0) (x := outwardNilpotentX)
+      (InfoGeometry.Core.PeirceDecomposition.idempotent_mul_complement peirceCutP0 hp)
+  constructor
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [jordanNilpotent, outwardNilpotentX, peirceCutP0,
+        Matrix.mul_apply, Fin.sum_univ_two]
+  · rw [hq]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [jordanNilpotent, outwardNilpotentX, peirceCutP0,
+        Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- **Witness 3 (p. 451 — Parabolic Jordan Coalescence)**:
 1. For `ρ₁ ≠ ρ₂`, `P_{ρ₁}` is an idempotent spectral projector (`P² = P`,
@@ -306,5 +453,20 @@ theorem parabolic_jordan_coalescence_witness (ρ₁ ρ₂ : ℝ) (hne : ρ₁ �
   · intro h0
     have h01 := congrFun (congrFun h0 0) 1
     norm_num [jordanNilpotent] at h01
+
+/-- At coalescence, a vector is an eigenvector for the repeated eigenvalue exactly
+when its second coordinate vanishes. Thus the eigenspace is a single line. -/
+theorem jordan_coalesced_eigenvector_iff_second_coordinate_zero (ρ : ℝ)
+    (v : Fin 2 → ℝ) :
+    jordanApproachMat ρ ρ *ᵥ v = ρ • v ↔ v 1 = 0 := by
+  constructor
+  · intro hv
+    have h0 := congrFun hv 0
+    simpa [Matrix.mulVec, dotProduct, jordanApproachMat, Fin.sum_univ_two] using h0
+  · intro hv
+    ext i
+    fin_cases i
+    · simp [Matrix.mulVec, dotProduct, jordanApproachMat, Fin.sum_univ_two, hv]
+    · simp [Matrix.mulVec, dotProduct, jordanApproachMat, Fin.sum_univ_two]
 
 end InfoGeometry.Krein.KreinJordanSpectralObstructions

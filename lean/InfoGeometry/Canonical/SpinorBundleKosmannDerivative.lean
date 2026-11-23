@@ -49,16 +49,55 @@ The argument order of `cov` is Mathlib's: `cov ψ x (X x)` is `∇_X ψ` at `x`.
 def connectionCorrectedDerivative
     (cov : CovariantDerivative I F V)
     (X : ∀ x : M, TangentSpace I x)
-    (C : ∀ x : M, TangentSpace I x →L[ℝ] V x →L[ℝ] V x)
+    (C : ∀ x : M, V x →L[ℝ] TangentSpace I x →L[ℝ] V x)
     (ψ : ∀ x : M, V x) : ∀ x : M, V x :=
-  fun x => cov ψ x (X x) - C x (X x) (ψ x)
+  fun x => cov ψ x (X x) - C x (ψ x) (X x)
+
+/-- The pointwise endomorphism correction assembled into an actual Mathlib
+covariant derivative on the same real vector bundle.  The minus sign is part
+of the convention in `connectionCorrectedDerivative`; its type is exactly
+Mathlib's endomorphism-valued one-form type. -/
+def connectionCorrectedCovariantDerivative
+    (cov : CovariantDerivative I F V)
+    (C : ∀ x : M, V x →L[ℝ] TangentSpace I x →L[ℝ] V x) :
+    CovariantDerivative I F V :=
+  cov.addOneForm (fun x => -(C x))
+
+/-- Evaluation of the corrected bundle connection is exactly the directional
+operator defined above.  This identifies the one-form construction with its
+actual covariant-derivative action, rather than merely asserting the Leibniz
+law for an unrelated pointwise formula. -/
+theorem connectionCorrectedCovariantDerivative_apply
+    (cov : CovariantDerivative I F V)
+    (C : ∀ x : M, V x →L[ℝ] TangentSpace I x →L[ℝ] V x)
+    (X : ∀ x : M, TangentSpace I x)
+    (ψ : ∀ x : M, V x) (x : M) :
+    connectionCorrectedCovariantDerivative I cov C ψ x (X x) =
+      connectionCorrectedDerivative I cov X C ψ x := by
+  simp [connectionCorrectedCovariantDerivative, connectionCorrectedDerivative,
+    CovariantDerivative.addOneForm]
+  abel
+
+/-- The actual corrected bundle connection satisfies the covariant scalar
+Leibniz identity, including the derivative term, on every smooth section and
+scalar field. -/
+theorem connectionCorrectedCovariantDerivative_leibniz
+    (cov : CovariantDerivative I F V)
+    (C : ∀ x : M, V x →L[ℝ] TangentSpace I x →L[ℝ] V x)
+    {ψ : ∀ x : M, V x} {g : M → ℝ} {x : M}
+    (hψ : MDiffAt (T% ψ) x) (hg : MDiffAt g x) :
+    connectionCorrectedCovariantDerivative I cov C (g • ψ) x =
+      g x • connectionCorrectedCovariantDerivative I cov C ψ x +
+        (d% g x).smulRight (ψ x) := by
+  exact (connectionCorrectedCovariantDerivative I cov C).isCovariantDerivativeOnUniv.leibniz
+    hψ hg
 
 /-- The correction is tensorial in the vector-field direction: both the
 covariant derivative and its one-form correction are linear in `X x`. -/
 theorem connectionCorrectedDerivative_tangent_smul
     (cov : CovariantDerivative I F V)
     (X : ∀ x : M, TangentSpace I x)
-    (C : ∀ x : M, TangentSpace I x →L[ℝ] V x →L[ℝ] V x)
+    (C : ∀ x : M, V x →L[ℝ] TangentSpace I x →L[ℝ] V x)
     (ψ : ∀ x : M, V x) (r : ℝ) (x : M) :
     connectionCorrectedDerivative I cov (fun y => r • X y) C ψ x =
       r • connectionCorrectedDerivative I cov X C ψ x := by
@@ -69,7 +108,7 @@ theorem connectionCorrectedDerivative_tangent_smul
 theorem connectionCorrectedDerivative_tangent_add
     (cov : CovariantDerivative I F V)
     (X Y : ∀ x : M, TangentSpace I x)
-    (C : ∀ x : M, TangentSpace I x →L[ℝ] V x →L[ℝ] V x)
+    (C : ∀ x : M, V x →L[ℝ] TangentSpace I x →L[ℝ] V x)
     (ψ : ∀ x : M, V x) (x : M) :
     connectionCorrectedDerivative I cov (fun y => X y + Y y) C ψ x =
       connectionCorrectedDerivative I cov X C ψ x +
@@ -83,7 +122,7 @@ continuous linear map on the fiber. -/
 theorem connectionCorrectedDerivative_smul
     (cov : CovariantDerivative I F V)
     (X : ∀ x : M, TangentSpace I x)
-    (C : ∀ x : M, TangentSpace I x →L[ℝ] V x →L[ℝ] V x)
+    (C : ∀ x : M, V x →L[ℝ] TangentSpace I x →L[ℝ] V x)
     {ψ : ∀ x : M, V x} {g : M → ℝ} {x : M}
     (hψ : MDiffAt (T% ψ) x) (hg : MDiffAt g x) :
     connectionCorrectedDerivative I cov X C (g • ψ) x =
@@ -92,10 +131,11 @@ theorem connectionCorrectedDerivative_smul
   simp only [connectionCorrectedDerivative]
   rw [cov.isCovariantDerivativeOn.leibniz hψ hg]
   change (g x • cov ψ x (X x) + (d% g x (X x)) • ψ x) -
-      C x (X x) (g x • ψ x) =
-    g x • (cov ψ x (X x) - C x (X x) (ψ x)) +
+      C x (g x • ψ x) (X x) =
+    g x • (cov ψ x (X x) - C x (ψ x) (X x)) +
       (d% g x (X x)) • ψ x
   rw [ContinuousLinearMap.map_smul]
+  simp only [smul_apply]
   module
 
 

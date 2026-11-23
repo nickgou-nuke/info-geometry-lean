@@ -10,30 +10,19 @@ import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
 import InfoGeometry.Arithmetic.IdeleClassZetaSymmetry
 
 /-!
-# InfoGeometry.Arithmetic.WeilLiKreinGhostEquivalence
+# Centered reflection, Cayley coordinates, and finite matrix examples
 
-Formalizes the R2 indefinite Krein-space, Apollonian Cayley–Li unit-disk duality,
-and parabolic Jordan / Krein spectral obstruction witnesses around the critical line:
+This module proves elementary identities on `ℂ` and on `2 × 2` matrices. In
+particular, `weilPairMode` is only a two-point reflection pairing built from an
+arbitrary function `Φ`; it is **not** the classical Weil explicit-formula
+pairing, a Krein-space form, or a criterion for RH/GRH. Its unrestricted test
+functions make the pointwise positivity equivalence a property of this model.
 
-1. **Centered Horizon Reflection & Souriau `D_∞` Correspondence**:
-   `horizonReflect w := -star w` corresponds under `w ↦ 1 / 2 + w` to
-   `antiunitaryCriticalReflection`, fixes `w ↔ w.re = 0`, and acts as
-   `ZetaCenteredChart.criticalMirror` on centered coordinates `⟨w.re, w.im⟩`.
-2. **Paired Weil Sesquilinear Mode & Krein Ghost Dichotomy**:
-   `weilPairMode w Φ := 2 * (Φ w * star (Φ (horizonReflect w))).re` satisfies
-   `w.re = 0 ↔ ∀ Φ, 0 ≤ weilPairMode w Φ`: every critical-line point yields
-   `2 * Complex.normSq (Φ w) ≥ 0`, whereas every off-line point `w.re ≠ 0` admits
-   an explicit ghost test vector `Φ` with `weilPairMode w Φ = -2 < 0`.
-3. **Apollonian Cayley–Li Disk Mapping (`z = (w - 1/2) / (w + 1/2)`)**:
-   Proves `normSq (apollonianDiskMap w) = 1 ↔ w.re = 0` unconditionally,
-   `apollonianDiskMap (-w) = (apollonianDiskMap w)⁻¹`, and intertwines horizon
-   reflection with anti-holomorphic circle inversion
-   `apollonianDiskMap (horizonReflect w) = (star (apollonianDiskMap w))⁻¹`.
-4. **Parabolic Jordan Block, Split Krein Trace, & Oblique Projector Blowup**:
-   Concrete `2 × 2` matrix witnesses showing Jordan nilpotent defects
-   (`N ≠ 0`, `N^2 = 0`), Krein metric trace cancellation (`J^2 = 1`, `tr J = 0`),
-   and unbounded off-diagonal norm growth on exact rank-1 idempotents
-   `obliqueProjector c * obliqueProjector c = obliqueProjector c`.
+The Cayley map identities characterize the critical line by a unit-circle
+equation. The matrix declarations establish only the displayed finite
+identities; they do not connect Jordan blocks to zeta-zero multiplicity or
+prove a spectral blow-up limit. For the separate coalescing-eigenvalue
+construction, see `Canonical.KreinParabolicSpectralObstructions`.
 -/
 
 noncomputable section
@@ -94,12 +83,14 @@ theorem horizonReflect_eq_centered_criticalMirror (w : ℂ) :
       FourierParity.actOnCentered FourierParity.dual ⟨w.re, w.im⟩ := by
   simp [FourierParity.actOnCentered, ZetaCenteredChart.criticalMirror]
 
-/-- Paired Weil sesquilinear contribution `2 * Re (Φ(w) * conj (Φ(horizonReflect w)))`
-across a pair `(w, -star w)`. -/
+/-- Two-point reflection pairing `2 * Re (Φ(w) * conj (Φ(horizonReflect w)))`.
+Despite its historical name, this definition is not the global Weil explicit-formula
+pairing and carries no test-function topology or summation over zeta zeros. -/
 def weilPairMode (w : ℂ) (Φ : ℂ → ℂ) : ℝ :=
   2 * (Φ w * star (Φ (horizonReflect w))).re
 
-/-- On the horizon `w.re = 0`, the paired Weil form collapses to a positive norm square. -/
+/-- At a fixed point of the reflection (`w.re = 0`), this two-point pairing is a
+nonnegative norm square. -/
 theorem weilPairMode_eq_two_normSq_of_re_eq_zero {w : ℂ} (hw : w.re = 0) (Φ : ℂ → ℂ) :
     weilPairMode w Φ = 2 * Complex.normSq (Φ w) := by
   rw [weilPairMode, (horizonReflect_fixed_iff_re_eq_zero w).mpr hw]
@@ -107,14 +98,16 @@ theorem weilPairMode_eq_two_normSq_of_re_eq_zero {w : ℂ} (hw : w.re = 0) (Φ :
     simp [Complex.mul_conj]
   rw [hmul, Complex.ofReal_re]
 
-/-- Every critical-line point `w.re = 0` yields a nonnegative Weil pairing for all `Φ`. -/
+/-- Every fixed point of the reflection yields a nonnegative two-point pairing
+for every function `Φ`. -/
 theorem weilPairMode_nonneg_of_re_eq_zero {w : ℂ} (hw : w.re = 0) (Φ : ℂ → ℂ) :
     0 ≤ weilPairMode w Φ := by
   rw [weilPairMode_eq_two_normSq_of_re_eq_zero hw Φ]
   exact mul_nonneg (by norm_num) (Complex.normSq_nonneg _)
 
-/-- Every off-critical point `w.re ≠ 0` admits an explicit `(1,1)` Krein ghost test function `Φ`
-whose Weil pairing equals `-2 < 0`. -/
+/-- Every non-fixed point admits a function separating the two evaluation points
+whose two-point pairing equals `-2`. This is a property of the unrestricted
+function space, not a negative vector in a global Weil/Krein form. -/
 theorem exists_negative_weilPairMode_of_re_ne_zero {w : ℂ} (hw : w.re ≠ 0) :
     ∃ Φ : ℂ → ℂ, weilPairMode w Φ = -2 ∧ weilPairMode w Φ < 0 := by
   classical
@@ -126,8 +119,8 @@ theorem exists_negative_weilPairMode_of_re_ne_zero {w : ℂ} (hw : w.re ≠ 0) :
   · simp [weilPairMode, Φ, hne]
   · simp [weilPairMode, Φ, hne]
 
-/-- Kernel-checked ghost equivalence: `w.re = 0` holds iff every complex test function `Φ`
-has nonnegative Weil mode pairing at `w`. -/
+/-- In this two-point model, the reflection fixes `w` exactly when every
+unrestricted function has nonnegative pairing. -/
 theorem re_eq_zero_iff_forall_weilPairMode_nonneg (w : ℂ) :
     w.re = 0 ↔ ∀ Φ : ℂ → ℂ, 0 ≤ weilPairMode w Φ := by
   constructor
@@ -138,29 +131,59 @@ theorem re_eq_zero_iff_forall_weilPairMode_nonneg (w : ℂ) :
     obtain ⟨Φ, _, hneg⟩ := exists_negative_weilPairMode_of_re_ne_zero hw
     exact hneg.not_ge (h Φ)
 
-/-- Finite configuration Weil pairing summed over a `Finset ℂ`. -/
+/-- Finite sum of the two-point reflection pairings over a `Finset ℂ`. -/
 def weilConfigForm (S : Finset ℂ) (Φ : ℂ → ℂ) : ℝ :=
   ∑ w ∈ S, weilPairMode w Φ
 
-/-- If every point of a finite configuration `S` lies on `w.re = 0`, the summed Weil form is
-nonnegative for every `Φ`. -/
+/-- If every point in a finite set is fixed by reflection, the finite sum is
+nonnegative. This does not state a zero-sum explicit formula. -/
 theorem weilConfigForm_nonneg_of_all_re_eq_zero (S : Finset ℂ)
     (hS : ∀ w ∈ S, w.re = 0) (Φ : ℂ → ℂ) :
     0 ≤ weilConfigForm S Φ :=
   Finset.sum_nonneg fun w hw ↦ weilPairMode_nonneg_of_re_eq_zero (hS w hw) Φ
 
-/-- Apollonian Cayley–Li map sending the centered strip to the unit disk/circle:
-`z(w) = (w - 1 / 2) / (w + 1 / 2)`. -/
+/-- Cayley coordinate `z(w) = (w - 1 / 2) / (w + 1 / 2)`. Its unit-circle
+boundary is `w.re = 0`; the right half-plane maps inside the disk. -/
 def apollonianDiskMap (w : ℂ) : ℂ :=
   (w - 1 / 2) / (w + 1 / 2)
 
-/-- Exact Apollonian polarization identity measuring the distance from the unit circle. -/
+/-- Difference of the squared norms of the two affine factors in the Cayley map. -/
 theorem normSq_add_half_sub_normSq_sub_half (w : ℂ) :
     Complex.normSq (w + 1 / 2) - Complex.normSq (w - 1 / 2) = 2 * w.re := by
   simp only [Complex.normSq_apply, Complex.add_re, Complex.add_im, Complex.sub_re,
     Complex.sub_im, Complex.div_ofNat_re, Complex.div_ofNat_im, Complex.one_re,
     Complex.one_im]
   ring
+
+/-- The signed squared-radius defect is the real part of `w` divided by the
+squared denominator. -/
+theorem one_sub_normSq_apollonianDiskMap
+    (w : ℂ) (hden : w + 1 / 2 ≠ 0) :
+    1 - Complex.normSq (apollonianDiskMap w) =
+      2 * w.re / Complex.normSq (w + 1 / 2) := by
+  have hden_pos : 0 < Complex.normSq (w + 1 / 2) :=
+    Complex.normSq_pos.mpr hden
+  have hdiv : Complex.normSq (apollonianDiskMap w) =
+      Complex.normSq (w - 1 / 2) / Complex.normSq (w + 1 / 2) := by
+    simp [apollonianDiskMap]
+  rw [hdiv]
+  have hpolar := normSq_add_half_sub_normSq_sub_half w
+  rw [one_sub_div (ne_of_gt hden_pos), hpolar]
+
+/-- Away from the pole, the Cayley transform lies strictly inside the unit
+disk exactly when `w` lies in the right half-plane. -/
+theorem normSq_apollonianDiskMap_lt_one_iff_re_pos
+    (w : ℂ) (hden : w + 1 / 2 ≠ 0) :
+    Complex.normSq (apollonianDiskMap w) < 1 ↔ 0 < w.re := by
+  rw [← sub_pos, one_sub_normSq_apollonianDiskMap w hden]
+  constructor
+  · intro h
+    have hden_pos : 0 < Complex.normSq (w + 1 / 2) :=
+      Complex.normSq_pos.mpr hden
+    have := (div_pos_iff_of_pos_right hden_pos).mp h
+    linarith
+  · intro h
+    exact div_pos (by positivity) (Complex.normSq_pos.mpr hden)
 
 /-- Unconditional unit-circle characterization: `normSq (apollonianDiskMap w) = 1 ↔ w.re = 0`. -/
 theorem normSq_apollonianDiskMap_eq_one_iff_re_eq_zero (w : ℂ) :
@@ -201,8 +224,8 @@ theorem apollonianDiskMap_horizonReflect (w : ℂ) :
   rw [apollonianDiskMap, apollonianDiskMap, horizonReflect, hst1, hst2, neg_div_neg_eq,
     star_div₀, inv_div]
 
-/-- Unit-circle points `normSq z = 1` have nonnegative Li moments `(1 - z ^ n).re ≥ 0`
-for every `n : ℕ`. -/
+/-- If `z` is on the unit circle, then `(1 - z^n).re ≥ 0` for every natural
+number `n`. This elementary inequality alone is not Li's criterion for RH. -/
 theorem re_one_sub_pow_nonneg_of_normSq_eq_one {z : ℂ} (hz : Complex.normSq z = 1) (n : ℕ) :
     0 ≤ (1 - z ^ n).re := by
   have hnorm : ‖z‖ = 1 := by
@@ -216,9 +239,10 @@ theorem re_one_sub_pow_nonneg_of_normSq_eq_one {z : ℂ} (hz : Complex.normSq z 
   simp only [Complex.sub_re, Complex.one_re, sub_nonneg]
   exact hre
 
-/-- Every point off the critical line (`w.re ≠ 0`) with `w ≠ ± 1/2` violates the unit-circle
-bound strictly in either `apollonianDiskMap w` or its inverse `apollonianDiskMap (-w)`,
-making the modulus blow up to `> 1` on one side and forcing exponential Li negativity on the real axis. -/
+/-- For a non-fixed point away from the two zeros/pole of the Cayley numerator
+and denominator, either this coordinate or its reflected coordinate has squared
+norm greater than one. No Li-coefficient or exponential-negativity conclusion
+is asserted. -/
 theorem apollonianDiskMap_unit_dichotomy_of_re_ne_zero {w : ℂ}
     (hwre : w.re ≠ 0) (hm : w - 1 / 2 ≠ 0) (hp : w + 1 / 2 ≠ 0) :
     1 < Complex.normSq (apollonianDiskMap w) ∨
@@ -234,11 +258,12 @@ theorem apollonianDiskMap_unit_dichotomy_of_re_ne_zero {w : ℂ}
     exact (one_lt_inv₀ hpos).mpr hlt
   · exact Or.inl hgt
 
-/-- `2 × 2` parabolic Jordan block representing a double zero `ρ` (`ζ'(ρ) = 0`). -/
+/-- Generic `2 × 2` Jordan block with eigenvalue `ρ`. Its algebraic form alone
+does not identify `ρ` with a zero of any analytic function. -/
 def parabolicJordanBlock (ρ : ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   ![![ρ, 1], ![0, ρ]]
 
-/-- Nonzero nilpotent Jordan defect `N` with `N ^ 2 = 0`. -/
+/-- The nonzero nilpotent part of the generic Jordan block. -/
 def jordanNilpotentDefect : Matrix (Fin 2) (Fin 2) ℂ :=
   ![![0, 1], ![0, 0]]
 
@@ -259,8 +284,8 @@ theorem jordanNilpotentDefect_sq_eq_zero :
   rw [Matrix.mul_apply, Fin.sum_univ_two]
   fin_cases i <;> fin_cases j <;> simp [jordanNilpotentDefect]
 
-/-- Indefinite split `(1, -1)` Krein signature metric witnessing nuclear-norm vs trace
-cancellation (`J^2 = 1`, `tr J = 0`). -/
+/-- Diagonal signature matrix `diag(1,-1)`. The following theorem records its
+involution and trace; it does not assert a nuclear-norm identity. -/
 def splitKreinMetric : Matrix (Fin 2) (Fin 2) ℝ :=
   ![![1, 0], ![0, -1]]
 
@@ -276,8 +301,8 @@ theorem splitKreinMetric_trace_eq_zero :
   rw [Fin.sum_univ_two]
   simp [splitKreinMetric]
 
-/-- Rank-1 oblique spectral projector modeling two coalescing eigenvalues at separation
-parameter `c = -cot θ`, remaining idempotent (`Ω² = Ω`) while off-diagonal energy `c^2` blows up. -/
+/-- Rank-one idempotent matrix `[[1,c],[0,0]]`. The parameter `c` is free;
+this definition does not tie it to an angle or to coalescing eigenvalues. -/
 def obliqueProjector (c : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   ![![1, c], ![0, 0]]
 
@@ -291,8 +316,7 @@ theorem obliqueProjector_offDiag_sq (c : ℝ) :
     (obliqueProjector c 0 1) ^ 2 = c ^ 2 := by
   simp [obliqueProjector]
 
-/-- Non-commutativity (`T16`) witness for the nilpotent Jordan defect and its adjoint/transpose:
-`N * Nᵀ ≠ Nᵀ * N`. -/
+/-- The nilpotent matrix does not commute with its transpose. -/
 theorem jordanNilpotentDefect_noncomm_with_transpose :
     jordanNilpotentDefect * Matrix.transpose jordanNilpotentDefect ≠
       Matrix.transpose jordanNilpotentDefect * jordanNilpotentDefect := by
@@ -302,8 +326,8 @@ theorem jordanNilpotentDefect_noncomm_with_transpose :
   simp_rw [Matrix.transpose_apply] at h00
   simp [jordanNilpotentDefect] at h00
 
-/-- Non-commutativity (`T16`) witness for the split Krein metric against any non-orthogonal
-rank-1 oblique projector (`c ≠ 0`): `J * Ω_c ≠ Ω_c * J`. -/
+/-- The diagonal signature matrix does not commute with this idempotent when
+its off-diagonal parameter is nonzero. -/
 theorem splitKreinMetric_obliqueProjector_noncomm {c : ℝ} (hc : c ≠ 0) :
     splitKreinMetric * obliqueProjector c ≠ obliqueProjector c * splitKreinMetric := by
   intro h
@@ -312,13 +336,13 @@ theorem splitKreinMetric_obliqueProjector_noncomm {c : ℝ} (hc : c ≠ 0) :
   simp [splitKreinMetric, obliqueProjector] at h01
   exact hc (by linarith)
 
-/-- Closed `T16` non-commutativity witness on `Matrix (Fin 2) (Fin 2) ℂ`. -/
+/-- Closed noncommutativity witness on `Matrix (Fin 2) (Fin 2) ℂ`. -/
 theorem exists_complexMatrix_noncomm_pair :
     ∃ A B : Matrix (Fin 2) (Fin 2) ℂ, A * B ≠ B * A :=
   ⟨jordanNilpotentDefect, Matrix.transpose jordanNilpotentDefect,
     jordanNilpotentDefect_noncomm_with_transpose⟩
 
-/-- Closed `T16` non-commutativity witness on `Matrix (Fin 2) (Fin 2) ℝ`. -/
+/-- Closed noncommutativity witness on `Matrix (Fin 2) (Fin 2) ℝ`. -/
 theorem exists_realMatrix_noncomm_pair :
     ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A :=
   ⟨splitKreinMetric, obliqueProjector 1, splitKreinMetric_obliqueProjector_noncomm one_ne_zero⟩

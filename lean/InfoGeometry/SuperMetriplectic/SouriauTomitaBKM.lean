@@ -8,6 +8,7 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauTomitaModularFlowBridge
 import InfoGeometry.Canonical.RelativeModularBerezinianBridge
 import InfoGeometry.Canonical.NoncommutativeGibbsBKMHessianBridge
+import InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap
 
 /-!
 # Souriau/Tomita/BKM Dictionary
@@ -289,6 +290,33 @@ theorem massieuBilinForm_nonneg (v : V) :
   exact M.massieuHessian_nonneg v
 
 end FiniteGibbsBKMHessianModel
+
+/-- A finite Gibbs/BKM Hessian cannot agree on every direction of the full
+canonical doubled-space modular-swap Hessian when the underlying real Hilbert
+space is nontrivial. The Gibbs Hessian is nonnegative on every parameter
+direction, whereas the doubled quadratic moment has a strictly negative first
+sheet direction. Thus any genuine BKM identification must specify a positive
+sector or another restricted tangent carrier. -/
+theorem finiteGibbsBKMHessian_not_full_doubled_modularSwapHessian
+    {n : ℕ} {E : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
+    [CompleteSpace E] [Nontrivial E]
+    (M : FiniteGibbsBKMHessianModel n (InfoGeometry.Krein.DoubledSpace E)) :
+    ¬ ∀ z u : InfoGeometry.Krein.DoubledSpace E,
+      M.massieuHessian u u =
+        (fderiv ℝ (fderiv ℝ
+          (InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap.quadraticMoment
+            (InfoGeometry.Krein.modular_j (E := E)))) z) u u := by
+  obtain ⟨x, hx⟩ := exists_ne (0 : E)
+  let u : InfoGeometry.Krein.DoubledSpace E :=
+    WithLp.toLp (2 : ENNReal) (x, 0)
+  intro h
+  have hnonneg := M.massieuHessian_nonneg u
+  have heq := h (0 : InfoGeometry.Krein.DoubledSpace E) u
+  rw [InfoGeometry.Canonical.SouriauDoubledQuadraticMomentMap.hessian_quadraticMoment_modularSwap_firstSheet]
+    at heq
+  have hstrict : 0 < ‖x‖ ^ 2 := sq_pos_of_ne_zero (norm_ne_zero_iff.mpr hx)
+  rw [heq] at hnonneg
+  linarith
 
 /--
 Souriau geometric-temperature to Tomita modular-Hamiltonian dictionary.

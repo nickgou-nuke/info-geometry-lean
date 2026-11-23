@@ -12,5 +12,5 @@ def test_grand_synthesis_geometry_exposes_unit_relative_volume_bit_routes() -> N
     assert "theorem vacuumEinsteinEquation_of_rnEntropySource_of_unitRelativeVolumeBit" in text
     assert "theorem gravity_generated_by_rnEntropy_of_unitRelativeVolumeBit" in text
     assert "(bit : UnitRelativeVolumeBit n M)" in text
-    assert "bit.unit_relative_volume" in text
-    assert "unitRelativeVolumeBit_of_eq_one hUnit" in text
+    assert "unitRelativeVolumeState_of_rnEntropySource_of_unitRelativeVolumeBit" in text
+    assert "theorem isRicciFlat_of_rnEntropySource_of_unitRelativeVolumeBit" in text

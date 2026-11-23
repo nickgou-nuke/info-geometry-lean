@@ -8,6 +8,7 @@ import InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset
 import InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityAporiaPoset
 import InfoGeometry.Epistemology.JungianEpistemicCompiler
 import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Analysis.Normed.Algebra.MatrixExponential
 
 /-!
 # Solve et Coagula Cross-Poset Alignment, Operator Identity Suite, and Kůrka Parabolic Dynamics
@@ -67,6 +68,14 @@ theorem matrixE01_mul_E10_ne_mul_E10_E01 :
   norm_num [matrixE01, matrixE10, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 end NoncommWitness
+
+/-- Concrete OpenGauss Trap T16/T17 non-commutativity witness over `ℂ`. -/
+theorem matrixE01_mul_E10_ne_mul_E10_E01_complex :
+    matrixE01 (K := ℂ) * matrixE10 (K := ℂ) ≠
+      matrixE10 (K := ℂ) * matrixE01 (K := ℂ) := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 0) h
+  norm_num [matrixE01, matrixE10, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 /-! ## Section 1: Explicit 16-Node Bijections -/
 
@@ -234,6 +243,60 @@ theorem solveEtCoagulaReach_iff_aporiaTransGen (a b : SolveEtCoagulaNode) :
     have h' := h.lift solveEtCoagulaToAporiaEquiv
       (fun x y hxy => (solveEtCoagulaEdge_iff_aporiaCover x y).mpr hxy)
     simpa only [Function.onFun] using h'
+
+/-- Strict relational isomorphism between `solveEtCoagulaReach` and
+`Relation.TransGen CoagulaCovers` (Contract 1). -/
+def solveEtCoagulaReach_relIso_coagulaTransGen :
+    RelIso solveEtCoagulaReach (Relation.TransGen CoagulaCovers) where
+  toEquiv := solveEtCoagulaToCoagulaEquiv
+  map_rel_iff' {a b} := solveEtCoagulaReach_iff_coagulaTransGen a b
+
+/-- Local `PartialOrder` wrapper on `SolveEtCoagulaNode` induced by
+`Relation.ReflTransGen solveEtCoagulaEdge`, avoiding a global instance on
+`SolveEtCoagulaNode` itself. -/
+@[ext]
+structure SolveEtCoagulaPosetNode where
+  node : SolveEtCoagulaNode
+  deriving DecidableEq
+
+instance : PartialOrder SolveEtCoagulaPosetNode where
+  le a b := Relation.ReflTransGen solveEtCoagulaEdge a.node b.node
+  le_refl _ := Relation.ReflTransGen.refl
+  le_trans _ _ _ h1 h2 := Relation.ReflTransGen.trans h1 h2
+  le_antisymm a b hab hba := by
+    rcases Relation.reflTransGen_iff_eq_or_transGen.mp hab with heq | h1
+    · exact SolveEtCoagulaPosetNode.ext heq.symm
+    · rcases Relation.reflTransGen_iff_eq_or_transGen.mp hba with heq | h2
+      · exact SolveEtCoagulaPosetNode.ext heq
+      · exact False.elim
+          (solveEtCoagula_poset_strict_order_and_branching.2.2.1 _ _ h1 h2)
+
+theorem solveEtCoagulaLe_iff_aporiaLe (a b : SolveEtCoagulaNode) :
+    Relation.ReflTransGen AporiaCover
+        (solveEtCoagulaToAporiaEquiv a) (solveEtCoagulaToAporiaEquiv b) ↔
+      Relation.ReflTransGen solveEtCoagulaEdge a b := by
+  constructor
+  · intro h
+    have h' := h.lift solveEtCoagulaToAporiaEquiv.symm
+      (fun x y hxy => (solveEtCoagulaEdge_iff_aporiaCover _ _).mp
+        (by simpa only [Equiv.apply_symm_apply] using hxy))
+    simpa only [Function.onFun, Equiv.symm_apply_apply] using h'
+  · intro h
+    have h' := h.lift solveEtCoagulaToAporiaEquiv
+      (fun x y hxy => (solveEtCoagulaEdge_iff_aporiaCover x y).mpr hxy)
+    simpa only [Function.onFun] using h'
+
+/-- Order isomorphism (`≃o`) between `SolveEtCoagulaPosetNode` and
+`AporiaCoagulaNode` (Contract 2). -/
+def solveEtCoagulaNode_orderIso_aporiaCoagulaNode :
+    SolveEtCoagulaPosetNode ≃o AporiaCoagulaNode where
+  toEquiv :=
+    { toFun := fun a => solveEtCoagulaToAporiaEquiv a.node
+      invFun := fun b => ⟨solveEtCoagulaToAporiaEquiv.symm b⟩
+      left_inv := fun a =>
+        congrArg SolveEtCoagulaPosetNode.mk (solveEtCoagulaToAporiaEquiv.left_inv a.node)
+      right_inv := fun b => solveEtCoagulaToAporiaEquiv.right_inv b }
+  map_rel_iff' {a b} := solveEtCoagulaLe_iff_aporiaLe a.node b.node
 
 /-! ## Section 3: Fourteen-Operator Alignment Suite -/
 
@@ -412,6 +475,56 @@ theorem kurkaParabolicMap_second_deriv (a c : ℝ) (ha : a ≠ 0) :
   rw [hvalue] at hquot
   exact hquot.congr_of_eventuallyEq hderiv_eventually
 
+/-- Direct equivalence between `kurkaParabolicMap` and `KleinEvanston1893`'s `kurkaMoebius` over `ℝ`. -/
+theorem kurkaParabolicMap_eq_kurkaMoebius (a c x : ℝ) :
+    kurkaParabolicMap a c x = kurkaMoebius (a + c) (-c ^ 2) 1 (a - c) x := by
+  dsimp [kurkaParabolicMap, kurkaMoebius]
+  rw [one_mul, ← sub_eq_add_neg]
+
+/-- Exact first-derivative formula for `kurkaParabolicMap` away from the pole `x = c - a`. -/
+theorem kurkaParabolicMap_hasDerivAt_formula (a c x : ℝ) (hx : x + (a - c) ≠ 0) :
+    HasDerivAt (kurkaParabolicMap a c) (a ^ 2 / (x + (a - c)) ^ 2) x := by
+  have hP : HasDerivAt (fun y : ℝ => (a + c) * y - c ^ 2) (a + c) x := by
+    simpa only [id_eq, one_mul, mul_one] using ((hasDerivAt_id x).const_mul (a + c)).sub_const (c ^ 2)
+  have hQ : HasDerivAt (fun y : ℝ => y + (a - c)) 1 x := by
+    simpa only [id_eq] using (hasDerivAt_id x).add_const (a - c)
+  have hdiv := hP.div hQ hx
+  have hnum : (a + c) * (x + (a - c)) - ((a + c) * x - c ^ 2) * 1 = a ^ 2 := by ring
+  rw [hnum] at hdiv
+  exact hdiv
+
+/-- Bundled Contract 4 theorem: for `d = 1` and `a ≠ 0`, Kůrka's parabolic map agrees with
+the `PGL₂` matrix `kurkaParabolicMat a c` and `kurkaMoebius`, has trace `2 * a`, determinant `a ^ 2 ≠ 0`,
+non-zero nilpotent shift `(A - a • 1) ^ 2 = 0`, fixed point `c`, first derivative `1` at `c`,
+and second derivative `-2 / a` at `c`. -/
+theorem kurkaParabolicMobius_d1_matrix_and_deriv (a c : ℝ) (ha : a ≠ 0) :
+    (∀ x : ℝ, a + (x - c) ≠ 0 →
+      kurkaParabolicMap a c x = x - (x - c) ^ 2 / (a + (x - c))) ∧
+    (∀ x : ℝ, x + (a - c) ≠ 0 →
+      kurkaParabolicMap a c x =
+        ((kurkaParabolicMat a c) 0 0 * x + (kurkaParabolicMat a c) 0 1) /
+          ((kurkaParabolicMat a c) 1 0 * x + (kurkaParabolicMat a c) 1 1)) ∧
+    (∀ x : ℝ, kurkaParabolicMap a c x = kurkaMoebius (a + c) (-c ^ 2) 1 (a - c) x) ∧
+    Matrix.trace (kurkaParabolicMat a c) = 2 * a ∧
+    Matrix.det (kurkaParabolicMat a c) = a ^ 2 ∧
+    Matrix.det (kurkaParabolicMat a c) ≠ 0 ∧
+    (kurkaParabolicMat a c - a • (1 : Matrix (Fin 2) (Fin 2) ℝ)) ^ 2 = 0 ∧
+    kurkaParabolicMat a c - a • (1 : Matrix (Fin 2) (Fin 2) ℝ) ≠ 0 ∧
+    kurkaParabolicMap a c c = c ∧
+    HasDerivAt (kurkaParabolicMap a c) 1 c ∧
+    HasDerivAt (fun x => deriv (kurkaParabolicMap a c) x) (-2 / a) c :=
+  ⟨fun x hx => kurkaParabolicMap_eq_sub_square a c x hx,
+   fun x hx => kurkaParabolicMap_eq_matrixAction a c x hx,
+   fun x => kurkaParabolicMap_eq_kurkaMoebius a c x,
+   kurkaParabolicMat_trace a c,
+   kurkaParabolicMat_det a c,
+   kurkaParabolicMat_det_ne_zero a c ha,
+   kurkaParabolicMat_sub_scalar_sq a c,
+   kurkaParabolicMat_sub_scalar_ne_zero a c,
+   kurkaParabolicMap_fixed_point a c ha,
+   kurkaParabolicMap_hasDerivAt a c ha,
+   kurkaParabolicMap_second_deriv a c ha⟩
+
 /-! ## Section 5: Rigorous Bug Refutation & Countermodels -/
 
 def kurkaGeneralRationalMap (a c d x : ℚ) : ℚ :=
@@ -434,6 +547,41 @@ theorem bugSourceA_deriv_refutation :
     (4 : ℚ) / 9 ≠ 2 / 9 := by
   norm_num
 
+/-- Claimed derivative formula from Source A line 229 (algebraically false in general and at `d = 1`). -/
+def sourceAClaimedDeriv {K : Type*} [Field K] (a c d x : K) : K :=
+  a * (a - (2 - d) * (x - c)) / (a + d * (x - c)) ^ 2
+
+/-- Bundled Contract 5 countermodel refuting both Turn 41's claimed matrix (`(2,0,3,2)` and
+`(2,0,1,0)`) and Source A line 229's claimed derivative formula at `(2,0,1,1)` via actual
+`HasDerivAt` / `deriv`. -/
+theorem kurkaParabolic_d_ne_one_not_mobius_countermodel :
+    (kurkaGeneralRationalMap 2 0 3 2 = 3 / 2 ∧
+      mobiusAction (bugTurn41Mat 2 3) 2 = 3 / 4 ∧
+      kurkaGeneralRationalMap 2 0 3 2 ≠ mobiusAction (bugTurn41Mat 2 3) 2) ∧
+    (kurkaGeneralRationalMap 2 0 1 0 = 0 ∧
+      mobiusAction (bugTurn41Mat 2 1) 0 = 1 ∧
+      kurkaGeneralRationalMap 2 0 1 0 ≠ mobiusAction (bugTurn41Mat 2 1) 0) ∧
+    (HasDerivAt (kurkaParabolicMap (2 : ℝ) 0) (4 / 9 : ℝ) 1 ∧
+      deriv (kurkaParabolicMap (2 : ℝ) 0) 1 = 4 / 9 ∧
+      sourceAClaimedDeriv (2 : ℝ) 0 1 1 = 2 / 9 ∧
+      deriv (kurkaParabolicMap (2 : ℝ) 0) 1 ≠ sourceAClaimedDeriv (2 : ℝ) 0 1 1 ∧
+      (4 : ℚ) / 9 ≠ 2 / 9) := by
+  have hd : HasDerivAt (kurkaParabolicMap (2 : ℝ) 0) (4 / 9 : ℝ) 1 := by
+    have h := kurkaParabolicMap_hasDerivAt_formula 2 0 1 (by norm_num)
+    norm_num at h
+    exact h
+  have hderiv : deriv (kurkaParabolicMap (2 : ℝ) 0) 1 = 4 / 9 := hd.deriv
+  have hclaim : sourceAClaimedDeriv (2 : ℝ) 0 1 1 = 2 / 9 := by
+    dsimp [sourceAClaimedDeriv]
+    norm_num
+  refine ⟨⟨by dsimp [kurkaGeneralRationalMap]; norm_num,
+      by dsimp [mobiusAction, bugTurn41Mat]; norm_num,
+      bugTurn41_refutation⟩,
+    ⟨by dsimp [kurkaGeneralRationalMap]; norm_num,
+      by dsimp [mobiusAction, bugTurn41Mat]; norm_num,
+      by dsimp [kurkaGeneralRationalMap, mobiusAction, bugTurn41Mat]; norm_num⟩,
+    ⟨hd, hderiv, hclaim, by rw [hderiv, hclaim]; norm_num, bugSourceA_deriv_refutation⟩⟩
+
 /-! ## Section 6: Jordan EP2 Non-Diagonalizability -/
 
 /-- Standard 2×2 Jordan block at eigenvalue `μ`. -/
@@ -441,7 +589,7 @@ def jordanBlock2 {K : Type*} [Field K] (μ : K) : Matrix (Fin 2) (Fin 2) K :=
   !![μ, 1; 0, μ]
 
 /-- Over any field `K`, the 2×2 Jordan block cannot be diagonalized. -/
-theorem jordanBlock2_not_diagonalizable {K : Type*} [Field K] (μ : K) :
+theorem jordanBlock2_not_diagonalizable_general {K : Type*} [Field K] (μ : K) :
     ∀ (P R : Matrix (Fin 2) (Fin 2) K) (d : Fin 2 → K),
     P * R = 1 → P * jordanBlock2 μ * R ≠ Matrix.diagonal d := by
   intro P R d hPR hdiag
@@ -463,7 +611,8 @@ theorem jordanBlock2_not_diagonalizable {K : Type*} [Field K] (μ : K) :
     dsimp [N, D_sub]
     calc P * (jordanBlock2 μ - μ • 1) * R
       _ = (P * jordanBlock2 μ - P * (μ • 1)) * R := by rw [Matrix.mul_sub]
-      _ = (P * jordanBlock2 μ - μ • P) * R := by simp
+      _ = (P * jordanBlock2 μ - μ • P) * R := by
+        rw [Matrix.mul_smul, Matrix.mul_one]
       _ = P * jordanBlock2 μ * R - (μ • P) * R := by rw [Matrix.sub_mul]
       _ = Matrix.diagonal d - μ • (P * R) := by rw [hdiag, Matrix.smul_mul]
       _ = Matrix.diagonal d - μ • 1 := by rw [hPR]
@@ -471,16 +620,16 @@ theorem jordanBlock2_not_diagonalizable {K : Type*} [Field K] (μ : K) :
     calc D_sub^2 = (P * N * R) * (P * N * R) := by rw [← hsim, sq]
       _ = P * N * (R * P) * N * R := by noncomm_ring
       _ = P * N * 1 * N * R := by rw [hPR_inv]
-      _ = P * (N^2) * R := by simp [Matrix.mul_assoc, sq]
+      _ = P * (N^2) * R := by simp only [Matrix.mul_one, Matrix.mul_assoc, sq]
       _ = P * 0 * R := by rw [hN_nil]
-      _ = 0 := by simp
+      _ = 0 := by rw [Matrix.mul_zero, Matrix.zero_mul]
   have hDdiag : D_sub = Matrix.diagonal (fun i => d i - μ) := by
     ext i j
     fin_cases i <;> fin_cases j <;>
       simp [D_sub, Matrix.diagonal, Matrix.smul_apply]
   have hDsqDiag : Matrix.diagonal (fun i => (d i - μ)^2) = 0 := by
     rw [hDdiag, pow_two, Matrix.diagonal_mul_diagonal] at hD_nil
-    simpa [hDdiag, pow_two] using hD_nil
+    simpa only [pow_two] using hD_nil
   have hD_zero : D_sub = 0 := by
     rw [hDdiag]
     ext i j
@@ -488,18 +637,133 @@ theorem jordanBlock2_not_diagonalizable {K : Type*} [Field K] (μ : K) :
     · subst j
       have hentry : (d i - μ)^2 = 0 := by
         have := congrArg (fun M : Matrix (Fin 2) (Fin 2) K => M i i) hDsqDiag
-        simpa using this
+        simpa only [Matrix.diagonal_apply_eq, Matrix.zero_apply] using this
       have hentry' : d i - μ = 0 := sq_eq_zero_iff.mp hentry
-      simp [Matrix.diagonal, hentry']
-    · simp [Matrix.diagonal, hij]
+      simp only [Matrix.diagonal_apply_eq, Matrix.zero_apply, hentry']
+    · simp only [Matrix.diagonal_apply_ne _ hij, Matrix.zero_apply]
   have hN_is_zero : N = 0 := by
-    calc N = 1 * N * 1 := by simp
+    calc N = 1 * N * 1 := by rw [Matrix.one_mul, Matrix.mul_one]
       _ = (R * P) * N * (R * P) := by rw [hPR_inv]
-      _ = R * (P * N * R) * P := by simp [Matrix.mul_assoc]
+      _ = R * (P * N * R) * P := by simp only [Matrix.mul_assoc]
       _ = R * D_sub * P := by rw [hsim]
       _ = R * 0 * P := by rw [hD_zero]
-      _ = 0 := by simp
+      _ = 0 := by rw [Matrix.mul_zero, Matrix.zero_mul]
   exact hN_ne hN_is_zero
+
+/-- Backward-compatible alias for `jordanBlock2_not_diagonalizable_general`. -/
+theorem jordanBlock2_not_diagonalizable {K : Type*} [Field K] (μ : K) :
+    ∀ (P R : Matrix (Fin 2) (Fin 2) K) (d : Fin 2 → K),
+    P * R = 1 → P * jordanBlock2 μ * R ≠ Matrix.diagonal d :=
+  jordanBlock2_not_diagonalizable_general μ
+
+/-- Indefinite Krein null-cone metric `η = !![0, 1; 1, 0]` for the 2×2 Jordan exceptional point (`EP2`). -/
+def kreinNullEta {K : Type*} [Zero K] [One K] : Matrix (Fin 2) (Fin 2) K :=
+  !![0, 1; 1, 0]
+
+/-- Krein `EP2` pseudo-Hermiticity and null-eigenvector witness for `jordanBlock2 μ` under `kreinNullEta`. -/
+theorem kreinNullEta_jordanBlock2_pseudoHermitian {K : Type*} [Field K] (μ : K) :
+    Matrix.transpose (kreinNullEta (K := K)) = kreinNullEta ∧
+    kreinNullEta (K := K) * kreinNullEta = 1 ∧
+    kreinNullEta * jordanBlock2 μ = Matrix.transpose (jordanBlock2 μ) * kreinNullEta ∧
+    Matrix.mulVec (jordanBlock2 μ) ![1, 0] = ![μ, 0] ∧
+    dotProduct ![1, 0] (Matrix.mulVec kreinNullEta ![1, 0]) = 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · ext i j
+    fin_cases i <;> fin_cases j <;> rfl
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [kreinNullEta, Matrix.mul_apply, Fin.sum_univ_two]
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [kreinNullEta, jordanBlock2, Matrix.mul_apply, Matrix.transpose_apply, Fin.sum_univ_two]
+  · ext i
+    fin_cases i <;>
+      simp [jordanBlock2, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+  · simp [kreinNullEta, Matrix.mulVec, dotProduct, Fin.sum_univ_two]
+
+/-- OpenGauss Trap T16 non-commutativity witness between `jordanBlock2 μ` and `kreinNullEta`. -/
+theorem jordanBlock2_mul_kreinNullEta_ne {K : Type*} [Field K] (μ : K) :
+    jordanBlock2 μ * kreinNullEta ≠ kreinNullEta * jordanBlock2 μ := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) K => M 0 0) h
+  norm_num [jordanBlock2, kreinNullEta, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
+/-- Concrete OpenGauss Trap T17/T16 witness over `ℚ` for `jordanBlock2` and `kreinNullEta`. -/
+theorem jordanBlock2_mul_kreinNullEta_ne_rat :
+    jordanBlock2 (1 : ℚ) * kreinNullEta ≠ kreinNullEta * jordanBlock2 (1 : ℚ) := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℚ => M 0 0) h
+  norm_num [jordanBlock2, kreinNullEta, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
+/-! ## Section 6b: Jordan EP2 Secular Drift via Matrix Exponential -/
+
+private lemma scaled_matrixE01_pow_add_two (τ : ℂ) (n : ℕ) :
+    (τ • matrixE01 (K := ℂ)) ^ (n + 2) = 0 := by
+  induction n with
+  | zero =>
+      rw [zero_add, pow_two]
+      ext i j
+      fin_cases i <;> fin_cases j <;>
+        simp [Matrix.mul_apply, Fin.sum_univ_two, matrixE01]
+  | succ n ih =>
+      rw [Nat.succ_add, pow_succ, ih, zero_mul]
+
+private lemma exp_smul_matrixE01_complex (τ : ℂ) :
+    NormedSpace.exp (τ • matrixE01 (K := ℂ)) =
+      (1 : Matrix (Fin 2) (Fin 2) ℂ) + τ • matrixE01 (K := ℂ) := by
+  rw [NormedSpace.exp_eq_tsum_rat]
+  change (∑' n : ℕ, (n.factorial : ℚ)⁻¹ • (τ • matrixE01 (K := ℂ)) ^ n) =
+    (1 : Matrix (Fin 2) (Fin 2) ℂ) + τ • matrixE01 (K := ℂ)
+  rw [tsum_eq_sum (s := {0, 1})]
+  · rw [Finset.sum_pair (by decide : (0 : ℕ) ≠ 1)]
+    simp only [Nat.factorial_zero, Nat.cast_one, inv_one, pow_zero, one_smul,
+      Nat.factorial_one, pow_one]
+  · intro n hn
+    have hn0 : n ≠ 0 := fun h => hn (by simp only [h, Finset.mem_insert, Finset.mem_singleton, true_or])
+    have hn1 : n ≠ 1 := fun h => hn (by simp only [h, Finset.mem_insert, Finset.mem_singleton, or_true])
+    have htwo : 2 ≤ n := by omega
+    obtain ⟨k, rfl⟩ := Nat.exists_eq_add_of_le htwo
+    have hpow : (τ • matrixE01 (K := ℂ)) ^ (2 + k) = 0 := by
+      rw [Nat.add_comm]
+      exact scaled_matrixE01_pow_add_two τ k
+    rw [hpow, smul_zero]
+
+private lemma exp_smul_one_complex (z : ℂ) :
+    NormedSpace.exp (z • (1 : Matrix (Fin 2) (Fin 2) ℂ)) =
+      Complex.exp z • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  have hdiag : z • (1 : Matrix (Fin 2) (Fin 2) ℂ) = Matrix.diagonal (fun _ : Fin 2 => z) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [Matrix.diagonal]
+  rw [hdiag, Matrix.exp_diagonal]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.diagonal, ← Complex.exp_eq_exp_ℂ]
+
+/-- Contract 7: Exact secular-drift exponential of the 2×2 Jordan block over `ℂ`. -/
+theorem normedSpaceExp_jordanBlock2_secular_drift :
+    ∀ ω₀ t : ℂ,
+      NormedSpace.exp ((-Complex.I * t) • jordanBlock2 ω₀) =
+        Complex.exp (-Complex.I * ω₀ * t) • !![1, -Complex.I * t; 0, 1] := by
+  intro ω₀ t
+  have hsplit :
+      (-Complex.I * t) • jordanBlock2 ω₀ =
+        (-Complex.I * ω₀ * t) • (1 : Matrix (Fin 2) (Fin 2) ℂ) +
+          (-Complex.I * t) • matrixE01 (K := ℂ) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [jordanBlock2, matrixE01] <;> ring
+  have hcomm :
+      Commute ((-Complex.I * ω₀ * t) • (1 : Matrix (Fin 2) (Fin 2) ℂ))
+        ((-Complex.I * t) • matrixE01 (K := ℂ)) := by
+    rw [Commute]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [Matrix.mul_apply, Matrix.one_apply, matrixE01, mul_comm]
+  rw [hsplit, Matrix.exp_add_of_commute _ _ hcomm,
+    exp_smul_one_complex, exp_smul_matrixE01_complex]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Matrix.one_apply, matrixE01]
 
 /-! ## Section 7: Jungian Epistemic Archetype Monotone Injection -/
 

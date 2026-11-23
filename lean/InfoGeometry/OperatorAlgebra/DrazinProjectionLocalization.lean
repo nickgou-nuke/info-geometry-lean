@@ -57,15 +57,63 @@ namespace DrazinInverseData
 variable {A : Type*} [Ring A]
 variable (D : DrazinInverseData A)
 
-/-- Re-export of the Drazin commutation law. -/
-theorem element_mul_inverse_eq_inverse_mul_element :
-    D.element * D.drazinInverse = D.drazinInverse * D.element :=
-  D.commutes
+/-- The support `a * a†` supplied by Drazin inverse data is idempotent.
+The proof keeps the product order and uses only the noncommutative reflexive
+inverse law. -/
+theorem support_idempotent : D.support * D.support = D.support := by
+  calc
+    D.support * D.support =
+        (D.element * D.drazinInverse) * (D.element * D.drazinInverse) := by
+          rw [← D.element_mul_inverse_eq_support]
+    _ = D.element *
+            (D.drazinInverse * D.element * D.drazinInverse) := by
+              simp only [mul_assoc]
+    _ = D.element * D.drazinInverse := by
+          rw [D.inverse_element_inverse]
+    _ = D.support := D.element_mul_inverse_eq_support
 
-/-- Re-export of the reflexive Drazin law. -/
+/-- The Drazin support commutes with its represented element. -/
+theorem support_commutes_element :
+    D.support * D.element = D.element * D.support := by
+  calc
+    D.support * D.element =
+        (D.element * D.drazinInverse) * D.element := by
+          rw [D.element_mul_inverse_eq_support]
+    _ = D.element * (D.drazinInverse * D.element) := by
+          simp only [mul_assoc]
+    _ = D.element * (D.element * D.drazinInverse) := by
+          rw [← D.commutes]
+    _ = D.element * D.support := by
+          rw [← D.element_mul_inverse_eq_support]
+
+/-- The Drazin support commutes with its represented inverse. -/
+theorem support_commutes_inverse :
+    D.support * D.drazinInverse = D.drazinInverse * D.support := by
+  calc
+    D.support * D.drazinInverse =
+        (D.element * D.drazinInverse) * D.drazinInverse := by
+          rw [D.element_mul_inverse_eq_support]
+    _ = (D.drazinInverse * D.element) * D.drazinInverse := by
+          rw [D.commutes]
+    _ = D.drazinInverse * (D.element * D.drazinInverse) := by
+          simp only [mul_assoc]
+    _ = D.drazinInverse * D.support := by
+          rw [D.element_mul_inverse_eq_support]
+
+/-- The ordered Drazin commutation law yields a genuine idempotent support
+that also commutes with the represented element. -/
+theorem element_mul_inverse_eq_inverse_mul_element :
+    D.element * D.drazinInverse = D.drazinInverse * D.element ∧
+      D.support * D.support = D.support ∧
+      D.support * D.element = D.element * D.support := by
+  exact ⟨D.commutes, D.support_idempotent, D.support_commutes_element⟩
+
+/-- The reflexive Drazin law, together with commutation of the support and
+inverse, records the consequences needed for support-localized calculations. -/
 theorem inverse_mul_element_mul_inverse :
-    D.drazinInverse * D.element * D.drazinInverse = D.drazinInverse :=
-  D.inverse_element_inverse
+    D.drazinInverse * D.element * D.drazinInverse = D.drazinInverse ∧
+      D.support * D.drazinInverse = D.drazinInverse * D.support := by
+  exact ⟨D.inverse_element_inverse, D.support_commutes_inverse⟩
 
 /-- Campbell--Meyer relations for the supplied Drazin inverse data. The
 regular part is expressed as the operator product `support * element`, so the
@@ -75,7 +123,7 @@ theorem campbellMeyer_relations :
     D.drazinInverse * D.element * D.drazinInverse = D.drazinInverse ∧
     D.drazinInverse * D.element = D.element * D.drazinInverse ∧
     D.drazinInverse * D.element * D.element = D.support * D.element := by
-  refine ⟨D.inverse_element_inverse, D.element_mul_inverse_eq_inverse_mul_element.symm, ?_⟩
+  refine ⟨D.inverse_element_inverse, D.commutes.symm, ?_⟩
   calc
     D.drazinInverse * D.element * D.element =
         (D.drazinInverse * D.element) * D.element := by rw [mul_assoc]

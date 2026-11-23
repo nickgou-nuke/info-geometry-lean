@@ -3,6 +3,12 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
 
@@ -416,6 +422,20 @@ def bracket4 (Z0 Z1 Z2 Z3 : Fin 4 → K) : K :=
   plucker2 Z0 Z1 1 2 * plucker2 Z2 Z3 0 3 -
   plucker2 Z0 Z1 1 3 * plucker2 Z2 Z3 0 2 +
   plucker2 Z0 Z1 2 3 * plucker2 Z2 Z3 0 1
+
+/-- The five-term dependence relation for five vectors in a four-dimensional
+space.  The cyclic brackets are written in their displayed cyclic order; the
+signs from rotating the four entries are therefore already included, so all
+five displayed coefficients are `+`. -/
+theorem cyclic_five_vector_bracket_syzygy
+    (Z₁ Z₂ Z₃ Z₄ Z₅ : Fin 4 → K) :
+    bracket4 Z₁ Z₂ Z₃ Z₄ • Z₅ +
+      bracket4 Z₂ Z₃ Z₄ Z₅ • Z₁ +
+      bracket4 Z₃ Z₄ Z₅ Z₁ • Z₂ +
+      bracket4 Z₄ Z₅ Z₁ Z₂ • Z₃ +
+      bracket4 Z₅ Z₁ Z₂ Z₃ • Z₄ = 0 := by
+  ext i
+  fin_cases i <;> dsimp [bracket4, plucker2, Pi.add_apply, smul_eq_mul] <;> ring
 
 /-- **Stage $\mathfrak{TP}_6$ (`plucker2_satisfies_klein_quadric_relation`)**:
 For any two 4-vectors $Z, W : \mathrm{Fin}\,4 \to K$, their 6 Plücker coordinates

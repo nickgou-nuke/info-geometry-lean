@@ -138,6 +138,49 @@ theorem vanishing_of_surj_prev_and_inj
     exact (hE_Y (iStar x)).mpr ⟨x, rfl⟩
   rw [hzero u, hzero v]
 
+set_option linter.style.haveILetI false in
+/-- Artin vanishing through degree d - 1 is equivalent to the full weak
+Lefschetz injectivity/bijectivity range, provided degree zero is detected by
+the first map. This packages the existing forward and converse exact-sequence
+lemmas on the additive-group owner. -/
+theorem artinVanishing_iff_weakLefschetz
+    {HcU HX HY : ℕ → Type*}
+    [∀ k, AddCommGroup (HcU k)] [∀ k, AddCommGroup (HX k)]
+    [∀ k, AddCommGroup (HY k)]
+    (jBang : ∀ k, HcU k →+ HX k)
+    (iStar : ∀ k, HX k →+ HY k)
+    (delta : ∀ k, HY k →+ HcU (k + 1))
+    (hj0 : Function.Injective (jBang 0))
+    (hEX : ∀ k, Function.Exact (jBang k) (iStar k))
+    (hEY : ∀ k, Function.Exact (iStar k) (delta k))
+    (hEU : ∀ k, Function.Exact (delta k) (jBang (k + 1)))
+    (d : ℕ) (hd : 0 < d) :
+    (∀ k, k < d → Subsingleton (HcU k)) ↔
+      ((∀ k, k + 1 < d → Function.Bijective (iStar k)) ∧
+       (∀ k, k < d → Function.Injective (iStar k))) := by
+  constructor
+  · intro hArtin
+    refine ⟨(weakLefschetz_of_artinVanishing d jBang iStar delta hEX hEY hArtin).1,
+      fun k hk => ?_⟩
+    letI : Subsingleton (HcU k) := hArtin k hk
+    exact weakLefschetz_injective_of_vanishing (jBang k) (iStar k) (hEX k)
+  · rintro ⟨hbij, hinj⟩ k hk
+    rcases k with _ | k
+    · refine ⟨fun x y => ?_⟩
+      have hzero : ∀ z : HcU 0, z = 0 := by
+        intro z
+        apply hj0
+        have hmap : iStar 0 (jBang 0 z) = 0 :=
+          (hEX 0 (jBang 0 z)).mpr ⟨z, rfl⟩
+        have hmap' : iStar 0 (jBang 0 z) = iStar 0 0 := by
+          simpa using hmap
+        have hpre : jBang 0 z = 0 := hinj 0 hd hmap'
+        simpa using hpre
+      rw [hzero x, hzero y]
+    · exact vanishing_of_surj_prev_and_inj (iStar k) (delta k)
+        (jBang (k + 1)) (iStar (k + 1)) (hEY k) (hEU k) (hEX (k + 1))
+        (hbij k hk).2 (hinj (k + 1) hk)
+
 end ExcisionExactSequence
 
 section FrobeniusEquivariance

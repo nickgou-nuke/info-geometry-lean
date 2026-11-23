@@ -45,6 +45,28 @@ theorem assocTripleOperator_commutator (x y u v z : B) :
       assocTripleOperator u (assocTriple v x y) z :=
   assocTriple_left_identity x y u v z
 
+/-- Additive endomorphism implementing the associative Jordan triple
+`z ↦ xyz + zyx` on the actual ring carrier. -/
+def jordanTripleOperator (x y : B) : B →+ B where
+  toFun z := jordanTriple x y z
+  map_zero' := by simp [jordanTriple]
+  map_add' u v := by
+    dsimp [jordanTriple]
+    noncomm_ring
+
+@[simp] theorem jordanTripleOperator_apply (x y z : B) :
+    jordanTripleOperator x y z = jordanTriple x y z := rfl
+
+/-- The commutator of the actual Jordan-triple operators is controlled by
+the ordered Freudenthal left-derivation identity, with its `ε = -1` sign. -/
+theorem jordanTripleOperator_commutator (x y u v z : B) :
+    jordanTripleOperator x y (jordanTripleOperator u v z) -
+      jordanTripleOperator u v (jordanTripleOperator x y z) =
+    jordanTripleOperator (jordanTriple x y u) v z -
+      jordanTripleOperator u (jordanTriple y x v) z := by
+  simp only [jordanTripleOperator_apply, jordanTriple]
+  noncomm_ring
+
 end NonCommRingTripleOperators
 
 variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]

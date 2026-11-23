@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Erlangen.KleinBrioschiQuinticResolvent
+import InfoGeometry.Erlangen.KleinQuinticOrderTenAction
 import InfoGeometry.Erlangen.KleinQuinticTschirnhausKleinCovariant
 import InfoGeometry.Projective.KleinQuadricPlucker
 import Mathlib.Data.Matrix.Basic
@@ -11,6 +12,8 @@ import Mathlib.LinearAlgebra.Projectivization.Basic
 
 /-!
 # Binary Quintic Resolvent Roots as Grassmann–Plücker Data
+
+## i. Overview
 
 For a source-ordered binary quintic, the existing Klein-orbit evaluation gives
 five signed coordinates. Squaring them gives the five roots used by the
@@ -25,6 +28,33 @@ projective Grassmannian point is obtained when the selected roots are not all
 equal (the theorem below gives a simple sufficient condition). No positivity
 or Cantor-cylinder conclusion is claimed for these generally complex
 coordinates.
+
+## ii. Key results
+
+- `binaryQuinticGenerator_eq_quinticWeight_smul` and
+  `binaryQuinticSignedCycle_eq_signedQuinticShift`: bridge the order-ten
+  diagonal generator and signed cycle on `Fin 5` to `quinticWeight` and
+  `signedQuinticShift 1` via `fin5ZMod5Equiv`.
+- `binaryQuinticResolventPlucker6_on_klein` and
+  `binaryQuinticResolventPlucker6_kleinQ_smul`: Klein-quadric membership and
+  degree-4 scaling of `Plucker6.kleinQ` under coefficient rescaling.
+- `binaryQuinticResolventProjectivePlucker6_smul`: guarded projective
+  invariance off the zero-bivector base locus.
+
+## iii. Table of contents
+
+- Order-ten diagonal and signed-cycle bridge (`fin5ZMod5Equiv`,
+  `binaryQuinticGenerator_eq_quinticWeight_smul`,
+  `binaryQuinticSignedCycle_eq_signedQuinticShift`).
+- Four-root `Gr(2,4)` chart, `Plucker6` scaling, and `kleinQ` homogeneity.
+- Quotient descent, Klein-quadric membership, and base-locus characterization.
+- Full five-root `Omega5` Tschirnhaus covariant comparison.
+
+## iv. References
+
+- `InfoGeometry.Erlangen.KleinQuinticOrderTenAction`
+- `InfoGeometry.Erlangen.KleinBrioschiQuinticResolvent`
+- `InfoGeometry.Projective.KleinQuadricPlucker`
 -/
 
 noncomputable section
@@ -119,6 +149,16 @@ theorem binaryQuinticResolventPlucker6_smul
       Plucker6.pluckerLine, Plucker6.scale, hcoord] <;>
     ring
 
+/-- Under uniform coefficient scaling by `c`, the Klein quadratic form
+evaluated on the four-root Grassmann–Plücker readout scales by `c ^ 4`. -/
+lemma binaryQuinticResolventPlucker6_kleinQ_smul
+    (c : ℂ) (v : BinaryQuinticCoefficientSpace) (z : ℂ × ℂ)
+    (pick : Fin 4 → Fin 5) :
+    Plucker6.kleinQ (binaryQuinticResolventPlucker6 (c • v) z pick) =
+      c ^ 4 * Plucker6.kleinQ (binaryQuinticResolventPlucker6 v z pick) := by
+  rw [binaryQuinticResolventPlucker6_smul, Plucker6.kleinQ_scale]
+  ring
+
 /-- Coordinates of a `Plucker6` vector in its fixed order `01, 02, 03, 12,
 13, 23`, for use in the genuine projectivization of a six-dimensional
 vector space. -/
@@ -130,6 +170,8 @@ def plucker6CoordinateVector (P : Plucker6 ℂ) : Fin 6 → ℂ
   | ⟨4, _⟩ => P.p13
   | ⟨_, _h⟩ => P.p23
 
+/-- Scaling a `Plucker6` element scales its six-coordinate vector in
+`Fin 6 → ℂ` by the same scalar. -/
 @[simp] theorem plucker6CoordinateVector_scale (c : ℂ) (P : Plucker6 ℂ) :
     plucker6CoordinateVector (Plucker6.scale c P) =
       c • plucker6CoordinateVector P := by
@@ -571,6 +613,9 @@ private def kleinResolventCyclePerm : Equiv.Perm (Fin 5) :=
       simp [kleinResolventCycleSucc]
       omega)
 
+/-- Under the source order-ten generator, the ordered Tschirnhaus bivector
+coordinates of the squared resolvent tuple transform by cycling both `Fin 5`
+indices via `kleinResolventCycleSucc`. -/
 theorem binaryQuinticResolventOmega5_generator_covariance
     (v : BinaryQuinticCoefficientSpace) (z : ℂ × ℂ) (i j : Fin 5) :
     rootKleinOmega5Ordered
@@ -703,5 +748,39 @@ theorem rootPermutation_preserves_polynomial_but_changes_omega_coordinate :
       (Equiv.swap (0 : Fin 5) 1)).symm
   · norm_num [rootKleinOmega5Ordered, centeredRoots, centeredRootSquares,
       rootMean, Equiv.swap_apply_def, Fin.sum_univ_succ]
+
+/-- Equivalence identifying the five-element `Fin 5` orbit index type with
+`ZMod 5`. -/
+def fin5ZMod5Equiv : Fin 5 ≃ ZMod 5 := (ZMod.finEquiv 5).toEquiv
+
+/-- The diagonal order-ten generator `binaryQuinticGenerator` acts on monomial
+coefficients by the owner-defined `quinticWeight` evaluated at the diagonal
+entries of `kleinBinaryStandardGenA`. -/
+lemma binaryQuinticGenerator_eq_quinticWeight_smul
+    (v : BinaryQuinticCoefficientSpace) (j : Fin 6) :
+    binaryQuinticGenerator v j =
+      InfoGeometry.Erlangen.KleinQuinticOrderTenAction.quinticWeight
+        (kleinBinaryStandardGenA 0 0) (kleinBinaryStandardGenA 1 1) j *
+        v j :=
+  rfl
+
+/-- The signed five-cycle on `Fin 5 → ℂ` matches the unit-stride
+`signedQuinticShift 1` on `ZMod 5 → ℂ` across `fin5ZMod5Equiv`. -/
+lemma binaryQuinticSignedCycle_eq_signedQuinticShift
+    (q : Fin 5 → ℂ) (k : Fin 5) :
+    binaryQuinticSignedCycle q k =
+      InfoGeometry.Erlangen.KleinQuinticOrderTenAction.signedQuinticShift 1
+        (fun i : ZMod 5 => q (fin5ZMod5Equiv.symm i)) (fin5ZMod5Equiv k) := by
+  have hstep : fin5ZMod5Equiv k + 1 = fin5ZMod5Equiv (k + 1) := by
+    change (ZMod.finEquiv 5) k + (1 : ZMod 5) = (ZMod.finEquiv 5) (k + 1)
+    rw [← map_one (ZMod.finEquiv 5), ← map_add]
+  have hidx : fin5ZMod5Equiv.symm (fin5ZMod5Equiv k + 1) =
+      kleinResolventCycleSucc k := by
+    rw [hstep, Equiv.symm_apply_apply]
+    apply Fin.ext
+    simp [Fin.val_add, kleinResolventCycleSucc]
+  change -q (kleinResolventCycleSucc k) =
+    -q (fin5ZMod5Equiv.symm (fin5ZMod5Equiv k + 1))
+  rw [hidx]
 
 end InfoGeometry.Erlangen.KleinQuinticGrassmannPluckerBridge

@@ -1,16 +1,23 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.RingTheory.Morita.Matrix
 
 namespace InfoGeometry.Canonical.Cl11MoritaNeutralStabilization
 
 open InfoGeometry.Clifford
 
 /-!
-# Morita-neutral Clifford stabilization readout
+# Finite-stage Clifford matrix and Morita readout
 
-This owner records only the associative matrix readout already supplied by
-`TowerMatrix`.  It does not identify the stage with a composition algebra or
-make any Bott-periodicity claim.
+This owner records the associative matrix readout supplied by `TowerMatrix`
+and proves that each finite real matrix stage is Morita equivalent to `ℝ`.
+It does not identify the stage with a composition algebra, assert split Bott
+periodicity, or pass the equivalence to a colimit or completion.
 -/
 
 abbrev StageThree := TowerMatrix.Mat 3
@@ -62,6 +69,31 @@ theorem stageTwo_to_stageThree_matrix_compatibility
       stageThreeMatrix8 (Cl11TensorTower.stageEmbed 2 A) := by
   exact standardMatrixStageEmbed_compatibility 2 A
 
+/-- Each finite real Clifford-tower stage is Morita equivalent to `ℝ`.
+The equivalence is built by composing the tower's actual algebra equivalence
+with Mathlib's matrix-module Morita equivalence; it concerns this finite stage
+and makes no assertion about a colimit or a completion. -/
+noncomputable def stageMoritaEquivalence (n : ℕ) :
+    MoritaEquivalence ℝ (TowerMatrix.Mat n) ℝ :=
+  (MoritaEquivalence.ofAlgEquiv (TowerMatrix.matEquivFinPowTwo n)).trans ℝ
+    ((moritaEquivalenceMatrix ℝ ℝ (0 : Fin (2 ^ n))).symm ℝ)
+
+/-- For an arbitrary, possibly noncommutative coefficient ring, left modules
+over the full `n × n` matrix operator algebra are equivalent to left modules
+over the coefficient ring. This is the module-category equivalence itself,
+not only an assertion that two rings have the same finite-dimensional
+representations. -/
+noncomputable def arbitraryMatrixModuleEquivalence (A : Type*) [Ring A]
+    {n : ℕ} (hn : 0 < n) : ModuleCat A ≌ ModuleCat (Matrix (Fin n) (Fin n) A) :=
+  ModuleCat.matrixEquivalence A ⟨0, hn⟩
+
+/-- The arbitrary-ring matrix-module equivalence supplies an explicit Morita
+equivalence over the canonical central `ℤ`-algebra structures. -/
+noncomputable def arbitraryMatrixMoritaEquivalence (A : Type*) [Ring A]
+    [Algebra ℤ A] {n : ℕ} (hn : 0 < n) :
+    MoritaEquivalence ℤ A (Matrix (Fin n) (Fin n) A) :=
+  moritaEquivalenceMatrix A ℤ ⟨0, hn⟩
+
 noncomputable def stageTwoMatrix4Unit
     (u : (TowerMatrix.Mat 2)ˣ) :
     (Matrix (Fin 4) (Fin 4) ℝ)ˣ :=
@@ -82,5 +114,30 @@ noncomputable def stageTwoMatrix4Unit
     stageTwoMatrix4Unit (u * v) =
       stageTwoMatrix4Unit u * stageTwoMatrix4Unit v := by
   simp [stageTwoMatrix4Unit]
+
+/- The matrix algebra remains genuinely noncommutative even over a general
+nontrivial coefficient ring: these two matrix units multiply in opposite
+orders to different diagonal corners. -/
+theorem matrixUnits_noncommute (A : Type*) [Ring A] [Nontrivial A]
+    {n : ℕ} (hn : 2 ≤ n) :
+    ∃ matI matJ : Matrix (Fin n) (Fin n) A,
+      matI * matJ ≠ matJ * matI := by
+  have hn0 : 0 < n := lt_of_lt_of_le (by decide : 0 < 2) hn
+  have hn1 : 1 < n := lt_of_lt_of_le (by decide : 1 < 2) hn
+  refine ⟨Matrix.single ⟨0, hn0⟩ ⟨1, hn1⟩ 1,
+    Matrix.single ⟨1, hn1⟩ ⟨0, hn0⟩ 1, ?_⟩
+  intro h
+  have h00 := congrFun (congrFun h ⟨0, hn0⟩) ⟨0, hn0⟩
+  simp [Matrix.mul_apply, Matrix.single_apply] at h00
+
+theorem matrixUnits4_noncommute :
+    ∃ matI matJ : Matrix (Fin 4) (Fin 4) ℝ,
+      matI * matJ ≠ matJ * matI :=
+  matrixUnits_noncommute ℝ (by decide : 2 ≤ 4)
+
+theorem matrixUnits8_noncommute :
+    ∃ matI matJ : Matrix (Fin 8) (Fin 8) ℝ,
+      matI * matJ ≠ matJ * matI :=
+  matrixUnits_noncommute ℝ (by decide : 2 ≤ 8)
 
 end InfoGeometry.Canonical.Cl11MoritaNeutralStabilization

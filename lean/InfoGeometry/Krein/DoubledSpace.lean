@@ -133,10 +133,36 @@ noncomputable def doubledHilbertBilin : LinearMap.BilinForm ℝ (DoubledSpace E)
       simp [real_inner_smul_right, mul_add])
 
 /-! Coordinate readback for the doubled Hilbert pairing. -/
+omit [CompleteSpace E] in
 lemma doubledHilbertBilin_to_doubled (x ξ y η : E) :
     doubledHilbertBilin (to_doubled x ξ) (to_doubled y η) =
       inner ℝ x y + inner ℝ ξ η := by
   simp [doubledHilbertBilin, to_doubled, WithLp.prod_inner_apply]
+
+omit [CompleteSpace E] in
+/-- The split-null-coordinate pairing, obtained by inserting the canonical
+sheet swap into the doubled Hilbert pairing. -/
+def nullPairing (u v : DoubledSpace E) : ℝ :=
+  inner ℝ (WithLp.fst u) (WithLp.snd v) +
+    inner ℝ (WithLp.snd u) (WithLp.fst v)
+
+omit [CompleteSpace E] in
+/-- Each coordinate sheet is isotropic for the null-coordinate pairing. -/
+theorem nullPairing_plus_self_isotropic (x y : E) :
+    nullPairing (to_doubled x 0) (to_doubled y 0) = 0 := by
+  simp [nullPairing]
+
+omit [CompleteSpace E] in
+/-- The second coordinate sheet is isotropic for the null-coordinate pairing. -/
+theorem nullPairing_minus_self_isotropic (x y : E) :
+    nullPairing (to_doubled 0 x) (to_doubled 0 y) = 0 := by
+  simp [nullPairing]
+
+omit [CompleteSpace E] in
+/-- The cross-pairing of the two null sheets is the original real inner product. -/
+theorem nullPairing_cross_sheet (x y : E) :
+    nullPairing (to_doubled x 0) (to_doubled 0 y) = inner ℝ x y := by
+  simp [nullPairing]
 
 /--
 Canonical substrate packaging of the doubled lane as an involutive self-dual carrier.
@@ -196,6 +222,26 @@ omit [CompleteSpace E] in
 omit [CompleteSpace E] in
 @[simp] lemma spectral_epsilon_apply (u : DoubledSpace E) :
     spectral_epsilon u = WithLp.toLp (2 : ENNReal) (WithLp.fst u, -WithLp.snd u) := rfl
+
+omit [CompleteSpace E] in
+/-- In the null-coordinate pairing, inserting the cut gives total null collapse. -/
+theorem nullPairing_cut_self_eq_zero (u : DoubledSpace E) :
+    nullPairing u (spectral_epsilon u) = 0 := by
+  simp [nullPairing, spectral_epsilon_apply, real_inner_comm]
+
+omit [CompleteSpace E] in
+/-- Inserting the mirror converts the null-coordinate pairing back to the
+positive doubled Hilbert pairing. -/
+theorem nullPairing_mirror_eq_hilbert (u v : DoubledSpace E) :
+    nullPairing u (modular_j v) = inner ℝ u v := by
+  simp [nullPairing, modular_j_apply, WithLp.prod_inner_apply]
+
+omit [CompleteSpace E] in
+/-- The diagonal value after mirror insertion is strictly positive away from zero. -/
+theorem nullPairing_mirror_self_pos (u : DoubledSpace E) (hu : u ≠ 0) :
+    0 < nullPairing u (modular_j u) := by
+  rw [nullPairing_mirror_eq_hilbert]
+  exact real_inner_self_pos.mpr hu
 
 omit [CompleteSpace E] in
 @[simp] lemma spectral_epsilon_to_doubled (x ξ : E) :

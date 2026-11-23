@@ -706,11 +706,14 @@ theorem gapCD_modularDerivation_metriplecticFlow_secondLaw
 
 /-- **`T3-CD-02` (Gap C + Gap D):** Couples a bridged exceptional `H3ZornF4Derivations`
 element (via `h3ZornF4DerivationLane : DerivationLieLane ℝ (H3Zorn ℝ)`) into a normed
-`GenericMetriplecticFlow.System V` trajectory (preserving zero global typeclass diamonds),
-proving Leibniz action and convex-interval `AntitoneOn` free-energy decay. -/
+`GenericMetriplecticFlow.System V` trajectory along an `ℝ`-linear intertwining map
+`embed : H3Zorn ℝ →ₗ[ℝ] V` (with `(sys t).M (sys t).dS = embed (D_f4 (x_zorn * y_zorn))`
+and zero global typeclass diamonds), proving Leibniz splitting of the dissipative drift and
+convex-interval `AntitoneOn` free-energy decay. -/
 theorem gapCD_exceptionalSuperDerivation_metriplecticFlow_secondLaw
     {V : Type*} [NormedAddCommGroup V] [NormedSpace ℝ V]
     (D_f4 : H3ZornF4Derivations) (x_zorn y_zorn : H3Zorn ℝ)
+    (embed : H3Zorn ℝ →ₗ[ℝ] V)
     (sys : ℝ → GenericMetriplecticFlow.System V)
     (H_fn S_fn : V → ℝ) {T : ℝ} (hT : 0 ≤ T)
     (dH_clm dS_clm : ℝ → (V →L[ℝ] ℝ))
@@ -720,19 +723,34 @@ theorem gapCD_exceptionalSuperDerivation_metriplecticFlow_secondLaw
     (hdS : ∀ t ∈ interior I, ∀ v, dS_clm t v = (sys t).dS v)
     (hH : ∀ t ∈ interior I, HasFDerivAt H_fn (dH_clm t) (x t))
     (hS : ∀ t ∈ interior I, HasFDerivAt S_fn (dS_clm t) (x t))
+    (h_diss_eq : ∀ t ∈ interior I,
+      (sys t).M (sys t).dS =
+        embed (h3ZornF4DerivationLane.operatorAction D_f4 (x_zorn * y_zorn)))
     (hx : ∀ t ∈ interior I, HasDerivAt x (sys t).flow t) :
     h3ZornF4DerivationLane.operatorAction D_f4 (x_zorn * y_zorn) =
         h3ZornF4DerivationLane.operatorAction D_f4 x_zorn * y_zorn +
           x_zorn * h3ZornF4DerivationLane.operatorAction D_f4 y_zorn ∧
       (∀ t ∈ interior I,
+        (sys t).M (sys t).dS =
+          embed (h3ZornF4DerivationLane.operatorAction D_f4 x_zorn * y_zorn) +
+            embed (x_zorn * h3ZornF4DerivationLane.operatorAction D_f4 y_zorn) ∧
         HasDerivAt (fun s => H_fn (x s) - T * S_fn (x s))
-          (-(T * (sys t).dS ((sys t).M (sys t).dS))) t ∧
-        -(T * (sys t).dS ((sys t).M (sys t).dS)) ≤ 0) ∧
+          (-(T * (sys t).dS
+            (embed (h3ZornF4DerivationLane.operatorAction D_f4 (x_zorn * y_zorn))))) t ∧
+        -(T * (sys t).dS
+          (embed (h3ZornF4DerivationLane.operatorAction D_f4 (x_zorn * y_zorn)))) ≤ 0) ∧
       AntitoneOn (fun s => H_fn (x s) - T * S_fn (x s)) I := by
   refine ⟨h3ZornF4DerivationLane.operatorAction_leibniz D_f4 x_zorn y_zorn, ?_, ?_⟩
   · intro t ht
-    exact genericMetriplectic_freeEnergy_hasDerivAt_nonpos hT
+    have hpt := genericMetriplectic_freeEnergy_hasDerivAt_nonpos hT
       (hdH t ht) (hdS t ht) (hH t ht) (hS t ht) (hx t ht)
+    have hsplit : (sys t).M (sys t).dS =
+        embed (h3ZornF4DerivationLane.operatorAction D_f4 x_zorn * y_zorn) +
+          embed (x_zorn * h3ZornF4DerivationLane.operatorAction D_f4 y_zorn) := by
+      rw [h_diss_eq t ht, h3ZornF4DerivationLane.operatorAction_leibniz D_f4 x_zorn y_zorn,
+        embed.map_add]
+    rw [h_diss_eq t ht] at hpt
+    exact ⟨hsplit, hpt.1, hpt.2⟩
   · exact genericMetriplectic_freeEnergy_antitoneOn hT hI hcont hdH hdS hH hS hx
 
 end GapCD_ModularExceptionalTrajectory
@@ -832,8 +850,6 @@ end GapAC_CartanSchurPeirceTrajectory
 /-! ## Section 8: Master Four-Pillar Synthesis & Non-Degenerate `n = 2` Witness -/
 
 section FourPillarMasterSynthesisAndWitness
-
-attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
 attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 

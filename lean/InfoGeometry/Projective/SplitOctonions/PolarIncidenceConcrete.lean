@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.Projective.SplitOctonions.Polar
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -34,10 +40,18 @@ variable {𝕜 : Type u} [Ring 𝕜]
 def dot (p q : Vec3 𝕜) : 𝕜 :=
   p.1 * q.1 + p.2.1 * q.2.1 + p.2.2 * q.2.2
 
-@[simp] theorem dot_comm {𝕜 : Type u} [CommRing 𝕜] (p q : Vec3 𝕜) :
+theorem dot_comm_of_coordinate_commutation {𝕜 : Type u} [Ring 𝕜]
+    (p q : Vec3 𝕜)
+    (h₁ : p.1 * q.1 = q.1 * p.1)
+    (h₂ : p.2.1 * q.2.1 = q.2.1 * p.2.1)
+    (h₃ : p.2.2 * q.2.2 = q.2.2 * p.2.2) :
     dot p q = dot q p := by
   unfold dot
-  ring
+  rw [h₁, h₂, h₃]
+
+@[simp] theorem dot_comm {𝕜 : Type u} [CommRing 𝕜] (p q : Vec3 𝕜) :
+    dot p q = dot q p := by
+  exact dot_comm_of_coordinate_commutation p q (mul_comm _ _) (mul_comm _ _) (mul_comm _ _)
 
 end Vec3
 

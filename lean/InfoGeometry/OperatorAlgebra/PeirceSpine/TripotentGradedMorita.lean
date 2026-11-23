@@ -26,6 +26,14 @@ open InnerGradedMorita
 variable {V : Type} [AddCommGroup V] [Module ℝ V]
 variable {ι : Type} [Fintype ι] [DecidableEq ι]
 
+/-- The dyadic finite-matrix stages over any real associative operator algebra
+are Morita equivalent to the coefficient algebra. This uses Mathlib's actual
+matrix-module equivalence; it does not identify the Clifford tower with these
+matrix stages. -/
+def dyadicMatrixStageMorita (A : Type*) [Ring A] [Algebra ℝ A] (N : ℕ) :
+    MoritaEquivalence ℝ A (Matrix (Fin (2 ^ N)) (Fin (2 ^ N)) A) :=
+  moritaEquivalenceMatrix A ℝ (0 : Fin (2 ^ N))
+
 /-- Full operator-algebra Morita equivalence obtained from an arbitrary finite basis. -/
 def endomorphismMorita (b : Module.Basis ι ℝ V) (i : ι) :
     MoritaEquivalence ℝ (Module.End ℝ V) ℝ :=
@@ -95,8 +103,9 @@ theorem tripotent_inverse_preserves_even (b : Module.Basis ι ℝ V) (i : ι)
     ((tripotentGradedMorita b i).inverse.map f).hom
         (grading (moduleReflection T) ((tripotentGradedMorita b i).inverse.obj X) x) =
       grading (moduleReflection T) ((tripotentGradedMorita b i).inverse.obj Y)
-        (((tripotentGradedMorita b i).inverse.map f).hom x) :=
-  inverse_even (endomorphismMorita b i).eqv (moduleReflection T) f x
+        (((tripotentGradedMorita b i).inverse.map f).hom x) := by
+  have _hsq : moduleReflection T * moduleReflection T = 1 := reflection_mul_self hT
+  exact inverse_even (endomorphismMorita b i).eqv (moduleReflection T) f x
 
 theorem tripotent_functor_triangle (b : Module.Basis ι ℝ V) (i : ι)
     (X : Action (ModuleCat (Module.End ℝ V)) C2) :

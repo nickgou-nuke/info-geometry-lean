@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -5,6 +10,7 @@ import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.OwnerTarget
 import InfoGeometry.Arithmetic.PrimeMajoranaCAR
 import InfoGeometry.Arithmetic.PrimeBooleanCube
+import InfoGeometry.Canonical.FormalPrimeRootSystem
 
 /-!
 # InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
@@ -34,6 +40,7 @@ namespace InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge
 open InfoGeometry.Arithmetic.PrimeMajoranaCAR
 open InfoGeometry.Arithmetic.PrimeBooleanCube
 open InfoGeometry.Arithmetic.PrimeBitWittenIndex
+open InfoGeometry.Canonical.FormalPrimeRootSystem
 
 /-! ## 1. Local CAR parity preserves Boolean local parity -/
 
@@ -167,6 +174,29 @@ theorem carGlobalChiralityReadout_eq_mobius
       ArithmeticFunction.moebius (representedNat v) := by
   rw [carGlobalChiralityReadout_eq_fermionParity P v E χ hN]
   exact (mobius_representedNat_eq_fermionParity P v).symm
+
+/-- The finite CAR chirality readout and the `A₁^P` Weyl sign are two
+readouts of the same occupied-prime subset.  The equality is on the actual
+finite support `v.val`; it does not identify the Clifford and root-lattice
+carriers. -/
+@[bridge_target_tag, rep_depth thermo]
+theorem carGlobalChiralityReadout_eq_weylSign
+    {Op : Type*} [Ring Op]
+    (P : PrimeRegister)
+    (v : Vertex P)
+    (E : ℕ → ExteriorCARPair Op)
+    (χ : Op →+* ℤ)
+    (hN :
+      ∀ p ∈ P.primes,
+        χ ((E p).numberOp) = occupationInt p v.val) :
+    (carGlobalChiralityReadout P E χ : ℝ) =
+      weylSign
+        (⟨v.val, v.property⟩ : BooleanWeylGroup (primeRootLattice P)) := by
+  rw [carGlobalChiralityReadout_eq_mobius P v E χ hN]
+  change (ArithmeticFunction.moebius (∏ p ∈ v.val, p) : ℝ) =
+    (-1 : ℝ) ^ v.val.card
+  exact_mod_cast mobius_prime_product_eq_parity v.val
+    (fun p hp => P.prime_mem p (v.property hp))
 
 
 /-! ## 3. Bridge theorem packet -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FormalPrimeRootSystem
@@ -151,6 +156,22 @@ theorem sign_preservation (S : {S : Finset ℕ // S ⊆ P.primes}) :
   rw [subsetWeylSign, subsetToArithmeticEquiv]
   simp
   exact (mobius_prime_product_eq_parity S.val hprime).symm
+
+/-- The sign of a finite `A₁^P` Weyl element is the Möbius value of the
+squarefree integer represented by its support.  This identifies the Weyl
+character on the root-system carrier with the arithmetic character on the
+same finite subset; it does not identify the root lattice with the integers. -/
+@[rep_depth thermo]
+theorem weylSign_eq_mobius_supportProduct
+    (w : BooleanWeylGroup (primeRootLattice P)) :
+    weylSign w =
+      (ArithmeticFunction.moebius (∏ p ∈ w.support, p) : ℝ) := by
+  have hprime : ∀ p ∈ w.support, Nat.Prime p := by
+    intro p hp
+    exact P.prime_mem p (w.support_subset hp)
+  have h := mobius_prime_product_eq_parity w.support hprime
+  rw [h]
+  simp [weylSign]
 
 /--
 The dictionary is coherent: all three presentations agree on the truth of the

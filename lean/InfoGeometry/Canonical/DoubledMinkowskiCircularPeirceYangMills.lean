@@ -7,6 +7,7 @@ import InfoGeometry.Meta.Architecture
 import InfoGeometry.Canonical.RealDoubledChiralKreinFrame
 import InfoGeometry.Canonical.ThermofieldWittSoldering
 import InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
+import InfoGeometry.Lie.SplitOctonionEllDoubledKreinFrameBridge
 import InfoGeometry.Lie.SplitOctonionCircularWittForm
 import InfoGeometry.Lie.SplitOctonionChiralMinkowskiFixedSectionBridge
 import InfoGeometry.Lie.SplitOctonionDoubleChiralSolderingBridge
@@ -24,8 +25,25 @@ import Mathlib.LinearAlgebra.Matrix.ConjTranspose
 /-!
 # Typed Bridge: Doubled Minkowski–Krein Carrier, Circular Split-Octonion Chiral Frames, and Two-Sheeted Yang–Mills
 
-This module constructs explicit maps and kernel-checked compatibility theorems
-connecting the separate repository owners on their actual Lean types:
+## i. Overview
+
+This module constructs explicit maps and kernel-checked compatibility results
+connecting the separate repository owners on their actual Lean types.  It links
+the circular split-octonion Peirce carrier `CanonicalZorn`, the Ell Krein
+eigenbasis frame `ellCircularToDoubledFrame` on `KreinFrame4`, two chiral
+Pauli-Weyl and bispinor representations, a two-sheeted non-Abelian gauge-Higgs
+connection with a helicity-split self-dual Yang-Mills solution, and inductive
+star-ring colimit transport.
+
+*Scope boundary*: All results here are finite-dimensional, algebraic,
+exterior-algebraic, or star-ring colimit identities.  The frame comparison on
+`KreinFrame4` is strictly linear/bilinear data and does not identify
+split-octonion multiplication with associative operator composition on
+`KreinFrame4` or `M_8(ℝ)`.  No smooth 4-manifold PDE existence, analytic
+lattice spacing `a → 0` limit, or continuum Wightman mass gap is claimed or
+proved.
+
+## ii. Key results
 
 1. **Doubled Minkowski–Krein Carrier & Metric (`@[rep_depth krein]`)**:
    - Maps `CanonicalZorn` (`SplitOctonionEllCircularPeirceBasis`) to `KreinFrame4`
@@ -34,6 +52,8 @@ connecting the separate repository owners on their actual Lean types:
      intertwining `uPlus * X - uMinus * X` with `chirality`) and the `(1,3)` parity-twisted
      equivalence `lorentzCircularZornToKreinFrame` (pulling back `chiralKreinForm` to
      `circularPeircePolar` and `2 * wittNorm`).
+   - Compares `ellCircularToDoubledFrame ∘ coordinateEquiv` against `circularZornToKreinFrame`
+     on the circular Peirce frame (`ellCircularToDoubledFrame_comp_coordinateEquiv_frame`).
    - Instantiates `dualConnectionWithMetric` at `minkowskiEta13 = diag(1, -1, -1, -1)`.
 
 2. **Two Chiral Weyl Representations on `KreinFrame4` & Circular Peirce Channels (`@[rep_depth krein]`)**:
@@ -62,9 +82,19 @@ connecting the separate repository owners on their actual Lean types:
    - Transports `kreinBispinorRep` across arbitrary `StarRingHom`s and
      `CanonicalTwoSheetedInductiveColimit.tailTowerCone`.
 
-*Scope boundary*: All theorems here are finite-dimensional, algebraic, exterior-algebraic, or
-star-ring colimit identities. No smooth 4-manifold PDE existence, analytic lattice spacing
-`a → 0` limit, or continuum Wightman mass gap is claimed or proved.
+## iii. Table of contents
+
+1. Layer 1: Doubled Minkowski-Krein carrier, metric pullback, and dual spin connection
+2. Layer 2: Two chiral Weyl representations on `KreinFrame4` and circular Peirce channels
+3. Layer 3: Two-sheeted gauge-Higgs connection, self-dual Yang-Mills, and Bogomolnyi identity
+4. Layer 4: Inductive star-ring colimit transport and unified synthesis
+
+## iv. References
+
+- `InfoGeometry.Canonical.RealDoubledChiralKreinFrame`
+- `InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis`
+- `InfoGeometry.Lie.SplitOctonionEllDoubledKreinFrameBridge`
+- `InfoGeometry.Canonical.BogomolnyiAlgebraicBoundBridge`
 -/
 
 noncomputable section
@@ -128,7 +158,7 @@ def circularZornToKreinFrame : CanonicalZorn ≃ₗ[ℝ] KreinFrame4 :=
 /-- Applying `wittSoldering` recovers the circular Peirce coordinates from
 `circularZornToKreinFrame`. -/
 @[rep_depth krein]
-theorem wittSoldering_circularZornToKreinFrame (X : CanonicalZorn) :
+lemma wittSoldering_circularZornToKreinFrame (X : CanonicalZorn) :
     wittSoldering (circularZornToKreinFrame X) = coordinateEquiv X := by
   change wittSolderingEquiv (wittSolderingEquiv.symm (coordinateEquiv X)) = coordinateEquiv X
   exact wittSolderingEquiv.apply_symm_apply (coordinateEquiv X)
@@ -142,7 +172,7 @@ private lemma frameBasis_apply (i j : Fin 4) :
 /-- Positive circular Peirce basis vectors `frame 0..3` map onto `plusFrame 0..3`,
 and negative circular Peirce basis vectors `frame 4..7` map onto `minusFrame 0..3`. -/
 @[rep_depth krein]
-theorem circularZornToKreinFrame_frame_blocks (i : Fin 4) :
+lemma circularZornToKreinFrame_frame_blocks (i : Fin 4) :
     circularZornToKreinFrame (frame (Fin.castAdd 4 i)) = plusFrame i ∧
     circularZornToKreinFrame (frame (Fin.addNat i 4)) = minusFrame i := by
   constructor
@@ -157,9 +187,48 @@ theorem circularZornToKreinFrame_frame_blocks (i : Fin 4) :
     fin_cases i <;> fin_cases k <;>
       simp [minusFrame, wittSoldering_to_doubled_apply, frameBasis_apply]
 
+/-- Comparing the Ell Krein eigenbasis frame map `ellCircularToDoubledFrame ∘ coordinateEquiv`
+against the null circular Peirce soldering `circularZornToKreinFrame` on `frame 0..7`:
+positive-sector vectors yield half-sums and negative-sector vectors yield signed
+half-differences. -/
+@[rep_depth krein]
+lemma ellCircularToDoubledFrame_comp_coordinateEquiv_frame (i : Fin 4) :
+    InfoGeometry.Lie.SplitOctonionEllDoubledKreinFrameBridge.ellCircularToDoubledFrame
+        (coordinateEquiv (frame (Fin.castAdd 4 i))) =
+      (1 / 2 : ℝ) • (circularZornToKreinFrame (frame (Fin.castAdd 4 i)) +
+        circularZornToKreinFrame (frame (Fin.addNat i 4))) ∧
+    InfoGeometry.Lie.SplitOctonionEllDoubledKreinFrameBridge.ellCircularToDoubledFrame
+        (coordinateEquiv (frame (Fin.addNat i 4))) =
+      (InfoGeometry.Lie.SplitOctonionEllCircularKreinOperatorBridge.ellKreinPairSign i / 2) •
+        (circularZornToKreinFrame (frame (Fin.castAdd 4 i)) -
+          circularZornToKreinFrame (frame (Fin.addNat i 4))) := by
+  have hblocks := circularZornToKreinFrame_frame_blocks i
+  constructor
+  · rw [coordinateEquiv_apply_frame]
+    change
+      InfoGeometry.Lie.SplitOctonionEllDoubledKreinFrameBridge.ellCircularToDoubledFrame
+          (Pi.single
+            (InfoGeometry.Lie.SplitOctonionEllCircularKreinOperatorBridge.ellKreinPairIndex i)
+            (1 : ℝ)) =
+        (1 / 2 : ℝ) • (circularZornToKreinFrame (frame (Fin.castAdd 4 i)) +
+          circularZornToKreinFrame (frame (Fin.addNat i 4)))
+    rw [Lie.SplitOctonionEllDoubledKreinFrameBridge.ellCircularToDoubledFrame_pair_coordinate,
+      hblocks.1, hblocks.2]
+  · rw [coordinateEquiv_apply_frame]
+    change
+      InfoGeometry.Lie.SplitOctonionEllDoubledKreinFrameBridge.ellCircularToDoubledFrame
+          (Pi.single
+            (InfoGeometry.Lie.SplitOctonionEllCircularKreinOperatorBridge.ellKreinOppositeIndex i)
+            (1 : ℝ)) =
+        (InfoGeometry.Lie.SplitOctonionEllCircularKreinOperatorBridge.ellKreinPairSign i / 2) •
+          (circularZornToKreinFrame (frame (Fin.castAdd 4 i)) -
+            circularZornToKreinFrame (frame (Fin.addNat i 4)))
+    rw [Lie.SplitOctonionEllDoubledKreinFrameBridge.ellCircularToDoubledFrame_opposite_coordinate,
+      hblocks.1, hblocks.2]
+
 /-- The circular sector swap `kappa` intertwines with `sheetFlip` on `KreinFrame4`. -/
 @[rep_depth krein]
-theorem circularZornToKreinFrame_intertwines_kappa_sheetFlip (X : CanonicalZorn) :
+lemma circularZornToKreinFrame_intertwines_kappa_sheetFlip (X : CanonicalZorn) :
     circularZornToKreinFrame (coordinateEquiv.symm (kappa (coordinateEquiv X))) =
       sheetFlip (circularZornToKreinFrame X) := by
   apply wittSoldering_injective
@@ -177,7 +246,7 @@ theorem circularZornToKreinFrame_intertwines_kappa_sheetFlip (X : CanonicalZorn)
 /-- Split-octonion left Peirce grading `uPlus * X - uMinus * X` intertwines
 with `chirality` on `KreinFrame4`. -/
 @[rep_depth krein]
-theorem circularZornToKreinFrame_intertwines_peirce_chirality (X : CanonicalZorn) :
+lemma circularZornToKreinFrame_intertwines_peirce_chirality (X : CanonicalZorn) :
     circularZornToKreinFrame (uPlus * X - uMinus * X) =
       chirality (circularZornToKreinFrame X) := by
   have hBasis : ∀ i : Fin 8,
@@ -313,7 +382,7 @@ private lemma snd_circ_3 (A : CanonicalZorn) : WithLp.snd (circularZornToKreinFr
 /-- Exact bilinear and quadratic metric pullback: `chiralKreinForm` along
 `lorentzCircularZornToKreinFrame` equals `circularPeircePolar` and `2 * wittNorm`. -/
 @[rep_depth krein]
-theorem chiralKreinForm_lorentzCircularZornToKreinFrame (X Y : CanonicalZorn) :
+lemma chiralKreinForm_lorentzCircularZornToKreinFrame (X Y : CanonicalZorn) :
     chiralKreinForm (E := FourSpace)
         (lorentzCircularZornToKreinFrame X)
         (lorentzCircularZornToKreinFrame Y) =
@@ -351,7 +420,7 @@ def minkowskiEta13 : Matrix (Fin 4) (Fin 4) ℝ :=
 /-- Determinant, unit invertibility, induced Krein graph metric, and unique
 metric-compatible dual spin connection for `minkowskiEta13`. -/
 @[rep_depth krein]
-theorem minkowskiEta13_metric_and_dualConnection
+lemma minkowskiEta13_metric_and_dualConnection
     (omegaPlus omegaMinus : Matrix (Fin 4) (Fin 4) ℝ) :
     minkowskiEta13.det = -1 ∧
     IsUnit minkowskiEta13.det ∧
@@ -379,7 +448,7 @@ theorem minkowskiEta13_metric_and_dualConnection
 
 /-- Explicit non-commutativity witness on the `Matrix (Fin 4) (Fin 4) ℝ` carrier. -/
 @[rep_depth krein]
-theorem minkowskiEta13_mat4R_noncomm :
+lemma minkowskiEta13_mat4R_noncomm :
     ∃ A B : Matrix (Fin 4) (Fin 4) ℝ, A * B ≠ B * A := by
   refine ⟨minkowskiEta13, !![0, 1, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0], ?_⟩
   intro hEq
@@ -436,7 +505,7 @@ private lemma snd_chirality (u : KreinFrame4) :
 /-- The two Weyl representations on `KreinFrame4` intertwine with `sheetFlip` and
 `chirality`, and match `doubleMinkowskiSolder` and its determinant norm difference. -/
 @[rep_depth krein]
-theorem kreinChiralWeyl_chirality_and_sheetFlip (u : KreinFrame4)
+lemma kreinChiralWeyl_chirality_and_sheetFlip (u : KreinFrame4)
     (t x1 x2 x3 tau y1 y2 y3 : ℝ) :
     let uSolder : KreinFrame4 :=
       to_doubled (WithLp.toLp 2 ![t, x1, x2, x3]) (WithLp.toLp 2 ![tau, y1, y2, y3])
@@ -569,7 +638,7 @@ private lemma pauli_zero : pauliSolder2x2 0 0 0 0 = 0 := by
 
 /-- Peirce selection and channel mapping of the 8 circular Peirce vectors into `SheetAlgebra (Fin 2 → ℂ)`. -/
 @[rep_depth krein]
-theorem circularSheetRep_peirce_channels (X : CanonicalZorn) :
+lemma circularSheetRep_peirce_channels (X : CanonicalZorn) :
     let P := firstSheetProjection (W := Fin 2 → ℂ)
     conePlus P (circularSheetRep X) = circularSheetRep (uPlus * X) ∧
     coneMinus P (circularSheetRep X) = circularSheetRep (uMinus * X) ∧
@@ -779,7 +848,7 @@ theorem circularSheetRep_peirce_channels (X : CanonicalZorn) :
 /-- Noncommutativity of the two Krein Weyl channels and exact metric-trace pullback:
 `Tr(kreinBispinorRep u * kreinBispinorRep v) = 2 * chiralKreinForm u v`. -/
 @[rep_depth krein]
-theorem kreinBispinorRep_metric_trace_and_noncomm (u v : KreinFrame4) :
+lemma kreinBispinorRep_metric_trace_and_noncomm (u v : KreinFrame4) :
     kreinChiralPlusWeyl (plusFrame 1) * kreinChiralMinusWeyl (minusFrame 2) ≠
       kreinChiralMinusWeyl (minusFrame 2) * kreinChiralPlusWeyl (plusFrame 1) ∧
     Matrix.trace (kreinBispinorRep u * kreinBispinorRep v) =
@@ -830,14 +899,14 @@ theorem kreinBispinorRep_metric_trace_and_noncomm (u v : KreinFrame4) :
 
 /-- Explicit non-commutativity witness on the `Matrix (Fin 2) (Fin 2) ℂ` Weyl carrier. -/
 @[rep_depth krein]
-theorem kreinChiralWeyl_mat2C_noncomm :
+lemma kreinChiralWeyl_mat2C_noncomm :
     ∃ A B : Matrix (Fin 2) (Fin 2) ℂ, A * B ≠ B * A :=
   ⟨kreinChiralPlusWeyl (plusFrame 1), kreinChiralMinusWeyl (minusFrame 2),
     (kreinBispinorRep_metric_trace_and_noncomm (plusFrame 1) (minusFrame 2)).1⟩
 
 /-- Explicit non-commutativity witness on the `Matrix (Fin 4) (Fin 4) ℂ` bispinor carrier. -/
 @[rep_depth krein]
-theorem kreinBispinorRep_mat4C_noncomm :
+lemma kreinBispinorRep_mat4C_noncomm :
     ∃ A B : Matrix (Fin 4) (Fin 4) ℂ, A * B ≠ B * A := by
   let P4C : Matrix (Fin 4) (Fin 4) ℂ :=
     !![1, 0, 0, 0; 0, 1, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0]
@@ -865,7 +934,7 @@ def twoSheetKreinConnection (AL AR : Operator (Fin 2 → ℂ)) (u : KreinFrame4)
 /-- Noncommutative curvature decomposition and `Cl(1,1)` parity separation of
 `twoSheetKreinConnection` inside `SheetAlgebra (Fin 2 → ℂ)`. -/
 @[rep_depth transport]
-theorem twoSheetKreinConnection_curvature_and_parity_split
+lemma twoSheetKreinConnection_curvature_and_parity_split
     (AL AR : Operator (Fin 2 → ℂ)) (u : KreinFrame4) :
     let P := firstSheetProjection (W := Fin 2 → ℂ)
     let Γ := invS P
@@ -932,7 +1001,7 @@ def blade2Coeff (a b : Fin 4) : ExteriorAlgebra ℂ (Fin 4 → ℂ) →ₗ[ℂ] 
 
 /-- Exact evaluation of `blade2Coeff a b` on basis 2-forms and annihilation on 1-forms and scalars. -/
 @[rep_depth transport]
-theorem blade2Coeff_eval (a b c d : Fin 4) (z : ℂ) :
+lemma blade2Coeff_eval (a b c d : Fin 4) (z : ℂ) :
     blade2Coeff a b (extBasisOneForm c * extBasisOneForm d) =
       (if a = c then (1 : ℂ) else 0) * (if b = d then (1 : ℂ) else 0) -
         (if a = d then (1 : ℂ) else 0) * (if b = c then (1 : ℂ) else 0) ∧
@@ -1043,7 +1112,7 @@ private lemma chiralHodgeStar4_blade (μ ν : Fin 4) :
 
 /-- Squares of `lorentzHodgeStar4` and `chiralHodgeStar4` on all basis 2-forms. -/
 @[rep_depth transport]
-theorem hodgeStar4_sq_on_blades (a b : Fin 4) :
+lemma hodgeStar4_sq_on_blades (a b : Fin 4) :
     lorentzHodgeStar4 (lorentzHodgeStar4 (extBasisOneForm a * extBasisOneForm b)) =
       -(extBasisOneForm a * extBasisOneForm b) ∧
     chiralHodgeStar4 (chiralHodgeStar4 (extBasisOneForm a * extBasisOneForm b)) =
@@ -1192,7 +1261,7 @@ private lemma chiralHodgeStar4_sd_pair2 :
 helicity-split circular connection: nonzero curvature, distinct upper/lower diagonal blocks,
 `isSelfDualCurvature chiralHodgeStar4 F`, and `covariantDerivative A 0 (matrixHodgeStar chiralHodgeStar4 F) = 0`. -/
 @[rep_depth transport]
-theorem helicityCircularConnection4_solves_self_dual_yang_mills :
+lemma helicityCircularConnection4_solves_self_dual_yang_mills :
     let P := upperSheetIdempotent4
     let F := curvatureFromConnection (0 : Module.End ℂ (ExteriorAlgebra ℂ (Fin 4 → ℂ))) helicityCircularConnection4
     F ≠ 0 ∧
@@ -1324,7 +1393,7 @@ def twoSheetEuclideanTwoForm (fPlus fMinus : Fin 3 → ℝ) : Fin 6 → ℝ :=
 `BogomolnyiAlgebraicBoundBridge`: `S - Q = 4 ‖fMinus‖²`, `S + Q = 4 ‖fPlus‖²`, `|Q| ≤ S`,
 and `S = Q ↔ ★F = F ↔ fMinus = 0`. -/
 @[rep_depth transport]
-theorem twoSheetBogomolnyi_action_identity (fPlus fMinus : Fin 3 → ℝ) :
+lemma twoSheetBogomolnyi_action_identity (fPlus fMinus : Fin 3 → ℝ) :
     let F := twoSheetEuclideanTwoForm fPlus fMinus
     euclideanTwoFormHodgeData.star F = twoSheetEuclideanTwoForm fPlus (-fMinus) ∧
     yangMillsEnergy euclideanTwoFormHodgeData F - topologicalPairing euclideanTwoFormHodgeData F =
@@ -1385,7 +1454,7 @@ theorem twoSheetBogomolnyi_action_identity (fPlus fMinus : Fin 3 → ℝ) :
 self-adjoint idempotent and transports all `kreinBispinorRep u` operators through arbitrary
 star-preserving ring homomorphisms and `CanonicalTwoSheetedInductiveColimit.tailTowerCone`. -/
 @[rep_depth transport, capstone]
-theorem kreinBispinorRep_colimit_transport
+lemma kreinBispinorRep_colimit_transport
     {B : Type*} [Ring B] [StarRing B]
     (φ : Matrix (Fin 4) (Fin 4) ℂ →+* B)
     (hφStar : ∀ M : Matrix (Fin 4) (Fin 4) ℂ, φ (star M) = star (φ M))
@@ -1430,7 +1499,7 @@ flip, circular Peirce channel mapping in `SheetAlgebra (Fin 2 → ℂ)`, trace m
 gauge–Higgs curvature splitting, unconditional self-dual Yang–Mills solution & Bogomolnyi
 saturation. -/
 @[rep_depth transport, capstone]
-theorem master_doubled_minkowski_circular_peirce_yang_mills
+lemma master_doubled_minkowski_circular_peirce_yang_mills
     (X : CanonicalZorn) (AL AR : Operator (Fin 2 → ℂ)) (fPlus fMinus : Fin 3 → ℝ) :
     let u := lorentzCircularZornToKreinFrame X
     let P := firstSheetProjection (W := Fin 2 → ℂ)

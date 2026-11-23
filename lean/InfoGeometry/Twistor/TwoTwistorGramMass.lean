@@ -37,16 +37,26 @@ theorem gram_hermitian (Z : PairFrame) : (gram Z)ᴴ = gram Z := by
 /-- The factor two is a convention conversion, not a redefinition of `pairMassSq`. -/
 def paperMassSq (Z : PairFrame) : ℝ := 2 * pairMassSq (Z 0) (Z 1)
 
+/-- The determinant-defined mass agrees with the existing lower-spinor
+invariant. Reality of the Hermitian momentum determinant is supplied by the
+actual dyad determinant theorem. -/
+theorem paperMassSq_eq_twice_pairMassSq (Z : PairFrame) :
+    paperMassSq Z = 2 * pairMassSq (Z 0) (Z 1) := by
+  rfl
+
 theorem paperMassSq_eq_infinity_normSq (Z : PairFrame) :
-    paperMassSq Z = 2 * Complex.normSq (infinityTwistor (Z 0) (Z 1)) := rfl
+    paperMassSq Z = 2 * Complex.normSq (infinityTwistor (Z 0) (Z 1)) := by
+  rw [paperMassSq_eq_twice_pairMassSq]
+  simp [pairMassSq, infinityTwistor, spinorMinor]
 
 theorem paperMassSq_nonneg (Z : PairFrame) : 0 ≤ paperMassSq Z :=
   mul_nonneg (by norm_num) (pairMassSq_nonneg _ _)
 
 theorem paperMassSq_eq_twice_momentum_det (Z : PairFrame) :
     (paperMassSq Z : ℂ) = 2 * (momentum (Z 0) + momentum (Z 1)).det := by
-  rw [pairMomentum_determinant]
-  simp [paperMassSq]
+  rw [paperMassSq_eq_twice_pairMassSq, pairMomentum_determinant]
+  push_cast
+  ring
 
 /-- The full ordered alternating two-tensor, on the owner's upper/lower slots. -/
 def bivector (Z : PairFrame) : KinematicMatrix :=
@@ -107,8 +117,8 @@ theorem massConformalDefect_of_null (Z : PairFrame)
     massConformalDefect Z =
       2 * Complex.normSq (infinityTwistor (Z 0) (Z 1)) +
         Complex.normSq (wittPair (Z 0) (Z 1)) := by
-  simp [massConformalDefect, paperMassSq_eq_infinity_normSq,
-    gram_det_of_null Z h0 h1]
+  simp [massConformalDefect, paperMassSq, pairMassSq, infinityTwistor,
+    spinorMinor, gram_det_of_null Z h0 h1]
 
 /-- Strict positivity needs a genuine nonzero pairing, not only null self-pairings. -/
 theorem massConformalDefect_pos_of_null (Z : PairFrame)
@@ -130,6 +140,27 @@ theorem momentOperator_mul (Z W : Twistor4) :
   simp [momentOperator, Matrix.vecMulVec, Matrix.mul_apply, conjugateCoordinate,
     component, wittPair, Fintype.sum_sum_type, Fin.sum_univ_two]
   ring
+
+/-- The commutator of two actual twistor moment operators retains the order of
+the two rank-one factors. This is the operator-level counterpart of the
+Witt pairing formula; it does not replace matrix composition by a scalar
+commuting model. -/
+theorem momentOperator_commutator (Z W : Twistor4) :
+    momentOperator Z * momentOperator W - momentOperator W * momentOperator Z =
+      wittPair Z W • Matrix.vecMulVec (component Z) (conjugateCoordinate W) -
+        wittPair W Z • Matrix.vecMulVec (component W) (conjugateCoordinate Z) := by
+  rw [momentOperator_mul Z W, momentOperator_mul W Z]
+
+/-- In the null-twistor witness, the ordered operator commutator is nonzero.
+Thus null self-pairing does not make the two constituent operators commute. -/
+theorem momentOperator_commutator_nonzero_witness :
+    ∃ Z W : Twistor4, wittPair Z Z = 0 ∧ wittPair W W = 0 ∧
+      momentOperator Z * momentOperator W - momentOperator W * momentOperator Z ≠ 0 := by
+  obtain ⟨Z, W, hZ, hW, hne⟩ := PerjesMomentOperator.momentOperators_noncommuting
+  refine ⟨Z, W, hZ, hW, ?_⟩
+  intro hzero
+  apply hne
+  exact sub_eq_zero.mp hzero
 
 theorem trace_momentOperator (Z : Twistor4) :
     Matrix.trace (momentOperator Z) = wittPair Z Z := by
@@ -186,7 +217,7 @@ def independentFrame (r t : ℂ) : PairFrame :=
 
 @[simp] theorem independentFrame_mass (r t : ℂ) :
     paperMassSq (independentFrame r t) = 2 * Complex.normSq r := by
-  rw [paperMassSq_eq_infinity_normSq, independentFrame_infinity]
+  simp [paperMassSq, pairMassSq, independentFrame, spinorMinor]
 
 /-- Joint surjectivity of the two complex pairings; no identification of them is possible. -/
 theorem pairings_surjective :

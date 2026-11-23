@@ -4,9 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.ObserverDefect
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularSourceBridge
 import InfoGeometry.Canonical.KKTClosureSymmetry
 import InfoGeometry.Canonical.RelativePotentialCore
+import InfoGeometry.Meta.BridgeTarget
 import InfoGeometry.Meta.Architecture
 
 open scoped BigOperators InnerProductSpace
@@ -277,14 +279,14 @@ noncomputable def sourcedGenerator (B : RouterDefectBridge (E := E)) : EndH :=
   B.flow.K0 + B.routerResidual
 
 /-- LLM-side sourced generator coincides with canonical sourced modular generator under bridge equality. -/
-@[rep_depth transport]
+@[bridge_target_tag, rep_depth transport]
 theorem sourcedGenerator_eq_canonical (B : RouterDefectBridge (E := E)) :
     B.sourcedGenerator = sourcedModularGenerator B.CIK B.obs B.flow := by
   unfold sourcedGenerator sourcedModularGenerator
   simp [B.residual_eq_observerDefect]
 
 /-- Drazin-cut preservation follows immediately once the router residual is identified canonically. -/
-@[rep_depth transport]
+@[bridge_target_tag, rep_depth transport]
 theorem sourcedGenerator_respects_cut (B : RouterDefectBridge (E := E)) :
     Commute B.sourcedGenerator B.CIK.spectralComplementaryProjector := by
   rw [sourcedGenerator_eq_canonical (B := B)]
@@ -419,6 +421,9 @@ derivative.
 def ObserverDefectResidualWeylThermodynamicBoundedByZD
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK) : Prop :=
+  -- DEBT_ID: LLM-ZD-001
+  -- DEBT_KIND: ZERO_DATUM
+  -- ZERO_DATUM: boundedness is recorded as a nonempty comparison witness rather than a proven theorem.
   Nonempty
     (WeylThermodynamicOperatorComparison (E := E)
       (observerDefectResidual CIK obs)
@@ -439,6 +444,33 @@ theorem observerDefectResidualWeylThermodynamicBoundedByZD_of_comparison
         (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)) :
     ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs :=
   ⟨cmp⟩
+
+/--
+Constructive witness packet for the corrected Weyl/thermodynamic observer-defect
+bound. This carries the comparison packet as explicit data, so downstream
+constructors do not need to consume a bare `Nonempty` proposition when an
+honest witness is already available.
+-/
+@[rep_depth transport]
+structure ObserverDefectResidualWeylThermodynamicControl
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK) where
+  comparison :
+    WeylThermodynamicOperatorComparison (E := E)
+      (observerDefectResidual CIK obs)
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK)
+
+/--
+An explicit Weyl/thermodynamic control witness closes the theorem-level bounded
+observer-defect target.
+-/
+@[rep_depth transport]
+theorem ObserverDefectResidualWeylThermodynamicBoundedByZD_of_control
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (c : ObserverDefectResidualWeylThermodynamicControl (E := E) CIK obs) :
+    ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs :=
+  ⟨c.comparison⟩
 
 /--
 Thermodynamic router bridge.
@@ -537,60 +569,195 @@ theorem observerDefectResidualWeylThermodynamicBoundedByZD
   subst routerResidual
   exact ⟨comparison⟩
 
-end RouterDefectThermodynamicBridge
+/--
+Canonical constructor for the thermodynamic router bridge from an explicit
+Weyl/thermodynamic comparison witness packet.
+
+This keeps the corrected D3 transport on the theorem-backed constructor lane
+without requiring downstream callers to eliminate the theorem-level `Nonempty`
+packet themselves.
+-/
+noncomputable def ofWeylThermodynamicControl
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDefectResidualWeylThermodynamicControl (E := E) CIK obs) :
+    RouterDefectThermodynamicBridge (E := E) :=
+  ofCanonicalObserverDefect (E := E) CIK obs flow c.comparison
+
+@[simp] theorem ofWeylThermodynamicControl_routerResidual
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDefectResidualWeylThermodynamicControl (E := E) CIK obs) :
+    (ofWeylThermodynamicControl (E := E) CIK obs flow c).routerResidual =
+      observerDefectResidual CIK obs := by
+  simp [ofWeylThermodynamicControl]
 
 /--
-Canonical theorem-backed constructor for the bounded bridge for observers with
-vanishing projector deviation.
+Canonical constructor for the thermodynamic router bridge from the theorem-level
+Weyl/thermodynamic boundedness target.
 
-This constructor derives the `Z_D` budget from the owner theorem
-`observerDeviationControlledByZD_of_deviation_eq_zero` instead of taking
-a free norm-budget hypothesis.
+This consumes the owner proposition `ObserverDefectResidualWeylThermodynamicBoundedByZD`
+instead of requiring downstream callers to manually unpack a comparison packet.
 -/
-noncomputable def ofCanonicalObserverDefectOfDeviationZero
- (CIK : CertifiedInverseKernel H₂)
- (obs : ObserverL5 CIK)
- (flow : BackgroundModularFlow CIK)
- (hDev : observerProjectorDeviation CIK obs = 0) :
- RouterDefectBoundBridge (E := E) :=
- let hCtrl : ObserverDeviationControlledByZD := observerDeviationControlledByZD_of_deviation_eq_zero hDev
- { CIK := CIK
- flow := flow
- routerResidual := observerDefectResidual CIK obs
- residual_norm_le_ZD := hCtrl.norm_bound }
+noncomputable def ofWeylThermodynamicBoundedByZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hBound : ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs) :
+    RouterDefectThermodynamicBridge (E := E) :=
+  ofCanonicalObserverDefect (E := E) CIK obs flow (Classical.choice hBound)
+
+@[simp] theorem ofWeylThermodynamicBoundedByZD_routerResidual
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hBound : ObserverDefectResidualWeylThermodynamicBoundedByZD (E := E) CIK obs) :
+    (ofWeylThermodynamicBoundedByZD (E := E) CIK obs flow hBound).routerResidual =
+      observerDefectResidual CIK obs := by
+  simp [ofWeylThermodynamicBoundedByZD]
+
+end RouterDefectThermodynamicBridge
 
 /--
 Canonical theorem-backed constructor for the bounded bridge.
 
 This constructor identifies the router residual with the canonical observer-defect
-residual. The bound proof remains explicit until a general canonical inequality
-linking `observerDefectResidual` to `Z_D` is established upstream.
+residual. The bound is derived from the deviation-control predicate instead of
+requiring an explicit norm-bound hypothesis.
 -/
 noncomputable def ofCanonicalObserverDefect
- (CIK : CertifiedInverseKernel H₂)
- (obs : ObserverL5 CIK)
- (flow : BackgroundModularFlow CIK)
- (hBound : ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖) :
- RouterDefectBoundBridge (E := E) :=
- { CIK := CIK
- flow := flow
- routerResidual := observerDefectResidual CIK obs
- residual_norm_le_ZD := hBound }
+  (CIK : CertifiedInverseKernel H₂)
+  (obs : ObserverL5 CIK)
+  (flow : BackgroundModularFlow CIK)
+  (hControl : ObserverDeviationControlledByZD CIK obs) :
+  RouterDefectBoundBridge (E := E) :=
+  { CIK := CIK
+    flow := flow
+    routerResidual := observerDefectResidual CIK obs
+    residual_norm_le_ZD := observerDefectResidual_norm_le_ZD (E := E) (CIK := CIK) (obs := obs) hControl }
+
+/--
+Core canonical constructor for a canonical observer controlled by `Z_D` — this route
+consumes the owner predicate `ObserverDeviationControlledByZD` directly, eliminating
+the explicit bound hypothesis on this lane.
+-/
+noncomputable def ofCanonicalControlledObserver
+  (CIK : CertifiedInverseKernel H₂)
+  (obs : ObserverL5 CIK)
+  (flow : BackgroundModularFlow CIK)
+  (hControl : ObserverDeviationControlledByZD CIK obs) :
+  RouterDefectBoundBridge (E := E) :=
+  { CIK := CIK
+    flow := flow
+    routerResidual := observerDefectResidual CIK obs
+    residual_norm_le_ZD := observerDefectResidual_norm_le_ZD (E := E) (CIK := CIK) (obs := obs) hControl }
+
+/--
+Constructive bounded constructor for a canonical observer whose exact deviation
+commutator channel is controlled by `Z_D` on the owner lane.
+-/
+noncomputable def ofZDControlledObserver
+  (CIK : CertifiedInverseKernel H₂)
+  (obs : ObserverL5 CIK)
+  (flow : BackgroundModularFlow CIK)
+  (hControl : ObserverDeviationControlledByZD CIK obs) :
+  RouterDefectBoundBridge (E := E) :=
+  ofCanonicalControlledObserver CIK obs flow hControl
+
+/--
+Constructive bounded constructor for a canonical observer carrying an explicit
+owner-side deviation-control witness packet.
+-/
+noncomputable def ofControlObserver
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDeviationControl CIK obs) :
+    RouterDefectBoundBridge (E := E) :=
+  ofZDControlledObserver (E := E) CIK obs flow
+    (ObserverDeviationControlledByZD.of_control c)
+
+/--
+Constructive bounded constructor for an observer whose compressed deviation
+commutator channel is already zero on the defect block.
+-/
+noncomputable def ofCompressedDeviationZeroObserver
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    RouterDefectBoundBridge (E := E) :=
+  ofCanonicalObserverDefect (E := E) CIK obs flow
+    (observerDeviationControlledByZD_of_compressedDeviation_eq_zero
+      (CIK := CIK) (obs := obs) hZero)
+
+@[simp] theorem ofCompressedDeviationZeroObserver_routerResidual
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hZero :
+      CIK.spectralComplementaryProjector *
+        DrazinSupercharge.commutator (observerProjectorDeviation CIK obs) CIK.dilationGap *
+        CIK.spectralComplementaryProjector = 0) :
+    (ofCompressedDeviationZeroObserver (E := E) CIK obs flow hZero).routerResidual = 0 := by
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_compressedDeviation_eq_zero (CIK := CIK) (obs := obs) hZero
+  simpa [ofCompressedDeviationZeroObserver, ofCanonicalObserverDefect] using hResidual
+
+/--
+If the operatorial defect-central/Casimir channel `Z_D` is zero, then the
+`Z_D`-controlled router residual produced from the canonical observer lane is
+zero.
+-/
+@[simp] theorem ofZDControlledObserver_routerResidual_eq_zero_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hControl : ObserverDeviationControlledByZD CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    (ofZDControlledObserver (E := E) CIK obs flow hControl).routerResidual = 0 := by
+  have hResidual :
+      observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_deviationControlledByZD_of_ZD_eq_zero
+      (E := E) (CIK := CIK) (obs := obs) hControl hZD
+  simpa [ofZDControlledObserver, ofCanonicalControlledObserver] using hResidual
+
+@[simp] theorem ofControlObserver_routerResidual_eq_zero_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDeviationControl CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    (ofControlObserver (E := E) CIK obs flow c).routerResidual = 0 := by
+  simpa [ofControlObserver] using
+    ofZDControlledObserver_routerResidual_eq_zero_of_ZD_eq_zero
+      (E := E) (CIK := CIK) (obs := obs) (flow := flow)
+      (hControl := ObserverDeviationControlledByZD.of_control c)
+      (hZD := hZD)
 
 @[simp] theorem ofCanonicalObserverDefect_routerResidual
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
     (flow : BackgroundModularFlow CIK)
-    (hBound : ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖) :
-    (ofCanonicalObserverDefect (E := E) CIK obs flow hBound).routerResidual = observerDefectResidual CIK obs := by
+    (hControl : ObserverDeviationControlledByZD CIK obs) :
+    (ofCanonicalObserverDefect (E := E) CIK obs flow hControl).routerResidual = observerDefectResidual CIK obs := by
   rfl
 
 /--
 Zero-defect bounded constructor for an aligned observer.
 
 This closes the `ZD` budget without a free inequality assumption in the
-equilibrium lane: alignment forces the canonical observer defect to vanish, and
-`0 ≤ ‖Z_D‖` supplies the bound.
+equilibrium lane: alignment constructs an explicit owner-side
+`ObserverDeviationControl` witness, and the general `ofControlObserver`
+constructor consumes that packet without reopening a bridge-local residual
+budget.
 -/
 noncomputable def ofAlignedObserver
     (CIK : CertifiedInverseKernel H₂)
@@ -598,14 +765,64 @@ noncomputable def ofAlignedObserver
     (flow : BackgroundModularFlow CIK)
     (hAlign : observerOrientationResidual CIK obs = 0) :
     RouterDefectBoundBridge (E := E) :=
-  ofCanonicalObserverDefect (E := E) CIK obs flow (by
-    have hZero : observerDefectResidual CIK obs = 0 :=
-      observerDefectResidual_eq_zero_of_aligned (CIK := CIK) (obs := obs) hAlign
-    rw [hZero]
-    calc
-      ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
-      _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ :=
-        norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK))
+  ofControlObserver (E := E) CIK obs flow
+    (observerDeviationControl_of_aligned
+      (E := E) (CIK := CIK) (obs := obs) hAlign)
+
+/--
+Zero-defect bounded constructor for an observer whose scalarized orientation
+strain already vanishes on the owner lane.
+-/
+noncomputable def ofStrainZeroObserver
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    RouterDefectBoundBridge (E := E) :=
+  ofCanonicalObserverDefect (E := E) CIK obs flow
+    (observerDeviationControlledByZD_of_strain_eq_zero
+      (CIK := CIK) (obs := obs) hStrain)
+
+/--
+Zero-defect bounded constructor for an observer whose local slice is exactly the
+certified spectral projector.  The owner lane first constructs the exact
+deviation-control predicate, and the bounded bridge is then obtained from the
+general `ofZDControlledObserver` constructor.
+-/
+noncomputable def ofDeviationZeroObserver
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    RouterDefectBoundBridge (E := E) :=
+  ofZDControlledObserver (E := E) CIK obs flow
+    (observerDeviationControlledByZD_of_deviation_eq_zero
+      (E := E) (CIK := CIK) (obs := obs) hDev)
+
+@[simp] theorem ofDeviationZeroObserver_routerResidual
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    (ofDeviationZeroObserver (E := E) CIK obs flow hDev).routerResidual = 0 := by
+  have _hControl : ObserverDeviationControlledByZD CIK obs :=
+    observerDeviationControlledByZD_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_deviation_eq_zero (CIK := CIK) (obs := obs) hDev
+  simpa [ofDeviationZeroObserver, ofZDControlledObserver,
+    ofCanonicalObserverDefect, ofCanonicalControlledObserver] using hResidual
+
+@[simp] theorem ofStrainZeroObserver_routerResidual
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    (ofStrainZeroObserver (E := E) CIK obs flow hStrain).routerResidual = 0 := by
+  have _hControl : ObserverDeviationControlledByZD CIK obs :=
+    observerDeviationControlledByZD_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_strain_eq_zero (CIK := CIK) (obs := obs) hStrain
+  simpa [ofStrainZeroObserver, ofZDControlledObserver, ofCanonicalObserverDefect] using hResidual
 
 @[simp] theorem ofAlignedObserver_routerResidual
     (CIK : CertifiedInverseKernel H₂)
@@ -613,45 +830,214 @@ noncomputable def ofAlignedObserver
     (flow : BackgroundModularFlow CIK)
     (hAlign : observerOrientationResidual CIK obs = 0) :
     (ofAlignedObserver (E := E) CIK obs flow hAlign).routerResidual = 0 := by
-  have hZero : observerDefectResidual CIK obs = 0 :=
+  have hResidual : observerDefectResidual CIK obs = 0 :=
     observerDefectResidual_eq_zero_of_aligned (CIK := CIK) (obs := obs) hAlign
-  simpa [ofAlignedObserver] using hZero
-
-/--
-Zero-defect bounded constructor for an observer with vanishing scalarized strain.
-
-This removes the explicit `hBound` norm-budget hypothesis on the exact lane where
-`observerOrientationStrain = 0` already forces the canonical observer defect to
-vanish.
--/
-noncomputable def ofZeroStrainObserver
-    (CIK : CertifiedInverseKernel H₂)
-    (obs : ObserverL5 CIK)
-    (flow : BackgroundModularFlow CIK)
-    (hStrain : observerOrientationStrain CIK obs = 0) :
-    RouterDefectBoundBridge (E := E) :=
-  ofCanonicalObserverDefect (E := E) CIK obs flow (by
-    have hZero : observerDefectResidual CIK obs = 0 :=
-      (observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)).1 hStrain
-    rw [hZero]
-    calc
-      ‖(0 : EndH)‖ = 0 := ContinuousLinearMap.opNorm_zero
-      _ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ :=
-        norm_nonneg (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK))
-
-@[simp] theorem ofZeroStrainObserver_routerResidual
-    (CIK : CertifiedInverseKernel H₂)
-    (obs : ObserverL5 CIK)
-    (flow : BackgroundModularFlow CIK)
-    (hStrain : observerOrientationStrain CIK obs = 0) :
-    (ofZeroStrainObserver (E := E) CIK obs flow hStrain).routerResidual = 0 := by
-  have hZero : observerDefectResidual CIK obs = 0 :=
-    (observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)).1 hStrain
-  simpa [ofZeroStrainObserver] using hZero
+  simpa [ofAlignedObserver, ofControlObserver, ofZDControlledObserver,
+    ofCanonicalObserverDefect, ofCanonicalControlledObserver] using hResidual
 
 /-- Sourced generator built from the bounded LLM-side residual input. -/
 noncomputable def sourcedGenerator (B : RouterDefectBoundBridge (E := E)) : EndH :=
   B.flow.K0 + B.routerResidual
+
+/--
+The bounded sourced generator equals the background flow exactly when the router
+residual vanishes.
+-/
+theorem sourcedGenerator_eq_flow_iff_routerResidual_eq_zero
+    (B : RouterDefectBoundBridge (E := E)) :
+    B.sourcedGenerator = B.flow.K0 ↔ B.routerResidual = 0 := by
+  constructor
+  · intro h
+    have hSub := congrArg (fun T => T - B.flow.K0) h
+    unfold RouterDefectBoundBridge.sourcedGenerator at hSub
+    simpa [sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using hSub
+  · intro hResidual
+    unfold RouterDefectBoundBridge.sourcedGenerator
+    simpa [hResidual]
+
+/--
+If the exact deviation channel is controlled by `Z_D` and `Z_D` itself vanishes,
+then the bounded router sourced generator collapses to the background flow.
+-/
+@[rep_depth transport]
+theorem ofZDControlledObserver_sourcedGenerator_eq_flow_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hControl : ObserverDeviationControlledByZD CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    (ofZDControlledObserver (E := E) CIK obs flow hControl).sourcedGenerator = flow.K0 := by
+  rw [RouterDefectBoundBridge.sourcedGenerator]
+  rw [ofZDControlledObserver_routerResidual_eq_zero_of_ZD_eq_zero
+    (E := E) (CIK := CIK) (obs := obs) (flow := flow) (hControl := hControl) (hZD := hZD)]
+  simp [ofZDControlledObserver, ofCanonicalControlledObserver]
+
+/--
+If the exact deviation channel is controlled by `Z_D` and `Z_D` itself vanishes,
+then Drazin-cut preservation reduces to the background-flow commutation theorem.
+-/
+@[rep_depth transport]
+theorem ofZDControlledObserver_sourcedGenerator_respects_cut_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hControl : ObserverDeviationControlledByZD CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    Commute
+      (ofZDControlledObserver (E := E) CIK obs flow hControl).sourcedGenerator
+      CIK.spectralComplementaryProjector := by
+  rw [ofZDControlledObserver_sourcedGenerator_eq_flow_of_ZD_eq_zero
+    (E := E) CIK obs flow hControl hZD]
+  exact flow.commutesQ0
+
+/--
+If an observer is carried by an explicit owner-side deviation-control witness and
+`Z_D` vanishes, the bounded sourced generator collapses to the background flow.
+-/
+@[rep_depth transport]
+theorem ofControlObserver_sourcedGenerator_eq_flow_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDeviationControl CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    (ofControlObserver (E := E) CIK obs flow c).sourcedGenerator = flow.K0 := by
+  simpa [ofControlObserver] using
+    ofZDControlledObserver_sourcedGenerator_eq_flow_of_ZD_eq_zero
+      (E := E) (CIK := CIK) (obs := obs) (flow := flow)
+      (hControl := ObserverDeviationControlledByZD.of_control c)
+      (hZD := hZD)
+
+/--
+If an observer is carried by an explicit owner-side deviation-control witness and
+`Z_D` vanishes, Drazin-cut preservation reduces to flow commutation.
+-/
+@[rep_depth transport]
+theorem ofControlObserver_sourcedGenerator_respects_cut_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDeviationControl CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    Commute
+      (ofControlObserver (E := E) CIK obs flow c).sourcedGenerator
+      CIK.spectralComplementaryProjector := by
+  rw [ofControlObserver_sourcedGenerator_eq_flow_of_ZD_eq_zero
+    (E := E) CIK obs flow c hZD]
+  exact flow.commutesQ0
+
+/--
+Strain-zero sourced-flow collapse for the control-witness constructor.
+
+This is a constructive infinite-lane descent that removes the extra `Z_D = 0`
+input on this branch: the owner theorem
+`observerDefectResidual_eq_zero_of_strain_eq_zero` already discharges residual
+vanishing from strain zero.
+-/
+@[rep_depth transport]
+theorem ofControlObserver_sourcedGenerator_eq_flow_of_strain_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDeviationControl CIK obs)
+    (hStrain : observerOrientationStrain CIK obs = 0) :
+    (ofControlObserver (E := E) CIK obs flow c).sourcedGenerator = flow.K0 := by
+  refine
+    (sourcedGenerator_eq_flow_iff_routerResidual_eq_zero
+      (B := ofControlObserver (E := E) CIK obs flow c)).2 ?_
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_strain_eq_zero
+      (CIK := CIK) (obs := obs) hStrain
+  simpa [ofControlObserver, ofZDControlledObserver,
+    ofCanonicalObserverDefect, ofCanonicalControlledObserver] using hResidual
+
+/--
+On the exact projector-deviation-zero branch, the control-witness constructor
+already collapses the router residual without any extra `Z_D = 0` hypothesis.
+-/
+@[rep_depth transport]
+theorem ofControlObserver_routerResidual_eq_zero_of_deviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDeviationControl CIK obs)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    (ofControlObserver (E := E) CIK obs flow c).routerResidual = 0 := by
+  have hResidual : observerDefectResidual CIK obs = 0 :=
+    observerDefectResidual_eq_zero_of_deviation_eq_zero
+      (CIK := CIK) (obs := obs) hDev
+  simpa [ofControlObserver, ofZDControlledObserver,
+    ofCanonicalObserverDefect, ofCanonicalControlledObserver] using hResidual
+
+/--
+On the exact projector-deviation-zero branch, the control-witness constructor
+already collapses the sourced generator to the background flow without any extra
+`Z_D = 0` hypothesis.
+-/
+@[rep_depth transport]
+theorem ofControlObserver_sourcedGenerator_eq_flow_of_deviation_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (c : ObserverDeviationControl CIK obs)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    (ofControlObserver (E := E) CIK obs flow c).sourcedGenerator = flow.K0 := by
+  exact
+    (sourcedGenerator_eq_flow_iff_routerResidual_eq_zero
+      (B := ofControlObserver (E := E) CIK obs flow c)).2
+      (ofControlObserver_routerResidual_eq_zero_of_deviation_eq_zero
+        (E := E) (CIK := CIK) (obs := obs) (flow := flow) (c := c) (hDev := hDev))
+
+/--
+Under zero central defect, the control-witness constructor forces zero scalarized
+observer strain on the owner lane.
+-/
+@[rep_depth transport]
+theorem ofControlObserver_observerOrientationStrain_eq_zero_of_ZD_eq_zero
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (c : ObserverDeviationControl CIK obs)
+    (hZD :
+      InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK = 0) :
+    observerOrientationStrain CIK obs = 0 := by
+  exact observerOrientationStrain_eq_zero_of_control_of_ZD_eq_zero
+    (CIK := CIK) (obs := obs) hZD c
+
+/--
+For a deviation-zero observer, the bounded router sourced generator collapses to
+the background flow generator.
+-/
+@[rep_depth transport]
+theorem ofDeviationZeroObserver_sourcedGenerator_eq_flow
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    (ofDeviationZeroObserver (E := E) CIK obs flow hDev).sourcedGenerator = flow.K0 := by
+  rw [RouterDefectBoundBridge.sourcedGenerator]
+  rw [ofDeviationZeroObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
+    (flow := flow) (hDev := hDev)]
+  simp [ofDeviationZeroObserver, ofZDControlledObserver, ofCanonicalControlledObserver]
+
+/--
+For a deviation-zero observer, Drazin-cut preservation reduces to the
+background-flow commutation theorem.
+-/
+@[rep_depth transport]
+theorem ofDeviationZeroObserver_sourcedGenerator_respects_cut
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    Commute
+      (ofDeviationZeroObserver (E := E) CIK obs flow hDev).sourcedGenerator
+      CIK.spectralComplementaryProjector := by
+  rw [ofDeviationZeroObserver_sourcedGenerator_eq_flow (E := E) CIK obs flow hDev]
+  exact flow.commutesQ0
 
 /--
 For an aligned observer, the bounded router sourced generator collapses to the
@@ -664,10 +1050,11 @@ theorem ofAlignedObserver_sourcedGenerator_eq_flow
     (flow : BackgroundModularFlow CIK)
     (hAlign : observerOrientationResidual CIK obs = 0) :
     (ofAlignedObserver (E := E) CIK obs flow hAlign).sourcedGenerator = flow.K0 := by
-  have hZero : observerDefectResidual CIK obs = 0 :=
-    observerDefectResidual_eq_zero_of_aligned (CIK := CIK) (obs := obs) hAlign
-  simp [RouterDefectBoundBridge.sourcedGenerator, ofAlignedObserver,
-    ofCanonicalObserverDefect, hZero]
+  exact
+    (sourcedGenerator_eq_flow_iff_routerResidual_eq_zero
+      (B := ofAlignedObserver (E := E) CIK obs flow hAlign)).2
+      (ofAlignedObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
+        (flow := flow) (hAlign := hAlign))
 
 /--
 For an aligned observer, Drazin-cut preservation reduces to the background-flow
@@ -686,35 +1073,36 @@ theorem ofAlignedObserver_sourcedGenerator_respects_cut
   exact flow.commutesQ0
 
 /--
-For a zero-strain observer, the bounded router sourced generator collapses to the
+For a strain-zero observer, the bounded router sourced generator collapses to the
 background flow generator.
 -/
 @[rep_depth transport]
-theorem ofZeroStrainObserver_sourcedGenerator_eq_flow
+theorem ofStrainZeroObserver_sourcedGenerator_eq_flow
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
     (flow : BackgroundModularFlow CIK)
     (hStrain : observerOrientationStrain CIK obs = 0) :
-    (ofZeroStrainObserver (E := E) CIK obs flow hStrain).sourcedGenerator = flow.K0 := by
-  have hZero : observerDefectResidual CIK obs = 0 :=
-    (observerOrientationStrain_eq_zero_iff (CIK := CIK) (obs := obs)).1 hStrain
-  simp [RouterDefectBoundBridge.sourcedGenerator, ofZeroStrainObserver,
-    ofCanonicalObserverDefect, hZero]
+    (ofStrainZeroObserver (E := E) CIK obs flow hStrain).sourcedGenerator = flow.K0 := by
+  exact
+    (sourcedGenerator_eq_flow_iff_routerResidual_eq_zero
+      (B := ofStrainZeroObserver (E := E) CIK obs flow hStrain)).2
+      (ofStrainZeroObserver_routerResidual (E := E) (CIK := CIK) (obs := obs)
+        (flow := flow) (hStrain := hStrain))
 
 /--
-For a zero-strain observer, Drazin-cut preservation reduces to the background-flow
-commutation theorem.
+For a strain-zero observer, Drazin-cut preservation reduces to the
+background-flow commutation theorem.
 -/
 @[rep_depth transport]
-theorem ofZeroStrainObserver_sourcedGenerator_respects_cut
+theorem ofStrainZeroObserver_sourcedGenerator_respects_cut
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
     (flow : BackgroundModularFlow CIK)
     (hStrain : observerOrientationStrain CIK obs = 0) :
     Commute
-      (ofZeroStrainObserver (E := E) CIK obs flow hStrain).sourcedGenerator
+      (ofStrainZeroObserver (E := E) CIK obs flow hStrain).sourcedGenerator
       CIK.spectralComplementaryProjector := by
-  rw [ofZeroStrainObserver_sourcedGenerator_eq_flow (E := E) CIK obs flow hStrain]
+  rw [ofStrainZeroObserver_sourcedGenerator_eq_flow (E := E) CIK obs flow hStrain]
   exact flow.commutesQ0
 
 /--
@@ -726,8 +1114,8 @@ theorem ofCanonicalObserverDefect_sourcedGenerator_eq_canonical
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
     (flow : BackgroundModularFlow CIK)
-    (hBound : ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖) :
-    (ofCanonicalObserverDefect (E := E) CIK obs flow hBound).sourcedGenerator =
+    (hControl : ObserverDeviationControlledByZD CIK obs) :
+    (ofCanonicalObserverDefect (E := E) CIK obs flow hControl).sourcedGenerator =
       sourcedModularGenerator CIK obs flow := by
   rfl
 
@@ -740,21 +1128,70 @@ theorem ofCanonicalObserverDefect_sourcedGenerator_respects_cut
     (CIK : CertifiedInverseKernel H₂)
     (obs : ObserverL5 CIK)
     (flow : BackgroundModularFlow CIK)
-    (hBound : ‖observerDefectResidual CIK obs‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖) :
+    (hControl : ObserverDeviationControlledByZD CIK obs) :
     Commute
-      (ofCanonicalObserverDefect (E := E) CIK obs flow hBound).sourcedGenerator
+      (ofCanonicalObserverDefect (E := E) CIK obs flow hControl).sourcedGenerator
       CIK.spectralComplementaryProjector := by
   rw [ofCanonicalObserverDefect_sourcedGenerator_eq_canonical
-    (E := E) CIK obs flow hBound]
+    (E := E) CIK obs flow hControl]
   exact sourcedModularGenerator_respects_spectral_cut (CIK := CIK) (obs := obs) (flow := flow)
 
 /-- The residual budget is exactly the sourced-generator deviation from baseline flow. -/
 @[rep_depth transport]
 theorem sourcedGenerator_deviation_norm_le_ZD
-    (B : RouterDefectBoundBridge (E := E)) :
-    ‖B.sourcedGenerator - B.flow.K0‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) B.CIK‖ := by
+  (B : RouterDefectBoundBridge (E := E)) :
+  ‖B.sourcedGenerator - B.flow.K0‖ ≤ ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) B.CIK‖ := by
   simpa [sourcedGenerator, sub_eq_add_neg, add_assoc, add_comm, add_left_comm] using
-    B.residual_norm_le_ZD
+  B.residual_norm_le_ZD
+
+/--
+Constructive readback for the witness-routed bounded constructor: the router residual
+inherits the canonical `Z_D` budget from the explicit `ObserverDeviationControl`
+packet, without reopening a bare `ObserverDeviationControlledByZD` hypothesis.
+-/
+@[rep_depth transport]
+theorem ofControlObserver_routerResidual_norm_le_ZD
+  (CIK : CertifiedInverseKernel H₂)
+  (obs : ObserverL5 CIK)
+  (flow : BackgroundModularFlow CIK)
+  (c : ObserverDeviationControl CIK obs) :
+  ‖(ofControlObserver (E := E) CIK obs flow c).routerResidual‖ ≤
+    ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  exact (ofControlObserver (E := E) CIK obs flow c).residual_norm_le_ZD
+
+/--
+Compatibility readback for the predicate-routed bounded constructor: the router residual
+inherits the canonical `Z_D` budget directly from the constructor record.
+-/
+@[rep_depth transport]
+theorem ofZDControlledObserver_routerResidual_norm_le_ZD
+  (CIK : CertifiedInverseKernel H₂)
+  (obs : ObserverL5 CIK)
+  (flow : BackgroundModularFlow CIK)
+  (hControl : ObserverDeviationControlledByZD CIK obs) :
+  ‖(ofZDControlledObserver (E := E) CIK obs flow hControl).routerResidual‖ ≤
+    ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  exact (ofZDControlledObserver (E := E) CIK obs flow hControl).residual_norm_le_ZD
+
+@[rep_depth transport]
+theorem ofAlignedObserver_routerResidual_norm_le_ZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hAlign : observerOrientationResidual CIK obs = 0) :
+    ‖(ofAlignedObserver (E := E) CIK obs flow hAlign).routerResidual‖ ≤
+      ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  exact observerDefectResidual_norm_le_ZD_of_aligned (E := E) (CIK := CIK) (obs := obs) hAlign
+
+@[rep_depth transport]
+theorem ofDeviationZeroObserver_routerResidual_norm_le_ZD
+    (CIK : CertifiedInverseKernel H₂)
+    (obs : ObserverL5 CIK)
+    (flow : BackgroundModularFlow CIK)
+    (hDev : observerProjectorDeviation CIK obs = 0) :
+    ‖(ofDeviationZeroObserver (E := E) CIK obs flow hDev).routerResidual‖ ≤
+      ‖InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) CIK‖ := by
+  exact observerDefectResidual_norm_le_ZD_of_deviation_eq_zero (E := E) (CIK := CIK) (obs := obs) hDev
 
 end RouterDefectBoundBridge
 

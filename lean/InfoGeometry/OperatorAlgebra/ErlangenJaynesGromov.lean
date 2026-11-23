@@ -1,3 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.DualNumber
@@ -615,6 +626,28 @@ theorem density_normalized (D : AlgebraicRNDensity (R := R) (A := A) ω φ) :
   rw [h] at hφ
   simpa using hφ
 
+/--
+The density representing a state is unique whenever the reference state has
+nondegenerate left pairing.  The order in the pairing is part of the
+hypothesis: it tests `ω (x * a)`, matching the left-density convention in
+`rn_law`.
+-/
+theorem density_unique_of_left_pairing_separating
+    {R : Type uR} {A : Type uA} [CommRing R] [Ring A] [Algebra R A]
+    (ω φ : AlgebraicState (R := R) (A := A))
+    (D₁ D₂ : AlgebraicRNDensity (R := R) (A := A) ω φ)
+    (hsep : ∀ x : A, (∀ a : A, ω (x * a) = 0) → x = 0) :
+    D₁.density = D₂.density := by
+  apply sub_eq_zero.mp
+  apply hsep (D₁.density - D₂.density)
+  intro a
+  calc
+    ω ((D₁.density - D₂.density) * a) =
+        ω (D₁.density * a) - ω (D₂.density * a) := by
+          rw [sub_mul]
+          exact ω.toLinearMap.map_sub (D₁.density * a) (D₂.density * a)
+    _ = 0 := sub_eq_zero.mpr ((D₁.rn_law a).symm.trans (D₂.rn_law a))
+
 end AlgebraicRNDensity
 
 /-- Algebraic absolute continuity is carried by an explicit RN-density witness. -/
@@ -669,7 +702,7 @@ def AlgebraicAbsolutelyContinuous.trans
 section EmpiricalRN
 
 variable {K : Type uR} {B : Type uA}
-variable [Field K] [Ring B] [Algebra K B]
+variable [Semifield K] [Semiring B] [Algebra K B]
 
 /--
 An empirical Jaynes state equipped with an explicit algebraic RN-density witness

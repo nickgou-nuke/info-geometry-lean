@@ -378,6 +378,29 @@ theorem quadraticMoment_modularSwap [CompleteSpace E] (z : Doubled E) :
   simp only [WithLp.fst, WithLp.snd]
   rw [real_inner_self_eq_norm_sq, real_inner_self_eq_norm_sq]
 
+/-- On every nontrivial real Hilbert carrier, the doubled modular-swap
+Souriau moment is not globally Lipschitz. Its degree-two scaling along a
+nonzero first-sheet vector rules out every finite global Lipschitz constant. -/
+theorem modularSwap_quadraticMoment_not_lipschitz
+    [CompleteSpace E] [Nontrivial E] :
+    ∀ C : NNReal, ¬ LipschitzWith C
+      (quadraticMoment (InfoGeometry.Krein.modular_j (E := E))) := by
+  obtain ⟨x, hx⟩ := exists_ne (0 : E)
+  let z : Doubled E := WithLp.toLp (2 : ENNReal) (x, 0)
+  have hzvalue : quadraticMoment (InfoGeometry.Krein.modular_j (E := E)) z =
+      -‖x‖ ^ 2 / 2 := by
+    rw [quadraticMoment_modularSwap]
+    simp [z]
+  have hsq : ‖x‖ ^ 2 ≠ 0 :=
+    pow_ne_zero 2 (norm_ne_zero_iff.mpr hx)
+  have hmoment : quadraticMoment (InfoGeometry.Krein.modular_j (E := E)) z ≠ 0 := by
+    rw [hzvalue]
+    exact div_ne_zero (neg_ne_zero.mpr hsq) (by norm_num)
+  have hpotential : potential
+      (symplecticForm.comp (InfoGeometry.Krein.modular_j (E := E))) z ≠ 0 := by
+    simpa [quadraticMoment] using hmoment
+  exact potential_not_lipschitzWith_of_ne_zero _ hpotential
+
 /-- The second Fréchet derivative of the quadratic Hamiltonian is the
 constant bilinear form `(u,v) ↦ Ω (G u) v`. In particular, the Hessian is
 independent of the base point; this is the precise finite-dimensional-style

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Lean
+import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Lean.Util.Sorry
 import InfoGeometry.Meta.CurvatureTelemetry
 import InfoGeometry.Meta.ProofShape

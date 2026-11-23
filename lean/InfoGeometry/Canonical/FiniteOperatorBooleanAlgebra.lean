@@ -65,6 +65,72 @@ theorem toOps_compl_eq_one_sub {P : ℕ} (s : Sector P) :
   funext i
   exact KreinSector.toAlg_compl_eq_one_sub (s i)
 
+/-! ## The sector carrier as two Boolean bits per site -/
+
+/-- The four-element projector algebra records occupancy of its two distinct
+atoms, `minus` and `plus`.  Thus one site is a two-bit Boolean cube. -/
+def kreinSectorBitEquiv : KreinSector ≃ Bool × Bool where
+  toFun
+    | .bot => (false, false)
+    | .minus => (true, false)
+    | .plus => (false, true)
+    | .top => (true, true)
+  invFun
+    | (false, false) => .bot
+    | (true, false) => .minus
+    | (false, true) => .plus
+    | (true, true) => .top
+  left_inv a := by cases a <;> rfl
+  right_inv b := by
+    rcases b with ⟨b₁, b₂⟩
+    cases b₁ <;> cases b₂ <;> rfl
+
+/-- Pointwise bit representation of a finite family of Krein sectors. -/
+def sectorBitEquiv (P : ℕ) : Sector P ≃ (Fin P → Bool × Bool) where
+  toFun s i := kreinSectorBitEquiv (s i)
+  invFun b i := kreinSectorBitEquiv.symm (b i)
+  left_inv s := by
+    funext i
+    exact kreinSectorBitEquiv.left_inv (s i)
+  right_inv b := by
+    funext i
+    exact kreinSectorBitEquiv.right_inv (b i)
+
+/-- The sitewise bit representation preserves meet, coordinatewise. -/
+theorem kreinSectorBitEquiv_inf (a b : KreinSector) :
+    kreinSectorBitEquiv (a ⊓ b) = kreinSectorBitEquiv a ⊓ kreinSectorBitEquiv b := by
+  cases a <;> cases b <;> rfl
+
+/-- The sitewise bit representation preserves join, coordinatewise. -/
+theorem kreinSectorBitEquiv_sup (a b : KreinSector) :
+    kreinSectorBitEquiv (a ⊔ b) = kreinSectorBitEquiv a ⊔ kreinSectorBitEquiv b := by
+  cases a <;> cases b <;> rfl
+
+/-- Complement in the sector algebra negates each of its two atom bits. -/
+theorem kreinSectorBitEquiv_compl (a : KreinSector) :
+    kreinSectorBitEquiv aᶜ =
+      (!((kreinSectorBitEquiv a).1), !((kreinSectorBitEquiv a).2)) := by
+  cases a <;> rfl
+
+/-- The finite-sector equivalence preserves the pointwise Boolean meet. -/
+theorem sectorBitEquiv_inf (P : ℕ) (s t : Sector P) :
+    sectorBitEquiv P (s ⊓ t) = sectorBitEquiv P s ⊓ sectorBitEquiv P t := by
+  funext i
+  exact kreinSectorBitEquiv_inf (s i) (t i)
+
+/-- The finite-sector equivalence preserves the pointwise Boolean join. -/
+theorem sectorBitEquiv_sup (P : ℕ) (s t : Sector P) :
+    sectorBitEquiv P (s ⊔ t) = sectorBitEquiv P s ⊔ sectorBitEquiv P t := by
+  funext i
+  exact kreinSectorBitEquiv_sup (s i) (t i)
+
+/-- The finite-sector equivalence carries complement to bitwise Boolean negation. -/
+theorem sectorBitEquiv_compl (P : ℕ) (s : Sector P) :
+    sectorBitEquiv P sᶜ = fun i =>
+      (!((sectorBitEquiv P s i).1), !((sectorBitEquiv P s i).2)) := by
+  funext i
+  exact kreinSectorBitEquiv_compl (s i)
+
 /-- Permutation action on a sector family: the coordinate permutation of a Boolean product. -/
 instance instPermAction (P : ℕ) : MulAction (Equiv.Perm (Fin P)) (Sector P) where
   smul σ s := fun i => s (σ.symm i)
@@ -136,6 +202,19 @@ abbrev FlipGroup (P : ℕ) := Fin P → Multiplicative (ZMod 2)
 /-- Single-bit action of `Multiplicative (ZMod 2)` on `KreinSector`. -/
 def applyFlipBit (b : Multiplicative (ZMod 2)) (a : KreinSector) : KreinSector :=
   if Multiplicative.toAdd b = (1 : ZMod 2) then signFlip a else a
+
+/-- Under the two-bit encoding, the nontrivial group element swaps the two
+atomic projector bits. -/
+theorem kreinSectorBitEquiv_applyFlipBit
+    (b : Multiplicative (ZMod 2)) (a : KreinSector) :
+    kreinSectorBitEquiv (applyFlipBit b a) =
+      if Multiplicative.toAdd b = (1 : ZMod 2) then
+        Prod.swap (kreinSectorBitEquiv a)
+      else kreinSectorBitEquiv a := by
+  unfold applyFlipBit
+  split_ifs with h
+  · cases a <;> rfl
+  · rfl
 
 @[simp] theorem applyFlipBit_one (a : KreinSector) :
     applyFlipBit 1 a = a := by
@@ -245,6 +324,18 @@ instance instSignedPermAction (P : ℕ) : MulAction (SignedPerm P) (Sector P) wh
     exact applyFlipBit_mul (g.left i) (h.left (g.right.symm i))
       (s (h.right.symm (g.right.symm i)))
 
+/-- The signed-permutation action, transported to bits, permutes sites and
+then swaps the two atom bits at each site selected by the flip component. -/
+theorem signedPerm_sectorBitEquiv_apply
+    (P : ℕ) (g : SignedPerm P) (s : Sector P) (i : Fin P) :
+    sectorBitEquiv P (g • s) i =
+      if Multiplicative.toAdd (g.left i) = (1 : ZMod 2) then
+        Prod.swap (sectorBitEquiv P s (g.right.symm i))
+      else sectorBitEquiv P s (g.right.symm i) := by
+  change kreinSectorBitEquiv
+      (applyFlipBit (g.left i) (s (g.right.symm i))) = _
+  exact kreinSectorBitEquiv_applyFlipBit (g.left i) (s (g.right.symm i))
+
 theorem signedPerm_meet (P : ℕ) (g : SignedPerm P) (s t : Sector P) :
     g • (s ⊓ t) = (g • s) ⊓ (g • t) :=
   signFlipSector_meet g.left (g.right • s) (g.right • t)
@@ -267,6 +358,74 @@ theorem signedPerm_top (P : ℕ) (g : SignedPerm P) :
   funext i
   exact applyFlipBit_top (g.left i)
 
+private theorem applyFlipBit_minus_ne_bot (b : Multiplicative (ZMod 2)) :
+    applyFlipBit b KreinSector.minus ≠ KreinSector.bot := by
+  unfold applyFlipBit
+  split_ifs <;> simp [signFlip]
+
+/-- An element of the signed-permutation group fixing every sector family is
+the identity, provided the register has at least one site. -/
+theorem signedPerm_eq_one_of_forall_smul_eq_self
+    (P : ℕ) [Nonempty (Fin P)] (g : SignedPerm P)
+    (hfix : ∀ s : Sector P, g • s = s) :
+    g = 1 := by
+  classical
+  have hright_apply : ∀ i : Fin P, g.right i = i := by
+    intro i
+    let s : Sector P := fun j => if j = i then KreinSector.minus else KreinSector.bot
+    have hs := congrFun (hfix s) (g.right i)
+    change applyFlipBit (g.left (g.right i))
+        (if g.right.symm (g.right i) = i then KreinSector.minus else KreinSector.bot) =
+      if g.right i = i then KreinSector.minus else KreinSector.bot at hs
+    simp only [Equiv.symm_apply_apply, ↓reduceIte] at hs
+    have hne := applyFlipBit_minus_ne_bot (g.left (g.right i))
+    by_contra hne'
+    simp [hne'] at hs
+    exact hne hs
+  have hright : g.right = 1 := by
+    ext i
+    exact congrArg Fin.val (hright_apply i)
+  have hleft_apply : ∀ i : Fin P, g.left i = 1 := by
+    intro i
+    have hs := congrFun (hfix (fun _ : Fin P => KreinSector.minus)) i
+    change applyFlipBit (g.left i) KreinSector.minus = KreinSector.minus at hs
+    have hzero : Multiplicative.toAdd (g.left i) = 0 := by
+      by_cases hone : Multiplicative.toAdd (g.left i) = 1
+      · simp [applyFlipBit, signFlip, hone] at hs
+      · have hvalne : (Multiplicative.toAdd (g.left i)).val ≠ 1 := by
+          intro hv
+          apply hone
+          apply ZMod.val_injective 2
+          simpa only [ZMod.val_one] using hv
+        have hval : (Multiplicative.toAdd (g.left i)).val = 0 := by
+          have hlt := ZMod.val_lt (Multiplicative.toAdd (g.left i))
+          omega
+        apply ZMod.val_injective 2
+        simpa only [ZMod.val_zero] using hval
+    apply Multiplicative.ext
+    simpa using hzero
+  apply SemidirectProduct.ext
+  · ext i
+    exact hleft_apply i
+  · exact hright
+
+/-- For a nonempty finite register the hyperoctahedral action on sector
+families is faithful. -/
+instance instSignedPermFaithfulSMul (P : ℕ) :
+    FaithfulSMul (SignedPerm P) (Sector P) := by
+  rw [faithfulSMul_iff]
+  intro g hfix
+  by_cases hP : 0 < P
+  · let hnonempty : Nonempty (Fin P) := ⟨⟨0, hP⟩⟩
+    exact @signedPerm_eq_one_of_forall_smul_eq_self P hnonempty g hfix
+  · have hP0 : P = 0 := Nat.eq_zero_of_not_pos hP
+    subst P
+    apply SemidirectProduct.ext
+    · funext i
+      exact Fin.elim0 i
+    · ext i
+      exact Fin.elim0 i
+
 /-! ## Prime-register Boolean sector assignment -/
 
 /-- Prime-register subset assignment mapping `p ∈ P.primes` to `p₊` if `p ∈ S`
@@ -274,6 +433,53 @@ and `p₋` otherwise. -/
 def primeSubsetSector (P : PrimeRegister) (S : Finset ℕ) :
     {p // p ∈ P.primes} → KreinSector :=
   fun p => if p.val ∈ S then KreinSector.plus else KreinSector.minus
+
+/-- Prime-register sector families using only the two atomic projectors.  This
+is the precise sector slice corresponding to one Boolean occupancy bit per
+prime; the unrestricted `Sector P` has four choices at every site. -/
+abbrev PrimeAtomSector (P : PrimeRegister) :=
+  {s : {p // p ∈ P.primes} → KreinSector //
+    ∀ p, s p = KreinSector.minus ∨ s p = KreinSector.plus}
+
+/-- Boolean occupancy words are equivalent to prime-register sector families
+restricted to the atomic projectors `minus` and `plus`. -/
+def primeBitAtomSectorEquiv (P : PrimeRegister) :
+    PrimeBitState P ≃ PrimeAtomSector P where
+  toFun ψ := ⟨fun p => if ψ p then KreinSector.plus else KreinSector.minus, by
+    intro p
+    by_cases h : ψ p <;> simp [h]⟩
+  invFun s := fun p => decide (s.1 p = KreinSector.plus)
+  left_inv ψ := by
+    funext p
+    cases h : ψ p <;> simp [h]
+  right_inv s := by
+    apply Subtype.ext
+    funext p
+    rcases s.2 p with hminus | hplus
+    · simp [hminus]
+    · simp [hplus]
+
+/-- Pointwise form of the state-to-sector encoding. -/
+@[simp] theorem primeBitAtomSectorEquiv_apply
+    (P : PrimeRegister) (ψ : PrimeBitState P) (p : {p // p ∈ P.primes}) :
+    (primeBitAtomSectorEquiv P ψ).1 p =
+      if ψ p then KreinSector.plus else KreinSector.minus := rfl
+
+/-- Negating an occupancy bit complements its atomic Krein projector. -/
+theorem primeBitAtomSectorEquiv_not_apply
+    (P : PrimeRegister) (ψ : PrimeBitState P) (p : {p // p ∈ P.primes}) :
+    (primeBitAtomSectorEquiv P (fun q => !(ψ q))).1 p =
+      ((primeBitAtomSectorEquiv P ψ).1 p)ᶜ := by
+  cases h : ψ p <;> simp [h, primeBitAtomSectorEquiv] <;> rfl
+
+/-- The existing subset-to-projector assignment is the state encoding of its
+characteristic occupancy word. -/
+theorem primeSubsetSector_eq_stateEncoding
+    (P : PrimeRegister) (S : Finset ℕ) :
+    primeSubsetSector P S =
+      (primeBitAtomSectorEquiv P (fun p => decide (p.val ∈ S))).1 := by
+  funext p
+  simp [primeSubsetSector, primeBitAtomSectorEquiv]
 
 /-- Pointwise `Cl(1,1)` projector realization of `primeSubsetSector P S`. -/
 noncomputable def primeSubsetOps (P : PrimeRegister) (S : Finset ℕ) :

@@ -7,6 +7,7 @@ import InfoGeometry.Clifford.Cl11ChiralityTransport
 import InfoGeometry.Clifford.Cl11StarAlgebraColimit
 import InfoGeometry.Canonical.Cl11TensorTowerInfiniteCAR
 import InfoGeometry.OperatorAlgebra.GradedAdjointHomotopy
+import InfoGeometry.OperatorAlgebra.FiniteParityContractible
 
 /-!
 # Graded CAR endomorphisms on the infinite Clifford algebraic colimit
@@ -141,12 +142,12 @@ theorem differential_homotopy_CAR (i j : ℕ) :
   rw [gradedAdjoint_mulLeft_anticommutator chirality _ _
     (chirality_annihilationMode j), creationMode_annihilationMode_CAR]
   by_cases hij : i = j
-  · simp only [if_pos hij]
+  · simp only [ite_eq_left hij]
     apply LinearMap.ext
     intro x
     change (1 : Limit) * x = x
     exact one_mul x
-  · simp only [if_neg hij]
+  · simp only [ite_eq_right hij]
     apply LinearMap.ext
     intro x
     change (0 : Limit) * x = 0
@@ -179,6 +180,47 @@ theorem differential_ker_eq_range (i : ℕ) :
     (creationMode i) (annihilationMode i) (chirality_creationMode i)
     (chirality_annihilationMode i) (creationMode_sq_zero i)
   simpa using creationMode_annihilationMode_CAR i i
+
+/-- The BRST operator defines a genuine two-periodic cochain complex on the
+infinite Clifford algebraic colimit. Both parity sectors use the same odd
+differential; its square-zero proof is the actual CAR creation nilpotence. -/
+def differentialComplex (i : ℕ) :
+    InfoGeometry.OperatorAlgebra.FiniteParityComplex.TwoPeriodicComplex Limit Limit where
+  dPlus := differential i
+  dMinus := differential i
+  dMinus_comp_dPlus := by
+    change differential i * differential i = 0
+    exact differential_sq_zero i
+  dPlus_comp_dMinus := by
+    change differential i * differential i = 0
+    exact differential_sq_zero i
+
+/-- The annihilation mode is a contracting homotopy for the two-periodic
+BRST complex. Its identities are the operator CAR equations proved above. -/
+theorem differentialComplexContraction (i : ℕ) :
+    InfoGeometry.OperatorAlgebra.FiniteParityComplex.TwoPeriodicComplex.Contractible
+      (differentialComplex i) := by
+  refine ⟨{
+    hPlus := homotopy i
+    hMinus := homotopy i
+    positive_identity := ?_
+    negative_identity := ?_ }⟩
+  · change (LinearMap.id : Module.End ℝ Limit) - 0 =
+      differential i * homotopy i + homotopy i * differential i
+    rw [differential_homotopy_contracts]
+    rw [sub_zero, ← Module.End.one_eq_id]
+  · change (LinearMap.id : Module.End ℝ Limit) - 0 =
+      differential i * homotopy i + homotopy i * differential i
+    rw [differential_homotopy_contracts]
+    rw [sub_zero, ← Module.End.one_eq_id]
+
+/-- Both cohomology groups of the explicitly constructed BRST complex vanish
+as quotients: every class is equal to zero, by the contracting homotopy. -/
+theorem differentialComplex_cohomology_subsingleton (i : ℕ) :
+    Subsingleton (differentialComplex i).PositiveCohomology ∧
+      Subsingleton (differentialComplex i).NegativeCohomology := by
+  exact ⟨(differentialComplexContraction i).positiveCohomology_subsingleton,
+    (differentialComplexContraction i).negativeCohomology_subsingleton⟩
 
 /-- The unit is exact, so this full contraction retains no unit cohomology class. -/
 theorem differential_annihilationMode (i : ℕ) :

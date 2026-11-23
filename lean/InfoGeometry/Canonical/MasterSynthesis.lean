@@ -4,6 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Quantum.ZeroPointEnergy
+import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.MasterFiniteBridgeLedger
 import InfoGeometry.Canonical.ConformalUnification
 import InfoGeometry.Canonical.NavierStokesBridge
 import InfoGeometry.Canonical.YangMillsContinuum

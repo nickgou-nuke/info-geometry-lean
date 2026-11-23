@@ -10,6 +10,7 @@ import InfoGeometry.Canonical.CPTGradingCompass
 import InfoGeometry.Canonical.Cl11BipartiteDiracBridge
 import InfoGeometry.Canonical.CantorPlabicTwistorBridge
 import InfoGeometry.Topology.WallpaperSymmetry
+import InfoGeometry.Topology.KleinQuotientDeckInvariants
 import InfoGeometry.Algebra.KleinBottleTwistedCommutantBridge
 
 /-!
@@ -59,6 +60,7 @@ open InfoGeometry.Canonical.CPTGradingCompass
 open InfoGeometry.Canonical.Cl11BipartiteDiracBridge
 open InfoGeometry.Canonical.CantorPlabicTwistorBridge
 open InfoGeometry.Topology.Wallpaper
+open InfoGeometry.Topology.KleinQuotientDeckInvariants
 open InfoGeometry.Algebra.KleinBottleTwistedCommutantBridge
 
 /-! ## 1. Abstract $\mathbb{Z}/2$-graded twisted-commutant product laws -/
@@ -189,6 +191,116 @@ theorem integralGlide_sq (p : ℤ × ℤ) :
 theorem integralGlide_sq_preserves_color (p : ℤ × ℤ) :
     latticeColor (integralGlide (integralGlide p)) = latticeColor p := by
   rw [integralGlide_flips_color, integralGlide_flips_color, Bool.not_not]
+
+/-! ### Signed nearest-neighbor lattice and the Klein seam gauge law
+
+The finite square model below is not the infinite lattice quotient.  This
+section records the local edge-signing law on the actual integral square grid:
+each unit face has Kasteleyn product `-1`, and the orientation-reversing glide
+pulls the signing back to a vertex-gauge transform.  These are local
+combinatorial identities; they do not assert a finite quotient graph or a
+classification of its spin structures.
+-/
+
+/-- A positively oriented unit edge in the integral square lattice. -/
+structure SquareLatticeEdge where
+  base : ℤ × ℤ
+  vertical : Bool
+  deriving DecidableEq, Inhabited
+
+/-- Initial vertex of a positively oriented square-lattice edge. -/
+def squareEdgeSource (e : SquareLatticeEdge) : ℤ × ℤ := e.base
+
+/-- Terminal vertex of a positively oriented square-lattice edge. -/
+def squareEdgeTarget (e : SquareLatticeEdge) : ℤ × ℤ :=
+  if e.vertical then (e.base.1, e.base.2 + 1) else (e.base.1 + 1, e.base.2)
+
+/-- The periodic Kasteleyn signing: horizontal edges have sign `+1`; a
+vertical edge based at horizontal coordinate `u` has sign `(-1)^u`. -/
+def squareLatticeKasteleynSign (e : SquareLatticeEdge) : ℤ :=
+  if e.vertical then signZ e.base.1 else 1
+
+/-- Vertex gauge used to compare the pulled-back signing across the glide. -/
+def squareLatticeSeamGauge (p : ℤ × ℤ) : ℤ := signZ p.2
+
+/-- The glide image of an unoriented edge, represented again by a positively
+oriented edge.  A vertical edge reverses direction under the reflection, so
+its new base is the image of its former terminal vertex. -/
+def integralGlideEdge (e : SquareLatticeEdge) : SquareLatticeEdge :=
+  if e.vertical then ⟨(e.base.1 + 1, -e.base.2 - 1), true⟩
+  else ⟨integralGlide e.base, false⟩
+
+/-- The edge map sends endpoints to the glide images, allowing endpoint order
+to reverse precisely on vertical edges. -/
+theorem integralGlideEdge_endpoints (e : SquareLatticeEdge) :
+    squareEdgeSource (integralGlideEdge e) =
+        (if e.vertical then integralGlide (squareEdgeTarget e)
+          else integralGlide (squareEdgeSource e)) ∧
+      squareEdgeTarget (integralGlideEdge e) =
+        (if e.vertical then integralGlide (squareEdgeSource e)
+          else integralGlide (squareEdgeTarget e)) := by
+  cases e with
+  | mk base vertical =>
+      cases vertical <;> rcases base with ⟨u, v⟩
+      · simp [squareEdgeSource, squareEdgeTarget, integralGlideEdge,
+          integralGlide]
+      · simp [squareEdgeSource, squareEdgeTarget, integralGlideEdge,
+          integralGlide]
+        all_goals ring
+
+private theorem squareLattice_sign_sq (n : ℤ) : signZ n * signZ n = 1 := by
+  have h : signZ n = 1 ∨ signZ n = -1 := by
+    unfold signZ
+    split_ifs <;> simp
+  rcases h with h | h <;> simp [h]
+
+private theorem squareLattice_sign_one : signZ (1 : ℤ) = -1 := by
+  norm_num [signZ]
+
+/-- Across the glide seam, the signed edge weight changes by the coboundary
+of `squareLatticeSeamGauge`.  This is the edge-coefficient identity underlying
+diagonal gauge conjugation on any finite subgraph where the induced edge
+permutation and boundary data are defined. -/
+theorem integralGlideEdge_kasteleyn_gauge_law (e : SquareLatticeEdge) :
+    squareLatticeKasteleynSign (integralGlideEdge e) =
+      squareLatticeSeamGauge (squareEdgeSource e) *
+        squareLatticeSeamGauge (squareEdgeTarget e) *
+          squareLatticeKasteleynSign e := by
+  cases e with
+  | mk base vertical =>
+      cases vertical <;> rcases base with ⟨u, v⟩
+      · simp [integralGlideEdge, integralGlide, squareLatticeKasteleynSign,
+          squareLatticeSeamGauge, squareEdgeSource, squareEdgeTarget,
+          squareLattice_sign_sq]
+      · simp only [integralGlideEdge, squareLatticeKasteleynSign,
+          squareLatticeSeamGauge, squareEdgeSource, squareEdgeTarget,
+          ite_true]
+        have hu : signZ (u + 1) = signZ u * -1 := by
+          rw [signZ_add u 1, squareLattice_sign_one]
+        have hv : signZ (v + 1) = signZ v * -1 := by
+          rw [signZ_add v 1, squareLattice_sign_one]
+        rw [hu, hv]
+        calc
+          signZ u * -1 = signZ v * (signZ v * -1) * signZ u := by
+            calc
+              signZ u * -1 = signZ u * 1 * -1 := by ring
+              _ = signZ u * (signZ v * signZ v) * -1 := by
+                rw [squareLattice_sign_sq v]
+              _ = signZ v * (signZ v * -1) * signZ u := by ring
+
+/-- Every unit square has Kasteleyn face-sign product `-1`. -/
+theorem squareLattice_unitFace_sign_product (u v : ℤ) :
+    squareLatticeKasteleynSign ⟨(u, v), false⟩ *
+      squareLatticeKasteleynSign ⟨(u + 1, v), true⟩ *
+      squareLatticeKasteleynSign ⟨(u, v), true⟩ *
+      squareLatticeKasteleynSign ⟨(u, v + 1), false⟩ = -1 := by
+  simp [squareLatticeKasteleynSign]
+  have hu : signZ (u + 1) = signZ u * -1 := by
+    rw [signZ_add u 1, squareLattice_sign_one]
+  calc
+    signZ (u + 1) * signZ u = (signZ u * -1) * signZ u := by rw [hu]
+    _ = (signZ u * signZ u) * -1 := by ring
+    _ = -1 := by rw [squareLattice_sign_sq u]; norm_num
 
 /-! ## 3. Kasteleyn (1961) / Tesler (2000) signed bipartite square & Klein twisted commutant -/
 
@@ -365,8 +477,10 @@ theorem kleinSeamSignedPerm_swaps_plus_minus :
 unites all five repository owners through explicit, type-preserving maps and
 identities (no false group equalities):
 1. Klein-bottle glide $G^2 = T_x$ (`WallpaperSymmetry`) and bipartite color flip
-   (`integralGlide_flips_color`).
-2. Kasteleyn odd-parity face product `-1` and mass-gap square `D² = 2 • I₄`.
+   (`integralGlide_flips_color`), together with the square-grid Kasteleyn face
+   law and the glide's edgewise vertex-gauge twist.
+2. The finite Kasteleyn square's odd-parity face product `-1` and mass-gap
+   square `D² = 2 • I₄`.
 3. Pullback of `kasteleynDiracMat` into `KleinBottleTwistedCommutantBridge.twistedCommutant`
    under the order-2 seam automorphism `kleinSeamConjAut`.
 4. CPT `Cl(1,1)` bipartite Dirac decoupling (`Cl11BipartiteDiracBridge`) and
@@ -379,6 +493,8 @@ theorem klein_plabic_bipartite_cpt_unification
     (hM : M ∈ InfoGeometry.Canonical.positiveGrassmannianInterior (k := 2) (n := 4)) :
     (G (G p) = T_x p) ∧
     (latticeColor (integralGlide q) = !(latticeColor q)) ∧
+    (∀ u v, squareLattice_unitFace_sign_product u v) ∧
+    (∀ e, integralGlideEdge_kasteleyn_gauge_law e) ∧
     (kasteleynEdgeSigns 0 * kasteleynEdgeSigns 1 *
       kasteleynEdgeSigns 2 * kasteleynEdgeSigns 3 = -1) ∧
     (kasteleynDiracMat * kasteleynDiracMat = (2 : ℝ) • (1 : Matrix (Fin 4) (Fin 4) ℝ)) ∧
@@ -393,6 +509,8 @@ theorem klein_plabic_bipartite_cpt_unification
       cantorSquareSeed M s) :=
   ⟨glide_squared_eq_x_translation p,
    integralGlide_flips_color q,
+   squareLattice_unitFace_sign_product,
+   integralGlideEdge_kasteleyn_gauge_law,
    kasteleyn_face_product_eq_neg_one,
    kasteleynDirac_sq_eq_two_one,
    kasteleynDirac_mem_klein_twistedCommutant,

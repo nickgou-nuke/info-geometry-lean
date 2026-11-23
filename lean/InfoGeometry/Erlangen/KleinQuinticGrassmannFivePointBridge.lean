@@ -8,6 +8,8 @@ import InfoGeometry.Erlangen.KleinQuinticGrassmannPluckerBridge
 /-!
 # The Full Five-Root Grassmann–Plücker Configuration of a Quintic Resolvent
 
+## i. Overview
+
 The four-root bridge gives a Klein-quadric point after selecting four roots.
 Here all five squared orbit roots are retained at once. The all-ones row and
 the five-root row give a decomposable 2-vector in `Λ² ℂ⁵`; when two roots
@@ -15,6 +17,30 @@ differ, it is nonzero and therefore defines a point of `Gr(2,5)`. Its ten
 oriented 2-by-2 minors form an antisymmetric matrix satisfying every
 four-index Plücker relation. Restricting to any four indices recovers the
 existing `Plucker6` chart and hence a point on the Klein quadric.
+
+## ii. Key results
+
+- `quinticGrassmannFiveRootMinor_smul`: degree-2 homogeneity of every
+  `Gr(2,5)` Plücker minor under coefficient scaling.
+- `quinticGrassmannFiveRootVector` and
+  `quinticGrassmannFiveRootProjective_smul`: full ten-coordinate bivector
+  in `Λ² ℂ⁵` and guarded projective invariance off the zero-bivector base
+  locus (`hnonconst`).
+- `quinticGrassmannFiveRootRestriction_eq_existing` and
+  `quinticGrassmannFiveRootRestriction_on_klein`: four-column restriction to
+  `Plucker6` and Klein-quadric membership.
+
+## iii. Table of contents
+
+- Five-root `Gr(2,5)` chart, minors, scaling, and guarded projectivization.
+- Antisymmetry, diagonal vanishing, and four-index Plücker relations.
+- Four-column restrictions to `Plucker6` and generator covariance.
+
+## iv. References
+
+- `InfoGeometry.Erlangen.KleinQuinticGrassmannPluckerBridge`
+- `InfoGeometry.Erlangen.KleinBrioschiQuinticResolvent`
+- `InfoGeometry.Erlangen.KleinQuinticTschirnhausKleinCovariant`
 -/
 
 noncomputable section
@@ -161,5 +187,53 @@ theorem quinticGrassmannFiveRootMinor_generator_covariant
       quinticGrassmannFiveRootMinor v z
         (kleinResolventCycleSucc i) (kleinResolventCycleSucc j) := by
   simp [quinticGrassmannFiveRootMinor, binaryQuinticResolventTuple_equivariant]
+
+/-- Uniform scaling of the binary-quintic coefficient vector scales every
+five-root `Gr(2,5)` Plücker minor by `c ^ 2`. -/
+lemma quinticGrassmannFiveRootMinor_smul
+    (c : ℂ) (v : BinaryQuinticCoefficientSpace) (z : ℂ × ℂ) (i j : Fin 5) :
+    quinticGrassmannFiveRootMinor (c • v) z i j =
+      c ^ 2 * quinticGrassmannFiveRootMinor v z i j := by
+  unfold quinticGrassmannFiveRootMinor
+  rw [binaryQuinticResolventTuple_smul]
+  dsimp only
+  rw [← mul_sub]
+
+/-- Full ten-coordinate `Gr(2,5)` Plücker bivector of the five squared
+resolvent roots, indexed by strictly increasing pairs `RootPair5` in
+`Λ² ℂ⁵`. -/
+noncomputable def quinticGrassmannFiveRootVector
+    (v : BinaryQuinticCoefficientSpace) (z : ℂ × ℂ) :
+    InfoGeometry.Erlangen.KleinQuinticTschirnhausKleinCovariant.RootPair5 →
+      ℂ :=
+  fun p => quinticGrassmannFiveRootMinor v z p.1.1 p.1.2
+
+/-- Nonzero scalar rescaling of the binary-quintic coefficient vector leaves
+the projective `Gr(2,5)` five-root bivector unchanged off the zero-bivector
+base locus. The explicit `hnonconst` guard excludes the base locus where all
+five squared orbit evaluations coincide. -/
+lemma quinticGrassmannFiveRootProjective_smul
+    (c : ℂ) (hc : c ≠ 0) (v : BinaryQuinticCoefficientSpace) (z : ℂ × ℂ)
+    (hnonconst : quinticGrassmannFiveRootVector v z ≠ 0) :
+    Projectivization.mk ℂ (quinticGrassmannFiveRootVector (c • v) z)
+        (by
+          intro hzero
+          apply hnonconst
+          funext p
+          have hp := congrFun hzero p
+          dsimp [quinticGrassmannFiveRootVector] at hp ⊢
+          rw [quinticGrassmannFiveRootMinor_smul] at hp
+          exact (mul_eq_zero.mp hp).resolve_left (pow_ne_zero 2 hc)) =
+      Projectivization.mk ℂ (quinticGrassmannFiveRootVector v z) hnonconst := by
+  have hc2 : c ^ 2 ≠ 0 := pow_ne_zero 2 hc
+  have hvec : quinticGrassmannFiveRootVector (c • v) z =
+      c ^ 2 • quinticGrassmannFiveRootVector v z := by
+    funext p
+    dsimp [quinticGrassmannFiveRootVector]
+    rw [quinticGrassmannFiveRootMinor_smul]
+  apply (Projectivization.mk_eq_mk_iff ℂ _ _ _ hnonconst).2
+  refine ⟨Units.mk0 (c ^ 2) hc2, ?_⟩
+  rw [Units.smul_def, Units.val_mk0]
+  exact hvec.symm
 
 end InfoGeometry.Erlangen.KleinQuinticGrassmannFivePointBridge

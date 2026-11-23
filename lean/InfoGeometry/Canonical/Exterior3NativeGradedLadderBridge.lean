@@ -93,6 +93,53 @@ theorem exteriorContract3_vacuum (φ : Module.Dual ℝ V3) :
   exact CliffordAlgebra.contractLeft_one
     (Q := (0 : QuadraticForm ℝ V3)) φ
 
+/-- Four real vectors in the three-mode space are linearly dependent, so their
+native exterior blade vanishes.  This uses Mathlib's exterior-algebra map on
+linearly dependent families rather than the finite Fock-matrix calculation. -/
+theorem exterior3_fourVector_blade_eq_zero (a b c d : V3) :
+    ExteriorAlgebra.ιMulti ℝ 4 ![a, b, c, d] = 0 := by
+  have hdim : Module.finrank ℝ V3 = 3 := by
+    simp [V3]
+  have hdep : ¬ LinearIndependent ℝ ![a, b, c, d] := by
+    intro hli
+    have hcard : Fintype.card (Fin 4) ≤ Module.finrank ℝ V3 :=
+      hli.fintype_card_le_finrank
+    rw [hdim] at hcard
+    norm_num at hcard
+  exact (ExteriorAlgebra.ιMulti ℝ 4).map_linearDependent ![a, b, c, d] hdep
+
+/-- The product of four real exterior-creation operators vanishes on the
+literal Mathlib carrier `ExteriorAlgebra ℝ (Fin 3 → ℝ)`. -/
+theorem exteriorWedge3_fourfold_mul_zero (a b c d : V3) :
+    exteriorWedge3 a * exteriorWedge3 b * exteriorWedge3 c *
+      exteriorWedge3 d = 0 := by
+  have hblade := exterior3_fourVector_blade_eq_zero a b c d
+  apply LinearMap.ext
+  intro ψ
+  change ExteriorAlgebra.ι ℝ a *
+      (ExteriorAlgebra.ι ℝ b *
+        (ExteriorAlgebra.ι ℝ c * (ExteriorAlgebra.ι ℝ d * ψ))) = 0
+  calc
+    ExteriorAlgebra.ι ℝ a *
+        (ExteriorAlgebra.ι ℝ b *
+          (ExteriorAlgebra.ι ℝ c * (ExteriorAlgebra.ι ℝ d * ψ))) =
+        (ExteriorAlgebra.ι ℝ a * ExteriorAlgebra.ι ℝ b *
+          ExteriorAlgebra.ι ℝ c * ExteriorAlgebra.ι ℝ d) * ψ := by
+            simp only [mul_assoc]
+    _ = (ExteriorAlgebra.ιMulti ℝ 4 ![a, b, c, d]) * ψ := by
+      simp [ExteriorAlgebra.ιMulti_apply]
+      simp only [mul_assoc]
+    _ = 0 := by rw [hblade, zero_mul]
+
+/-- Two composed bivector-creation operators vanish on the three-mode
+exterior carrier: their product is the action of a four-vector blade, whose
+degree exceeds `Module.finrank ℝ V3`. -/
+theorem exterior3_bivectorWedgeOperators_mul_eq_zero (a b c d : V3) :
+    (exteriorWedge3 a * exteriorWedge3 b) *
+      (exteriorWedge3 c * exteriorWedge3 d) = 0 := by
+  rw [← mul_assoc]
+  exact exteriorWedge3_fourfold_mul_zero a b c d
+
 theorem exteriorContract3_ιMulti_succ_mem
     (φ : Module.Dual ℝ V3) (n : ℕ) (v : Fin (n + 1) → V3) :
     exteriorContract3 φ (ExteriorAlgebra.ιMulti ℝ (n + 1) v) ∈

@@ -175,6 +175,79 @@ def cohomologyCoordinates (n : ℕ) : CechH1 n ≃ₗ[ℂ] (Fin (n + 1) → ℂ)
     (boundaries_eq_kernel n)).trans
       (LinearMap.quotKerEquivOfSurjective (principalPart n) (principalPart_surjective n))
 
+/-- The algebraic two-chart Cech quotient has dimension `n + 1`, as computed
+from its explicit principal-part coordinates. -/
+theorem cechH1_finrank (n : ℕ) : Module.finrank ℂ (CechH1 n) = n + 1 := by
+  rw [(cohomologyCoordinates n).finrank_eq]
+  simp
+
+/-- For projective weights `w ≥ -1`, the two regular charts cover every
+Laurent exponent. This is the algebraic vanishing range complementary to the
+finite principal-part calculation above. -/
+def weightInfinityPatch (w : ℤ) : Submodule ℂ Laurent where
+  carrier := {p | ∀ k : ℤ, w < k → p.coeff k = 0}
+  zero_mem' := by simp
+  add_mem' hp hq k hk := by simp [hp k hk, hq k hk]
+  smul_mem' c p hp k hk := by simp [hp k hk]
+
+def weightBoundaries (w : ℤ) : Submodule ℂ Laurent :=
+  finitePatch ⊔ weightInfinityPatch w
+
+abbrev weightCechH1 (w : ℤ) := Laurent ⧸ weightBoundaries w
+
+/-- The signed-weight presentation agrees definitionally with the existing
+principal-part quotient on every weight `-n-2`, retaining its exact dimension. -/
+theorem weightCechH1_finrank_negative (n : ℕ) :
+    Module.finrank ℂ (weightCechH1 (weight n)) = n + 1 := by
+  exact cechH1_finrank n
+
+theorem weightBoundaries_eq_top_of_ge_neg_one (w : ℤ) (hw : -1 ≤ w) :
+    weightBoundaries w = ⊤ := by
+  apply top_unique
+  intro p hp
+  let a : Laurent := AddMonoidAlgebra.ofCoeff
+    (Finsupp.filter (fun k : ℤ => 0 ≤ k) p.coeff)
+  let b : Laurent := AddMonoidAlgebra.ofCoeff
+    (Finsupp.filter (fun k : ℤ => k < 0) p.coeff)
+  have ha : a ∈ finitePatch := by
+    intro k hk
+    simp [a, not_le.mpr hk]
+  have hb : b ∈ weightInfinityPatch w := by
+    intro k hk
+    by_cases hneg : k < 0
+    · exact False.elim (Int.not_le.mpr hk (by linarith [hw, hneg]))
+    · simp [b, hneg]
+  apply Submodule.mem_sup.mpr
+  refine ⟨a, ha, b, hb, ?_⟩
+  ext k
+  by_cases hk : k < 0
+  · simp [a, b, hk, not_le.mpr hk]
+  · simp [a, b, hk, le_of_not_gt hk]
+
+/-- The algebraic two-chart Cech group vanishes for all projective weights
+`w ≥ -1`, including every nonnegative weight. -/
+theorem weightCechH1_vanishes_of_ge_neg_one (w : ℤ) (hw : -1 ≤ w)
+    (p : Laurent) :
+    (Submodule.Quotient.mk (p := weightBoundaries w) p : weightCechH1 w) = 0 := by
+  apply (Submodule.Quotient.mk_eq_zero _).2
+  rw [weightBoundaries_eq_top_of_ge_neg_one w hw]
+  trivial
+
+/-- Every integer projective weight lies either in the vanishing range `w ≥ -1`
+or has the form `-n-2` represented by the finite principal-part model. -/
+theorem integer_weight_cases (w : ℤ) :
+    (-1 ≤ w) ∨ ∃ n : ℕ, w = weight n := by
+  by_cases hw : -1 ≤ w
+  · exact Or.inl hw
+  · right
+    refine ⟨(-w - 2).toNat, ?_⟩
+    dsimp [weight]
+    have hle : w ≤ -2 := by omega
+    have hnat : ((-w - 2).toNat : ℤ) = -w - 2 := by
+      apply Int.toNat_of_nonneg
+      omega
+    omega
+
 theorem single_principal_class_nonzero (n : ℕ) (i : Fin (n + 1)) :
     AddMonoidAlgebra.single (principalExponent i) (1 : ℂ) ∉ boundaries n := by
   rw [boundaries_eq_kernel]

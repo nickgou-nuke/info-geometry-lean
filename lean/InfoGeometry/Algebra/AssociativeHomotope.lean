@@ -4,8 +4,11 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Module.Basic
+import Mathlib.Basic.Real.Basic
+import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.NoncommRing
+import InfoGeometry.Algebra.MatrixNoncommutativity
 
 /-!
 # Associative homotopes and the exact loss under symmetrization
@@ -131,5 +134,117 @@ theorem product_eq_jordan_iff (T x y : A) :
   rw [← sub_eq_zero, product_sub_jordan, skew_eq_zero_iff]
 
 end Halves
+
+/-! ## Concrete two-corner realization in `Mat₂(A)`
+
+The generic fixed-kernel product above is now realized by the ordered upper,
+lower, upper matrix-corner product. These equalities retain the coefficient
+ring's noncommutative multiplication order. -/
+
+section MatrixCorners
+
+variable {A : Type*} [Ring A]
+
+abbrev Mat2 := Matrix (Fin 2) (Fin 2) A
+
+/-- The upper Witt corner, with its coefficient in position `(0,1)`. -/
+def upperCorner (x : A) : Mat2 (A := A) := !![0, x; 0, 0]
+
+/-- The lower Witt corner, with its coefficient in position `(1,0)`. -/
+def lowerCorner (x : A) : Mat2 (A := A) := !![0, 0; x, 0]
+
+/-- The lower-corner vacuum used as the homotope kernel. -/
+def lowerVacuum : Mat2 (A := A) := lowerCorner 1
+
+/-- The ordered upper-lower-upper matrix product realizes the full
+associative coefficient product, with no symmetrization. -/
+theorem upper_lower_upper_product (x y : A) :
+    upperCorner x * lowerVacuum * upperCorner y = upperCorner (x * y) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [upperCorner, lowerVacuum, lowerCorner, Matrix.mul_apply,
+      Fin.sum_univ_two]
+
+/-- The two mixed matrix commutators recover the ordered KKT triple
+`x*z*y + y*z*x` in the upper corner. -/
+theorem upper_lower_kkt_double_commutator (x z y : A) :
+    (upperCorner x * lowerCorner z - lowerCorner z * upperCorner x) *
+        upperCorner y -
+      upperCorner y *
+        (upperCorner x * lowerCorner z - lowerCorner z * upperCorner x) =
+      upperCorner (x * z * y + y * z * x) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [upperCorner, lowerCorner, sub_eq_add_neg, mul_assoc]
+
+/-- Symmetrizing the two ordered corner products gives only the Jordan
+product. The antisymmetric part remains exactly the coefficient commutator. -/
+theorem upper_corner_order_difference (x y : A) :
+    upperCorner x * lowerVacuum * upperCorner y -
+        upperCorner y * lowerVacuum * upperCorner x =
+      upperCorner (x * y - y * x) := by
+  rw [upper_lower_upper_product, upper_lower_upper_product]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [upperCorner, Matrix.sub_apply]
+
+/-- A noncommuting coefficient pair stays noncommuting after the ordered
+homotope embedding into the full matrix algebra. -/
+theorem upper_corner_order_detects_noncommutativity {x y : A}
+    (hxy : x * y ≠ y * x) :
+    upperCorner x * lowerVacuum * upperCorner y ≠
+      upperCorner y * lowerVacuum * upperCorner x := by
+  intro heq
+  rw [upper_lower_upper_product, upper_lower_upper_product] at heq
+  have hentry := congrArg (fun M : Mat2 (A := A) => M 0 1) heq
+  have hcoeff : x * y = y * x := by simpa [upperCorner] using hentry
+  exact hxy hcoeff
+
+/-- Concrete order-sensitive instance over the repository's noncommuting
+coefficient matrices. The ambient carrier is a `2×2` block matrix over the
+actual noncommutative `2×2` matrix ring, hence a `4×4` real matrix algebra. -/
+theorem matrixCoefficient_homotope_order_witness :
+    upperCorner (A := Matrix (Fin 2) (Fin 2) ℝ)
+        (InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix) *
+      lowerVacuum *
+        upperCorner (A := Matrix (Fin 2) (Fin 2) ℝ)
+          (InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix) ≠
+      upperCorner (A := Matrix (Fin 2) (Fin 2) ℝ)
+          (InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix) *
+        lowerVacuum *
+          upperCorner (A := Matrix (Fin 2) (Fin 2) ℝ)
+            (InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix) := by
+  exact upper_corner_order_detects_noncommutativity
+    InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix_mul_tiltedMatrix_ne
+
+/-- Exact concrete commutator readout for the nested operator matrices. The
+coefficient commutator is the nonzero skew matrix `[[0,-1],[1,0]]`, and the
+outer Witt-corner product preserves it without symmetrization. -/
+theorem matrixCoefficient_homotope_commutator_readout :
+    upperCorner (A := Matrix (Fin 2) (Fin 2) ℝ)
+        InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix *
+      lowerVacuum *
+        upperCorner (A := Matrix (Fin 2) (Fin 2) ℝ)
+          InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix -
+      upperCorner (A := Matrix (Fin 2) (Fin 2) ℝ)
+          InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix *
+        lowerVacuum *
+          upperCorner (A := Matrix (Fin 2) (Fin 2) ℝ)
+            InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix =
+      upperCorner (A := Matrix (Fin 2) (Fin 2) ℝ) (!![(0 : ℝ), -1; 1, 0]) := by
+  have hcoeff :
+      InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix *
+          InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix -
+        InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix *
+          InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix =
+        !![(0 : ℝ), -1; 1, 0] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      norm_num [InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix,
+        InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix,
+        Matrix.mul_apply, Fin.sum_univ_two]
+  rw [upper_corner_order_difference, hcoeff]
+
+end MatrixCorners
 
 end InfoGeometry.Algebra.AssociativeHomotope

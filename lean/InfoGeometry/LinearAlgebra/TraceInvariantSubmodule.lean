@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import InfoGeometry.LinearAlgebra.TraceUpperTriangular
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Projection
@@ -8,71 +14,72 @@ namespace InfoGeometry.LinearAlgebra.TraceInvariantSubmodule
 
 open InfoGeometry.LinearAlgebra.TraceUpperTriangular
 
+variable {K : Type*} [Field K]
 variable {V : Type*}
-variable [AddCommGroup V] [Module ℝ V]
+variable [AddCommGroup V] [Module K V]
 
 def invariantRestriction
-    (T : Module.End ℝ V)
-    (S : Submodule ℝ V)
+    (T : Module.End K V)
+    (S : Submodule K V)
     (hS : S ≤ Submodule.comap T S) :
-    Module.End ℝ S :=
+    Module.End K S :=
   T.restrict fun _ hx => hS hx
 
 def invariantQuotientMap
-    (T : Module.End ℝ V)
-    (S : Submodule ℝ V)
+    (T : Module.End K V)
+    (S : Submodule K V)
     (hS : S ≤ Submodule.comap T S) :
-    Module.End ℝ (V ⧸ S) :=
+    Module.End K (V ⧸ S) :=
   Submodule.mapQ S S T hS
 
 def transportedEndomorphism
-    (T : Module.End ℝ V)
-    (S Q : Submodule ℝ V)
+    (T : Module.End K V)
+    (S Q : Submodule K V)
     (hSQ : IsCompl S Q) :
-    Module.End ℝ (S × Q) :=
+    Module.End K (S × Q) :=
   (S.prodEquivOfIsCompl Q hSQ).symm.conj T
 
 def transportedUpperLeft
-    (T : Module.End ℝ V)
-    (S Q : Submodule ℝ V)
+    (T : Module.End K V)
+    (S Q : Submodule K V)
     (hSQ : IsCompl S Q) :
-    Module.End ℝ S :=
-  (LinearMap.fst ℝ S Q).comp
+    Module.End K S :=
+  (LinearMap.fst K S Q).comp
     ((transportedEndomorphism T S Q hSQ).comp
-      (LinearMap.inl ℝ S Q))
+      (LinearMap.inl K S Q))
 
 def transportedUpperRight
-    (T : Module.End ℝ V)
-    (S Q : Submodule ℝ V)
+    (T : Module.End K V)
+    (S Q : Submodule K V)
     (hSQ : IsCompl S Q) :
-    Q →ₗ[ℝ] S :=
-  (LinearMap.fst ℝ S Q).comp
+    Q →ₗ[K] S :=
+  (LinearMap.fst K S Q).comp
     ((transportedEndomorphism T S Q hSQ).comp
-      (LinearMap.inr ℝ S Q))
+      (LinearMap.inr K S Q))
 
 def transportedLowerRight
-    (T : Module.End ℝ V)
-    (S Q : Submodule ℝ V)
+    (T : Module.End K V)
+    (S Q : Submodule K V)
     (hSQ : IsCompl S Q) :
-    Module.End ℝ Q :=
-  (LinearMap.snd ℝ S Q).comp
+    Module.End K Q :=
+  (LinearMap.snd K S Q).comp
     ((transportedEndomorphism T S Q hSQ).comp
-      (LinearMap.inr ℝ S Q))
+      (LinearMap.inr K S Q))
 
 theorem endomorphism_eq_upperTriangular_of_lowerLeft_zero
     {M N : Type*}
-    [AddCommGroup M] [Module ℝ M]
-    [AddCommGroup N] [Module ℝ N]
-    (F : Module.End ℝ (M × N))
+    [AddCommGroup M] [Module K M]
+    [AddCommGroup N] [Module K N]
+    (F : Module.End K (M × N))
     (hLower : ∀ x : M, (F (x, 0)).2 = 0) :
     F =
       upperTriangular
-        ((LinearMap.fst ℝ M N).comp
-          (F.comp (LinearMap.inl ℝ M N)))
-        ((LinearMap.fst ℝ M N).comp
-          (F.comp (LinearMap.inr ℝ M N)))
-        ((LinearMap.snd ℝ M N).comp
-          (F.comp (LinearMap.inr ℝ M N))) := by
+        ((LinearMap.fst K M N).comp
+          (F.comp (LinearMap.inl K M N)))
+        ((LinearMap.fst K M N).comp
+          (F.comp (LinearMap.inr K M N)))
+        ((LinearMap.snd K M N).comp
+          (F.comp (LinearMap.inr K M N))) := by
   apply LinearMap.ext
   intro x
   rw [upperTriangular_apply]
@@ -85,13 +92,13 @@ theorem endomorphism_eq_upperTriangular_of_lowerLeft_zero
   · simp [hLower]
 
 theorem transported_lowerLeft_zero
-    (T : Module.End ℝ V)
-    (S Q : Submodule ℝ V)
+    (T : Module.End K V)
+    (S Q : Submodule K V)
     (hSQ : IsCompl S Q)
     (hS : S ≤ Submodule.comap T S) :
     ∀ x : S, ((transportedEndomorphism T S Q hSQ) (x, 0)).2 = 0 := by
   intro x
-  let e : (S × Q) ≃ₗ[ℝ] V := S.prodEquivOfIsCompl Q hSQ
+  let e : (S × Q) ≃ₗ[K] V := S.prodEquivOfIsCompl Q hSQ
   have hTx : T x ∈ S := hS x.2
   have hDecomp :
       e.symm (T x) = (⟨T x, hTx⟩, 0) := by
@@ -103,8 +110,8 @@ theorem transported_lowerLeft_zero
     simp [e, Submodule.coe_prodEquivOfIsCompl'], hDecomp]
 
 theorem transportedEndomorphism_eq_upperTriangular
-    (T : Module.End ℝ V)
-    (S Q : Submodule ℝ V)
+    (T : Module.End K V)
+    (S Q : Submodule K V)
     (hSQ : IsCompl S Q)
     (hS : S ≤ Submodule.comap T S) :
     transportedEndomorphism T S Q hSQ =
@@ -117,8 +124,8 @@ theorem transportedEndomorphism_eq_upperTriangular
     (transported_lowerLeft_zero T S Q hSQ hS)
 
 theorem transportedUpperLeft_eq_invariantRestriction
-    (T : Module.End ℝ V)
-    (S Q : Submodule ℝ V)
+    (T : Module.End K V)
+    (S Q : Submodule K V)
     (hSQ : IsCompl S Q)
     (hS : S ≤ Submodule.comap T S) :
     transportedUpperLeft T S Q hSQ =
@@ -126,7 +133,7 @@ theorem transportedUpperLeft_eq_invariantRestriction
   apply LinearMap.ext
   intro x
   apply Subtype.ext
-  let e : (S × Q) ≃ₗ[ℝ] V := S.prodEquivOfIsCompl Q hSQ
+  let e : (S × Q) ≃ₗ[K] V := S.prodEquivOfIsCompl Q hSQ
   have hTx : T x ∈ S := hS x.2
   have hDecomp :
       e.symm (T x) = (⟨T x, hTx⟩, 0) := by
@@ -139,13 +146,13 @@ theorem transportedUpperLeft_eq_invariantRestriction
     simp, hDecomp]
 
 theorem quotientEquiv_apply_mk_eq_snd_prodEquiv_symm
-    (S Q : Submodule ℝ V)
+    (S Q : Submodule K V)
     (hSQ : IsCompl S Q)
     (v : V) :
     (S.quotientEquivOfIsCompl Q hSQ) (Submodule.Quotient.mk v) =
       ((S.prodEquivOfIsCompl Q hSQ).symm v).2 := by
-  let e : (S × Q) ≃ₗ[ℝ] V := S.prodEquivOfIsCompl Q hSQ
-  let q : (V ⧸ S) ≃ₗ[ℝ] Q := S.quotientEquivOfIsCompl Q hSQ
+  let e : (S × Q) ≃ₗ[K] V := S.prodEquivOfIsCompl Q hSQ
+  let q : (V ⧸ S) ≃ₗ[K] Q := S.quotientEquivOfIsCompl Q hSQ
   apply q.symm.injective
   rw [q.symm_apply_apply,
     Submodule.quotientEquivOfIsCompl_symm_apply]
@@ -159,8 +166,8 @@ theorem quotientEquiv_apply_mk_eq_snd_prodEquiv_symm
   exact (e.symm v).1.2
 
 theorem transportedLowerRight_eq_quotientConj
-    (T : Module.End ℝ V)
-    (S Q : Submodule ℝ V)
+    (T : Module.End K V)
+    (S Q : Submodule K V)
     (hSQ : IsCompl S Q)
     (hS : S ≤ Submodule.comap T S) :
     transportedLowerRight T S Q hSQ =
@@ -169,8 +176,8 @@ theorem transportedLowerRight_eq_quotientConj
   apply LinearMap.ext
   intro x
   apply Subtype.ext
-  let e : (S × Q) ≃ₗ[ℝ] V := S.prodEquivOfIsCompl Q hSQ
-  let q : (V ⧸ S) ≃ₗ[ℝ] Q := S.quotientEquivOfIsCompl Q hSQ
+  let e : (S × Q) ≃ₗ[K] V := S.prodEquivOfIsCompl Q hSQ
+  let q : (V ⧸ S) ≃ₗ[K] Q := S.quotientEquivOfIsCompl Q hSQ
   change (e.symm (T (e (0, x)))).2.1 =
     (q (invariantQuotientMap T S hS (q.symm x))).1
   rw [show e (0, x) = (x : V) by
@@ -183,18 +190,18 @@ theorem transportedLowerRight_eq_quotientConj
   rw [quotientEquiv_apply_mk_eq_snd_prodEquiv_symm S Q hSQ]
 
 theorem trace_eq_transported_diagonal
-    [FiniteDimensional ℝ V]
-    (T : Module.End ℝ V)
-    (S Q : Submodule ℝ V)
+    [FiniteDimensional K V]
+    (T : Module.End K V)
+    (S Q : Submodule K V)
     (hSQ : IsCompl S Q)
     (hS : S ≤ Submodule.comap T S) :
-    LinearMap.trace ℝ V T =
-      LinearMap.trace ℝ S (transportedUpperLeft T S Q hSQ) +
-        LinearMap.trace ℝ Q (transportedLowerRight T S Q hSQ) := by
-  let e : (S × Q) ≃ₗ[ℝ] V := S.prodEquivOfIsCompl Q hSQ
+    LinearMap.trace K V T =
+      LinearMap.trace K S (transportedUpperLeft T S Q hSQ) +
+        LinearMap.trace K Q (transportedLowerRight T S Q hSQ) := by
+  let e : (S × Q) ≃ₗ[K] V := S.prodEquivOfIsCompl Q hSQ
   have hConj :
-      LinearMap.trace ℝ (S × Q) (e.symm.conj T) =
-        LinearMap.trace ℝ V T :=
+      LinearMap.trace K (S × Q) (e.symm.conj T) =
+        LinearMap.trace K V T :=
     LinearMap.trace_conj' T e.symm
   rw [← hConj, show e.symm.conj T =
       transportedEndomorphism T S Q hSQ by rfl,
@@ -202,13 +209,13 @@ theorem trace_eq_transported_diagonal
     trace_upperTriangular]
 
 theorem trace_eq_trace_restriction_add_trace_quotient
-    [FiniteDimensional ℝ V]
-    (T : Module.End ℝ V)
-    (S : Submodule ℝ V)
+    [FiniteDimensional K V]
+    (T : Module.End K V)
+    (S : Submodule K V)
     (hS : S ≤ Submodule.comap T S) :
-    LinearMap.trace ℝ V T =
-      LinearMap.trace ℝ S (invariantRestriction T S hS) +
-        LinearMap.trace ℝ (V ⧸ S)
+    LinearMap.trace K V T =
+      LinearMap.trace K S (invariantRestriction T S hS) +
+        LinearMap.trace K (V ⧸ S)
           (invariantQuotientMap T S hS) := by
   obtain ⟨Q, hSQ⟩ := Submodule.exists_isCompl S
   rw [trace_eq_transported_diagonal T S Q hSQ hS,
@@ -217,5 +224,30 @@ theorem trace_eq_trace_restriction_add_trace_quotient
   rw [LinearMap.trace_conj'
     (invariantQuotientMap T S hS)
     (S.quotientEquivOfIsCompl Q hSQ)]
+
+/-- Trace decomposition for every iterate of an endomorphism preserving a
+finite-dimensional subspace. Unlike a scalar trace-sequence hypothesis, this
+derives the sequence from the restricted and quotient endomorphisms themselves. -/
+theorem trace_pow_eq_trace_restriction_pow_add_trace_quotient_pow
+    [FiniteDimensional K V]
+    (T : Module.End K V)
+    (S : Submodule K V)
+    (hS : S ≤ Submodule.comap T S)
+    (n : ℕ) :
+    LinearMap.trace K V (T ^ n) =
+      LinearMap.trace K S (invariantRestriction T S hS ^ n) +
+        LinearMap.trace K (V ⧸ S) (invariantQuotientMap T S hS ^ n) := by
+  let hSn : S ≤ Submodule.comap (T ^ n) S := S.le_comap_pow_of_le_comap hS n
+  have hrestrict :
+      invariantRestriction (T ^ n) S hSn = invariantRestriction T S hS ^ n := by
+    have hT : ∀ x : V, x ∈ S → T x ∈ S := fun _ hx => hS hx
+    have hTpow : ∀ x : V, x ∈ S → (T ^ n) x ∈ S := fun _ hx => hSn hx
+    change (T ^ n).restrict hTpow = (T.restrict hT) ^ n
+    exact (Module.End.pow_restrict (f' := T) n hT (h' := hTpow)).symm
+  have hquotient :
+      invariantQuotientMap (T ^ n) S hSn = invariantQuotientMap T S hS ^ n := by
+    exact S.mapQ_pow hS n
+  rw [trace_eq_trace_restriction_add_trace_quotient (T ^ n) S hSn,
+    hrestrict, hquotient]
 
 end InfoGeometry.LinearAlgebra.TraceInvariantSubmodule

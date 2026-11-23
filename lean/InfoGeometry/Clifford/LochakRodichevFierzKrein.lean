@@ -583,15 +583,14 @@ theorem realWeylQuaternionAction_mul (q r : Quaternion ℝ) (x : Fin 4 → ℝ) 
       realWeylQuaternionAction (q * r) x := by
   ext i
   fin_cases i <;>
-    simp [realWeylQuaternionAction, realWeylUnitQuaternionTransform,
-      Quaternion.re_mul, Quaternion.imI_mul, Quaternion.imJ_mul, Quaternion.imK_mul] <;>
+    simp [realWeylQuaternionAction, realWeylUnitQuaternionTransform] <;>
     ring
 
 /-- The native real quaternion norm squared is multiplicative. -/
 theorem realQuaternion_normSq_mul (q r : Quaternion ℝ) :
     Quaternion.normSq (q * r) = Quaternion.normSq q * Quaternion.normSq r := by
   rw [Quaternion.normSq_eq_norm_mul_self, norm_mul,
-    Quaternion.normSq_eq_norm_mul_self]
+    Quaternion.normSq_eq_norm_mul_self, Quaternion.normSq_eq_norm_mul_self]
   ring
 
 /-- Unit norm is closed under the product used by the Weyl-sector action. -/
@@ -622,8 +621,8 @@ theorem realWeylQuaternionAction_star_inverse (q : Quaternion ℝ)
     rw [Quaternion.star_mul_self, hq]
     simp
   constructor
-  · rw [← realWeylQuaternionAction_mul, hstarq, realWeylQuaternionAction_one]
-  · rw [← realWeylQuaternionAction_mul, hqstar, realWeylQuaternionAction_one]
+  · rw [realWeylQuaternionAction_mul, hstarq, realWeylQuaternionAction_one]
+  · rw [realWeylQuaternionAction_mul, hqstar, realWeylQuaternionAction_one]
 
 /-- The real unit-quaternion transformation commutes with the internal Weyl bivector. -/
 theorem realWeylUnitQuaternionTransform_commutes_bivector
@@ -660,6 +659,20 @@ theorem realWeylUnitQuaternionTransform_preserves_bilinears (a b c d : ℝ)
     exact congrArg Neg.neg
       (realWeylUnitQuaternionTransform_preserves_dot a b c d hunit
         (realWeylBivector x) y)
+
+/-- Bilinear invariance for the native quaternion parameter: norm-one quaternion
+multiplication preserves both real chiral cross-pairings. -/
+theorem realWeylQuaternionAction_preserves_bilinears (q : Quaternion ℝ)
+    (hq : Quaternion.normSq q = 1) (x y : Fin 4 → ℝ) :
+    dotProduct (realWeylQuaternionAction q x) (realWeylQuaternionAction q y) =
+        dotProduct x y ∧
+    -dotProduct (realWeylBivector (realWeylQuaternionAction q x))
+        (realWeylQuaternionAction q y) = -dotProduct (realWeylBivector x) y := by
+  have hcoords : q.re ^ 2 + q.imI ^ 2 + q.imJ ^ 2 + q.imK ^ 2 = 1 := by
+    simpa [Quaternion.normSq_def'] using hq
+  simpa [realWeylQuaternionAction] using
+    realWeylUnitQuaternionTransform_preserves_bilinears
+      q.re q.imI q.imJ q.imK hcoords x y
 
 /-- The two complementary real phase-plane rotations. -/
 private def realWeylBivector₂ (x : Fin 4 → ℝ) : Fin 4 → ℝ :=

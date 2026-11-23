@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CuntzBoundaryMatrixStageBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GenuineMatrixStageMorphism
@@ -24,12 +29,12 @@ open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 open InfoGeometry.Canonical.CuntzMatrixFiniteTraceFaithfulness
 
 private theorem extendBitWord_eq_extendSucc (n : ℕ) (w : BitWord n) (b : Bool) :
-    extendBitWord n w b = extendSucc n w b := by
+    InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n w b = extendSucc n w b := by
   funext i
   by_cases hi : i.1 < n
-  · simp [extendBitWord, bitWordEquiv, extendSucc, hi]
+  · simp [InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.extendBitWord, bitWordEquiv, extendSucc, hi]
   · have hi' : i.1 = n := by omega
-    simp [extendBitWord, bitWordEquiv, extendSucc, hi']
+    simp [InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.extendBitWord, bitWordEquiv, extendSucc, hi']
 
 private theorem extendSucc_eq_iff (n : ℕ) (u : BitWord n) (b : Bool)
     (x : BitWord (n + 1)) :

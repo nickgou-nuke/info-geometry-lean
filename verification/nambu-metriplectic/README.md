@@ -2,11 +2,11 @@
 
 ## Current status
 
-**Proof candidates; native Lean acceptance is pending.** The canonical prerequisite
-build was started on 2026-11-23 and remains waiting for the shared build lock at
-this record. It has not emitted the acquired-lock command or compiler output.
-The complete five-owner runner was then queued through the same shared lock;
-its status is `toolchain`, waiting before its native version probe can execute.
+**Proof candidates; native Lean acceptance is pending.** Earlier local execution
+handles are no longer available; their persisted logs record waiting for the
+shared build lock and do not establish a live process. A fresh invocation on
+2026-11-23 again reached the locked `toolchain` stage, before its native version
+probe could execute. No completed native command is recorded at this snapshot.
 The new declarations have not yet been kernel-checked or axiom-audited in this task.
 
 Completed checks are independent mathematical/source review, exact symbolic
@@ -14,8 +14,28 @@ matrix identities, a bounded forbidden-construct screen, the maintained staged
 proof gate, and Python syntax checking for this runner. These are different
 checks and do not imply Lean acceptance.
 
-The root environment and publication gates have not passed. Root dependency
+The root environment and integration gates have not passed. Root dependency
 pins, hook code, toolchain and shared-lock implementation are unchanged.
+
+## Focused CI and root integration
+
+`.github/workflows/nambu-metriplectic.yml` runs this same verifier on the exact
+PR head commit, with recursive submodule checkout disabled, read-only repository
+permissions, the pinned toolchain, and only external dependency artifacts cached.
+It uses the existing locked wrapper for dependency hydration and every build,
+elaboration and native declaration audit. It records the checked commit/tree,
+source hashes, compiler output and audit result as workflow artifacts.
+
+This job is intended to establish focused native acceptance for the five owners.
+Its presence is not evidence of a successful run. Root integration remains a
+separate gate. On PR #431 at `c30b02b9`, the reviewed-integration job failed during
+recursive checkout because `external_ref/open-math-harness` lacks a `.gitmodules`
+URL; the root quality job failed because the `HomotopyHypothesis` package
+directory was absent. Neither failure reached elaboration of these new owners.
+
+The proposed Peirce-defect, Klein-four and KMS-coordinate follow-up remains in
+candidate review until the baseline native build, warnings-as-errors checks and
+axiom audit complete successfully.
 
 ## Reproduce
 

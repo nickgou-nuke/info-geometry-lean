@@ -1,0 +1,183 @@
+name: Nambu and metriplectic native proof check
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/AssociativeNambuScalarReduction.lean'
+      - 'lean/InfoGeometry/Algebra/RealPauliNambuSign.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11MetriplecticPencil.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11EighthRoot.lean'
+      - 'lean/InfoGeometry/Thermo/MatrixGENERICRealization.lean'
+      - 'verification/nambu-metriplectic/**'
+      - 'verification/real-matrix-split/**'
+      - 'lean-toolchain'
+      - 'lakefile.lean'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - '.github/workflows/nambu-metriplectic.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nambu-metriplectic-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  focused-native-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      EVIDENCE_DIR: artifacts/verification/nambu-metriplectic-ci
+    steps:
+      - name: Check out the exact requested source commit
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 1
+          submodules: false
+          persist-credentials: false
+
+      - name: Bind the source revision and unchanged dependency pins
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE_DIR"
+          python3 - <<'PY' 2>&1 | tee "$EVIDENCE_DIR/source-preflight.log"
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+
+          root = Path.cwd()
+          focused = root / 'verification/real-matrix-split'
+          actual = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          expected = os.environ['EXPECTED_SOURCE_SHA']
+          if actual != expected:
+              raise SystemExit(f'Checkout mismatch: expected {expected}, obtained {actual}')
+          toolchain = (root / 'lean-toolchain').read_text().strip()
+          if toolchain != 'leanprover/lean4:v4.34.1':
+              raise SystemExit(f'Unexpected root toolchain: {toolchain}')
+          if (root / 'lean-toolchain').read_bytes() != (focused / 'lean-toolchain').read_bytes():
+              raise SystemExit('Root and focused toolchain declarations differ')
+          root_manifest = json.loads((root / 'lake-manifest.json').read_text())
+          focused_manifest = json.loads((focused / 'lake-manifest.json').read_text())
+          root_pins = {p['name']: p['rev'] for p in root_manifest['packages'] if p['type'] == 'git'}
+          focused_pins = {p['name']: p['rev'] for p in focused_manifest['packages']}
+          if any(root_pins.get(name) != rev for name, rev in focused_pins.items()):
+              raise SystemExit('Focused dependency revisions differ from root pins')
+          record = {
+              'expected_source_sha': expected,
+              'checked_commit': actual,
+              'checked_tree': subprocess.check_output(['git', 'rev-parse', 'HEAD^{tree}'], text=True).strip(),
+              'initial_git_status': subprocess.check_output(['git', 'status', '--short'], text=True),
+              'toolchain': toolchain,
+              'focused_dependency_pins': focused_pins,
+              'root_manifest_sha256': hashlib.sha256((root / 'lake-manifest.json').read_bytes()).hexdigest(),
+              'focused_manifest_sha256': hashlib.sha256((focused / 'lake-manifest.json').read_bytes()).hexdigest(),
+              'scope': 'Five selected Nambu/metriplectic owners and imported dependencies; root integration remains separate',
+          }
+          (Path(os.environ['EVIDENCE_DIR']) / 'revision.json').write_text(json.dumps(record, indent=2) + '\n')
+          print(json.dumps(record, indent=2))
+          PY
+
+      # Only external dependencies and the toolchain are reused. Repository
+      # source artifacts under verification/real-matrix-split/.lake are fresh.
+      - name: Restore exact-pin external dependency artifacts
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: nambu-metriplectic-deps-${{ runner.os }}-${{ hashFiles('lean-toolchain', 'lake-manifest.json', 'verification/real-matrix-split/lean-toolchain', 'verification/real-matrix-split/lakefile.toml', 'verification/real-matrix-split/lake-manifest.json') }}-v1
+
+      - name: Install and report the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            if [ ! -x "$HOME/.elan/bin/elan" ]; then
+              curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/nambu-metriplectic-elan-init.sh"
+              sh "$RUNNER_TEMP/nambu-metriplectic-elan-init.sh" -y --default-toolchain none
+            fi
+            echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+            "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+            "$HOME/.elan/bin/lean" --version
+            "$HOME/.elan/bin/lake" --version
+          } 2>&1 | tee "$EVIDENCE_DIR/toolchain-install.log"
+
+      - name: Hydrate the pinned Mathlib closure under the shared lock
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/real-matrix-split/check.py exe cache get 2>&1 | tee "$EVIDENCE_DIR/dependency-hydration.log"
+          git diff --exit-code HEAD -- lean-toolchain lakefile.lean lake-manifest.json \
+            verification/real-matrix-split/lean-toolchain \
+            verification/real-matrix-split/lakefile.toml \
+            verification/real-matrix-split/lake-manifest.json \
+            2>&1 | tee -a "$EVIDENCE_DIR/dependency-hydration.log"
+
+      - name: Build the five owners and audit every owned declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/nambu-metriplectic/check.py 2>&1 | tee "$EVIDENCE_DIR/native-verification.log"
+          git diff --exit-code HEAD -- lean/InfoGeometry \
+            lean-toolchain lakefile.lean lake-manifest.json \
+            verification/real-matrix-split \
+            verification/nambu-metriplectic \
+            tools/build_lock.py tools/quality/reviewed_audit_source.py \
+            2>&1 | tee -a "$EVIDENCE_DIR/native-verification.log"
+
+      - name: Save validated external dependency artifacts
+        if: success() && steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
+
+      - name: Record the focused acceptance result
+        if: always()
+        shell: bash
+        env:
+          OBSERVED_JOB_STATUS: ${{ job.status }}
+        run: |
+          mkdir -p "$EVIDENCE_DIR"
+          python3 - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          status_path = Path('artifacts/verification/nambu-metriplectic/status.json')
+          native = json.loads(status_path.read_text()) if status_path.is_file() else None
+          record = {
+              'expected_source_sha': os.environ['EXPECTED_SOURCE_SHA'],
+              'observed_job_status': os.environ['OBSERVED_JOB_STATUS'],
+              'native_runner_status': native.get('status') if native else 'not_started',
+              'root_integration_certified': False,
+              'scope': 'Focused native owner checks only; existing root gates remain separate',
+          }
+          (Path(os.environ['EVIDENCE_DIR']) / 'workflow-result.json').write_text(json.dumps(record, indent=2) + '\n')
+          print(json.dumps(record, indent=2))
+          PY
+
+      - name: Preserve exact-commit status, compiler output and axiom evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nambu-metriplectic-native-${{ github.run_id }}-${{ github.run_attempt }}
+          path: |
+            artifacts/verification/nambu-metriplectic/
+            artifacts/verification/nambu-metriplectic-ci/
+          if-no-files-found: warn

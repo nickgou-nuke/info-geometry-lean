@@ -1,0 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Canonical.KleinBottleKasteleynPlabicOrbit
+
+/-! Axiom audit for the finite Klein-bottle/Kasteleyn/plabic bridge. -/
+
+#print axioms InfoGeometry.Canonical.KleinBottleKasteleynPlabicOrbit.kastDirac_sq_and_anticomm_bipartiteB
+#print axioms InfoGeometry.Canonical.KleinBottleKasteleynPlabicOrbit.bareGlide_mem_twistedCommutant_and_wallpaper
+#print axioms InfoGeometry.Canonical.KleinBottleKasteleynPlabicOrbit.dressedGlide_swaps_untwisted_mobius_sectors
+#print axioms InfoGeometry.Canonical.KleinBottleKasteleynPlabicOrbit.finiteTorusCover_glide_orbit_signFlip
+#print axioms InfoGeometry.Canonical.KleinBottleKasteleynPlabicOrbit.kleinBottle_lattice_face_reversal_and_plabic_twist
+#print axioms InfoGeometry.Canonical.KleinBottleKasteleynPlabicOrbit.kasteleyn_holonomy_cluster_chart_roundtrip_fails
+#print axioms InfoGeometry.Canonical.KleinBottleKasteleynPlabicOrbit.kleinBottle_bipartite_kasteleyn_master_witness_N1

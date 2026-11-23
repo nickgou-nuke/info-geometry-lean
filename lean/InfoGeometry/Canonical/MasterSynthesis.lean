@@ -12,7 +12,6 @@ import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Canonical.GrandSynthesis
 import InfoGeometry.Canonical.InformationalLichnerowiczBottBridge
 import InfoGeometry.Canonical.SuperchargeEinsteinSourceBridge
-import InfoGeometry.Canonical.DiracRicciBridge
 import InfoGeometry.Canonical.KaehlerGeometry
 import InfoGeometry.Canonical.CalabiYauBridge
 import InfoGeometry.Quantum.RealMajoranaCategory
@@ -69,7 +68,6 @@ open InfoGeometry.Canonical.RicciMongeAmpere
 open InfoGeometry.Canonical.SpectralInference
 open InfoGeometry.Canonical.BottDirac
 open InfoGeometry.Canonical.MoE
-open InfoGeometry.Canonical.DiracRicciBridge
 open InfoGeometry.Canonical.KaehlerGeometry
 open InfoGeometry.Canonical.CalabiYauBridge
 open InfoGeometry.Canonical.UniversalVolume

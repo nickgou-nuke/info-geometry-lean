@@ -919,4 +919,83 @@ theorem rieszDrazinCandidate_isWeylCompatible
     { riesz := hR
       candidate_commutes_spectralEpsilon := hComm }
 
+/--
+Concrete local Weyl-symmetry Riesz constructor for an invertible `ε`-equivariant operator:
+since `P = 1` automatically commutes with `spectral_epsilon`, only operator `ε`-symmetry and
+two-sided invertibility are required.
+-/
+noncomputable def constructiveRieszLocalWeylSymmetryData_of_invertible
+    {T : EndH} (S : EndH)
+    (hLeft : S * T = 1) (hRight : T * S = 1)
+    (hT : T.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp T) :
+    ConstructiveRieszLocalWeylSymmetryData (E := E) T where
+  riesz := constructiveRieszDecompositionAtZero_of_invertible (𝕂 := ℝ) S hLeft hRight
+  operator_commutes_spectralEpsilon := hT
+  projector_commutes_spectralEpsilon := by
+    change (1 : EndH) * (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)) * (1 : EndH)
+    rw [one_mul, mul_one]
+
+/--
+Concrete local Weyl-symmetry Riesz constructor for a nilpotent `ε`-equivariant operator:
+since `P = 0` automatically commutes with `spectral_epsilon`, only operator `ε`-symmetry and
+nilpotency `T ^ k = 0` are required.
+-/
+noncomputable def constructiveRieszLocalWeylSymmetryData_of_nilpotent
+    {T : EndH} (k : ℕ) (hNil : T ^ k = 0)
+    (hT : T.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp T) :
+    ConstructiveRieszLocalWeylSymmetryData (E := E) T where
+  riesz := constructiveRieszDecompositionAtZero_of_nilpotent (𝕂 := ℝ) k hNil
+  operator_commutes_spectralEpsilon := hT
+  projector_commutes_spectralEpsilon := by
+    change (0 : EndH) * (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)) * (0 : EndH)
+    rw [zero_mul, mul_zero]
+
+/--
+Concrete local Weyl-symmetry Riesz constructor from an `ε`-equivariant idempotent projector `P`
+commuting with an `ε`-equivariant operator `T`, a regular-subspace inverse `U`, and defect
+nilpotency `T ^ k * (1 - P) = 0`.
+-/
+noncomputable def constructiveRieszLocalWeylSymmetryData_of_regularInverseAndNilpotentDefect
+    {T : EndH} (k : ℕ) (P U : EndH)
+    (hP : P * P = P) (hComm : T * P = P * T)
+    (hLeft : U * T * P = P) (hRight : T * U * P = P)
+    (hNil : T ^ k * (1 - P) = 0)
+    (hT : T.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp T)
+    (hP_eps : P.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp P) :
+    ConstructiveRieszLocalWeylSymmetryData (E := E) T where
+  riesz :=
+    constructiveRieszDecompositionAtZero_of_regularInverseAndNilpotentDefect
+      (𝕂 := ℝ) k P U hP hComm hLeft hRight hNil
+  operator_commutes_spectralEpsilon := hT
+  projector_commutes_spectralEpsilon := hP_eps
+
+/--
+End-to-end constructive Drazin–Weyl theorem (`D2`): from an `ε`-equivariant operator `T`,
+an `ε`-equivariant commuting idempotent `P`, a regular-part inverse `U` (`U * T * P = P`,
+`T * U * P = P`), and nilpotency on the complement (`T ^ k * (1 - P) = 0`), the dressed inverse
+`P * U * P` is simultaneously the Drazin inverse of `T` of index `k` and Weyl-compatible with
+`spectral_epsilon`.
+-/
+theorem isDrazinInverse_and_isWeylCompatible_of_regularInverseAndNilpotentDefect
+    {T : EndH} (k : ℕ) (P U : EndH)
+    (hP : P * P = P) (hComm : T * P = P * T)
+    (hLeft : U * T * P = P) (hRight : T * U * P = P)
+    (hNil : T ^ k * (1 - P) = 0)
+    (hT : T.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp T)
+    (hP_eps : P.comp (spectral_epsilon (E := E)) = (spectral_epsilon (E := E)).comp P) :
+    let hR :=
+      constructiveRieszDecompositionAtZero_of_regularInverseAndNilpotentDefect
+        (𝕂 := ℝ) k P U hP hComm hLeft hRight hNil
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse T (constructiveDrazinCandidate hR) k ∧
+      IsWeylCompatible (E := E) (constructiveDrazinCandidate hR) := by
+  dsimp only
+  set D :=
+    constructiveRieszLocalWeylSymmetryData_of_regularInverseAndNilpotentDefect
+      (E := E) k P U hP hComm hLeft hRight hNil hT hP_eps
+  refine ⟨?_, constructiveDrazinCandidate_isWeylCompatible_of_localWeylSymmetry (E := E) D⟩
+  exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.mk
+    (constructiveDrazinCandidate_comm (hR := D.riesz))
+    (constructiveDrazinCandidate_inner (hR := D.riesz))
+    (constructiveDrazinCandidate_power (hR := D.riesz))
+
 end InfoGeometry.Canonical.DrazinWeylConstructive

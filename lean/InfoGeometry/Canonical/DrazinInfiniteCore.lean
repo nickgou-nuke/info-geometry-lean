@@ -698,6 +698,88 @@ theorem exists_drazinInverse_of_rieszDecomposition
   exists_drazinInverse_of_constructiveRieszDecompositionAtZero
     (hR := constructiveRieszDecompositionAtZero_of_hasClassicalRieszDecompositionAtZero h)
 
+/--
+Constructive Riesz decomposition at `0` for an invertible operator (`S * T = 1`, `T * S = 1`):
+the regular spectral projector is `P = 1`, the Drazin index is `k = 0`, and the regular inverse is `S`.
+-/
+@[rep_depth operator]
+def constructiveRieszDecompositionAtZero_of_invertible
+    {T : E →L[𝕂] E} (S : E →L[𝕂] E)
+    (hLeft : S * T = 1) (hRight : T * S = 1) :
+    ConstructiveRieszDecompositionAtZero (𝕂 := 𝕂) T where
+  k := 0
+  P := 1
+  P_idempotent := mul_one 1
+  PT_comm := by rw [mul_one, one_mul]
+  S := S
+  left_inverse_on_regular := hLeft
+  right_inverse_on_regular := hRight
+  S_supported_on_regular_left := mul_one S
+  S_supported_on_regular_right := one_mul S
+  nilpotent_on_complement := by simp
+
+/--
+Constructive Riesz decomposition at `0` for a nilpotent operator (`T ^ k = 0`):
+the regular spectral projector is `P = 0` and the regular inverse is `S = 0`.
+-/
+@[rep_depth operator]
+def constructiveRieszDecompositionAtZero_of_nilpotent
+    {T : E →L[𝕂] E} (k : ℕ) (hNil : T ^ k = 0) :
+    ConstructiveRieszDecompositionAtZero (𝕂 := 𝕂) T where
+  k := k
+  P := 0
+  P_idempotent := mul_zero 0
+  PT_comm := by rw [mul_zero, zero_mul]
+  S := 0
+  left_inverse_on_regular := zero_mul T
+  right_inverse_on_regular := mul_zero T
+  S_supported_on_regular_left := mul_zero 0
+  S_supported_on_regular_right := zero_mul 0
+  nilpotent_on_complement := by rw [sub_zero, mul_one, hNil]
+
+/--
+Constructive Riesz decomposition at `0` from an idempotent `T`-commuting projector `P`,
+a two-sided inverse `U` of the regular part (`U * T * P = P`, `T * U * P = P`), and nilpotency
+of `T` on the defect complement (`(T * (1 - P)) ^ k = 0`).
+Notice the regular inverse `S := P * U * P` and its two-sided support laws are constructed
+automatically rather than assumed as independent fields.
+-/
+@[rep_depth operator]
+def constructiveRieszDecompositionAtZero_of_regularInverseAndNilpotentDefect
+    {T : E →L[𝕂] E} (k : ℕ) (P U : E →L[𝕂] E)
+    (hP : P * P = P) (hComm : T * P = P * T)
+    (hLeft : U * T * P = P) (hRight : T * U * P = P)
+    (hNil : T ^ k * (1 - P) = 0) :
+    ConstructiveRieszDecompositionAtZero (𝕂 := 𝕂) T where
+  k := k
+  P := P
+  P_idempotent := hP
+  PT_comm := hComm
+  S := P * U * P
+  left_inverse_on_regular := by
+    calc
+      (P * U * P) * T = P * U * (P * T) := by simp [mul_assoc]
+      _ = P * U * (T * P) := by rw [← hComm]
+      _ = P * (U * T * P) := by simp [mul_assoc]
+      _ = P * P := by rw [hLeft]
+      _ = P := hP
+  right_inverse_on_regular := by
+    calc
+      T * (P * U * P) = (T * P) * U * P := by simp [mul_assoc]
+      _ = (P * T) * U * P := by rw [hComm]
+      _ = P * (T * U * P) := by simp [mul_assoc]
+      _ = P * P := by rw [hRight]
+      _ = P := hP
+  S_supported_on_regular_left := by
+    calc
+      (P * U * P) * P = P * U * (P * P) := by simp [mul_assoc]
+      _ = P * U * P := by rw [hP]
+  S_supported_on_regular_right := by
+    calc
+      P * (P * U * P) = (P * P) * U * P := by simp [mul_assoc]
+      _ = P * U * P := by rw [hP]
+  nilpotent_on_complement := hNil
+
 end SpectralInterfaces
 
 section RieszData

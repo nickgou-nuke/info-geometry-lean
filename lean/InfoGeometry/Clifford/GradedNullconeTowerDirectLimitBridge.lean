@@ -7,6 +7,8 @@ import InfoGeometry.Algebra.GradedNullconeAlgebra
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
 import InfoGeometry.Canonical.Cl11JordanWignerDirectLimit
+import InfoGeometry.Canonical.PeirceBoundaryComplex
+import InfoGeometry.Clifford.Cl11SplitTowerMatrixEquiv
 import Mathlib.LinearAlgebra.Matrix.Reindex
 
 /-!
@@ -224,5 +226,36 @@ theorem tauInfinity_towerToDirectLimit (k : ℕ)
 @[simp] theorem tauInfinity_towerDirectLimitNeg (k : ℕ) (i : Fin k) :
     tauInfinity (cliffordBitWordColimitEquiv (towerDirectLimitNeg k i)) = 0 := by
   rw [towerDirectLimitNeg, tauInfinity_towerToDirectLimit, normalizedTowerTrace_jwNeg]
+
+/-- Canonical identification of `gradedInnerDiff` with `PeirceBoundaryComplex.differential`. -/
+theorem gradedInnerDiff_eq_peirceBoundaryDifferential
+    {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
+    (p u x : A) :
+    gradedInnerDiff (InfoGeometry.Core.PeirceGrading.reflection p) u x =
+      InfoGeometry.Canonical.PeirceBoundaryComplex.differential (R := R) p u x := by
+  rw [gradedInnerDiff_apply, parityConj_apply,
+    InfoGeometry.Canonical.PeirceBoundaryComplex.differential_apply,
+    InfoGeometry.Core.PeirceGrading.conjugation_apply]
+
+/-- Explicit `ℝ`-algebra isomorphism from `Matrix (TowerIdx k) (TowerIdx k) ℝ` to
+`Matrix (Fin (2 ^ k)) (Fin (2 ^ k)) ℝ`. -/
+def towerEquivFinPowTwo (k : ℕ) :
+    Matrix (TowerIdx k) (TowerIdx k) ℝ ≃ₐ[ℝ] Matrix (Fin (2 ^ k)) (Fin (2 ^ k)) ℝ :=
+  (towerStageAlgEquiv k).trans (matEquivFinPowTwo k)
+
+/-- Explicit `ℝ`-algebra isomorphism between rung `k` of `GradedNullconeAlgebra` and the
+native graded Clifford algebra `Clsplit k ≅ Cl(k, k)`. -/
+def towerEquivClsplit (k : ℕ) :
+    Matrix (TowerIdx k) (TowerIdx k) ℝ ≃ₐ[ℝ] InfoGeometry.CliffordTower.Clsplit k :=
+  (towerEquivFinPowTwo k).trans
+    (InfoGeometry.Clifford.Cl11SplitTowerMatrixEquiv.splitTowerEquivMatrix k).symm
+
+/-- Coefficient-preserving equivalence `M_{2^k}(A) ≃ₐ[ℝ] Cl(k, k) ⊗[ℝ] A` for any
+(possibly noncommutative) real algebra `A`. -/
+def towerMatrixEquivClsplitTensor (k : ℕ) (A : Type*) [Ring A] [Algebra ℝ A] :
+    Matrix (TowerIdx k) (TowerIdx k) A ≃ₐ[ℝ]
+      TensorProduct ℝ (InfoGeometry.CliffordTower.Clsplit k) A :=
+  (Matrix.reindexAlgEquiv ℝ A ((towerIdxEquivIdx k).trans (idxEquivFinPowTwo k))).trans
+    (InfoGeometry.Clifford.Cl11SplitTowerMatrixEquiv.matrixEquivCliffordTensor k A)
 
 end InfoGeometry.Clifford.GradedNullconeTowerDirectLimitBridge

@@ -1265,8 +1265,8 @@ theorem idempotent_deriv_off_diagonal_and_projected_berry_curvature {E : Type*} 
     have hDP : P * D P + D P * P = D P := by
       rw [← D.map_mul, hP]
     calc
-      D P = D P * P + P * D P := by rw [← hDP, add_comm]
-      _ = (1 - P) * D P * P + P * D P * (1 - P) := by rw [hrightP D, hleftP D]
+      D P = D P * P + P * D P := hDP.symm.trans (add_comm _ _)
+      _ = (1 - P) * D P * P + P * D P * (1 - P) := by conv_lhs => rw [hrightP D, hleftP D]
   have h1diag := hdiag D₁
   have h1off := hoff D₁
   have h2off := hoff D₂
@@ -1277,14 +1277,14 @@ theorem idempotent_deriv_off_diagonal_and_projected_berry_curvature {E : Type*} 
           = (P * D₁ P) * (D₂ P * P) - (P * D₂ P) * (D₁ P * P) := by noncomm_ring
       _ = (P * D₁ P * (1 - P)) * ((1 - P) * D₂ P * P) -
             (P * D₂ P * (1 - P)) * ((1 - P) * D₁ P * P) := by
-          rw [hleftP D₁, hrightP D₂, hleftP D₂, hrightP D₁]
+          conv_lhs => rw [hleftP D₁, hrightP D₂, hleftP D₂, hrightP D₁]
   · calc
       (1 - P) * (D₁ P * D₂ P - D₂ P * D₁ P) * (1 - P)
           = ((1 - P) * D₁ P) * (D₂ P * (1 - P)) -
             ((1 - P) * D₂ P) * (D₁ P * (1 - P)) := by noncomm_ring
       _ = ((1 - P) * D₁ P * P) * (P * D₂ P * (1 - P)) -
             ((1 - P) * D₂ P * P) * (P * D₁ P * (1 - P)) := by
-          rw [hleftQ D₁, hrightQ D₂, hleftQ D₂, hrightQ D₁]
+          conv_lhs => rw [hleftQ D₁, hrightQ D₂, hleftQ D₂, hrightQ D₁]
 
 end Section5Sharpenings
 

@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Arithmetic/LFunctionPotential.lean
 
 Arithmetic spectral divisors and automorphic L-function barriers in the real doubled language.
@@ -200,5 +205,45 @@ theorem arithmetic_barrier_diverges_at_geometric_horizon
   W.arithmeticBarrierDivergesOnHorizon X hRankDeficient
 
 end UnifiedHorizonWitness
+
+structure UnifiedHorizonData
+    (J : Type*) [AddCommGroup J] [Module ℝ J]
+    (D : CubicJordanNormDatum J)
+    (G : Type*) [Monoid G]
+    (L : ScatteringLFunction E G) where
+
+  /-- Map from a Jordan charge/state to the real spectral carrier H₂. -/
+  spectralMap : J → DoubledSpace E
+
+  /-- Smooth/harmonic finite renormalization term. -/
+  renormalization : J → ℝ
+
+  /-- Scaling constant relating the two finite potentials off the horizon. -/
+  c : ℝ
+
+  /--
+  Finite potential identity away from the Jordan divisor.
+  Uses the Krein norm ‖.‖ on H₂.
+  -/
+  potentialEquivalence :
+    ∀ X : D.NonzeroNormPoint,
+      lFunctionPotential L (spectralMap X.val) =
+        c * splitPotential D X + renormalization X.val
+
+  /--
+  Exact divisor correspondence.
+  -/
+  horizonIff :
+    ∀ X : J,
+      D.norm X = 0 ↔ IsArithmeticHorizon L (spectralMap X)
+
+  /--
+  Optional asymptotic refinement: the arithmetic barrier diverges at the
+  spectral image of every Jordan rank-deficient point.
+  -/
+  arithmeticBarrierDivergesOnHorizon :
+    ∀ X : J,
+      D.norm X = 0 →
+        ArithmeticBarrierDivergesAt L (spectralMap X)
 
 end InfoGeometry.Arithmetic.LFunction

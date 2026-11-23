@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.ArithmeticFunction.Zeta
@@ -130,5 +135,14 @@ theorem moebius_mul_zeta_apply_one :
 theorem moebius_mul_zeta_apply_ne_one {k : ℕ} (hk : k ≠ 1) :
     ((moebius : ArithmeticFunction ℂ) * (zeta : ArithmeticFunction ℂ)) k = 0 := by
   rw [moebius_mul_zeta_eq_one, one_apply, if_neg hk]
+
+/-- 🏆 THEOREM 3: Möbius shift is the arithmetic shift for the Möbius function $\mu$. -/
+theorem arithmeticShift_moebius_eq_mobius (N : ℕ) (f : ℝ → ℂ) :
+    arithmeticShift moebius N f = finiteMobiusShift N f := by
+  rfl
+
+-- =========================================================================
+-- 3. Mellin-Character Readout on Exponential Test Family
+-- =========================================================================
 
 end InfoGeometry.Arithmetic.FiniteDirichletMobiusConvolutionRepresentationBridge

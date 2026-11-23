@@ -80,4 +80,7 @@ This will serve as the equivalent to the Amplituhedron Volume / All-Loop Integra
 noncomputable def bostConnesPartitionFunction (β : ℝ) : ℝ :=
   (riemannZeta (β : ℂ)).re
 
+noncomputable def formalBostConnesZetaReadout (β : ℝ) : ℝ :=
+  (riemannZeta (β : ℂ)).re
+
 end InfoGeometry.Arithmetic.BostConnes

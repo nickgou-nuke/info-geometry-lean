@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.PrimeCounting
@@ -474,5 +479,68 @@ theorem fredholm_determinant_mul_zeta_eq_one
     (C : FredholmClosureCertificate) {s : ℂ} (hs : 1 < s.re) :
     C.determinant s * C.zeta s = 1 :=
   C.determinant_mul_zeta_eq_one s hs
+
+structure FredholmClosureData where
+  /-- Concrete trace-class-style ideal used by the colimit owner, if that route is instantiated. -/
+  TraceIdeal : Type
+  /-- Ambient operator space, e.g. bounded operators on `ℓ²(ℕ⁺)`. -/
+  AmbientOperator : Type
+  /-- Inclusion of the trace-class ideal into the ambient operator space. -/
+  idealToAmbient : TraceIdeal → AmbientOperator
+  /-- Ambient predicate for being trace-class. -/
+  isTraceClass : AmbientOperator → Prop
+  /-- Ambient predicate for compactness. -/
+  isCompact : AmbientOperator → Prop
+  /--
+  The ideal inclusion really lands in the trace-class predicate.  This prevents
+  confusing the trace-class lane with merely compact or bounded operators.
+  -/
+  idealToAmbient_isTraceClass : ∀ T : TraceIdeal, isTraceClass (idealToAmbient T)
+  /-- Trace-class operators are compact in the chosen analytic backend. -/
+  traceClass_isCompact : ∀ T : AmbientOperator, isTraceClass T → isCompact T
+  /-- Finite cutoff operators `T_N(s)`. -/
+  finiteCutoff : ℂ → ℕ → TraceIdeal
+  /-- Infinite diagonal operator `T(s) = -e^{-sH}` inside the trace-class ideal. -/
+  limitOperator : ℂ → TraceIdeal
+  /-- Trace-norm distance on the supplied trace-class ideal. -/
+  traceNormDist : TraceIdeal → TraceIdeal → ℝ
+  /-- Trace-norm distance is nonnegative. -/
+  traceNormDist_nonneg : ∀ A B : TraceIdeal, 0 ≤ traceNormDist A B
+  /--
+  Trace-norm convergence of finite cutoffs to the infinite diagonal operator.
+
+  This is deliberately restricted to `1 < s.re`, the half-plane where the
+  p-series `∑ n, n^{-s.re}` is absolutely summable and the diagonal operator is
+  trace-class.
+  -/
+  traceNorm_cutoff_tendsto :
+    ∀ s : ℂ, 1 < s.re →
+      Filter.Tendsto
+        (fun N : ℕ => traceNormDist (finiteCutoff s N) (limitOperator s))
+        Filter.atTop (nhds 0)
+  /-- Fredholm determinant functional on the trace-class ideal. -/
+  determinantOnIdeal : TraceIdeal → ℂ
+  /-- Candidate Fredholm determinant readout on spectral parameters. -/
+  determinant : ℂ → ℂ
+  /-- The parameter readout is the determinant of the trace-class limit. -/
+  determinant_eq_limit :
+    ∀ s : ℂ, determinant s = determinantOnIdeal (limitOperator s)
+  /--
+  Continuity of the Fredholm determinant along the finite cutoff sequence in
+  the trace-norm topology, again only on `Re s > 1`.
+  -/
+  determinant_cutoff_tendsto :
+    ∀ s : ℂ, 1 < s.re →
+      Filter.Tendsto
+        (fun N : ℕ => determinantOnIdeal (finiteCutoff s N))
+        Filter.atTop (nhds (determinantOnIdeal (limitOperator s)))
+  /-- Candidate Fredholm determinant readout. -/
+  zeta : ℂ → ℂ
+  /-- Right-half-plane determinant/zeta calibration. -/
+  determinant_mul_zeta_eq_one :
+    ∀ s : ℂ, 1 < s.re → determinant s * zeta s = 1
+  /-- Nonvanishing of the determinant on the absolutely convergent half-plane. -/
+  determinant_ne_zero_on_abs_convergence :
+    ∀ s : ℂ, 1 < s.re → determinant s ≠ 0
 
 end InfoGeometry.Arithmetic.FredholmClosure

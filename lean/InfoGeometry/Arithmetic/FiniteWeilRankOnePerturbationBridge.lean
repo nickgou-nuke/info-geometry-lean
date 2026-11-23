@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.FiniteWeilMangoldtQuadraticFormBridge
@@ -58,5 +63,10 @@ theorem rankOnePerturbation_selfAdjoint
     inner_sub_left]
   rw [hD f g, rankOneOperator_selfAdjoint ξ f g]
 
+
+
+theorem rankOnePerturbation_eq_sub_rankOne
+    (D : H →ₗ[ℂ] H) (ξ η : H) :
+    rankOnePerturbation D ξ η = D - rankOneOperator ξ η := rfl
 
 end InfoGeometry.Arithmetic.FiniteWeilRankOnePerturbationBridge

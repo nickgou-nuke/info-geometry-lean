@@ -69,6 +69,16 @@ theorem endCommutator_smul_left (r : ℝ) (A B : FormEnd V) :
   ext α
   simp [endCommutator, Module.End.mul_apply, smul_sub]
 
+theorem endCommutator_smul_right (r : ℝ) (A B : FormEnd V) :
+    endCommutator A (r • B) = r • endCommutator A B := by
+  calc
+    endCommutator A (r • B) = -endCommutator (r • B) A :=
+      endCommutator_skew A (r • B)
+    _ = -(r • endCommutator B A) := by rw [endCommutator_smul_left]
+    _ = r • endCommutator A B := by
+      rw [endCommutator_skew B A]
+      simp
+
 theorem endCommutator_add_left (A₁ A₂ B : FormEnd V) :
     endCommutator (A₁ + A₂) B =
       endCommutator A₁ B + endCommutator A₂ B := by
@@ -196,6 +206,303 @@ theorem clifford_double_commutator
     LinearMap.smul_apply]
   module
 
+/-! ### Contracted Clifford double commutator
+
+This is the positive-definite orthonormal-frame specialization of the algebraic
+identity used in Shirokov's Theorem 5.2.  It is stated on Mathlib's
+Kähler--Atiyah action on exterior forms, with no matrix representation. -/
+
+/-- In an orthonormal frame, summing the double commutator over the frame
+produces the factor `4 (dim V - 1)` on each Clifford generator. -/
+theorem orthonormal_frame_double_commutator_sum
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (hg : ∀ x y, g x y = g y x)
+    (horth : ∀ i j, g (b i) (b j) = if i = j then 1 else 0)
+    (j : ι) :
+    (∑ i : ι,
+      endCommutator (cartanCliffordAction g (b i))
+        (endCommutator (cartanCliffordAction g (b i))
+          (cartanCliffordAction g (b j))) : FormEnd V) =
+      ((4 * (Fintype.card ι - 1 : ℕ) : ℝ)) •
+        cartanCliffordAction g (b j) := by
+  have hterm (i : ι) :
+      endCommutator (cartanCliffordAction g (b i))
+        (endCommutator (cartanCliffordAction g (b i))
+          (cartanCliffordAction g (b j))) =
+        (if i = j then (0 : FormEnd V)
+          else (4 : ℝ) • cartanCliffordAction g (b j)) := by
+    have hbase := clifford_double_commutator g hg (b i) (b j) (b i)
+    have hreverse := endCommutator_skew
+      (cartanCliffordAction g (b i))
+      (endCommutator (cartanCliffordAction g (b i))
+        (cartanCliffordAction g (b j)))
+    rw [horth j i, horth i i] at hbase
+    by_cases hij : i = j
+    · subst j
+      simp [endCommutator]
+    · rw [hreverse, hbase]
+      have hji : j ≠ i := fun h => hij h.symm
+      simp [hij, hji]
+  rw [← Finset.sum_erase_add (Finset.univ : Finset ι)
+    (fun i => endCommutator (cartanCliffordAction g (b i))
+      (endCommutator (cartanCliffordAction g (b i))
+        (cartanCliffordAction g (b j)))) (Finset.mem_univ j)]
+  have herase :
+      (∑ i ∈ (Finset.univ : Finset ι).erase j,
+        endCommutator (cartanCliffordAction g (b i))
+          (endCommutator (cartanCliffordAction g (b i))
+            (cartanCliffordAction g (b j)))) =
+        (Fintype.card ι - 1 : ℕ) •
+          ((4 : ℝ) • cartanCliffordAction g (b j)) := by
+    calc
+      (∑ i ∈ (Finset.univ : Finset ι).erase j,
+          endCommutator (cartanCliffordAction g (b i))
+            (endCommutator (cartanCliffordAction g (b i))
+              (cartanCliffordAction g (b j)))) =
+          ∑ i ∈ (Finset.univ : Finset ι).erase j,
+            (4 : ℝ) • cartanCliffordAction g (b j) := by
+              apply Finset.sum_congr rfl
+              intro i hi
+              have hij : i ≠ j := (Finset.mem_erase.mp hi).1
+              rw [hterm, if_neg hij]
+      _ = (Fintype.card ι - 1 : ℕ) •
+          ((4 : ℝ) • cartanCliffordAction g (b j)) := by
+            simp [Finset.sum_const, Finset.card_erase_of_mem (Finset.mem_univ j)]
+  rw [herase, hterm j]
+  simp only [if_true, add_zero]
+  rw [← Nat.cast_smul_eq_nsmul ℝ, smul_smul]
+  congr 1
+  rw [mul_comm]
+
+/-- Scaling the Clifford field by `σ` scales its contracted cubic current by
+`σ^3`, as in Shirokov's Theorem 5.2. -/
+theorem scaled_orthonormal_frame_double_commutator_sum
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (hg : ∀ x y, g x y = g y x)
+    (horth : ∀ i j, g (b i) (b j) = if i = j then 1 else 0)
+    (j : ι) (σ : ℝ) :
+    (∑ i : ι,
+      endCommutator (σ • cartanCliffordAction g (b i))
+        (endCommutator (σ • cartanCliffordAction g (b i))
+          (σ • cartanCliffordAction g (b j))) : FormEnd V) =
+      ((4 * (Fintype.card ι - 1 : ℕ) : ℝ) * σ ^ 3) •
+        cartanCliffordAction g (b j) := by
+  have hscale (i : ι) :
+      endCommutator (σ • cartanCliffordAction g (b i))
+        (endCommutator (σ • cartanCliffordAction g (b i))
+          (σ • cartanCliffordAction g (b j))) =
+        σ ^ 3 • endCommutator (cartanCliffordAction g (b i))
+          (endCommutator (cartanCliffordAction g (b i))
+            (cartanCliffordAction g (b j))) := by
+    let A := cartanCliffordAction g (b i)
+    let B := cartanCliffordAction g (b j)
+    have hin : endCommutator (σ • A) (σ • B) = σ ^ 2 • endCommutator A B := by
+      rw [endCommutator_smul_left, endCommutator_smul_right]
+      module
+    change endCommutator (σ • A) (endCommutator (σ • A) (σ • B)) =
+      σ ^ 3 • endCommutator A (endCommutator A B)
+    rw [hin]
+    calc
+      endCommutator (σ • A) (σ ^ 2 • endCommutator A B) =
+          σ ^ 2 • endCommutator (σ • A) (endCommutator A B) :=
+        endCommutator_smul_right _ _ _
+      _ = σ ^ 2 • (σ • endCommutator A (endCommutator A B)) := by
+        rw [endCommutator_smul_left]
+      _ = σ ^ 3 • endCommutator A (endCommutator A B) := by module
+  calc
+    (∑ i : ι,
+        endCommutator (σ • cartanCliffordAction g (b i))
+          (endCommutator (σ • cartanCliffordAction g (b i))
+            (σ • cartanCliffordAction g (b j))) : FormEnd V) =
+        σ ^ 3 • ∑ i : ι,
+          endCommutator (cartanCliffordAction g (b i))
+            (endCommutator (cartanCliffordAction g (b i))
+              (cartanCliffordAction g (b j))) := by
+            rw [Finset.smul_sum]
+            apply Finset.sum_congr rfl
+            intro i hi
+            exact hscale i
+    _ = ((4 * (Fintype.card ι - 1 : ℕ) : ℝ) * σ ^ 3) •
+          cartanCliffordAction g (b j) := by
+            rw [orthonormal_frame_double_commutator_sum b g hg horth]
+            module
+
+/-! The paper's contracted index in a pseudo-Euclidean frame carries the
+metric sign. Raising both contracted and output indices removes dependence on
+the signature in the cubic current coefficient. -/
+
+/-- Contracted Clifford double commutator in a pseudo-orthonormal frame.
+The function `ε` records the diagonal signature, with `ε i = ±1`; the raised
+frame vectors are `ε i • b i`. -/
+theorem pseudoOrthonormal_frame_contracted_double_commutator
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (hg : ∀ x y, g x y = g y x)
+    (ε : ι → ℝ) (hε : ∀ i, ε i * ε i = 1)
+    (horth : ∀ i j, g (b i) (b j) = if i = j then ε i else 0)
+    (j : ι) :
+    (∑ i : ι,
+      endCommutator (cartanCliffordAction g (b i))
+        (endCommutator (ε i • cartanCliffordAction g (b i))
+          (ε j • cartanCliffordAction g (b j))) : FormEnd V) =
+      ((4 * (Fintype.card ι - 1 : ℕ) : ℝ)) •
+        (ε j • cartanCliffordAction g (b j)) := by
+  have hterm (i : ι) :
+      endCommutator (cartanCliffordAction g (b i))
+        (endCommutator (ε i • cartanCliffordAction g (b i))
+          (ε j • cartanCliffordAction g (b j))) =
+        (if i = j then (0 : FormEnd V)
+          else (4 : ℝ) • (ε j • cartanCliffordAction g (b j))) := by
+    let ci := cartanCliffordAction g (b i)
+    let cj := cartanCliffordAction g (b j)
+    have hbase := clifford_double_commutator g hg (b i) (b j) (b i)
+    have hreverse := endCommutator_skew ci (endCommutator ci cj)
+    rw [horth j i, horth i i] at hbase
+    by_cases hij : i = j
+    · subst j
+      simp [endCommutator]
+    · rw [if_neg hij]
+      have hbase' : endCommutator (endCommutator ci cj) ci =
+          -((4 * ε i) • cj) := by
+        have hji : j ≠ i := fun h => hij h.symm
+        simpa [ci, cj, hij, hji] using hbase
+      have hinner : endCommutator (ε i • ci) (ε j • cj) =
+          (ε i * ε j) • endCommutator ci cj := by
+        rw [endCommutator_smul_left, endCommutator_smul_right]
+        module
+      have hscalar : (ε i * ε j) * (4 * ε i) = 4 * ε j := by
+        calc
+          (ε i * ε j) * (4 * ε i) = 4 * ε j * (ε i * ε i) := by ring
+          _ = 4 * ε j := by rw [hε i, mul_one]
+      rw [hinner]
+      calc
+        endCommutator ci ((ε i * ε j) • endCommutator ci cj) =
+            (ε i * ε j) • endCommutator ci (endCommutator ci cj) :=
+          endCommutator_smul_right _ _ _
+        _ = (ε i * ε j) • (-endCommutator (endCommutator ci cj) ci) := by
+          rw [hreverse]
+        _ = (4 : ℝ) • (ε j • cj) := by
+          rw [hbase']
+          simp only [smul_neg, neg_neg, smul_smul]
+          rw [hscalar]
+  rw [← Finset.sum_erase_add (Finset.univ : Finset ι)
+    (fun i => endCommutator (cartanCliffordAction g (b i))
+      (endCommutator (ε i • cartanCliffordAction g (b i))
+        (ε j • cartanCliffordAction g (b j)))) (Finset.mem_univ j)]
+  have herase :
+      (∑ i ∈ (Finset.univ : Finset ι).erase j,
+        endCommutator (cartanCliffordAction g (b i))
+          (endCommutator (ε i • cartanCliffordAction g (b i))
+            (ε j • cartanCliffordAction g (b j)))) =
+        (Fintype.card ι - 1 : ℕ) •
+          ((4 : ℝ) • (ε j • cartanCliffordAction g (b j))) := by
+    calc
+      (∑ i ∈ (Finset.univ : Finset ι).erase j,
+          endCommutator (cartanCliffordAction g (b i))
+            (endCommutator (ε i • cartanCliffordAction g (b i))
+              (ε j • cartanCliffordAction g (b j)))) =
+          ∑ i ∈ (Finset.univ : Finset ι).erase j,
+            (4 : ℝ) • (ε j • cartanCliffordAction g (b j)) := by
+              apply Finset.sum_congr rfl
+              intro i hi
+              have hij : i ≠ j := (Finset.mem_erase.mp hi).1
+              rw [hterm, if_neg hij]
+      _ = (Fintype.card ι - 1 : ℕ) •
+            ((4 : ℝ) • (ε j • cartanCliffordAction g (b j))) := by
+              simp [Finset.sum_const, Finset.card_erase_of_mem (Finset.mem_univ j)]
+  rw [herase, hterm j]
+  simp only [if_true, add_zero]
+  rw [← Nat.cast_smul_eq_nsmul ℝ, smul_smul]
+  congr 1
+  rw [mul_comm]
+
+/-- Cubic scaling of the diagonal pseudo-Euclidean Clifford contraction. -/
+theorem scaled_pseudoOrthonormal_frame_contracted_double_commutator
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (hg : ∀ x y, g x y = g y x)
+    (ε : ι → ℝ) (hε : ∀ i, ε i * ε i = 1)
+    (horth : ∀ i j, g (b i) (b j) = if i = j then ε i else 0)
+    (j : ι) (σ : ℝ) :
+    (∑ i : ι,
+      endCommutator (σ • cartanCliffordAction g (b i))
+        (endCommutator (ε i • (σ • cartanCliffordAction g (b i)))
+          (ε j • (σ • cartanCliffordAction g (b j)))) : FormEnd V) =
+      ((4 * (Fintype.card ι - 1 : ℕ) : ℝ) * σ ^ 3) •
+        (ε j • cartanCliffordAction g (b j)) := by
+  have hscale (i : ι) :
+      endCommutator (σ • cartanCliffordAction g (b i))
+        (endCommutator (ε i • (σ • cartanCliffordAction g (b i)))
+          (ε j • (σ • cartanCliffordAction g (b j)))) =
+      σ ^ 3 • endCommutator (cartanCliffordAction g (b i))
+        (endCommutator (ε i • cartanCliffordAction g (b i))
+          (ε j • cartanCliffordAction g (b j))) := by
+    have hleft : ε i • (σ • cartanCliffordAction g (b i)) =
+        σ • (ε i • cartanCliffordAction g (b i)) := by
+      calc
+        ε i • (σ • cartanCliffordAction g (b i)) =
+            (ε i * σ) • cartanCliffordAction g (b i) := smul_smul _ _ _
+        _ = (σ * ε i) • cartanCliffordAction g (b i) := by rw [mul_comm]
+        _ = σ • (ε i • cartanCliffordAction g (b i)) := (smul_smul _ _ _).symm
+    have hright : ε j • (σ • cartanCliffordAction g (b j)) =
+        σ • (ε j • cartanCliffordAction g (b j)) := by
+      calc
+        ε j • (σ • cartanCliffordAction g (b j)) =
+            (ε j * σ) • cartanCliffordAction g (b j) := smul_smul _ _ _
+        _ = (σ * ε j) • cartanCliffordAction g (b j) := by rw [mul_comm]
+        _ = σ • (ε j • cartanCliffordAction g (b j)) := (smul_smul _ _ _).symm
+    rw [hleft, hright]
+    have hinner :
+        endCommutator (σ • (ε i • cartanCliffordAction g (b i)))
+          (σ • (ε j • cartanCliffordAction g (b j))) =
+        σ ^ 2 • endCommutator (ε i • cartanCliffordAction g (b i))
+          (ε j • cartanCliffordAction g (b j)) := by
+      calc
+        _ = σ • endCommutator (ε i • cartanCliffordAction g (b i))
+              (σ • (ε j • cartanCliffordAction g (b j))) :=
+            endCommutator_smul_left _ _ _
+        _ = σ • (σ • endCommutator (ε i • cartanCliffordAction g (b i))
+              (ε j • cartanCliffordAction g (b j))) := by
+            rw [endCommutator_smul_right]
+        _ = σ ^ 2 • endCommutator (ε i • cartanCliffordAction g (b i))
+              (ε j • cartanCliffordAction g (b j)) := by
+            rw [smul_smul, pow_two]
+    calc
+      endCommutator (σ • cartanCliffordAction g (b i))
+          (endCommutator (σ • (ε i • cartanCliffordAction g (b i)))
+            (σ • (ε j • cartanCliffordAction g (b j)))) =
+        σ • endCommutator (cartanCliffordAction g (b i))
+          (endCommutator (σ • (ε i • cartanCliffordAction g (b i)))
+            (σ • (ε j • cartanCliffordAction g (b j)))) :=
+          endCommutator_smul_left _ _ _
+      _ = σ • (σ ^ 2 • endCommutator (cartanCliffordAction g (b i))
+            (endCommutator (ε i • cartanCliffordAction g (b i))
+              (ε j • cartanCliffordAction g (b j)))) := by
+          rw [hinner, endCommutator_smul_right]
+      _ = σ ^ 3 • endCommutator (cartanCliffordAction g (b i))
+            (endCommutator (ε i • cartanCliffordAction g (b i))
+              (ε j • cartanCliffordAction g (b j))) := by
+          module
+  calc
+    (∑ i : ι,
+        endCommutator (σ • cartanCliffordAction g (b i))
+          (endCommutator (ε i • (σ • cartanCliffordAction g (b i)))
+            (ε j • (σ • cartanCliffordAction g (b j)))) : FormEnd V) =
+        σ ^ 3 • ∑ i : ι,
+          endCommutator (cartanCliffordAction g (b i))
+            (endCommutator (ε i • cartanCliffordAction g (b i))
+              (ε j • cartanCliffordAction g (b j))) := by
+            rw [Finset.smul_sum]
+            apply Finset.sum_congr rfl
+            intro i hi
+            exact hscale i
+    _ = ((4 * (Fintype.card ι - 1 : ℕ) : ℝ) * σ ^ 3) •
+          (ε j • cartanCliffordAction g (b j)) := by
+            rw [pseudoOrthonormal_frame_contracted_double_commutator b g hg ε hε horth j]
+            module
+
 /--
 The normalized Clifford bivector acts on Cartan generators by the defining
 orthogonal Lie algebra representation:
@@ -251,6 +558,90 @@ not itself construct bundle transition functions or a global spinor bundle.
 No complex scalar structure or orthonormal-frame assumption is introduced.
 -/
 
+/-- The endomorphism whose values on a frame are its coordinate derivatives. -/
+noncomputable def frameDerivativeMap
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (dh : ι → V) : V →ₗ[ℝ] V :=
+  b.constr ℝ dh
+
+@[simp] theorem frameDerivativeMap_apply_basis
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (dh : ι → V) (i : ι) :
+    frameDerivativeMap b dh (b i) = dh i := by
+  simp [frameDerivativeMap]
+
+/-- Differentiating the pseudo-orthonormal frame relations gives a
+metric-skew frame-derivative endomorphism. The hypothesis is the exact
+first-order compatibility identity on frame vectors. -/
+theorem frameDerivativeMap_metricSkew
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (dh : ι → V)
+    (hcompat : ∀ i j, g (dh i) (b j) + g (b i) (dh j) = 0) :
+    ∀ x y, g (frameDerivativeMap b dh x) y +
+      g x (frameDerivativeMap b dh y) = 0 := by
+  intro x y
+  let cx : ι → ℝ := fun i => b.repr x i
+  let cy : ι → ℝ := fun i => b.repr y i
+  have hx : (∑ i : ι, cx i • b i) = x := by
+    simpa [cx] using b.sum_repr x
+  have hy : (∑ i : ι, cy i • b i) = y := by
+    simpa [cy] using b.sum_repr y
+  have hA (z : V) : frameDerivativeMap b dh z =
+      ∑ i : ι, b.repr z i • dh i := by
+    simp [frameDerivativeMap, Module.Basis.constr_apply_fintype]
+  have hPairLeft (i : ι) : g (dh i) y =
+      ∑ j : ι, cy j * g (dh i) (b j) := by
+    calc
+      g (dh i) y = g (dh i) (∑ j : ι, cy j • b j) := by
+        exact congrArg (g (dh i)) hy.symm
+      _ = ∑ j : ι, cy j * g (dh i) (b j) := by
+        simp [LinearMap.BilinForm.smul_right, map_sum, smul_eq_mul]
+  have hPairRight (j : ι) : g x (dh j) =
+      ∑ i : ι, cx i * g (b i) (dh j) := by
+    calc
+      g x (dh j) = g (∑ i : ι, cx i • b i) (dh j) := by
+        exact congrArg (fun z => g z (dh j)) hx.symm
+      _ = ∑ i : ι, cx i * g (b i) (dh j) := by
+        simp [LinearMap.BilinForm.smul_left, map_sum, smul_eq_mul]
+  have hFirst : g (frameDerivativeMap b dh x) y =
+      ∑ i : ι, ∑ j : ι, cx i * cy j * g (dh i) (b j) := by
+    calc
+      g (frameDerivativeMap b dh x) y =
+          ∑ i : ι, cx i * g (dh i) y := by
+            rw [hA x]
+            simp [cx, LinearMap.BilinForm.smul_left, smul_eq_mul,
+              LinearMap.BilinForm.sum_left]
+      _ = ∑ i : ι, cx i * (∑ j : ι, cy j * g (dh i) (b j)) := by
+            apply Finset.sum_congr rfl
+            intro i hi
+            rw [hPairLeft i]
+      _ = ∑ i : ι, ∑ j : ι, cx i * cy j * g (dh i) (b j) := by
+            simp [Finset.mul_sum, mul_assoc]
+  have hSecond : g x (frameDerivativeMap b dh y) =
+      ∑ i : ι, ∑ j : ι, cx i * cy j * g (b i) (dh j) := by
+    calc
+      g x (frameDerivativeMap b dh y) =
+          ∑ j : ι, cy j * g x (dh j) := by
+            rw [hA y]
+            simp [cy, LinearMap.BilinForm.smul_right, smul_eq_mul,
+              LinearMap.BilinForm.sum_right]
+      _ = ∑ j : ι, cy j * (∑ i : ι, cx i * g (b i) (dh j)) := by
+            apply Finset.sum_congr rfl
+            intro j hj
+            rw [hPairRight j]
+      _ = ∑ i : ι, ∑ j : ι, cx i * cy j * g (b i) (dh j) := by
+            rw [Finset.sum_comm]
+            simp [Finset.mul_sum, mul_assoc, mul_left_comm, mul_comm]
+  rw [hFirst, hSecond]
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_eq_zero
+  intro i hi
+  rw [← Finset.sum_add_distrib]
+  apply Finset.sum_eq_zero
+  intro j hj
+  rw [← mul_add, hcompat, mul_zero]
+
 /-- A Clifford bivector representative for a metric-skew endomorphism, written
 using the supplied basis and its metric-dual basis. -/
 noncomputable def metricSkewSpinLift
@@ -258,6 +649,201 @@ noncomputable def metricSkewSpinLift
     (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
     (hg : g.Nondegenerate) (A : V →ₗ[ℝ] V) : FormEnd V :=
   (1 / 2 : ℝ) • ∑ i, spinBivector g (A (b i)) ((g.dualBasis hg b) i)
+
+/-- The bivector spin lift is the quarter-sum of Clifford products whenever
+the metric trace of the endomorphism vanishes. This is the algebraic form of
+the frame formula `C = (1/4) Σ_i (A b_i) b^i`; the trace condition is explicit
+so the scalar part is not silently discarded. -/
+theorem metricSkewSpinLift_eq_quarter_frame_product
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (hg : g.Nondegenerate) (hgsymm : ∀ x y, g x y = g y x)
+    (A : V →ₗ[ℝ] V)
+    (htrace : ∑ i : ι, g (A (b i)) ((g.dualBasis hg b) i) = 0) :
+    metricSkewSpinLift b g hg A =
+      (1 / 4 : ℝ) • ∑ i : ι,
+        cartanCliffordAction g (A (b i)) *
+          cartanCliffordAction g ((g.dualBasis hg b) i) := by
+  have hcomm (i : ι) :
+      endCommutator (cartanCliffordAction g (A (b i)))
+          (cartanCliffordAction g ((g.dualBasis hg b) i)) =
+        (2 : ℝ) •
+            (cartanCliffordAction g (A (b i)) *
+              cartanCliffordAction g ((g.dualBasis hg b) i)) -
+          (2 * g (A (b i)) ((g.dualBasis hg b) i)) • (1 : FormEnd V) := by
+    have hanti := cartanCliffordAction_anticommutator_of_symmetric
+      g hgsymm (A (b i)) ((g.dualBasis hg b) i)
+    have hsecond :
+        cartanCliffordAction g ((g.dualBasis hg b) i) *
+            cartanCliffordAction g (A (b i)) =
+          (2 * g (A (b i)) ((g.dualBasis hg b) i)) • (1 : FormEnd V) -
+            cartanCliffordAction g (A (b i)) *
+              cartanCliffordAction g ((g.dualBasis hg b) i) := by
+      calc
+        _ = cartanCliffordAction g (A (b i)) *
+              cartanCliffordAction g ((g.dualBasis hg b) i) +
+            cartanCliffordAction g ((g.dualBasis hg b) i) *
+              cartanCliffordAction g (A (b i)) -
+            cartanCliffordAction g (A (b i)) *
+              cartanCliffordAction g ((g.dualBasis hg b) i) := by noncomm_ring
+        _ = (2 * g (A (b i)) ((g.dualBasis hg b) i)) • (1 : FormEnd V) -
+            cartanCliffordAction g (A (b i)) *
+              cartanCliffordAction g ((g.dualBasis hg b) i) := by rw [hanti]
+    rw [endCommutator]
+    rw [hsecond]
+    module
+  unfold metricSkewSpinLift spinBivector
+  rw [Finset.smul_sum]
+  have hsum :
+      (∑ i : ι,
+        endCommutator (cartanCliffordAction g (A (b i)))
+          (cartanCliffordAction g ((g.dualBasis hg b) i))) =
+        (2 : ℝ) • ∑ i : ι,
+            cartanCliffordAction g (A (b i)) *
+              cartanCliffordAction g ((g.dualBasis hg b) i) := by
+    calc
+      _ = ∑ i : ι,
+          ((2 : ℝ) • (cartanCliffordAction g (A (b i)) *
+              cartanCliffordAction g ((g.dualBasis hg b) i)) -
+            (2 * g (A (b i)) ((g.dualBasis hg b) i)) • (1 : FormEnd V)) := by
+              apply Finset.sum_congr rfl
+              intro i hi
+              exact hcomm i
+      _ = (2 : ℝ) • ∑ i : ι,
+            cartanCliffordAction g (A (b i)) *
+              cartanCliffordAction g ((g.dualBasis hg b) i) := by
+              rw [Finset.sum_sub_distrib, ← Finset.smul_sum]
+              have hscalar :
+                  ∑ i : ι, (2 * g (A (b i)) ((g.dualBasis hg b) i)) = 0 := by
+                calc
+                  _ = 2 * ∑ i : ι,
+                      g (A (b i)) ((g.dualBasis hg b) i) := by rw [Finset.mul_sum]
+                  _ = 0 := by rw [htrace]; simp
+              rw [show (∑ i : ι,
+                  (2 * g (A (b i)) ((g.dualBasis hg b) i)) •
+                    (1 : FormEnd V)) =
+                  (∑ i : ι, 2 * g (A (b i)) ((g.dualBasis hg b) i)) •
+                    (1 : FormEnd V) by rw [← Finset.sum_smul]]
+              rw [hscalar, zero_smul, sub_zero]
+  have hscale :
+      (∑ i : ι,
+        (1 / 2 : ℝ) • ((1 / 4 : ℝ) •
+          endCommutator (cartanCliffordAction g (A (b i)))
+            (cartanCliffordAction g ((g.dualBasis hg b) i)))) =
+        (1 / 8 : ℝ) • ∑ i : ι,
+          endCommutator (cartanCliffordAction g (A (b i)))
+            (cartanCliffordAction g ((g.dualBasis hg b) i)) := by
+    calc
+      _ = ∑ i : ι, ((1 / 2 : ℝ) * (1 / 4 : ℝ)) •
+          endCommutator (cartanCliffordAction g (A (b i)))
+            (cartanCliffordAction g ((g.dualBasis hg b) i)) := by
+              apply Finset.sum_congr rfl
+              intro i hi
+              rw [smul_smul]
+      _ = (1 / 8 : ℝ) • ∑ i : ι,
+          endCommutator (cartanCliffordAction g (A (b i)))
+            (cartanCliffordAction g ((g.dualBasis hg b) i)) := by
+              rw [Finset.smul_sum]
+              norm_num
+  rw [hscale, hsum]
+  module
+
+/-- A metric-skew endomorphism has zero metric trace when the supplied
+metric-dual frame is diagonal in the original frame. -/
+theorem metricSkew_trace_zero_of_diagonal_dual_frame
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (hg : g.Nondegenerate) (hgsymm : ∀ x y, g x y = g y x)
+    (hdual : ∃ ε : ι → ℝ,
+      ∀ i, (g.dualBasis hg b) i = ε i • b i)
+    (A : V →ₗ[ℝ] V)
+    (hA : ∀ x y, g (A x) y + g x (A y) = 0) :
+    ∑ i : ι, g (A (b i)) ((g.dualBasis hg b) i) = 0 := by
+  have hdiag (i : ι) : g (A (b i)) (b i) = 0 := by
+    have h := hA (b i) (b i)
+    rw [hgsymm (b i) (A (b i))] at h
+    exact (add_self_eq_zero.mp h)
+  obtain ⟨ε, hdual⟩ := hdual
+  have hterm (i : ι) : g (A (b i)) ((g.dualBasis hg b) i) = 0 := by
+    rw [hdual i, map_smul]
+    simp only [smul_eq_mul, hdiag, mul_zero]
+  simp [hterm]
+
+/-- In a pseudo-orthonormal frame, the metric-dual basis is the signed frame. -/
+theorem metricDualBasis_eq_signed_frame
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (hg : g.Nondegenerate)
+    (ε : ι → ℝ) (hε : ∀ i, ε i * ε i = 1)
+    (horth : ∀ i j, g (b i) (b j) = if i = j then ε i else 0) :
+    ∀ i, (g.dualBasis hg b) i = ε i • b i := by
+  let _ := b.finiteDimensional_of_finite
+  intro i
+  apply (g.toDual hg).injective
+  ext x
+  rw [← b.sum_repr x]
+  simp only [map_sum, map_smul, LinearMap.BilinForm.toDual_def]
+  apply Finset.sum_congr rfl
+  intro j hj
+  rw [LinearMap.BilinForm.apply_dualBasis_left]
+  simp only [LinearMap.smul_apply, smul_eq_mul, LinearMap.BilinForm.toDual_def]
+  rw [horth]
+  by_cases hji : j = i
+  · subst j
+    simp [hε]
+  · have hij : i ≠ j := fun h => hji h.symm
+    simp [hji, hij]
+
+/-- The frame-product formula follows for metric-skew maps when the
+metric-dual frame is a diagonal rescaling of the chosen basis. -/
+theorem metricSkewSpinLift_eq_quarter_frame_product_of_pseudoOrthonormal_frame
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (hg : g.Nondegenerate) (hgsymm : ∀ x y, g x y = g y x)
+    (ε : ι → ℝ) (hε : ∀ i, ε i * ε i = 1)
+    (horth : ∀ i j, g (b i) (b j) = if i = j then ε i else 0)
+    (A : V →ₗ[ℝ] V)
+    (hA : ∀ x y, g (A x) y + g x (A y) = 0) :
+    metricSkewSpinLift b g hg A =
+      (1 / 4 : ℝ) • ∑ i : ι,
+        cartanCliffordAction g (A (b i)) *
+          cartanCliffordAction g ((g.dualBasis hg b) i) := by
+  apply metricSkewSpinLift_eq_quarter_frame_product b g hg hgsymm A
+  have hdual : ∀ i, (g.dualBasis hg b) i = ε i • b i :=
+    metricDualBasis_eq_signed_frame b g hg ε hε horth
+  exact metricSkew_trace_zero_of_diagonal_dual_frame b g hg hgsymm ⟨ε, hdual⟩ A hA
+
+/-- Spin connection obtained by lifting a directional derivative of the
+chosen frame. The first index of `d` is the derivative direction and the
+second is the frame index. -/
+noncomputable def spinConnectionFromFrameDerivative
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (hg : g.Nondegenerate) (d : ι → ι → V) (μ : ι) : FormEnd V :=
+  metricSkewSpinLift b g hg (frameDerivativeMap b (d μ))
+
+/-- Shirokov's frame formula `C_μ = (1/4) Σ_ν (∂_μ h_ν) h^ν` for a
+pseudo-orthonormal frame. The derivative of the frame-pairing identity is
+the explicit metric-compatibility premise. -/
+theorem spinConnectionFromFrameDerivative_eq_quarter_product
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (b : Module.Basis ι ℝ V) (g : LinearMap.BilinForm ℝ V)
+    (hg : g.Nondegenerate) (hgsymm : ∀ x y, g x y = g y x)
+    (ε : ι → ℝ) (hε : ∀ i, ε i * ε i = 1)
+    (horth : ∀ i j, g (b i) (b j) = if i = j then ε i else 0)
+    (d : ι → ι → V)
+    (hcompat : ∀ μ i j,
+      g (d μ i) (b j) + g (b i) (d μ j) = 0)
+    (μ : ι) :
+    spinConnectionFromFrameDerivative b g hg d μ =
+      (1 / 4 : ℝ) • ∑ i : ι,
+        cartanCliffordAction g (d μ i) *
+          cartanCliffordAction g ((g.dualBasis hg b) i) := by
+  unfold spinConnectionFromFrameDerivative
+  simpa only [frameDerivativeMap_apply_basis] using
+    metricSkewSpinLift_eq_quarter_frame_product_of_pseudoOrthonormal_frame
+    b g hg hgsymm ε hε horth (frameDerivativeMap b (d μ))
+    (frameDerivativeMap_metricSkew b g (d μ) (hcompat μ))
 
 private def metricSkewSpinTensorMap
     (g : LinearMap.BilinForm ℝ V) (A : V →ₗ[ℝ] V) :

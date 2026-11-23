@@ -66,7 +66,8 @@ theorem sharedPhase_sq : sharedPhase * sharedPhase = -(1 : Matrix8) := by
   simp only [sharedPhase, Matrix.fromBlocks_multiply, mul_zero, zero_mul,
     add_zero, zero_add, realPhaseAxis_sq]
   ext i j
-  rcases i with i | i <;> rcases j with j | j <;> simp [Matrix.fromBlocks]
+  rcases i with i | i <;> rcases j with j | j <;>
+    simp [Matrix.fromBlocks, Matrix.one_apply]
 
 theorem cut_sq : cut * cut = (1 : Matrix8) := by
   simp [cut, Matrix.fromBlocks_multiply, Matrix.fromBlocks_one]
@@ -83,17 +84,17 @@ theorem cut_mirror_noncommute : cut * mirror ≠ mirror * cut := by
 
 theorem chiralA_eq_lower (a : Vector3) :
     chiralA a = Matrix.fromBlocks (0 : Matrix4) 0 0 (rotation a) := by
-  have hhalf : (1 / 2 : ℝ) • (rotation a + rotation a) = rotation a := by module
   simp [chiralA, doubledRotation, sharedPhase, doubledBoost,
     Matrix.fromBlocks_multiply, Matrix.fromBlocks_add, Matrix.fromBlocks_smul,
-    phase_mul_boost, hhalf]
+    phase_mul_boost]
+  module
 
 theorem chiralB_eq_upper (a : Vector3) :
     chiralB a = Matrix.fromBlocks (rotation a) 0 0 (0 : Matrix4) := by
-  have hhalf : (1 / 2 : ℝ) • (rotation a + rotation a) = rotation a := by module
   simp [chiralB, doubledRotation, sharedPhase, doubledBoost, sub_eq_add_neg,
     Matrix.fromBlocks_multiply, Matrix.fromBlocks_add, Matrix.fromBlocks_neg,
-    Matrix.fromBlocks_smul, phase_mul_boost, hhalf]
+    Matrix.fromBlocks_smul, phase_mul_boost]
+  module
 
 /-- Full cross-product bracket law on the lower rotation sector. -/
 theorem chiralA_commutator (a b : Vector3) :
@@ -151,7 +152,7 @@ theorem chiralCasimirB_value : chiralCasimirB = (-3 / 4 : ℝ) • sectorPlus :=
       chiralB (Pi.single i 1) * chiralB (Pi.single i 1) =
         (-1 / 4 : ℝ) • sectorPlus := by
     simp only [chiralB_eq_upper, Matrix.fromBlocks_multiply, mul_zero, zero_mul,
-      add_zero, zero_add]
+      add_zero]
     change Matrix.fromBlocks (rotationAxis i * rotationAxis i) 0 0 (0 : Matrix4) = _
     rw [rotationAxis_sq]
     simp [sectorPlus, Matrix.fromBlocks_smul]
@@ -167,7 +168,8 @@ private theorem doubledRotation_axis_sq (i : Fin 3) :
     (rotationAxis i * rotationAxis i) = _
   rw [rotationAxis_sq]
   ext p q
-  rcases p with p | p <;> rcases q with q | q <;> simp [Matrix.fromBlocks]
+  rcases p with p | p <;> rcases q with q | q <;>
+    simp [Matrix.fromBlocks, Matrix.one_apply]
 
 private theorem doubledBoost_axis_sq (i : Fin 3) :
     doubledBoost (Pi.single i 1) * doubledBoost (Pi.single i 1) =
@@ -178,7 +180,8 @@ private theorem doubledBoost_axis_sq (i : Fin 3) :
     (boostAxis i * boostAxis i) = _
   rw [boostAxis_sq]
   ext p q
-  rcases p with p | p <;> rcases q with q | q <;> simp [Matrix.fromBlocks]
+  rcases p with p | p <;> rcases q with q | q <;>
+    simp [Matrix.fromBlocks, Matrix.one_apply]
 
 theorem firstLorentzCasimir_value :
     firstLorentzCasimir = (-3 / 2 : ℝ) • (1 : Matrix8) := by
@@ -191,7 +194,7 @@ theorem firstLorentzCasimir_eq_chiral_sum :
   rw [firstLorentzCasimir_value, chiralCasimirA_value, chiralCasimirB_value]
   ext i j
   rcases i with i | i <;> rcases j with j | j <;>
-    simp [sectorPlus, sectorMinus, Matrix.fromBlocks] <;> ring
+    simp [sectorPlus, sectorMinus, Matrix.fromBlocks, Matrix.one_apply] <;> ring
 
 private theorem doubledRotation_axis_mul_boost (i : Fin 3) :
     doubledRotation (Pi.single i 1) * doubledBoost (Pi.single i 1) =
@@ -215,7 +218,7 @@ theorem secondLorentzCasimir_eq_chiral_difference :
     Matrix.fromBlocks_multiply]
   ext i j
   rcases i with i | i <;> rcases j with j | j <;>
-    simp [Matrix.fromBlocks, Matrix.mul_apply, Fin.sum_univ_four] <;> ring
+    simp [Matrix.fromBlocks]
 
 theorem mirror_chiralCasimirA : mirror * chiralCasimirA * mirror = chiralCasimirB := by
   rw [chiralCasimirA_value, chiralCasimirB_value]
@@ -240,16 +243,25 @@ theorem chiralA_nambu :
       (-3 / 4 : ℝ) • sectorMinus := by
   have h01 : comm (chiralA (Pi.single 0 1)) (chiralA (Pi.single 1 1)) =
       chiralA (Pi.single 2 1) := by
-    simpa [comm, cross_apply, chiralA_eq_lower, rotation, spatialPauli] using
-      chiralA_commutator (Pi.single 0 1) (Pi.single 1 1)
+    simpa [InfoGeometry.Algebra.NoncommutativeZornNambu.comm, chiralA_eq_lower,
+      rotationAxis, Matrix.fromBlocks_multiply, sub_eq_add_neg,
+      Matrix.fromBlocks_neg, Matrix.fromBlocks_add] using
+        congrArg (fun M : Matrix4 => (Matrix.fromBlocks (0 : Matrix4) 0 0 M : Matrix8))
+          rotationAxis_commutators.1
   have h12 : comm (chiralA (Pi.single 1 1)) (chiralA (Pi.single 2 1)) =
       chiralA (Pi.single 0 1) := by
-    simpa [comm, cross_apply, chiralA_eq_lower, rotation, spatialPauli] using
-      chiralA_commutator (Pi.single 1 1) (Pi.single 2 1)
+    simpa [InfoGeometry.Algebra.NoncommutativeZornNambu.comm, chiralA_eq_lower,
+      rotationAxis, Matrix.fromBlocks_multiply, sub_eq_add_neg,
+      Matrix.fromBlocks_neg, Matrix.fromBlocks_add] using
+        congrArg (fun M : Matrix4 => (Matrix.fromBlocks (0 : Matrix4) 0 0 M : Matrix8))
+          rotationAxis_commutators.2.1
   have h20 : comm (chiralA (Pi.single 2 1)) (chiralA (Pi.single 0 1)) =
       chiralA (Pi.single 1 1) := by
-    simpa [comm, cross_apply, chiralA_eq_lower, rotation, spatialPauli] using
-      chiralA_commutator (Pi.single 2 1) (Pi.single 0 1)
+    simpa [InfoGeometry.Algebra.NoncommutativeZornNambu.comm, chiralA_eq_lower,
+      rotationAxis, Matrix.fromBlocks_multiply, sub_eq_add_neg,
+      Matrix.fromBlocks_neg, Matrix.fromBlocks_add] using
+        congrArg (fun M : Matrix4 => (Matrix.fromBlocks (0 : Matrix4) 0 0 M : Matrix8))
+          rotationAxis_commutators.2.2
   calc
     nambu ⟨chiralA (Pi.single 0 1), chiralA (Pi.single 1 1), chiralA (Pi.single 2 1)⟩ =
         chiralCasimirA := by
@@ -262,16 +274,25 @@ theorem chiralB_nambu :
       (-3 / 4 : ℝ) • sectorPlus := by
   have h01 : comm (chiralB (Pi.single 0 1)) (chiralB (Pi.single 1 1)) =
       chiralB (Pi.single 2 1) := by
-    simpa [comm, cross_apply, chiralB_eq_upper, rotation, spatialPauli] using
-      chiralB_commutator (Pi.single 0 1) (Pi.single 1 1)
+    simpa [InfoGeometry.Algebra.NoncommutativeZornNambu.comm, chiralB_eq_upper,
+      rotationAxis, Matrix.fromBlocks_multiply, sub_eq_add_neg,
+      Matrix.fromBlocks_neg, Matrix.fromBlocks_add] using
+        congrArg (fun M : Matrix4 => (Matrix.fromBlocks M 0 0 (0 : Matrix4) : Matrix8))
+          rotationAxis_commutators.1
   have h12 : comm (chiralB (Pi.single 1 1)) (chiralB (Pi.single 2 1)) =
       chiralB (Pi.single 0 1) := by
-    simpa [comm, cross_apply, chiralB_eq_upper, rotation, spatialPauli] using
-      chiralB_commutator (Pi.single 1 1) (Pi.single 2 1)
+    simpa [InfoGeometry.Algebra.NoncommutativeZornNambu.comm, chiralB_eq_upper,
+      rotationAxis, Matrix.fromBlocks_multiply, sub_eq_add_neg,
+      Matrix.fromBlocks_neg, Matrix.fromBlocks_add] using
+        congrArg (fun M : Matrix4 => (Matrix.fromBlocks M 0 0 (0 : Matrix4) : Matrix8))
+          rotationAxis_commutators.2.1
   have h20 : comm (chiralB (Pi.single 2 1)) (chiralB (Pi.single 0 1)) =
       chiralB (Pi.single 1 1) := by
-    simpa [comm, cross_apply, chiralB_eq_upper, rotation, spatialPauli] using
-      chiralB_commutator (Pi.single 2 1) (Pi.single 0 1)
+    simpa [InfoGeometry.Algebra.NoncommutativeZornNambu.comm, chiralB_eq_upper,
+      rotationAxis, Matrix.fromBlocks_multiply, sub_eq_add_neg,
+      Matrix.fromBlocks_neg, Matrix.fromBlocks_add] using
+        congrArg (fun M : Matrix4 => (Matrix.fromBlocks M 0 0 (0 : Matrix4) : Matrix8))
+          rotationAxis_commutators.2.2
   calc
     nambu ⟨chiralB (Pi.single 0 1), chiralB (Pi.single 1 1), chiralB (Pi.single 2 1)⟩ =
         chiralCasimirB := by

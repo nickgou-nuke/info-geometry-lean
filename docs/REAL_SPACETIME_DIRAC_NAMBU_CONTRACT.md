@@ -1,12 +1,12 @@
 # Real spacetime, Dirac operators, and associative cubic contractions
 
-**Status: reviewed proof candidates; new focused Lean validation is pending.**
-The three modules added by this continuation have passed source review and the
-staged proof-integrity gate. Their repaired snapshot has not completed a Lean
-build or declaration audit. The statements below describe the reviewed
-contracts and proof implementations, not a kernel-verification certificate
-for this extension. The earlier 52 named theorems have separate, completed
-exact-source validation.
+**Status: Dirac and Nambu compilation passed; doubled repair and audits pending.**
+The six Nambu and 27 Dirac public theorem declarations compiled successfully
+at the hashes recorded below. The first doubled-module check reported proof
+normalization and name-resolution errors. Its reviewed repair preserves all
+21 public and three private theorem statements and still requires compilation.
+The native declaration audit for this three-module extension has not run.
+The earlier 52 named theorems have separate, completed exact-source validation.
 
 ## Input and scope
 
@@ -267,8 +267,9 @@ finite matrix witness.
 ## Acceptance record
 
 The three new owners contain **54 public theorem declarations and three
-private helper lemmas**. Their source and semantic reviews are complete,
-and the unmodified staged proof gate passed on the repaired snapshot.
+private helper lemmas**. Their source and semantic reviews are complete.
+The staged proof gate passed for the first Dirac/Nambu repair; the latest
+doubled proof repair has a separate pending build/audit record.
 
 The first canonical build found redundant `dsimp` steps in the two cubic
 swap proofs, finite-index normalization gaps in injectivity, an explicit
@@ -277,24 +278,35 @@ linear-map application reduction needed in the square proof, and missing
 preserves every theorem statement. It also removes the compiler-reported
 unused tactic arguments. No heartbeat settings or proof assumptions changed.
 
-The repaired build was launched on 2026-11-23 and remained queued on the
-shared build lock when this draft update was prepared. Its command is:
+The repaired build completed on 2026-11-23 with exit code 1. It successfully
+built `AssociativeNambuPeirceBridge` (169 seconds) and
+`RealDiracLorentzBridge` (1227 seconds), then reported errors in the doubled
+module (1059 seconds). Its command was:
 
 ```bash
 python3 verification/real-matrix-split/check.py build \
   InfoGeometry.Canonical.RealDoubledSpinCasimirBridge
 ```
 
-This target includes both new prerequisite modules. A native audit of all
-owned declarations, plus explicit `#print axioms` checks for all 54 public
-theorems, is prepared but has not run. No new kernel-verification or axiom
-acceptance claim is made for these three owners at this snapshot.
+This target includes both prerequisite modules. The doubled diagnostics were
+four Sum-index identity normalization sites, two distributed scalar half-sums,
+and six Nambu axis steps with ambiguous imported names and unresolved basis
+normalization. The reviewed repair adds the missing identity-entry reduction,
+closes the scalar identities, and transports the already compiled
+`rotationAxis_commutators` through the explicit lower/upper block embeddings.
+It preserves all statements, definitions, imports, and signs; it introduces
+no new assumptions or heartbeat settings.
 
-| Pending owner | Repaired source SHA-256 |
-| --- | --- |
-| `Algebra.AssociativeNambuPeirceBridge` | `7b1c1c2ecf032791385b24404a49221fe231bddbb73fa9de131ab89f46d7b315` |
-| `Canonical.RealDiracLorentzBridge` | `c657b2436de64be1a29d18898cd83c95968c95eec0d95ac11adc5a8be5648d4f` |
-| `Canonical.RealDoubledSpinCasimirBridge` | `dce3447d2b26e8942ddfd0a70afd7edf61c5e7643e3d8b352068bb47903a8656` |
+A rebuild of the repaired doubled module is required. A native audit of all
+owned declarations, plus explicit `#print axioms` checks for all 54 public
+theorems, is prepared but has not run. The successful prerequisite compilations
+are recorded separately from completed audit acceptance of the extension.
+
+| Owner | Current source SHA-256 | Observed status |
+| --- | --- | --- |
+| `Algebra.AssociativeNambuPeirceBridge` | `7b1c1c2ecf032791385b24404a49221fe231bddbb73fa9de131ab89f46d7b315` | Compilation passed; audit pending |
+| `Canonical.RealDiracLorentzBridge` | `c657b2436de64be1a29d18898cd83c95968c95eec0d95ac11adc5a8be5648d4f` | Compilation passed; audit pending |
+| `Canonical.RealDoubledSpinCasimirBridge` | `dff8e072983612e8d6adf70f5413f2b875c398055f28edf22ac85cdb3079602c` | Reviewed repair; rebuild and audit pending |
 
 The original 52 named theorems retain their previous exact-source evidence.
 The raw attachment failure and the new candidate diagnostics are separate

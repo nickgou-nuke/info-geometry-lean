@@ -60,6 +60,14 @@ positive-definite orthonormal-frame results are special cases only.
    This is a concrete character coefficient for conjugation by ordered blades
    in the existing negative-definite `Cl(0,n)` carrier. It is not yet the
    Reynolds sum, a center projection, or the varying-frame identity.
+   The coordinate product formula and parity cancellation are now proved for
+   the overlap sign: `shirokov_blade_swap_sign_character` identifies the
+   coefficient with a product of one-coordinate signs, and
+   `shirokov_blade_swap_average_vanishes` proves its sum is zero for even
+   nonempty grades and odd non-top grades. The remaining step is the actual
+   algebra-valued conjugation average (including the inverse blade factors),
+   followed by transport to the paper's varying dual frame and its odd-grade
+   reduced sum.
 2. Connect the finite-coordinate `C+K` transfer's derivation family to the
    repository's CE/exterior-form carrier; derive its flatness and parallelness
    hypotheses from the Clifford-frame compatibility equations.
@@ -109,8 +117,11 @@ center vanishing required for (1.9), and the paper's full-basis averaging
 formula with its identification as the unique spin connection, remain open.
 The new `shirokov_blade_conjugation_sign` declaration compiled in the targeted
 owner build (9,091 jobs); the axiom checker passed 1 module with 0 failures,
-and the strict screener reported 0 traps. This extends the finite blade
-calculation only; it does not close the Reynolds-average obligation.
+and the strict screener reported 0 traps. The follow-up coordinate-factor,
+parity-cancellation, and overlap-character theorems also compile in the same
+targeted owner build (9,091 jobs). These prove cancellation of scalar
+coefficients, not yet the full Clifford-valued Reynolds projection or its
+application to Theorem 2.2.
 The earlier strict screen of the new Shirokov bridge reported zero traps. The
 automated GATE_4 review was rejected before
 kernel verification because the repository-wide staged Lean set fails its QMS

@@ -237,6 +237,219 @@ theorem shirokov_blade_conjugation_sign
                   smul_smul _ _ _
             _ = _ := by rw [← pow_add]
 
+/-- The Reynolds character sum factors as a coordinatewise product. This is
+the combinatorial cancellation mechanism for the standard blade frame; a
+separate parity lemma identifies these factors with the conjugation signs. -/
+theorem shirokov_reynolds_character_sum (n : ℕ) (T : Finset (Fin n)) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      ∏ i ∈ S, (-1 : ℤ) ^ (T.card + if i ∈ T then 1 else 0)) =
+      ∏ i ∈ (Finset.univ : Finset (Fin n)),
+        (1 + (-1 : ℤ) ^ (T.card + if i ∈ T then 1 else 0)) := by
+  simpa using (Finset.prod_one_add
+    (f := fun i : Fin n => (-1 : ℤ) ^ (T.card + if i ∈ T then 1 else 0))
+    (Finset.univ : Finset (Fin n))).symm
+
+/-- Every noncentral blade character has zero standard-frame average: an even
+nonempty blade is killed at a coordinate in it; an odd non-top blade is killed
+at a coordinate outside it. -/
+theorem shirokov_noncentral_blade_character_vanishes (n : ℕ)
+    (T : Finset (Fin n))
+    (hcase : (Even T.card ∧ T.Nonempty) ∨ (Odd T.card ∧
+      T ≠ (Finset.univ : Finset (Fin n)))) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      ∏ i ∈ S, (-1 : ℤ) ^ (T.card + if i ∈ T then 1 else 0)) = 0 := by
+  rw [shirokov_reynolds_character_sum]
+  obtain hEven | hOdd := hcase
+  · obtain ⟨i, hi⟩ := hEven.2
+    have hfactor : 1 + (-1 : ℤ) ^ (T.card + if i ∈ T then 1 else 0) = 0 := by
+      obtain ⟨k, hk⟩ := hEven.1
+      simp [hi, hk]
+    exact Finset.prod_eq_zero (Finset.mem_univ i) hfactor
+  · have hout : ∃ i : Fin n, i ∉ T := by
+      by_contra h
+      push Not at h
+      apply hOdd.2
+      ext i
+      simp only [Finset.mem_univ]
+      exact ⟨fun _ => trivial, fun _ => h i⟩
+    obtain ⟨i, hi⟩ := hout
+    have hfactor : 1 + (-1 : ℤ) ^ (T.card + if i ∈ T then 1 else 0) = 0 := by
+      obtain ⟨k, hk⟩ := hOdd.1
+      simp [hi, hk, pow_add, pow_mul]
+    exact Finset.prod_eq_zero (Finset.mem_univ i) hfactor
+
+/-- The product character is exactly the sign from swapping two Clifford
+blades; `k^2` and `k` have the same parity for the overlap cardinality `k`. -/
+theorem shirokov_blade_character_product (n : ℕ)
+    (S T : Finset (Fin n)) :
+    ∏ i ∈ S, (-1 : ℤ) ^ (T.card + if i ∈ T then 1 else 0) =
+      (-1 : ℤ) ^ (S.card * T.card + (S ∩ T).card) := by
+  rw [Finset.prod_pow_eq_pow_sum]
+  have hsum :
+      (∑ i ∈ S, (T.card + if i ∈ T then 1 else 0)) =
+        S.card * T.card + (S ∩ T).card := by
+    simp [Finset.sum_add_distrib, Finset.sum_const]
+  rw [hsum]
+
+/-- The overlap exponent in the Clifford blade swap law is the same sign
+character that factors over coordinates in the standard-frame average. -/
+theorem shirokov_blade_swap_sign_character (n : ℕ)
+    (S T : Finset (Fin n)) :
+    (-1 : ℤ) ^ (S.card * T.card - (S ∩ T).card ^ 2) =
+      ∏ i ∈ S, (-1 : ℤ) ^ (T.card + if i ∈ T then 1 else 0) := by
+  have hle := (cBlade_mul_swap_overlap ℤ n S T).1
+  have hmod : S.card * T.card - (S ∩ T).card ^ 2 ≡
+      S.card * T.card + (S ∩ T).card [MOD 2] := by
+    have hk : (S ∩ T).card ^ 2 + (S ∩ T).card =
+        (S ∩ T).card * ((S ∩ T).card + 1) := by ring
+    have heven : 2 ∣ (S ∩ T).card * ((S ∩ T).card + 1) := by
+      rcases Nat.even_or_odd (S ∩ T).card with ⟨j, hj⟩ | ⟨j, hj⟩
+      · exact ⟨j * ((S ∩ T).card + 1), by rw [hj]; ring⟩
+      · exact ⟨(S ∩ T).card * (j + 1), by rw [hj]; ring⟩
+    rw [Nat.ModEq]
+    omega
+  rw [neg_one_pow_eq_of_modEq (R := ℤ) hmod,
+    shirokov_blade_character_product]
+
+/-- In `Cl(0,n)`, the ordered blade inverse is its square sign times itself. -/
+theorem shirokov_blade_inverse_formula (n : ℕ) (S : Finset (Fin n)) :
+    let b := cBlade ℝ n S
+    let ε : ℝ := (-1) ^ (S.card * (S.card + 1) / 2)
+    (ε • b) * b = 1 ∧ b * (ε • b) = 1 := by
+  dsimp
+  let ε : ℝ := (-1) ^ (S.card * (S.card + 1) / 2)
+  have hε : ε * ε = 1 := by
+    calc
+      ε * ε = (-1 : ℝ) ^
+          (S.card * (S.card + 1) / 2 + S.card * (S.card + 1) / 2) := by
+            dsimp [ε]
+            rw [← pow_add]
+      _ = (-1 : ℝ) ^ (2 * (S.card * (S.card + 1) / 2)) := by
+            congr 1 <;> omega
+      _ = ((-1 : ℝ) ^ 2) ^ (S.card * (S.card + 1) / 2) := by rw [pow_mul]
+      _ = 1 := by norm_num
+  have hsq : cBlade ℝ n S * cBlade ℝ n S = ε • (1 : CliffordAlgebra
+      (cliffordNegSqForm ℝ n)) := by
+    simpa [ε] using cBlade_sq ℝ n S
+  constructor
+  · calc
+      (ε • cBlade ℝ n S) * cBlade ℝ n S =
+          ε • (cBlade ℝ n S * cBlade ℝ n S) := smul_mul_assoc _ _ _
+      _ = ε • (ε • (1 : CliffordAlgebra (cliffordNegSqForm ℝ n))) := by rw [hsq]
+      _ = (ε * ε) • (1 : CliffordAlgebra (cliffordNegSqForm ℝ n)) := smul_smul _ _ _
+      _ = 1 := by rw [hε]; simp
+  · calc
+      cBlade ℝ n S * (ε • cBlade ℝ n S) =
+          ε • (cBlade ℝ n S * cBlade ℝ n S) := mul_smul_comm _ _ _
+      _ = ε • (ε • (1 : CliffordAlgebra (cliffordNegSqForm ℝ n))) := by rw [hsq]
+      _ = (ε * ε) • (1 : CliffordAlgebra (cliffordNegSqForm ℝ n)) := smul_smul _ _ _
+      _ = 1 := by rw [hε]; simp
+
+/-- Conjugation by the actual inverse blade acts by the overlap sign, with the
+blade-square sign canceled. -/
+theorem shirokov_inverse_blade_conjugation_sign (n : ℕ)
+    (S T : Finset (Fin n)) :
+    let b := cBlade ℝ n S
+    let ε : ℝ := (-1) ^ (S.card * (S.card + 1) / 2)
+    (ε • b) * cBlade ℝ n T * b =
+      ((-1 : ℝ) ^ (S.card * T.card - (S ∩ T).card ^ 2)) • cBlade ℝ n T := by
+  dsimp
+  let ε : ℝ := (-1) ^ (S.card * (S.card + 1) / 2)
+  have hconj := shirokov_blade_conjugation_sign (R := ℝ) n S T
+  calc
+    (ε • cBlade ℝ n S) * cBlade ℝ n T * cBlade ℝ n S =
+        ε • (cBlade ℝ n S * cBlade ℝ n T * cBlade ℝ n S) := by
+          simp only [smul_mul_assoc]
+    _ = ε • (((-1 : ℝ) ^ (S.card * T.card - (S ∩ T).card ^ 2 +
+          S.card * (S.card + 1) / 2)) • cBlade ℝ n T) := by rw [hconj]
+    _ = (ε * (-1 : ℝ) ^ (S.card * T.card - (S ∩ T).card ^ 2 +
+          S.card * (S.card + 1) / 2)) • cBlade ℝ n T := smul_smul _ _ _
+    _ = ((-1 : ℝ) ^ (S.card * T.card - (S ∩ T).card ^ 2)) • cBlade ℝ n T := by
+          dsimp [ε]
+          rw [← pow_add]
+          have hmod : S.card * (S.card + 1) / 2 +
+              (S.card * T.card - (S ∩ T).card ^ 2 +
+                S.card * (S.card + 1) / 2) ≡
+              S.card * T.card - (S ∩ T).card ^ 2 [MOD 2] := by
+            have hprodEven : 2 ∣ S.card * (S.card + 1) := by
+              rcases Nat.even_or_odd S.card with ⟨j, hj⟩ | ⟨j, hj⟩
+              · exact ⟨j * (S.card + 1), by rw [hj]; ring⟩
+              · exact ⟨S.card * (j + 1), by rw [hj]; ring⟩
+            have hdiv : 2 * (S.card * (S.card + 1) / 2) = S.card * (S.card + 1) :=
+              Nat.mul_div_cancel' hprodEven
+            rw [Nat.ModEq]
+            omega
+          rw [neg_one_pow_eq_of_modEq (R := ℝ) hmod]
+
+/-- The signed overlap coefficients from the Clifford blade swap law cancel
+for all grades except the scalar and, in odd dimension, the top grade. -/
+theorem shirokov_blade_swap_average_vanishes (n : ℕ)
+    (T : Finset (Fin n))
+    (hcase : (Even T.card ∧ T.Nonempty) ∨ (Odd T.card ∧
+      T ≠ (Finset.univ : Finset (Fin n)))) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      (-1 : ℤ) ^ (S.card * T.card - (S ∩ T).card ^ 2)) = 0 := by
+  calc
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        (-1 : ℤ) ^ (S.card * T.card - (S ∩ T).card ^ 2)) =
+      ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        ∏ i ∈ S, (-1 : ℤ) ^ (T.card + if i ∈ T then 1 else 0) := by
+          apply Finset.sum_congr rfl
+          intro S hS
+          exact shirokov_blade_swap_sign_character n S T
+    _ = 0 := shirokov_noncentral_blade_character_vanishes n T hcase
+
+/-- The actual inverse-blade Reynolds sum annihilates every noncentral blade
+in the standard `Cl(0,n)` basis. The scalar and odd-dimensional top grades
+are excluded by `hcase` and require the corresponding fixed-point calculation. -/
+theorem shirokov_noncentral_blade_reynolds_vanishes (n : ℕ)
+    (T : Finset (Fin n))
+    (hcase : (Even T.card ∧ T.Nonempty) ∨ (Odd T.card ∧
+      T ≠ (Finset.univ : Finset (Fin n)))) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+        cBlade ℝ n T * cBlade ℝ n S) = 0 := by
+  calc
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+          cBlade ℝ n T * cBlade ℝ n S) =
+      ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        ((-1 : ℝ) ^ (S.card * T.card - (S ∩ T).card ^ 2)) • cBlade ℝ n T := by
+          apply Finset.sum_congr rfl
+          intro S hS
+          exact shirokov_inverse_blade_conjugation_sign n S T
+    _ = (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+          (-1 : ℝ) ^ (S.card * T.card - (S ∩ T).card ^ 2)) • cBlade ℝ n T := by
+          rw [← Finset.sum_smul]
+    _ = 0 := by
+          have hcoef :
+              (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+                (-1 : ℝ) ^ (S.card * T.card - (S ∩ T).card ^ 2)) = 0 := by
+            exact_mod_cast shirokov_blade_swap_average_vanishes n T hcase
+          rw [hcoef]
+          simp
+
+/-- The standard inverse-blade Reynolds average fixes the scalar blade with
+the expected orbit-count factor `2^n`. -/
+theorem shirokov_scalar_blade_reynolds_average (n : ℕ) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+        cBlade ℝ n ∅ * cBlade ℝ n S) =
+      (2 ^ n : ℝ) • cBlade ℝ n ∅ := by
+  calc
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+          cBlade ℝ n ∅ * cBlade ℝ n S) =
+      ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        (1 : ℝ) • cBlade ℝ n ∅ := by
+          apply Finset.sum_congr rfl
+          intro S hS
+          rw [shirokov_inverse_blade_conjugation_sign]
+          simp [cBlade_empty]
+    _ = (2 ^ n : ℝ) • cBlade ℝ n ∅ := by
+          rw [← Finset.sum_smul]
+          simp [Finset.card_powerset]
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

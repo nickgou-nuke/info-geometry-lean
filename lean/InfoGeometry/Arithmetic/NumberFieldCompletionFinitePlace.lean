@@ -96,6 +96,13 @@ theorem properSpace_adicCompletion (v : HeightOneSpectrum R) :
   exact (properSpace_iff_completeSpace_and_isDiscreteValuationRing_integer_and_finite_residueField
     (Γ₀ := ℤᵐ⁰)).2 ⟨inferInstance, hDVR, hFinite⟩
 
+/-- The completion of the fraction field at a height-one prime is locally compact when the
+base Dedekind domain has finite quotients. -/
+theorem locallyCompactSpace_adicCompletion (v : HeightOneSpectrum R) :
+    LocallyCompactSpace (v.adicCompletion K) := by
+  let := properSpace_adicCompletion v (K := K)
+  infer_instance
+
 /-- The valuation ring inside a finite-place completion is compact. -/
 theorem compactSpace_adicCompletionIntegers (v : HeightOneSpectrum R) :
     CompactSpace (v.adicCompletionIntegers K) := by

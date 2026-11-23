@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -8,15 +14,15 @@ Coordinate Plücker relation for the Klein quadric.
 
 This file proves the finite algebraic core:
 
-If `pᵢⱼ = xᵢ yⱼ - xⱼ yᵢ` are the Plücker coordinates of a decomposable
-2-vector `x ∧ y` in `R⁴`, then
+For a commutative coefficient ring, if `pᵢⱼ = xᵢ yⱼ - xⱼ yᵢ` are the
+Plücker coordinates of a decomposable 2-vector `x ∧ y` in `R⁴`, then
 
   `p01 * p23 - p02 * p13 + p03 * p12 = 0`.
 
 No Grassmannian scheme.
-No Schubert calculus.
-No Hodge-star wrapper.
-No axiom.
+Over an arbitrary associative coefficient ring, multiplication order matters:
+the code records the exact Plücker defect instead of asserting that it vanishes.
+No Schubert calculus, Hodge-star wrapper, or axiom is used.
 -/
 
 namespace InfoGeometry.Projective.Quadrics.PluckerKlein
@@ -53,6 +59,39 @@ theorem pluckerCoord_smul_left
     pluckerCoord (fun k => a * x k) y i j =
       a * pluckerCoord x y i j := by
   unfold pluckerCoord
+  noncomm_ring
+
+/-- Right multiplication of the second vector acts on Plücker coordinates on the right. -/
+theorem pluckerCoord_mul_right
+    (a : R) (x y : Vec4 R) (i j : Fin 4) :
+    pluckerCoord x (fun k => y k * a) i j = pluckerCoord x y i j * a := by
+  unfold pluckerCoord
+  noncomm_ring
+
+/-- The valid bimodule scaling law over a noncommutative coefficient ring. -/
+theorem pluckerCoord_bimodule_smul
+    (a b : R) (x y : Vec4 R) (i j : Fin 4) :
+    pluckerCoord (fun k => a * x k) (fun k => y k * b) i j =
+      a * pluckerCoord x y i j * b := by
+  unfold pluckerCoord
+  noncomm_ring
+
+/-- The noncommutative Klein defect is the ordered Plücker polynomial; it need not vanish. -/
+def pluckerKleinDefect (x y : Vec4 R) : R :=
+  pluckerCoord x y 0 1 * pluckerCoord x y 2 3
+    - pluckerCoord x y 0 2 * pluckerCoord x y 1 3
+    + pluckerCoord x y 0 3 * pluckerCoord x y 1 2
+
+/-- Exact operator-ordered expansion of the Plücker defect, valid in every associative ring. -/
+theorem pluckerKleinDefect_expansion (x y : Vec4 R) :
+    pluckerKleinDefect x y =
+      x 0 * y 1 * x 2 * y 3 - x 0 * y 1 * x 3 * y 2
+      - x 1 * y 0 * x 2 * y 3 + x 1 * y 0 * x 3 * y 2
+      - x 0 * y 2 * x 1 * y 3 + x 0 * y 2 * x 3 * y 1
+      + x 2 * y 0 * x 1 * y 3 - x 2 * y 0 * x 3 * y 1
+      + x 0 * y 3 * x 1 * y 2 - x 0 * y 3 * x 2 * y 1
+      - x 3 * y 0 * x 1 * y 2 + x 3 * y 0 * x 2 * y 1 := by
+  simp only [pluckerKleinDefect, pluckerCoord]
   noncomm_ring
 
 /--
@@ -144,14 +183,17 @@ theorem plucker_coordinates_smul_both_satisfy_KleinRel
 end CommRing
 
 /-!
-#### BUCKET 1: CLOSED FINITE THEOREMS
+#### BUCKET 1: NONCOMMUTATIVE OPERATOR IDENTITIES AND COMMUTATIVE KLEIN RELATION
 [pluckerCoord_self, pluckerCoord_swap, pluckerCoord_smul_left,
- pluckerCoord_smul_right, pluckerCoord_smul_both, plucker_klein_relation,
- KleinRel_smul, plucker_coordinates_satisfy_KleinRel,
+ pluckerCoord_mul_right, pluckerCoord_bimodule_smul,
+ pluckerKleinDefect_expansion, pluckerCoord_smul_right,
+ pluckerCoord_smul_both, plucker_klein_relation, KleinRel_smul,
+ plucker_coordinates_satisfy_KleinRel,
  plucker_coordinates_smul_both_satisfy_KleinRel]
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT WITNESSES
-[All theorems are over an arbitrary commutative ring `R`.]
+[The classical vanishing relation and its scaling corollaries require a
+commutative ring `R`; the ordered defect expansion is over `[Ring R]`.]
 
 #### SCOPE AND OWNER MAP
 This generic commutative-ring file proves the coordinate identities above.

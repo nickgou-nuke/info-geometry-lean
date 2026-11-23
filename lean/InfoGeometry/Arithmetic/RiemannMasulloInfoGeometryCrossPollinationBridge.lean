@@ -22,6 +22,9 @@ import InfoGeometry.Analysis.BarrelledAnalyticContinuationFourierPhase
 import InfoGeometry.Algebra.ZLatticeEuclideanTorusQuotient
 import InfoGeometry.Arithmetic.MaurerCartanVonMangoldtBridge
 import InfoGeometry.Arithmetic.WeilLiKreinGhostEquivalence
+import InfoGeometry.Krein.KreinJordanSpectralObstructions
+import InfoGeometry.Arithmetic.TateAdelicSignAndOddCharacterCosetBridge
+import InfoGeometry.Arithmetic.TwoSidedHorizonMellinCutoffObstruction
 
 /-!
 # InfoGeometry.Arithmetic.RiemannMasulloInfoGeometryCrossPollinationBridge
@@ -49,13 +52,17 @@ Souriau `D_∞`, and lattice-torus modules:
    torus quotients, and vertical-strip reciprocal Gamma / Hadamard interpolation.
 5. `meromorphicPolar_rectangleCauchy_crossPollination`,
    `weightedGaussianMellin_and_gammaStripRatio_crossPollination`, and
-   `barrelledAnalyticContinuation_and_complexPowerCylinder_bridge`: connects
-   one-sided residue contours, even/odd archimedean Gamma factors, and the
-   prime-cylinder quotient `ℂ / ℤ·(2πi / log q) ≃ ℂˣ`.
-6. `maurerCartan_weilKrein_apollonian_gamma_bridge` and the two following
-   characterization theorems: on `1 < s.re` the R1 Maurer–Cartan readout equals
-   `Λ`, is CE-flat and gives `-ζ'/ζ`; off the horizon the Weil–Krein ghost and
-   Apollonian unit-circle dichotomy are exact converses of critical-line balance.
+   `barrelledAnalyticContinuation_and_complexPowerCylinder_bridge`: integrates
+   meromorphic polar Cauchy residues, even/odd weighted Gaussian Mellin transforms,
+   vertical-strip Gamma ratios, and prime complex-power cylinders.
+6. `maurerCartan_weilKrein_apollonian_gamma_bridge` and
+   `criticalLine_iff_weilKrein_and_apollonian`: welds R1 Maurer–Cartan `Λ` gauge
+   readout (`-ζ'/ζ`) on `1 < s.re` with a pointwise finite-mode Weil-pairing
+   model and the Apollonian unit-circle characterization. This finite-mode result
+   is not positivity of the global Weil explicit formula or an RH/GRH criterion.
+7. `errataCounterexamples_and_twoSidedRepair_capstone` and
+   `twoSidedHorizonMellin_vs_oneSidedCutoff_capstone`: packages `ERRATA` F8/F9/F11/F13,
+   Ch. 10 oblique/parabolic obstructions, and symmetric two-sided horizon cancellation.
 -/
 
 noncomputable section
@@ -83,6 +90,9 @@ open InfoGeometry.Algebra.ZLatticeEuclideanTorusQuotient
 open InfoGeometry.Arithmetic.MaurerCartanVonMangoldtBridge
 open InfoGeometry.Arithmetic.WeilLiKreinGhostEquivalence
 open InfoGeometry.OperatorAlgebra.MaurerCartanTower
+open InfoGeometry.Krein.KreinJordanSpectralObstructions
+open InfoGeometry.Arithmetic.TateAdelicSignAndOddCharacterCosetBridge
+open InfoGeometry.Arithmetic.TwoSidedHorizonMellinCutoffObstruction
 
 local notation "atHeight" => comap (abs ∘ Complex.im) atTop
 
@@ -135,7 +145,7 @@ theorem archimedeanGaussianMellin_souriauCriticalLine_crossPollination
     antiunitaryCriticalReflection w = w ∧
     ‖(Complex.Gamma w)⁻¹‖ ≤ Real.exp (Real.pi * |w.im| / 2) :=
   ⟨mellin_gaussian Real.pi_pos hs,
-   (fixed_antiunitaryCriticalReflection_iff_criticalLine w).mpr hw,
+   ((fixed_antiunitaryCriticalReflection_iff_criticalLine w).mpr hw).symm,
    norm_inv_Gamma_half w hw⟩
 
 /-- Cross-pollination pairing cyclotomic quadratic Boolean-sign characters on
@@ -229,13 +239,16 @@ local instance instDirichletSMulCommClass :
     ext n
     simp [ArithmeticFunction.mul_apply, Finset.mul_sum]⟩
 
-/-- Joint R1 Maurer–Cartan + R2 Weil-Krein + Apollonian cross-pollination theorem:
+/-- Joint R1 Maurer–Cartan and finite-mode Weil-pairing / Apollonian identity:
 on `1 < s.re`, the R1 left Maurer–Cartan 1-form
 `actionThetaL dirichletLogLane MaurerCartanVonMangoldtBridge.zetaUnit` equals `Λ`,
-is CE-flat (`actionCurvature = 0`), evaluates to `-deriv riemannZeta s / riemannZeta s`,
-while at any centered point `w` with `1 / 2 + w` on `CriticalLine`, `w.re = 0`, all
-Weil mode pairings are nonnegative (`2 * normSq (Φ w)`), `apollonianDiskMap w` lies on the
-unit circle (`normSq = 1`), and `norm_inv_Gamma_half` bounds `‖(Γ (1 / 2 + w))⁻¹‖`. -/
+is CE-flat (`actionCurvature = 0`), and reads out `-deriv riemannZeta s / riemannZeta s`;
+at any centered `w` on `CriticalLine (1 / 2 + w)`, the defined pointwise pairing
+`weilPairMode w Φ` is nonnegative, the Apollonian map has norm square one, and
+`norm_inv_Gamma_half` gives the reciprocal Gamma bound.
+`weilPairMode` is the finite two-point model defined in
+`WeilLiKreinGhostEquivalence`; this does not assert the global Weil explicit formula
+or imply RH/GRH. -/
 theorem maurerCartan_weilKrein_apollonian_gamma_bridge
     {s w : ℂ} (hs : 1 < s.re) (hw : CriticalLine (1 / 2 + w)) (Φ : ℂ → ℂ) :
     L ↗(actionThetaL dirichletLogLane MaurerCartanVonMangoldtBridge.zetaUnit ![(1 : ℝ)]) s =
@@ -244,15 +257,94 @@ theorem maurerCartan_weilKrein_apollonian_gamma_bridge
       (actionThetaL dirichletLogLane MaurerCartanVonMangoldtBridge.zetaUnit) = 0 ∧
     0 ≤ weilPairMode w Φ ∧
     Complex.normSq (apollonianDiskMap w) = 1 ∧
+    (CriticalLine (1 / 2 + w) ↔ ∀ Ψ : ℂ → ℂ, 0 ≤ weilPairMode w Ψ) ∧
+    (CriticalLine (1 / 2 + w) ↔ Complex.normSq (apollonianDiskMap w) = 1) ∧
     ‖(Complex.Gamma (1 / 2 + w))⁻¹‖ ≤ Real.exp (Real.pi * |(1 / 2 + w).im| / 2) := by
   have hwre : w.re = 0 := (criticalLine_centered_iff_re_eq_zero w).mp hw
   refine ⟨(maurerCartan_zetaLogDerivative_mobius_synthesis hs 1).2.1,
     actionThetaL_zetaUnit_flat,
     weilPairMode_nonneg_of_re_eq_zero hwre Φ,
     (normSq_apollonianDiskMap_eq_one_iff_re_eq_zero w).mpr hwre,
+    (criticalLine_centered_iff_re_eq_zero w).trans
+      (re_eq_zero_iff_forall_weilPairMode_nonneg w),
+    (criticalLine_centered_iff_re_eq_zero w).trans
+      (normSq_apollonianDiskMap_eq_one_iff_re_eq_zero w).symm,
     norm_inv_Gamma_half (1 / 2 + w) hw⟩
 
-/-- Exact Weil–Krein/Apollonian characterization of the centered critical line. -/
+/-- Finite-mode characterization accompanying
+`maurerCartan_weilKrein_apollonian_gamma_bridge`: `CriticalLine (1 / 2 + w)` is
+equivalent to universal nonnegativity of the defined pointwise pairing and to
+unit-circle Apollonian balance (`Complex.normSq (apollonianDiskMap w) = 1`),
+while any off-line `w` (`w.re ≠ 0`) admits a test function with pairing `-2`.
+These statements concern the two-point model in `WeilLiKreinGhostEquivalence`, not
+the global Weil explicit formula, and do not constitute an RH/GRH criterion. -/
+theorem criticalLine_iff_weilKrein_and_apollonian (w : ℂ) :
+    (CriticalLine (1 / 2 + w) ↔ ∀ Φ : ℂ → ℂ, 0 ≤ weilPairMode w Φ) ∧
+    (CriticalLine (1 / 2 + w) ↔ Complex.normSq (apollonianDiskMap w) = 1) ∧
+    (w.re ≠ 0 → ∃ Φ : ℂ → ℂ, weilPairMode w Φ = -2 ∧ weilPairMode w Φ < 0) :=
+  ⟨(criticalLine_centered_iff_re_eq_zero w).trans
+      (re_eq_zero_iff_forall_weilPairMode_nonneg w),
+   (criticalLine_centered_iff_re_eq_zero w).trans
+      (normSq_apollonianDiskMap_eq_one_iff_re_eq_zero w).symm,
+   exists_negative_weilPairMode_of_re_ne_zero⟩
+
+/-- Closed `T16` noncommutativity witness on `Matrix (Fin 2) (Fin 2) ℝ` from `ERRATA F9`. -/
+theorem errata_F9_realMatrix_noncomm_witness :
+    peirceCutP0 * outwardNilpotentX ≠ outwardNilpotentX * peirceCutP0 :=
+  errata_F9_trace_norm_asymmetry.2.2.2.2.2.2
+
+/-- **Step 1 Unified `ERRATA` & Two-Sided Repair Capstone**:
+packages the exact finite-dimensional `F8` Walsh-Krein basis cancellation (`2 → 0`),
+`F9` Peirce/nilpotent trace-norm asymmetry (`P₀ X = 0` vs `X P₀ = X`), `F11`/`F13` Tate
+opposite-sign cancellation and odd-character mod-3 shifted-coset non-vanishing, and
+Chapter 10 unbounded oblique Markushevich duals / parabolic Jordan nilpotent defect. -/
+theorem errataCounterexamples_and_twoSidedRepair_capstone (M : ℝ) :
+    (|kreinPolarityMat 0 0| + |kreinPolarityMat 1 1| = 2) ∧
+    (|(walshMat * kreinPolarityMat * walshMat) 0 0| +
+     |(walshMat * kreinPolarityMat * walshMat) 1 1| = 0) ∧
+    (Matrix.trace (peirceCutP0 * outwardNilpotentX) = 0 ∧
+     Matrix.trace (outwardNilpotentX * peirceCutP0) = 0 ∧
+     peirceCutP0 * outwardNilpotentX = 0 ∧
+     outwardNilpotentX * peirceCutP0 = outwardNilpotentX) ∧
+    (addCharPos (1 / 3 : ℝ) * addCharPos (1 / 3 : ℝ) ≠ 1 ∧
+     addCharNeg (1 / 3 : ℝ) * addCharPos (1 / 3 : ℝ) = 1 ∧
+     quadCharMod3 (-1) = -1 ∧
+     (∑ u : (ZMod 3)ˣ, quadCharMod3 u * shiftedCosetIndicator 1 u) = 1) ∧
+    (∃ θ : ℝ, Real.sin θ ≠ 0 ∧ M < frobNormSq (obliqueProj θ)) ∧
+    (jordanNilpotent * jordanNilpotent = 0 ∧ jordanNilpotent ≠ 0) := by
+  have hF8 := errata_F8_walsh_basis_dependence
+  have hF9 := errata_F9_trace_norm_asymmetry
+  have hOdd := odd_quad_char_mod3_witness
+  have hJ := parabolic_jordan_coalescence_witness 0 1 zero_ne_one
+  exact ⟨hF8.1, hF8.2,
+    ⟨hF9.2.2.1, hF9.2.2.2.1, hF9.2.2.2.2.1, hF9.2.2.2.2.2.1⟩,
+    ⟨same_sign_character_fails_at_one_third, tate_opposite_sign_at_one_third,
+      hOdd.1, hOdd.2.2⟩,
+    obliqueProj_frobNormSq_unbounded M,
+    ⟨hJ.2.2.2.2.1, hJ.2.2.2.2.2⟩⟩
+
+/-- **Step 2 Symmetric Two-Sided Horizon Mellin vs. One-Sided Cutoff Capstone
+(`ERRATA R2` / §1.4.3–1.4.4)**: contrasts non-integrability and unboundedness of the
+one-sided cutoff kernel `(t - 1)⁻¹` on `[1 + ε, 2]` (`c > 0`) against symmetric
+two-sided log-horizon cancellation on `[-R, -r] ∪ [r, R]`, multiplicative UV↔IR
+antisymmetry `t ↦ t⁻¹`, and the §1.4.4 negative log-derivative sign at `s = 5 / 2`. -/
+theorem twoSidedHorizonMellin_vs_oneSidedCutoff_capstone
+    {c r R t : ℝ} (hc : 0 < c) (hr : 0 < r) (hR : 0 < R) (ht : 0 < t) (M : ℝ) :
+    (¬ IntervalIntegrable (fun u : ℝ ↦ (u - 1)⁻¹) volume 1 2) ∧
+    (∃ ε ∈ Set.Ioo (0 : ℝ) 1, M < ∫ u in (1 + ε)..2, c * (u - 1)⁻¹) ∧
+    ((∫ τ in (-R)..(-r), c * τ⁻¹) + (∫ τ in r..R, c * τ⁻¹) = 0) ∧
+    (archimedeanHorizonKernel t⁻¹ = -archimedeanHorizonKernel t) ∧
+    (L ↗(actionThetaL dirichletLogLane MaurerCartanVonMangoldtBridge.zetaUnit ![(1 : ℝ)])
+      (5 / 2 : ℂ) = -deriv riemannZeta (5 / 2 : ℂ) / riemannZeta (5 / 2 : ℂ)) :=
+  ⟨not_intervalIntegrable_oneSidedHorizonKernel,
+    oneSidedHorizonCutoff_unbounded hc M,
+    twoSidedLogHorizonPrincipalValue_eq_zero c hr hR,
+    archimedeanHorizonKernel_inv ht,
+    sec144_vonMangoldt_LSeries_at_five_halves⟩
+
+
+/-- The centred critical line is characterised by nonnegativity of every Weil
+pairing together with the Apollonian disk map lying on the unit circle. -/
 theorem weilKrein_apollonian_criticalLine_characterization (w : ℂ) :
     CriticalLine (1 / 2 + w) ↔
       (∀ Φ : ℂ → ℂ, 0 ≤ weilPairMode w Φ) ∧
@@ -265,7 +357,8 @@ theorem weilKrein_apollonian_criticalLine_characterization (w : ℂ) :
   · intro h
     exact (re_eq_zero_iff_forall_weilPairMode_nonneg w).mpr h.1
 
-/-- Off the critical line, a negative Weil mode and an off-unit Apollonian image exist. -/
+/-- Off the centred critical line there is a negative Weil pairing and the
+Apollonian disk map is off the unit circle. -/
 theorem offCriticalLine_weilKrein_ghost {w : ℂ} (hw : w.re ≠ 0) :
     (∃ Φ : ℂ → ℂ, weilPairMode w Φ < 0) ∧
       Complex.normSq (apollonianDiskMap w) ≠ 1 := by
@@ -273,5 +366,6 @@ theorem offCriticalLine_weilKrein_ghost {w : ℂ} (hw : w.re ≠ 0) :
   refine ⟨⟨Φ, hneg⟩, ?_⟩
   intro h
   exact hw ((normSq_apollonianDiskMap_eq_one_iff_re_eq_zero w).mp h)
+
 
 end InfoGeometry.Arithmetic.RiemannMasulloInfoGeometryCrossPollinationBridge

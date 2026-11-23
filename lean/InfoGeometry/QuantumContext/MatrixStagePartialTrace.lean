@@ -104,12 +104,11 @@ theorem weightedStageFunctional_compatible_of_partialTraceCompatible
   | @step j hij ih =>
       rw [show rawMap (Nat.le.step hij) x =
         concreteStep j (rawMap hij x) by
-          simpa [rawMap, concreteData,
+          simpa [rawMap, concreteTraceCompatibleData,
             InfoGeometry.Canonical.CuntzMatrixTraceTower.concreteMap,
             InfoGeometry.Canonical.CuntzMatrixTraceTower.map_succ] using
             congrArg (fun f => f x)
-              (InfoGeometry.Canonical.CuntzMatrixTraceTower.map_succ
-                concreteData hij)]
+              (InfoGeometry.Canonical.CuntzMatrixTraceTower.map_succ concreteTraceCompatibleData.step hij)]
       exact (weightedStageFunctional_step D hD j (rawMap hij x)).trans ih
 
 /-- A family satisfying the backward partial-trace law descends to the

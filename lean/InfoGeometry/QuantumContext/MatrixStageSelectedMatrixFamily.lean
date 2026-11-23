@@ -90,8 +90,8 @@ theorem rawMap_successor (k n : ℕ) (hkn : k ≤ n) (Dk : MatrixStage k) :
   have hindex : Nat.le_trans hkn (Nat.le_succ n) = Nat.le.step hkn :=
     Subsingleton.elim _ _
   rw [hindex]
-  have hmap := congrArg (fun f => f Dk) (map_succ concreteData hkn)
-  simpa [rawMap, concreteData, concreteMap] using hmap
+  have hmap := congrArg (fun f => f Dk) (map_succ concreteTraceCompatibleData.step hkn)
+  simpa [rawMap, concreteTraceCompatibleData, concreteMap] using hmap
 
 /-- The successor law above the selected stage follows from the partial
 trace left-inverse theorem for the full-matrix embedding. -/

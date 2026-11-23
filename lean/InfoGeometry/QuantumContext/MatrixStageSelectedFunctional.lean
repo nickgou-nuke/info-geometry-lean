@@ -42,8 +42,8 @@ def selectedStageFunctional (k : ℕ) (Dk : MatrixStage k) : StageFunctional :=
 
 private theorem concreteStep_eq_rawMap_succ (n : ℕ) :
     concreteStep n = rawMap (Nat.le.step (le_refl n)) := by
-  change concreteData.step n = map concreteData (Nat.le.step (le_refl n))
-  rw [map_succ concreteData (le_refl n), map_id]
+  change concreteTraceCompatibleData.step n = map concreteTraceCompatibleData.step (Nat.le.step (le_refl n))
+  rw [map_succ concreteTraceCompatibleData.step (le_refl n), map_id]
   rfl
 
 /-- Compatibility at a single successor stage for the selected functional. -/
@@ -59,8 +59,8 @@ theorem selectedStageFunctional_step (k : ℕ) (Dk : MatrixStage k)
         (concreteMap_comp (Nat.le.step (le_refl n)) hn1)
       have hstep : concreteStep n A =
           concreteMap (Nat.le.step (le_refl n)) A := by
-        change concreteData.step n A = map concreteData (Nat.le.step (le_refl n)) A
-        rw [map_succ concreteData (le_refl n), map_id]
+        change concreteTraceCompatibleData.step n A = map concreteTraceCompatibleData.step (Nat.le.step (le_refl n)) A
+        rw [map_succ concreteTraceCompatibleData.step (le_refl n), map_id]
         rfl
       have hmaps : concreteMap hn1
           (concreteMap (Nat.le.step (le_refl n)) A) =
@@ -94,15 +94,15 @@ theorem selectedStageFunctional_step (k : ℕ) (Dk : MatrixStage k)
               exact congrArg (matrixTraceFunctional (n + 1))
                 ((concreteStep n).map_mul A Dk).symm
         _ = matrixTraceFunctional n (A * Dk) := by
-              simpa [matrixTraceState, concreteData] using
-                concreteData.trace_compatible n (A * Dk)
+              simpa [matrixTraceState, concreteTraceCompatibleData] using
+                concreteTraceCompatibleData.trace_compatible n (A * Dk)
     · have hkn : k ≤ n := by omega
       have hkn1 : k ≤ n + 1 := Nat.le_trans hkn (Nat.le_succ n)
       have hmap : rawMap hkn1 Dk = concreteStep n (rawMap hkn Dk) := by
-        have hs := map_succ concreteData hkn
+        have hs := map_succ concreteTraceCompatibleData.step hkn
         have hproof : hkn1 = Nat.le.step hkn := Subsingleton.elim _ _
         rw [hproof]
-        change map concreteData (Nat.le.step hkn) Dk = _
+        change map concreteTraceCompatibleData.step (Nat.le.step hkn) Dk = _
         exact congrArg (fun f => f Dk) hs
       rw [selectedStageFunctional, dite_eq_right (by omega),
         selectedStageFunctional, dite_eq_right (by omega)]
@@ -116,8 +116,8 @@ theorem selectedStageFunctional_step (k : ℕ) (Dk : MatrixStage k)
                 exact congrArg (matrixTraceFunctional (n + 1))
                   ((concreteStep n).map_mul A (rawMap hkn Dk)).symm
         _ = matrixTraceFunctional n (A * rawMap hkn Dk) := by
-                simpa [matrixTraceState, concreteData] using
-                  concreteData.trace_compatible n (A * rawMap hkn Dk)
+                simpa [matrixTraceState, concreteTraceCompatibleData] using
+                  concreteTraceCompatibleData.trace_compatible n (A * rawMap hkn Dk)
 
 /-- A selected-stage functional is compatible with every transition in the
 matrix tower. -/
@@ -129,11 +129,10 @@ theorem selectedStageFunctional_compatible (k : ℕ) (Dk : MatrixStage k) :
   | @step j hij ih =>
       rw [show rawMap (Nat.le.step hij) A =
         concreteStep j (rawMap hij A) by
-          simpa [rawMap, concreteData, concreteMap,
+          simpa [rawMap, concreteTraceCompatibleData, concreteMap,
             InfoGeometry.Canonical.CuntzMatrixTraceTower.map_succ] using
             congrArg (fun f => f A)
-              (InfoGeometry.Canonical.CuntzMatrixTraceTower.map_succ
-                concreteData hij)]
+              (InfoGeometry.Canonical.CuntzMatrixTraceTower.map_succ concreteTraceCompatibleData.step hij)]
       exact (selectedStageFunctional_step k Dk j (rawMap hij A)).trans ih
 
 /-- The functional induced by the selected finite matrix on the categorical

@@ -17,6 +17,13 @@ by the compiler linter. These repairs still require a successful native rerun.
 Earlier local attempts were blocked by the shared build lock; they do not
 certify this updated source snapshot.
 
+The subsequent [run 45183619232](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45183619232)
+at `cac1fff` built the other four owners successfully and reported no warnings
+in the five owned sources. Its remaining three Pauli expansion goals retained
+identity-matrix entries. Those entry-expansion lists now explicitly apply
+`Matrix.one_apply`. The aggregate gate, fresh warning-as-error checks and axiom
+audit still require a successful rerun.
+
 Completed checks are independent mathematical/source review, exact symbolic
 matrix identities, a bounded forbidden-construct screen, the maintained staged
 proof gate, and Python syntax checking for this runner. These are different

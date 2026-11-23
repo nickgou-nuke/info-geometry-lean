@@ -174,7 +174,7 @@ theorem nambu_pauliLinear_12 (μ0 μ1 μ2 μ3 c : ℝ) :
         (6 * μ3) • realPhaseAxis) := by
   ext i j
   simp only [nambu, dot, cross, pauliLinear, Matrix.add_apply, Matrix.sub_apply,
-    Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_four]
+    Matrix.smul_apply, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_four]
   fin_cases i <;> fin_cases j <;>
     norm_num [realPhaseAxis, realSigma1, realSigma2, realSigma3] <;> ring
 
@@ -184,7 +184,7 @@ theorem nambu_pauliLinear_23 (μ0 μ1 μ2 μ3 c : ℝ) :
         (6 * μ1) • realPhaseAxis) := by
   ext i j
   simp only [nambu, dot, cross, pauliLinear, Matrix.add_apply, Matrix.sub_apply,
-    Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_four]
+    Matrix.smul_apply, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_four]
   fin_cases i <;> fin_cases j <;>
     norm_num [realPhaseAxis, realSigma1, realSigma2, realSigma3] <;> ring
 
@@ -194,7 +194,7 @@ theorem nambu_pauliLinear_31 (μ0 μ1 μ2 μ3 c : ℝ) :
         (6 * μ2) • realPhaseAxis) := by
   ext i j
   simp only [nambu, dot, cross, pauliLinear, Matrix.add_apply, Matrix.sub_apply,
-    Matrix.smul_apply, Matrix.mul_apply, Fin.sum_univ_four]
+    Matrix.smul_apply, Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_four]
   fin_cases i <;> fin_cases j <;>
     norm_num [realPhaseAxis, realSigma1, realSigma2, realSigma3] <;> ring
 

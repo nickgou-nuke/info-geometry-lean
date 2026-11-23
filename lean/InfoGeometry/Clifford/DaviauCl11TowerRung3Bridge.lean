@@ -468,4 +468,53 @@ theorem clSplit3_reconciliation_packet :
     (clSplit3EquivTower3.trans splitCl3EquivTower3.symm = clSplit3EquivSplitClPower3) :=
   ⟨rfl, rfl⟩
 
+/-! ### 7. Curved `ℤ/2`-Graded DG Differential `∂_F` on Rung `k = 3` (`M₈(ℝ)`) -/
+
+/-- Chiral parity conjugation `α(A) = γ₅ A γ₅` on `M₈(ℝ)` using `γ₅ = gamma5Real 2`. -/
+def rung3ParityConj (A : Mat8R) : Mat8R :=
+  parityConj (gamma5Real 2) A
+
+/-- Curved `ℤ/2`-graded differential `∂_F(A) = F A - (γ₅ A γ₅) F` on `M₈(ℝ)`. -/
+def rung3CurvedDiff (F A : Mat8R) : Mat8R :=
+  gradedInnerDiff (gamma5Real 2) F A
+
+/-- Rung-3 curved DG package: graded Leibniz rule, `∂_F²(A) = [F², A]`, Bianchi identity
+`∂_F(F²) = 0`, and centrality characterization for any `γ₅`-odd operator `F ∈ M₈(ℝ)`. -/
+theorem rung3CurvedDiff_leibniz_sq_and_bianchi {F : Mat8R}
+    (hF : rung3ParityConj F = -F) (A B : Mat8R) :
+    (rung3CurvedDiff F (A * B) =
+      rung3CurvedDiff F A * B + rung3ParityConj A * rung3CurvedDiff F B) ∧
+    (rung3CurvedDiff F (rung3CurvedDiff F A) = (F * F) * A - A * (F * F)) ∧
+    (rung3CurvedDiff F (F * F) = 0) ∧
+    ((∀ X : Mat8R, rung3CurvedDiff F (rung3CurvedDiff F X) = 0) ↔
+      (∀ X : Mat8R, (F * F) * X = X * (F * F))) :=
+  ⟨gradedInnerDiff_mul (gamma5Real_sq 2) F A B,
+    gradedInnerDiff_sq (gamma5Real_sq 2) hF A,
+    gradedInnerDiff_curvature_closed (gamma5Real_sq 2) hF,
+    gradedInnerDiff_sq_eq_zero_iff_central (gamma5Real_sq 2) hF⟩
+
+/-- Every Daviau Dirac matrix `Γ^μ` (`gammaR μ`) is `γ₅`-odd (`γ₅ Γ^μ γ₅ = -Γ^μ`) with central
+square `(Γ^μ)² = g^{μμ} I₈`, so its graded differential satisfies `∂_{Γ^μ}² = 0` on all of `M₈(ℝ)`. -/
+theorem rung3_gammaR_is_chiral_odd_and_curvedDiff_sq_zero (μ : Fin 4) :
+    rung3ParityConj (gammaR μ) = -gammaR μ ∧
+    (∀ A : Mat8R, rung3CurvedDiff (gammaR μ) (rung3CurvedDiff (gammaR μ) A) = 0) := by
+  have hodd : rung3ParityConj (gammaR μ) = -gammaR μ := by
+    dsimp [rung3ParityConj, parityConj]
+    have hanti : gamma5Real 2 * gammaR μ = -(gammaR μ * gamma5Real 2) :=
+      eq_neg_of_add_eq_zero_left (gamma5Real_anticomm 2 μ)
+    rw [hanti, neg_mul, Matrix.mul_assoc, gamma5Real_sq 2, Matrix.mul_one]
+  have h2sq : gammaR μ * gammaR μ + gammaR μ * gammaR μ =
+      (2 * minkowskiMetricR μ) • (1 : Mat8R) := by
+    simpa using gammaR_anticomm μ μ
+  have hsq : gammaR μ * gammaR μ = minkowskiMetricR μ • (1 : Mat8R) := by
+    have hhalf := congrArg (fun M : Mat8R => (1 / 2 : ℝ) • M) h2sq
+    rw [← two_smul ℝ (gammaR μ * gammaR μ), smul_smul, smul_smul,
+      show (1 / 2 : ℝ) * 2 = 1 by norm_num, one_smul,
+      show (1 / 2 : ℝ) * (2 * minkowskiMetricR μ) = minkowskiMetricR μ by ring] at hhalf
+    exact hhalf
+  refine ⟨hodd, ?_⟩
+  intro A
+  rw [(rung3CurvedDiff_leibniz_sq_and_bianchi hodd A 1).2.1, hsq,
+    Algebra.smul_mul_assoc, Algebra.mul_smul_comm, Matrix.one_mul, Matrix.mul_one, sub_self]
+
 end InfoGeometry.Clifford.DaviauCl11TowerRung3Bridge

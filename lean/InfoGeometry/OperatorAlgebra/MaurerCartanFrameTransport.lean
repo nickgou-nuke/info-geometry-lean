@@ -77,7 +77,7 @@ theorem action_inverse (x : K.L) (g : Aˣ) :
 def gaugeForm (g : Aˣ) : OneForm K where
   toFun x := (↑g⁻¹ : A) * K.operatorAction x (↑g : A)
   map_add' x y := by simp [mul_add]
-  map_smul' c x := by simp [mul_smul_comm]
+  map_smul' c x := by simp
 
 @[simp] theorem gaugeForm_apply (g : Aˣ) (x : K.L) :
     gaugeForm K g x = (↑g⁻¹ : A) * K.operatorAction x (↑g : A) := rfl
@@ -106,8 +106,7 @@ theorem covariant_frameTransport (g : Aˣ) (x : K.L) (a : A) :
   rw [K.operatorAction_leibniz x ((↑g⁻¹ : A) * a) (↑g : A)]
   rw [K.operatorAction_leibniz x (↑g⁻¹ : A) a]
   rw [action_inverse K x g]
-  have hunit : (↑g : A) * (↑g⁻¹ : A) = 1 := by
-    simpa using congrArg (fun u : Aˣ => (u : A)) g.mul_inv
+  have hunit : (↑g : A) * (↑g⁻¹ : A) = 1 := Units.mul_inv g
   have hlast : (↑g⁻¹ : A) * a * ↑g *
       ((↑g⁻¹ : A) * K.operatorAction x (↑g : A)) =
       (↑g⁻¹ : A) * a * K.operatorAction x (↑g : A) := by
@@ -127,5 +126,44 @@ theorem covariant_frameTransport_zero (g : Aˣ) (x : K.L) (a : A)
     covariantDerivative K (gaugeForm K g) x (frameTransport g a) = 0 := by
   rw [covariant_frameTransport, ha]
   simp [frameTransport]
+
+/-- Chevalley--Eilenberg curvature decomposition for a split one-form `θ = ϖ + e`:
+when `θ` is flat and the odd covariant exterior derivative vanishes, horizontal curvature
+satisfies Cartan's structural equation `R_ϖ(x, y) = -(e(x) e(y) - e(y) e(x))`. -/
+theorem connectionCurvature_split_and_cartan_horizontal_from_flat
+    (ϖ e : OneForm K) (x y : K.L) :
+    (connectionCurvature K (ϖ + e) x y =
+      (connectionCurvature K ϖ x y + (e x * e y - e y * e x)) +
+        (exteriorDerivativeOne K e x y + (ϖ x * e y - e y * ϖ x) -
+          (ϖ y * e x - e x * ϖ y))) ∧
+    (connectionCurvature K (ϖ + e) x y = 0 →
+      exteriorDerivativeOne K e x y + (ϖ x * e y - e y * ϖ x) -
+        (ϖ y * e x - e x * ϖ y) = 0 →
+      connectionCurvature K ϖ x y = -(e x * e y - e y * e x)) := by
+  have hsplit :
+      connectionCurvature K (ϖ + e) x y =
+        (connectionCurvature K ϖ x y + (e x * e y - e y * e x)) +
+          (exteriorDerivativeOne K e x y + (ϖ x * e y - e y * ϖ x) -
+            (ϖ y * e x - e x * ϖ y)) := by
+    simp only [connectionCurvature_apply, exteriorDerivativeOne_apply,
+      LinearMap.add_apply, map_add]
+    noncomm_ring
+  refine ⟨hsplit, ?_⟩
+  intro hflat hcov
+  rw [hflat, hcov, add_zero] at hsplit
+  exact eq_neg_of_add_eq_zero_left hsplit.symm
+
+/-- For any Maurer--Cartan pure-gauge connection decomposed as `gaugeForm K g = ϖ + e`,
+flatness (`gaugeForm_flat K g`) and vanishing odd covariant exterior derivative directly force
+`R_ϖ(x, y) = -(e(x) e(y) - e(y) e(x))`. -/
+theorem gaugeForm_split_cartan_horizontal_curvature
+    (g : Aˣ) (ϖ e : OneForm K) (hge : gaugeForm K g = ϖ + e) (x y : K.L)
+    (hcov : exteriorDerivativeOne K e x y + (ϖ x * e y - e y * ϖ x) -
+      (ϖ y * e x - e x * ϖ y) = 0) :
+    connectionCurvature K ϖ x y = -(e x * e y - e y * e x) := by
+  have hflat : connectionCurvature K (ϖ + e) x y = 0 := by
+    rw [← hge, gaugeForm_flat K g]
+    rfl
+  exact (connectionCurvature_split_and_cartan_horizontal_from_flat K ϖ e x y).2 hflat hcov
 
 end InfoGeometry.OperatorAlgebra.MaurerCartanFrameTransport

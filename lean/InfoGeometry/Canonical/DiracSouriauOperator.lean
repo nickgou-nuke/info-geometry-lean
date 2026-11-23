@@ -13,6 +13,7 @@ import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.Canonical.ZornSpinor
 import InfoGeometry.Volume.Pfaffian
 import InfoGeometry.Canonical.DiracSouriauDecoupledDrazin
+import InfoGeometry.Algebra.GradedNullconeAlgebra
 
 /-!
 # InfoGeometry.Canonical.DiracSouriauOperator
@@ -35,9 +36,7 @@ theorem mat2_ring_mul_noncommutative_witness {R : Type*} [CommRing R] [Nontrivia
   refine ⟨!![0, 1; 0, 0], !![0, 0; 1, 0], ?_⟩
   intro h
   have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 0) h
-  simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.cons_val_zero, Matrix.cons_val_one,
-    Matrix.head_cons, mul_zero, add_zero, mul_one, zero_add] at h00
-  exact zero_ne_one h00.symm
+  simp [Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 /-- Trap T16 non-commutativity witness for `2 × 2` real matrices in the Dirac-Souriau sector. -/
 theorem mat2_mul_noncommutative_witness :
@@ -508,6 +507,58 @@ theorem souriauEntropy_eq
       Real.log (Real.sqrt S.K.det) - (1 / 2) *
         Real.log (S.berezinian) := by
   rfl
+
+/-- Canonical `ℤ/2`-grading involution `Γ₄ = diag(I₂, -I₂)` on the `4 × 4` Dirac-Souriau carrier. -/
+@[rep_depth transport]
+def superGamma4 (R : Type*) [CommRing R] : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R :=
+  fromBlocks 1 0 0 (-1)
+
+/-- Off-diagonal supersymmetric intertwiner block `F_S = [[0, B], [C, 0]]` of a `DiracSouriauSector`. -/
+@[rep_depth transport]
+def oddBlockMatrix (S : DiracSouriauSector R) : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R :=
+  fromBlocks 0 S.B S.C 0
+
+@[rep_depth transport]
+theorem superGamma4_sq :
+    superGamma4 R * superGamma4 R = (1 : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R) := by
+  dsimp [superGamma4]
+  rw [fromBlocks_multiply]
+  simp [← fromBlocks_one]
+
+@[rep_depth transport]
+theorem oddBlockMatrix_is_superGamma4_odd (S : DiracSouriauSector R) :
+    InfoGeometry.Algebra.GradedNullconeAlgebra.parityConj (superGamma4 R) S.oddBlockMatrix =
+      -S.oddBlockMatrix := by
+  dsimp [InfoGeometry.Algebra.GradedNullconeAlgebra.parityConj, superGamma4, oddBlockMatrix]
+  rw [fromBlocks_multiply, fromBlocks_multiply, fromBlocks_neg]
+  simp
+
+/-- Curved `ℤ/2`-graded DG theorem for the `4 × 4` Dirac-Souriau odd block `F_S`:
+`∂_{F_S}²(M) = [F_S², M]`, `∂_{F_S}(F_S²) = 0`, and `F_S² = diag(B C, C B)`. -/
+@[rep_depth transport]
+theorem diracSouriau_curved_dg_sq_and_bianchi (S : DiracSouriauSector R)
+    (M N : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) R) :
+    let Γ := superGamma4 R
+    let F := S.oddBlockMatrix
+    (InfoGeometry.Algebra.GradedNullconeAlgebra.gradedInnerDiff Γ F (M * N) =
+      InfoGeometry.Algebra.GradedNullconeAlgebra.gradedInnerDiff Γ F M * N +
+        InfoGeometry.Algebra.GradedNullconeAlgebra.parityConj Γ M *
+          InfoGeometry.Algebra.GradedNullconeAlgebra.gradedInnerDiff Γ F N) ∧
+    (InfoGeometry.Algebra.GradedNullconeAlgebra.gradedInnerDiff Γ F
+        (InfoGeometry.Algebra.GradedNullconeAlgebra.gradedInnerDiff Γ F M) =
+      (F * F) * M - M * (F * F)) ∧
+    (InfoGeometry.Algebra.GradedNullconeAlgebra.gradedInnerDiff Γ F (F * F) = 0) ∧
+    (F * F = fromBlocks (S.B * S.C) 0 0 (S.C * S.B)) := by
+  dsimp only
+  refine ⟨InfoGeometry.Algebra.GradedNullconeAlgebra.gradedInnerDiff_mul
+      (superGamma4_sq (R := R)) S.oddBlockMatrix M N,
+    InfoGeometry.Algebra.GradedNullconeAlgebra.gradedInnerDiff_sq
+      (superGamma4_sq (R := R)) S.oddBlockMatrix_is_superGamma4_odd M,
+    InfoGeometry.Algebra.GradedNullconeAlgebra.gradedInnerDiff_curvature_closed
+      (superGamma4_sq (R := R)) S.oddBlockMatrix_is_superGamma4_odd, ?_⟩
+  dsimp [oddBlockMatrix]
+  rw [fromBlocks_multiply]
+  simp
 
 end DiracSouriauSector
 

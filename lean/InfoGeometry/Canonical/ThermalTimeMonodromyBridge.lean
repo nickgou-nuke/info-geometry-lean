@@ -7,6 +7,7 @@ import InfoGeometry.Canonical.YangMillsContinuum
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricMonodromy
 import InfoGeometry.Canonical.Cl11MonodromyDictionaryConstruction
+import InfoGeometry.Algebra.GradedNullconeAlgebra
 
 /-!
 # ThermalTimeMonodromyBridge
@@ -250,6 +251,59 @@ theorem cl11_calibrated_clock_additive (E : Type) [NormedAddCommGroup E] [InnerP
         (modularAutomorphismGroup modularData (B.calibration.timeOfWinding n) A) := by
   dsimp [cl11BridgeData, cl11CanonicalCalibration]
   exact modularAutomorphismGroup_timeOfWinding_add (B := cl11BridgeData E modularData radius h_radius) m n A
+
+open InfoGeometry.Algebra.GradedNullconeAlgebra
+
+/--
+Unilateral `2 × 2` Peirce–Zorn nullcone generator `peirceY (t(n))` calibrated by the thermal
+time of integer winding `n : ℤ`.
+-/
+def calibratedUnilateralPeirceY (cal : ThermalTimeWindingCalibration) (n : ℤ) :
+    Matrix (Fin 2) (Fin 2) ℝ :=
+  peirceY (cal.timeOfWinding n)
+
+/--
+For any `ThermalTimeWindingCalibration`, the calibrated unilateral nullcone bridge
+`calibratedUnilateralPeirceY cal n` is square-zero (`F² = 0`), induces a strictly parabolic
+curved `ℤ/2`-graded differential (`∂_F² = 0`), and maps integer winding addition `m + n` to
+unipotent matrix multiplication `(1 + F(m)) * (1 + F(n)) = 1 + F(m + n)` with injectivity in `n`.
+-/
+theorem calibratedUnilateralPeirceY_parabolic_and_unipotent_group
+    (cal : ThermalTimeWindingCalibration) (m n : ℤ) :
+    let Fm := calibratedUnilateralPeirceY cal m
+    let Fn := calibratedUnilateralPeirceY cal n
+    let Fmn := calibratedUnilateralPeirceY cal (m + n)
+    (Fn * Fn = 0) ∧
+    (∀ M : Matrix (Fin 2) (Fin 2) ℝ,
+      gradedInnerDiff (peirceGamma (E := ℝ)) Fn
+        (gradedInnerDiff (peirceGamma (E := ℝ)) Fn M) = 0) ∧
+    ((1 + Fm) * (1 + Fn) = 1 + Fmn) ∧
+    (calibratedUnilateralPeirceY cal m = calibratedUnilateralPeirceY cal n ↔ m = n) := by
+  dsimp only [calibratedUnilateralPeirceY]
+  have hGamma2 : (peirceGamma (E := ℝ)) * (peirceGamma (E := ℝ)) = 1 :=
+    (axiom3_peirce_zorn_operator_algebra (0 : ℝ) 0 (cal.timeOfWinding n) 0).1
+  have hY2 : (peirceY (cal.timeOfWinding n)) * (peirceY (cal.timeOfWinding n)) = 0 :=
+    (axiom3_peirce_zorn_operator_algebra (0 : ℝ) 0 (cal.timeOfWinding n) 0).2.2.1
+  have hYOdd :
+      parityConj (peirceGamma (E := ℝ)) (peirceY (cal.timeOfWinding n)) =
+        -peirceY (cal.timeOfWinding n) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [parityConj, peirceGamma, peirceY, Matrix.mul_apply, Fin.sum_univ_two]
+  refine ⟨hY2, ?_, ?_, ?_⟩
+  · intro M
+    rw [gradedInnerDiff_sq hGamma2 hYOdd M, hY2, zero_mul, mul_zero, sub_self]
+  · rw [timeOfWinding_add cal m n]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [peirceY, Matrix.mul_apply, Fin.sum_univ_two, add_comm]
+  · constructor
+    · intro hEq
+      have h01 := congrFun (congrFun hEq 0) 1
+      simp only [peirceY, Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one] at h01
+      exact timeOfWinding_injective cal h01
+    · intro hmn
+      rw [hmn]
 
 end Bridge
 

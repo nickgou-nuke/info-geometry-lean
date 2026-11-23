@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.RingTheory.Derivation.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Colimit.DirectLimit
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
+import InfoGeometry.Algebra.GradedNullconeAlgebra
 
 /-!
 # ModularMonodromyClock
@@ -146,5 +152,66 @@ The residue-style operator is nilpotent of order `2` by field projection.
 theorem deRhamResidue_nilpotent [Ring A] (res : DeRhamResidue A) (X : A) :
     res.Res (res.Res X) = 0 :=
   res.is_parabolic X
+
+open InfoGeometry.Algebra.GradedNullconeAlgebra
+
+/--
+When an odd generator `F` (`parityConj Γ F = -F`) lies on the forbidden nullcone
+(`OnForbiddenCone A F`, i.e. `F * F = 0`), its curved `ℤ/2`-graded inner differential
+`gradedInnerDiff Γ F` has vanishing curvature and is strictly parabolic (`∂_F (∂_F X) = 0`).
+In particular, every unilateral Peirce–Zorn nullcone bridge `peirceY Y` on `M₂(A)` lies on
+the forbidden cone and induces a square-zero graded differential.
+-/
+theorem unilateral_onForbiddenCone_gradedInnerDiff_parabolic
+    [Ring A] {Γ F : A} (hΓ : Γ * Γ = 1) (hOdd : parityConj Γ F = -F)
+    (hCone : OnForbiddenCone A F) (X : A) :
+    gradedInnerDiff Γ F (gradedInnerDiff Γ F X) = 0 ∧
+      OnForbiddenCone (Matrix (Fin 2) (Fin 2) A) (peirceY X) ∧
+      ∀ M : Matrix (Fin 2) (Fin 2) A,
+        gradedInnerDiff (peirceGamma (E := A)) (peirceY X)
+          (gradedInnerDiff (peirceGamma (E := A)) (peirceY X) M) = 0 := by
+  have hCone' : F * F = 0 := hCone
+  have hGamma2 : (peirceGamma (E := A)) * (peirceGamma (E := A)) = 1 :=
+    (axiom3_peirce_zorn_operator_algebra (0 : A) 0 X 0).1
+  have hY2 : (peirceY X) * (peirceY X) = 0 :=
+    (axiom3_peirce_zorn_operator_algebra (0 : A) 0 X 0).2.2.1
+  have hYOdd : parityConj (peirceGamma (E := A)) (peirceY X) = -peirceY X := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [parityConj, peirceGamma, peirceY, Matrix.mul_apply, Fin.sum_univ_two]
+  refine ⟨?_, hY2, ?_⟩
+  · rw [gradedInnerDiff_sq hΓ hOdd X, hCone', zero_mul, mul_zero, sub_self]
+  · intro M
+    rw [gradedInnerDiff_sq hGamma2 hYOdd M, hY2, zero_mul, mul_zero, sub_self]
+
+/--
+Unilateral nullcone unipotent soldering law: for any `F` on the forbidden cone (`F * F = 0`),
+`(1 + F) * (1 - F) = 1` and `(1 - F) * (1 + F) = 1`, and for any `D : RingDeriv A` satisfying
+`D F = 0`, the unipotent element `1 + F` evolves linearly as `(1 + F) * D F = 0`. Moreover, on
+`M₂(A)`, the unilateral bridge `1 + peirceY Y` has explicit two-sided inverse `1 - peirceY Y`
+and satisfies `(1 + peirceY Y₁) * (1 + peirceY Y₂) = 1 + peirceY (Y₁ + Y₂)`.
+-/
+theorem unilateral_onForbiddenCone_unipotent_soldering
+    [Ring A] {F : A} (hCone : OnForbiddenCone A F) (Y₁ Y₂ : A) :
+    (1 + F) * (1 - F) = 1 ∧
+      (1 - F) * (1 + F) = 1 ∧
+      ((1 + peirceY Y₁ : Matrix (Fin 2) (Fin 2) A) * (1 + peirceY Y₂) =
+        1 + peirceY (Y₁ + Y₂)) := by
+  have hF2 : F * F = 0 := hCone
+  refine ⟨?_, ?_, ?_⟩
+  · calc
+      (1 + F) * (1 - F) = 1 - F * F := by noncomm_ring
+      _ = 1 := by rw [hF2, sub_zero]
+  · calc
+      (1 - F) * (1 + F) = 1 - F * F := by noncomm_ring
+      _ = 1 := by rw [hF2, sub_zero]
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [peirceY, Matrix.mul_apply, Fin.sum_univ_two, add_comm]
+
+/-- Explicit non-commutativity witness for `2 × 2` Peirce–Zorn matrices over any nontrivial ring `A`. -/
+theorem unilateral_peirceMatrix_noncommutative [Ring A] [Nontrivial A] :
+    ∃ M1 M2 : Matrix (Fin 2) (Fin 2) A, M1 * M2 ≠ M2 * M1 :=
+  peirce_block_mul_noncommutative (E := A)
 
 end InfoGeometry.Canonical.ModularMonodromyClock

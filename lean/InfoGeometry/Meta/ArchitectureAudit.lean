@@ -11,7 +11,7 @@ import InfoGeometry.Meta.Architecture
 
 open Lean Elab Command
 
-namespace InfoGeometry.Meta
+namespace InfoGeometry.Meta.ArchitectureAudit
 
 /-- Constant kinds policed as representation-depth surfaces. -/
 def isPolicedRepDepthInfo : ConstantInfo → Bool
@@ -741,4 +741,4 @@ elab "#audit_rep_depth_coverage_file" : command => do
 elab "#audit_rep_depth_coverage_namespace " ns:ident : command => do
   Command.liftCoreM <| checkRepDepthCoverageForNamespace ns.getId
 
-end InfoGeometry.Meta
+end InfoGeometry.Meta.ArchitectureAudit

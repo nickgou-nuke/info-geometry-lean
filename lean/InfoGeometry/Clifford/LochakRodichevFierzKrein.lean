@@ -563,6 +563,50 @@ def realWeylRight (Φ : Vec8R) : Fin 4 → ℝ :=
 def realWeylBivector (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
   ![-x 1, x 0, -x 3, x 2]
 
+/-- Real matrix transformation on a Weyl sector, parameterized by four real
+coefficients. The unit-sphere condition is stated in the invariance theorem below. -/
+def realWeylUnitQuaternionTransform (a b c d : ℝ) (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
+  ![a * x 0 - b * x 1 + c * x 2 - d * x 3,
+    b * x 0 + a * x 1 + d * x 2 + c * x 3,
+    -c * x 0 - d * x 1 + a * x 2 + b * x 3,
+    d * x 0 - c * x 1 - b * x 2 + a * x 3]
+
+/-- The real unit-quaternion transformation commutes with the internal Weyl bivector. -/
+theorem realWeylUnitQuaternionTransform_commutes_bivector
+    (a b c d : ℝ) (x : Fin 4 → ℝ) :
+    realWeylUnitQuaternionTransform a b c d (realWeylBivector x) =
+      realWeylBivector (realWeylUnitQuaternionTransform a b c d x) := by
+  ext i
+  fin_cases i <;>
+    simp [realWeylUnitQuaternionTransform, realWeylBivector] <;> ring
+
+/-- A simultaneous real unit-quaternion transformation preserves the pairing
+between the two chiral sectors. -/
+theorem realWeylUnitQuaternionTransform_preserves_dot (a b c d : ℝ)
+    (hunit : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 1) (x y : Fin 4 → ℝ) :
+    dotProduct (realWeylUnitQuaternionTransform a b c d x)
+      (realWeylUnitQuaternionTransform a b c d y) = dotProduct x y := by
+  simp [realWeylUnitQuaternionTransform, dotProduct, Fin.sum_univ_four]
+  linear_combination hunit *
+    (x 0 * y 0 + x 1 * y 1 + x 2 * y 2 + x 3 * y 3)
+
+/-- The scalar and internal-bivector pairings of real Weyl sectors are preserved
+when the same unit-quaternion transformation acts on both sectors. -/
+theorem realWeylUnitQuaternionTransform_preserves_bilinears (a b c d : ℝ)
+    (hunit : a ^ 2 + b ^ 2 + c ^ 2 + d ^ 2 = 1) (x y : Fin 4 → ℝ) :
+    dotProduct (realWeylUnitQuaternionTransform a b c d x)
+        (realWeylUnitQuaternionTransform a b c d y) = dotProduct x y ∧
+    -dotProduct (realWeylBivector
+        (realWeylUnitQuaternionTransform a b c d x))
+        (realWeylUnitQuaternionTransform a b c d y) =
+      -dotProduct (realWeylBivector x) y := by
+  constructor
+  · exact realWeylUnitQuaternionTransform_preserves_dot a b c d hunit x y
+  · rw [← realWeylUnitQuaternionTransform_commutes_bivector]
+    exact congrArg Neg.neg
+      (realWeylUnitQuaternionTransform_preserves_dot a b c d hunit
+        (realWeylBivector x) y)
+
 /-- The two complementary real phase-plane rotations. -/
 private def realWeylBivector₂ (x : Fin 4 → ℝ) : Fin 4 → ℝ :=
   ![-x 2, x 3, x 0, -x 1]

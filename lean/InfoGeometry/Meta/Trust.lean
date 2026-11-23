@@ -179,7 +179,7 @@ def collectHardEvidenceBatch
       match queryEnv.getModuleIdxFor? uName with
       | some midx =>
           let modName := queryEnv.header.moduleNames[midx.toNat]?.getD queryEnv.mainModule
-          if isExternalUpstreamModule modName then
+          if InfoGeometry.Meta.ArchitectureAudit.isExternalUpstreamModule modName then
             -- Read `.olean` axiom indices via `Lean.collectAxioms` at external boundaries.
             let axs ← Lean.collectAxioms uName
             if axs.contains ``sorryAx then
@@ -288,8 +288,8 @@ def collectHardEvidenceBatch
     if taggedRoots.isEmpty then
       {}
     else
-      let tagIdx := TagReachIndex.build queryEnv
-      computeNearestTaggedBatch queryEnv tagIdx taggedRoots
+      let tagIdx := InfoGeometry.Meta.ArchitectureAudit.TagReachIndex.build queryEnv
+      InfoGeometry.Meta.ArchitectureAudit.computeNearestTaggedBatch queryEnv tagIdx taggedRoots
 
   let mut out : Std.HashMap Name HardEvidence := {}
   for declName in declNames do
@@ -302,7 +302,8 @@ def collectHardEvidenceBatch
       | some depth =>
           let allowComposite := capstoneAttr.hasTag queryEnv declName
           let deps := nearestTaggedMap.getD declName {}
-          !(taggedDependencyViolationsFromSet queryEnv declName depth allowComposite deps).isEmpty
+          !(InfoGeometry.Meta.ArchitectureAudit.taggedDependencyViolationsFromSet
+            queryEnv declName depth allowComposite deps).isEmpty
       | none => false
     let comp := sccOf[nodeIdx[declName]!]!
     let forbidden := (forbiddenMap.getD declName #[]).toList

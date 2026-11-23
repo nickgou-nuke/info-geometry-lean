@@ -3751,4 +3751,99 @@ theorem grandCanonicalFockOperator_zero_mu
 
 end ConformalGrandCanonicalFockContext
 
+namespace ConformalCartanOddPartitionWitness
+
+variable {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+variable {C : ConformalGibbsSouriauOperatorContext (α := α) (H := H)}
+
+/-- Pure Cartan-odd symmetric-space partition constructor (`D11`): supplies a
+`ConformalCartanOddPartitionWitness` directly from `C.operatorPartition = 1 + B_θ(x, x)`
+for `x ∈ oddSubmodule` without requiring a separate square-amplitude witness (`amplitude = 0`). -/
+@[rep_depth transport]
+def ofPureSymmetricSpace
+    (metric : CartanOddMetricData (L := L))
+    (x : L) (hx : x ∈ metric.S.oddSubmodule)
+    (hPart : C.operatorPartition = 1 + informationMassSq (M := metric) x) :
+    ConformalCartanOddPartitionWitness (α := α) (H := H) (C := C) (L := L) where
+  metric := metric
+  x := x
+  x_mem_odd := hx
+  amplitude := 0
+  operatorPartition_eq_cartan_floor_add_square := by
+    rw [hPart]
+    simp
+
+/-- Direct positive-partition witness from pure Cartan-odd symmetric-space energy `1 + B_θ(x, x)`. -/
+@[rep_depth transport]
+noncomputable def toPositivePartitionWitnessOfPureSymmetricSpace
+    (metric : CartanOddMetricData (L := L))
+    (x : L) (hx : x ∈ metric.S.oddSubmodule)
+    (hPart : C.operatorPartition = 1 + informationMassSq (M := metric) x) :
+    ConformalPositivePartitionWitness C :=
+  (ofPureSymmetricSpace (C := C) metric x hx hPart).toPositivePartitionWitness
+
+/-- Operator admissibility directly from cone membership and pure Cartan-odd symmetric-space partition identity. -/
+@[rep_depth transport]
+theorem operatorAdmissible_of_pureSymmetricSpace
+    (metric : CartanOddMetricData (L := L))
+    (x : L) (hx : x ∈ metric.S.oddSubmodule)
+    (hPart : C.operatorPartition = 1 + informationMassSq (M := metric) x)
+    (hCone : C.IsConeAdmissible) :
+    C.IsOperatorAdmissible :=
+  (ofPureSymmetricSpace (C := C) metric x hx hPart).operatorAdmissible_of_cartanOddPartition hCone
+
+end ConformalCartanOddPartitionWitness
+
+namespace ConformalFisherOnsagerPositiveContext
+
+variable {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+
+/-- Cartan-odd symmetric-space constructor for Fisher/Onsager response positivity (`D10`):
+derives `0 ≤ operatorConformalResponse X X` directly from `informationMassSq_nonneg_of_mem_odd`
+when the self-response equals the Cartan-odd Killing/metric form `B_θ(x, x)`. -/
+@[rep_depth transport]
+def ofCartanOddMetric
+    (closure : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H))
+    (metric : CartanOddMetricData (L := L))
+    (x : L) (hx : x ∈ metric.S.oddSubmodule)
+    (hResp : closure.gibbs.operatorConformalResponse closure.X closure.X =
+      informationMassSq (M := metric) x) :
+    ConformalFisherOnsagerPositiveContext (α := α) (H := H) where
+  closure := closure
+  selfResponse_nonneg := by
+    rw [hResp]
+    exact informationMassSq_nonneg_of_mem_odd (M := metric) hx
+
+@[rep_depth transport]
+theorem fisherOnsagerProduction_ofCartanOddMetric
+    (closure : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H))
+    (metric : CartanOddMetricData (L := L))
+    (x : L) (hx : x ∈ metric.S.oddSubmodule)
+    (hResp : closure.gibbs.operatorConformalResponse closure.X closure.X =
+      informationMassSq (M := metric) x) :
+    (ofCartanOddMetric closure metric x hx hResp).fisherOnsagerProduction =
+      informationMassSq (M := metric) x :=
+  hResp
+
+end ConformalFisherOnsagerPositiveContext
+
+namespace ConformalSquareFisherOnsagerPositiveContext
+
+variable {L : Type _} [LieRing L] [LieAlgebra ℝ L]
+
+/-- Square-response Fisher/Onsager positive context constructed directly from a Cartan-odd
+symmetric-space metric response witness (`D10`). -/
+@[rep_depth transport]
+noncomputable def ofCartanOddMetric
+    (closure : ConformalWeylTKKKKTJordanLieContext (α := α) (H := H))
+    (metric : CartanOddMetricData (L := L))
+    (x : L) (hx : x ∈ metric.S.oddSubmodule)
+    (hResp : closure.gibbs.operatorConformalResponse closure.X closure.X =
+      informationMassSq (M := metric) x) :
+    ConformalSquareFisherOnsagerPositiveContext (α := α) (H := H) :=
+  ofPositiveContext (ConformalFisherOnsagerPositiveContext.ofCartanOddMetric
+    closure metric x hx hResp)
+
+end ConformalSquareFisherOnsagerPositiveContext
+
 end InfoGeometry.Canonical.SouriauConformalKKT

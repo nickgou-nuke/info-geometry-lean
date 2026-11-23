@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Potential.Thermo
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NavierStokesBridge
@@ -46,11 +51,29 @@ theorem fenchelGap_eq_zero_iff_contact (L : LegendreModel) (θ η : ℝ)
     L.fenchelGap θ η = 0 ↔ η = L.grad θ :=
   L.fenchelGap_eq_zero_iff_eq_grad_of_hasDerivAt θ η hd
 
-/-- The thermodynamic contact condition is equivalent to the trace-free collapsed modular Hamiltonian. -/
+/-- Under the metriplectic decomposition `collapseToBaseVelocity K = (η - L.grad θ) • D + Ω`
+into a radial dilation generator `D` with nonzero trace and a skew-adjoint rotational velocity `Ω`
+(`Ω† = -Ω`), the thermodynamic contact condition `η = L.grad θ` is constructively equivalent to
+the trace-free condition `LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0`. -/
 theorem contact_iff_collapsed_trace_zero (L : LegendreModel) (θ η : ℝ) (K : EndH)
-    (hContact : η = L.grad θ ↔ LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0) :
-    η = L.grad θ ↔ LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0 :=
-  hContact
+    (D Ω : VelocityField E)
+    (hDecomp : collapseToBaseVelocity K = (η - L.grad θ) • D + Ω)
+    (hSkew : ContinuousLinearMap.adjoint Ω = -Ω)
+    (hTrD : LinearMap.trace ℝ E D.toLinearMap ≠ 0) :
+    η = L.grad θ ↔ LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0 := by
+  have hΩ_vort : vorticity Ω = Ω := vorticity_eq_self_of_skew hSkew
+  have hΩ_div : IsDivergenceFree Ω := by
+    rw [← hΩ_vort]
+    exact vorticity_isDivergenceFree Ω
+  have hTrΩ : LinearMap.trace ℝ E Ω.toLinearMap = 0 := hΩ_div
+  have hTrK :
+      LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap =
+        (η - L.grad θ) * LinearMap.trace ℝ E D.toLinearMap := by
+    rw [hDecomp]
+    change LinearMap.trace ℝ E (((η - L.grad θ) • D).toLinearMap + Ω.toLinearMap) = _
+    rw [LinearMap.map_add, hTrΩ, add_zero]
+    exact map_smul (LinearMap.trace ℝ E) (η - L.grad θ) D.toLinearMap
+  rw [hTrK, mul_eq_zero, or_iff_left hTrD, sub_eq_zero]
 
 /--
 **Global Navier-Stokes-Legendre Synthesis Theorem**
@@ -81,10 +104,29 @@ theorem fenchel_legendre_gap_zero_iff_madelung_divergence_free
   constructor
   · intro h
     right
-    rwa [← contact_iff_collapsed_trace_zero L θ η K hContact]
+    rwa [← hContact]
   · rintro (rfl | hTr)
     · exact h_beta rfl
-    · rwa [contact_iff_collapsed_trace_zero L θ η K hContact]
+    · rwa [hContact]
+
+/-- **Constructive Metriplectic Navier-Stokes-Legendre Theorem (Discharging `hContact` & `h_beta`)**:
+At any finite inverse temperature `β ≠ 0`, when the collapsed base velocity decomposes into
+radial Fenchel-Legendre gradient expansion `(η - L.grad θ) • D` (`Tr(D) ≠ 0`) plus a skew-adjoint
+rotational velocity `Ω` (`Ω† = -Ω`), vanishing of the Fenchel-Legendre gap is equivalent to
+divergence-free Madelung flow without assuming `hContact` or `h_beta`. -/
+theorem metriplectic_fenchel_legendre_gap_zero_iff_madelung_divergence_free
+    (L : LegendreModel) (θ η : ℝ) (β : ℝ) (hβ : β ≠ 0) (K : EndH)
+    (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
+    (hSmooth : IsThermodynamicallySmoothed β K)
+    (hd : HasDerivAt L.L.ψ (L.grad θ) θ)
+    (D Ω : VelocityField E)
+    (hDecomp : collapseToBaseVelocity K = (η - L.grad θ) • D + Ω)
+    (hSkew : ContinuousLinearMap.adjoint Ω = -Ω)
+    (hTrD : LinearMap.trace ℝ E D.toLinearMap ≠ 0) :
+    L.fenchelGap θ η = 0 ↔ IsDivergenceFree (madelungFluidState β K vac ω hSmooth).u :=
+  fenchel_legendre_gap_zero_iff_madelung_divergence_free L θ η β K vac ω hSmooth hd
+    (contact_iff_collapsed_trace_zero L θ η K D Ω hDecomp hSkew hTrD)
+    (fun hβ0 => False.elim (hβ hβ0))
 
 /-- A point on the Fenchel-Legendre variety where the gap vanishes. -/
 structure FLVarietyPoint (L : LegendreModel) where

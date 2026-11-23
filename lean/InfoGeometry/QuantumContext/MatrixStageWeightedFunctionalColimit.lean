@@ -58,8 +58,8 @@ theorem stageStarAlgEquiv_stageMorphism {m n : ℕ} (h : m ≤ n)
       rw [stageStarAlgEquiv_bond, ih]
       have hmap : rawMap (Nat.le.step h) (stageStarAlgEquiv m A) =
           concreteStep n (rawMap h (stageStarAlgEquiv m A)) := by
-        change map concreteData (Nat.le.step h) (stageStarAlgEquiv m A) =
-          concreteData.step n (map concreteData h (stageStarAlgEquiv m A))
+        change map concreteTraceCompatibleData.step (Nat.le.step h) (stageStarAlgEquiv m A) =
+          concreteTraceCompatibleData.step n (map concreteTraceCompatibleData.step h (stageStarAlgEquiv m A))
         rw [map_succ]
         rfl
       rw [hmap]

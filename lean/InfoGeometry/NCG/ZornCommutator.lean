@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Canonical.AlbertCayleyDickson
+import InfoGeometry.Algebra.AkivisIdentity
 import Mathlib.Algebra.Ring.Defs
 import Mathlib.Tactic
 
@@ -138,8 +139,16 @@ theorem nonassoc_commutator_leibniz_defect_eq_associators
         ((x * y - y * x) * z + y * (x * z - z * x)) =
       -((x * y) * z - x * (y * z)) +
         ((y * x) * z - y * (x * z)) - ((y * z) * x - y * (z * x)) := by
-  simp only [sub_mul, mul_sub]
-  abel
+  calc
+    _ = InfoGeometry.Algebra.akivisBracket x (y * z) -
+        y * InfoGeometry.Algebra.akivisBracket x z -
+          InfoGeometry.Algebra.akivisBracket x y * z := by
+      simp only [InfoGeometry.Algebra.akivisBracket]
+      abel
+    _ = _root_.associator y x z - _root_.associator x y z -
+        _root_.associator y z x :=
+      InfoGeometry.Algebra.akivisBracket_leibniz_defect_eq_associators y z x
+    _ = _ := by simp only [_root_.associator_apply]; abel
 
 /-- The generic defect formula specialized to the actual operator-valued Zorn
 product over an arbitrary (possibly noncommutative) coefficient ring. -/

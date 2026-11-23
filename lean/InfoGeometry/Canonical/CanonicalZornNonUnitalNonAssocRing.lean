@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ZornSpinor
@@ -8,38 +13,40 @@ noncomputable section
 
 namespace InfoGeometry.Canonical
 
-@[simp] lemma zorn_zero_a : (0 : ZornMatrix ℝ).a = 0 := rfl
-@[simp] lemma zorn_zero_b : (0 : ZornMatrix ℝ).b = 0 := rfl
-@[simp] lemma zorn_zero_x : (0 : ZornMatrix ℝ).x = 0 := rfl
-@[simp] lemma zorn_zero_y : (0 : ZornMatrix ℝ).y = 0 := rfl
+variable {R : Type*} [CommRing R]
 
-@[simp] lemma zorn_add_a (X Y : ZornMatrix ℝ) : (X + Y).a = X.a + Y.a := rfl
-@[simp] lemma zorn_add_b (X Y : ZornMatrix ℝ) : (X + Y).b = X.b + Y.b := rfl
-@[simp] lemma zorn_add_x (X Y : ZornMatrix ℝ) : (X + Y).x = X.x + Y.x := rfl
-@[simp] lemma zorn_add_y (X Y : ZornMatrix ℝ) : (X + Y).y = X.y + Y.y := rfl
+@[simp] lemma zorn_zero_a : (0 : ZornMatrix R).a = 0 := rfl
+@[simp] lemma zorn_zero_b : (0 : ZornMatrix R).b = 0 := rfl
+@[simp] lemma zorn_zero_x : (0 : ZornMatrix R).x = 0 := rfl
+@[simp] lemma zorn_zero_y : (0 : ZornMatrix R).y = 0 := rfl
 
-lemma zorn_dot_add_left (x y z : Fin 3 → ℝ) :
+@[simp] lemma zorn_add_a (X Y : ZornMatrix R) : (X + Y).a = X.a + Y.a := rfl
+@[simp] lemma zorn_add_b (X Y : ZornMatrix R) : (X + Y).b = X.b + Y.b := rfl
+@[simp] lemma zorn_add_x (X Y : ZornMatrix R) : (X + Y).x = X.x + Y.x := rfl
+@[simp] lemma zorn_add_y (X Y : ZornMatrix R) : (X + Y).y = X.y + Y.y := rfl
+
+lemma zorn_dot_add_left (x y z : Fin 3 → R) :
     ZornMatrix.dot (x + y) z = ZornMatrix.dot x z + ZornMatrix.dot y z := by
   simp [ZornMatrix.dot]
   ring
 
-lemma zorn_dot_add_right (x y z : Fin 3 → ℝ) :
+lemma zorn_dot_add_right (x y z : Fin 3 → R) :
     ZornMatrix.dot x (y + z) = ZornMatrix.dot x y + ZornMatrix.dot x z := by
   simp [ZornMatrix.dot]
   ring
 
-lemma zorn_cross_add_left (x y z : Fin 3 → ℝ) :
+lemma zorn_cross_add_left (x y z : Fin 3 → R) :
     ZornMatrix.cross (x + y) z = ZornMatrix.cross x z + ZornMatrix.cross y z := by
   funext i
   fin_cases i <;> simp [ZornMatrix.cross] <;> ring
 
-lemma zorn_cross_add_right (x y z : Fin 3 → ℝ) :
+lemma zorn_cross_add_right (x y z : Fin 3 → R) :
     ZornMatrix.cross x (y + z) = ZornMatrix.cross x y + ZornMatrix.cross x z := by
   funext i
   fin_cases i <;> simp [ZornMatrix.cross] <;> ring
 
 instance canonicalZornNonUnitalNonAssocRing :
-    NonUnitalNonAssocRing (ZornMatrix ℝ) where
+    NonUnitalNonAssocRing (ZornMatrix R) where
   zero_mul := by
     intro x
     cases x

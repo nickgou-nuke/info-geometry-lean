@@ -10,6 +10,7 @@ import InfoGeometry.Canonical.ModularSuperchargeClosure
 import InfoGeometry.Modular.Noncommutative
 import InfoGeometry.Algebra.ZornMatrix
 import Mathlib.Algebra.Polynomial.Derivative
+import Mathlib.Algebra.MvPolynomial.PDeriv
 
 /-!
 # End-to-End Verification Suite: Unified Leibniz–Derivation–Fréchet–Onsager Framework
@@ -116,22 +117,22 @@ theorem hK12_real_noncomm : K1_real * K2_real ≠ K2_real * K1_real := by
   have hm := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h
   norm_num [K1_real, K2_real, Matrix.mul_apply, Fin.sum_univ_two] at hm
 
-private lemma matrixOfOp_sub_eq {n : ℕ} (S T : FiniteOperatorAlgebra n) :
+lemma matrixOfOp_sub_eq {n : ℕ} (S T : FiniteOperatorAlgebra n) :
     matrixOfOp (S - T) = matrixOfOp S - matrixOfOp T := by
   unfold matrixOfOp
   exact (LinearMap.toMatrix (ketBasis (Fin n)) (ketBasis (Fin n))).map_sub
     S.toLinearMap T.toLinearMap
 
-private lemma matrixOfOp_neg_eq {n : ℕ} (T : FiniteOperatorAlgebra n) :
+lemma matrixOfOp_neg_eq {n : ℕ} (T : FiniteOperatorAlgebra n) :
     matrixOfOp (-T) = -matrixOfOp T := by
   unfold matrixOfOp
   exact (LinearMap.toMatrix (ketBasis (Fin n)) (ketBasis (Fin n))).map_neg T.toLinearMap
 
-private lemma matrixOfOp_mul_eq {n : ℕ} (S T : FiniteOperatorAlgebra n) :
+lemma matrixOfOp_mul_eq {n : ℕ} (S T : FiniteOperatorAlgebra n) :
     matrixOfOp (S * T) = matrixOfOp S * matrixOfOp T :=
   matrixOfOp_comp S T
 
-private lemma matrixOfOp_one_eq {n : ℕ} :
+lemma matrixOfOp_one_eq {n : ℕ} :
     matrixOfOp (1 : FiniteOperatorAlgebra n) = 1 :=
   matrixOfOp_id
 
@@ -545,10 +546,10 @@ private theorem tilt_real2_isSpectralNonCompact :
   rw [B_real2_GammaS_apply, tilt_real2_apply, tilt_real2_apply, B_real2_GammaS_apply]
   fin_cases i <;> simp
 
-private def P_doubled_proj : DoubledSpace ℝ →L[ℝ] DoubledSpace ℝ :=
+def P_doubled_proj : DoubledSpace ℝ →L[ℝ] DoubledSpace ℝ :=
   (1 / 2 : ℝ) • (1 + InfoGeometry.Krein.modular_j (E := ℝ))
 
-private theorem P_doubled_proj_idem : P_doubled_proj * P_doubled_proj = P_doubled_proj := by
+theorem P_doubled_proj_idem : P_doubled_proj * P_doubled_proj = P_doubled_proj := by
   apply ContinuousLinearMap.ext
   intro v
   change P_doubled_proj (P_doubled_proj v) = P_doubled_proj v
@@ -556,7 +557,7 @@ private theorem P_doubled_proj_idem : P_doubled_proj * P_doubled_proj = P_double
   apply InfoGeometry.Krein.DoubledSpace.ext <;>
     simp [InfoGeometry.Krein.modular_j] <;> ring
 
-private theorem P_doubled_proj_selfAdjoint : star P_doubled_proj = P_doubled_proj := by
+theorem P_doubled_proj_selfAdjoint : star P_doubled_proj = P_doubled_proj := by
   apply ContinuousLinearMap.coe_injective
   change (ContinuousLinearMap.adjoint P_doubled_proj).toLinearMap = P_doubled_proj.toLinearMap
   have hadj : ContinuousLinearMap.adjoint P_doubled_proj = P_doubled_proj := by
@@ -567,7 +568,7 @@ private theorem P_doubled_proj_selfAdjoint : star P_doubled_proj = P_doubled_pro
     ring
   rw [hadj]
 
-private def CIK_doubled : InfoGeometry.Canonical.CertifiedInverseKernel (DoubledSpace ℝ) where
+def CIK_doubled : InfoGeometry.Canonical.CertifiedInverseKernel (DoubledSpace ℝ) where
   A := P_doubled_proj
   A_D := P_doubled_proj
   A_MP := P_doubled_proj
@@ -579,7 +580,7 @@ private def CIK_doubled : InfoGeometry.Canonical.CertifiedInverseKernel (Doubled
     (by rw [P_doubled_proj_idem]; exact P_doubled_proj_selfAdjoint)
     (by rw [P_doubled_proj_idem]; exact P_doubled_proj_selfAdjoint)
 
-private def B_doubled : DrazinCartanOnsagerBridge (E := DoubledSpace ℝ) := ⟨CIK_doubled⟩
+def B_doubled : DrazinCartanOnsagerBridge (E := DoubledSpace ℝ) := ⟨CIK_doubled⟩
 
 /-- `T1-F1-04`: `DrazinCartanOnsagerBridge` (`idCertifiedInverseKernel`, non-trivial `B_doubled`, and non-diagonal `B_real2`) bridges to `ParityOnsagerSystem` with non-zero dissipation, reversible coupling, and reciprocity. -/
 theorem t1_f1_04_drazinCartanParityOnsagerSystem :
@@ -1324,7 +1325,7 @@ section GapB_Tests
 
 attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
-private lemma isSelfAdjoint_I_smul_comm {n : ℕ} (X Y : GibbsOperator n)
+lemma isSelfAdjoint_I_smul_comm {n : ℕ} (X Y : GibbsOperator n)
     (hX : IsSelfAdjoint X) (hY : IsSelfAdjoint Y) :
     IsSelfAdjoint ((Complex.I • X) * Y - Y * (Complex.I • X)) := by
   rw [isSelfAdjoint_iff]
@@ -1338,19 +1339,19 @@ private lemma isSelfAdjoint_I_smul_comm {n : ℕ} (X Y : GibbsOperator n)
   rw [h1, h2]
   abel
 
-private lemma isSelfAdjoint_real_smul {n : ℕ} (r : ℝ) (X : GibbsOperator n)
+lemma isSelfAdjoint_real_smul {n : ℕ} (r : ℝ) (X : GibbsOperator n)
     (hX : IsSelfAdjoint X) : IsSelfAdjoint (r • X) := by
   rw [isSelfAdjoint_iff, real_smul_eq_complex_smul, star_smul, Complex.star_def,
     Complex.conj_ofReal, hX.star_eq]
 
-private lemma isSelfAdjoint_add_op {n : ℕ} {X Y : GibbsOperator n}
+lemma isSelfAdjoint_add_op {n : ℕ} {X Y : GibbsOperator n}
     (hX : IsSelfAdjoint X) (hY : IsSelfAdjoint Y) : IsSelfAdjoint (X + Y) := by
   rw [isSelfAdjoint_iff]
   have hadd := (finiteOperatorStarRealCLM n).map_add X Y
   change star (X + Y) = X + Y
   rw [show star (X + Y) = star X + star Y from hadd, hX.star_eq, hY.star_eq]
 
-private lemma switchOp2_eq_A_swap : switchOp2 = A_swap := by
+lemma switchOp2_eq_A_swap : switchOp2 = A_swap := by
   apply matrixOfOp_injective
   rw [switchOp2, A_swap, matrixOfOp_matrixOp, matrixOfOp_matrixOp]
   ext i j
@@ -1380,19 +1381,19 @@ private lemma matrixOp_ne_scalarGauge {n : ℕ} [Nonempty (Fin n)] (X : GibbsOpe
   simp only [Matrix.smul_apply, Matrix.one_apply, hij, ↓reduceIte, smul_zero] at hm
   exact h0 hm.symm
 
-private lemma matrixOfOp_tiltOp2 :
+lemma matrixOfOp_tiltOp2 :
     matrixOfOp tiltOp2 = InfoGeometry.Physics.KleinBottleSewingExact.tilt2 :=
   matrixOfOp_matrixOp _
 
-private lemma matrixOfOp_A_swap :
+lemma matrixOfOp_A_swap :
     matrixOfOp A_swap = swapMatrix :=
   matrixOfOp_matrixOp _
 
-private lemma matrixOfOp_B_tilt :
+lemma matrixOfOp_B_tilt :
     matrixOfOp B_tilt = tiltedMatrix :=
   matrixOfOp_matrixOp _
 
-private lemma matrixOfOp_H_d63 :
+lemma matrixOfOp_H_d63 :
     matrixOfOp H_d63 = d63TiltedAmplitude :=
   matrixOfOp_matrixOp _
 
@@ -2463,16 +2464,16 @@ theorem t1_f4_06_erlangenDatumSpecialization :
     exact hf5.2.2.2 hrev0
   exact ⟨fun A B s => hrec.1 A B s, hrec.2, hresp_ne, hpair_ne⟩
 
-private def traceMulAlt2CLM :
+def traceMulAlt2CLM :
     GibbsOperator 2 →L[ℝ] (GibbsOperator 2 [⋀^(Fin 2)]→L[ℝ] GibbsOperator 2) :=
   (Complex.reCLM.comp ((finiteOperatorTraceRealCLM 2).comp (leftMulRealCLM tiltOp2))).smulRight
     (frechetExtDerivReal (smoothLeftMulOneForm 2) H_d63)
 
-private def omega0Smooth :
+def omega0Smooth :
     RealOperatorFrechetForm (GibbsOperator 2) (GibbsOperator 2) (GibbsOperator 2) 0 :=
   fun H => ContinuousAlternatingMap.constOfIsEmpty ℝ (GibbsOperator 2) (Fin 0) H
 
-private def omega3Const :
+def omega3Const :
     RealOperatorFrechetForm (GibbsOperator 2) (GibbsOperator 2) (GibbsOperator 2) 3 :=
   fun _ => ContinuousAlternatingMap.alternatizeUncurryFinCLM ℝ (GibbsOperator 2) (GibbsOperator 2)
     traceMulAlt2CLM
@@ -3621,13 +3622,13 @@ theorem t1_f6_01_banachMetriplecticFlow :
       (fun t _ => hrev t) (fun t _ => hdiss t),
     sys_gen.entropy_rate_nonneg⟩
 
-private def H_sol_c (t : ℝ) : ℝ := Real.arsinh (Real.exp (-t / 4))
-private def H_sol_d (t : ℝ) : ℝ := (1 / 2 : ℝ) * Real.log (1 + Real.exp (-t / 2))
+def H_sol_c (t : ℝ) : ℝ := Real.arsinh (Real.exp (-t / 4))
+def H_sol_d (t : ℝ) : ℝ := (1 / 2 : ℝ) * Real.log (1 + Real.exp (-t / 2))
 
-private def H_sol_curve (t : ℝ) : FiniteOperatorAlgebra 2 :=
+def H_sol_curve (t : ℝ) : FiniteOperatorAlgebra 2 :=
   H_sol_c t • tiltOp2 + H_sol_d t • (1 : FiniteOperatorAlgebra 2)
 
-private lemma H_sol_curve_isSelfAdjoint (t : ℝ) : IsSelfAdjoint (H_sol_curve t) :=
+lemma H_sol_curve_isSelfAdjoint (t : ℝ) : IsSelfAdjoint (H_sol_curve t) :=
   isSelfAdjoint_add_op
     (isSelfAdjoint_real_smul (H_sol_c t) tiltOp2 tiltOp2_isSelfAdjoint)
     (isSelfAdjoint_real_smul (H_sol_d t) 1 (by rw [isSelfAdjoint_iff, star_one]))
@@ -3867,7 +3868,7 @@ section GapC_Layer3
 
 open scoped Matrix.Norms.L2Operator
 
-private def Φ_norm_swap (M : Matrix (Fin 2) (Fin 2) ℂ) : ℝ :=
+def Φ_norm_swap (M : Matrix (Fin 2) (Fin 2) ℂ) : ℝ :=
   -(Matrix.trace (swapMatrix * M) / Matrix.trace M).re
 
 private def matrix_trace_clm :
@@ -4342,10 +4343,10 @@ section GapD_Tests
 
 attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
 
-private abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
-private abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
+abbrev Mat2R := Matrix (Fin 2) (Fin 2) ℝ
+abbrev Mat2C := Matrix (Fin 2) (Fin 2) ℂ
 
-private def innerMat2RDeriv (K : Mat2R) : NonAssocDerivation.derivations ℝ Mat2R :=
+def innerMat2RDeriv (K : Mat2R) : NonAssocDerivation.derivations ℝ Mat2R :=
   ⟨{ toFun := fun X => K * X - X * K
      map_add' := fun X Y => by noncomm_ring
      map_smul' := fun r X => by
@@ -4355,7 +4356,7 @@ private def innerMat2RDeriv (K : Mat2R) : NonAssocDerivation.derivations ℝ Mat
      change K * (X * Y) - (X * Y) * K = (K * X - X * K) * Y + X * (K * Y - Y * K)
      noncomm_ring⟩
 
-private def innerMat2CDeriv (K : Mat2C) : NonAssocDerivation.derivations ℂ Mat2C :=
+def innerMat2CDeriv (K : Mat2C) : NonAssocDerivation.derivations ℂ Mat2C :=
   ⟨{ toFun := fun X => K * X - X * K
      map_add' := fun X Y => by noncomm_ring
      map_smul' := fun c X => by
@@ -4414,7 +4415,7 @@ theorem t1_f7_01_modularZDerivationsRoundTrip :
     timeSemigroupDerivationEquivDerivations.apply_symm_apply dK,
     hexact, dK.property, mat2R_comm_01_10_ne_zero⟩
 
-/-- `T1-F7-02`: `R`-linear `Modular.*` and `IsLinearDerivation` types bridge into `derivations R A`. -/
+/-- `T1-F7-02`: `R`-linear `Modular.*` types bridge into `derivations R A`, and explicitly documents/proves the `Subsingleton {0}` collapse (`∀ D x, D x = 0`) on self-linear `R →ₗ[R] R` `IsLinearDerivation` predicates. -/
 theorem t1_f7_02_modularRLinearDerivations :
     let dC : NonAssocDerivation.derivations ℂ Mat2C :=
       innerMat2CDeriv (swapMatrix : Mat2C)
@@ -4439,7 +4440,13 @@ theorem t1_f7_02_modularRLinearDerivations :
       d_infoS = (0 : NonAssocDerivation.derivations ℝ ℝ) ∧
       Function.Injective (trifoldIsLinearDerivationEquivDerivations (R := ℝ)) ∧
       Function.Injective (modularSurprisalIsLinearDerivationEquivDerivations (R := ℝ)) ∧
-      Function.Injective (infoModularSurprisalIsLinearDerivationEquivDerivations (R := ℝ)) := by
+      Function.Injective (infoModularSurprisalIsLinearDerivationEquivDerivations (R := ℝ)) ∧
+      (∀ (D : Polynomial ℝ →ₗ[Polynomial ℝ] Polynomial ℝ),
+        InfoGeometry.Modular.IsLinearDerivation D → ∀ x, D x = 0) ∧
+      (∀ (D : Polynomial ℝ →ₗ[Polynomial ℝ] Polynomial ℝ),
+        InfoGeometry.Modular.ModularSurprisalDerivationBridge.IsLinearDerivation D → ∀ x, D x = 0) ∧
+      (∀ (D : Polynomial ℝ →ₗ[Polynomial ℝ] Polynomial ℝ),
+        InfoGeometry.Information.ModularSurprisalDerivationBridge.IsLinearDerivation D → ∀ x, D x = 0) := by
   intro dC d_skms d_kms d_semi dR0 hTri hModS hInfoS d_tri d_modS d_infoS
   have hne : (dC : Module.End ℂ Mat2C) (!![1, 0; 0, -1] : Mat2C) ≠ 0 := by
     intro h0
@@ -4447,7 +4454,7 @@ theorem t1_f7_02_modularRLinearDerivations :
     change ((swapMatrix : Mat2C) * (!![1, 0; 0, -1] : Mat2C) -
       (!![1, 0; 0, -1] : Mat2C) * (swapMatrix : Mat2C)) 0 1 = 0 at hm
     norm_num [swapMatrix, Matrix.mul_apply, Fin.sum_univ_two] at hm
-  exact ⟨superKMSLinearDerivationEquivDerivations.apply_symm_apply dC,
+  refine ⟨superKMSLinearDerivationEquivDerivations.apply_symm_apply dC,
     kmsStateLinearDerivationEquivDerivations.apply_symm_apply dC,
     semidirectDerivationEquivDerivations.apply_symm_apply dC,
     hne,
@@ -4456,9 +4463,28 @@ theorem t1_f7_02_modularRLinearDerivations :
     rfl,
     (trifoldIsLinearDerivationEquivDerivations (R := ℝ)).injective,
     (modularSurprisalIsLinearDerivationEquivDerivations (R := ℝ)).injective,
-    (infoModularSurprisalIsLinearDerivationEquivDerivations (R := ℝ)).injective⟩
+    (infoModularSurprisalIsLinearDerivationEquivDerivations (R := ℝ)).injective,
+    ?_, ?_, ?_⟩
+  · intro D hD x
+    have h1 : D 1 = 0 := by
+      have h := hD 1 1
+      simpa using (add_left_cancel (by simpa using h.symm : D 1 + 0 = D 1 + D 1)).symm
+    have hx : D (x • (1 : Polynomial ℝ)) = x • D 1 := D.map_smul x 1
+    simpa [smul_eq_mul, mul_one, h1, mul_zero] using hx
+  · intro D hD x
+    have h1 : D 1 = 0 := by
+      have h := hD 1 1
+      simpa using (add_left_cancel (by simpa using h.symm : D 1 + 0 = D 1 + D 1)).symm
+    have hx : D (x • (1 : Polynomial ℝ)) = x • D 1 := D.map_smul x 1
+    simpa [smul_eq_mul, mul_one, h1, mul_zero] using hx
+  · intro D hD x
+    have h1 : D 1 = 0 := by
+      have h := hD 1 1
+      simpa using (add_left_cancel (by simpa using h.symm : D 1 + 0 = D 1 + D 1)).symm
+    have hx : D (x • (1 : Polynomial ℝ)) = x • D 1 := D.map_smul x 1
+    simpa [smul_eq_mul, mul_one, h1, mul_zero] using hx
 
-/-- `T1-F7-03`: `ColimitFlowDerivation`, `ColimitKMSInfinitesimal`, and `LocalDerivationSystem` tower bridges. -/
+/-- `T1-F7-03`: `ColimitFlowDerivation`, `ColimitKMSInfinitesimal`, and `LocalDerivationSystem` tower bridges, including non-constant alternating `adSwapHom` colimit tower (`colimitFlowExtensionToDerivation`) and `colimitDerivationToDerivations_injective`. -/
 theorem t1_f7_03_colimitTowerAndLocalSystem :
     let A : ℕ → Type := fun _ => Mat2C
     let iota : ∀ n, A n →⋆ₐ[ℂ] A (n + 1) := fun _ => StarAlgHom.id ℂ Mat2C
@@ -4481,11 +4507,141 @@ theorem t1_f7_03_colimitTowerAndLocalSystem :
       { inr := fun _ => AlgHom.id ℂ Mat2C
         inr_comm := fun _ _ => rfl
         surj_dense := fun x => ⟨0, x, rfl⟩
-        inr_inj := fun {i} _ _ h => ⟨i, le_refl i, h⟩ }
+        inr_inj := fun {i} _ _ h => ⟨i, le_rfl, h⟩ }
     let dsys : InfoGeometry.Modular.ColimitDerivation.LocalDerivationSystem (R := ℂ) ℕ A sys :=
       { deriv := fun _ => (dC : Module.End ℂ Mat2C)
         deriv_leibniz := fun _ => dC.property
         intertwine := fun _ _ => rfl }
+    let swapM : Mat2C := !![0, 1; 1, 0]
+    let adSwapHom : Mat2C →⋆ₐ[ℂ] Mat2C :=
+      { toFun := fun X => swapM * X * swapM
+        map_one' := by ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, Matrix.mul_apply, Fin.sum_univ_two]
+        map_mul' := fun X Y => by
+          have hsq : swapM * swapM = 1 := by
+            ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, Matrix.mul_apply, Fin.sum_univ_two]
+          calc swapM * (X * Y) * swapM
+              = swapM * X * (swapM * swapM) * Y * swapM := by simp only [hsq, mul_one, mul_assoc]
+            _ = (swapM * X * swapM) * (swapM * Y * swapM) := by noncomm_ring
+        map_zero' := by simp
+        map_add' := fun X Y => by simp [mul_add, add_mul]
+        commutes' := fun c => by
+          ext i j; fin_cases i <;> fin_cases j <;>
+            simp [swapM, Algebra.algebraMap_eq_smul_one, Matrix.mul_apply, Fin.sum_univ_two]
+        map_star' := fun X => by
+          have hs : star swapM = swapM := by
+            ext i j; fin_cases i <;> fin_cases j <;> simp [swapM]
+          simp [mul_assoc, hs] }
+    let K_diagC : Mat2C := !![1, 0; 0, -1]
+    let iotaAlt : (n : ℕ) → A n →⋆ₐ[ℂ] A (n + 1) := fun _ => adSwapHom
+    let psiAlt : (n : ℕ) → A n →⋆ₐ[ℂ] Mat2C :=
+      fun n => if n % 2 = 0 then StarAlgHom.id ℂ (A n) else adSwapHom
+    have had_inv : ∀ X, adSwapHom (adSwapHom X) = X := by
+      intro X
+      have hsq : swapM * swapM = 1 := by
+        ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, Matrix.mul_apply, Fin.sum_univ_two]
+      dsimp [adSwapHom]
+      calc swapM * (swapM * X * swapM) * swapM
+          = (swapM * swapM) * X * (swapM * swapM) := by noncomm_ring
+        _ = X := by simp [hsq]
+    have psiAlt_comm : ∀ n, (psiAlt (n + 1)).comp (iotaAlt n) = psiAlt n := by
+      intro n; ext X; dsimp [psiAlt, iotaAlt]
+      rcases Nat.mod_two_eq_zero_or_one n with hn | hn
+      · have hn1 : (n + 1) % 2 = 1 := by omega
+        simp [hn, hn1, had_inv]
+      · have hn1 : (n + 1) % 2 = 0 := by omega
+        simp [hn, hn1]
+    let dFamAlt : (n : ℕ) → A n →ₗ[ℂ] A n := fun n =>
+      { toFun := fun X => ((-1 : ℂ) ^ n) • (K_diagC * X - X * K_diagC)
+        map_add' := fun X Y => by rw [mul_add, add_mul, ← smul_add]; congr 1; abel
+        map_smul' := fun c X => by
+          simp only [RingHom.id_apply, Algebra.mul_smul_comm, Algebra.smul_mul_assoc,
+            smul_sub, smul_comm c ((-1 : ℂ) ^ n)] }
+    have hderiv_comm_alt : ∀ n, (dFamAlt (n + 1)).comp (iotaAlt n).toLinearMap =
+        (iotaAlt n).toLinearMap.comp (dFamAlt n) := by
+      intro n; apply LinearMap.ext; intro X; dsimp [dFamAlt, iotaAlt, adSwapHom]
+      have had_K : swapM * K_diagC * swapM = -K_diagC := by
+        ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, K_diagC, Matrix.mul_apply, Fin.sum_univ_two]
+      have hsq : swapM * swapM = 1 := by
+        ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, Matrix.mul_apply, Fin.sum_univ_two]
+      rw [pow_succ, mul_neg, mul_one, neg_smul]
+      calc -(((-1 : ℂ) ^ n) • (K_diagC * (swapM * X * swapM) - (swapM * X * swapM) * K_diagC))
+          = ((-1 : ℂ) ^ n) • ((swapM * X * swapM) * K_diagC - K_diagC * (swapM * X * swapM)) := by
+              rw [← smul_neg, neg_sub]
+        _ = ((-1 : ℂ) ^ n) • (swapM * (K_diagC * X - X * K_diagC) * swapM) := by
+              congr 1
+              calc (swapM * X * swapM) * K_diagC - K_diagC * (swapM * X * swapM)
+                  = (swapM * X * (swapM * swapM) * (-K_diagC) * swapM) -
+                      (swapM * (-K_diagC) * (swapM * swapM) * X * swapM) := by
+                        have hL : swapM * (-K_diagC) * swapM = K_diagC := by
+                          calc swapM * (-K_diagC) * swapM = -(swapM * K_diagC * swapM) := by
+                                rw [mul_neg, neg_mul]
+                            _ = K_diagC := by rw [had_K, neg_neg]
+                        calc (swapM * X * swapM) * K_diagC - K_diagC * (swapM * X * swapM)
+                            = (swapM * X * swapM) * (swapM * (-K_diagC) * swapM) -
+                                (swapM * (-K_diagC) * swapM) * (swapM * X * swapM) := by rw [hL]
+                          _ = (swapM * X * (swapM * swapM) * (-K_diagC) * swapM) -
+                                (swapM * (-K_diagC) * (swapM * swapM) * X * swapM) := by
+                                  simp only [mul_assoc]
+                _ = swapM * (K_diagC * X - X * K_diagC) * swapM := by
+                      simp only [hsq, mul_one, mul_neg, neg_mul, sub_neg_eq_add]
+                      noncomm_ring
+        _ = swapM * (((-1 : ℂ) ^ n) • (K_diagC * X - X * K_diagC)) * swapM := by
+              simp [Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
+    let tFlowAlt : InfoGeometry.Modular.ColimitFlowDerivation.TowerDerivation A iotaAlt :=
+      { deriv := dFamAlt
+        leibniz := fun n X Y => by
+          dsimp [dFamAlt]
+          have hL : K_diagC * (X * Y) - (X * Y) * K_diagC =
+              (K_diagC * X - X * K_diagC) * Y + X * (K_diagC * Y - Y * K_diagC) := by
+            calc K_diagC * (X * Y) - (X * Y) * K_diagC
+                = K_diagC * X * Y - X * K_diagC * Y + (X * K_diagC * Y - X * Y * K_diagC) := by
+                    rw [sub_add_sub_cancel, mul_assoc, mul_assoc]
+              _ = (K_diagC * X - X * K_diagC) * Y + X * (K_diagC * Y - Y * K_diagC) := by
+                    rw [sub_mul, mul_sub, mul_assoc, mul_assoc, mul_assoc]
+          rw [hL, smul_add]
+          congr 1
+          · exact (Algebra.smul_mul_assoc _ _ _).symm
+          · exact (Algebra.mul_smul_comm _ _ _).symm
+        deriv_comm := hderiv_comm_alt }
+    let δ_inf : Mat2C →ₗ[ℂ] Mat2C := dFamAlt 0
+    have h_ext_alt : ∀ n (x : A n),
+        δ_inf (psiAlt n x) = InfoGeometry.Modular.ColimitFlowDerivation.liftedDeriv A iotaAlt
+          Mat2C psiAlt tFlowAlt n x := by
+      intro n x
+      dsimp [InfoGeometry.Modular.ColimitFlowDerivation.liftedDeriv, tFlowAlt, δ_inf, dFamAlt, psiAlt]
+      rcases Nat.mod_two_eq_zero_or_one n with hn | hn
+      · have hpow : (-1 : ℂ) ^ n = 1 := by rw [show n = 2 * (n / 2) by omega, pow_mul]; norm_num
+        have hite : (if n % 2 = 0 then StarAlgHom.id ℂ (A n) else adSwapHom) = StarAlgHom.id ℂ (A n) :=
+          ite_eq_left_iff.mpr (fun h => absurd hn h)
+        rw [hite, pow_zero, one_smul, hpow, one_smul]
+        rfl
+      · have hpow : (-1 : ℂ) ^ n = -1 := by
+          rw [show n = 2 * (n / 2) + 1 by omega, pow_add, pow_mul]; norm_num
+        have had_K : swapM * K_diagC * swapM = -K_diagC := by
+          ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, K_diagC, Matrix.mul_apply, Fin.sum_univ_two]
+        have hsq : swapM * swapM = 1 := by
+          ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, Matrix.mul_apply, Fin.sum_univ_two]
+        have hite : (if n % 2 = 0 then StarAlgHom.id ℂ (A n) else adSwapHom) = adSwapHom :=
+          ite_eq_right_iff.mpr (fun h => absurd h (by omega))
+        rw [hite, pow_zero, one_smul, hpow, neg_one_smul]
+        dsimp [adSwapHom]
+        have hL : swapM * (-K_diagC) * swapM = K_diagC := by
+          calc swapM * (-K_diagC) * swapM = -(swapM * K_diagC * swapM) := by
+                rw [mul_neg, neg_mul]
+            _ = K_diagC := by rw [had_K, neg_neg]
+        calc K_diagC * (swapM * x * swapM) - (swapM * x * swapM) * K_diagC
+            = (swapM * (-K_diagC) * swapM) * (swapM * x * swapM) -
+                (swapM * x * swapM) * (swapM * (-K_diagC) * swapM) := by rw [hL]
+          _ = swapM * (-K_diagC * (swapM * swapM) * x - x * (swapM * swapM) * (-K_diagC)) * swapM := by
+                noncomm_ring
+          _ = -(swapM * (K_diagC * x - x * K_diagC) * swapM) := by
+                rw [hsq, mul_one, mul_one, neg_mul, mul_neg]
+                have hneg : -(K_diagC * x) - -(x * K_diagC) = -(K_diagC * x - x * K_diagC) := by
+                  rw [sub_neg_eq_add, add_comm, ← sub_eq_add_neg, neg_sub]
+                rw [hneg, mul_neg, neg_mul]
+          _ = swapM * -(K_diagC * x - x * K_diagC) * swapM := by rw [mul_neg, neg_mul]
+    let d_colim_alt := colimitFlowExtensionToDerivation A iotaAlt Mat2C
+      psiAlt psiAlt_comm (fun X => ⟨0, X, rfl⟩) tFlowAlt δ_inf h_ext_alt
     colimitFlowStageDerivation A iota tFlow 0 = dC ∧
       colimitKMSStageDerivation A iota tKMS 0 = dC ∧
       (d_colim : Module.End ℂ Mat2C) (!![1, 0; 0, -1] : Mat2C) =
@@ -4493,8 +4649,12 @@ theorem t1_f7_03_colimitTowerAndLocalSystem :
       (d_kms_colim : Module.End ℂ Mat2C) (!![1, 0; 0, -1] : Mat2C) =
         (dC : Module.End ℂ Mat2C) (!![1, 0; 0, -1] : Mat2C) ∧
       localDerivationStage sys dsys 0 = dC ∧
-      colimitDerivationToDerivations sys colim dsys = dC := by
+      colimitDerivationToDerivations sys colim dsys = dC ∧
+      (d_colim_alt.1 (!![0, 1; 0, 0] : Mat2C) ≠ 0) ∧
+      Function.Injective (colimitDerivationToDerivations sys colim) := by
   intro A iota dC tFlow tKMS psi d_colim d_kms_colim sys colim dsys
+    swapM adSwapHom K_diagC iotaAlt psiAlt had_inv psiAlt_comm dFamAlt hderiv_comm_alt
+    tFlowAlt δ_inf h_ext_alt d_colim_alt
   have h1 : (d_colim : Module.End ℂ Mat2C) (!![1, 0; 0, -1] : Mat2C) =
       (dC : Module.End ℂ Mat2C) (!![1, 0; 0, -1] : Mat2C) := by
     dsimp only [d_colim]
@@ -4515,9 +4675,21 @@ theorem t1_f7_03_colimitTowerAndLocalSystem :
     change InfoGeometry.Modular.ColimitDerivation.colimitDerivVal sys dsys colim (colim.inr 0 x) = _
     rw [InfoGeometry.Modular.ColimitDerivation.colimitDerivVal_inr]
     rfl
-  exact ⟨rfl, rfl, h1, h2, rfl, h3⟩
+  refine ⟨rfl, rfl, h1, h2, rfl, h3, ?_,
+    colimitDerivationToDerivations_injective sys colim (fun {_} _ _ h => h)⟩
+  intro hz
+  have hval : d_colim_alt.1 (!![0, 1; 0, 0] : Mat2C) = !![0, 2; 0, 0] := by
+    change δ_inf !![0, 1; 0, 0] = !![0, 2; 0, 0]
+    dsimp [δ_inf, dFamAlt]
+    rw [pow_zero, one_smul]
+    ext i j
+    rw [Matrix.sub_apply, Matrix.mul_apply, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_two]
+    fin_cases i <;> fin_cases j <;> (simp [K_diagC]; try norm_num)
+  rw [hval] at hz
+  have h01 := congrArg (fun M : Mat2C => M 0 1) hz
+  simp at h01
 
-/-- `T1-F7-04`: `OuterDerivation` and all standalone associative `*Derivation` wrappers embed cleanly. -/
+/-- `T1-F7-04`: `OuterDerivation` and all standalone associative `*Derivation` wrappers embed cleanly with non-zero commuting `MvPolynomial.pderiv`, non-inner `Polynomial.derivative`, non-degenerate `DerivationFrame`, and nontrivial `derivationsToFullLieDerHom`. -/
 theorem t1_f7_04_outerAndStandaloneWrappers :
     let K_diag : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) ℝ :=
       Matrix.fromBlocks matrixUnit01 0 0 matrixUnit01
@@ -4550,10 +4722,28 @@ theorem t1_f7_04_outerAndStandaloneWrappers :
             p • Polynomial.derivative q + q • Polynomial.derivative p
           simp only [Polynomial.derivative_mul, smul_eq_mul]
           ring }
-    let d_frame : InfoGeometry.Thermo.BipolarObservableMetriplecticAlgebra.DerivationFrame (Polynomial ℝ) :=
-      ⟨polyDer, polyDer, polyDer, fun _ => rfl⟩
+    let pd0 : _root_.Derivation ℝ (MvPolynomial (Fin 2) ℝ) (MvPolynomial (Fin 2) ℝ) :=
+      MvPolynomial.pderiv (R := ℝ) (0 : Fin 2)
+    let pd1 : _root_.Derivation ℝ (MvPolynomial (Fin 2) ℝ) (MvPolynomial (Fin 2) ℝ) :=
+      MvPolynomial.pderiv (R := ℝ) (1 : Fin 2)
+    let d_frame : InfoGeometry.Thermo.BipolarObservableMetriplecticAlgebra.DerivationFrame (MvPolynomial (Fin 2) ℝ) :=
+      ⟨pd0 + pd1, pd0, pd1, fun F => by
+        have hC : ⁅pd0, pd1⁆ = 0 := by
+          apply MvPolynomial.derivation_ext; intro k; fin_cases k <;> simp [pd0, pd1, Derivation.commutator_apply]
+        have hF := congrArg (fun D : _root_.Derivation ℝ (MvPolynomial (Fin 2) ℝ) (MvPolynomial (Fin 2) ℝ) => D F) hC
+        change pd0 (pd1 F) - pd1 (pd0 F) = 0 at hF
+        exact sub_eq_zero.mp hF⟩
+    let d_mv0_in : InfoGeometry.Canonical.HypothesisFoundations.CommRingDerivation (MvPolynomial (Fin 2) ℝ) :=
+      ⟨(pd0 : MvPolynomial (Fin 2) ℝ →+ MvPolynomial (Fin 2) ℝ),
+        fun x y => _root_.map_add _ x y,
+        fun x y => by simp [Derivation.leibniz, mul_comm, add_comm]⟩
+    let d_mv1_in : InfoGeometry.Canonical.HypothesisFoundations.CommRingDerivation (MvPolynomial (Fin 2) ℝ) :=
+      ⟨(pd1 : MvPolynomial (Fin 2) ℝ →+ MvPolynomial (Fin 2) ℝ),
+        fun x y => _root_.map_add _ x y,
+        fun x y => by simp [Derivation.leibniz, mul_comm, add_comm]⟩
     let d_poset := posetOpDerivationEquivDerivations.symm dZ
-    let d_commR := commRingDerivationEquivDerivations.symm (innerIntDerivation (0 : Polynomial ℝ))
+    let d_commR0 := commRingDerivationEquivDerivations.symm (commRingDerivationEquivDerivations d_mv0_in)
+    let d_commR1 := commRingDerivationEquivDerivations.symm (commRingDerivationEquivDerivations d_mv1_in)
     let d_gen := genericDerivationEquivDerivations.symm dZ
     let d_dlog := densityDLogDerivationEquivDerivations.symm dZ
     let d_syn := synthesisDerivationEquivDerivations.symm dZ
@@ -4569,7 +4759,9 @@ theorem t1_f7_04_outerAndStandaloneWrappers :
         (Matrix.fromBlocks matrixUnit10 (0 : Mat2R) 0 0) ≠ 0 ∧
       Function.Injective (outerDerivationToDerivations (ι := Fin 2) (R := ℝ)) ∧
       posetOpDerivationEquivDerivations d_poset = dZ ∧
-      commRingDerivationEquivDerivations d_commR = innerIntDerivation (0 : Polynomial ℝ) ∧
+      commRingDerivationEquivDerivations d_commR0 = commRingDerivationEquivDerivations d_mv0_in ∧
+      commRingDerivationEquivDerivations d_commR0 ≠ commRingDerivationEquivDerivations d_commR1 ∧
+      ⁅commRingDerivationEquivDerivations d_commR0, commRingDerivationEquivDerivations d_commR1⁆ = 0 ∧
       genericDerivationEquivDerivations d_gen = dZ ∧
       densityDLogDerivationEquivDerivations d_dlog = dZ ∧
       synthesisDerivationEquivDerivations d_syn = dZ ∧
@@ -4582,9 +4774,12 @@ theorem t1_f7_04_outerAndStandaloneWrappers :
       kmsModularDerivationEquivDerivations d_kmsM = dC ∧
       complexDerivationEquivDerivations d_cpx = dC ∧
       (mathlibDerivationLieEquivDerivations polyDer : Module.End ℝ (Polynomial ℝ)) Polynomial.X = 1 ∧
-      (derivationFrameToDerivationsTriple d_frame).1 = mathlibDerivationLinearEquivDerivations polyDer := by
-  intro K_diag D_outer dR dZ dC polyDer d_frame d_poset d_commR d_gen d_dlog d_syn
-    d_cert d_phase d_gauge d_alg d_op d_e2e d_kmsM d_cpx
+      (¬ ∃ r : Polynomial ℝ, ∀ p : Polynomial ℝ, Polynomial.derivative p = r * p - p * r) ∧
+      (derivationsToFullLieDerHom ℝ Mat2R dR) matrixUnit10 ≠ 0 ∧
+      (derivationFrameToDerivationsTriple d_frame).1 = mathlibDerivationLinearEquivDerivations (pd0 + pd1) ∧
+      (derivationFrameToDerivationsTriple d_frame).2.1 ≠ (derivationFrameToDerivationsTriple d_frame).2.2 := by
+  intro K_diag D_outer dR dZ dC polyDer pd0 pd1 d_frame d_mv0_in d_mv1_in
+    d_poset d_commR0 d_commR1 d_gen d_dlog d_syn d_cert d_phase d_gauge d_alg d_op d_e2e d_kmsM d_cpx
   have houter_ne :
       (outerDerivationToDerivations D_outer : Module.End ℝ (Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) ℝ))
         (Matrix.fromBlocks matrixUnit10 (0 : Mat2R) 0 0) ≠ 0 := by
@@ -4599,10 +4794,41 @@ theorem t1_f7_04_outerAndStandaloneWrappers :
       Matrix.fromBlocks_apply₁₁] at hm
     have h00 : (matrixUnit01 * matrixUnit10 - matrixUnit10 * matrixUnit01 : Mat2R) 0 0 = 0 := hm
     norm_num [matrixUnit01, matrixUnit10, Matrix.mul_apply, Fin.sum_univ_two] at h00
+  have hmv_ne : commRingDerivationEquivDerivations d_commR0 ≠ commRingDerivationEquivDerivations d_commR1 := by
+    rw [commRingDerivationEquivDerivations.apply_symm_apply,
+      commRingDerivationEquivDerivations.apply_symm_apply]
+    intro hEq
+    have h0 := congrArg (fun D : NonAssocDerivation.derivations ℤ (MvPolynomial (Fin 2) ℝ) =>
+      D.1 (MvPolynomial.X 0)) hEq
+    change pd0 (MvPolynomial.X 0) = pd1 (MvPolynomial.X 0) at h0
+    simp [pd0, pd1] at h0
+  have hmv_comm : ⁅commRingDerivationEquivDerivations d_commR0, commRingDerivationEquivDerivations d_commR1⁆ = 0 := by
+    rw [commRingDerivationEquivDerivations.apply_symm_apply,
+      commRingDerivationEquivDerivations.apply_symm_apply]
+    apply Subtype.ext; apply LinearMap.ext; intro p
+    have hC : ⁅pd0, pd1⁆ = 0 := by
+      apply MvPolynomial.derivation_ext; intro k; fin_cases k <;> simp [pd0, pd1, Derivation.commutator_apply]
+    change pd0 (pd1 p) - pd1 (pd0 p) = 0
+    simpa [Derivation.commutator_apply] using Derivation.congr_fun hC p
+  have hpoly_non_inner : ¬ ∃ r : Polynomial ℝ, ∀ p : Polynomial ℝ, Polynomial.derivative p = r * p - p * r := by
+    rintro ⟨r, hr⟩
+    have hx := hr Polynomial.X
+    have hx' : (Polynomial.derivative : Polynomial ℝ →ₗ[ℝ] Polynomial ℝ) Polynomial.X = 1 := by simp
+    rw [hx', mul_comm r Polynomial.X, sub_self] at hx
+    exact one_ne_zero hx
+  have hframe_ne : (derivationFrameToDerivationsTriple d_frame).2.1 ≠
+      (derivationFrameToDerivationsTriple d_frame).2.2 := by
+    intro hEq
+    have h0 := congrArg (fun D : NonAssocDerivation.derivations ℝ (MvPolynomial (Fin 2) ℝ) =>
+      D.1 (MvPolynomial.X 0)) hEq
+    change pd0 (MvPolynomial.X 0) = pd1 (MvPolynomial.X 0) at h0
+    simp [pd0, pd1] at h0
   exact ⟨houter_ne,
     outerDerivationToDerivations_injective,
     posetOpDerivationEquivDerivations.apply_symm_apply dZ,
     commRingDerivationEquivDerivations.apply_symm_apply _,
+    hmv_ne,
+    hmv_comm,
     genericDerivationEquivDerivations.apply_symm_apply dZ,
     densityDLogDerivationEquivDerivations.apply_symm_apply dZ,
     synthesisDerivationEquivDerivations.apply_symm_apply dZ,
@@ -4615,7 +4841,10 @@ theorem t1_f7_04_outerAndStandaloneWrappers :
     kmsModularDerivationEquivDerivations.apply_symm_apply dC,
     complexDerivationEquivDerivations.apply_symm_apply dC,
     by dsimp [mathlibDerivationLieEquivDerivations, mathlibDerivationLinearEquivDerivations, polyDer]; exact Polynomial.derivative_X,
-    rfl⟩
+    hpoly_non_inner,
+    mat2R_comm_01_10_ne_zero,
+    rfl,
+    hframe_ne⟩
 
 /-- `T1-F7-05`: `StarDerivation`, `InvolutiveDerivation`, and `KreinStarDerivation` inject, lift to `DerivationLieLane`, and evaluate in `OnsagerFormPairing`. -/
 theorem t1_f7_05_properSubtypesAndOnsagerFormPairing :
@@ -4996,7 +5225,7 @@ theorem t1_f8_02_splitCayleyAndSplitOctonionDerivations :
     ⟨X_nz, hX_nz⟩,
     hoct_ne⟩
 
-private def ncZornRot01Fun
+def ncZornRot01Fun
     (X : InfoGeometry.Physics.NoncommutativeZornBdGDerivations.NCZorn ℝ) :
     InfoGeometry.Physics.NoncommutativeZornBdGDerivations.NCZorn ℝ :=
   ⟨0, ![-(X.u 1), X.u 0, 0], ![-(X.v 1), X.v 0, 0], 0⟩
@@ -5381,10 +5610,10 @@ theorem t2_f8_02_squareZeroPeirceNoGo
         _ = 0 := by rw [h1P, zero_mul])
     hcompat
 
-private def P3_mat_e2e : Matrix (Fin 3) (Fin 3) ℂ := !![(1 : ℂ), 0, 0; 0, 1, 0; 0, 0, 0]
-private def P3_op_e2e : FiniteOperatorAlgebra 3 := matrixOp P3_mat_e2e
+def P3_mat_e2e : Matrix (Fin 3) (Fin 3) ℂ := !![(1 : ℂ), 0, 0; 0, 1, 0; 0, 0, 0]
+def P3_op_e2e : FiniteOperatorAlgebra 3 := matrixOp P3_mat_e2e
 
-private lemma P3_op_e2e_idem : P3_op_e2e * P3_op_e2e = P3_op_e2e := by
+lemma P3_op_e2e_idem : P3_op_e2e * P3_op_e2e = P3_op_e2e := by
   apply matrixOfOp_injective
   rw [matrixOfOp_mul_eq, show matrixOfOp P3_op_e2e = P3_mat_e2e from matrixOfOp_matrixOp _]
   ext i j; fin_cases i <;> fin_cases j <;>
@@ -5392,11 +5621,11 @@ private lemma P3_op_e2e_idem : P3_op_e2e * P3_op_e2e = P3_op_e2e := by
         Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.cons_val]
       norm_num }
 
-private def P3_e2e : PeirceCut 3 := ⟨P3_op_e2e, P3_op_e2e_idem⟩
-private def A3_e2e : FiniteOperatorAlgebra 3 := matrixOp !![(0 : ℂ), 0, 1; 0, 0, 0; 0, 0, 0]
-private def C3_e2e : FiniteOperatorAlgebra 3 := matrixOp !![(0 : ℂ), 0, 0; 0, 0, 0; 1, 0, 0]
-private def X3_e2e : FiniteOperatorAlgebra 3 := matrixOp !![(0 : ℂ), 1, 0; 1, 0, 0; 0, 0, 0]
-private def Y3_e2e : FiniteOperatorAlgebra 3 := matrixOp !![(1 : ℂ), 1, 0; 1, 0, 0; 0, 0, 0]
+def P3_e2e : PeirceCut 3 := ⟨P3_op_e2e, P3_op_e2e_idem⟩
+def A3_e2e : FiniteOperatorAlgebra 3 := matrixOp !![(0 : ℂ), 0, 1; 0, 0, 0; 0, 0, 0]
+def C3_e2e : FiniteOperatorAlgebra 3 := matrixOp !![(0 : ℂ), 0, 0; 0, 0, 0; 1, 0, 0]
+def X3_e2e : FiniteOperatorAlgebra 3 := matrixOp !![(0 : ℂ), 1, 0; 1, 0, 0; 0, 0, 0]
+def Y3_e2e : FiniteOperatorAlgebra 3 := matrixOp !![(1 : ℂ), 1, 0; 1, 0, 0; 0, 0, 0]
 
 /-- `T2-F8-03`: Odd superderivation fails ungraded Leibniz on `X_odd`, while `3×3` `{differentialPlus, differentialMinus}` satisfies ordinary Leibniz with nonzero action (`(d_anti : Module.End ℝ _) X3 ≠ 0`). -/
 theorem t2_f8_03_oddSuperderivationVsOrdinaryLeibniz :
@@ -5661,10 +5890,10 @@ theorem t3_ab_01_peirceCutCeBkmParity :
     linarith
   exact ⟨hbridge.1, hdiss_pos, ne_of_gt hdiss_pos, hbridge.2.2.1, hrev_ne, hbridge.2.2.2.2⟩
 
-private def P_diag_i_mat : Matrix (Fin 2) (Fin 2) ℂ :=
+def P_diag_i_mat : Matrix (Fin 2) (Fin 2) ℂ :=
   !![1 / 2, Complex.I / 2; -Complex.I / 2, 1 / 2]
 
-private def P_diag_i : PeirceCut 2 :=
+def P_diag_i : PeirceCut 2 :=
   ⟨matrixOp P_diag_i_mat, by
     apply matrixOfOp_injective
     change matrixOfOp ((matrixOp P_diag_i_mat).comp (matrixOp P_diag_i_mat)) =
@@ -5874,14 +6103,14 @@ section Tier3_GapBC_L2
 
 open scoped Matrix.Norms.L2Operator
 
-private lemma conjStarAlgEquiv_realMatrix {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ) :
+lemma conjStarAlgEquiv_realMatrix {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ) :
     conjStarAlgEquiv n (matrixOp (M.map Complex.ofReal)) = matrixOp (M.map Complex.ofReal) := by
   apply matrixOfOp_injective
   rw [conjStarAlgEquiv_apply, conjOpFun, matrixOfOp_matrixOp, matrixOfOp_matrixOp]
   ext i j
   simp
 
-private lemma conjStarAlgEquiv_B_tilt :
+lemma conjStarAlgEquiv_B_tilt :
     conjStarAlgEquiv 2 B_tilt = B_tilt := by
   have h : B_tilt = matrixOp (tiltedMatrix.map Complex.ofReal) := by
     apply matrixOfOp_injective
@@ -5890,7 +6119,7 @@ private lemma conjStarAlgEquiv_B_tilt :
   rw [h]
   exact conjStarAlgEquiv_realMatrix tiltedMatrix
 
-private lemma conjStarAlgEquiv_A_swap :
+lemma conjStarAlgEquiv_A_swap :
     conjStarAlgEquiv 2 A_swap = A_swap := by
   rw [← switchOp2_eq_A_swap]
   exact conj_switchOp2
@@ -6537,22 +6766,22 @@ theorem t3_db_01_modularDerivationCeBkmParityForm :
     linarith
   exact ⟨h.1, h.2.1, hd1_ne, hd2_ne, ne_of_gt hdiss_pos⟩
 
-private def H3_e2e : GibbsOperator 3 := matrixOp !![(1 : ℂ), 0, 0; 0, 2, 0; 0, 0, 3]
-private def B_br_e2e : GibbsOperator 3 := matrixOp !![(1 : ℂ), 0, 0; 0, 0, 1; 0, 1, 0]
+def H3_e2e : GibbsOperator 3 := matrixOp !![(1 : ℂ), 0, 0; 0, 2, 0; 0, 0, 3]
+def B_br_e2e : GibbsOperator 3 := matrixOp !![(1 : ℂ), 0, 0; 0, 0, 1; 0, 1, 0]
 
-private lemma H3_e2e_sa : IsSelfAdjoint H3_e2e := by
+lemma H3_e2e_sa : IsSelfAdjoint H3_e2e := by
   rw [isSelfAdjoint_iff]; apply matrixOfOp_injective
   change matrixOfOp (ContinuousLinearMap.adjoint H3_e2e) = matrixOfOp H3_e2e
   dsimp only [H3_e2e]; rw [matrixOfOp_adjoint, matrixOfOp_matrixOp]
   ext i j; fin_cases i <;> fin_cases j <;> simp
 
-private lemma X3_e2e_sa : IsSelfAdjoint X3_e2e := by
+lemma X3_e2e_sa : IsSelfAdjoint X3_e2e := by
   rw [isSelfAdjoint_iff]; apply matrixOfOp_injective
   change matrixOfOp (ContinuousLinearMap.adjoint X3_e2e) = matrixOfOp X3_e2e
   dsimp only [X3_e2e]; rw [matrixOfOp_adjoint, matrixOfOp_matrixOp]
   ext i j; fin_cases i <;> fin_cases j <;> simp
 
-private def D_br_e2e : GradedBraidedDerivation (ZMod 2) ℝ (GibbsOperator 3)
+def D_br_e2e : GradedBraidedDerivation (ZMod 2) ℝ (GibbsOperator 3)
     (zmod2SignBicharacter ℝ) (fun _ => ⊤) where
   toFun := fun X => B_br_e2e * X - X * B_br_e2e
   deg := 0
@@ -6568,7 +6797,7 @@ private def D_br_e2e : GradedBraidedDerivation (ZMod 2) ℝ (GibbsOperator 3)
       Complex.ofReal_one, one_smul]
     simp only [mul_sub, sub_mul, mul_assoc]; abel
 
-private lemma D_br_e2e_isLeibniz :
+lemma D_br_e2e_isLeibniz :
     NonAssocDerivation.IsLeibniz ℝ (GibbsOperator 3) (gradedBraidedDerivationToLinearMap D_br_e2e) :=
   fun x y => by
     change B_br_e2e * (x * y) - (x * y) * B_br_e2e =
@@ -7575,5 +7804,2164 @@ theorem t4_sc_05_exceptionalJordanSuperBraidedPipeline :
     t2_f8_04_braidedDegree1VsDegree0Boundary.1⟩
 
 end Tier4_Tests
+
+/-! ## Section 6: Tier 5 — Adversarial Coverage Hardening (`T5-CAP`, `T5-A`, `T5-B`, `T5-C`, `T5-D`) -/
+
+section Tier5_Tests
+
+open Matrix
+open scoped Interval
+open InfoGeometry.OperatorAlgebra.PeirceGradedSuperderivations
+open InfoGeometry.Canonical.FrechetPeirceLieStabilizer
+open InfoGeometry.Canonical.OperatorCoefficientZornExtension
+
+attribute [local instance 100] LieRing.ofAssociativeRing LieAlgebra.ofAssociativeAlgebra
+
+lemma star_I_comm_e2e {B : Type*} [Ring B] [StarRing B] [Algebra ℂ B] [StarModule ℂ B]
+    (H A : B) (hH : IsSelfAdjoint H) (hA : IsSelfAdjoint A) :
+    IsSelfAdjoint (Complex.I • H * A - A * (Complex.I • H)) := by
+  have h1 : (Complex.I • H) * A = Complex.I • (H * A) := Algebra.smul_mul_assoc Complex.I H A
+  have h2 : A * (Complex.I • H) = Complex.I • (A * H) := Algebra.mul_smul_comm Complex.I A H
+  rw [h1, h2, isSelfAdjoint_iff, star_sub, star_smul, star_smul, star_mul, star_mul,
+    hH.star_eq, hA.star_eq, Complex.star_def, Complex.conj_I,
+    neg_smul, neg_smul, sub_neg_eq_add, add_comm, ← sub_eq_add_neg]
+
+lemma comm_leib_op_e2e {B : Type*} [Ring B] (k x y : B) :
+    k * (x * y) - (x * y) * k = (k * x - x * k) * y + x * (k * y - y * k) := by
+  rw [mul_sub, sub_mul, mul_assoc, mul_assoc, mul_assoc]
+  abel
+
+lemma peirce_conj_odd_deriv_e2e {B : Type*} [Ring B] (S K : B)
+    (hS : S * S = 1) (hSKS : S * K * S = -K) (X : B) :
+    S * (K * (S * X * S) - (S * X * S) * K) * S = -(K * X - X * K) := by
+  have hL : S * (K * (S * X * S)) * S = (S * K * S) * (S * (S * X * S) * S) := by
+    calc S * (K * (S * X * S)) * S
+        = S * K * (S * S) * (S * X * S) * S := by rw [hS, mul_one]; simp only [mul_assoc]
+      _ = (S * K * S) * (S * (S * X * S) * S) := by simp only [mul_assoc]
+  have hR : S * ((S * X * S) * K) * S = (S * (S * X * S) * S) * (S * K * S) := by
+    calc S * ((S * X * S) * K) * S
+        = S * (S * X * S) * (S * S) * K * S := by rw [hS, mul_one]; simp only [mul_assoc]
+      _ = (S * (S * X * S) * S) * (S * K * S) := by simp only [mul_assoc]
+  have hX : S * (S * X * S) * S = X := by
+    calc S * (S * X * S) * S
+        = (S * S) * X * (S * S) := by simp only [mul_assoc]
+      _ = X := by rw [hS, one_mul, mul_one]
+  rw [mul_sub, sub_mul, hL, hR, hX, hSKS, neg_mul, mul_neg]
+  abel
+
+lemma peirce_conj_odd_deriv_rev_e2e {B : Type*} [Ring B] (S K : B)
+    (hS : S * S = 1) (hSKS : S * K * S = -K) (X : B) :
+    K * (S * X * S) - (S * X * S) * K = -(S * (K * X - X * K) * S) := by
+  have h := congrArg (fun M => S * M * S) (peirce_conj_odd_deriv_e2e S K hS hSKS X)
+  have hL : S * (S * (K * (S * X * S) - (S * X * S) * K) * S) * S =
+      K * (S * X * S) - (S * X * S) * K := by
+    calc S * (S * (K * (S * X * S) - (S * X * S) * K) * S) * S
+        = (S * S) * (K * (S * X * S) - (S * X * S) * K) * (S * S) := by simp only [mul_assoc]
+      _ = K * (S * X * S) - (S * X * S) * K := by rw [hS, one_mul, mul_one]
+  rw [hL, mul_neg, neg_mul] at h
+  exact h
+
+lemma op_invS_eq_e2e {n : ℕ} (P : FiniteOperatorAlgebra n) :
+    invS P = P + P - 1 := by
+  dsimp [invS]
+  abel
+
+lemma peirce_P_minus_apply_e2e (P : PeirceCut 2) (X : FiniteOperatorAlgebra 2) :
+    (peirceSymmetricLieAlgebra P).P_minus X =
+      ((2 : ℝ)⁻¹) • (X - invS (P : FiniteOperatorAlgebra 2) * X * invS (P : FiniteOperatorAlgebra 2)) :=
+  rfl
+
+lemma p_d63_mat_eq_e2e :
+    matrixOfOp (P_d63 : FiniteOperatorAlgebra 2) = !![(1 / 2 : ℂ), 1 / 2; 1 / 2, 1 / 2] := by
+  change matrixOfOp (matrixOp !![(1 / 2 : ℂ), 1 / 2; 1 / 2, 1 / 2]) = _
+  exact matrixOfOp_matrixOp _
+
+lemma switchOp2_mat_eq_e2e :
+    matrixOfOp switchOp2 = !![(0 : ℂ), 1; 1, 0] := by
+  rw [switchOp2, matrixOfOp_matrixOp]
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [InfoGeometry.Physics.KleinBottleSewingExact.switch2]
+
+lemma tiltOp2_twist_neg_e2e :
+    twist (invS (P_d63 : FiniteOperatorAlgebra 2)) tiltOp2 = -tiltOp2 := by
+  change invS (P_d63 : FiniteOperatorAlgebra 2) * tiltOp2 * invS (P_d63 : FiniteOperatorAlgebra 2) = -tiltOp2
+  apply matrixOfOp_injective
+  rw [op_invS_eq_e2e, matrixOfOp_mul_eq, matrixOfOp_mul_eq, matrixOfOp_sub_eq,
+    matrixOfOp_add, matrixOfOp_neg_eq, matrixOfOp_one_eq, p_d63_mat_eq_e2e, matrixOfOp_tiltOp2]
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [Matrix.mul_apply, Fin.sum_univ_two, InfoGeometry.Physics.KleinBottleSewingExact.tilt2] <;>
+    norm_num
+
+def opZornComm_e2e {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H] [CompleteSpace H]
+    (k : H →L[ℂ] H) (X : OpZorn H) : OpZorn H where
+  a := k * X.a - X.a * k
+  u i := k * X.u i - X.u i * k
+  v i := k * X.v i - X.v i * k
+  b := k * X.b - X.b * k
+
+private lemma op_leib_dot_e2e {B : Type*} [Ring B] (k a a' u0 u1 u2 v0 v1 v2 : B) :
+    k * (a * a' + (u0 * v0 + u1 * v1 + u2 * v2)) -
+      (a * a' + (u0 * v0 + u1 * v1 + u2 * v2)) * k =
+      ((k * a - a * k) * a' + ((k * u0 - u0 * k) * v0 + (k * u1 - u1 * k) * v1 +
+        (k * u2 - u2 * k) * v2)) +
+      (a * (k * a' - a' * k) + (u0 * (k * v0 - v0 * k) + u1 * (k * v1 - v1 * k) +
+        u2 * (k * v2 - v2 * k))) := by
+  simp only [mul_add, add_mul, mul_sub, sub_mul, mul_assoc]
+  abel
+
+private lemma op_leib_pm_e2e {B : Type*} [Ring B] (k a u v b c1 c2 d1 d2 : B) :
+    k * (a * v + b * u - (c1 * d1 - c2 * d2)) - (a * v + b * u - (c1 * d1 - c2 * d2)) * k =
+      ((k * a - a * k) * v + b * (k * u - u * k) -
+        ((k * c1 - c1 * k) * d1 - (k * c2 - c2 * k) * d2)) +
+      (a * (k * v - v * k) + (k * b - b * k) * u -
+        (c1 * (k * d1 - d1 * k) - c2 * (k * d2 - d2 * k))) := by
+  simp only [mul_add, add_mul, mul_sub, sub_mul, mul_assoc]
+  abel
+
+private lemma op_leib_pp_e2e {B : Type*} [Ring B] (k a u v b c1 c2 d1 d2 : B) :
+    k * (a * v + b * u + (c1 * d1 - c2 * d2)) - (a * v + b * u + (c1 * d1 - c2 * d2)) * k =
+      (a * (k * v - v * k) + (k * b - b * k) * u +
+        ((k * c1 - c1 * k) * d1 - (k * c2 - c2 * k) * d2)) +
+      ((k * a - a * k) * v + b * (k * u - u * k) +
+        (c1 * (k * d1 - d1 * k) - c2 * (k * d2 - d2 * k))) := by
+  simp only [mul_add, add_mul, mul_sub, sub_mul, mul_assoc]
+  abel
+
+lemma odd_twist_leibniz_e2e {B : Type*} [Ring B] (S K a b : B) (hS : S * S = 1) :
+    K * (a * b) - (S * (a * b) * S) * K =
+      (K * a - (S * a * S) * K) * b + (S * a * S) * (K * b - (S * b * S) * K) := by
+  have hS1 : S * (a * b) * S = (S * a * S) * (S * b * S) := by
+    calc S * (a * b) * S
+        = S * a * (S * S) * b * S := by rw [hS, mul_one]; simp only [mul_assoc]
+      _ = (S * a * S) * (S * b * S) := by simp only [mul_assoc]
+  rw [hS1, sub_mul, mul_sub]
+  simp only [mul_assoc]
+  abel
+
+lemma odd_twist_anticomm_e2e {B : Type*} [Ring B] (S K a : B)
+    (hS : S * S = 1) (hSKS : S * K * S = -K) :
+    S * (K * a - (S * a * S) * K) * S = -(K * (S * a * S) - (S * (S * a * S) * S) * K) := by
+  have h1 : S * (K * a) * S = (S * K * S) * (S * a * S) := by
+    calc S * (K * a) * S
+        = S * K * (S * S) * a * S := by rw [hS, mul_one]; simp only [mul_assoc]
+      _ = (S * K * S) * (S * a * S) := by simp only [mul_assoc]
+  have h2 : S * ((S * a * S) * K) * S = (S * (S * a * S) * S) * (S * K * S) := by
+    calc S * ((S * a * S) * K) * S
+        = S * (S * a * S) * (S * S) * K * S := by rw [hS, mul_one]; simp only [mul_assoc]
+      _ = (S * (S * a * S) * S) * (S * K * S) := by simp only [mul_assoc]
+  rw [mul_sub, sub_mul, h1, h2, hSKS, neg_mul, mul_neg]
+  abel
+
+private lemma op_comm_add_e2e (k A₁ A₂ : FiniteOperatorAlgebra 2) :
+    k * (A₁ + A₂) - (A₁ + A₂) * k = (k * A₁ - A₁ * k) + (k * A₂ - A₂ * k) := by
+  rw [mul_add, add_mul]
+  abel
+
+private lemma op_comm_smul_e2e (k x : FiniteOperatorAlgebra 2) (c : ℂ) :
+    k * (c • x) - (c • x) * k = c • (k * x - x * k) := by
+  rw [mul_smul_comm, smul_mul_assoc, smul_sub]
+
+def opZornCommDeriv_e2e (k : FiniteOperatorAlgebra 2) : OpDerivation (FiniteHilbertSpace 2) where
+  toLinearMap :=
+    { toFun := opZornComm_e2e k
+      map_add' := fun X Y => by
+        apply OpZorn.ext
+        · exact op_comm_add_e2e k X.a Y.a
+        · funext i; exact op_comm_add_e2e k (X.u i) (Y.u i)
+        · funext i; exact op_comm_add_e2e k (X.v i) (Y.v i)
+        · exact op_comm_add_e2e k X.b Y.b
+      map_smul' := fun c X => by
+        apply OpZorn.ext
+        · exact op_comm_smul_e2e k X.a c
+        · funext i; exact op_comm_smul_e2e k (X.u i) c
+        · funext i; exact op_comm_smul_e2e k (X.v i) c
+        · exact op_comm_smul_e2e k X.b c }
+  leibniz := fun X Y => by
+    apply OpZorn.ext
+    · exact op_leib_dot_e2e k X.a Y.a (X.u 0) (X.u 1) (X.u 2) (Y.v 0) (Y.v 1) (Y.v 2)
+    · funext i
+      fin_cases i
+      · exact op_leib_pm_e2e k X.a (X.u 0) (Y.u 0) Y.b (X.v 1) (X.v 2) (Y.v 2) (Y.v 1)
+      · exact op_leib_pm_e2e k X.a (X.u 1) (Y.u 1) Y.b (X.v 2) (X.v 0) (Y.v 0) (Y.v 2)
+      · exact op_leib_pm_e2e k X.a (X.u 2) (Y.u 2) Y.b (X.v 0) (X.v 1) (Y.v 1) (Y.v 0)
+    · funext i
+      fin_cases i
+      · exact op_leib_pp_e2e k Y.a (Y.v 0) (X.v 0) X.b (X.u 1) (X.u 2) (Y.u 2) (Y.u 1)
+      · exact op_leib_pp_e2e k Y.a (Y.v 1) (X.v 1) X.b (X.u 2) (X.u 0) (Y.u 0) (Y.u 2)
+      · exact op_leib_pp_e2e k Y.a (Y.v 2) (X.v 2) X.b (X.u 0) (X.u 1) (Y.u 1) (Y.u 0)
+    · exact op_leib_dot_e2e k X.b Y.b (X.v 0) (X.v 1) (X.v 2) (Y.u 0) (Y.u 1) (Y.u 2)
+
+def d_odd_lin_e2e (S_p : FiniteOperatorAlgebra 2) :
+    Module.End ℝ (FiniteOperatorAlgebra 2) where
+  toFun := fun X => tiltOp2 * X - twist S_p X * tiltOp2
+  map_add' := fun X Y => by simp [twist, mul_add, add_mul]; abel
+  map_smul' := fun r X => by
+    simp [twist, real_smul_eq_complex_smul, smul_mul_assoc, mul_smul_comm, smul_sub]
+
+private lemma hasDerivAt_add_real_smul_e2e {n : ℕ} (B V : FiniteOperatorAlgebra n) (t : ℝ) :
+    HasDerivAt (fun s : ℝ => B + s • V) V t := by
+  rw [hasDerivAt_iff_tendsto_slope_zero]
+  have h : (fun s : ℝ => s⁻¹ • ((B + (t + s) • V) - (B + t • V))) =ᶠ[nhdsWithin 0 {0}ᶜ]
+      fun _ => V := by
+    filter_upwards [self_mem_nhdsWithin] with s hs
+    have hs0 : s ≠ 0 := hs
+    rw [real_smul_eq_complex_smul, add_sub_add_left_eq_sub, real_smul_eq_complex_smul,
+      real_smul_eq_complex_smul, Complex.ofReal_inv]
+    have hsub : ((t + s : ℝ) : ℂ) • V - (t : ℂ) • V = (s : ℂ) • V := by
+      rw [Complex.ofReal_add, add_smul (t : ℂ) (s : ℂ) V, add_sub_cancel_left]
+    rw [hsub, smul_smul, inv_mul_cancel₀ (Complex.ofReal_ne_zero.mpr hs0), one_smul]
+  exact tendsto_const_nhds.congr' h.symm
+
+private lemma hasDerivAt_comp_ofReal_e2e {fC : ℂ → FiniteOperatorAlgebra 2}
+    {f' : FiniteOperatorAlgebra 2} {t : ℝ}
+    (h : HasDerivAt fC f' (t : ℂ)) :
+    HasDerivAt (fun s : ℝ => fC (s : ℂ)) f' t := by
+  rw [hasDerivAt_iff_tendsto_slope]
+  have hc : Filter.Tendsto (slope fC (t : ℂ)) (nhdsWithin (t : ℂ) {(t : ℂ)}ᶜ) (nhds f') :=
+    hasDerivAt_iff_tendsto_slope.mp h
+  have hof : Filter.Tendsto (fun s : ℝ => (s : ℂ)) (nhdsWithin t {t}ᶜ)
+      (nhdsWithin (t : ℂ) {(t : ℂ)}ᶜ) := by
+    refine tendsto_nhdsWithin_of_tendsto_nhds_of_eventually_within _
+      ((Complex.continuous_ofReal.tendsto t).mono_left nhdsWithin_le_nhds) ?_
+    filter_upwards [self_mem_nhdsWithin] with s hs
+    exact Complex.ofReal_inj.ne.mpr hs
+  refine (hc.comp hof).congr' ?_
+  filter_upwards [self_mem_nhdsWithin] with s _
+  simp only [Function.comp_def, slope_def_module, ← Complex.ofReal_sub,
+    ← Complex.ofReal_inv, real_smul_eq_complex_smul]
+
+def U_rot_e2e (t : ℝ) : FiniteOperatorAlgebra 2 :=
+  NormedSpace.exp ((t : ℂ) • (-Complex.I • switchOp2))
+
+private lemma U_rot_e2e_deriv (t : ℝ) :
+    HasDerivAt U_rot_e2e ((-Complex.I • switchOp2) * U_rot_e2e t) t := by
+  have : CompleteSpace (FiniteOperatorAlgebra 2) := FiniteDimensional.complete ℂ _
+  let : NormedAlgebra ℚ (FiniteOperatorAlgebra 2) := NormedAlgebra.restrictScalars ℚ ℂ _
+  exact hasDerivAt_comp_ofReal_e2e
+    (hasStrictDerivAt_exp_smul_const' (-Complex.I • switchOp2) (t : ℂ)).hasDerivAt
+
+private lemma U_rot_e2e_neg_deriv (t : ℝ) :
+    HasDerivAt (fun s => U_rot_e2e (-s)) (-((-Complex.I • switchOp2) * U_rot_e2e (-t))) t := by
+  have : CompleteSpace (FiniteOperatorAlgebra 2) := FiniteDimensional.complete ℂ _
+  let : NormedAlgebra ℚ (FiniteOperatorAlgebra 2) := NormedAlgebra.restrictScalars ℚ ℂ _
+  have hc : HasDerivAt (fun z : ℂ => NormedSpace.exp (z • (Complex.I • switchOp2)))
+      ((Complex.I • switchOp2) * NormedSpace.exp ((t : ℂ) • (Complex.I • switchOp2))) (t : ℂ) :=
+    (hasStrictDerivAt_exp_smul_const' (Complex.I • switchOp2) (t : ℂ)).hasDerivAt
+  have hr := hasDerivAt_comp_ofReal_e2e hc
+  have heq : (fun s : ℝ => NormedSpace.exp ((s : ℂ) • (Complex.I • switchOp2))) =
+      fun s : ℝ => U_rot_e2e (-s) := by
+    funext s
+    dsimp [U_rot_e2e]
+    congr 1
+    apply ContinuousLinearMap.ext; intro v
+    simp only [_root_.smul_apply, Complex.ofReal_neg]
+    rw [smul_smul, smul_smul]
+    congr 1; ring
+  have hdv : (Complex.I • switchOp2) * NormedSpace.exp ((t : ℂ) • (Complex.I • switchOp2)) =
+      -((-Complex.I • switchOp2) * U_rot_e2e (-t)) := by
+    have harg := congrFun heq t
+    rw [← harg]
+    apply ContinuousLinearMap.ext; intro v
+    simp
+  rw [heq, hdv] at hr
+  exact hr
+
+lemma H_ng_sa_e2e (t : ℝ) :
+    IsSelfAdjoint (switchOp2 + Real.exp (-t) • (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t))) := by
+  apply isSelfAdjoint_add_op switchOp2_isSelfAdjoint
+  apply isSelfAdjoint_real_smul
+  rw [isSelfAdjoint_iff]
+  have hstarU : ∀ s : ℝ, star (U_rot_e2e s) = U_rot_e2e (-s) := fun s => by
+    dsimp [U_rot_e2e]
+    have h1 : star ((s : ℂ) • (-Complex.I • switchOp2)) = ((-s : ℝ) : ℂ) • (-Complex.I • switchOp2) := by
+      rw [star_smul, star_smul, Complex.star_def, Complex.conj_ofReal, map_neg,
+        Complex.conj_I, switchOp2_isSelfAdjoint.star_eq]
+      apply ContinuousLinearMap.ext; intro v
+      simp only [_root_.smul_apply, neg_neg, Complex.ofReal_neg]
+      rw [smul_smul, smul_smul]
+      congr 1; ring
+    rw [NormedSpace.star_exp, h1]
+  rw [star_mul, star_mul, tiltOp2_isSelfAdjoint.star_eq, hstarU (-t), neg_neg, hstarU t, mul_assoc]
+
+/-- `T5-CAP-01`: Capstone umbrella synthesis exercising `UnifiedDerivationOnsagerFormSpine.ofParitySystem`,
+`canonicalUnifiedDerivationOnsagerFormSpine`, `canonicalStarCapstoneSpine`, `canonicalAutCapstoneSpine`,
+and `four_pillar_unified_capstone` on the non-singleton trajectory `H_sol_curve` over `Set.Icc 0 1`. -/
+theorem t5_cap_01_capstone_umbrella :
+    let U := UnifiedDerivationOnsagerFormSpine.ofParitySystem
+      (peirceCutDerivationLieLane 2)
+      (peirceCartanParityOnsagerSystem P_d63 (hsProbeBilinForm 2 tiltOp2))
+      B_tilt ((exteriorDerivativeZero (peirceCutDerivationLieLane 2)) tiltOp2)
+    let U_can := canonicalUnifiedDerivationOnsagerFormSpine
+    let S_star : LeibnizDerivationFrechetOnsagerSpine 2 := canonicalStarCapstoneSpine P_d63 H_d63 A_swap B_tilt
+      hH_d63_sa hZ_d63_pos hA_swap_sa hB_tilt_sa (hsProbeBilinForm 2 tiltOp2)
+    let S_aut : LeibnizDerivationFrechetOnsagerSpine 2 := canonicalAutCapstoneSpine
+      (conjStarAlgEquiv 2) (conjStarAlgEquiv_involutive (n := 2))
+      P_d63 tiltOp2 switchOp2 (Complex.I • switchOp2)
+      tiltOp2_isSelfAdjoint
+      (tracedExponential_re_pos_of_isSelfAdjoint tiltOp2 tiltOp2_isSelfAdjoint)
+      conj_tiltOp2 (conjStarAlgEquiv_trace_re (n := 2))
+      conj_switchOp2 (conjStarAlgEquiv_purelyImaginary_odd switchOp2 conj_switchOp2)
+      (hsProbeBilinForm 2 tiltOp2)
+    let v : Fin 1 → U.lane.L := ![peirceCutGenerator P_d63]
+    let ω : DerivationOperatorForm U.lane 1 :=
+      (oneFormAlternatingLinearEquiv U.lane) ((exteriorDerivativeZero U.lane) B_tilt)
+    let η : DerivationOperatorForm U.lane 1 :=
+      (oneFormAlternatingLinearEquiv U.lane) ((exteriorDerivativeZero U.lane) A_swap)
+    let D1 : FrechetOperatorDerivation ℂ (CEOneFormNOperatorBridge.GibbsOperator 2) :=
+      innerFrechetComplexDeriv (Complex.I • H_d63)
+    let D2 : FrechetOperatorDerivation ℂ (CEOneFormNOperatorBridge.GibbsOperator 2) :=
+      innerFrechetComplexDeriv (Complex.I • tiltOp2)
+    let D1q : FrechetOperatorDerivation ℂ (CEOneFormNOperatorBridge.GibbsOperator 2) :=
+      innerFrechetComplexDeriv (Complex.I • tiltOp2)
+    let D2q : FrechetOperatorDerivation ℂ (CEOneFormNOperatorBridge.GibbsOperator 2) :=
+      innerFrechetComplexDeriv (Complex.I • tiltOp2 + tiltOp2 * switchOp2)
+    let σ_mix : GibbsOperator 2 := (1 / 2 : ℝ) • (1 : GibbsOperator 2)
+    (LinearMap.ker (peirceAdMap S_star.peirceCut ∘ₗ peirceAdMap S_star.peirceCut) =
+        S_star.peirceCartan.drazinCore ∧
+      LinearMap.range (peirceAdMap S_star.peirceCut) = S_star.peirceCartan.dissipativeRange) ∧
+    ((secondFDerivLogPartitionReadout S_star.hamiltonian
+        (finiteCEOperatorForm 2 S_star.observable (finiteCEFrechetDirection D1))
+        (finiteCEOperatorForm 2 S_star.observable (finiteCEFrechetDirection D2))).re =
+      S_star.ceParitySystem.dissipative (finiteCEFrechetDirection D1) (finiteCEFrechetDirection D2)) ∧
+    (0 < S_star.ceParitySystem.dissipative (finiteCEFrechetDirection D1) (finiteCEFrechetDirection D1)) ∧
+    (S_star.ceParitySystem.totalGenerator
+        (S_star.ceParitySystem.T.op (finiteCEFrechetDirection D1))
+        (S_star.ceParitySystem.T.op (finiteCEFrechetDirection D2)) =
+      S_star.ceParitySystem.totalGenerator (finiteCEFrechetDirection D2) (finiteCEFrechetDirection D1)) ∧
+    (S_star.erlangenDatum.onsagerPairing ()
+        (S_star.erlangenDatum.casimirJ (fun _ => finiteCEFrechetDirection D1))
+        (S_star.erlangenDatum.casimirJ (fun _ => finiteCEFrechetDirection D2)) =
+      S_star.erlangenDatum.onsagerPairing ()
+        (fun _ => finiteCEFrechetDirection D2) (fun _ => finiteCEFrechetDirection D1)) ∧
+    ((U.evalForm 1 v).totalGenerator ((U.evalForm 1 v).T.op ω) ((U.evalForm 1 v).T.op η) =
+      (U.evalForm 1 v).totalGenerator η ω) ∧
+    ((inducedDerivationLaneOnsagerSystem U.onsager U.lane U.observable).totalGenerator
+        (peirceCutGenerator P_d63) (peirceCutGenerator P_d63) =
+      U.onsager.totalGenerator (U.lane.operatorAction (peirceCutGenerator P_d63) U.observable)
+        (U.lane.operatorAction (peirceCutGenerator P_d63) U.observable)) ∧
+    ((U_can.evalForm 1 v).totalGenerator ((U_can.evalForm 1 v).T.op ω) ((U_can.evalForm 1 v).T.op η) =
+      (U_can.evalForm 1 v).totalGenerator η ω) ∧
+    (S_aut.ceParitySystem.reversible (finiteCEFrechetDirection D1q) (finiteCEFrechetDirection D2q) ≠ 0) ∧
+    (S_aut.ceParitySystem.totalGenerator
+        (S_aut.ceParitySystem.T.op (finiteCEFrechetDirection D1q))
+        (S_aut.ceParitySystem.T.op (finiteCEFrechetDirection D2q)) =
+      S_aut.ceParitySystem.totalGenerator (finiteCEFrechetDirection D2q) (finiteCEFrechetDirection D1q)) ∧
+    ((secondFDerivLogPartitionReadout S_aut.hamiltonian
+        (finiteCEOperatorForm 2 S_aut.observable (finiteCEFrechetDirection D1q))
+        (finiteCEOperatorForm 2 S_aut.observable (finiteCEFrechetDirection D2q))).re =
+      S_aut.ceParitySystem.dissipative (finiteCEFrechetDirection D1q) (finiteCEFrechetDirection D2q)) ∧
+    (S_aut.peirceParitySystem.reversible (S_aut.peirceCartan.S.P_plus B_tilt)
+        (S_aut.peirceCartan.S.P_minus B_tilt) ≠ 0) ∧
+    AntitoneOn (fun s => gibbsRelativePotential σ_mix (H_sol_curve s)) (Set.Icc 0 1) ∧
+    gibbsRelativePotential σ_mix (H_sol_curve 1) < gibbsRelativePotential σ_mix (H_sol_curve 0) := by
+  intro U U_can S_star S_aut v ω η D1 D2 D1q D2q σ_mix
+  have hA1 : IsSelfAdjoint (finiteCEOperatorForm 2 S_star.observable (finiteCEFrechetDirection D1)) := by
+    change IsSelfAdjoint (Complex.I • H_d63 * A_swap - A_swap * (Complex.I • H_d63))
+    exact star_I_comm_e2e H_d63 A_swap hH_d63_sa hA_swap_sa
+  have hA1q : IsSelfAdjoint (finiteCEOperatorForm 2 S_aut.observable (finiteCEFrechetDirection D1q)) := by
+    change IsSelfAdjoint ((Complex.I • tiltOp2) * switchOp2 - switchOp2 * (Complex.I • tiltOp2))
+    rw [switchOp2_eq_A_swap]
+    exact star_I_comm_e2e tiltOp2 A_swap tiltOp2_isSelfAdjoint hA_swap_sa
+  have hσ_sa : IsSelfAdjoint σ_mix := isSelfAdjoint_real_smul _ 1 (by rw [isSelfAdjoint_iff, star_one])
+  have hcomm_σ0 : Commute σ_mix (0 : GibbsOperator 2) := Commute.zero_right _
+  have hcap_star := four_pillar_unified_capstone S_star U v ω η D1 D2 hA1
+    (0 : GibbsOperator 2) σ_mix hσ_sa hcomm_σ0
+    H_sol_curve (convex_Icc 0 1)
+    (fun t _ => H_sol_curve_isSelfAdjoint t)
+    (fun t _ => H_sol_curve_flow t)
+  have hcap_aut := four_pillar_unified_capstone S_aut U v ω η D1q D2q hA1q
+    (0 : GibbsOperator 2) σ_mix hσ_sa hcomm_σ0
+    H_sol_curve (convex_Icc 0 1)
+    (fun t _ => H_sol_curve_isSelfAdjoint t)
+    (fun t _ => H_sol_curve_flow t)
+  have hdiss_star_pos :
+      0 < S_star.ceParitySystem.dissipative (finiteCEFrechetDirection D1) (finiteCEFrechetDirection D1) := by
+    let D_d63 := faithfulGibbsDensity H_d63 hH_d63_sa hZ_d63_pos
+    let hpow_d63 := continuous_faithfulGibbsDensity_rpow H_d63 hH_d63_sa hZ_d63_pos
+    change 0 < centeredCEBKMForm D_d63 hpow_d63 A_swap
+      (finiteCEFrechetDirection D1) (finiteCEFrechetDirection D1)
+    rw [centeredCEBKMForm_apply, centeredBKMRealCovariance_self, D_d63.bkmRealBilinForm_apply]
+    apply D_d63.kuboMoriPairing_self_re_pos _ hpow_d63
+    intro h0
+    have hmem := (centeredStatistic_eq_zero_iff D_d63 hpow_d63 _).mp h0
+    obtain ⟨r, hr⟩ := Submodule.mem_span_singleton.mp hmem
+    have hm := congrArg (fun M : GibbsOperator 2 => matrixOfOp M 0 1) hr
+    have hr01 : matrixOfOp (r • (1 : GibbsOperator 2)) 0 1 = 0 := by
+      rw [matrixOfOp_real_smul, matrixOfOp_one_eq]; simp
+    have hce01 :
+        matrixOfOp (finiteCEOperatorForm 2 A_swap (finiteCEFrechetDirection D1)) 0 1 =
+          2 * Complex.I := by
+      change matrixOfOp ((Complex.I • H_d63) * A_swap - A_swap * (Complex.I • H_d63)) 0 1 = 2 * Complex.I
+      rw [matrixOfOp_sub_eq, matrixOfOp_mul_eq, matrixOfOp_mul_eq, matrixOfOp_complex_smul,
+        matrixOfOp_H_d63, matrixOfOp_A_swap]
+      dsimp only [Matrix.sub_apply, Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul]
+      simp only [Fin.sum_univ_two, d63TiltedAmplitude, swapMatrix, Matrix.of_apply,
+        Matrix.cons_val_zero, Matrix.cons_val_one, Fin.isValue, mul_one, mul_zero,
+        add_zero, zero_mul, mul_neg]
+      rw [one_mul, zero_add, sub_neg_eq_add, ← two_mul]
+    change matrixOfOp (r • (1 : GibbsOperator 2)) 0 1 =
+      matrixOfOp (finiteCEOperatorForm 2 A_swap (finiteCEFrechetDirection D1)) 0 1 at hm
+    rw [hr01, hce01] at hm
+    have him := congrArg Complex.im hm
+    norm_num at him
+  have hrev_aut_ce :
+      S_aut.ceParitySystem.reversible (finiteCEFrechetDirection D1q) (finiteCEFrechetDirection D2q) ≠ 0 := by
+    change capstoneQubitSpine.ceParitySystem.reversible
+      (finiteCEFrechetDirection D1q) (finiteCEFrechetDirection D2q) ≠ 0
+    exact capstone_qubit_nondegenerate_witness.2.2.2.1
+  have hrev_aut_peirce : S_aut.peirceParitySystem.reversible (S_aut.peirceCartan.S.P_plus B_tilt)
+      (S_aut.peirceCartan.S.P_minus B_tilt) ≠ 0 :=
+    t1_f1_05_cartanMasterReciprocityAndEntropy.2.2.1
+  exact ⟨hcap_star.1, hcap_star.2.1, hdiss_star_pos, hcap_star.2.2.1,
+    (S_star.erlangenDatum.onsager_reciprocity _ _ ()).symm,
+    hcap_star.2.2.2.1,
+    U.induced_eval (peirceCutGenerator P_d63) (peirceCutGenerator P_d63),
+    U_can.form_reciprocity 1 v ω η,
+    hrev_aut_ce, hcap_aut.2.2.1, hcap_aut.2.1, hrev_aut_peirce,
+    hcap_star.2.2.2.2, t1_f6_02_gibbsRelativePotentialMetriplectic.2.2⟩
+
+/-- `T5-A-01`: Gap A `+θ` Cartan parity (`cartanParityOnsagerSystemOfInvolution`),
+sector orthogonality/diagonal vanishing (`cartan_T_even_imp_orthogonal_core_range`,
+`cartan_T_odd_imp_diag_sectors_zero`), `onsagerCasimirSystemOfMetricData`,
+`drazinCartanInvolutionTimeReversal`, and `drazinCartanTimeReversal_GammaS`. -/
+theorem t5_a_01_cartan_pos_parity_and_drazin :
+    let C := peirceCartanOnsagerSplit P_d63
+    let P_pos := cartanParityOnsagerSystemOfInvolution C (hsRealBilinForm 2)
+      (hsRealBilinForm_symm 2) (hsRealBilinForm_nonneg 2) (hsProbeBilinForm 2 tiltOp2)
+    let B_even : LinearMap.BilinForm ℝ (FiniteOperatorAlgebra 2) :=
+      LinearMap.mk₂ ℝ
+        (fun x y => (hsRealBilinForm 2) (C.S.P_plus x) (C.S.P_plus y) +
+          (hsRealBilinForm 2) (C.S.P_minus x) (C.S.P_minus y))
+        (fun x₁ x₂ y => by simp only [_root_.map_add, LinearMap.add_apply]; abel)
+        (fun r x y => by simp only [_root_.map_smul, LinearMap.smul_apply, smul_eq_mul, mul_add])
+        (fun x y₁ y₂ => by simp only [_root_.map_add]; abel)
+        (fun r x y => by simp only [_root_.map_smul, smul_eq_mul, mul_add])
+    let Ω_odd : LinearMap.BilinForm ℝ (FiniteOperatorAlgebra 2) :=
+      LinearMap.mk₂ ℝ
+        (fun x y => (hsProbeBilinForm 2 tiltOp2) (C.S.P_plus x) (C.S.P_minus y) -
+          (hsProbeBilinForm 2 tiltOp2) (C.S.P_plus y) (C.S.P_minus x))
+        (fun x₁ x₂ y => by simp only [_root_.map_add, LinearMap.add_apply]; abel)
+        (fun r x y => by simp only [_root_.map_smul, LinearMap.smul_apply, smul_eq_mul, mul_sub])
+        (fun x y₁ y₂ => by simp only [_root_.map_add, LinearMap.add_apply]; abel)
+        (fun r x y => by simp only [_root_.map_smul, LinearMap.smul_apply, smul_eq_mul, mul_sub])
+    let M_metric : OnsagerMetricData (ℝ × ℝ) :=
+      { onsager :=
+          { toFun := fun p => (2 * p.1, 3 * p.2)
+            map_add' := fun p q => by ext <;> simp <;> ring
+            map_smul' := fun r p => by ext <;> simp <;> ring }
+        pairing := fun u v => u.1 * v.1 + u.2 * v.2
+        metric_symmetric := fun u v => by simp; ring
+        metric_nonnegative := fun u => by simp; nlinarith [sq_nonneg u.1, sq_nonneg u.2]
+        pairing_zero_right := fun u => by simp }
+    let B_metric : LinearMap.BilinForm ℝ (ℝ × ℝ) :=
+      LinearMap.mk₂ ℝ M_metric.pairing
+        (fun u₁ u₂ v => by dsimp [M_metric]; ring)
+        (fun r u v => by dsimp [M_metric]; ring)
+        (fun u v₁ v₂ => by dsimp [M_metric]; ring)
+        (fun r u v => by dsimp [M_metric]; ring)
+    let S_metric := onsagerCasimirSystemOfMetricData M_metric B_metric (fun _ _ => rfl)
+    let T_draz_inv := drazinCartanInvolutionTimeReversal B_real2
+    (P_pos.T.op (C.S.P_plus B_tilt) = C.S.P_plus B_tilt) ∧
+    (P_pos.T.op (C.S.P_minus B_tilt) = -(C.S.P_minus B_tilt)) ∧
+    (0 ≤ P_pos.dissipative B_tilt B_tilt) ∧
+    (B_even (C.S.P_plus B_tilt) (C.S.P_minus B_tilt) = 0) ∧
+    (Ω_odd (C.S.P_plus B_tilt) (C.S.P_plus A_swap) = 0 ∧
+      Ω_odd (C.S.P_minus B_tilt) (C.S.P_minus A_swap) = 0) ∧
+    (S_metric.dissipative (1, 1) (1, 1) = 5) ∧
+    (T_draz_inv.op B_real2.CIK.GammaS = B_real2.CIK.GammaS) ∧
+    ((drazinCartanTimeReversal B_real2).op B_real2.CIK.GammaS = -B_real2.CIK.GammaS) := by
+  intro C P_pos B_even Ω_odd M_metric B_metric S_metric T_draz_inv
+  have hP_plus_th : ∀ x, C.S.P_plus (C.S.θ x) = C.S.P_plus x := fun x => by
+    change ((2 : ℝ)⁻¹) • (C.S.θ x + C.S.θ (C.S.θ x)) = ((2 : ℝ)⁻¹) • (x + C.S.θ x)
+    rw [C.S.involutive x, add_comm]
+  have hP_minus_th : ∀ x, C.S.P_minus (C.S.θ x) = -C.S.P_minus x := fun x => by
+    change ((2 : ℝ)⁻¹) • (C.S.θ x - C.S.θ (C.S.θ x)) = -(((2 : ℝ)⁻¹) • (x - C.S.θ x))
+    rw [C.S.involutive x, ← neg_sub x (C.S.θ x), smul_neg]
+  have hEven : ∀ x y, B_even (C.S.θ x) (C.S.θ y) = B_even x y := by
+    intro x y
+    dsimp only [B_even, LinearMap.mk₂_apply]
+    rw [hP_plus_th, hP_plus_th, hP_minus_th, hP_minus_th, map_neg,
+      (hsRealBilinForm 2).map_neg, LinearMap.neg_apply, neg_neg]
+  have hOdd : ∀ x y, Ω_odd (C.S.θ x) (C.S.θ y) = -Ω_odd x y := by
+    intro x y
+    dsimp only [Ω_odd, LinearMap.mk₂_apply]
+    rw [hP_plus_th, hP_plus_th, hP_minus_th, hP_minus_th, map_neg, map_neg]
+    ring
+  have hP_plus_th2 : ∀ x, C.S.θ (C.S.P_plus x) = C.S.P_plus x := fun x => by
+    change C.S.θ (((2 : ℝ)⁻¹) • (x + C.S.θ x)) = ((2 : ℝ)⁻¹) • (x + C.S.θ x)
+    rw [C.S.lin.map_smul, C.S.lin.map_add, C.S.involutive x, add_comm]
+  have hP_minus_th2 : ∀ x, C.S.θ (C.S.P_minus x) = -C.S.P_minus x := fun x => by
+    change C.S.θ (((2 : ℝ)⁻¹) • (x - C.S.θ x)) = -(((2 : ℝ)⁻¹) • (x - C.S.θ x))
+    have hneg_th : C.S.θ (-C.S.θ x) = -x := by
+      rw [← neg_one_smul ℝ (C.S.θ x), C.S.lin.map_smul, C.S.involutive x, neg_one_smul]
+    rw [sub_eq_add_neg, C.S.lin.map_smul, C.S.lin.map_add, hneg_th, ← sub_eq_add_neg,
+      ← neg_sub x (C.S.θ x), smul_neg, ← sub_eq_add_neg]
+  have hk_mem : C.S.P_plus B_tilt ∈ C.drazinCore := by
+    rw [C.drazinCore_eq_k]; exact (C.S.mem_evenSubmodule_iff).2 (hP_plus_th2 B_tilt)
+  have hp_mem : C.S.P_minus B_tilt ∈ C.dissipativeRange := by
+    rw [C.dissipativeRange_eq_p]; exact (C.S.mem_oddSubmodule_iff).2 (hP_minus_th2 B_tilt)
+  have hkA_mem : C.S.P_plus A_swap ∈ C.drazinCore := by
+    rw [C.drazinCore_eq_k]; exact (C.S.mem_evenSubmodule_iff).2 (hP_plus_th2 A_swap)
+  have hpA_mem : C.S.P_minus A_swap ∈ C.dissipativeRange := by
+    rw [C.dissipativeRange_eq_p]; exact (C.S.mem_oddSubmodule_iff).2 (hP_minus_th2 A_swap)
+  have hdiag := cartan_T_odd_imp_diag_sectors_zero C Ω_odd hOdd
+  have hTdraz : T_draz_inv.op B_real2.CIK.GammaS = B_real2.CIK.GammaS := by
+    change B_real2.CIK.thetaS B_real2.CIK.GammaS = B_real2.CIK.GammaS
+    change B_real2.CIK.GammaS.comp (B_real2.CIK.GammaS.comp B_real2.CIK.GammaS) = B_real2.CIK.GammaS
+    rw [← ContinuousLinearMap.comp_assoc, GammaS_comp_GammaS B_real2.CIK,
+      ContinuousLinearMap.id_comp]
+  refine ⟨cartanInvolutionTimeReversal_P_plus C B_tilt,
+    cartanInvolutionTimeReversal_P_minus C B_tilt,
+    P_pos.dissipative_nonneg B_tilt,
+    cartan_T_even_imp_orthogonal_core_range C B_even hEven hk_mem hp_mem,
+    ⟨hdiag.1 _ hk_mem _ hkA_mem, hdiag.2 _ hp_mem _ hpA_mem⟩,
+    by dsimp [S_metric, onsagerCasimirSystemOfMetricData, B_metric, M_metric]; norm_num,
+    hTdraz,
+    drazinCartanTimeReversal_GammaS B_real2⟩
+
+/-- `T5-A-02`: Gap A two-block Schur–Drazin, `scalarSchurReducedTwoBlock_restrict_zero`,
+TKK skew form (`tkkParityOnsagerSystemWithSkew`), and conformal PK flip (`conformalPKSplitFlipParityOnsagerSystem`). -/
+theorem t5_a_02_two_block_schur_tkk_conformal_flip :
+    let B_cas : ScalarSchurDrazinBlock :=
+      { LPP := 5
+        LPΘ := 2
+        LΘP := -2
+        LΘΘ := 2
+        penrose := ⟨2, 1 / 2, by norm_num, by norm_num⟩
+        drazin := ⟨2, 1 / 2, 0, by norm_num, by norm_num, by norm_num⟩
+        penrose_matches_hidden := rfl
+        drazin_matches_hidden := rfl }
+    have hEff : 0 ≤ B_cas.effectiveEvenOnsager := by
+      dsimp [ScalarSchurDrazinBlock.effectiveEvenOnsager, B_cas]
+      norm_num
+    let P_2b := scalarTwoBlockParityOnsagerSystem B_cas (by norm_num) (by norm_num) (by norm_num)
+    let P_red := scalarSchurReducedTwoBlockParityOnsagerSystem B_cas hEff (by norm_num)
+    let M_tkk_all1 : TKKOnsagerMatrix :=
+      { entry := fun _ _ => 1
+        reciprocal := fun _ _ => rfl }
+    let Ω_tkk : InfoGeometry.SuperMetriplectic.TKKGrade →
+        InfoGeometry.SuperMetriplectic.TKKGrade → ℝ := fun i j =>
+      match i, j with
+      | .minus, .zero => 1
+      | .plus, .zero => -1
+      | .zero, .minus => -1
+      | .zero, .plus => 1
+      | _, _ => 0
+    let P_tkk_skew := tkkParityOnsagerSystemWithSkew M_tkk_all1
+      (fun v => by
+        have hsq : tkkSum (fun i => tkkSum (fun j => v i * M_tkk_all1.entry i j * v j)) =
+            (v .minus + v .zero + v .plus) * (v .minus + v .zero + v .plus) := by
+          dsimp [tkkSum, M_tkk_all1]
+          ring
+        rw [hsq]
+        exact mul_self_nonneg _)
+      (fun _ _ => rfl)
+      Ω_tkk
+      (fun i j => by cases i <;> cases j <;> simp [Ω_tkk])
+      (fun i j => by cases i <;> cases j <;> simp [Ω_tkk, InfoGeometry.SuperMetriplectic.TKKGrade.dual])
+    let split_flip : ConformalPKMetriplecticSplit :=
+      { reversiblePK := 3
+        covariancePK := 0
+        souriauCocyclePK := 0
+        dissipativePK := 0
+        totalPK := 3
+        dissipativePK_eq_covariance_plus_cocycle := by norm_num
+        totalPK_eq_reversible_plus_dissipative := by norm_num }
+    let P_flip := conformalPKSplitFlipParityOnsagerSystem split_flip 2 3
+      (by norm_num) (by norm_num) (by norm_num)
+    (P_2b.reversible ![1, 0] ![0, 1] = 2) ∧
+    (P_red.dissipative ![1, 0] ![1, 0] = 7) ∧
+    (P_red.totalGenerator ![2, 0] ![3, 0] = (scalarEffectiveOnsagerSystem B_cas hEff).totalGenerator 2 3) ∧
+    (P_tkk_skew.reversible
+      (fun g => match g with | .minus => 1 | .zero => 0 | .plus => 0)
+      (fun g => match g with | .minus => 0 | .zero => 1 | .plus => 0) = 1) ∧
+    (P_flip.dissipative ![1, 1] ![1, 1] = 5) ∧
+    (P_flip.reversible ![1, 0] ![0, 1] = 3) := by
+  intro B_cas hEff P_2b P_red M_tkk_all1 Ω_tkk P_tkk_skew split_flip P_flip
+  refine ⟨?_, ?_, scalarSchurReducedTwoBlock_restrict_zero B_cas hEff (by norm_num) 2 3, ?_, ?_, ?_⟩
+  · dsimp [P_2b, scalarTwoBlockParityOnsagerSystem, scalarTwoBlockOnsagerSystem]
+    norm_num
+  · dsimp [P_red, scalarSchurReducedTwoBlockParityOnsagerSystem,
+      scalarSchurReducedTwoBlockDissipative, ScalarSchurDrazinBlock.effectiveEvenOnsager, B_cas]
+    norm_num
+  · dsimp [P_tkk_skew, tkkParityOnsagerSystemWithSkew, tkkSkewForm, tkkSum, Ω_tkk]
+    norm_num
+  · dsimp [P_flip, conformalPKSplitFlipParityOnsagerSystem, conformalPKSplitOnsagerSystem, split_flip]
+    norm_num
+  · dsimp [P_flip, conformalPKSplitFlipParityOnsagerSystem, conformalPKSplitOnsagerSystem, split_flip]
+    norm_num
+
+/-- `T5-A-03`: Gap A Peirce-cut BKM strictly positive dissipation (`peirceCartanParityOnsagerSystemBKM`),
+`cutStabilizer_eq_evenLieSubalgebra` (`d_even ∈` vs `d_odd ∉` and `θ d_odd = -d_odd`), and `derivConjLieEquiv`. -/
+theorem t5_a_03_peirce_cut_bkm_and_cut_stabilizer :
+    let D := faithfulGibbsDensity H_d63 hH_d63_sa hZ_d63_pos
+    let hpow := continuous_faithfulGibbsDensity_rpow H_d63 hH_d63_sa hZ_d63_pos
+    let P_bkm := peirceCartanParityOnsagerSystemBKM P_d63 D hpow (hsProbeBilinForm 2 tiltOp2)
+    let x_p := (peirceSymmetricLieAlgebra P_d63).P_minus tiltOp2
+    let d_even : NonAssocDerivation.derivations ℝ (FiniteOperatorAlgebra 2) :=
+      FrechetBridge.toRealDerivation (cutDerivation P_d63)
+    let d_odd : NonAssocDerivation.derivations ℝ (FiniteOperatorAlgebra 2) :=
+      { val :=
+          { toFun := fun X => tiltOp2 * X - X * tiltOp2
+            map_add' := fun X Y => by simp [mul_add, add_mul]; abel
+            map_smul' := fun r X => by
+              simp [real_smul_eq_complex_smul, smul_mul_assoc, mul_smul_comm, smul_sub] }
+        property := fun X Y => comm_leib_op_e2e tiltOp2 X Y }
+    let θ_alg := conjugationAlgEquivOfSqOne (invS (P_d63 : FiniteOperatorAlgebra 2))
+      (invS_sq_eq_one (P_d63 : FiniteOperatorAlgebra 2) P_d63.property)
+    let conjLie := derivConjLieEquiv θ_alg (conjugationAlgEquivOfSqOne_involutive _ _)
+    (0 < P_bkm.dissipative x_p x_p) ∧
+    (d_even ∈ cutStabilizer (P_d63 : FiniteOperatorAlgebra 2)) ∧
+    (d_even ∈ (peirceDerivSymmetricLieAlgebra P_d63).evenLieSubalgebra) ∧
+    (d_odd ∉ cutStabilizer (P_d63 : FiniteOperatorAlgebra 2)) ∧
+    ((peirceDerivSymmetricLieAlgebra P_d63).θ d_odd = -d_odd) ∧
+    (conjLie d_even = d_even ∧ conjLie d_odd = -d_odd) := by
+  intro D hpow P_bkm x_p d_even d_odd θ_alg conjLie
+  have hP_mat : matrixOfOp (P_d63 : FiniteOperatorAlgebra 2) = !![(1 / 2 : ℂ), 1 / 2; 1 / 2, 1 / 2] :=
+    p_d63_mat_eq_e2e
+  have hT_mat : matrixOfOp tiltOp2 = !![(1 : ℂ), 0; 0, -1] := by
+    rw [matrixOfOp_tiltOp2]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [InfoGeometry.Physics.KleinBottleSewingExact.tilt2]
+  have hS_sq : invS (P_d63 : FiniteOperatorAlgebra 2) * invS (P_d63 : FiniteOperatorAlgebra 2) = 1 :=
+    invS_sq_eq_one _ P_d63.property
+  have hS_tilt : invS (P_d63 : FiniteOperatorAlgebra 2) * tiltOp2 *
+      invS (P_d63 : FiniteOperatorAlgebra 2) = -tiltOp2 :=
+    tiltOp2_twist_neg_e2e
+  have hx_eq : x_p = tiltOp2 := by
+    dsimp only [x_p]
+    rw [peirce_P_minus_apply_e2e, hS_tilt, sub_neg_eq_add, ← two_smul ℝ tiltOp2, smul_smul]
+    norm_num
+  have hnz : tiltOp2 ≠ 0 := by
+    intro hz
+    have h00 := congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M 0 0) hz
+    rw [hT_mat, matrixOfOp_zero] at h00
+    simp at h00
+  have hev_mem : d_even ∈ cutStabilizer (P_d63 : FiniteOperatorAlgebra 2) :=
+    cutDerivation_mem_cutStabilizer P_d63
+  have hev_even : d_even ∈ (peirceDerivSymmetricLieAlgebra P_d63).evenLieSubalgebra := by
+    rw [← cutStabilizer_eq_evenLieSubalgebra P_d63]; exact hev_mem
+  have htheta_odd : (peirceDerivSymmetricLieAlgebra P_d63).θ d_odd = -d_odd := by
+    apply Subtype.ext
+    apply LinearMap.ext
+    intro X
+    change invS (P_d63 : FiniteOperatorAlgebra 2) *
+        (tiltOp2 * (invS (P_d63 : FiniteOperatorAlgebra 2) * X * invS (P_d63 : FiniteOperatorAlgebra 2)) -
+          (invS (P_d63 : FiniteOperatorAlgebra 2) * X * invS (P_d63 : FiniteOperatorAlgebra 2)) * tiltOp2) *
+        invS (P_d63 : FiniteOperatorAlgebra 2) =
+      -(tiltOp2 * X - X * tiltOp2)
+    exact peirce_conj_odd_deriv_e2e (invS (P_d63 : FiniteOperatorAlgebra 2)) tiltOp2 hS_sq hS_tilt X
+  have hconj_even : conjLie d_even = d_even :=
+    (SymmetricLieAlgebra.mem_even_iff (peirceDerivSymmetricLieAlgebra P_d63)).mp hev_even
+  refine ⟨?_, hev_mem, hev_even, ?_, htheta_odd, hconj_even, htheta_odd⟩
+  · have hbkm : P_bkm.dissipative x_p x_p = (D.kuboMoriPairing tiltOp2 tiltOp2).re := by
+      dsimp only [P_bkm, peirceCartanParityOnsagerSystemBKM, peirceCartanParityOnsagerSystemOfForms]
+      simp only [LinearMap.compl₁₂_apply, peirceAdSq_eq_P_minus]
+      have hP_minus_tilt : (peirceSymmetricLieAlgebra P_d63).P_minus tiltOp2 = tiltOp2 := hx_eq
+      have hP_minus_xp : (peirceSymmetricLieAlgebra P_d63).P_minus x_p = tiltOp2 := by
+        dsimp only [x_p]
+        rw [hP_minus_tilt, hP_minus_tilt]
+      rw [hP_minus_xp, ← D.bkmRealBilinForm_apply hpow tiltOp2 tiltOp2]
+    rw [hbkm]
+    exact D.kuboMoriPairing_self_re_pos tiltOp2 hpow hnz
+  · intro hmem
+    change tiltOp2 * (P_d63 : FiniteOperatorAlgebra 2) -
+      (P_d63 : FiniteOperatorAlgebra 2) * tiltOp2 = 0 at hmem
+    have h01 := congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M 0 1) hmem
+    rw [matrixOfOp_sub_eq, matrixOfOp_mul_eq, matrixOfOp_mul_eq, hT_mat, hP_mat] at h01
+    simp [matrixOfOp_zero] at h01
+
+/-- `T5-D-01`: Gap D `R →ₗ[R] R` `IsLinearDerivation` `Subsingleton {0}` collapse,
+nontrivial `commRingDerivationEquivDerivations` (`MvPolynomial.pderiv 0 ≠ 1`),
+`lieIdealRingDerivation_isInner_iff`, `outerDerivationEquivSubtype`, `derivationsToFullLieDerHom`,
+`fullLieDerLieActionLane`, and `complexToRealDerivationLieLane`. -/
+theorem t5_d_01_modular_nondegenerate_and_lie_lanes :
+    let D0 := commRingDerivationEquivDerivations
+      (⟨(MvPolynomial.pderiv (R := ℝ) (0 : Fin 2) : MvPolynomial (Fin 2) ℝ →+ MvPolynomial (Fin 2) ℝ),
+        fun x y => _root_.map_add _ x y,
+        fun x y => by simp [Derivation.leibniz, mul_comm, add_comm]⟩ :
+        InfoGeometry.Canonical.HypothesisFoundations.CommRingDerivation (MvPolynomial (Fin 2) ℝ))
+    let D1 := commRingDerivationEquivDerivations
+      (⟨(MvPolynomial.pderiv (R := ℝ) (1 : Fin 2) : MvPolynomial (Fin 2) ℝ →+ MvPolynomial (Fin 2) ℝ),
+        fun x y => _root_.map_add _ x y,
+        fun x y => by simp [Derivation.leibniz, mul_comm, add_comm]⟩ :
+        InfoGeometry.Canonical.HypothesisFoundations.CommRingDerivation (MvPolynomial (Fin 2) ℝ))
+    let K1_m : Mat2R := !![1, 0; 0, -1]
+    let K2_m : Mat2R := !![0, 1; 0, 0]
+    let d_in : NonAssocDerivation.derivations ℝ Mat2R := innerMat2RDeriv K1_m
+    let d_ideal : InfoGeometry.Modular.LieIdeal.RingDerivation Mat2R :=
+      ⟨fun X => matrixUnit01 * X - X * matrixUnit01,
+        fun _ _ => by noncomm_ring,
+        fun X Y => comm_leib_op_e2e matrixUnit01 X Y⟩
+    let K_diag : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) ℝ :=
+      Matrix.fromBlocks matrixUnit01 0 0 matrixUnit01
+    let D_outer : InfoGeometry.Modular.TrifoldSurprisalIntertwiningBridge.OuterDerivation (Fin 2) ℝ :=
+      { toLinearMap :=
+          { toFun := fun X => K_diag * X - X * K_diag
+            map_add' := fun _ _ => by noncomm_ring
+            map_smul' := fun r X => by
+              change K_diag * (r • X) - (r • X) * K_diag = r • (K_diag * X - X * K_diag)
+              rw [mul_smul_comm, smul_mul_assoc, smul_sub] }
+        leibniz' := fun X Y => comm_leib_op_e2e K_diag X Y
+        map_one' := by simp
+        map_gamma' := by
+          change K_diag * InfoGeometry.Modular.TrifoldSurprisalIntertwiningBridge.GammaGrading -
+            InfoGeometry.Modular.TrifoldSurprisalIntertwiningBridge.GammaGrading * K_diag = 0
+          dsimp [K_diag, InfoGeometry.Modular.TrifoldSurprisalIntertwiningBridge.GammaGrading]
+          rw [Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply]
+          simp }
+    let fullLie := derivationsToFullLieDerHom ℝ Mat2R
+    let fullLane := fullLieDerLieActionLane ℝ Mat2R
+    let cpxLane := complexToRealDerivationLieLane (GibbsOperator 2)
+    let d_cpx_sw : NonAssocDerivation.derivations ℂ (GibbsOperator 2) :=
+      ⟨{ toFun := fun X => switchOp2 * X - X * switchOp2
+         map_add' := fun X Y => by simp [mul_add, add_mul]; abel
+         map_smul' := fun c X => by simp [smul_mul_assoc, mul_smul_comm, smul_sub] },
+       fun X Y => comm_leib_op_e2e switchOp2 X Y⟩
+    (∀ (D : Polynomial ℝ →ₗ[Polynomial ℝ] Polynomial ℝ),
+      InfoGeometry.Modular.IsLinearDerivation D → ∀ x, D x = 0) ∧
+    (∀ (D : Polynomial ℝ →ₗ[Polynomial ℝ] Polynomial ℝ),
+      InfoGeometry.Modular.ModularSurprisalDerivationBridge.IsLinearDerivation D → ∀ x, D x = 0) ∧
+    (∀ (D : Polynomial ℝ →ₗ[Polynomial ℝ] Polynomial ℝ),
+      InfoGeometry.Information.ModularSurprisalDerivationBridge.IsLinearDerivation D → ∀ x, D x = 0) ∧
+    (D0 ≠ D1) ∧
+    (⁅D0, D1⁆ = 0) ∧
+    (¬ ∃ r : Polynomial ℝ, ∀ p : Polynomial ℝ, Polynomial.derivative p = r * p - p * r) ∧
+    (InfoGeometry.Modular.LieIdeal.isInner d_ideal ∧
+      lieIdealRingDerivationEquivDerivations d_ideal ∈ modularInnerIdeal Mat2R) ∧
+    ((outerDerivationEquivSubtype.symm (outerDerivationEquivSubtype D_outer)).toLinearMap
+      (Matrix.fromBlocks matrixUnit10 (0 : Mat2R) 0 0) ≠ 0) ∧
+    ((fullLane.act (fullLie d_in)) K2_m ≠ 0) ∧
+    (cpxLane.operatorAction ⟨complexDerivationRestrictReal d_cpx_sw,
+      ⟨d_cpx_sw, rfl⟩⟩ tiltOp2 ≠ 0) := by
+  intro D0 D1 K1_m K2_m d_in d_ideal K_diag D_outer fullLie fullLane cpxLane d_cpx_sw
+  have hinner : InfoGeometry.Modular.LieIdeal.isInner d_ideal := ⟨matrixUnit01, rfl⟩
+  have hinner_mem : lieIdealRingDerivationEquivDerivations d_ideal ∈ modularInnerIdeal Mat2R :=
+    (lieIdealRingDerivation_isInner_iff d_ideal).mp hinner
+  have hfull_ne : (fullLane.act (fullLie d_in)) K2_m ≠ 0 := by
+    intro hz
+    have h01 := congrArg (fun M : Mat2R => M 0 1) hz
+    change (K1_m * K2_m - K2_m * K1_m) 0 1 = 0 at h01
+    norm_num [K1_m, K2_m, Matrix.mul_apply, Fin.sum_univ_two] at h01
+  have hcpx_ne : cpxLane.operatorAction
+      ⟨complexDerivationRestrictReal d_cpx_sw,
+        ⟨d_cpx_sw, rfl⟩⟩ tiltOp2 ≠ 0 := by
+    intro hz
+    have h01 := congrArg (fun M : GibbsOperator 2 => matrixOfOp M 0 1) hz
+    change matrixOfOp (switchOp2 * tiltOp2 - tiltOp2 * switchOp2) 0 1 = matrixOfOp (0 : GibbsOperator 2) 0 1 at h01
+    rw [matrixOfOp_sub_eq, matrixOfOp_mul_eq, matrixOfOp_mul_eq, switchOp2_mat_eq_e2e,
+      matrixOfOp_tiltOp2, matrixOfOp_zero] at h01
+    simp only [Matrix.sub_apply, Matrix.mul_apply, Fin.sum_univ_two,
+      InfoGeometry.Physics.KleinBottleSewingExact.tilt2, Matrix.of_apply,
+      Matrix.cons_val_zero, Matrix.cons_val_one, Matrix.zero_apply] at h01
+    norm_num at h01
+  have houter_ne :
+      (outerDerivationEquivSubtype.symm (outerDerivationEquivSubtype D_outer)).toLinearMap
+        (Matrix.fromBlocks matrixUnit10 (0 : Mat2R) 0 0) ≠ 0 := by
+    rw [outerDerivationEquivSubtype.symm_apply_apply]
+    intro h0
+    have hm := congrArg (fun M : Matrix (Fin 2 ⊕ Fin 2) (Fin 2 ⊕ Fin 2) ℝ => M (Sum.inl 0) (Sum.inl 0)) h0
+    change (K_diag * Matrix.fromBlocks matrixUnit10 (0 : Mat2R) (0 : Mat2R) (0 : Mat2R) -
+      Matrix.fromBlocks matrixUnit10 (0 : Mat2R) (0 : Mat2R) (0 : Mat2R) * K_diag)
+        (Sum.inl 0) (Sum.inl 0) = 0 at hm
+    dsimp [K_diag] at hm
+    rw [Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply] at hm
+    simp only [Matrix.mul_zero, zero_mul, add_zero, Matrix.fromBlocks_apply₁₁] at hm
+    have h00 : (matrixUnit01 * matrixUnit10 - matrixUnit10 * matrixUnit01 : Mat2R) 0 0 = 0 := hm
+    norm_num [matrixUnit01, matrixUnit10, Matrix.mul_apply, Fin.sum_univ_two] at h00
+  refine ⟨t1_f7_02_modularRLinearDerivations.2.2.2.2.2.2.2.2.2.2.1,
+    t1_f7_02_modularRLinearDerivations.2.2.2.2.2.2.2.2.2.2.2.1,
+    t1_f7_02_modularRLinearDerivations.2.2.2.2.2.2.2.2.2.2.2.2,
+    ?_, ?_, ?_, ⟨hinner, hinner_mem⟩, houter_ne, hfull_ne, hcpx_ne⟩
+  · intro hEq
+    have h0 := congrArg (fun D : NonAssocDerivation.derivations ℤ
+        (MvPolynomial (Fin 2) ℝ) => D.1 (MvPolynomial.X 0)) hEq
+    change (MvPolynomial.pderiv (R := ℝ) 0) (MvPolynomial.X 0) =
+      (MvPolynomial.pderiv (R := ℝ) 1) (MvPolynomial.X 0) at h0
+    simp at h0
+  · apply Subtype.ext; apply LinearMap.ext; intro p
+    have hC : ⁅(MvPolynomial.pderiv (0 : Fin 2) : Derivation ℝ (MvPolynomial (Fin 2) ℝ) (MvPolynomial (Fin 2) ℝ)),
+        (MvPolynomial.pderiv (1 : Fin 2) : Derivation ℝ (MvPolynomial (Fin 2) ℝ) (MvPolynomial (Fin 2) ℝ))⁆ = 0 := by
+      apply MvPolynomial.derivation_ext; intro k; fin_cases k <;> simp [Derivation.commutator_apply]
+    change (MvPolynomial.pderiv (R := ℝ) 0) ((MvPolynomial.pderiv (R := ℝ) 1) p) -
+      (MvPolynomial.pderiv (R := ℝ) 1) ((MvPolynomial.pderiv (R := ℝ) 0) p) = 0
+    simpa [Derivation.commutator_apply] using Derivation.congr_fun hC p
+  · rintro ⟨r, hr⟩
+    have hx := hr Polynomial.X
+    have hx' : (Polynomial.derivative : Polynomial ℝ →ₗ[ℝ] Polynomial ℝ) Polynomial.X = 1 := by simp
+    rw [hx', mul_comm r Polynomial.X, sub_self] at hx
+    exact one_ne_zero hx
+
+/-- `T5-D-02`: Non-constant alternating `adSwapHom` colimit tower via `colimitFlowExtensionToDerivation`
+and `colimitDerivationToDerivations_injective`. -/
+theorem t5_d_02_nonconstant_colimit_tower_and_injectivity :
+    let swapM : Mat2C := !![0, 1; 1, 0]
+    let adSwapHom : Mat2C →⋆ₐ[ℂ] Mat2C :=
+      { toFun := fun X => swapM * X * swapM
+        map_one' := by ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, Matrix.mul_apply, Fin.sum_univ_two]
+        map_mul' := fun X Y => by
+          have hsq : swapM * swapM = 1 := by
+            ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, Matrix.mul_apply, Fin.sum_univ_two]
+          calc swapM * (X * Y) * swapM
+              = swapM * X * (swapM * swapM) * Y * swapM := by simp only [hsq, mul_one, mul_assoc]
+            _ = (swapM * X * swapM) * (swapM * Y * swapM) := by noncomm_ring
+        map_zero' := by simp
+        map_add' := fun X Y => by simp [mul_add, add_mul]
+        commutes' := fun c => by
+          ext i j; fin_cases i <;> fin_cases j <;>
+            simp [swapM, Algebra.algebraMap_eq_smul_one, Matrix.mul_apply, Fin.sum_univ_two]
+        map_star' := fun X => by
+          have hs : star swapM = swapM := by
+            ext i j; fin_cases i <;> fin_cases j <;> simp [swapM]
+          simp [mul_assoc, hs] }
+    let K_diagC : Mat2C := !![1, 0; 0, -1]
+    let A : ℕ → Type := fun _ => Mat2C
+    let iota : (n : ℕ) → A n →⋆ₐ[ℂ] A (n + 1) := fun _ => adSwapHom
+    let psi : (n : ℕ) → A n →⋆ₐ[ℂ] Mat2C :=
+      fun n => if n % 2 = 0 then StarAlgHom.id ℂ (A n) else adSwapHom
+    have had_inv : ∀ X, adSwapHom (adSwapHom X) = X := by
+      intro X
+      have hsq : swapM * swapM = 1 := by
+        ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, Matrix.mul_apply, Fin.sum_univ_two]
+      dsimp [adSwapHom]
+      calc swapM * (swapM * X * swapM) * swapM
+          = (swapM * swapM) * X * (swapM * swapM) := by noncomm_ring
+        _ = X := by simp [hsq]
+    have psi_comm : ∀ n, (psi (n + 1)).comp (iota n) = psi n := by
+      intro n; ext X; dsimp [psi, iota]
+      rcases Nat.mod_two_eq_zero_or_one n with hn | hn
+      · have hn1 : (n + 1) % 2 = 1 := by omega
+        simp [hn, hn1, had_inv]
+      · have hn1 : (n + 1) % 2 = 0 := by omega
+        simp [hn, hn1]
+    have h_surj : ∀ X : Mat2C, ∃ (n : ℕ) (xn : A n), psi n xn = X := fun X => ⟨0, X, rfl⟩
+    let dFam : (n : ℕ) → A n →ₗ[ℂ] A n := fun n =>
+      { toFun := fun X => ((-1 : ℂ) ^ n) • (K_diagC * X - X * K_diagC)
+        map_add' := fun X Y => by rw [mul_add, add_mul, ← smul_add]; congr 1; abel
+        map_smul' := fun c X => by
+          simp only [RingHom.id_apply, Algebra.mul_smul_comm, Algebra.smul_mul_assoc,
+            smul_sub, smul_comm c ((-1 : ℂ) ^ n)] }
+    have hderiv_comm : ∀ n, (dFam (n + 1)).comp (iota n).toLinearMap =
+        (iota n).toLinearMap.comp (dFam n) := by
+      intro n; apply LinearMap.ext; intro X; dsimp [dFam, iota, adSwapHom]
+      have had_K : swapM * K_diagC * swapM = -K_diagC := by
+        ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, K_diagC, Matrix.mul_apply, Fin.sum_univ_two]
+      have hsq : swapM * swapM = 1 := by
+        ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, Matrix.mul_apply, Fin.sum_univ_two]
+      rw [pow_succ, mul_neg, mul_one, neg_smul]
+      calc -(((-1 : ℂ) ^ n) • (K_diagC * (swapM * X * swapM) - (swapM * X * swapM) * K_diagC))
+          = ((-1 : ℂ) ^ n) • ((swapM * X * swapM) * K_diagC - K_diagC * (swapM * X * swapM)) := by
+              rw [← smul_neg, neg_sub]
+        _ = ((-1 : ℂ) ^ n) • (swapM * (K_diagC * X - X * K_diagC) * swapM) := by
+              congr 1
+              rw [← neg_inj, neg_sub]
+              exact peirce_conj_odd_deriv_rev_e2e swapM K_diagC hsq had_K X
+        _ = swapM * (((-1 : ℂ) ^ n) • (K_diagC * X - X * K_diagC)) * swapM := by
+              simp [Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
+    let tFlow : InfoGeometry.Modular.ColimitFlowDerivation.TowerDerivation A iota :=
+      { deriv := dFam
+        leibniz := fun n X Y => by
+          dsimp [dFam]
+          rw [comm_leib_op_e2e K_diagC X Y, smul_add]
+          congr 1
+          · exact (Algebra.smul_mul_assoc _ _ _).symm
+          · exact (Algebra.mul_smul_comm _ _ _).symm
+        deriv_comm := hderiv_comm }
+    let δ_inf : Mat2C →ₗ[ℂ] Mat2C := dFam 0
+    have h_ext : ∀ n (x : A n),
+        δ_inf (psi n x) = InfoGeometry.Modular.ColimitFlowDerivation.liftedDeriv A iota
+          Mat2C psi tFlow n x := by
+      intro n x
+      dsimp [InfoGeometry.Modular.ColimitFlowDerivation.liftedDeriv, tFlow, δ_inf, dFam, psi]
+      rcases Nat.mod_two_eq_zero_or_one n with hn | hn
+      · have hpow : (-1 : ℂ) ^ n = 1 := by rw [show n = 2 * (n / 2) by omega, pow_mul]; norm_num
+        have hite : (if n % 2 = 0 then StarAlgHom.id ℂ (A n) else adSwapHom) = StarAlgHom.id ℂ (A n) :=
+          ite_eq_left_iff.mpr (fun h => absurd hn h)
+        rw [hite, pow_zero, one_smul, hpow, one_smul]
+        rfl
+      · have hpow : (-1 : ℂ) ^ n = -1 := by
+          rw [show n = 2 * (n / 2) + 1 by omega, pow_add, pow_mul]; norm_num
+        have had_K : swapM * K_diagC * swapM = -K_diagC := by
+          ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, K_diagC, Matrix.mul_apply, Fin.sum_univ_two]
+        have hsq : swapM * swapM = 1 := by
+          ext i j; fin_cases i <;> fin_cases j <;> simp [swapM, Matrix.mul_apply, Fin.sum_univ_two]
+        have hite : (if n % 2 = 0 then StarAlgHom.id ℂ (A n) else adSwapHom) = adSwapHom :=
+          ite_eq_right_iff.mpr (fun h => absurd h (by omega))
+        rw [hite, pow_zero, one_smul, hpow, neg_one_smul]
+        dsimp [adSwapHom]
+        rw [mul_neg, neg_mul]
+        exact peirce_conj_odd_deriv_rev_e2e swapM K_diagC hsq had_K x
+    let d_colim := colimitFlowExtensionToDerivation A iota Mat2C psi psi_comm h_surj tFlow δ_inf h_ext
+    let sys : InfoGeometry.Modular.ColimitDerivation.DirectedAlgSystem (R := ℂ) PUnit
+        (fun _ => Mat2C) :=
+      { map := fun _ => AlgHom.id ℂ _
+        map_self := fun _ _ => rfl
+        map_trans := fun {_ _ _} _ _ _ => rfl }
+    let colim : InfoGeometry.Modular.ColimitDerivation.AlgColimitCocone (R := ℂ) PUnit
+        (fun _ => Mat2C) sys Mat2C :=
+      { inr := fun _ => AlgHom.id ℂ _
+        inr_comm := fun {_ _} _ _ => rfl
+        surj_dense := fun x => ⟨PUnit.unit, x, rfl⟩
+        inr_inj := fun {_} _ _ h => ⟨PUnit.unit, le_rfl, h⟩ }
+    (d_colim.1 (!![0, 1; 0, 0] : Mat2C) ≠ 0) ∧
+    (Function.Injective (colimitDerivationToDerivations sys colim)) := by
+  intro swapM adSwapHom K_diagC A iota psi had_inv psi_comm h_surj dFam hderiv_comm
+    tFlow δ_inf h_ext d_colim sys colim
+  refine ⟨?_, colimitDerivationToDerivations_injective sys colim (fun _ _ _ h => h)⟩
+  intro hz
+  have hval : d_colim.1 (!![0, 1; 0, 0] : Mat2C) = !![0, 2; 0, 0] := by
+    change δ_inf !![0, 1; 0, 0] = !![0, 2; 0, 0]
+    dsimp [δ_inf, dFam]
+    rw [pow_zero, one_smul]
+    ext i j
+    rw [Matrix.sub_apply, Matrix.mul_apply, Matrix.mul_apply, Fin.sum_univ_two, Fin.sum_univ_two]
+    fin_cases i <;> fin_cases j <;> (simp [K_diagC]; try norm_num)
+  rw [hval] at hz
+  have h01 := congrArg (fun M : Mat2C => M 0 1) hz
+  simp at h01
+
+/-- `T5-D-03`: Gap D `OpDerivation` (`OpZorn`), `LinearG2Derivation`, `ZornMatrixCarrier`,
+`g2EntrywiseActionLane`, `compatibleG2H3ZornDerivationLane`, `oddSuperderivationEvenBimoduleHom`,
+`superAnticommLinearEvenRestrict`, and genuine `deg = 1` `GradedBraidedDerivation` via
+`oddTwistSuperderivationToGradedBraided` asserting `-1` braided Leibniz sign and non-trivial `≠`. -/
+theorem t5_d_03_opzorn_and_nontrivial_graded_braided :
+    let opK : FiniteOperatorAlgebra 2 := Complex.I • switchOp2
+    let D_opZ : OpDerivation (FiniteHilbertSpace 2) := opZornCommDeriv_e2e opK
+    let X0 : OpZorn (FiniteHilbertSpace 2) := { a := tiltOp2, u := 0, v := 0, b := 0 }
+    let D_c := opDerivationEquivComplexDerivations D_opZ
+    let D_r := opDerivationToRealDerivations D_opZ
+    let d_lin_g2 : LinearG2Derivation ℝ :=
+      { toFun := fun u => ![0, u 3, 0, -u 1, -u 5, u 4, 0]
+        map_add := fun u v => by ext i; fin_cases i <;> simp <;> ring
+        map_sub := fun u v => by ext i; fin_cases i <;> simp <;> ring
+        leibniz := fun u v => by
+          funext i; fin_cases i <;>
+            · dsimp [InfoGeometry.Algebra.Zorn.G2DerivationLieAlgebra.crossProd]; ring
+        map_smul := fun r u => by ext i; fin_cases i <;> simp }
+    let d_zm : InfoGeometry.Canonical.G2ToBraidChain.G2Derivation :=
+      ⟨InfoGeometry.Lie.BaezG2SplitOctonion.rot01G2Derivation.1,
+        InfoGeometry.Lie.BaezG2SplitOctonion.rot01G2Derivation.2⟩
+    let d_zm_ent := g2ToBraidDerivationEquivCanonicalZorn d_zm
+    let d_zm_carrier := canonicalZornDerivationsEquivCarrier d_zm_ent
+    let g2EntLane := g2EntrywiseActionLane
+    let compatLane := compatibleG2H3ZornDerivationLane
+    let X_zm : InfoGeometry.Canonical.ZornMatrix ℝ := ⟨0, 0, Pi.single 0 1, 0⟩
+    let X_h3 : InfoGeometry.Algebra.H3Zorn ℝ :=
+      ⟨0, 0, 0, InfoGeometry.Algebra.ZornVectorMatrix.U 0, 0, 0⟩
+    let S_p : FiniteOperatorAlgebra 2 := invS P_d63.1
+    let hS_sq : S_p * S_p = 1 := invS_sq_eq_one _ P_d63.property
+    let d_lin := d_odd_lin_e2e S_p
+    let hd_odd : IsOddTwistSuperderivationLinear ℝ S_p d_lin :=
+      ⟨fun a b => odd_twist_leibniz_e2e S_p tiltOp2 a b hS_sq,
+       fun a => odd_twist_anticomm_e2e S_p tiltOp2 a hS_sq tiltOp2_twist_neg_e2e⟩
+    let d_even_bimod := oddSuperderivationEvenBimoduleHom hS_sq hd_odd
+    let d_even_rest := superAnticommLinearEvenRestrict hS_sq hd_odd hd_odd
+    let d_odd_gb := oddTwistSuperderivationToGradedBraided hS_sq d_lin hd_odd
+    (D_c.1 ⟨X0⟩ ≠ 0) ∧
+    (D_r.1 ⟨X0⟩ = D_c.1 ⟨X0⟩) ∧
+    ((linearG2DerivationEquivDerivations ℝ d_lin_g2 : Module.End ℝ (CrossProdCarrier ℝ)) ⟨Pi.single 3 1⟩ ≠ 0) ∧
+    ((d_zm_carrier : Module.End ℝ ZornMatrixCarrier) ⟨X_zm⟩ ≠ 0) ∧
+    (g2EntLane.operatorAction d_zm_ent X_h3 ≠ 0) ∧
+    (Function.Injective compatLane.act ∧
+      compatLane.operatorAction 0 InfoGeometry.Algebra.h3_diag₁ = 0) ∧
+    (∀ x y : evenSubring S_p hS_sq,
+      (d_even_bimod (x * y) : FiniteOperatorAlgebra 2) =
+        (d_even_bimod x : FiniteOperatorAlgebra 2) * y.1 +
+          x.1 * (d_even_bimod y : FiniteOperatorAlgebra 2)) ∧
+    ((d_even_rest : Module.End ℝ (evenSubalgebra ℝ S_p hS_sq))
+      ⟨1, by change S_p * 1 * S_p = 1; rw [mul_one, hS_sq]⟩ = 0) ∧
+    (d_odd_gb.deg = 1) ∧
+    (d_odd_gb tiltOp2 ≠ 0) ∧
+    (∀ b : FiniteOperatorAlgebra 2,
+      d_odd_gb (tiltOp2 * b) = d_odd_gb tiltOp2 * b + (-1 : ℝ) • (tiltOp2 * d_odd_gb b)) ∧
+    ((-1 : ℝ) • (tiltOp2 * d_odd_gb tiltOp2) ≠ tiltOp2 * d_odd_gb tiltOp2) := by
+  intro opK D_opZ X0 D_c D_r d_lin_g2 d_zm d_zm_ent d_zm_carrier g2EntLane compatLane X_zm X_h3
+    S_p hS_sq d_lin hd_odd d_even_bimod d_even_rest d_odd_gb
+  have hX0_nz : D_c.1 ⟨X0⟩ ≠ 0 := by
+    intro hz
+    have ha := congrArg (fun Z : OpZornCarrier (FiniteHilbertSpace 2) => Z.val.a) hz
+    change opK * tiltOp2 - tiltOp2 * opK = 0 at ha
+    have h01 := congrArg (fun T : FiniteOperatorAlgebra 2 => matrixOfOp T 0 1) ha
+    have hval : matrixOfOp (opK * tiltOp2 - tiltOp2 * opK) 0 1 = -2 * Complex.I := by
+      rw [matrixOfOp_sub_eq, matrixOfOp_mul_eq, matrixOfOp_mul_eq]
+      dsimp [opK]
+      rw [matrixOfOp_complex_smul, switchOp2_mat_eq_e2e, matrixOfOp_tiltOp2]
+      simp [Matrix.mul_apply, Fin.sum_univ_two, InfoGeometry.Physics.KleinBottleSewingExact.tilt2]
+      ring
+    rw [h01, matrixOfOp_zero] at hval
+    have h2 : (-2 : ℂ) * Complex.I = 0 := hval.symm
+    exact Complex.I_ne_zero ((mul_eq_zero.mp h2).resolve_left (by norm_num))
+  have hg2_nz : (linearG2DerivationEquivDerivations ℝ d_lin_g2 :
+      Module.End ℝ (CrossProdCarrier ℝ)) ⟨Pi.single 3 1⟩ ≠ 0 := by
+    intro h0
+    have hc := congrArg (fun x : CrossProdCarrier ℝ => x.val 1) h0
+    simp [linearG2DerivationEquivDerivations, linearG2DerivationToEnd, d_lin_g2] at hc
+  have hzm_nz : (d_zm_carrier : Module.End ℝ ZornMatrixCarrier) ⟨X_zm⟩ ≠ 0 := by
+    intro h0
+    have hv := congrArg (fun Z : ZornMatrixCarrier => Z.val.x 1) h0
+    change (d_zm_ent.1 X_zm).x 1 = 0 at hv
+    dsimp [d_zm_ent, g2ToBraidDerivationEquivCanonicalZorn, d_zm, X_zm] at hv
+    simp [InfoGeometry.Lie.BaezG2SplitOctonion.rot01G2Derivation,
+      InfoGeometry.Lie.RealSplitOctonionDerivation.rot01Linear,
+      InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real] at hv
+  have hg2_ent_nz : g2EntLane.operatorAction d_zm_ent X_h3 ≠ 0 := by
+    intro h0
+    have ha := congrArg (fun M : InfoGeometry.Algebra.H3Zorn ℝ => M.a.v 1) h0
+    change (InfoGeometry.Lie.CanonicalZornDerivation.canonicalToVectorDerivation d_zm_ent
+      (InfoGeometry.Algebra.ZornVectorMatrix.U 0)).v 1 = 0 at ha
+    dsimp [InfoGeometry.Lie.CanonicalZornDerivation.canonicalToVectorDerivation,
+      InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge.canonicalVectorEquiv,
+      d_zm_ent, g2ToBraidDerivationEquivCanonicalZorn, d_zm] at ha
+    simp [InfoGeometry.Lie.BaezG2SplitOctonion.rot01G2Derivation,
+      InfoGeometry.Lie.RealSplitOctonionDerivation.rot01Linear,
+      InfoGeometry.Lie.RealSplitOctonionDerivationWitness.rot01Real,
+      InfoGeometry.Algebra.ZornVectorMatrix.U,
+      InfoGeometry.Algebra.ZornVec3.basis] at ha
+  have hT_odd : tiltOp2 ∈ peirceZMod2Grade S_p hS_sq 1 := tiltOp2_twist_neg_e2e
+  have htsq : tiltOp2 * tiltOp2 = 1 := by
+    apply matrixOfOp_injective
+    rw [matrixOfOp_mul_eq, matrixOfOp_one_eq, matrixOfOp_tiltOp2]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [Matrix.mul_apply, Fin.sum_univ_two, InfoGeometry.Physics.KleinBottleSewingExact.tilt2]
+  have hd_tilt : d_odd_gb tiltOp2 = (2 : ℝ) • 1 := by
+    change tiltOp2 * tiltOp2 - twist S_p tiltOp2 * tiltOp2 = (2 : ℝ) • 1
+    have hneg_t : (-tiltOp2) * tiltOp2 = -(tiltOp2 * tiltOp2) := ContinuousLinearMap.ext fun v => by
+      change (-tiltOp2) (tiltOp2 v) = -(tiltOp2 (tiltOp2 v)); simp
+    rw [tiltOp2_twist_neg_e2e, hneg_t, sub_neg_eq_add, htsq, ← two_smul ℝ (1 : FiniteOperatorAlgebra 2)]
+  refine ⟨hX0_nz, rfl, hg2_nz, hzm_nz, hg2_ent_nz, ⟨compatLane.faithful, by simp [compatLane]⟩,
+    fun x y => oddSuperderivation_even_bimodule_leibniz hS_sq hd_odd x y,
+    ?_, rfl, ?_, ?_, ?_⟩
+  · apply Subtype.ext
+    change d_lin (d_lin 1) + d_lin (d_lin 1) = 0
+    have h1 : d_lin 1 = 0 := by
+      change tiltOp2 * 1 - twist S_p 1 * tiltOp2 = 0
+      have htw : twist S_p 1 = 1 := by change S_p * 1 * S_p = 1; rw [mul_one, hS_sq]
+      rw [htw, mul_one, one_mul, sub_self]
+    rw [h1, map_zero, add_zero]
+  · intro hz
+    rw [hd_tilt] at hz
+    have h00 := congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M 0 0) hz
+    rw [real_smul_eq_complex_smul, matrixOfOp_complex_smul, matrixOfOp_one_eq, matrixOfOp_zero,
+      Matrix.smul_apply, Matrix.one_apply_eq, smul_eq_mul, mul_one] at h00
+    norm_num at h00
+  · intro b
+    have hg := d_odd_gb.leibniz_graded 1 tiltOp2 hT_odd b
+    have hdeg : d_odd_gb.deg = 1 := rfl
+    rw [hdeg, zmod2SignBicharacter_1_1] at hg
+    exact hg
+  · rw [hd_tilt]
+    intro hsame
+    have h00 := congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M 0 0) hsame
+    change matrixOfOp ((-1 : ℝ) • (tiltOp2 * ((2 : ℝ) • (1 : FiniteOperatorAlgebra 2)))) 0 0 =
+      matrixOfOp (tiltOp2 * ((2 : ℝ) • (1 : FiniteOperatorAlgebra 2))) 0 0 at h00
+    rw [real_smul_eq_complex_smul, matrixOfOp_complex_smul, matrixOfOp_mul_eq,
+      real_smul_eq_complex_smul, matrixOfOp_complex_smul, matrixOfOp_one_eq, matrixOfOp_tiltOp2,
+      Matrix.smul_apply, Matrix.mul_smul, Matrix.mul_one, Matrix.smul_apply, smul_eq_mul, smul_eq_mul] at h00
+    norm_num [InfoGeometry.Physics.KleinBottleSewingExact.tilt2] at h00
+
+/-- `T5-B-01`: Gap B odd-parity `ε = -1` (`finiteGibbsCEParityOnsagerSystem_of_parity`),
+`Aut`/`AdGamma`/`Conj` Erlangen data (`gibbsNOperatorFamilyAutErlangenDatum`,
+`gibbsNOperatorFamilyAdGammaErlangenDatum`, `gibbsNOperatorFamilyConjErlangenDatum`),
+`frechetFormParityOnsagerPairing` + `frechetFormParityOnsagerPairingOfAut`,
+`logPartitionOneForm_finiteGibbs_aut_unification` + `_star_unification_reversible_eq_zero`,
+`centeredBKMOnsagerFormPairing_ofDomainOrbit`, and `centeredBKMOnsagerFormPairing_ofWeightedValueParity`. -/
+theorem t5_b_01_oddParity_erlangenAut_frechetFormPairing :
+    let D := faithfulGibbsDensity H_d63 hH_d63_sa hZ_d63_pos
+    let hpow := continuous_faithfulGibbsDensity_rpow H_d63 hH_d63_sa hZ_d63_pos
+    let PS_odd := finiteGibbsCEParityOnsagerSystem_of_parity H_d63 hH_d63_sa hZ_d63_pos
+      Q_odd B_tilt (Or.inr rfl) (by rw [hQ_odd_anti]; apply ContinuousLinearMap.ext; intro v; simp) hB_tilt_sa
+    let d1 := innerDerivation tiltOp2
+    let d2 := innerDerivation (tiltOp2 * switchOp2)
+    let a : Fin 2 → GibbsOperator 2 := ![A_swap, B_tilt]
+    let ha_conj : ∀ i, conjStarAlgEquiv 2 (a i) = a i := fun i => by
+      fin_cases i
+      · exact conjStarAlgEquiv_A_swap
+      · exact conjStarAlgEquiv_B_tilt
+    let hH_conj : conjStarAlgEquiv 2 H_d63 = H_d63 := by
+      apply matrixOfOp_injective
+      rw [conjStarAlgEquiv_apply, conjOpFun, matrixOfOp_H_d63, matrixOfOp_matrixOp]
+      ext j k; fin_cases j <;> fin_cases k <;> simp [Matrix.map_apply, d63TiltedAmplitude]
+    let hZ_tilt : 0 < gibbsPartitionReal tiltOp2 :=
+      tracedExponential_re_pos_of_isSelfAdjoint tiltOp2 tiltOp2_isSelfAdjoint
+    let ha_tilt : ∀ i : Fin 2, conjStarAlgEquiv 2 (![switchOp2, tiltOp2] i) = ![switchOp2, tiltOp2] i := fun i => by
+      fin_cases i; exact conj_switchOp2; exact conj_tiltOp2
+    let hQ_tilt_anti : conjStarAlgEquiv 2 (Complex.I • tiltOp2) = -(Complex.I • tiltOp2) :=
+      conjStarAlgEquiv_purelyImaginary_odd tiltOp2 conj_tiltOp2
+    let datum_aut := gibbsNOperatorFamilyAutErlangenDatum (G := Unit)
+      (conjStarAlgEquiv 2) (conjStarAlgEquiv_involutive (n := 2))
+      tiltOp2 tiltOp2_isSelfAdjoint hZ_tilt conj_tiltOp2 (conjStarAlgEquiv_trace_re (n := 2))
+      ![switchOp2, tiltOp2] ha_tilt ![1, 2] (Complex.I • tiltOp2) hQ_tilt_anti
+    let datum_adG := gibbsNOperatorFamilyAdGammaErlangenDatum (G := Unit)
+      tiltOp2 tiltOp2_isSelfAdjoint tiltOp2_sq
+      tiltOp2 tiltOp2_isSelfAdjoint hZ_tilt (Commute.refl tiltOp2)
+      (fun _ : Fin 1 => tiltOp2) (fun _ => Commute.refl tiltOp2) ![1] switchOp2
+      (by
+        apply matrixOfOp_injective
+        rw [matrixOfOp_mul_eq, matrixOfOp_neg_eq, matrixOfOp_mul_eq,
+          switchOp2_mat_eq_e2e, matrixOfOp_tiltOp2]
+        ext i j; fin_cases i <;> fin_cases j <;>
+          simp [Matrix.mul_apply, Fin.sum_univ_two, InfoGeometry.Physics.KleinBottleSewingExact.tilt2])
+    let datum_conj := gibbsNOperatorFamilyConjErlangenDatum (G := Unit) H_d63 hH_d63_sa hZ_d63_pos
+      hH_conj a ha_conj ![1, 2] Q_odd
+      (by rw [Q_odd, ← switchOp2_eq_A_swap]; exact conjStarAlgEquiv_purelyImaginary_odd switchOp2 conj_switchOp2)
+    let K_vf := frechetVectorFieldDerivationLane ℝ (GibbsOperator 2)
+    let V1 := frechetVectorFieldFromComplex (innerFrechetComplexDeriv (tiltOp2 * switchOp2))
+    let V2 := frechetVectorFieldFromComplex (innerFrechetComplexDeriv switchOp2)
+    let PP_fr := frechetFormParityOnsagerPairing D hpow tiltOp2 tiltOp2_isSelfAdjoint tiltOp2 ![V1, V2]
+    let PP_fr_aut := frechetFormParityOnsagerPairingOfAut (conjStarAlgEquiv 2)
+      (conjStarAlgEquiv_involutive (n := 2)) D hpow
+      (aut_faithfulGibbsDensity_rho (conjStarAlgEquiv 2) H_d63 hH_d63_sa hZ_d63_pos hH_conj)
+      (conjStarAlgEquiv_trace_re (n := 2)) Q_odd
+      (by rw [Q_odd, ← switchOp2_eq_A_swap]; exact conjStarAlgEquiv_purelyImaginary_odd switchOp2 conj_switchOp2)
+      H_d63 ![V1, V2]
+    let ω := smoothLeftMulOneForm 2
+    let hω := contDiff_smoothLeftMulOneForm 2
+    let dω := frechetFormToCEForm 2 (frechetExtDerivReal ω) (contDiff_frechetExtDerivK hω)
+    let D1_unif := innerFrechetComplexDeriv (Complex.I • tiltOp2)
+    let D2_unif := innerFrechetComplexDeriv (Complex.I • tiltOp2 + tiltOp2 * switchOp2)
+    let PS_aut_u := finiteGibbsCEParityOnsagerSystemOfAut (conjStarAlgEquiv 2)
+      (conjStarAlgEquiv_involutive (n := 2)) H_d63 hH_d63_sa hZ_d63_pos hH_conj
+      (conjStarAlgEquiv_trace_re (n := 2)) switchOp2 Q_odd conj_switchOp2
+      (by rw [Q_odd, ← switchOp2_eq_A_swap]; exact conjStarAlgEquiv_purelyImaginary_odd switchOp2 conj_switchOp2)
+    let PP_dom := centeredBKMOnsagerFormPairing_ofDomainOrbit D hpow B_tilt ![d1, d2]
+    let PP_wt := centeredBKMOnsagerFormPairing_ofWeightedValueParity D hpow B_tilt hB_tilt_sa
+      ![1, 2] (fun i => by fin_cases i <;> norm_num) (fun _ => ![d1, d2])
+    let ω_ce : DerivationOperatorForm (realDerivationsLane (GibbsOperator 2)) 2 :=
+      twoCochainEquivDerivationOperatorForm (realDerivationsLane (GibbsOperator 2))
+        (connectionCurvature (realDerivationsLane (GibbsOperator 2))
+          (exteriorDerivativeZero (realDerivationsLane (GibbsOperator 2)) A_swap))
+    PS_odd.dissipative (PS_odd.T.op d1) (PS_odd.T.op d2) = PS_odd.dissipative d1 d2 ∧
+      PS_odd.reversible (PS_odd.T.op d1) (PS_odd.T.op d2) = -PS_odd.reversible d1 d2 ∧
+      PS_odd.dissipative d1 d1 ≠ 0 ∧
+      PS_odd.reversible d1 d2 ≠ 0 ∧
+      HasJReciprocity datum_aut.onsagerPairing
+        (familyTimeReversal 2 (autDerivationTimeReversal (conjStarAlgEquiv 2)
+          (conjStarAlgEquiv_involutive (n := 2)))).op ∧
+      HasJReciprocity datum_adG.onsagerPairing
+        (familyTimeReversal 1 (autDerivationTimeReversal (adGammaStarAlgEquiv tiltOp2 tiltOp2_isSelfAdjoint tiltOp2_sq)
+          (adGammaStarAlgEquiv_involutive tiltOp2 tiltOp2_isSelfAdjoint tiltOp2_sq))).op ∧
+      HasJReciprocity datum_conj.onsagerPairing
+        (familyTimeReversal 2 (autDerivationTimeReversal (conjStarAlgEquiv 2)
+          (conjStarAlgEquiv_involutive (n := 2)))).op ∧
+      0 < PP_fr.totalGenerator dω dω ∧
+      PP_fr.totalGenerator (PP_fr.T.op dω) (PP_fr.T.op dω) =
+        PP_fr.totalGenerator (ceExteriorDerivative K_vf 1 (frechetFormToCEForm 1 ω hω))
+          (ceExteriorDerivative K_vf 1 (frechetFormToCEForm 1 ω hω)) ∧
+      PP_fr_aut.totalGenerator (PP_fr_aut.T.op dω) (PP_fr_aut.T.op dω) = PP_fr_aut.totalGenerator dω dω ∧
+      (secondFDerivLogPartitionReadout H_d63
+          (finiteCEOperatorForm 2 switchOp2 (finiteCEFrechetDirection D1_unif))
+          (finiteCEOperatorForm 2 switchOp2 (finiteCEFrechetDirection D2_unif))).re =
+        PS_aut_u.dissipative (finiteCEFrechetDirection D1_unif) (finiteCEFrechetDirection D2_unif) ∧
+      (finiteGibbsCEParityOnsagerSystem H_d63 hH_d63_sa hZ_d63_pos A_swap B_tilt hA_swap_sa hB_tilt_sa).reversible
+        (finiteCEFrechetDirection D1_unif) (finiteCEFrechetDirection D1_unif) = 0 ∧
+      PP_dom.totalGenerator (PP_dom.T.op ω_ce) (PP_dom.T.op ω_ce) = PP_dom.totalGenerator ω_ce ω_ce ∧
+      PP_wt.totalGenerator (PP_wt.T.op ω_ce) (PP_wt.T.op ω_ce) = PP_wt.totalGenerator ω_ce ω_ce := by
+  intro D hpow PS_odd d1 d2 a ha_conj hH_conj hZ_tilt ha_tilt hQ_tilt_anti
+    datum_aut datum_adG datum_conj K_vf V1 V2 PP_fr PP_fr_aut ω hω dω D1_unif D2_unif
+    PS_aut_u PP_dom PP_wt ω_ce
+  have hd11_ne : PS_odd.dissipative d1 d1 ≠ 0 := by
+    change centeredCEBKMForm D hpow Q_odd d1 d1 ≠ 0
+    rw [centeredCEBKMForm_apply, centeredBKMRealCovariance_self, D.bkmRealBilinForm_apply]
+    apply ne_of_gt
+    apply D.kuboMoriPairing_self_re_pos _ hpow
+    intro h0
+    have hmem := (centeredStatistic_eq_zero_iff D hpow _).mp h0
+    obtain ⟨r, hr⟩ := Submodule.mem_span_singleton.mp hmem
+    have hm := congrArg (fun M : GibbsOperator 2 => matrixOfOp M 0 1) hr
+    change matrixOfOp (r • (1 : GibbsOperator 2)) 0 1 =
+      matrixOfOp (tiltOp2 * Q_odd - Q_odd * tiltOp2) 0 1 at hm
+    rw [matrixOfOp_real_smul, matrixOfOp_one_eq, matrixOfOp_sub_eq, matrixOfOp_mul_eq,
+      matrixOfOp_mul_eq, Q_odd, matrixOfOp_complex_smul, matrixOfOp_tiltOp2, matrixOfOp_A_swap] at hm
+    dsimp only [Matrix.smul_apply, Matrix.sub_apply, Matrix.mul_apply, smul_eq_mul] at hm
+    simp only [Fin.sum_univ_two, InfoGeometry.Physics.KleinBottleSewingExact.tilt2, swapMatrix] at hm
+    have hm' := congrArg Complex.im hm
+    norm_num at hm'
+  have hrev12_ne : PS_odd.reversible d1 d2 ≠ 0 := by
+    change ceCurvatureBKMProbeForm D hpow Q_odd B_tilt d1 d2 ≠ 0
+    rw [ceCurvatureBKMProbeForm_apply]
+    have hcurv :
+        connectionCurvature (realDerivationsLane (GibbsOperator 2))
+          (exteriorDerivativeZero (realDerivationsLane (GibbsOperator 2)) Q_odd) d1 d2 =
+          (8 : ℝ) • A_swap := by
+      rw [connectionCurvature, exteriorDerivativeOne_exteriorDerivativeZero, zero_add]
+      change d1.1 Q_odd * d2.1 Q_odd -
+        d2.1 Q_odd * d1.1 Q_odd = (8 : ℝ) • A_swap
+      have hsw_t : switchOp2 * tiltOp2 = -(tiltOp2 * switchOp2) := by
+        rw [tiltOp2_switchOp2_anticomm, neg_neg]
+      have hd1Q : d1.1 Q_odd = (2 * Complex.I) • (tiltOp2 * switchOp2) := by
+        change tiltOp2 * Q_odd - Q_odd * tiltOp2 = _
+        rw [Q_odd, ← switchOp2_eq_A_swap, smul_mul_assoc, mul_smul_comm,
+          hsw_t, smul_neg, sub_neg_eq_add, ← two_smul ℂ (Complex.I • (tiltOp2 * switchOp2)),
+          smul_smul]
+      have hd2Q : d2.1 Q_odd = (2 * Complex.I) • tiltOp2 := by
+        change (tiltOp2 * switchOp2) * Q_odd - Q_odd * (tiltOp2 * switchOp2) = _
+        rw [Q_odd, ← switchOp2_eq_A_swap, smul_mul_assoc, mul_smul_comm]
+        have ht1 : (tiltOp2 * switchOp2) * switchOp2 = tiltOp2 := by
+          rw [mul_assoc, switchOp2_sq, mul_one]
+        have ht2 : switchOp2 * (tiltOp2 * switchOp2) = -tiltOp2 := by
+          have hop : (-(tiltOp2 * switchOp2)) * switchOp2 = -((tiltOp2 * switchOp2) * switchOp2) :=
+            ContinuousLinearMap.ext fun v => by change (-(tiltOp2 * switchOp2)) (switchOp2 v) = _; simp
+          rw [← mul_assoc, hsw_t, hop, mul_assoc, switchOp2_sq, mul_one]
+        rw [ht1, ht2, smul_neg, sub_neg_eq_add, ← two_smul ℂ (Complex.I • tiltOp2), smul_smul]
+      rw [hd1Q, hd2Q, smul_mul_assoc, mul_smul_comm, smul_mul_assoc, mul_smul_comm,
+        smul_smul, smul_smul]
+      have h1 : (tiltOp2 * switchOp2) * tiltOp2 = -switchOp2 := by
+        have hop : tiltOp2 * (-(tiltOp2 * switchOp2)) = -(tiltOp2 * (tiltOp2 * switchOp2)) :=
+          ContinuousLinearMap.ext fun v => by simp
+        rw [mul_assoc, hsw_t, hop, ← mul_assoc, tiltOp2_sq, one_mul]
+      have h2 : tiltOp2 * (tiltOp2 * switchOp2) = switchOp2 := by
+        rw [← mul_assoc, tiltOp2_sq, one_mul]
+      have hI2 : (2 * Complex.I) * (2 * Complex.I) = (-4 : ℂ) := by
+        calc (2 * Complex.I) * (2 * Complex.I) = 4 * (Complex.I * Complex.I) := by ring
+          _ = 4 * (-1) := by rw [Complex.I_mul_I]
+          _ = -4 := by norm_num
+      rw [h1, h2, hI2]
+      apply ContinuousLinearMap.ext; intro v
+      simp only [_root_.sub_apply, _root_.neg_apply, _root_.smul_apply,
+        real_smul_eq_complex_smul, ← switchOp2_eq_A_swap]
+      module
+    rw [hcurv, (D.bkmRealBilinForm hpow).map_smul, LinearMap.smul_apply, smul_eq_mul]
+    exact mul_ne_zero (by norm_num) (ne_of_gt bkm_H_d63_A_swap_B_tilt_pos)
+  have h_sa_comm : ∀ (U : GibbsOperator 2) (hU : IsSelfAdjoint U),
+      IsSelfAdjoint ((Complex.I • tiltOp2) * U - U * (Complex.I • tiltOp2)) := fun U hU =>
+    star_I_comm_e2e tiltOp2 U tiltOp2_isSelfAdjoint hU
+  have hD1_conj : IsSelfAdjoint (finiteGibbsCEFamilyNOperatorReadoutLinear a ![1, 2]
+      (finiteCEFrechetFamilyDirection ![innerFrechetComplexDeriv (Complex.I • tiltOp2),
+        innerFrechetComplexDeriv (Complex.I • tiltOp2)])) := by
+    change IsSelfAdjoint (∑ i : Fin 2, (![1, 2] : Fin 2 → ℝ) i •
+      finiteCEOperatorForm 2 (a i) (finiteCEFrechetDirection
+        (![innerFrechetComplexDeriv (Complex.I • tiltOp2),
+          innerFrechetComplexDeriv (Complex.I • tiltOp2)] i)))
+    rw [Fin.sum_univ_two]
+    exact isSelfAdjoint_add_op
+      (isSelfAdjoint_real_smul _ _ (h_sa_comm A_swap hA_swap_sa))
+      (isSelfAdjoint_real_smul _ _ (h_sa_comm B_tilt hB_tilt_sa))
+  have hconj := gibbsNOperatorFamilyConjErlangenDatum_reciprocity_and_hessian (G := Unit)
+    H_d63 hH_d63_sa hZ_d63_pos hH_conj a ha_conj ![1, 2] Q_odd
+    (by rw [Q_odd, ← switchOp2_eq_A_swap]; exact conjStarAlgEquiv_purelyImaginary_odd switchOp2 conj_switchOp2)
+    ![innerFrechetComplexDeriv (Complex.I • tiltOp2), innerFrechetComplexDeriv (Complex.I • tiltOp2)]
+    ![innerFrechetComplexDeriv (Complex.I • tiltOp2), innerFrechetComplexDeriv (Complex.I • tiltOp2)]
+    hD1_conj
+  have hfr_rec := frechetExtDerivReal_parityOnsager_reciprocity D hpow tiltOp2 tiltOp2_isSelfAdjoint
+    tiltOp2 ![V1, V2] ω ω hω hω
+  have hfr_pos : 0 < PP_fr.totalGenerator dω dω := by
+    rw [frechetFormParityOnsagerPairing_totalGenerator]
+    change 0 < centeredBKMRealCovariance D hpow ((dω ![V1, V2]) tiltOp2) ((dω ![V1, V2]) tiltOp2) +
+      commutatorBKMProbeForm D hpow tiltOp2 ((dω ![V1, V2]) tiltOp2) ((dω ![V1, V2]) tiltOp2)
+    rw [commutatorBKMProbeForm_apply, sub_self, map_zero, LinearMap.zero_apply, add_zero,
+      centeredBKMRealCovariance_self, D.bkmRealBilinForm_apply]
+    apply D.kuboMoriPairing_self_re_pos _ hpow
+    intro h0
+    have hmem := (centeredStatistic_eq_zero_iff D hpow _).mp h0
+    obtain ⟨r, hr⟩ := Submodule.mem_span_singleton.mp hmem
+    have hdiag := congrArg (fun M : GibbsOperator 2 => matrixOfOp M 0 0 - matrixOfOp M 1 1) hr
+    have hr0 : matrixOfOp (r • (1 : GibbsOperator 2)) 0 0 - matrixOfOp (r • (1 : GibbsOperator 2)) 1 1 = 0 := by
+      rw [matrixOfOp_real_smul, matrixOfOp_one_eq]; simp
+    have hv : (fun i => (![V1, V2] i).toDerivation tiltOp2) =
+        ![(tiltOp2 * switchOp2) * tiltOp2 - tiltOp2 * (tiltOp2 * switchOp2),
+          switchOp2 * tiltOp2 - tiltOp2 * switchOp2] := by
+      ext i; fin_cases i <;> rfl
+    have hdw : (dω ![V1, V2]) tiltOp2 =
+        ((tiltOp2 * switchOp2) * tiltOp2 - tiltOp2 * (tiltOp2 * switchOp2)) *
+            (switchOp2 * tiltOp2 - tiltOp2 * switchOp2) -
+          (switchOp2 * tiltOp2 - tiltOp2 * switchOp2) *
+            ((tiltOp2 * switchOp2) * tiltOp2 - tiltOp2 * (tiltOp2 * switchOp2)) := by
+      change frechetExtDerivReal ω tiltOp2 (fun i => (![V1, V2] i).toDerivation tiltOp2) = _
+      rw [hv, frechetExtDerivReal_smoothLeftMulOneForm]
+    rw [hr0, hdw, matrixOfOp_sub_eq, matrixOfOp_mul_eq, matrixOfOp_mul_eq, matrixOfOp_sub_eq,
+      matrixOfOp_mul_eq, matrixOfOp_mul_eq, matrixOfOp_sub_eq, matrixOfOp_mul_eq,
+      matrixOfOp_mul_eq, matrixOfOp_mul_eq, matrixOfOp_tiltOp2, switchOp2_mat_eq_e2e] at hdiag
+    dsimp only [Matrix.sub_apply, Matrix.mul_apply] at hdiag
+    simp only [Fin.sum_univ_two, InfoGeometry.Physics.KleinBottleSewingExact.tilt2] at hdiag
+    norm_num at hdiag
+  have hA1_u : IsSelfAdjoint (finiteCEOperatorForm 2 switchOp2 (finiteCEFrechetDirection D1_unif)) := by
+    change IsSelfAdjoint ((Complex.I • tiltOp2) * switchOp2 - switchOp2 * (Complex.I • tiltOp2))
+    exact h_sa_comm switchOp2 switchOp2_isSelfAdjoint
+  have hA2_u : IsSelfAdjoint (finiteCEOperatorForm 2 switchOp2 (finiteCEFrechetDirection D2_unif)) := by
+    have hsw_sq : switchOp2 * switchOp2 = 1 := by
+      apply matrixOfOp_injective
+      rw [matrixOfOp_mul_eq, matrixOfOp_one_eq, switchOp2_mat_eq_e2e]
+      ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+    have hsw_t : switchOp2 * tiltOp2 = -(tiltOp2 * switchOp2) := by
+      apply matrixOfOp_injective
+      rw [matrixOfOp_mul_eq, matrixOfOp_neg_eq, matrixOfOp_mul_eq, switchOp2_mat_eq_e2e, matrixOfOp_tiltOp2]
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [Matrix.mul_apply, Fin.sum_univ_two, InfoGeometry.Physics.KleinBottleSewingExact.tilt2]
+    have hsplit : (Complex.I • tiltOp2 + tiltOp2 * switchOp2) * switchOp2 -
+        switchOp2 * (Complex.I • tiltOp2 + tiltOp2 * switchOp2) =
+        ((Complex.I • tiltOp2) * switchOp2 - switchOp2 * (Complex.I • tiltOp2)) +
+        ((tiltOp2 * switchOp2) * switchOp2 - switchOp2 * (tiltOp2 * switchOp2)) := by
+      rw [add_mul, mul_add]
+      abel
+    have hterm : (tiltOp2 * switchOp2) * switchOp2 - switchOp2 * (tiltOp2 * switchOp2) =
+        (2 : ℝ) • tiltOp2 := by
+      have hneg_ts : (-(tiltOp2 * switchOp2)) * switchOp2 = -((tiltOp2 * switchOp2) * switchOp2) :=
+        ContinuousLinearMap.ext fun v => by change (-(tiltOp2 * switchOp2)) (switchOp2 v) = _; simp
+      rw [mul_assoc, hsw_sq, mul_one, ← mul_assoc, hsw_t, hneg_ts, mul_assoc, hsw_sq, mul_one,
+        sub_neg_eq_add, ← two_smul ℝ tiltOp2]
+    change IsSelfAdjoint ((Complex.I • tiltOp2 + tiltOp2 * switchOp2) * switchOp2 -
+      switchOp2 * (Complex.I • tiltOp2 + tiltOp2 * switchOp2))
+    rw [hsplit, hterm]
+    exact isSelfAdjoint_add_op (h_sa_comm switchOp2 switchOp2_isSelfAdjoint)
+      (isSelfAdjoint_real_smul 2 tiltOp2 tiltOp2_isSelfAdjoint)
+  have hunif_aut := logPartitionOneForm_finiteGibbs_aut_unification (conjStarAlgEquiv 2)
+    (conjStarAlgEquiv_involutive (n := 2)) H_d63 switchOp2 Q_odd hH_d63_sa hZ_d63_pos
+    hH_conj (conjStarAlgEquiv_trace_re (n := 2)) conj_switchOp2
+    (by rw [Q_odd, ← switchOp2_eq_A_swap]; exact conjStarAlgEquiv_purelyImaginary_odd switchOp2 conj_switchOp2)
+    D1_unif D2_unif hA1_u hA2_u
+  have hA1_star : IsSelfAdjoint (finiteCEOperatorForm 2 A_swap (finiteCEFrechetDirection D1_unif)) := by
+    change IsSelfAdjoint ((Complex.I • tiltOp2) * A_swap - A_swap * (Complex.I • tiltOp2))
+    exact h_sa_comm A_swap hA_swap_sa
+  have hrev_star0 :
+      (finiteGibbsCEParityOnsagerSystem H_d63 hH_d63_sa hZ_d63_pos A_swap B_tilt hA_swap_sa hB_tilt_sa).reversible
+        (finiteCEFrechetDirection D1_unif) (finiteCEFrechetDirection D1_unif) = 0 :=
+    logPartitionOneForm_finiteGibbs_star_unification_reversible_eq_zero H_d63 A_swap B_tilt
+      hH_d63_sa hZ_d63_pos hA_swap_sa hB_tilt_sa D1_unif D1_unif hA1_star hA1_star
+  refine ⟨PS_odd.dissipative_T_even d1 d2, PS_odd.reversible_T_odd d1 d2, hd11_ne, hrev12_ne,
+    fun x y s => by simpa [datum_aut, gibbsNOperatorFamilyAutErlangenDatum_casimirJ] using
+      datum_aut.onsager_reciprocity x y s,
+    fun x y s => by simpa [datum_adG, gibbsNOperatorFamilyAdGammaErlangenDatum_casimirJ] using
+      datum_adG.onsager_reciprocity x y s,
+    fun A B s => hconj.1 A B s,
+    hfr_pos, hfr_rec,
+    frechetFormParityOnsagerPairingOfAut_reciprocity (conjStarAlgEquiv 2)
+      (conjStarAlgEquiv_involutive (n := 2)) D hpow
+      (aut_faithfulGibbsDensity_rho (conjStarAlgEquiv 2) H_d63 hH_d63_sa hZ_d63_pos hH_conj)
+      (conjStarAlgEquiv_trace_re (n := 2)) Q_odd
+      (by rw [Q_odd, ← switchOp2_eq_A_swap]; exact conjStarAlgEquiv_purelyImaginary_odd switchOp2 conj_switchOp2)
+      H_d63 ![V1, V2] (frechetExtDerivReal ω) (frechetExtDerivReal ω)
+        (contDiff_frechetExtDerivK hω) (contDiff_frechetExtDerivK hω),
+    hunif_aut.2.2.2.1, hrev_star0,
+    PP_dom.toParityOnsagerSystem.onsager_casimir_master_reciprocity ω_ce ω_ce,
+    PP_wt.toParityOnsagerSystem.onsager_casimir_master_reciprocity ω_ce ω_ce⟩
+
+/-- `T5-B-02`: KMS `modularInterpolation` (non-tracial `s = 0` vs `s = 1` vs tracial invariance),
+`logPartitionZeroForm`, `operatorFrechetJet`, and `secondFDerivLogPartitionReadout_symm_of_extDeriv_sq_zero`. -/
+theorem t5_b_02_modularInterpolation_and_jetVsForm :
+    let D_nt := faithfulGibbsDensity H_d63 hH_d63_sa hZ_d63_pos
+    let D_tr := maximallyMixedFaithfulDensityTwo
+    D_nt.modularInterpolation 0 A_swap ≠ D_nt.modularInterpolation 1 A_swap ∧
+      (∀ s : ℝ, D_tr.modularInterpolation s A_swap = (1 / 2 : ℝ) • A_swap) ∧
+      frechetExtDeriv (logPartitionZeroForm 2) H_d63 ![A_swap] = operatorExpectation H_d63 A_swap ∧
+      (∃ f : ℂ → ℂ, operatorFrechetJet 2 f 0 ![1, 1] ≠ 0 ∧
+        ∀ ω : OperatorFrechetForm ℂ ℂ ℂ 2, ω 0 ![1, 1] = 0) ∧
+      secondFDerivLogPartitionReadout H_d63 A_swap B_tilt =
+        secondFDerivLogPartitionReadout H_d63 B_tilt A_swap := by
+  intro D_nt D_tr
+  refine ⟨?_, ?_, ?_, operatorFrechetJet_two_diag_nonzero_witness,
+    secondFDerivLogPartitionReadout_symm_of_extDeriv_sq_zero H_d63 A_swap B_tilt
+      (tracedExponential_mem_slitPlane_of_isSelfAdjoint H_d63 hH_d63_sa)⟩
+  · intro heq
+    rw [FaithfulDensityOperator.modularInterpolation_zero,
+      FaithfulDensityOperator.modularInterpolation_one] at heq
+    exact t1_f6_03_kuboMoriTransformCommutator.2 heq.symm
+  · intro s
+    unfold FaithfulDensityOperator.modularInterpolation
+    have htr : D_tr.rpow s * A_swap * D_tr.rpow (1 - s) =
+        A_swap * (D_tr.rpow s * D_tr.rpow (1 - s)) := by
+      have hcomm : Commute (D_tr.rpow s) A_swap := by
+        change Commute (D_tr.rho ^ s) A_swap
+        rw [CFC.rpow_eq_cfc_real D_tr.strictlyPositive.nonneg]
+        have h1 : Commute D_tr.rho A_swap := by
+          change Commute ((1 / 2 : ℝ) • (1 : FiniteOperatorAlgebra 2)) A_swap
+          rw [real_smul_eq_complex_smul]
+          exact (Commute.one_left A_swap).smul_left _
+        let : NormedSpace ℝ (FiniteOperatorAlgebra 2) := NormedSpace.restrictScalars ℝ ℂ _
+        let : NormedAlgebra ℝ (FiniteOperatorAlgebra 2) := NormedAlgebra.restrictScalars ℝ ℂ _
+        let : StarModule ℝ (FiniteOperatorAlgebra 2) := ⟨fun r x => by
+          change star ((r : ℂ) • x) = r • star x
+          rw [star_smul]; simpa [Complex.star_def] using (real_smul_eq_complex_smul r (star x)).symm⟩
+        exact h1.cfc_real (fun x : ℝ => x ^ s)
+      rw [hcomm.eq, mul_assoc]
+    rw [htr, ← D_tr.rpow_add s (1 - s), add_sub_cancel, D_tr.rpow_one]
+    change A_swap * ((1 / 2 : ℝ) • (1 : FiniteOperatorAlgebra 2)) = (1 / 2 : ℝ) • A_swap
+    rw [real_smul_eq_complex_smul, mul_smul_comm, mul_one, ← real_smul_eq_complex_smul]
+  · exact (frechetExtDeriv_logPartitionZeroForm H_d63
+      (tracedExponential_mem_slitPlane_of_isSelfAdjoint H_d63 hH_d63_sa)).2 A_swap
+
+/-- `T5-C-01`: Coupled `ℝ × ℝ × ℝ` `GenericMetriplecticFlow.System` with `L ≠ 0`, `M ≠ 0`,
+`dH ≠ 0`, `dS ≠ 0`, `genericMetriplectic_freeEnergy_hasDerivAt_nonpos`,
+`genericMetriplectic_freeEnergy_antitoneOn_finiteDim`, `genericMetriplectic_entropy_monotoneOn`,
+strict entropy growth `S(0) < S(1)`, Hamiltonian conservation `H(1) = H(0)`, and `(sys 0).L (sys 0).dH ≠ 0`. -/
+theorem t5_c_01_genericMetriplectic_coupled :
+    let e1 : ℝ × ℝ × ℝ := (1, 0, 0)
+    let e2 : ℝ × ℝ × ℝ := (0, 1, 0)
+    let e3 : ℝ × ℝ × ℝ := (0, 0, 1)
+    let H_fn : ℝ × ℝ × ℝ → ℝ := fun p => p.1 ^ 2 + p.2.1 ^ 2
+    let S_fn : ℝ × ℝ × ℝ → ℝ := fun p => -(p.2.2 ^ 2)
+    let x : ℝ → ℝ × ℝ × ℝ := fun t => (Real.cos t, Real.sin t, Real.exp (-t))
+    let dH_at : ℝ × ℝ × ℝ → GenericMetriplecticFlow.Covector (ℝ × ℝ × ℝ) := fun p =>
+      (2 * p.1) • (LinearMap.fst ℝ ℝ (ℝ × ℝ)) +
+        (2 * p.2.1) • ((LinearMap.fst ℝ ℝ ℝ).comp (LinearMap.snd ℝ ℝ (ℝ × ℝ)))
+    let dS_at : ℝ × ℝ × ℝ → GenericMetriplecticFlow.Covector (ℝ × ℝ × ℝ) := fun p =>
+      (-2 * p.2.2) • ((LinearMap.snd ℝ ℝ ℝ).comp (LinearMap.snd ℝ ℝ (ℝ × ℝ)))
+    let L_map : GenericMetriplecticFlow.Covector (ℝ × ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ × ℝ) :=
+      { toFun := fun α => (-(1 / 2 : ℝ) * α e2, (1 / 2 : ℝ) * α e1, 0)
+        map_add' := fun α₁ α₂ => by ext <;> (simp [Prod.mk_add_mk]; try ring)
+        map_smul' := fun r α => by ext <;> (simp [Prod.smul_mk]; try ring) }
+    let M_map : GenericMetriplecticFlow.Covector (ℝ × ℝ × ℝ) →ₗ[ℝ] (ℝ × ℝ × ℝ) :=
+      { toFun := fun α => (0, 0, (1 / 2 : ℝ) * α e3)
+        map_add' := fun α₁ α₂ => by ext <;> (simp [Prod.mk_add_mk]; try ring)
+        map_smul' := fun r α => by ext <;> (simp [Prod.smul_mk]; try ring) }
+    let sys : ℝ → GenericMetriplecticFlow.System (ℝ × ℝ × ℝ) := fun t =>
+      { dH := dH_at (x t)
+        dS := dS_at (x t)
+        L := L_map
+        M := M_map
+        L_skew := fun α β => by
+          have eval_L : ∀ γ δ : GenericMetriplecticFlow.Covector (ℝ × ℝ × ℝ),
+              γ (L_map δ) = (-(1 / 2 : ℝ) * δ e2) * γ e1 + ((1 / 2 : ℝ) * δ e1) * γ e2 := by
+            intro γ δ
+            have hdec : L_map δ = (-(1 / 2 : ℝ) * δ e2) • e1 + ((1 / 2 : ℝ) * δ e1) • e2 := by
+              ext <;> simp [L_map, e1, e2]
+            rw [hdec, _root_.map_add, _root_.map_smul, _root_.map_smul, smul_eq_mul, smul_eq_mul]
+          rw [eval_L α β, eval_L β α]
+          ring
+        L_entropy_casimir := by
+          ext <;> simp [L_map, dS_at, e1, e2]
+        M_symmetric := fun α β => by
+          have eval_M : ∀ γ δ : GenericMetriplecticFlow.Covector (ℝ × ℝ × ℝ),
+              γ (M_map δ) = ((1 / 2 : ℝ) * δ e3) * γ e3 := by
+            intro γ δ
+            have hdec : M_map δ = ((1 / 2 : ℝ) * δ e3) • e3 := by
+              ext <;> simp [M_map, e3]
+            rw [hdec, _root_.map_smul, smul_eq_mul]
+          rw [eval_M α β, eval_M β α]
+          ring
+        M_hamiltonian_casimir := by
+          ext <;> simp [M_map, dH_at, e3]
+        M_nonneg := fun α => by
+          have hdec : M_map α = ((1 / 2 : ℝ) * α e3) • e3 := by
+            ext <;> simp [M_map, e3]
+          rw [hdec, _root_.map_smul, smul_eq_mul]
+          nlinarith [mul_self_nonneg (α e3)] }
+    (∀ t ∈ Set.Icc (0 : ℝ) 1,
+      HasDerivAt (fun s => H_fn (x s) - 2 * S_fn (x s))
+        (-(2 * (sys t).dS ((sys t).M (sys t).dS))) t ∧
+      -(2 * (sys t).dS ((sys t).M (sys t).dS)) < 0) ∧
+      AntitoneOn (fun s => H_fn (x s) - 2 * S_fn (x s)) (Set.Icc 0 1) ∧
+      MonotoneOn (fun s => S_fn (x s)) (Set.Icc 0 1) ∧
+      S_fn (x 0) < S_fn (x 1) ∧
+      H_fn (x 1) = H_fn (x 0) ∧
+      (sys 0).L (sys 0).dH ≠ 0 := by
+  intro e1 e2 e3 H_fn S_fn x dH_at dS_at L_map M_map sys
+  have hH_fd : ∀ t, HasFDerivAt H_fn ((sys t).dH.toContinuousLinearMap) (x t) := by
+    intro t
+    have h1 := (ContinuousLinearMap.fst ℝ ℝ (ℝ × ℝ)).hasFDerivAt (x := x t)
+    have h2 := ((ContinuousLinearMap.fst ℝ ℝ ℝ).comp
+      (ContinuousLinearMap.snd ℝ ℝ (ℝ × ℝ))).hasFDerivAt (x := x t)
+    have hsq := (h1.pow 2).add (h2.pow 2)
+    refine hsq.congr_fderiv (ContinuousLinearMap.ext fun p => ?_)
+    simp [sys, dH_at, LinearMap.toContinuousLinearMap, smul_eq_mul]
+  have hS_fd : ∀ t, HasFDerivAt S_fn ((sys t).dS.toContinuousLinearMap) (x t) := by
+    intro t
+    have h3 := ((ContinuousLinearMap.snd ℝ ℝ ℝ).comp
+      (ContinuousLinearMap.snd ℝ ℝ (ℝ × ℝ))).hasFDerivAt (x := x t)
+    have hsq := (h3.pow 2).neg
+    refine hsq.congr_fderiv (ContinuousLinearMap.ext fun p => ?_)
+    simp [sys, dS_at, LinearMap.toContinuousLinearMap, smul_eq_mul]
+  have hx_d : ∀ t, HasDerivAt x (sys t).flow t := by
+    intro t
+    have hc := Real.hasDerivAt_cos t
+    have hs := Real.hasDerivAt_sin t
+    have he : HasDerivAt (fun s : ℝ => Real.exp (-s)) (-Real.exp (-t)) t := by
+      simpa using (hasDerivAt_id t).neg.exp
+    have hmk := hc.prodMk (hs.prodMk he)
+    convert hmk using 1
+    ext <;> (simp [GenericMetriplecticFlow.System.flow, sys, L_map, M_map, dH_at, dS_at, x, e1, e2, e3]; try ring)
+  have hcontF : ContinuousOn (fun s => H_fn (x s) - 2 * S_fn (x s)) (Set.Icc 0 1) :=
+    fun t _ => ((hH_fd t).comp_hasDerivAt t (hx_d t)).sub
+      (((hS_fd t).comp_hasDerivAt t (hx_d t)).const_mul 2) |>.continuousAt.continuousWithinAt
+  have hcontS : ContinuousOn (fun s => S_fn (x s)) (Set.Icc 0 1) :=
+    fun t _ => ((hS_fd t).comp_hasDerivAt t (hx_d t)).continuousAt.continuousWithinAt
+  have hanti_fd : AntitoneOn (fun s => H_fn (x s) - 2 * S_fn (x s)) (Set.Icc 0 1) :=
+    genericMetriplectic_freeEnergy_antitoneOn_finiteDim (T := 2) (by norm_num) (convex_Icc 0 1)
+      hcontF (fun t _ => hH_fd t) (fun t _ => hS_fd t) (fun t _ => hx_d t)
+  have hmono_S : MonotoneOn (fun s => S_fn (x s)) (Set.Icc 0 1) :=
+    genericMetriplectic_entropy_monotoneOn (convex_Icc 0 1) hcontS
+      (fun _ _ _ => rfl) (fun t _ => hS_fd t) (fun t _ => hx_d t)
+  refine ⟨fun t _ => ?_, hanti_fd, hmono_S, ?_, ?_, ?_⟩
+  · have hpt := genericMetriplectic_freeEnergy_hasDerivAt_nonpos (sys := sys) (H_fn := H_fn)
+      (S_fn := S_fn) (T := 2) (by norm_num)
+      (dH_clm := fun s => (sys s).dH.toContinuousLinearMap)
+      (dS_clm := fun s => (sys s).dS.toContinuousLinearMap)
+      (fun _ => rfl) (fun _ => rfl) (hH_fd t) (hS_fd t) (hx_d t)
+    refine ⟨hpt.1, ?_⟩
+    have hdec : (sys t).M (sys t).dS = ((1 / 2 : ℝ) * (sys t).dS e3) • e3 := by
+      ext <;> simp [sys, M_map, e3]
+    rw [hdec, _root_.map_smul, smul_eq_mul]
+    have hdS3 : (sys t).dS e3 = -2 * Real.exp (-t) := by
+      simp [sys, dS_at, x, e3]
+    rw [hdS3]
+    nlinarith [Real.exp_pos (-t)]
+  · change -(Real.exp (-0) ^ 2) < -(Real.exp (-1) ^ 2)
+    have h1 : Real.exp (-1) < Real.exp (-0) := Real.exp_lt_exp.mpr (by norm_num)
+    have hp : 0 < Real.exp (-1) := Real.exp_pos (-1)
+    nlinarith
+  · change Real.cos 1 ^ 2 + Real.sin 1 ^ 2 = Real.cos 0 ^ 2 + Real.sin 0 ^ 2
+    rw [Real.cos_sq_add_sin_sq, Real.cos_zero, Real.sin_zero]
+    norm_num
+  · intro h0
+    have h2 := congrArg (fun p : ℝ × ℝ × ℝ => p.2.1) h0
+    simp [sys, L_map, dH_at, x, e1] at h2
+
+/-- `T5-C-02`: Non-tracial `σ_nt ≠ (1/2)•1` with noncommuting `H_eq = switchOp2`, `H0 = tiltOp2`,
+`hasDerivAt_normalizedExponential_gibbsMetriplecticFlow`, `deriv_gibbsRelativePotential_metriplectic_neg_of_ne`,
+and full-interval `[0, 1]` `hasDerivAt_normalizedExponential_naturalGradientMetriplectic`. -/
+theorem t5_c_02_nonTracial_nonCommuting_trajectories :
+    let H_eq : FiniteOperatorAlgebra 2 := switchOp2
+    let hZ_eq : 0 < gibbsPartitionReal H_eq :=
+      tracedExponential_re_pos_of_isSelfAdjoint H_eq switchOp2_isSelfAdjoint
+    let σ_nt : FiniteOperatorAlgebra 2 := (faithfulGibbsDensity H_eq switchOp2_isSelfAdjoint hZ_eq).rho
+    let H_ng : ℝ → FiniteOperatorAlgebra 2 := fun t =>
+      H_eq + Real.exp (-t) • (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t))
+    let H0_g : ℝ → FiniteOperatorAlgebra 2 := fun s =>
+      tiltOp2 + s • gibbsMetriplecticFlow H_eq σ_nt tiltOp2 tiltOp2_isSelfAdjoint
+    σ_nt ≠ (1 / 2 : ℝ) • (1 : FiniteOperatorAlgebra 2) ∧
+      gibbsUnitaryVectorField H_eq tiltOp2 ≠ 0 ∧
+      HasDerivAt (fun s => normalizedExponential (H0_g s))
+        (gibbsUnitaryVectorField H_eq
+            (faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint
+              (tracedExponential_re_pos_of_isSelfAdjoint tiltOp2 tiltOp2_isSelfAdjoint)).rho -
+          (faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint
+              (tracedExponential_re_pos_of_isSelfAdjoint tiltOp2 tiltOp2_isSelfAdjoint)).kuboMoriTransform
+            (centeredStatistic
+              (faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint
+                (tracedExponential_re_pos_of_isSelfAdjoint tiltOp2 tiltOp2_isSelfAdjoint))
+              ((faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint
+                  (tracedExponential_re_pos_of_isSelfAdjoint tiltOp2 tiltOp2_isSelfAdjoint)).kuboMoriTransform
+                ((faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint
+                    (tracedExponential_re_pos_of_isSelfAdjoint tiltOp2 tiltOp2_isSelfAdjoint)).rho - σ_nt)))) 0 ∧
+      deriv (fun s => gibbsRelativePotential σ_nt (H0_g s)) 0 < 0 ∧
+      (∀ t ∈ Set.Icc (0 : ℝ) 1,
+        HasDerivAt (fun s => normalizedExponential (H_ng s))
+          (gibbsUnitaryVectorField H_eq
+              (faithfulGibbsDensity (H_ng t) (H_ng_sa_e2e t)
+                (tracedExponential_re_pos_of_isSelfAdjoint (H_ng t) (H_ng_sa_e2e t))).rho -
+            (faithfulGibbsDensity (H_ng t) (H_ng_sa_e2e t)
+                (tracedExponential_re_pos_of_isSelfAdjoint (H_ng t) (H_ng_sa_e2e t))).kuboMoriTransform
+              (centeredStatistic
+                (faithfulGibbsDensity (H_ng t) (H_ng_sa_e2e t)
+                  (tracedExponential_re_pos_of_isSelfAdjoint (H_ng t) (H_ng_sa_e2e t)))
+                (H_ng t - H_eq))) t) := by
+  intro H_eq hZ_eq σ_nt H_ng H0_g
+  have hσ_sa : IsSelfAdjoint σ_nt :=
+    (faithfulGibbsDensity H_eq switchOp2_isSelfAdjoint hZ_eq).strictlyPositive.isSelfAdjoint
+  have hcomm_σ : Commute σ_nt H_eq := by
+    dsimp only [σ_nt]
+    rw [faithfulGibbsDensity_rho_eq_normalizedExponential H_eq switchOp2_isSelfAdjoint hZ_eq]
+    exact commute_normalizedExponential_self H_eq
+  have hσ_ne_mix : σ_nt ≠ (1 / 2 : ℝ) • (1 : FiniteOperatorAlgebra 2) := by
+    intro heq
+    have hcfc : σ_nt = cfc (NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight (gibbsPartitionReal H_eq)) switchOp2 :=
+      faithfulGibbsDensity_rho_eq_normalizedGibbsCFC H_eq switchOp2_isSelfAdjoint hZ_eq
+    have hcont_sub : ContinuousOn
+        (fun x : ℝ => NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight (gibbsPartitionReal H_eq) x - 1 / 2)
+        (spectrum ℝ switchOp2) :=
+      ((continuous_const.mul Real.continuous_exp).sub continuous_const).continuousOn
+    have h1_mem : (1 : ℝ) ∈ spectrum ℝ switchOp2 := by
+      rw [spectrum.mem_iff]
+      intro hu
+      have h0 : (switchOp2 - 1) * (switchOp2 + 1) = 0 := by
+        rw [sub_mul, mul_add, one_mul, mul_one, switchOp2_sq]; abel
+      have hne : switchOp2 + (1 : FiniteOperatorAlgebra 2) ≠ 0 := by
+        intro h
+        have hm := congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M 0 0) h
+        rw [matrixOfOp_add, switchOp2_mat_eq_e2e, matrixOfOp_one_eq, matrixOfOp_zero] at hm
+        norm_num at hm
+      have halg : algebraMap ℝ (FiniteOperatorAlgebra 2) (1 : ℝ) - switchOp2 = -(switchOp2 - 1) := by
+        rw [Algebra.algebraMap_eq_smul_one, one_smul]; abel
+      have hinv1 : (↑hu.unit⁻¹ : FiniteOperatorAlgebra 2) * (-(switchOp2 - 1)) = 1 := by
+        rw [← halg]; exact hu.unit.inv_mul
+      have hinv_eq : (-(switchOp2 - 1)) * (switchOp2 + 1) = -((switchOp2 - 1) * (switchOp2 + 1)) := by
+        apply ContinuousLinearMap.ext; intro v; simp
+      have hinv : switchOp2 + (1 : FiniteOperatorAlgebra 2) = 0 := by
+        calc switchOp2 + (1 : FiniteOperatorAlgebra 2)
+            = 1 * (switchOp2 + 1) := (one_mul _).symm
+          _ = (↑hu.unit⁻¹ * -(switchOp2 - 1)) * (switchOp2 + 1) := by rw [hinv1]
+          _ = ↑hu.unit⁻¹ * ((-(switchOp2 - 1)) * (switchOp2 + 1)) := mul_assoc _ _ _
+          _ = ↑hu.unit⁻¹ * (-((switchOp2 - 1) * (switchOp2 + 1))) := by rw [hinv_eq]
+          _ = 0 := by rw [h0, neg_zero, mul_zero]
+      exact hne hinv
+    have hm1_mem : (-1 : ℝ) ∈ spectrum ℝ switchOp2 := by
+      rw [spectrum.mem_iff]
+      intro hu
+      have h0 : (switchOp2 + 1) * (switchOp2 - 1) = 0 := by
+        rw [add_mul, mul_sub, one_mul, mul_one, switchOp2_sq]; abel
+      have hne : switchOp2 - (1 : FiniteOperatorAlgebra 2) ≠ 0 := by
+        intro h
+        have hm := congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M 0 0) h
+        rw [matrixOfOp_sub_eq, switchOp2_mat_eq_e2e, matrixOfOp_one_eq, matrixOfOp_zero] at hm
+        norm_num at hm
+      have halg : algebraMap ℝ (FiniteOperatorAlgebra 2) (-1 : ℝ) - switchOp2 = -(switchOp2 + 1) := by
+        rw [Algebra.algebraMap_eq_smul_one, neg_one_smul]; abel
+      have hinv1 : (↑hu.unit⁻¹ : FiniteOperatorAlgebra 2) * (-(switchOp2 + 1)) = 1 := by
+        rw [← halg]; exact hu.unit.inv_mul
+      have hinv_eq : (-(switchOp2 + 1)) * (switchOp2 - 1) = -((switchOp2 + 1) * (switchOp2 - 1)) := by
+        apply ContinuousLinearMap.ext; intro v; simp
+      have hinv : switchOp2 - (1 : FiniteOperatorAlgebra 2) = 0 := by
+        calc switchOp2 - (1 : FiniteOperatorAlgebra 2)
+            = 1 * (switchOp2 - 1) := (one_mul _).symm
+          _ = (↑hu.unit⁻¹ * -(switchOp2 + 1)) * (switchOp2 - 1) := by rw [hinv1]
+          _ = ↑hu.unit⁻¹ * ((-(switchOp2 + 1)) * (switchOp2 - 1)) := mul_assoc _ _ _
+          _ = ↑hu.unit⁻¹ * (-((switchOp2 + 1) * (switchOp2 - 1))) := by rw [hinv_eq]
+          _ = 0 := by rw [h0, neg_zero, mul_zero]
+      exact hne hinv
+    let : NormedSpace ℝ (FiniteOperatorAlgebra 2) := NormedSpace.restrictScalars ℝ ℂ _
+    let : NormedAlgebra ℝ (FiniteOperatorAlgebra 2) := NormedAlgebra.restrictScalars ℝ ℂ _
+    let : StarModule ℝ (FiniteOperatorAlgebra 2) := ⟨fun r x => by
+      change star ((r : ℂ) • x) = r • star x
+      rw [star_smul]; simpa [Complex.star_def] using (real_smul_eq_complex_smul r (star x)).symm⟩
+    have hhalf : (1 / 2 : ℝ) • (1 : FiniteOperatorAlgebra 2) =
+        cfc (fun _ : ℝ => (1 / 2 : ℝ)) switchOp2 := by
+      rw [cfc_const (1 / 2 : ℝ) switchOp2 switchOp2_isSelfAdjoint, Algebra.algebraMap_eq_smul_one]
+    have hsub0 : cfc (fun x : ℝ => NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight (gibbsPartitionReal H_eq) x - 1 / 2)
+        switchOp2 = 0 := by
+      have hc := cfc_sub (NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight (gibbsPartitionReal H_eq))
+        (fun _ : ℝ => (1 / 2 : ℝ)) switchOp2
+        (continuous_const.mul Real.continuous_exp).continuousOn continuousOn_const
+      exact hc.trans (by rw [← hcfc, ← hhalf, heq, sub_self])
+    have hspec_eq : ∀ x ∈ spectrum ℝ switchOp2,
+        NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight (gibbsPartitionReal H_eq) x = 1 / 2 := fun x hx => by
+      have hm : NoncommutativeGibbsRpowNormalizationBridge.normalizedScalarGibbsWeight (gibbsPartitionReal H_eq) x - 1 / 2 ∈
+          spectrum ℝ (0 : FiniteOperatorAlgebra 2) := by
+        rw [← hsub0, cfc_map_spectrum (ha := switchOp2_isSelfAdjoint) (hf := hcont_sub)]
+        exact ⟨x, hx, rfl⟩
+      rw [spectrum.zero_eq] at hm
+      exact sub_eq_zero.mp hm
+    have hv1 := hspec_eq 1 h1_mem
+    have hvm1 := hspec_eq (-1) hm1_mem
+    have hexp : Real.exp 1 = Real.exp (-1) :=
+      mul_left_cancel₀ (inv_ne_zero hZ_eq.ne') (hv1.trans hvm1.symm)
+    exact (ne_of_gt (Real.exp_lt_exp.mpr (by norm_num : (-1 : ℝ) < 1))) hexp
+  have hunit_ne : gibbsUnitaryVectorField H_eq tiltOp2 ≠ 0 := by
+    intro h0
+    have hm := congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M 0 1) h0
+    dsimp [gibbsUnitaryVectorField, H_eq] at hm
+    rw [matrixOfOp_complex_smul, matrixOfOp_sub_eq, matrixOfOp_mul_eq, matrixOfOp_mul_eq,
+      switchOp2_mat_eq_e2e, matrixOfOp_tiltOp2, matrixOfOp_zero] at hm
+    dsimp only [Matrix.sub_apply, Matrix.smul_apply, Matrix.mul_apply, smul_eq_mul] at hm
+    simp only [Fin.sum_univ_two, InfoGeometry.Physics.KleinBottleSewingExact.tilt2] at hm
+    norm_num at hm
+  have hH0 : H0_g 0 = tiltOp2 := ContinuousLinearMap.ext fun _ => by simp [H0_g]
+  have hH0_sa : IsSelfAdjoint (H0_g 0) := hH0.symm ▸ tiltOp2_isSelfAdjoint
+  have hderiv0 : HasDerivAt H0_g (gibbsMetriplecticFlow H_eq σ_nt (H0_g 0) hH0_sa) 0 := by
+    have h := hasDerivAt_add_real_smul_e2e tiltOp2
+      (gibbsMetriplecticFlow H_eq σ_nt tiltOp2 tiltOp2_isSelfAdjoint) 0
+    simpa only [hH0] using h
+  have hρ_ne_σ : (faithfulGibbsDensity (H0_g 0) hH0_sa
+      (tracedExponential_re_pos_of_isSelfAdjoint (H0_g 0) hH0_sa)).rho ≠ σ_nt := by
+    intro heq
+    let hZ_tilt : 0 < gibbsPartitionReal tiltOp2 :=
+      tracedExponential_re_pos_of_isSelfAdjoint tiltOp2 tiltOp2_isSelfAdjoint
+    let hZ_0 : 0 < gibbsPartitionReal (H0_g 0) :=
+      tracedExponential_re_pos_of_isSelfAdjoint (H0_g 0) hH0_sa
+    have hrho_eq : (faithfulGibbsDensity (H0_g 0) hH0_sa hZ_0).rho =
+        (faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint hZ_tilt).rho := by
+      rw [faithfulGibbsDensity_rho_eq_normalizedExponential,
+        faithfulGibbsDensity_rho_eq_normalizedExponential, hH0]
+    have heq' : (faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint hZ_tilt).rho = σ_nt :=
+      hrho_eq.symm.trans heq
+    have hcomm_t : Commute σ_nt tiltOp2 := by
+      rw [← heq', faithfulGibbsDensity_rho_eq_normalizedExponential]
+      exact commute_normalizedExponential_self tiltOp2
+    have h12 : σ_nt = (matrixOfOp σ_nt 0 0) • (1 : FiniteOperatorAlgebra 2) := by
+      apply matrixOfOp_injective
+      have hc1 : matrixOfOp σ_nt * InfoGeometry.Physics.KleinBottleSewingExact.tilt2 =
+          InfoGeometry.Physics.KleinBottleSewingExact.tilt2 * matrixOfOp σ_nt := by
+        have h := congrArg matrixOfOp hcomm_t.eq
+        rwa [matrixOfOp_mul_eq, matrixOfOp_mul_eq, matrixOfOp_tiltOp2] at h
+      have hc2 : matrixOfOp σ_nt * InfoGeometry.Physics.KleinBottleSewingExact.switch2 =
+          InfoGeometry.Physics.KleinBottleSewingExact.switch2 * matrixOfOp σ_nt := by
+        have h := congrArg matrixOfOp hcomm_σ.eq
+        rwa [matrixOfOp_mul_eq, matrixOfOp_mul_eq, show H_eq = switchOp2 from rfl,
+          switchOp2, matrixOfOp_matrixOp] at h
+      have h01 : matrixOfOp σ_nt 0 1 = 0 := by
+        have h := congrFun (congrFun hc1 0) 1
+        simp only [InfoGeometry.Physics.KleinBottleSewingExact.tilt2, Matrix.mul_apply,
+          Fin.sum_univ_two] at h
+        linear_combination (-1 / 2 : ℂ) * h
+      have h10 : matrixOfOp σ_nt 1 0 = 0 := by
+        have h := congrFun (congrFun hc1 1) 0
+        simp only [InfoGeometry.Physics.KleinBottleSewingExact.tilt2, Matrix.mul_apply,
+          Fin.sum_univ_two] at h
+        linear_combination (1 / 2 : ℂ) * h
+      have hdiag : matrixOfOp σ_nt 0 0 = matrixOfOp σ_nt 1 1 := by
+        have h := congrFun (congrFun hc2 0) 1
+        simp only [InfoGeometry.Physics.KleinBottleSewingExact.switch2, Matrix.mul_apply,
+          Fin.sum_univ_two] at h
+        linear_combination h
+      rw [matrixOfOp_complex_smul, matrixOfOp_one_eq]
+      ext i j; fin_cases i <;> fin_cases j <;> simp [h01, h10, hdiag]
+    have htr1 := (faithfulGibbsDensity H_eq switchOp2_isSelfAdjoint hZ_eq).trace_one
+    change Matrix.trace (matrixOfOp σ_nt) = 1 at htr1
+    rw [h12, matrixOfOp_complex_smul, matrixOfOp_one_eq,
+      Matrix.trace_smul, Matrix.trace_one, Fintype.card_fin, smul_eq_mul] at htr1
+    have hm00 : matrixOfOp σ_nt 0 0 = 1 / 2 := by linear_combination (1 / 2 : ℂ) * htr1
+    have hmix : σ_nt = (1 / 2 : ℝ) • (1 : FiniteOperatorAlgebra 2) := by
+      rw [h12, hm00, real_smul_eq_complex_smul]
+      apply ContinuousLinearMap.ext; intro v; simp
+    exact hσ_ne_mix hmix
+  have hρ_deriv := hasDerivAt_normalizedExponential_gibbsMetriplecticFlow H_eq σ_nt
+    switchOp2_isSelfAdjoint hσ_sa H0_g hH0_sa hderiv0
+  have hneg := deriv_gibbsRelativePotential_metriplectic_neg_of_ne H_eq σ_nt hσ_sa hcomm_σ
+    H0_g hH0_sa hderiv0 hρ_ne_σ
+  have hH_ng_deriv : ∀ t : ℝ, HasDerivAt H_ng (gibbsUnitaryVectorField H_eq (H_ng t) - (H_ng t - H_eq)) t := by
+    intro t
+    have hU1 := U_rot_e2e_deriv t
+    have hU2 := U_rot_e2e_neg_deriv t
+    have hconj_d : HasDerivAt (fun s => U_rot_e2e s * tiltOp2 * U_rot_e2e (-s))
+        ((-Complex.I • switchOp2) * (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t)) -
+          (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t)) * (-Complex.I • switchOp2)) t := by
+      have hprod := (hU1.mul_const tiltOp2).mul hU2
+      refine hprod.congr_deriv ?_
+      let : NormedAlgebra ℚ (FiniteOperatorAlgebra 2) := NormedAlgebra.restrictScalars ℚ ℂ _
+      have hcommU : Commute (-Complex.I • switchOp2) (U_rot_e2e (-t)) := by
+        dsimp [U_rot_e2e]
+        exact ((Commute.refl (-Complex.I • switchOp2)).smul_right ((-t : ℝ) : ℂ)).exp_right
+      apply ContinuousLinearMap.ext; intro v
+      change ((-Complex.I • switchOp2) * U_rot_e2e t * tiltOp2 * U_rot_e2e (-t) +
+          (U_rot_e2e t * tiltOp2) * (-((-Complex.I • switchOp2) * U_rot_e2e (-t)))) v = _
+      rw [hcommU.eq]
+      simp [mul_assoc, sub_eq_add_neg]
+    have hexp_d : HasDerivAt (fun s => Real.exp (-s)) (-Real.exp (-t)) t := by
+      simpa using (hasDerivAt_id t).neg.exp
+    have hsmul_d := hexp_d.smul hconj_d
+    have hadd_d := (hasDerivAt_const t H_eq).add hsmul_d
+    refine hadd_d.congr_deriv ?_
+    apply ContinuousLinearMap.ext; intro v
+    dsimp [H_ng, gibbsUnitaryVectorField, H_eq]
+    simp only [_root_.add_apply, _root_.sub_apply, _root_.smul_apply,
+      real_smul_eq_complex_smul, Complex.ofReal_neg, zero_add]
+    have h1 : (switchOp2 * (switchOp2 + (Real.exp (-t) : ℂ) • (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t))) -
+        (switchOp2 + (Real.exp (-t) : ℂ) • (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t))) * switchOp2) =
+        (Real.exp (-t) : ℂ) • (switchOp2 * (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t)) -
+          (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t)) * switchOp2) := by
+      rw [mul_add, add_mul, add_sub_add_left_eq_sub, mul_smul_comm, smul_mul_assoc]
+      apply ContinuousLinearMap.ext; intro w
+      simp only [_root_.sub_apply, _root_.smul_apply, smul_sub]
+    change ((Real.exp (-t) : ℂ) • ((-Complex.I • switchOp2) * (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t)) -
+        (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t)) * (-Complex.I • switchOp2)) +
+      (-(Real.exp (-t) : ℂ)) • (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t))) v =
+      ((-Complex.I • (switchOp2 * (switchOp2 + (Real.exp (-t) : ℂ) • (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t))) -
+        (switchOp2 + (Real.exp (-t) : ℂ) • (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t))) * switchOp2)) -
+        ((switchOp2 + (Real.exp (-t) : ℂ) • (U_rot_e2e t * tiltOp2 * U_rot_e2e (-t))) - switchOp2)) v
+    rw [h1]
+    simp only [_root_.sub_apply, _root_.add_apply, _root_.smul_apply,
+      smul_mul_assoc, mul_smul_comm]
+    simp [add_sub_cancel_left]
+    module
+  refine ⟨hσ_ne_mix, hunit_ne, ?_, hneg, fun t _ =>
+    hasDerivAt_normalizedExponential_naturalGradientMetriplectic H_eq switchOp2_isSelfAdjoint
+      H_ng (H_ng_sa_e2e t) (hH_ng_deriv t)⟩
+  simpa only [hH0] using hρ_deriv
+
+/-- `T5-C-02b`: `hasDerivAt_matrixNormalizedExponential_metriplectic` (`evolvingGibbsMetriplecticSystem`)
+and `deriv_freeEnergy_nonpos_of_matrixKuboMoriMobility_of_reversible_orthogonal` with non-tracial `σ_nt`
+and noncommuting `[H, ρ] ≠ 0` and `[grad_F, H] ≠ 0`. -/
+theorem t5_c_02b_matrixNormalized_evolvingGibbs :
+    let H_eq : FiniteOperatorAlgebra 2 := switchOp2
+    let hZ_eq : 0 < gibbsPartitionReal H_eq :=
+      tracedExponential_re_pos_of_isSelfAdjoint H_eq switchOp2_isSelfAdjoint
+    let σ_nt := (faithfulGibbsDensity H_eq switchOp2_isSelfAdjoint hZ_eq).rho
+    let hZ0 : 0 < gibbsPartitionReal tiltOp2 :=
+      tracedExponential_re_pos_of_isSelfAdjoint tiltOp2 tiltOp2_isSelfAdjoint
+    let ρ0 := (faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint hZ0).rho
+    let V := gibbsUnitaryVectorField H_eq tiltOp2 - (ρ0 - σ_nt)
+    let H_lin : ℝ → FiniteOperatorAlgebra 2 := fun s => tiltOp2 + s • V
+    ∃ hH0_sa : IsSelfAdjoint (H_lin 0),
+      let sys0 := evolvingGibbsMetriplecticSystem H_eq σ_nt (H_lin 0) hH0_sa
+      let Φ_lin : Mat2C → ℝ := fun M => (Matrix.trace (star sys0.grad_F * M)).re
+      HasDerivAt (fun s => matrixOfOp (normalizedExponential (H_lin s)))
+        (MetriplecticDissipation.stateEvolution sys0) 0 ∧
+      deriv (fun s => Φ_lin (matrixOfOp (normalizedExponential (H_lin s)))) 0 < 0 ∧
+      sys0.H * sys0.rho ≠ sys0.rho * sys0.H ∧
+      sys0.grad_F * sys0.H ≠ sys0.H * sys0.grad_F := by
+  intro H_eq hZ_eq σ_nt hZ0 ρ0 V H_lin
+  have hH0 : H_lin 0 = tiltOp2 := ContinuousLinearMap.ext fun _ => by simp [H_lin]
+  have hH0_sa : IsSelfAdjoint (H_lin 0) := hH0.symm ▸ tiltOp2_isSelfAdjoint
+  have hσ_sa : IsSelfAdjoint σ_nt :=
+    (faithfulGibbsDensity H_eq switchOp2_isSelfAdjoint hZ_eq).strictlyPositive.isSelfAdjoint
+  have hderiv : HasDerivAt H_lin
+      (gibbsUnitaryVectorField H_eq (H_lin 0) -
+        ((faithfulGibbsDensity (H_lin 0) hH0_sa
+            (tracedExponential_re_pos_of_isSelfAdjoint (H_lin 0) hH0_sa)).rho - σ_nt)) 0 := by
+    have hd := hasDerivAt_add_real_smul_e2e tiltOp2 V 0
+    have hρeq : (faithfulGibbsDensity (H_lin 0) hH0_sa
+        (tracedExponential_re_pos_of_isSelfAdjoint (H_lin 0) hH0_sa)).rho = ρ0 := by
+      dsimp only [ρ0]
+      exact (faithfulGibbsDensity_rho_eq_normalizedExponential (H_lin 0) hH0_sa _).trans
+        (by rw [hH0]; exact (faithfulGibbsDensity_rho_eq_normalizedExponential tiltOp2 tiltOp2_isSelfAdjoint hZ0).symm)
+    simpa only [hH0, hρeq] using hd
+  have hmat_d := hasDerivAt_matrixNormalizedExponential_metriplectic H_eq σ_nt switchOp2_isSelfAdjoint hσ_sa
+    H_lin hH0_sa hderiv
+  let sys0 := evolvingGibbsMetriplecticSystem H_eq σ_nt (H_lin 0) hH0_sa
+  let hZ_lin0 : 0 < gibbsPartitionReal (H_lin 0) :=
+    tracedExponential_re_pos_of_isSelfAdjoint (H_lin 0) hH0_sa
+  let D_lin0 := faithfulGibbsDensity (H_lin 0) hH0_sa hZ_lin0
+  let hD_lin0 := continuous_faithfulGibbsDensity_rpow (H_lin 0) hH0_sa hZ_lin0
+  let Φ_clm : Mat2C →L[ℝ] ℝ :=
+    LinearMap.toContinuousLinearMap
+      { toFun := fun M => (Matrix.trace (star sys0.grad_F * M)).re
+        map_add' := fun M N => by rw [Matrix.mul_add, Matrix.trace_add, Complex.add_re]
+        map_smul' := fun r M => by
+          change (Matrix.trace (star sys0.grad_F * ((r : ℂ) • M))).re = _
+          rw [Matrix.mul_smul, Matrix.trace_smul, smul_eq_mul, Complex.re_ofReal_mul]
+          rfl }
+  have hΦ : HasFDerivAt (fun M => Φ_clm M) Φ_clm (matrixOfOp (normalizedExponential (H_lin 0))) :=
+    Φ_clm.hasFDerivAt
+  have hrho0_eq : matrixOfOp (normalizedExponential (H_lin 0)) = sys0.rho := by
+    dsimp only [sys0, evolvingGibbsMetriplecticSystem]
+    exact congrArg matrixOfOp (faithfulGibbsDensity_rho_eq_normalizedExponential (H_lin 0) hH0_sa _).symm
+  have hσ_im : ∀ i j, (matrixOfOp σ_nt i j).im = 0 := by
+    have hconj_σ : conjStarAlgEquiv 2 σ_nt = σ_nt :=
+      aut_faithfulGibbsDensity_rho (conjStarAlgEquiv 2) H_eq switchOp2_isSelfAdjoint hZ_eq conj_switchOp2
+    intro i j
+    have hc := congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M i j) hconj_σ
+    rw [conjStarAlgEquiv_apply, conjOpFun, matrixOfOp_matrixOp, Matrix.map_apply] at hc
+    exact Complex.conj_eq_iff_im.mp hc
+  have hρ0_im : ∀ i j, (matrixOfOp D_lin0.rho i j).im = 0 := by
+    have hconj_ρ : conjStarAlgEquiv 2 D_lin0.rho = D_lin0.rho := by
+      have hH_conj : conjStarAlgEquiv 2 (H_lin 0) = H_lin 0 := by rw [hH0]; exact conj_tiltOp2
+      exact aut_faithfulGibbsDensity_rho (conjStarAlgEquiv 2) (H_lin 0) hH0_sa hZ_lin0 hH_conj
+    intro i j
+    have hc := congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M i j) hconj_ρ
+    rw [conjStarAlgEquiv_apply, conjOpFun, matrixOfOp_matrixOp, Matrix.map_apply] at hc
+    exact Complex.conj_eq_iff_im.mp hc
+  have hcent_im : ∀ i j, (matrixOfOp (centeredStatistic D_lin0 (D_lin0.rho - σ_nt)) i j).im = 0 := by
+    intro i j
+    change (matrixOfOp ((D_lin0.rho - σ_nt) -
+      expectationReal D_lin0 (D_lin0.rho - σ_nt) • (1 : FiniteOperatorAlgebra 2)) i j).im = 0
+    rw [matrixOfOp_sub_eq, matrixOfOp_sub_eq, matrixOfOp_real_smul, matrixOfOp_one_eq]
+    have h1_im : ((1 : Mat2C) i j).im = 0 := by by_cases hij : i = j <;> simp [Matrix.one_apply, hij]
+    simp [Complex.sub_im, hρ0_im i j, hσ_im i j, h1_im]
+  have hH_im : ∀ i j, (sys0.H i j).im = 0 := by
+    change ∀ i j, (matrixOfOp switchOp2 i j).im = 0
+    rw [switchOp2_mat_eq_e2e]
+    intro i j; fin_cases i <;> fin_cases j <;> simp
+  have hstar_grad_im : ∀ i j, ((star sys0.grad_F) i j).im = 0 := by
+    intro i j
+    change (star (sys0.grad_F j i)).im = 0
+    rw [Complex.star_def, Complex.conj_im, neg_eq_zero]
+    exact hcent_im j i
+  have hsys_rho_im : ∀ i j, (sys0.rho i j).im = 0 := hρ0_im
+  have hrev_zero :
+      (Matrix.trace (star sys0.grad_F *
+        (-Complex.I • (sys0.H * sys0.rho - sys0.rho * sys0.H)))).re = 0 := by
+    have hre_entry : ∀ i j, ((-Complex.I • (sys0.H * sys0.rho - sys0.rho * sys0.H)) i j).re = 0 := by
+      intro i j
+      simp only [Matrix.smul_apply, Matrix.sub_apply, Matrix.mul_apply, smul_eq_mul,
+        neg_mul, Complex.neg_re, Complex.mul_re, Complex.I_re, Complex.I_im,
+        zero_mul, zero_sub, neg_neg, one_mul]
+      have him_sum : ((∑ x : Fin 2, sys0.H i x * sys0.rho x j) -
+          (∑ x : Fin 2, sys0.rho i x * sys0.H x j)).im = 0 := by
+        rw [Complex.sub_im, Complex.im_sum, Complex.im_sum]
+        have hz1 : ∀ k, (sys0.H i k * sys0.rho k j).im = 0 := fun k => by
+          rw [Complex.mul_im, hH_im i k, hsys_rho_im k j]; ring
+        have hz2 : ∀ k, (sys0.rho i k * sys0.H k j).im = 0 := fun k => by
+          rw [Complex.mul_im, hsys_rho_im i k, hH_im k j]; ring
+        simp [hz1, hz2]
+      exact him_sum
+    dsimp only [Matrix.trace, Matrix.diag]
+    simp only [Complex.re_sum, Matrix.mul_apply, Complex.mul_re]
+    apply Finset.sum_eq_zero; intro i _
+    apply Finset.sum_eq_zero; intro k _
+    rw [hstar_grad_im i k, hre_entry k i]
+    ring
+  have hderiv_nonpos := deriv_freeEnergy_nonpos_of_matrixKuboMoriMobility_of_reversible_orthogonal
+    (fun M => Φ_clm M) (fun _ => Φ_clm)
+    (fun s => matrixOfOp (normalizedExponential (H_lin s)))
+    (fun _ => sys0) (fun _ => D_lin0) (fun _ => hD_lin0)
+    (fun _ => rfl) hrev_zero hmat_d hΦ (fun _ => rfl)
+  have hH_rho_ne : sys0.H * sys0.rho ≠ sys0.rho * sys0.H := by
+    intro hcomm
+    have hc_op : Commute switchOp2 D_lin0.rho := by
+      apply matrixOfOp_injective
+      rw [matrixOfOp_mul_eq, matrixOfOp_mul_eq]
+      exact hcomm
+    have hρ_eq_tilt : D_lin0.rho = ρ0 := by
+      change (faithfulGibbsDensity (H_lin 0) hH0_sa hZ_lin0).rho =
+        (faithfulGibbsDensity tiltOp2 tiltOp2_isSelfAdjoint hZ0).rho
+      rw [faithfulGibbsDensity_rho_eq_normalizedExponential,
+        faithfulGibbsDensity_rho_eq_normalizedExponential, hH0]
+    rw [hρ_eq_tilt] at hc_op
+    have h01 : matrixOfOp (switchOp2 * ρ0) 0 1 = matrixOfOp (ρ0 * switchOp2) 0 1 :=
+      congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M 0 1) hc_op.eq
+    have hexp_t : ρ0 = (1 / 2 : ℝ) • (1 : FiniteOperatorAlgebra 2) +
+        (Real.tanh 1 / 2 : ℝ) • tiltOp2 := by
+      dsimp only [ρ0]
+      rw [faithfulGibbsDensity_rho_eq_normalizedExponential]
+      have hexp1 : NormedSpace.exp tiltOp2 =
+          Real.cosh 1 • (1 : FiniteOperatorAlgebra 2) + Real.sinh 1 • tiltOp2 := by
+        have h := exp_real_smul_tiltOp2 1
+        simpa using h
+      have htr1 : finiteOperatorTrace (1 : FiniteOperatorAlgebra 2) = 2 := by
+        change Matrix.trace (matrixOfOp (1 : FiniteOperatorAlgebra 2)) = 2
+        rw [matrixOfOp_one_eq]; norm_num [Matrix.trace, Matrix.diag, Fin.sum_univ_two]
+      have htr_tilt : finiteOperatorTrace tiltOp2 = 0 := by
+        change Matrix.trace (matrixOfOp tiltOp2) = 0
+        rw [matrixOfOp_tiltOp2]
+        norm_num [InfoGeometry.Physics.KleinBottleSewingExact.tilt2, Matrix.trace, Matrix.diag, Fin.sum_univ_two]
+      have htr : tracedExponential tiltOp2 = ((2 * Real.cosh 1 : ℝ) : ℂ) := by
+        unfold tracedExponential
+        rw [hexp1, real_smul_eq_complex_smul, real_smul_eq_complex_smul,
+          (finiteOperatorTraceCLM 2).map_add, (finiteOperatorTraceCLM 2).map_smul,
+          (finiteOperatorTraceCLM 2).map_smul]
+        change (Real.cosh 1 : ℂ) • finiteOperatorTrace 1 + (Real.sinh 1 : ℂ) • finiteOperatorTrace tiltOp2 = _
+        rw [htr1, htr_tilt, smul_eq_mul, smul_eq_mul]; push_cast; ring
+      unfold normalizedExponential
+      rw [htr, hexp1, real_smul_eq_complex_smul, real_smul_eq_complex_smul, smul_add, smul_smul, smul_smul]
+      have hc : (((2 * Real.cosh 1 : ℝ) : ℂ)⁻¹ * (Real.cosh 1 : ℂ)) = ((1 / 2 : ℝ) : ℂ) := by
+        exact_mod_cast show (2 * Real.cosh 1)⁻¹ * Real.cosh 1 = 1 / 2 by
+          field_simp [ne_of_gt (Real.cosh_pos 1)]
+      have hs : (((2 * Real.cosh 1 : ℝ) : ℂ)⁻¹ * (Real.sinh 1 : ℂ)) = ((Real.tanh 1 / 2 : ℝ) : ℂ) := by
+        rw [Real.tanh_eq_sinh_div_cosh]
+        exact_mod_cast show (2 * Real.cosh 1)⁻¹ * Real.sinh 1 = Real.sinh 1 / Real.cosh 1 / 2 by
+          field_simp [ne_of_gt (Real.cosh_pos 1)]
+      rw [hc, hs, ← real_smul_eq_complex_smul, ← real_smul_eq_complex_smul]
+    rw [hexp_t, matrixOfOp_mul_eq, matrixOfOp_mul_eq, matrixOfOp_add,
+      matrixOfOp_real_smul, matrixOfOp_real_smul, matrixOfOp_one_eq,
+      switchOp2_mat_eq_e2e, matrixOfOp_tiltOp2] at h01
+    have h01' := congrArg Complex.re h01
+    simp only [Matrix.add_apply, Matrix.mul_apply, Matrix.smul_apply, smul_eq_mul,
+      Fin.sum_univ_two, InfoGeometry.Physics.KleinBottleSewingExact.tilt2,
+      Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
+      Matrix.one_apply, Fin.isValue, Complex.add_re, Complex.mul_re,
+      Complex.ofReal_re, Complex.ofReal_im, Complex.one_re, Complex.one_im,
+      Complex.neg_re, Complex.neg_im,
+      zero_mul, mul_zero, sub_zero, add_zero, zero_add] at h01'
+    have htanh_ne : Real.tanh 1 ≠ 0 := by
+      rw [Real.tanh_eq_sinh_div_cosh]
+      exact div_ne_zero (ne_of_gt (Real.sinh_pos_iff.mpr one_pos)) (ne_of_gt (Real.cosh_pos 1))
+    exact htanh_ne (by linarith)
+  have hgrad_H_ne : sys0.grad_F * sys0.H ≠ sys0.H * sys0.grad_F := by
+    intro hcomm
+    have hc_op : Commute (centeredStatistic D_lin0 (D_lin0.rho - σ_nt)) switchOp2 := by
+      apply matrixOfOp_injective
+      rw [matrixOfOp_mul_eq, matrixOfOp_mul_eq]
+      exact hcomm
+    have hcomm_diff : Commute (D_lin0.rho - σ_nt) switchOp2 := by
+      have h1 : Commute (D_lin0.rho - σ_nt - expectationReal D_lin0 (D_lin0.rho - σ_nt) • (1 : FiniteOperatorAlgebra 2))
+          switchOp2 := hc_op
+      have h2 : Commute (expectationReal D_lin0 (D_lin0.rho - σ_nt) • (1 : FiniteOperatorAlgebra 2)) switchOp2 := by
+        rw [real_smul_eq_complex_smul]; exact (Commute.one_left switchOp2).smul_left _
+      have := h1.add_left h2
+      simpa [sub_add_cancel] using this
+    have hcomm_rho : Commute D_lin0.rho switchOp2 := by
+      have hσ_sw : Commute σ_nt switchOp2 := by
+        dsimp only [σ_nt]
+        rw [faithfulGibbsDensity_rho_eq_normalizedExponential]
+        exact commute_normalizedExponential_self switchOp2
+      have := hcomm_diff.add_left hσ_sw
+      simpa [sub_add_cancel] using this
+    have hdiff := congrArg matrixOfOp hcomm_rho.symm.eq
+    rw [matrixOfOp_mul_eq, matrixOfOp_mul_eq] at hdiff
+    exact hH_rho_ne hdiff
+  have hderiv_neg : deriv (fun s => Φ_clm (matrixOfOp (normalizedExponential (H_lin s)))) 0 < 0 := by
+    have hcomp := hasDerivAt_freeEnergy_of_matrixKuboMoriMobility
+      (fun M => Φ_clm M) (fun _ => Φ_clm)
+      (fun s => matrixOfOp (normalizedExponential (H_lin s)))
+      (fun _ => sys0) hmat_d hΦ (fun _ => rfl)
+    rw [hcomp.deriv]
+    change (Matrix.trace (star sys0.grad_F * MetriplecticDissipation.stateEvolution sys0)).re < 0
+    have hevol : MetriplecticDissipation.stateEvolution sys0 =
+        (-Complex.I • (sys0.H * sys0.rho - sys0.rho * sys0.H)) - sys0.Onsager sys0.grad_F := by
+      simp [MetriplecticDissipation.stateEvolution, MetriplecticDissipation.unitaryFlow,
+        MetriplecticDissipation.commutator]
+    rw [hevol, Matrix.mul_sub, Matrix.trace_sub, Complex.sub_re, hrev_zero, zero_sub]
+    have hdiss :
+        (Matrix.trace (star sys0.grad_F * sys0.Onsager sys0.grad_F)).re =
+          (D_lin0.kuboMoriPairing (centeredStatistic D_lin0 (D_lin0.rho - σ_nt))
+            (centeredStatistic D_lin0 (D_lin0.rho - σ_nt))).re := by
+      have hg : sys0.grad_F = matrixOfOp (centeredStatistic D_lin0 (D_lin0.rho - σ_nt)) := by
+        dsimp only [sys0, evolvingGibbsMetriplecticSystem, D_lin0]
+      have hcsa : IsSelfAdjoint (centeredStatistic D_lin0 (D_lin0.rho - σ_nt)) := by
+        rw [isSelfAdjoint_iff]
+        unfold centeredStatistic
+        rw [← finiteOperatorStarRealCLM_apply, (finiteOperatorStarRealCLM 2).map_sub,
+          finiteOperatorStarRealCLM_apply, finiteOperatorStarRealCLM_apply,
+          (D_lin0.strictlyPositive.isSelfAdjoint.sub hσ_sa).star_eq,
+          (isSelfAdjoint_real_smul _ 1 (by rw [isSelfAdjoint_iff, star_one])).star_eq]
+      rw [hg]
+      have hkm := matrixKuboMoriMobility_trace_eq_bkm D_lin0 hD_lin0
+        (matrixOfOp (centeredStatistic D_lin0 (D_lin0.rho - σ_nt)))
+      rw [matrixOp_matrixOfOp, hcsa.star_eq] at hkm
+      exact congrArg Complex.re hkm
+    rw [hdiss]
+    apply neg_lt_zero.mpr
+    apply D_lin0.kuboMoriPairing_self_re_pos _ hD_lin0
+    intro hc0
+    have hmem := (centeredStatistic_eq_zero_iff D_lin0 hD_lin0 _).mp hc0
+    obtain ⟨r, hr⟩ := Submodule.mem_span_singleton.mp hmem
+    have htr_diff : finiteOperatorTrace (D_lin0.rho - σ_nt) = 0 := by
+      rw [← finiteOperatorTraceLinear_apply, _root_.map_sub, finiteOperatorTraceLinear_apply,
+        finiteOperatorTraceLinear_apply, D_lin0.trace_one,
+        (faithfulGibbsDensity H_eq switchOp2_isSelfAdjoint hZ_eq).trace_one, sub_self]
+    have htr_r : finiteOperatorTrace (r • (1 : FiniteOperatorAlgebra 2)) = (2 * r : ℝ) := by
+      rw [real_smul_eq_complex_smul, ← finiteOperatorTraceLinear_apply, _root_.map_smul,
+        finiteOperatorTraceLinear_apply]
+      change (r : ℂ) • Matrix.trace (matrixOfOp (1 : FiniteOperatorAlgebra 2)) = _
+      rw [matrixOfOp_one_eq, Matrix.trace_one, Fintype.card_fin]
+      simp [smul_eq_mul, mul_comm]
+    have htr_eq := congrArg finiteOperatorTrace hr
+    rw [htr_r, htr_diff] at htr_eq
+    have hr0 : r = 0 := by
+      have hre := congrArg Complex.re htr_eq
+      simp only [Complex.ofReal_re, Complex.zero_re] at hre
+      linarith
+    rw [hr0, zero_smul] at hr
+    have hrho_eq_sigma : D_lin0.rho = σ_nt := sub_eq_zero.mp hr.symm
+    have hcomm_mat : sys0.H * sys0.rho = sys0.rho * sys0.H := by
+      have hcomm_op : Commute switchOp2 σ_nt := by
+        dsimp only [σ_nt]
+        rw [faithfulGibbsDensity_rho_eq_normalizedExponential]
+        exact (commute_normalizedExponential_self switchOp2).symm
+      change matrixOfOp switchOp2 * matrixOfOp D_lin0.rho = matrixOfOp D_lin0.rho * matrixOfOp switchOp2
+      rw [hrho_eq_sigma, ← matrixOfOp_mul_eq, ← matrixOfOp_mul_eq, hcomm_op.eq]
+    exact hH_rho_ne hcomm_mat
+  exact ⟨hH0_sa, hmat_d, hderiv_neg, hH_rho_ne, hgrad_H_ne⟩
+
+/-- `T5-C-03`: Dim-2 zero-trace slit-plane rejection
+(`tracedExponential ((Complex.I * (π / 2)) • tiltOp2) = 0 ∉ Complex.slitPlane`) and
+non-self-adjoint nilpotent `H_ns = matrixOp !![0, 1; 0, 0]` (`star H_ns ≠ H_ns`,
+`HasFDerivAt (gibbsRelativePotential σ) (gibbsRelativePotentialFDeriv σ H_ns) H_ns`). -/
+theorem t5_c_03_slitPlane_and_nonSA :
+    let H_zero_tr : FiniteOperatorAlgebra 2 := (Complex.I * ((Real.pi : ℂ) / 2)) • tiltOp2
+    let H_ns : FiniteOperatorAlgebra 2 := matrixOp !![0, 1; 0, 0]
+    let σ : FiniteOperatorAlgebra 2 := (1 / 2 : ℝ) • (1 : FiniteOperatorAlgebra 2)
+    tracedExponential H_zero_tr = 0 ∧
+      tracedExponential H_zero_tr ∉ Complex.slitPlane ∧
+      star H_ns ≠ H_ns ∧
+      tracedExponential H_ns ∈ Complex.slitPlane ∧
+      HasFDerivAt (gibbsRelativePotential σ) (gibbsRelativePotentialFDeriv σ H_ns) H_ns := by
+  intro H_zero_tr H_ns σ
+  have : CompleteSpace (FiniteOperatorAlgebra 2) := FiniteDimensional.complete ℂ _
+  have hexp_zt : NormedSpace.exp H_zero_tr = Complex.I • tiltOp2 := by
+    let : NormedAlgebra ℚ (FiniteOperatorAlgebra 2) := NormedAlgebra.restrictScalars ℚ ℂ _
+    let fC : ℂ → FiniteOperatorAlgebra 2 := fun z =>
+      (Complex.cos z • (1 : FiniteOperatorAlgebra 2) + (Complex.I * Complex.sin z) • tiltOp2) *
+        NormedSpace.exp (z • (-Complex.I • tiltOp2))
+    have hfC : ∀ z : ℂ, HasDerivAt fC 0 z := fun z => by
+      have h1 : HasDerivAt (fun u : ℂ => NormedSpace.exp (u • (-Complex.I • tiltOp2)))
+          (NormedSpace.exp (z • (-Complex.I • tiltOp2)) * (-Complex.I • tiltOp2)) z := by
+        have h' := (hasStrictDerivAt_exp_smul_const' (-Complex.I • tiltOp2) z).hasDerivAt
+        have hc : Commute (-Complex.I • tiltOp2) (NormedSpace.exp (z • (-Complex.I • tiltOp2))) :=
+          ((Commute.refl (-Complex.I • tiltOp2)).smul_right z).exp_right
+        rwa [hc.eq] at h'
+      have h2 : HasDerivAt (fun u : ℂ => Complex.cos u • (1 : FiniteOperatorAlgebra 2) +
+            (Complex.I * Complex.sin u) • tiltOp2)
+          ((-Complex.sin z) • (1 : FiniteOperatorAlgebra 2) + (Complex.I * Complex.cos z) • tiltOp2) z :=
+        ((Complex.hasDerivAt_cos z).smul_const (1 : FiniteOperatorAlgebra 2)).add
+          (((Complex.hasDerivAt_sin z).const_mul Complex.I).smul_const tiltOp2)
+      refine (h2.mul h1).congr_deriv ?_
+      have hcomm : Commute (NormedSpace.exp (z • (-Complex.I • tiltOp2))) (-Complex.I • tiltOp2) :=
+        ((Commute.refl (-Complex.I • tiltOp2)).smul_left z).exp_left
+      have hprod : (Complex.cos z • (1 : FiniteOperatorAlgebra 2) +
+            (Complex.I * Complex.sin z) • tiltOp2) * (-Complex.I • tiltOp2) =
+          -((-Complex.sin z) • (1 : FiniteOperatorAlgebra 2) + (Complex.I * Complex.cos z) • tiltOp2) := by
+        rw [add_mul, smul_mul_assoc, mul_smul_comm, one_mul, smul_mul_assoc, mul_smul_comm, tiltOp2_sq,
+          smul_smul, smul_smul]
+        apply ContinuousLinearMap.ext; intro v; simp only [_root_.add_apply, _root_.neg_apply, _root_.smul_apply]
+        have hi : (Complex.I * Complex.sin z) * (-Complex.I) = Complex.sin z := by
+          calc (Complex.I * Complex.sin z) * (-Complex.I) = -(Complex.I * Complex.I) * Complex.sin z := by ring
+            _ = Complex.sin z := by rw [Complex.I_mul_I]; ring
+        rw [hi]
+        module
+      calc (-Complex.sin z • 1 + (Complex.I * Complex.cos z) • tiltOp2) *
+              NormedSpace.exp (z • -Complex.I • tiltOp2) +
+            (Complex.cos z • 1 + (Complex.I * Complex.sin z) • tiltOp2) *
+              (NormedSpace.exp (z • -Complex.I • tiltOp2) * (-Complex.I • tiltOp2))
+          = (-Complex.sin z • 1 + (Complex.I * Complex.cos z) • tiltOp2) *
+              NormedSpace.exp (z • -Complex.I • tiltOp2) +
+            ((Complex.cos z • 1 + (Complex.I * Complex.sin z) • tiltOp2) * (-Complex.I • tiltOp2)) *
+              NormedSpace.exp (z • -Complex.I • tiltOp2) := by rw [hcomm.eq, mul_assoc]
+        _ = (-Complex.sin z • 1 + (Complex.I * Complex.cos z) • tiltOp2) *
+              NormedSpace.exp (z • -Complex.I • tiltOp2) +
+            (-((-Complex.sin z) • (1 : FiniteOperatorAlgebra 2) + (Complex.I * Complex.cos z) • tiltOp2)) *
+              NormedSpace.exp (z • -Complex.I • tiltOp2) := by rw [hprod]
+        _ = 0 := by rw [← add_mul, add_neg_cancel, zero_mul]
+    let f : ℝ → FiniteOperatorAlgebra 2 := fun s => fC (s : ℂ)
+    have hf_d : ∀ s : ℝ, HasDerivAt f 0 s := fun s => hasDerivAt_comp_ofReal_e2e (hfC (s : ℂ))
+    have hconst : f (Real.pi / 2) = f 0 :=
+      is_const_of_deriv_eq_zero (fun s => (hf_d s).differentiableAt) (fun s => (hf_d s).deriv) _ 0
+    have hf0 : f 0 = 1 := by
+      dsimp [f, fC]
+      rw [Complex.cos_zero, Complex.sin_zero, mul_zero, one_smul]
+      rw [show ((0 : ℂ) • (-Complex.I • tiltOp2)) = 0 from
+        ContinuousLinearMap.ext fun _ => by simp]
+      rw [NormedSpace.exp_zero, mul_one]
+      apply ContinuousLinearMap.ext; intro v; simp
+    have hpi : f (Real.pi / 2) =
+        (Complex.I • tiltOp2) * NormedSpace.exp (((Real.pi : ℂ) / 2) • (-Complex.I • tiltOp2)) := by
+      dsimp [f, fC]
+      rw [Complex.ofReal_div, Complex.ofReal_ofNat, Complex.cos_pi_div_two, Complex.sin_pi_div_two]
+      apply ContinuousLinearMap.ext; intro v; simp
+    have hmul : NormedSpace.exp (((Real.pi : ℂ) / 2) • (-Complex.I • tiltOp2)) *
+        NormedSpace.exp H_zero_tr = 1 := by
+      have hc : Commute (((Real.pi : ℂ) / 2) • (-Complex.I • tiltOp2)) H_zero_tr := by
+        dsimp [H_zero_tr]
+        exact ((Commute.refl tiltOp2).smul_left (-Complex.I)).smul_left _ |>.smul_right _
+      have hz : ((Real.pi : ℂ) / 2) • (-Complex.I • tiltOp2) + H_zero_tr = 0 := by
+        dsimp [H_zero_tr]
+        apply ContinuousLinearMap.ext; intro v
+        simp only [_root_.add_apply, _root_.smul_apply, _root_.zero_apply]
+        have hc0 : ((Real.pi : ℂ) / 2) * -Complex.I + Complex.I * ((Real.pi : ℂ) / 2) = 0 := by ring
+        rw [smul_smul, ← add_smul, hc0, zero_smul]
+      rw [← NormedSpace.exp_add_of_commute hc, hz, NormedSpace.exp_zero]
+    calc NormedSpace.exp H_zero_tr = 1 * NormedSpace.exp H_zero_tr := (one_mul _).symm
+      _ = f (Real.pi / 2) * NormedSpace.exp H_zero_tr := by rw [hconst, hf0]
+      _ = (Complex.I • tiltOp2) *
+            (NormedSpace.exp (((Real.pi : ℂ) / 2) • (-Complex.I • tiltOp2)) * NormedSpace.exp H_zero_tr) := by
+          rw [hpi, mul_assoc]
+      _ = Complex.I • tiltOp2 := by rw [hmul, mul_one]
+  have htr_zt : tracedExponential H_zero_tr = 0 := by
+    change finiteOperatorTrace (NormedSpace.exp H_zero_tr) = 0
+    rw [hexp_zt, ← finiteOperatorTraceLinear_apply, _root_.map_smul, finiteOperatorTraceLinear_apply]
+    change Complex.I * Matrix.trace (matrixOfOp tiltOp2) = 0
+    rw [matrixOfOp_tiltOp2]
+    simp [Matrix.trace, Matrix.diag, InfoGeometry.Physics.KleinBottleSewingExact.tilt2, Fin.sum_univ_two]
+  have hns_ne : star H_ns ≠ H_ns := by
+    intro h
+    have hm := congrArg (fun M : FiniteOperatorAlgebra 2 => matrixOfOp M 1 0) h
+    have hst : matrixOfOp (star H_ns) = (matrixOfOp H_ns)ᴴ := by
+      change matrixOfOp (ContinuousLinearMap.adjoint H_ns) = _
+      exact matrixOfOp_adjoint H_ns
+    rw [hst] at hm
+    dsimp [H_ns] at hm
+    rw [matrixOfOp_matrixOp] at hm
+    norm_num at hm
+  have hns_sq : H_ns * H_ns = 0 := by
+    apply matrixOfOp_injective
+    dsimp [H_ns]
+    rw [matrixOfOp_mul_eq, matrixOfOp_matrixOp, matrixOfOp_zero]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [Matrix.mul_apply, Fin.sum_univ_two]
+  have hexp_ns : NormedSpace.exp H_ns = 1 + H_ns := by
+    let : NormedAlgebra ℚ (FiniteOperatorAlgebra 2) := NormedAlgebra.restrictScalars ℚ ℂ _
+    have hexp_eq : NormedSpace.exp H_ns = ∑' k : ℕ, (k.factorial : ℂ)⁻¹ • H_ns ^ k :=
+      congrFun (NormedSpace.exp_eq_tsum ℂ) H_ns
+    rw [hexp_eq]
+    have hterm : ∀ k ≥ 2, ((k.factorial : ℂ)⁻¹ • H_ns ^ k) = 0 := by
+      intro k hk
+      obtain ⟨m, rfl⟩ := Nat.exists_eq_add_of_le' hk
+      rw [pow_add, pow_two, hns_sq, mul_zero, smul_zero]
+    rw [tsum_eq_sum (s := {0, 1}) (fun k hk => hterm k (by
+      simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hk
+      omega))]
+    simp [Finset.sum_pair (by decide : (0 : ℕ) ≠ 1)]
+  have htr_ns : tracedExponential H_ns = 2 := by
+    change finiteOperatorTrace (NormedSpace.exp H_ns) = 2
+    rw [hexp_ns, ← finiteOperatorTraceLinear_apply, _root_.map_add, finiteOperatorTraceLinear_apply,
+      finiteOperatorTraceLinear_apply]
+    change Matrix.trace (matrixOfOp (1 : FiniteOperatorAlgebra 2)) + Matrix.trace (matrixOfOp H_ns) = 2
+    dsimp [H_ns]
+    rw [matrixOfOp_one_eq, matrixOfOp_matrixOp]
+    norm_num [Matrix.trace, Matrix.diag, Fin.sum_univ_two]
+  have hslit_ns : tracedExponential H_ns ∈ Complex.slitPlane := by
+    rw [htr_ns, Complex.mem_slitPlane_iff]; left; norm_num
+  refine ⟨htr_zt, by rw [htr_zt]; exact Complex.zero_notMem_slitPlane, hns_ne, hslit_ns,
+    hasFDerivAt_gibbsRelativePotential σ H_ns hslit_ns⟩
+
+end Tier5_Tests
 
 end InfoGeometry.Canonical.LeibnizDerivationFrechetOnsagerE2ETests

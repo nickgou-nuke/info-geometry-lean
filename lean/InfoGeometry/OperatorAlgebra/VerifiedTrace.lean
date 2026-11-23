@@ -44,17 +44,25 @@ theorem cyclic_trace_conjugation_invariant_ring {B M : Type*} [Ring B] [AddCommM
     _ = τ ((U_inv * U) * A) := by rw [mul_assoc]
     _ = τ A := by rw [h_left, one_mul]
 
-/-- Over any non-commutative ring `[Ring B]`, a cyclic trace `τ : B → M` is invariant
-under every `InvertibleTransport B`. -/
-theorem cyclic_trace_invariant_under_transport_ring {B M : Type*} [Ring B]
-    (τ : B → M) (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
-    (A : B) (U : InvertibleTransport B) :
-    τ (U.conjugate A) = τ A := by
-  dsimp [InvertibleTransport.conjugate]
-  calc
-    τ ((U : B) * A * (↑U⁻¹ : B)) = τ (↑U⁻¹ * ((U : B) * A)) := h_cyc ((U : B) * A) (↑U⁻¹ : B)
-    _ = τ ((↑U⁻¹ * (U : B)) * A) := by rw [mul_assoc]
-    _ = τ A := by rw [Units.inv_mul U, one_mul]
+/-- A cyclic additive real trace vanishes on an element conjugated to its
+negative. The cyclicity and involution hypotheses are explicit: no trace
+functional is assumed to exist on an arbitrary ring. -/
+theorem cyclic_real_trace_eq_zero_of_involutive_anticommutation
+    {B : Type*} [Ring B] (τ : B →+ ℝ)
+    (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
+    (J K : B) (hK : K * K = 1) (hKJ : K * J = -(J * K)) :
+    τ J = 0 := by
+  have hconj : τ (K * J * K) = τ J :=
+    cyclic_trace_conjugation_invariant_ring τ h_cyc J K K hK
+  have hneg : K * J * K = -J := by
+    calc
+      K * J * K = (K * J) * K := by rw [mul_assoc]
+      _ = (-(J * K)) * K := by rw [hKJ]
+      _ = -((J * K) * K) := by rw [neg_mul]
+      _ = -(J * (K * K)) := by rw [mul_assoc]
+      _ = -J := by rw [hK, mul_one]
+  rw [hneg, map_neg] at hconj
+  linarith
 
 /-! ## 1. Constructive cyclicity and invariance -/
 
@@ -72,18 +80,17 @@ theorem matrix_trace_conjugation_defect {R : Type*} [Ring R]
     rw [← mul_assoc, h_left, one_mul]
   rw [hA, ← Matrix.trace_sub]
 
-variable {R : Type*} [CommRing R]
+variable {R : Type*} [Ring R]
 
-/--
-Finite matrix trace is invariant under conjugation by a two-sided inverse.
-
-The two-sided inverse is part of the public theorem boundary.  The proof uses
-trace cyclicity and the left inverse law after cycling the final factor.
--/
+/-- A cyclic matrix trace over a possibly noncommutative coefficient ring is
+invariant under conjugation whenever the conjugating pair has a left inverse.
+The cyclicity condition is explicit because the ordinary matrix trace is not
+cyclic for arbitrary noncommutative coefficients. -/
 theorem matrix_trace_conjugation_invariant
     (A : Matrix n n R)
     (U U_inv : Matrix n n R)
-    (h_right : U * U_inv = 1)
+    (h_trace_cyclic : ∀ X Y : Matrix n n R,
+      Matrix.trace (X * Y) = Matrix.trace (Y * X))
     (h_left : U_inv * U = 1) :
     Matrix.trace (U * A * U_inv) = Matrix.trace A := by
   calc
@@ -91,67 +98,78 @@ theorem matrix_trace_conjugation_invariant
         = Matrix.trace ((U * A) * U_inv) := by
             rw [mul_assoc]
     _ = Matrix.trace (U_inv * (U * A)) := by
-            rw [Matrix.trace_mul_comm]
+            exact h_trace_cyclic (U * A) U_inv
     _ = Matrix.trace ((U_inv * U) * A) := by
             rw [← mul_assoc]
-    _ = Matrix.trace ((U * U_inv) * A) := by
-            rw [h_left, h_right]
     _ = Matrix.trace (1 * A) := by
-            rw [h_right]
+            rw [h_left]
     _ = Matrix.trace A := by
             simp
 
-/--
-Trace invariance for an `InvertibleTransport` of a finite matrix algebra.
--/
+/-! ## 2. The ordinary matrix trace need not be cyclic over noncommutative coefficients -/
+
+/-- Two noncommuting coefficient operators in `Mat₂(ℤ)`. -/
+private def traceWitnessA : Matrix (Fin 2) (Fin 2) ℤ :=
+  ![![0, 1], ![0, 0]]
+
+private def traceWitnessB : Matrix (Fin 2) (Fin 2) ℤ :=
+  ![![0, 0], ![1, 0]]
+
+/-- Outer matrix units with noncommuting operator-valued coefficients. -/
+private def traceWitnessX :
+    Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) ℤ) :=
+  ![![0, traceWitnessA], ![0, 0]]
+
+private def traceWitnessY :
+    Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) ℤ) :=
+  ![![0, 0], ![traceWitnessB, 0]]
+
+/-- The usual diagonal-sum matrix trace is not cyclic when its entries lie in
+a noncommutative operator ring: the off-diagonal matrix units expose the
+coefficient commutator. -/
+theorem matrix_trace_not_cyclic_over_operator_coefficients :
+    Matrix.trace (traceWitnessX * traceWitnessY) ≠
+      Matrix.trace (traceWitnessY * traceWitnessX) := by
+  decide
+
+theorem cyclic_trace_invariant_under_transport_ring {B M : Type*} [Ring B]
+    (τ : B → M) (h_cyc : ∀ x y : B, τ (x * y) = τ (y * x))
+    (A : B) (U : InvertibleTransport B) :
+    τ (U.conjugate A) = τ A := by
+  dsimp [InvertibleTransport.conjugate]
+  calc
+    τ ((U : B) * A * (↑U⁻¹ : B)) = τ (↑U⁻¹ * ((U : B) * A)) := h_cyc ((U : B) * A) (↑U⁻¹ : B)
+    _ = τ ((↑U⁻¹ * (U : B)) * A) := by rw [mul_assoc]
+    _ = τ A := by rw [Units.inv_mul U, one_mul]
+
 theorem matrix_trace_invariant_under_transport
     (A : Matrix n n R)
     (U : InvertibleTransport (Matrix n n R)) :
     Matrix.trace (U.conjugate A) = Matrix.trace A := by
   simpa [InvertibleTransport.conjugate] using Matrix.trace_units_conj U A
 
-/-! ## 2. Verified trace readout -/
-
-set_option linter.dupNamespace false
-
-/-!
-A verified trace is an operator-to-scalar map with a proved conjugation
-invariance law.  The subtype is the native proof-carrying carrier.
--/
 def VerifiedTrace
     (Op Scalar : Type*) [Monoid Op] :=
   {tr : Op → Scalar //
     ∀ (A : Op) (U : InvertibleTransport Op),
       tr (U.conjugate A) = tr A}
 
-namespace VerifiedTrace
-
-variable {Op Scalar : Type*} [Monoid Op]
-variable (T : VerifiedTrace Op Scalar)
 
 abbrev tr : Op → Scalar :=
   T.1
+
 
 theorem invariant
     (A : Op) (U : InvertibleTransport Op) :
     T.tr (U.conjugate A) = T.tr A :=
   T.2 A U
 
-/--
-Re-export trace invariance.
--/
 theorem conjugation_invariant
     (A : Op)
     (U : InvertibleTransport Op) :
     T.tr (U.conjugate A) = T.tr A :=
   T.invariant A U
 
-end VerifiedTrace
-
-/--
-Construction of a verified trace for finite matrix algebras over a commutative
-ring.
--/
 def matrixVerifiedTrace
     (n R : Type*) [Fintype n] [DecidableEq n] [CommRing R] :
     VerifiedTrace (Matrix n n R) R :=
@@ -159,19 +177,11 @@ def matrixVerifiedTrace
     intro A U
     exact matrix_trace_invariant_under_transport A U⟩
 
-/-! ## 3. Real finite matrix specialization -/
-
-/--
-Verified real trace on `Fin n` matrices.
--/
 def realMatrixVerifiedTrace
     (n : ℕ) :
     VerifiedTrace (Matrix (Fin n) (Fin n) ℝ) ℝ :=
   matrixVerifiedTrace (Fin n) ℝ
 
-/--
-Real finite matrix trace is invariant under invertible conjugation.
--/
 theorem real_matrix_trace_invariant_under_transport
     {n : ℕ}
     (A : Matrix (Fin n) (Fin n) ℝ)

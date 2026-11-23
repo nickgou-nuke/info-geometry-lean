@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.ZMod.Basic
@@ -44,15 +49,10 @@ theorem odd_power_to_even_forces_even (g : Bool) :
     z2PowerGrade 3 g = false → g = false := by
   cases g <;> decide
 
-/-- A square root of an even central element may carry odd grade. -/
-theorem square_root_grade_one_lands_even :
-    z2PowerGrade 2 true = false := by
-  rfl
-
-/-- A fourth root of an even central element may also carry odd grade. -/
-theorem fourth_root_grade_one_lands_even :
-    z2PowerGrade 4 true = false := by
-  rfl
+/-- Every even power has even grade, independently of the input grade. -/
+theorem even_power_grade_zero (n : Nat) (g : Bool) (hn : n % 2 = 0) :
+    z2PowerGrade n g = false := by
+  simp [z2PowerGrade, hn]
 
 abbrev Mat2Z := InfoGeometry.Algebra.FiniteSpin.Mat2Z
 
@@ -62,18 +62,15 @@ def I2Z : Mat2Z := 1
 /-- The central sign `-I`. -/
 def negI2Z : Mat2Z := -1
 
-/-- Both central signs are assigned even grade. -/
-def centralSignGrade (_A : Mat2Z) : Bool := false
-
-/-- The central sign pair is even in the finite `Z₂` grading. -/
-theorem central_sign_pair_even :
-    centralSignGrade I2Z = false ∧ centralSignGrade negI2Z = false := by
-  exact ⟨rfl, rfl⟩
-
 /-- The negative identity squares to the identity. -/
 theorem negI2Z_sq : negI2Z * negI2Z = I2Z := by
   ext i j
   fin_cases i <;> fin_cases j <;> decide
+
+/-- Both scalar central signs commute with every operator in the concrete matrix ring. -/
+theorem central_signs_commute (A : Mat2Z) :
+    I2Z * A = A * I2Z ∧ negI2Z * A = A * negI2Z := by
+  constructor <;> ext i j <;> simp [I2Z, negI2Z]
 
 /-! ## Tripotent and `Z₃` clock readouts -/
 
@@ -175,17 +172,34 @@ theorem g2_artin_length_six (x : Fin 6) :
 
 /-- Consolidated finite bridge packet. -/
 theorem dual_split_octonion_root_klein_braid_packet :
-    z2PowerGrade 2 true = false ∧
-      centralSignGrade I2Z = false ∧
-      centralSignGrade negI2Z = false ∧
+    (∀ n : Nat, ∀ g : Bool, n % 2 = 0 → z2PowerGrade n g = false) ∧
+      (∀ A : Mat2Z, I2Z * A = A * I2Z ∧ negI2Z * A = A * negI2Z) ∧
       negI2Z * negI2Z = I2Z ∧
       tripotentZ3 * tripotentZ3 * tripotentZ3 = tripotentZ3 ∧
       (∀ s : Z3Sector, z3Rotate (z3Rotate (z3Rotate s)) = s) ∧
       My * Mx * My = Mx ∧
       Mx * Mx = (1 : Mat8Z) ∧
       (∀ x : Fin 6, g2ArtinLeft x = g2ArtinRight x) := by
-  exact ⟨square_root_grade_one_lands_even, central_sign_pair_even.1,
-    central_sign_pair_even.2, negI2Z_sq, tripotentZ3_cube, z3Rotate_cube,
+  exact ⟨even_power_grade_zero, central_signs_commute,
+    negI2Z_sq, tripotentZ3_cube, z3Rotate_cube,
     klein_monodromy_relation, Mx_sq, g2_artin_length_six⟩
+
+/-- A square root of an even central element may carry odd grade. -/
+theorem square_root_grade_one_lands_even :
+    z2PowerGrade 2 true = false := by
+  rfl
+
+/-- A fourth root of an even central element may also carry odd grade. -/
+theorem fourth_root_grade_one_lands_even :
+    z2PowerGrade 4 true = false := by
+  rfl
+
+/-- Both central signs are assigned even grade. -/
+def centralSignGrade (_A : Mat2Z) : Bool := false
+
+/-- The central sign pair is even in the finite `Z₂` grading. -/
+theorem central_sign_pair_even :
+    centralSignGrade I2Z = false ∧ centralSignGrade negI2Z = false := by
+  exact ⟨rfl, rfl⟩
 
 end InfoGeometry.OperatorAlgebra.DualSplitOctonionRootKleinBraidBridge

@@ -11,7 +11,7 @@ import Lean.Elab.Command
 # Axiom and Integrity Audit for `LeibnizDerivationFrechetOnsagerE2ETests`
 
 Verifies via both explicit `#print axioms` on every exported E2E witness definition and
-Tier 1–4 theorem, plus an environment-wide `Lean.Util.CollectAxioms` sweep, that all constants in
+Tier 1–5 theorem, plus an environment-wide `Lean.Util.CollectAxioms` sweep, that all constants in
 `InfoGeometry.Canonical.LeibnizDerivationFrechetOnsagerE2ETests` depend strictly on
 `{propext, Classical.choice, Quot.sound}`.
 -/
@@ -170,6 +170,88 @@ open InfoGeometry.Canonical.LeibnizDerivationFrechetOnsagerE2ETests
 #print axioms t4_sc_03_singularSchurDrazinBodyForcePipeline
 #print axioms t4_sc_04_kmsModularExteriorCurvaturePipeline
 #print axioms t4_sc_05_exceptionalJordanSuperBraidedPipeline
+
+-- Additional Exported Witness & Helper Declarations (Tiers 1-4)
+#print axioms matrixOfOp_sub_eq
+#print axioms matrixOfOp_neg_eq
+#print axioms matrixOfOp_mul_eq
+#print axioms matrixOfOp_one_eq
+#print axioms P_doubled_proj
+#print axioms P_doubled_proj_idem
+#print axioms P_doubled_proj_selfAdjoint
+#print axioms CIK_doubled
+#print axioms B_doubled
+#print axioms isSelfAdjoint_I_smul_comm
+#print axioms isSelfAdjoint_real_smul
+#print axioms isSelfAdjoint_add_op
+#print axioms switchOp2_eq_A_swap
+#print axioms matrixOfOp_tiltOp2
+#print axioms matrixOfOp_A_swap
+#print axioms matrixOfOp_B_tilt
+#print axioms matrixOfOp_H_d63
+#print axioms traceMulAlt2CLM
+#print axioms Φ_norm_swap
+#print axioms omega0Smooth
+#print axioms omega3Const
+#print axioms H_sol_c
+#print axioms H_sol_d
+#print axioms H_sol_curve
+#print axioms H_sol_curve_isSelfAdjoint
+#print axioms Mat2R
+#print axioms Mat2C
+#print axioms innerMat2RDeriv
+#print axioms innerMat2CDeriv
+#print axioms ncZornRot01Fun
+#print axioms P3_mat_e2e
+#print axioms P3_op_e2e
+#print axioms P3_op_e2e_idem
+#print axioms P3_e2e
+#print axioms A3_e2e
+#print axioms C3_e2e
+#print axioms X3_e2e
+#print axioms Y3_e2e
+#print axioms P_diag_i_mat
+#print axioms P_diag_i
+#print axioms conjStarAlgEquiv_realMatrix
+#print axioms conjStarAlgEquiv_B_tilt
+#print axioms conjStarAlgEquiv_A_swap
+#print axioms H3_e2e
+#print axioms B_br_e2e
+#print axioms H3_e2e_sa
+#print axioms X3_e2e_sa
+#print axioms D_br_e2e
+#print axioms D_br_e2e_isLeibniz
+
+-- Tier 5 Helpers & Adversarial Coverage Hardening (T5-CAP-01, T5-A..T5-D)
+#print axioms star_I_comm_e2e
+#print axioms comm_leib_op_e2e
+#print axioms peirce_conj_odd_deriv_e2e
+#print axioms peirce_conj_odd_deriv_rev_e2e
+#print axioms op_invS_eq_e2e
+#print axioms peirce_P_minus_apply_e2e
+#print axioms p_d63_mat_eq_e2e
+#print axioms switchOp2_mat_eq_e2e
+#print axioms tiltOp2_twist_neg_e2e
+#print axioms opZornComm_e2e
+#print axioms odd_twist_leibniz_e2e
+#print axioms odd_twist_anticomm_e2e
+#print axioms opZornCommDeriv_e2e
+#print axioms d_odd_lin_e2e
+#print axioms U_rot_e2e
+#print axioms H_ng_sa_e2e
+#print axioms t5_cap_01_capstone_umbrella
+#print axioms t5_a_01_cartan_pos_parity_and_drazin
+#print axioms t5_a_02_two_block_schur_tkk_conformal_flip
+#print axioms t5_a_03_peirce_cut_bkm_and_cut_stabilizer
+#print axioms t5_d_01_modular_nondegenerate_and_lie_lanes
+#print axioms t5_d_02_nonconstant_colimit_tower_and_injectivity
+#print axioms t5_d_03_opzorn_and_nontrivial_graded_braided
+#print axioms t5_b_01_oddParity_erlangenAut_frechetFormPairing
+#print axioms t5_b_02_modularInterpolation_and_jetVsForm
+#print axioms t5_c_01_genericMetriplectic_coupled
+#print axioms t5_c_02_nonTracial_nonCommuting_trajectories
+#print axioms t5_c_02b_matrixNormalized_evolvingGibbs
+#print axioms t5_c_03_slitPlane_and_nonSA
 
 end ExplicitPrintAxioms
 

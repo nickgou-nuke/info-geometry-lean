@@ -1,9 +1,36 @@
-import Mathlib.Tactic
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib
 
 namespace Omega.Zeta
 
-/-- Concrete fixed-span parameters for the logistic depth design law.  The corresponding design
-space below is the minimal fixed-span seed: the equidistant spacing configuration itself. -/
+/-- An affine Fano score is antitone in the error whenever its slope is nonnegative. -/
+theorem affineFanoScore_antitone {ι : Type*} (error : ι → ℝ)
+    (intercept slope : ℝ) (hslope : 0 ≤ slope) {xstar : ι}
+    (hmin : ∀ x, error xstar ≤ error x) (x : ι) :
+    intercept - slope * error x ≤ intercept - slope * error xstar := by
+  have hmul := mul_le_mul_of_nonneg_left (hmin x) hslope
+  linarith
+
+/-- If an error minimizer is unique and the Fano slope is positive, its Fano score maximizer
+is unique as well. -/
+theorem affineFanoScore_unique_maximizer {ι : Type*} (error : ι → ℝ)
+    (intercept slope : ℝ) (hslope : 0 < slope) {xstar : ι}
+    (hmin : ∀ x, error xstar ≤ error x)
+    (hunique : ∀ x, error x = error xstar → x = xstar) :
+    (∀ x, intercept - slope * error x ≤ intercept - slope * error xstar) ∧
+      (∀ x, intercept - slope * error x = intercept - slope * error xstar → x = xstar) := by
+  constructor
+  · intro x
+    exact affineFanoScore_antitone error intercept slope hslope.le hmin x
+  · intro x hscore
+    apply hunique x
+    have hmul : slope * error x = slope * error xstar := by linarith
+    exact (mul_left_cancel₀ hslope.ne' hmul)
+
 structure xi_logistic_depth_design_law_Data where
   kappa : Nat
   totalSpan : Real
@@ -11,8 +38,6 @@ structure xi_logistic_depth_design_law_Data where
   fanoIntercept : Real
   fanoSlope : NNReal
 
-/-- The fixed-span design space after Jensen equality has collapsed the optimizer to the
-equidistant spacing family. -/
 def xi_logistic_depth_design_law_configuration
     (_D : xi_logistic_depth_design_law_Data) : Type :=
   PUnit
@@ -41,8 +66,6 @@ def xi_logistic_depth_design_law_error
     (_x : xi_logistic_depth_design_law_configuration D) : Real :=
   D.baselineError
 
-/-- Affine Fano lower-bound functional, monotone decreasing in the error when the slope is
-nonnegative. -/
 def xi_logistic_depth_design_law_fanoLowerBound
     (D : xi_logistic_depth_design_law_Data) (err : Real) : Real :=
   D.fanoIntercept - (D.fanoSlope : Real) * err

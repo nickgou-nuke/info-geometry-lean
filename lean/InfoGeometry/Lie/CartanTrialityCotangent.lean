@@ -167,7 +167,10 @@ theorem finrank_cartan_dual_invariants : Module.finrank ℝ cartanRepresentation
 /-- The simultaneous fixed cotangent space has the expected actual dimension four. -/
 theorem finrank_fixed_cartan_phase :
     Module.finrank ℝ (cartanRepresentation.invariants × cartanRepresentation.dual.invariants) = 4 := by
-  rw [Module.finrank_prod, finrank_cartan_invariants, finrank_cartan_dual_invariants]
+  let b : Module.Basis (Fin 2 ⊕ Fin 2) ℝ
+      (cartanRepresentation.invariants × cartanRepresentation.dual.invariants) :=
+    (fixedCartanBasis.prod fixedCartanBasis.dualBasis).map fixedCartanCotangentEquiv.symm
+  simpa only [Fintype.card_sum, Fintype.card_fin] using (Module.finrank_eq_card_basis b)
 
 /-- Finite triality gives a nondegenerate form on the actual fixed coordinates. -/
 theorem fixed_cartan_phase_nondegenerate :

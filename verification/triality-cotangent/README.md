@@ -10,6 +10,11 @@ The seven focused owners cover the native action groupoid, Lie algebra fiber
 form, finite invariant dual equivalence, a shear counterexample, exact Cartan
 coordinates, faithful native `S₃` action, and the vector-group specialization.
 
+The completed kernel run, exact source identity, raw artifact hashes, and
+independent acceptance reviews are recorded in [VALIDATION.md](VALIDATION.md).
+Earlier failed checkpoints are retained as history, separately from the final
+successful result.
+
 ## Commands
 
 From an independent checkout with the pinned Lean release installed:

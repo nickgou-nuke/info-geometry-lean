@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Colimit.DirectLimit
+import InfoGeometry.Categorical.CompatibleEndomorphisms
 import InfoGeometry.LinearAlgebra.PositiveRadicalQuotient
 
 /-!
@@ -17,11 +18,18 @@ without introducing another carrier or a positivity assumption into the form.
 Exact form compatibility preserves positive semidefiniteness in both directions
 and preserves every negative stage witness, including in the native radical
 quotient. No topology, analytic limit, or arithmetic evaluation map is asserted.
+
+For compatible operators, native adjoint-pair, self-adjoint and skew-adjoint
+relations, and positivity of the operator quadratic are detected exactly on
+the stages. An adjoint partner is supplied and transported, not constructed
+for an arbitrary operator on the algebraic limit.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.LinearAlgebra.CompatibleBilinearColimit
+
+open InfoGeometry.Categorical.CompatibleEndomorphisms
 
 variable {I : Type*} [Preorder I] [IsDirectedOrder I] [Nonempty I]
 variable {V : I → Type*} [∀ i, AddCommGroup (V i)] [∀ i, Module ℝ (V i)]
@@ -149,5 +157,68 @@ theorem quotient_nonneg_iff (hSymm : ∀ i, (B i).IsSymm) :
       ∀ i x, 0 ≤ B i x x :=
   (PositiveRadicalQuotient.quotientForm_nonneg_iff
     (form f B hB) (form_isSymm f B hB hSymm)).trans (form_nonneg_iff f B hB)
+
+variable (T : ∀ i, Module.End ℝ (V i))
+variable (hT : ∀ i j h x, T j (f i j h x) = f i j h (T i x))
+
+/-- Adjoint pairs on the limit are equivalent to adjoint pairs at every stage. -/
+-- theorem-class: transport
+theorem form_isAdjointPair_iff (U : ∀ i, Module.End ℝ (V i))
+    (hU : ∀ i j h x, U j (f i j h x) = f i j h (U i x)) :
+    LinearMap.IsAdjointPair (form f B hB) (form f B hB)
+      (liftEnd f T hT) (liftEnd f U hU) ↔
+      ∀ i, LinearMap.IsAdjointPair (B i) (B i) (T i) (U i) := by
+  constructor
+  · intro h i x y
+    simpa only [liftEnd_of, form_of] using
+      h (DirectLimit.Module.of ℝ I V f i x) (DirectLimit.Module.of ℝ I V f i y)
+  · intro h x y
+    induction x, y using DirectLimit.induction₂ with
+    | _ i x y =>
+      change form f B hB (liftEnd f T hT (DirectLimit.Module.of ℝ I V f i x))
+          (DirectLimit.Module.of ℝ I V f i y) =
+        form f B hB (DirectLimit.Module.of ℝ I V f i x)
+          (liftEnd f U hU (DirectLimit.Module.of ℝ I V f i y))
+      simpa only [liftEnd_of, form_of] using h i x y
+
+/-- Self-adjointness is detected exactly on the supplied stage operators. -/
+-- theorem-class: transport
+theorem form_isSelfAdjoint_iff :
+    (form f B hB).IsSelfAdjoint (liftEnd f T hT) ↔
+      ∀ i, (B i).IsSelfAdjoint (T i) :=
+  form_isAdjointPair_iff f B hB T hT T hT
+
+/-- Skew-adjointness is detected exactly on the supplied stage operators. -/
+-- theorem-class: transport
+theorem form_isSkewAdjoint_iff :
+    (form f B hB).IsSkewAdjoint (liftEnd f T hT) ↔
+      ∀ i, (B i).IsSkewAdjoint (T i) := by
+  constructor
+  · intro h i x y
+    simpa only [Pi.neg_apply, liftEnd_of, map_neg, form_of] using
+      h (DirectLimit.Module.of ℝ I V f i x) (DirectLimit.Module.of ℝ I V f i y)
+  · intro h x y
+    induction x, y using DirectLimit.induction₂ with
+    | _ i x y =>
+      change form f B hB (liftEnd f T hT (DirectLimit.Module.of ℝ I V f i x))
+          (DirectLimit.Module.of ℝ I V f i y) =
+        form f B hB (DirectLimit.Module.of ℝ I V f i x)
+          (-(liftEnd f T hT (DirectLimit.Module.of ℝ I V f i y)))
+      simpa only [Pi.neg_apply, liftEnd_of, map_neg, form_of] using h i x y
+
+/-- The dissipative quadratic is nonnegative exactly when it is so at every stage. -/
+-- theorem-class: transport
+theorem form_apply_liftEnd_nonneg_iff :
+    (∀ x, 0 ≤ form f B hB x (liftEnd f T hT x)) ↔
+      ∀ i x, 0 ≤ B i x (T i x) := by
+  constructor
+  · intro h i x
+    simpa only [liftEnd_of, form_of] using h (DirectLimit.Module.of ℝ I V f i x)
+  · intro h x
+    induction x using DirectLimit.induction with
+    | _ i x =>
+      change 0 ≤ form f B hB (DirectLimit.Module.of ℝ I V f i x)
+        (liftEnd f T hT (DirectLimit.Module.of ℝ I V f i x))
+      simpa only [liftEnd_of, form_of] using h i x
 
 end InfoGeometry.LinearAlgebra.CompatibleBilinearColimit

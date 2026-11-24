@@ -1,4 +1,4 @@
-name: Finite arithmetic and compatible colimits
+name: Finite arithmetic and compatible colimit laws
 
 on:
   pull_request:
@@ -60,6 +60,10 @@ jobs:
             lean/InfoGeometry/GrandUnification/ArchetypeDictionary.lean
             lean/InfoGeometry/Arithmetic/CompletedZetaSouriauDInfinityThermodynamics.lean
             lean/InfoGeometry/Krein/DoubledSpace.lean
+            lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean
+            lean/InfoGeometry/Physics/FiniteMetriplecticDynamics.lean
+            lean/InfoGeometry/Thermo/CompatibleMetriplecticColimit.lean
+            lean/InfoGeometry/Thermo/CompatibleMetriplecticColimitAudit.lean
           )
           python3 - "${owners[@]}" <<'PY' 2>&1 | tee verification/zeta-weil-krein/logs/proof-proxy.log
           from pathlib import Path
@@ -70,8 +74,8 @@ jobs:
           )
           root = Path.cwd()
           paths = sys.argv[1:]
-          if len(paths) != 13 or len(set(paths)) != 13:
-              raise SystemExit("Expected thirteen distinct Lean owners")
+          if len(paths) != 17 or len(set(paths)) != 17:
+              raise SystemExit("Expected seventeen distinct Lean owners")
           cache = ActiveIndexCache(root, scope_paths=paths)
           failures = checker_index_mismatches(root)
           for path in paths:
@@ -107,18 +111,19 @@ jobs:
         run: |
           set -euo pipefail
           python3 verification/zeta-weil-krein/check.py exe cache get 2>&1 | tee verification/zeta-weil-krein/logs/cache.log
-      - name: Build both focused audits
+      - name: Build all three focused audits
         shell: bash
         run: |
           set -euo pipefail
-          python3 verification/zeta-weil-krein/check.py --wfail build InfoGeometry.Arithmetic.ZetaDihedralWeilKreinAudit InfoGeometry.Categorical.CompatibleColimitAudit 2>&1 | tee verification/zeta-weil-krein/logs/build.log
+          python3 verification/zeta-weil-krein/check.py --wfail build InfoGeometry.Arithmetic.ZetaDihedralWeilKreinAudit InfoGeometry.Categorical.CompatibleColimitAudit InfoGeometry.Thermo.CompatibleMetriplecticColimitAudit 2>&1 | tee verification/zeta-weil-krein/logs/build.log
       - name: Inspect fresh declaration axiom output
         shell: bash
         run: |
           set -euo pipefail
           python3 verification/zeta-weil-krein/check.py env lean lean/InfoGeometry/Arithmetic/ZetaDihedralWeilKreinAudit.lean 2>&1 | tee verification/zeta-weil-krein/logs/axioms.log
           python3 verification/zeta-weil-krein/check.py env lean lean/InfoGeometry/Categorical/CompatibleColimitAudit.lean 2>&1 | tee verification/zeta-weil-krein/logs/colimit-axioms.log
-          python3 verification/zeta-weil-krein/check_axioms.py verification/zeta-weil-krein/logs/axioms.log verification/zeta-weil-krein/logs/colimit-axioms.log > verification/zeta-weil-krein/logs/axiom-check.json
+          python3 verification/zeta-weil-krein/check.py env lean lean/InfoGeometry/Thermo/CompatibleMetriplecticColimitAudit.lean 2>&1 | tee verification/zeta-weil-krein/logs/thermodynamic-axioms.log
+          python3 verification/zeta-weil-krein/check_axioms.py verification/zeta-weil-krein/logs/axioms.log verification/zeta-weil-krein/logs/colimit-axioms.log verification/zeta-weil-krein/logs/thermodynamic-axioms.log > verification/zeta-weil-krein/logs/axiom-check.json
       - name: Preserve verification evidence
         if: always()
         uses: actions/upload-artifact@v4

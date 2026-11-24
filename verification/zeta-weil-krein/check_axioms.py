@@ -13,13 +13,14 @@ ROOT = Path(__file__).resolve().parents[2]
 AUDITS = {
     "lean/InfoGeometry/Arithmetic/ZetaDihedralWeilKreinAudit.lean": 52,
     "lean/InfoGeometry/Categorical/CompatibleColimitAudit.lean": 24,
+    "lean/InfoGeometry/Thermo/CompatibleMetriplecticColimitAudit.lean": 11,
 }
 ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("logs", type=Path, nargs="+", help="Fresh compiler output from both audits")
+    parser.add_argument("logs", type=Path, nargs="+", help="Fresh compiler output from all three audits")
     args = parser.parse_args()
     expected: list[str] = []
     for audit, count in AUDITS.items():

@@ -1377,6 +1377,7 @@ import InfoGeometry.Canonical.RelativeDeterminantScatteringSocket
 import InfoGeometry.Canonical.RegularSupportSecondLaw
 import InfoGeometry.Canonical.DrazinFiveGradedTKKAnomalyBridge
 import InfoGeometry.Canonical.DrazinCoreFlow
+import InfoGeometry.Canonical.DrazinRieszSpectralDecomposition
 import InfoGeometry.Canonical.DrazinBogoliubovFrameEquiv
 import InfoGeometry.Canonical.DrazinDescriptorSystems
 import InfoGeometry.Canonical.SemilinearPaperLean4

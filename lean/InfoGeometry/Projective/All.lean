@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Projective.MobiusDual
+import InfoGeometry.Projective.FisherCauchySchwarzCramerRao
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KuzminCuntzPath
 import InfoGeometry.Projective.KuzminInductiveLimitBridge

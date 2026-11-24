@@ -236,6 +236,35 @@ theorem shirokov_even_grade_scalar_interpolation {n : ℕ} (hn : Even n)
   simpa [shirokovSandwichPowerMatrix, Matrix.mul_apply, Matrix.vandermonde,
     Matrix.one_apply] using hentry
 
+/-- Real coefficient matrix for the same interpolation, used to form an
+endomorphism of the real Clifford algebra. -/
+def shirokovSandwichPowerMatrixReal (n : ℕ) :
+    Matrix (Fin (n + 1)) (Fin (n + 1)) ℝ :=
+  Matrix.vandermonde (fun i : Fin (n + 1) =>
+    -(shirokovGradeEigenvalue n i.val : ℝ))
+
+theorem shirokov_even_sandwich_power_matrix_real_isUnit {n : ℕ} (hn : Even n) :
+    IsUnit (shirokovSandwichPowerMatrixReal n) := by
+  rw [shirokovSandwichPowerMatrixReal, Matrix.isUnit_iff_isUnit_det]
+  apply isUnit_iff_ne_zero.mpr
+  rw [Matrix.det_vandermonde_ne_zero_iff]
+  intro i j hij
+  apply shirokov_even_grade_eigenvalues_injective hn
+  exact_mod_cast (neg_injective hij)
+
+theorem shirokov_even_grade_real_scalar_interpolation {n : ℕ} (hn : Even n)
+    (i k : Fin (n + 1)) :
+    (∑ j : Fin (n + 1),
+      (-(shirokovGradeEigenvalue n i.val : ℝ)) ^ (j : ℕ) *
+        (shirokovSandwichPowerMatrixReal n)⁻¹ j k) = if i = k then 1 else 0 := by
+  have hdet : IsUnit (shirokovSandwichPowerMatrixReal n).det := by
+    exact (Matrix.isUnit_iff_isUnit_det _).mp
+      (shirokov_even_sandwich_power_matrix_real_isUnit hn)
+  have hinv := Matrix.mul_nonsing_inv (shirokovSandwichPowerMatrixReal n) hdet
+  have hentry := congrFun (congrFun hinv i) k
+  simpa [shirokovSandwichPowerMatrixReal, Matrix.mul_apply,
+    Matrix.vandermonde, Matrix.one_apply] using hentry
+
 /-- Shirokov's standard-frame sandwich operator on the negative-definite
 finite-stage algebra `Cl(0,n)`. -/
 def shirokovGradeSandwich (n : ℕ)
@@ -296,6 +325,82 @@ theorem shirokov_grade_sandwich_blade_eigenvalue_action (n : ℕ)
       (-(shirokovGradeEigenvalue n S.card : ℝ)) • cBlade ℝ n S := by
   rw [shirokov_grade_sandwich_blade_scalar,
     shirokov_grade_sandwich_blade_eigenvalue]
+
+/-- The frame sandwich as a real-linear endomorphism of the same Clifford
+algebra, so its polynomial spectral projections retain the full carrier. -/
+def shirokovGradeSandwichLinear (n : ℕ) :
+    CliffordAlgebra (cliffordNegSqForm ℝ n) →ₗ[ℝ]
+      CliffordAlgebra (cliffordNegSqForm ℝ n) where
+  toFun := shirokovGradeSandwich n
+  map_add' x y := by
+    unfold shirokovGradeSandwich
+    simp_rw [mul_add, add_mul, Finset.sum_add_distrib]
+  map_smul' r x := by
+    unfold shirokovGradeSandwich
+    simp_rw [mul_smul_comm, smul_mul_assoc]
+    rw [Finset.smul_sum]
+    simp
+
+theorem shirokov_sandwich_power_blade (n : ℕ) (S : Finset (Fin n))
+    (j : ℕ) :
+    (shirokovGradeSandwichLinear n ^ j) (cBlade ℝ n S) =
+      (-(shirokovGradeEigenvalue n S.card : ℝ)) ^ j • cBlade ℝ n S := by
+  let μ : ℝ := -(shirokovGradeEigenvalue n S.card : ℝ)
+  have hbase : shirokovGradeSandwichLinear n (cBlade ℝ n S) =
+      μ • cBlade ℝ n S := by
+    exact shirokov_grade_sandwich_blade_eigenvalue_action n S
+  induction j with
+  | zero => simp
+  | succ j ih =>
+    rw [pow_succ, Module.End.mul_apply, hbase, map_smul, ih]
+    calc
+      μ • (-shirokovGradeEigenvalue n S.card : ℝ) ^ j • cBlade ℝ n S =
+          (μ * (-shirokovGradeEigenvalue n S.card : ℝ) ^ j) • cBlade ℝ n S :=
+        smul_smul _ _ _
+      _ = (-shirokovGradeEigenvalue n S.card : ℝ) ^ (j + 1) •
+          cBlade ℝ n S := by rw [pow_succ]; congr 1 <;> dsimp [μ] <;> ring
+
+/-- Polynomial spectral projection onto the `k`th sandwich eigenspace, acting
+on the Clifford algebra itself. -/
+def shirokovGradeProjector (n : ℕ) (k : Fin (n + 1)) :
+    Module.End ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)) :=
+  ∑ j : Fin (n + 1),
+    ((shirokovSandwichPowerMatrixReal n)⁻¹ j k) •
+      (shirokovGradeSandwichLinear n) ^ (j : ℕ)
+
+/-- The polynomial projector selects exactly the ordered blades of grade `k`.
+This lifts scalar Vandermonde interpolation to the full finite-stage Clifford
+carrier by its native ordered-blade basis. -/
+theorem shirokov_even_grade_projector_blade {n : ℕ} (hn : Even n)
+    (k : Fin (n + 1)) (S : Finset (Fin n)) :
+    shirokovGradeProjector n k (cBlade ℝ n S) =
+      (if (⟨S.card, Nat.lt_succ_of_le (by simpa using Finset.card_le_univ S)⟩ :
+          Fin (n + 1)) = k then (1 : ℝ) else 0) • cBlade ℝ n S := by
+  have hcard : S.card ≤ n := by simpa using Finset.card_le_univ S
+  let iS : Fin (n + 1) := ⟨S.card, Nat.lt_succ_of_le hcard⟩
+  have hinterp := shirokov_even_grade_real_scalar_interpolation hn iS k
+  have hsum : (∑ j : Fin (n + 1),
+      (shirokovSandwichPowerMatrixReal n)⁻¹ j k *
+        (-(shirokovGradeEigenvalue n S.card : ℝ)) ^ (j : ℕ)) =
+      if iS = k then 1 else 0 := by
+    have hcomm : (∑ j : Fin (n + 1),
+        (shirokovSandwichPowerMatrixReal n)⁻¹ j k *
+          (-(shirokovGradeEigenvalue n S.card : ℝ)) ^ (j : ℕ)) =
+        ∑ j : Fin (n + 1),
+          (-(shirokovGradeEigenvalue n S.card : ℝ)) ^ (j : ℕ) *
+            (shirokovSandwichPowerMatrixReal n)⁻¹ j k := by
+      apply Finset.sum_congr rfl
+      intro j hj
+      ring
+    have hinterp' : (∑ j : Fin (n + 1),
+        (-(shirokovGradeEigenvalue n S.card : ℝ)) ^ (j : ℕ) *
+          (shirokovSandwichPowerMatrixReal n)⁻¹ j k) = if iS = k then 1 else 0 := by
+      simpa [iS] using hinterp
+    exact hcomm.trans hinterp'
+  simp only [shirokovGradeProjector, LinearMap.coe_sum, Finset.sum_apply,
+    LinearMap.smul_apply]
+  simp_rw [shirokov_sandwich_power_blade, smul_smul]
+  rw [← Finset.sum_smul, hsum]
 
 /-- The first two generators in the concrete negative-definite `Cl(0,2)`. -/
 private def shirokovWitnessGen0 :
@@ -1235,6 +1340,34 @@ theorem shirokov_blade_expansion (n : ℕ)
   ext T
   change bladeRepr ℝ n x T = _
   simp [Pi.single_apply]
+
+/-- On an arbitrary element, the polynomial in the frame-sandwich endomorphism
+is the canonical grade-`k` projection in ordered-blade coordinates. -/
+theorem shirokov_even_grade_projector_apply {n : ℕ} (hn : Even n)
+    (k : Fin (n + 1)) (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    shirokovGradeProjector n k x =
+      ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        if S.card = k.val then bladeRepr ℝ n x S • cBlade ℝ n S else 0 := by
+  rw [shirokov_blade_expansion n x]
+  simp only [map_sum, map_smul]
+  apply Finset.sum_congr rfl
+  intro S hS
+  have hrepr : bladeRepr ℝ n
+      (∑ T ∈ (Finset.univ : Finset (Fin n)).powerset,
+        bladeRepr ℝ n x T • cBlade ℝ n T) S = bladeRepr ℝ n x S :=
+    congrArg (fun y => bladeRepr ℝ n y S) (shirokov_blade_expansion n x).symm
+  have hgrade :
+      ((⟨S.card, Nat.lt_succ_of_le (by simpa using Finset.card_le_univ S)⟩ :
+        Fin (n + 1)) = k) ↔ S.card = k.val := by
+    constructor
+    · intro h
+      exact congrArg Fin.val h
+    · intro h
+      apply Fin.ext
+      exact h
+  rw [shirokov_even_grade_projector_blade hn k S]
+  rw [← hrepr]
+  simp [hgrade, smul_smul]
 
 /-- Complementary inverse blades induce the same conjugation on every element
 of the fixed finite-stage `Cl(0,n)` algebra when `n` is odd. -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
@@ -56,6 +61,16 @@ theorem HaarPsi_boundary_regularization :
     traceForm HaarPsi N = 0 := by
   rw [HaarPsi_eq_K]
   exact trace_K_boundary_from_MP
+
+
+theorem HaarPhi_mul_HaarPsi : HaarPhi * HaarPsi = HaarPsi := by
+  rw [HaarPhi_is_identity]
+  simp
+
+
+theorem HaarPsi_mul_HaarPhi : HaarPsi * HaarPhi = HaarPsi := by
+  rw [HaarPhi_is_identity]
+  simp
 
 end InfoGeometry.Canonical.CantorHaarDiracSea
 

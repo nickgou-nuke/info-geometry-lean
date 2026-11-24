@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.CantorDiracOperator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator
@@ -1025,6 +1030,31 @@ theorem xi_ne_zero_of_hilbertSelfAdjoint_finiteCharacteristicDeterminant_offCrit
   (hilbertPolyaNoOffCriticalZerosConclusion_of_hilbertSelfAdjoint_finiteCharacteristicDeterminant
     Xi T hSelf normalizingUnit normalizingUnit_nonzero
     xi_eq_unit_mul_finiteCharacteristicDeterminant) s hOff
+
+
+structure KreinDefinitizableRealSpectrumData
+    {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
+    (pairing : Carrier → Carrier → ℂ)
+    (T : Carrier → Carrier) where
+  symmetric : HestenesKreinSymmetricOperator pairing T
+  definitizingPolynomial : Polynomial ℂ
+  definitizingPolynomial_nonzero : definitizingPolynomial ≠ 0
+  avoidsDefinitizingZeros : AvoidsDefinitizingZeros definitizingPolynomial T
+  realAwayFromDefinitizingZeros :
+    RealSpectrumAwayFromDefinitizingZeros definitizingPolynomial T
+
+
+structure CompletedXiSpectralDeterminantData
+    {Carrier : Type*} [Zero Carrier] [SMul ℂ Carrier]
+    (Xi : ℂ → ℂ) (T : Carrier → Carrier) where
+  spectralDeterminant : ℂ → ℂ
+  normalizingUnit : ℂ → ℂ
+  normalizingUnit_nonzero : ∀ s : ℂ, normalizingUnit s ≠ 0
+  xi_eq_unit_mul_det :
+    ∀ s : ℂ, Xi s = normalizingUnit s * spectralDeterminant s
+  determinant_zero_to_eigen :
+    ∀ s : ℂ, spectralDeterminant s = 0 →
+      EigenvalueEquation T (hilbertPolyaEigenparameter s)
 
 end HilbertPolyaLemmaSeries
 

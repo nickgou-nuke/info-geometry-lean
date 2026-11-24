@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Dynamics.SouriauBostConnesFlowExtensions
@@ -38,5 +43,21 @@ Information below resolution ~ 1/n is lost at rate ~ 1/n².
 theorem jacobian_bound_at_stage {n : ℕ} (hn : (n : ℝ) > 1/2) :
     1 / (((n : ℝ) + (1/2 : ℝ)) ^ 2) ≤ 4 / ((n : ℝ) ^ 2) :=
   thermalCayley_jacobian_bound hn
+
+
+theorem resolutionAtStage_pos (n : ℕ) : 0 < resolutionAtStage n := by
+  dsimp [resolutionAtStage]
+  positivity
+
+
+theorem resolutionAtStage_le_inv_natCast {n : ℕ} (hn : 0 < n) :
+    resolutionAtStage n ≤ 1 / (n : ℝ) := by
+  have hn0 : 0 < (n : ℝ) := by
+    exact_mod_cast hn
+  have hn1 : 0 < (n : ℝ) + 1 := by
+    linarith
+  dsimp [resolutionAtStage]
+  apply (div_le_div_iff₀ hn1 hn0).2
+  linarith
 
 end InfoGeometry.Canonical.CantorResolutionScaling

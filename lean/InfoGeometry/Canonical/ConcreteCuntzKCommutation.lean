@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
@@ -147,5 +152,24 @@ theorem concrete_S_left_KLinear
         S_left (to_doubled x ξ : H₂) = to_doubled (baseShift x) (baseShift ξ)) :
     KLinear (E := E) S_left :=
   KLinear_of_same_doubled_action (E := E) S_left baseShift hS_left
+
+/-- Real-valued functions on the binary Cuntz/Cantor boundary. -/
+abbrev BinarySectorFunctionSpace :=
+  (ℕ → BinarySector) → ℝ
+
+
+theorem concrete_S_left_iterate_K_commute
+    (n : ℕ) (ψ : ConcreteHilbert (E := E)) :
+    (concrete_S_left (E := E))^[n]
+      (concrete_K (E := E) ψ) =
+      concrete_K (E := E)
+        ((concrete_S_left (E := E))^[n] ψ) := by
+  induction n generalizing ψ with
+  | zero => rfl
+  | succ n ih =>
+      rw [Function.iterate_succ_apply]
+      rw [concrete_S_left_K_commute]
+      rw [Function.iterate_succ_apply]
+      exact ih (concrete_S_left (E := E) ψ)
 
 end ConcreteCuntzKCommutation

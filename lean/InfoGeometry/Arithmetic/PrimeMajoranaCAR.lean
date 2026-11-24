@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -406,6 +411,24 @@ theorem parityOp_sq :
             rw [hN]
     _ = 1 := by
             abel
+
+
+theorem iota_mul_eps_eq_one_sub_numberOp :
+    P.iota * P.eps = 1 - P.numberOp := by
+  exact P.iota_mul_eps_eq_one_sub_eps_mul_iota
+
+
+theorem iota_mul_eps_idem :
+    (P.iota * P.eps) * (P.iota * P.eps) = P.iota * P.eps := by
+  rw [P.iota_mul_eps_eq_one_sub_numberOp]
+  have hN : P.numberOp * P.numberOp = P.numberOp := P.numberOp_idem
+  calc
+    (1 - P.numberOp) * (1 - P.numberOp) =
+        1 - (2 : Op) * P.numberOp + P.numberOp * P.numberOp := by
+          noncomm_ring
+    _ = 1 - P.numberOp := by
+      rw [hN]
+      noncomm_ring
 
 end ExteriorCARPair
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CPTCstarStateLimit
@@ -95,5 +100,18 @@ structure AmplituhedronZetaEquivalence (R : Type u) [CommRing R] where
   Z : BostConnesPartitionData R
   Vol : AmplituhedronVolumeData R
   equivalence : ∀ (β : R) (L : ℕ), Z β = Vol L
+
+
+structure ChiralQuadricBoundary (R : Type u) [CommRing R] where
+  S_plus : R
+  S_minus : R
+  nil_plus : S_plus * S_plus = 0
+  nil_minus : S_minus * S_minus = 0
+
+/-- The amplituhedron/zeta comparison carrier. -/
+structure AmplituhedronZetaComparison (R : Type u) [CommRing R] where
+  Z : BostConnesPartitionData R
+  Vol : AmplituhedronVolumeData R
+  comparison : ∀ (β : R) (L : ℕ), Z β = Vol L
 
 end InfoGeometry.Canonical.BostConnesAmplituhedronBoundary

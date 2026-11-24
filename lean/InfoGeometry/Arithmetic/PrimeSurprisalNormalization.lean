@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Basic
@@ -210,5 +215,29 @@ theorem complexPrimeSouriauProductSurprisal_eq_re_mul_sum
   ring
 
 /-! ## 4. Prime-register owner target -/
+
+/-- Partition-normalized weights form a finite probability distribution. -/
+theorem normalizedWeight_sum_eq_one
+    {α : Type*} [Fintype α] (w : α → ℝ)
+    (hZ : 0 < ∑ x, w x) :
+    ∑ a, normalizedWeight w (∑ x, w x) a = 1 := by
+  unfold normalizedWeight
+  rw [← Finset.sum_div]
+  exact div_self (ne_of_gt hZ)
+
+/-- The normalized finite energy readout is the weighted-energy quotient. -/
+theorem normalizedWeight_energy_sum_eq_weighted_quotient
+    {α : Type*} [Fintype α] (w energy : α → ℝ) :
+    (∑ a, normalizedWeight w (∑ x, w x) a * energy a) =
+      (∑ a, w a * energy a) / ∑ x, w x := by
+  unfold normalizedWeight
+  calc
+    (∑ a, (w a / ∑ x, w x) * energy a) =
+        ∑ a, (w a * energy a) / ∑ x, w x := by
+      apply Finset.sum_congr rfl
+      intro a ha
+      ring
+    _ = (∑ a, w a * energy a) / ∑ x, w x := by
+      rw [← Finset.sum_div]
 
 end InfoGeometry.Arithmetic.PrimeSurprisalNormalization

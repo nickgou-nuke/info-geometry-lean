@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeExteriorRepresentation
@@ -598,5 +603,25 @@ theorem rawHyperbolicCantorDiracIndex_eq_pfaffian_difference
   rw [rawHyperbolicCantorDiracIndex,
       stableProjectedCantorDiracIndex_eq_pfaffian,
       stableProjectedCantorDiracIndex_eq_pfaffian]
+
+/-- The weighted number energy is nonnegative when occupied-mode weights are. -/
+theorem weightedNumberEnergy_nonneg
+    (P : PrimeCutoff)
+    (weight : PrimeMode P → ℝ)
+    (S : Vertex P)
+    (hweight : ∀ p ∈ S, 0 ≤ weight p) :
+    0 ≤ weightedNumberEnergy P weight S := by
+  unfold weightedNumberEnergy
+  exact SquareFreePrimeState.squareFreeEnergy_nonneg S hweight
+
+/-- The occupied Hodge-square energy is nonnegative under nonnegative weights. -/
+theorem weightedHodgeSquareEnergy_nonneg
+    (P : PrimeCutoff)
+    (weight : PrimeMode P → ℝ)
+    (S : Vertex P)
+    (hweight : ∀ p ∈ S, 0 ≤ weight p) :
+    0 ≤ weightedHodgeSquareEnergy P weight S := by
+  rw [weightedHodgeSquareEnergy_eq_weightedNumberEnergy]
+  exact weightedNumberEnergy_nonneg P weight S hweight
 
 end InfoGeometry.Arithmetic.PrimeExteriorGraphDirac

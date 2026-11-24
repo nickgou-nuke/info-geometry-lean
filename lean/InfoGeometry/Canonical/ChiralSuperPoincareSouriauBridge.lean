@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.CuntzSupergradedSUSY
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.SouriauMassieuPlanckFunctional
@@ -231,5 +236,35 @@ theorem casimir_eq_minkowski_square {A : Type*} [Ring A]
   rfl
 
 end ChiralSuperPoincareSouriauPacket
+
+structure PoincareAlgebraData (A : Type*) [Ring A] where
+  lorentz : SpacetimeIndex → SpacetimeIndex → A
+  momentum : SpacetimeIndex → A
+  lorentz_skew : ∀ μ ν, lorentz μ ν = -lorentz ν μ
+  momentum_commutes : ∀ μ ν, momentum μ * momentum ν = momentum ν * momentum μ
+  lorentz_momentum_bracket :
+    ∀ ρ σ μ,
+      poincareCommutator (lorentz ρ σ) (momentum μ) =
+        minkowskiMetricCoeff σ μ • momentum ρ -
+          minkowskiMetricCoeff ρ μ • momentum σ
+  lorentz_lorentz_bracket :
+    ∀ ρ σ μ ν,
+      poincareCommutator (lorentz ρ σ) (lorentz μ ν) =
+        minkowskiMetricCoeff σ μ • lorentz ρ ν -
+          minkowskiMetricCoeff ρ μ • lorentz σ ν -
+          minkowskiMetricCoeff σ ν • lorentz ρ μ +
+          minkowskiMetricCoeff ρ ν • lorentz σ μ
+
+/-- Twistor/null-incidence data needed before the chiral algebra can be read geometrically. -/
+structure TwistorChiralNullData where
+  nullCone : InfoGeometry.Twistor.Incidence.Twistor → Prop
+  incidence : InfoGeometry.Twistor.Incidence.Twistor →
+    InfoGeometry.Twistor.Incidence.Twistor → Prop
+  chiralPlus : InfoGeometry.Twistor.Incidence.Twistor → Prop
+  chiralMinus : InfoGeometry.Twistor.Incidence.Twistor → Prop
+  plus_incidence_null :
+    ∀ Z W, chiralPlus Z → incidence Z W → nullCone W
+  minus_incidence_null :
+    ∀ Z W, chiralMinus Z → incidence Z W → nullCone W
 
 end InfoGeometry.Canonical.ChiralSuperPoincareSouriauBridge

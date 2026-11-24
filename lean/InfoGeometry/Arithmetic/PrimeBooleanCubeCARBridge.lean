@@ -239,4 +239,35 @@ theorem primeBooleanCubeCARBridge_packet
       ArithmeticFunction.moebius (representedNat v) :=
   primeBooleanCubeCARBridgeOwnerTarget P v E χ hN
 
+/-- The evaluated local parity is an involution. -/
+theorem carParity_readout_sq
+    {Op : Type*} [Ring Op]
+    (E : ExteriorCARPair Op)
+    (χ : Op →+* ℤ)
+    (p : ℕ)
+    (S : Finset ℕ)
+    (hN : χ E.numberOp = occupationInt p S) :
+    χ E.parityOp * χ E.parityOp = 1 := by
+  rw [carParity_readout_eq_booleanLocalParity E χ p S hN]
+  by_cases hp : p ∈ S <;> simp [localParity, hp]
+
+theorem primeBooleanCubeCARBridge_readouts :
+    ∀ {Op : Type*} [Ring Op]
+      (P : PrimeRegister)
+      (v : Vertex P)
+      (E : ℕ → ExteriorCARPair Op)
+      (χ : Op →+* ℤ)
+      (_ :
+        ∀ p ∈ P.primes,
+          χ ((E p).numberOp) = occupationInt p v.val),
+      carGlobalChiralityReadout P E χ = globalChirality P v.val ∧
+      carGlobalChiralityReadout P E χ = fermionParity v ∧
+      carGlobalChiralityReadout P E χ =
+        ArithmeticFunction.moebius (representedNat v) := by
+  intro Op inst P v E χ hN
+  exact
+    ⟨ carGlobalChiralityReadout_eq_booleanChirality P v E χ hN,
+      carGlobalChiralityReadout_eq_fermionParity P v E χ hN,
+      carGlobalChiralityReadout_eq_mobius P v E χ hN ⟩
+
 end InfoGeometry.Arithmetic.PrimeBooleanCubeCARBridge

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.FractalCantorCliffordFockBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ColimitRigidityFixedLocusBridge
@@ -59,5 +64,21 @@ theorem twoTree_critical_fixed_locus (T : TwoTree) (s : ℂ) :
     (tomitaTwoTreeConjugation T = T ∧ antiReflection s = s) ↔
       (tomitaTwoTreeConjugation T = T ∧ s.re = 1 / 2) := by
   rw [antiReflection_fixed_locus]
+
+
+theorem tomitaWordConjugation_ne_self
+    (w : (ℕ → Bool)) :
+    tomitaWordConjugation w ≠ w := by
+  intro h
+  have h0 := congrFun h 0
+  cases hw : w 0 <;> simp [tomitaWordConjugation, hw] at h0
+
+
+theorem tomitaTwoTreeConjugation_fixed_pair
+    (w : (ℕ → Bool)) :
+    tomitaTwoTreeConjugation
+        (w, tomitaWordConjugation w) =
+      (w, tomitaWordConjugation w) := by
+  simp [tomitaTwoTreeConjugation, tomitaWordConjugation_involutive]
 
 end InfoGeometry.Canonical.CantorTwoTreeFixedLocus

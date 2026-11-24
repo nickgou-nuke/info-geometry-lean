@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorBinaryTiltCARCCRBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11Matrix
@@ -213,5 +218,22 @@ theorem localCl11AlgebraHom_eq_representationHom
     simpa [representationPositive, localCl11Positive] using h0.symm
   · change localCl11Negative P = representationNegative R
     simpa [representationNegative, localCl11Negative] using congrArg₂ (· * ·) h0.symm h1.symm
+
+
+theorem representationPositive_eq_binary
+    (P : BinaryWordTiltReadout Op)
+    (R : CantorCliffordRepresentation Op)
+    (h0 : R.gamma 0 = P.bitOperator false) :
+    representationPositive R = localCl11Positive P := by
+  simp [representationPositive, localCl11Positive, h0]
+
+
+theorem representationNegative_eq_binary
+    (P : BinaryWordTiltReadout Op)
+    (R : CantorCliffordRepresentation Op)
+    (h0 : R.gamma 0 = P.bitOperator false)
+    (h1 : R.gamma 1 = P.bitOperator true) :
+    representationNegative R = localCl11Negative P := by
+  simp [representationNegative, localCl11Positive, localCl11Negative, h0, h1]
 
 end InfoGeometry.Canonical.CantorLocalCl11Universal

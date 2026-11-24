@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.PrimeBitLattice
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Inference.FiniteGibbsInference
@@ -308,5 +313,20 @@ theorem primeBitTemperatureSusceptibility_pos_of_two_distinct_primes
     exact henergy_ne (hSp.trans hSq.symm)
   have hnonneg := primeBitTemperatureSusceptibility_nonneg L ε
   exact lt_of_le_of_ne hnonneg (fun h => hzero_ne h.symm)
+
+
+theorem primeBit_massieuPotential_eq_grandCanonical_potential
+    (L : PrimeBitLattice) (β : ℝ) :
+    massieuPotential (primeBitCartanParameters L β) =
+      GrandCanonical.potential (primeBitGrandCanonicalParams L) β := by
+  rfl
+
+
+theorem primeBitGrandCanonical_weight_eq_fermionic
+    (L : PrimeBitLattice) (β : ℝ) (S : PrimeBitSubset L) :
+    GrandCanonical.gibbsWeight (primeBitGrandCanonicalParams L) β S =
+      Real.exp (-β * primeBitEnergy L S.1) /
+        GrandCanonical.partition (primeBitGrandCanonicalParams L) β := by
+  rfl
 
 end InfoGeometry.Arithmetic.PrimeBitFiniteGibbsBridge

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
@@ -52,6 +57,21 @@ theorem rpf_bernoulli_eigenstate (x : CantorStream) :
     ruellePerronFrobeniusOp (fun _ => 0) (fun _ => 1) x = 2 := by
   dsimp [ruellePerronFrobeniusOp]
   rw [Real.exp_zero]
+  ring
+
+
+theorem rpf_operator_add (f g h : CantorStream → ℝ) (x : CantorStream) :
+    ruellePerronFrobeniusOp f (fun y => g y + h y) x =
+      ruellePerronFrobeniusOp f g x + ruellePerronFrobeniusOp f h x := by
+  dsimp [ruellePerronFrobeniusOp]
+  ring
+
+
+theorem rpf_operator_smul (f : CantorStream → ℝ) (c : ℝ)
+    (g : CantorStream → ℝ) (x : CantorStream) :
+    ruellePerronFrobeniusOp f (fun y => c * g y) x =
+      c * ruellePerronFrobeniusOp f g x := by
+  dsimp [ruellePerronFrobeniusOp]
   ring
 
 end InfoGeometry.Canonical.CantorRuellePerronFrobeniusBridge

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorKMSCylinderState
@@ -53,5 +58,19 @@ theorem uniformKMSPrior_finitely_additive (w : BinaryWord) :
       uniformKMSPrior.weight (false :: w) + uniformKMSPrior.weight (true :: w) := by
   symm
   exact uniformKMSPrior_successor_consistent w
+
+
+theorem cylinderKMSWeight_nonnegative
+    (w : List Bool) :
+    0 ≤ cylinderKMSWeight w :=
+  cylinderKMSWeight_nonneg w
+
+
+theorem cylinderKMSWeight_finitely_additive
+    (w : List Bool) :
+    cylinderKMSWeight w =
+      cylinderKMSWeight (false :: w) + cylinderKMSWeight (true :: w) := by
+  symm
+  exact cylinderKMSWeight_children_sum w
 
 end InfoGeometry.Canonical.CantorCylinderPrior

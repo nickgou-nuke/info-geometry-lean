@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -67,5 +72,11 @@ theorem mobius_witten_klein_index_synthesis :
   exact ⟨fun P => pairContribution_zero P,
     fun hodd hrel => pg_fixed_line_extinction hodd hrel,
     fun hrel hnz => surviving_fixed_line_mode_not_odd hrel hnz⟩
+
+
+abbrev weight (P : SUSYPair) : ℂ := P.1
+
+
+abbrev glideEigenvalue (P : SUSYPair) : ℂ := P.2
 
 end MobiusWittenKleinIndex

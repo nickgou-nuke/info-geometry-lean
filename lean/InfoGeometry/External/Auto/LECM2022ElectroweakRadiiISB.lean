@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -174,6 +179,10 @@ theorem combined_observable_cancels_under_exact_isospin :
     edgeHolds Concept.Combined_ISB_Observable Edge.cancels_under_exact_isospin Concept.Isovector_Monopole_Operator =
       true := by
   rfl
+
+
+theorem deltaCMax_permyriad_value :
+    deltaCMax_permyriad = 100 := rfl
 
 end LECM2022ElectroweakRadiiISB
 

@@ -146,4 +146,11 @@ theorem emergent_spacetime_ansatz_witness : emergent_spacetime_ansatz := by
       simp [PauliZornTrifactor.pauliHermitian]
   · exact PauliZornTrifactor.pauliHermitian_det _ _ _ _
 
+
+theorem emergent_spacetime_ansatz_property : emergent_spacetime_ansatz := by
+  refine ⟨1, 0, 0, 0, ?_, ?_⟩
+  · ext i j <;> fin_cases i <;> fin_cases j <;>
+      simp [PauliZornTrifactor.pauliHermitian]
+  · exact PauliZornTrifactor.pauliHermitian_det _ _ _ _
+
 end noncomputable section

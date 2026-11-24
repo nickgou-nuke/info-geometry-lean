@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -111,5 +116,10 @@ theorem primon_fock_trace_bridge_synthesis :
 #check finitePrimonFockTrace_eq_zeta_partial
 #check finitePrimonFockTrace_succ
 #check primon_fock_trace_bridge_synthesis
+
+
+def energy {N : ℕ} (D : FiniteSpectralData N) : Fin N → ℝ := D.1
+
+def projectorTrace {N : ℕ} (D : FiniteSpectralData N) : Fin N → ℝ := D.2
 
 end PrimonFockTraceBridge

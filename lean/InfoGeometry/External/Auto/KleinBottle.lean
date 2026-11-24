@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -124,5 +129,7 @@ theorem non_orientable_orbifold_theorem :
   exact ⟨klein_bottle_relation, glide_reflection_sq, mirror_involution,
     half_turn_involution, by simp [M], cone_point_origin,
     mirror_orientation_reversing, glide_orientation_reversing⟩
+
+def KleinHalfTurn (z : ℂ) : ℂ := -z
 
 end InfoGeometry.External.Auto.KleinBottle

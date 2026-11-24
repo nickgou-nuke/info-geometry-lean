@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -19,6 +24,11 @@ def causality_condensate (majorana_mode : H → H) : Set H := Set.range majorana
 A proof-level readout: the pairing cone returns the forward channel.
 -/
 theorem time_is_superfluid_phase (majorana_mode : H → H) (forward _backward : H) :
+    cooper_pair_cone majorana_mode forward _backward = majorana_mode forward := by
+  rfl
+
+/-- The readout is definitionally the selected forward channel. -/
+theorem cooper_pair_cone_apply (majorana_mode : H → H) (forward _backward : H) :
     cooper_pair_cone majorana_mode forward _backward = majorana_mode forward := by
   rfl
 

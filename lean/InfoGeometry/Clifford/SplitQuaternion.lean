@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -225,5 +230,13 @@ theorem toGL2R_mul (q1 q2 : NonZeroCoq) :
 
 /- #### BUCKET 3: OPEN CLOSURE DEBT -/
 -- [No open closure debt in this module.]
+
+
+theorem det_2x2_eq_matrix_det (M : Matrix (Fin 2) (Fin 2) ℝ) :
+    det_2x2 M = Matrix.det M := by
+  simp [det_2x2, Matrix.det_fin_two]
+
+/- #### BUCKET 1: CLOSED FINITE THEOREMS -/
+-- [Fully verified lemmas with zero remaining dependencies or open goals. Fully checked by the kernel.]
 
 end InfoGeometry.Clifford

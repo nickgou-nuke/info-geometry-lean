@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.Basic
@@ -86,6 +91,16 @@ theorem confinement_from_spectral_gap
     0 < BregmanDivergence Phi grad_Phi x z := by
   rw [← h_synth.fenchel_bregman x z]
   exact h_synth.confinement_barrier x z h_neq
+
+theorem confinement_from_fenchel_compatibility
+    {Phi Phi_star : E → ℝ} {grad_Phi : E → E}
+    (h_fenchel_bregman : FenchelBregmanCompatible Phi Phi_star grad_Phi)
+    (h_confinement_barrier :
+      ∀ (x z : E), x ≠ z → 0 < LegendreFenchelGap Phi Phi_star x (grad_Phi z))
+    (x z : E) (h_neq : x ≠ z) : 
+    0 < BregmanDivergence Phi grad_Phi x z := by
+  rw [← h_fenchel_bregman x z]
+  exact h_confinement_barrier x z h_neq
 
 end LegendreFenchelSpectralGap
 end noncomputable section

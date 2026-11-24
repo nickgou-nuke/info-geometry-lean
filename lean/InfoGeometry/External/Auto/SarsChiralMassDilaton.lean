@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -103,6 +108,8 @@ theorem chiral_mass_dilaton_kernel :
     diracMassCoupling_matrix, diracMassCoupling_diag_zero, diracMassCoupling_offblock_self,
     localMass_zero_base, springPotential_nonneg, springPotential_zero_at_vacuum,
     localEntropyQuadratic_nonneg, localEntropyQuadratic_zero⟩
+
+def zitterFrequency (hbar c m : ℝ) : ℝ := 2 * m * c^2 / hbar
 
 end SarsChiralMassDilaton
 

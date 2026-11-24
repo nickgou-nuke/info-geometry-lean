@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SplitCliffordFiniteCAR
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
@@ -58,5 +63,10 @@ export InfoGeometry.Capstone.ErlangenLanglandsConnesCapstone
   (erlangen_o55_invariants)
 
 /- [1] FINITE CAR --------------------------------------------------------- -/
+
+theorem finite_CAR_at_all_truncations (i j : Mode) (hij : i ≠ j) :
+    aMode i * adagMode i + adagMode i * aMode i = (1 : M4R) ∧
+    aMode i * aMode j + aMode j * aMode i = (0 : M4R) := by
+  exact ⟨same_mode_car i, cross_annihilate_anticomm i j hij⟩
 
 end InfoGeometry.Capstone.FockCapstone

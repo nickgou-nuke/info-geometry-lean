@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -120,5 +125,17 @@ theorem amari_chentsov_fierz_torsion_synthesis (L : ChiralCubicLift) (ε : ℝ) 
   · exact jonesFierz_trace_zero (cubicTorsion L)
   · exact jonesFierz_transpose (cubicTorsion L)
 
+
+
+abbrev dikinMetric (J : ModularBregmanJet) : ℝ := J.1
+
+
+abbrev amariCubic (J : ModularBregmanJet) : ℝ := J.2
+
+
+abbrev left (L : ChiralCubicLift) : ModularBregmanJet := L.1
+
+
+abbrev right (L : ChiralCubicLift) : ModularBregmanJet := L.2
 
 end AmariChentsovFierzTorsion

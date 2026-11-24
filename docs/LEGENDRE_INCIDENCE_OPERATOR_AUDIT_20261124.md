@@ -371,9 +371,24 @@ override without changing tracked pins or linking Lake roots.
 
 ### Current verification status
 
-The first local focused kernel build is queued on the maintained shared build
-lock. The PR is prepared as a draft with focused CI so this execution boundary
-remains explicit. No successful kernel result, push-gate result, or whole-
-repository build certificate is asserted. Current commands and results are
-recorded in `verification/legendre-incidence/VALIDATION.md`; update that record
-with observed compiler and axiom results before promoting the draft.
+Focused [CI run 45361210176](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45361210176)
+passed on proof head `752875eaee124ada0faf40654e7b5e988a6b6004` and GitHub merge
+checkout `b66b51f8aa8b5bcd1557343b66ff059072faa669`. All four owners and the audit
+were freshly compiled. A separate fresh Lean run audited every one of the
+113 public declarations exactly once and reported only `propext`,
+`Classical.choice`, and `Quot.sound`. The strict source screen reported zero
+findings. Build and fresh-audit invocations checked the same stable 60-file
+input snapshot under the pinned Lean 4.34.1 runtime.
+
+The local attempt eventually acquired its lock but ended with Lean exit 137
+without a proof diagnostic; it is not used as a validation certificate. The
+successful CI evidence, first-run repairs, source hashes, exact commands, and
+artifact are recorded in `verification/legendre-incidence/VALIDATION.md`.
+
+The PR remains a draft because separate repository-wide gates hit unchanged
+baseline problems: a missing required HomotopyHypothesis directory, an
+unconfigured submodule, a case-colliding source pair, and tracked forensic
+proof debt. No whole-repository build certificate or successful root publish
+gate is asserted. The final evidence update changes documentation only; the
+checked mathematical and verification sources remain identical to those in
+the successful focused run.

@@ -5,20 +5,60 @@ Date: 2026-11-24. Upstream baseline:
 
 ## Current disposition
 
-**Draft; complete kernel validation pending.** The complete source
-implementation has independent mathematical reviews, an exact public
-declaration inventory, and clean strict source screens. The first remote
-focused CI run compiled three of the four new owners and found five proof
-elaboration issues in the transport owner. The repairs described below are
-source-reviewed and awaiting a fresh focused run. The first local Lake
-invocation is still waiting for the maintained shared build lock, held by
-another task; that job and lock have not been interrupted or bypassed.
+**Focused kernel, axiom, and source validation passed.** The repaired source
+was freshly built and audited by successful
+[CI run 45361210176](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45361210176).
+All four mathematical owners and the generated audit compiled, and the
+separate fresh axiom run checked all 113 public declarations exactly once.
+Only `propext`, `Classical.choice`, and `Quot.sound` were reported.
 
-The focused CI workflow builds the canonical source import closure, performs
-a fresh axiom-printing run, checks every expected declaration exactly once,
-and preserves its logs. Its actual result must replace the pending status
-before this draft can be described as kernel-verified. A repository-wide
-build and the root push gate have not completed; neither is claimed here.
+The PR remains a draft because the wider repository gates have independent
+baseline failures listed below. This is a certificate for the focused import
+closure and declaration inventory, not the whole repository. The final record
+update changes documentation only; the checked Lean sources, audit script,
+runner, manifests, and workflow remain unchanged from the successful run.
+
+### Successful checked revision and commands
+
+- PR head: `752875eaee124ada0faf40654e7b5e988a6b6004`.
+- Actual GitHub checkout: merge commit
+  `b66b51f8aa8b5bcd1557343b66ff059072faa669`, incorporating that head into the
+  unchanged upstream baseline named above.
+- Job: `138331442254`. Completed successfully on 2026-11-24.
+- Focused source artifact cache: miss; the log explicitly records fresh builds
+  of all four owners and the audit.
+
+| Executed command | Observed result |
+|---|---|
+| `python3 verification/legendre-incidence/check.py exe cache get` | Exit 0; pinned artifacts hydrated; stability checks passed. |
+| `python3 verification/legendre-incidence/audit.py` | Exit 0; 113 declarations in four owners. |
+| `python3 verification/legendre-incidence/check.py build` | Exit 0; all five targets built; Lake reported 8,942 jobs. |
+| `python3 verification/legendre-incidence/check.py env lean lean/InfoGeometry/Twistor/LegendreIncidenceAudit.lean` | Exit 0; fresh axiom output. |
+| `python3 verification/legendre-incidence/audit.py --log legendre-incidence-axioms.log` | Exit 0; exact inventory and allowed foundational axioms only. |
+| Strict OpenGauss screen on the four owners and audit | Exit 0; zero findings. |
+
+The build and fresh axiom run both checked the same 60-file source and
+configuration snapshot, SHA-256:
+
+```text
+0cf2bccd7742266e7de1b7ae5329bfd84e27b88f003f51657f94569c43f246c3
+```
+
+Both reported source/configuration/runtime stability passed. The successful
+run used Lean 4.34.1, commit
+`5045d0056413266e57c625dcd7c365b10e377c52`, and Lake 5.0.0-src+5045d00.
+
+Preserved evidence:
+[artifact 14905008070](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45361210176/artifacts/14905008070),
+`legendre-incidence-validation.zip`, SHA-256:
+
+```text
+1568fc5a991f273efa57365d5837a732410087532d5e556ea018a7147e42b961
+```
+
+The only mathematical-source warnings observed in the successful run came
+from unchanged `PeirceSpine/Supercharge.lean` tactics. All new owners completed
+without a reported warning in that run.
 
 ## Executed source checks
 
@@ -42,12 +82,14 @@ has exact pinned HEAD `d13f23b723b8a846827a245b89c10fc7d3f11612` and clean track
 sources. The focused manifest preserves all nine corresponding root pins.
 No tracked toolchain or dependency revision was changed.
 
-The initial queued command selects
+The initial local command selected
 `InfoGeometry.Twistor.FenchelContactIncidence` through `check.py` with an
 explicit existing package directory. It was launched before the runner's
-provenance improvements. Final acceptance therefore requires the completed
-focused build and fresh axiom run with the current runner, as documented in
-`README.md`, even if that initial command subsequently succeeds.
+provenance improvements. Its dependencies compiled, but the final Lean process
+ended with code 137 and no theorem-elaboration error. That result is recorded
+without attributing a specific operating-system cause. It does not establish
+either success or a mathematical counterexample. That acceptance requirement
+is now met by the successful focused build and fresh axiom run recorded above.
 
 The current runner checks the actual runtime, exact dependency revisions,
 workspace integrity, local overrides, and stable source/configuration hashes
@@ -88,6 +130,25 @@ The independent delta review is preserved in `reviews/ci_repairs.md`.
 
 Lake returned exit 1 in this first run, and the fresh axiom check was not
 reached. This partial build is not a certificate for the complete bridge.
+
+## Wider repository CI boundaries
+
+The following failures were inspected at the successful proof head. Each
+comes from unchanged baseline files or prerequisites. The PR comparison at
+that head contains 19 added files and no modifications to existing files.
+
+| Gate and observed run | Exact blocker |
+|---|---|
+| [Post-Build Quality Gate 45361210351](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45361210351/job/138331442989) | The root build cannot load the existing required package directory `external_refs/homotopy-hypothesis-lean4`; Lake exits 1 before the post-build quality gate. The root dependency declaration and manifest are unchanged. |
+| [Reviewed PR Integration 45361210700](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45361210700/job/138331445091) | Recursive submodule checkout exits 128 because baseline gitlink `external_ref/open-math-harness` has no URL entry in `.gitmodules`. Compilation and auditing are skipped. |
+| [Lean style lint 45361210198](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45361210198/job/138331440948) | The case-sensitivity prerequisite finds existing `src/InfoGeometry/Physics/PellisfineStructure.lean` and `PellisFineStructure.lean`. Lean style checking does not proceed. |
+| [Sorry Gate 45361210887](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45361210887/job/138331446860) | The repository-wide tracked-source threshold reports 878 findings in 91 forensic/fixture files; package and unclassified counts are zero. All 91 paths exist at baseline, and none is a PR file. The later quarantine command is not reached after this exit 1. |
+
+These are specific inspected failures, not a classification of every
+repository workflow. No root-gate success or whole-repository certificate is
+claimed. The local tracked commit/source gates passed; publication used the
+authorized GitHub draft workflow, with these broader acceptance boundaries
+left visible rather than marked successful.
 
 ## Acceptance boundary
 

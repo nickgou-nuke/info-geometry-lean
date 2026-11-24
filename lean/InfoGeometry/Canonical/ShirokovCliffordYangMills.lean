@@ -47,6 +47,33 @@ theorem shirokov_generators_noncommute :
       shirokovWitnessGen1 * shirokovWitnessGen0 := by
   exact cGen_noncomm ℝ (by norm_num) (by decide)
 
+/-- A coordinate generator after an isometric change of frame in `Cl(0,n)`. -/
+def shirokovIsometryFrameVector (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    (i : Fin n) : CliffordAlgebra (cliffordNegSqForm ℝ n) :=
+  CliffordAlgebra.ι (cliffordNegSqForm ℝ n) (e (Pi.single i (1 : ℝ)))
+
+/-- The ascending ordered blade in the isometry-transformed frame. -/
+def shirokovIsometryFrameBlade (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    (S : Finset (Fin n)) : CliffordAlgebra (cliffordNegSqForm ℝ n) :=
+  ((bladeList S).map (shirokovIsometryFrameVector n e)).prod
+
+@[simp] theorem shirokovIsometryFrameVector_sq (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    (i : Fin n) :
+    shirokovIsometryFrameVector n e i * shirokovIsometryFrameVector n e i = -1 := by
+  have h := congrArg (CliffordAlgebra.equivOfIsometry e) (cGen_sq ℝ n i)
+  simpa [shirokovIsometryFrameVector, cGen] using h
+
+theorem shirokovIsometryFrameVector_anticommute (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    {i j : Fin n} (hij : i ≠ j) :
+    shirokovIsometryFrameVector n e i * shirokovIsometryFrameVector n e j +
+      shirokovIsometryFrameVector n e j * shirokovIsometryFrameVector n e i = 0 := by
+  have h := congrArg (CliffordAlgebra.equivOfIsometry e) (cGen_mul_swap hij)
+  simpa [shirokovIsometryFrameVector, cGen] using h
+
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- The commutator convention used in Shirokov's compatibility equation. -/
@@ -1089,12 +1116,42 @@ theorem shirokov_isometry_map_blade
     (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
     (S : Finset (Fin n)) :
     CliffordAlgebra.equivOfIsometry e (cBlade ℝ n S) =
-      ((bladeList S).map fun i =>
-        CliffordAlgebra.ι (cliffordNegSqForm ℝ n)
-          (e (Pi.single i (1 : ℝ)))).prod := by
+      shirokovIsometryFrameBlade n e S := by
   simp only [cBlade, map_list_prod, List.map_map, Function.comp_def, cGen,
     CliffordAlgebra.equivOfIsometry_apply, CliffordAlgebra.map_apply_ι]
   rfl
+
+/-- Inverse ordered blade unit associated to a quadratic-form isometry frame. -/
+noncomputable def shirokovIsometryInverseBladeUnit (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    (S : Finset (Fin n)) : (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ :=
+  Units.map (CliffordAlgebra.equivOfIsometry e).toMonoidHom
+    (shirokovInverseBladeUnit n S)
+
+@[simp] theorem shirokovIsometryInverseBladeUnit_val (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    (S : Finset (Fin n)) :
+    (shirokovIsometryInverseBladeUnit n e S :
+      CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+      ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2)) •
+        shirokovIsometryFrameBlade n e S := by
+  change CliffordAlgebra.equivOfIsometry e
+    (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) = _
+  rw [shirokovInverseBladeUnit_val, map_smul,
+    shirokov_isometry_map_blade]
+
+@[simp] theorem shirokovIsometryInverseBladeUnit_inv_val (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    (S : Finset (Fin n)) :
+    (((shirokovIsometryInverseBladeUnit n e S)⁻¹ :
+      (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+        CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+      shirokovIsometryFrameBlade n e S := by
+  change CliffordAlgebra.equivOfIsometry e
+    ((((shirokovInverseBladeUnit n S)⁻¹ :
+      (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+        CliffordAlgebra (cliffordNegSqForm ℝ n))) = _
+  rw [shirokovInverseBladeUnit_inv_val, shirokov_isometry_map_blade]
 
 /-- Theorem 2.2 for an automorphism-transported standard frame. The connection
 coefficient is assumed grade two after pulling it back to the standard frame. -/

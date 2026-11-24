@@ -206,10 +206,13 @@ Clifford algebra automorphism, and
 Theorem 2.2 result when the pulled-back coefficient is grade two.
 `shirokov_isometry_map_blade` identifies the frame blades for the automorphism
 induced by a quadratic-form isometry: they are ordered products of the
-transformed coordinate vectors. Thus the transport result applies to fixed
-orthogonal changes of frame in this negative-definite `Cl(0,n)` carrier.
-Arbitrary point-dependent dual-frame transport, other signatures, and the
-paper's odd-dimensional reduced sum remain open.
+transformed coordinate vectors. The named frame-vector operations prove the
+transformed generators still square to `-1` and pairwise anticommute, while
+`shirokovIsometryInverseBladeUnit` packages each transformed inverse blade as
+a unit and exposes its value and inverse. Thus the transported Reynolds
+identity applies to fixed orthogonal changes of frame in this negative-
+definite `Cl(0,n)` carrier. Arbitrary point-dependent dual-frame transport,
+other signatures, and the paper's odd-dimensional reduced sum remain open.
 The owner also includes the concrete noncommutativity witness
 `shirokov_generators_noncommute` for the first two generators of the real
 negative-definite two-dimensional Clifford algebra. This is a separate carrier

@@ -47,6 +47,37 @@ theorem shirokov_generators_noncommute :
       shirokovWitnessGen1 * shirokovWitnessGen0 := by
   exact cGen_noncomm ℝ (by norm_num) (by decide)
 
+/-- A Clifford frame with at least two members has no central frame vector.
+The square and orthogonality relations alone imply this noncentrality
+conclusion; Shirokov's odd-volume trace condition is needed for the separate
+basis-independence claim. -/
+theorem shirokov_frame_vectors_noncentral {B : Type*} [Ring B] [Algebra ℝ B]
+    [Nontrivial B] [NoZeroSMulDivisors ℝ B]
+    (m : ℕ) (h : Fin (m + 2) → B) (ε : Fin (m + 2) → ℝ)
+    (hε : ∀ i, ε i ≠ 0)
+    (hsq : ∀ i, h i * h i = ε i • (1 : B))
+    (hanti : ∀ i j, i ≠ j → h i * h j + h j * h i = 0) :
+    ∀ i, ¬ (∀ y, h i * y = y * h i) := by
+  intro i hcentral
+  have hcard : 1 < Fintype.card (Fin (m + 2)) := by simp
+  obtain ⟨j, hji⟩ := Fintype.exists_ne_of_one_lt_card hcard i
+  have hcomm : h i * h j = h j * h i := hcentral (h j)
+  have hsum := hanti j i hji
+  have hdouble : h i * h j + h i * h j = 0 := by simpa [hcomm] using hsum
+  have hprod : h i * h j = 0 := by
+    have hmul : (2 : ℝ) • (h i * h j) = 0 := by simpa [two_smul] using hdouble
+    exact (smul_eq_zero.mp hmul).resolve_left (by norm_num)
+  have hscaled : ε i • h j = 0 := by
+    calc
+      ε i • h j = (h i * h i) * h j := by rw [hsq i]; simp
+      _ = h i * (h i * h j) := by rw [mul_assoc]
+      _ = 0 := by rw [hprod]; simp
+  have hjzero : h j = 0 := (smul_eq_zero.mp hscaled).resolve_left (hε i)
+  have hsqj := hsq j
+  rw [hjzero] at hsqj
+  simp only [zero_mul] at hsqj
+  exact (smul_ne_zero (hε j) one_ne_zero) hsqj.symm
+
 /-- A coordinate generator after an isometric change of frame in `Cl(0,n)`. -/
 def shirokovIsometryFrameVector (n : ℕ)
     (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))

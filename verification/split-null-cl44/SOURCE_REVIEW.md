@@ -118,3 +118,49 @@ contract and raw-intake directory are now included in the workflow paths.
 The reviewed mathematical sources have 59 explicit public declaration heads.
 This count is not a native environment inventory. Native acceptance remains
 pending until an exact-revision receipt says otherwise.
+
+## First native run and reviewed repairs
+
+[Native run 45406866384](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45406866384)
+checked published head `acbb4c0e8184478f502b400af94c19b23d08297c` and
+failed during its target build. The complete artifact `14927122918` was
+downloaded and its SHA-256 matched GitHub:
+`58786bc465b2e5a70f028516b0c70b0cc1e516f2b493d88bd445513f343d92d3`.
+
+The compiler exposed two residual transport goals: the quadratic isometry's
+definitional coercion after generator transport, and commuted sums of negative
+coordinates in `bornReflection.map_add'`. The corresponding repairs add `rfl`
+and `add_comm` at those exact goals. The Born owner also replaces deprecated
+`if_neg` with the compiler-requested `ite_eq_right`. The three downstream
+uses-sorry warnings were consequences of the failed reflection definition;
+there are no authored proof holes.
+
+The existing determinant dependency reached resource limits in its basis-entry
+calculation and recursive minor expansion. The inherited Zorn workflow also
+exposed the nonzero incidence witness's coordinate-reduction failure. Those
+base-owner repairs are published on #442 at
+`f2235ba8948a74a8c952e9a59775abc9e1cd05b0` and integrated here. The matrix
+readout now compares eight generic coordinates using the native matrix/linear
+map equivalence, and Mathlib's certified `eval_det` computes the determinant.
+The same theorem statements, hypotheses, signs, coordinate order, and bounded
+determinant budget are retained. The native incidence witness first uses its
+existing coordinate theorem. The base source review records both failed runs
+and artifact digests.
+
+Independent source/API review accepted all four repairs. Updated target hashes:
+
+| Source | SHA-256 |
+|---|---|
+| `Cl44BornReciprocity.lean` | `a7c6ecf3d84b17de15ecc5dbda0a5ab267de71414978ab603d6779bd5b5ba552` |
+| `ZornCl44DiracTransport.lean` | `467d802ecb1564ca66192e4c55ee5006465206afd3e46cf2b9968d669a133946` |
+
+The trace and full-null owners are unchanged. Their elaboration was not reached
+because the determinant dependency failed. No acceptance claim is inferred
+from that absence of diagnostics. A new exact-revision native transaction is
+required for these repairs.
+
+The repaired target pair passed the staged proof gate, whitespace check,
+source axiom/debt and scope audits, and semantic gate (two files, zero findings).
+The placeholder audit has zero hard findings and the same six reviewed
+normalization/ordered-product soft flags described above. The base-owner pair
+passed its corresponding source gates separately with zero placeholder findings.

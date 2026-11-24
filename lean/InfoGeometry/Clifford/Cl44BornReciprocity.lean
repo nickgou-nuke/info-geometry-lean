@@ -76,7 +76,7 @@ theorem bornWord_mul_f (i : Fin 4) : bornWord * f i = -(f i * bornWord) := by
     · subst j
       simp [SemiconjBy]
     · change f i * f j = (if i = j then f j else -f j) * f i
-      rw [if_neg hij, neg_mul]
+      rw [ite_eq_right hij, neg_mul]
       exact f_mul_f_neg i j hij
   have h := (((hj 0).mul_right (hj 1)).mul_right (hj 2)).mul_right (hj 3)
   have hf : f i * bornWord = -(bornWord * f i) := by

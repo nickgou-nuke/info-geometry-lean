@@ -108,6 +108,7 @@ def diracRepresentation : Cl44 →ₐ[ℝ] Module.End ℝ DiracCarrier :=
       (CliffordAlgebra.map splitZornIsometry.toIsometry
         (CliffordAlgebra.ι splitQ44 v)) = _
   simp only [CliffordAlgebra.map_apply_ι, zornCliffordRepresentation_ι]
+  rfl
 
 /-- Readback on the two genuine eight-dimensional Zorn sheets. -/
 theorem diracRepresentation_generator_apply (v : Fin 8 → ℝ) (S C : ZornMatrix ℝ) :
@@ -193,7 +194,7 @@ def bornReflection : ZornMatrix ℝ ≃ₗ[ℝ] ZornMatrix ℝ where
   invFun Z := { a := Z.b, b := Z.a, x := -Z.y, y := -Z.x }
   left_inv Z := by ext <;> simp
   right_inv Z := by ext <;> simp
-  map_add' Z W := by ext <;> simp
+  map_add' Z W := by ext <;> simp [add_comm]
   map_smul' r Z := by ext <;> simp
 
 @[simp] theorem bornReflection_twice (Z : ZornMatrix ℝ) :

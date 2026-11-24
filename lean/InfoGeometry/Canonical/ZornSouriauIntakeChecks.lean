@@ -48,7 +48,8 @@ theorem nonzero_null_phase :
     phaseVector ![1, 1, 0, 0] ![2, 2, 0, 0] ≠ 0 := by
   intro h
   have h₀ := congrArg (fun Z => coordinateEquiv Z 0) h
-  norm_num [phaseVector, InfoGeometry.Lie.SplitOctonionCircularWittForm.positiveCircularEmbedding,
+  rw [phaseVector_coordinates, map_zero] at h₀
+  norm_num [InfoGeometry.Lie.SplitOctonionCircularWittForm.positiveCircularEmbedding,
     InfoGeometry.Lie.SplitOctonionCircularWittForm.negativeCircularEmbedding] at h₀
 
 theorem nonzero_null_phase_matrix_singular :
@@ -94,6 +95,7 @@ theorem translation_cocycle_nonzero :
   norm_num [translationDatum]
 
 /-- This witnesses that mathlib resolves the specialized native groupoid. -/
+@[instance_reducible]
 def translationGroupoid : Groupoid (AffineActionGroupoid translationDatum) :=
   inferInstance
 

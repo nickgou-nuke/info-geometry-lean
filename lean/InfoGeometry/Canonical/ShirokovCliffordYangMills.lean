@@ -1845,6 +1845,89 @@ def shirokovCenterProjection (n : ℕ)
     CliffordAlgebra (cliffordNegSqForm ℝ n) :=
   ((2 ^ n : ℝ)⁻¹) • shirokovReynolds n x
 
+/-- Explicit coordinate formula for the standard-frame projection onto the
+center: it retains the scalar coordinate and, in odd dimension, the top one. -/
+theorem shirokov_center_projection_coordinate_formula (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    shirokovCenterProjection n x = bladeRepr ℝ n x ∅ • cBlade ℝ n ∅ +
+      if Odd n then
+        bladeRepr ℝ n x (Finset.univ : Finset (Fin n)) •
+          cBlade ℝ n (Finset.univ : Finset (Fin n))
+      else 0 := by
+  classical
+  let ps := (Finset.univ : Finset (Fin n)).powerset
+  have hpow : (2 ^ n : ℝ) ≠ 0 := pow_ne_zero _ (by norm_num)
+  have hcancel : ((2 ^ n : ℝ)⁻¹) * (2 ^ n : ℝ) = 1 := inv_mul_cancel₀ hpow
+  have hscale (a : ℝ) (z : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+      ((2 ^ n : ℝ)⁻¹) • (a • ((2 ^ n : ℝ) • z)) = a • z := by
+    rw [smul_smul, smul_smul]
+    congr 1
+    calc
+      ((2 ^ n : ℝ)⁻¹) * a * (2 ^ n : ℝ) =
+          a * (((2 ^ n : ℝ)⁻¹) * (2 ^ n : ℝ)) := by
+            calc
+              _ = (((2 ^ n : ℝ)⁻¹) * (2 ^ n : ℝ)) * a := by ac_rfl
+              _ = _ := mul_comm _ _
+      _ = a := by rw [hcancel, mul_one]
+  by_cases hn : Odd n
+  · have hnpos : 0 < n := hn.pos
+    have hne : (∅ : Finset (Fin n)) ≠ Finset.univ := by
+      intro h
+      have hmem := Finset.mem_univ (⟨0, hnpos⟩ : Fin n)
+      rw [← h] at hmem
+      simp at hmem
+    rw [shirokovCenterProjection, shirokov_reynolds_all_elements]
+    have hsplit :
+        (∑ T ∈ ps, bladeRepr ℝ n x T •
+          (if T = ∅ then (2 ^ n : ℝ) • cBlade ℝ n ∅ else
+            if Odd n ∧ T = Finset.univ then
+              (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) else 0)) =
+          bladeRepr ℝ n x ∅ • ((2 ^ n : ℝ) • cBlade ℝ n ∅) +
+            bladeRepr ℝ n x Finset.univ •
+              ((2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n))) := by
+      calc
+        _ = (∑ T ∈ ps, if T = ∅ then
+              bladeRepr ℝ n x T • ((2 ^ n : ℝ) • cBlade ℝ n ∅) else 0) +
+            ∑ T ∈ ps, if T = Finset.univ then
+              bladeRepr ℝ n x T • ((2 ^ n : ℝ) •
+                cBlade ℝ n (Finset.univ : Finset (Fin n))) else 0 := by
+              rw [← Finset.sum_add_distrib]
+              apply Finset.sum_congr rfl
+              intro T hT
+              by_cases he : T = ∅
+              · subst T
+                simp [hne]
+              · by_cases ht : T = Finset.univ
+                · subst T
+                  simp [hn, ne_comm.mp hne]
+                · simp [he, ht]
+        _ = _ := by
+              rw [Finset.sum_eq_single_of_mem ∅ (by simp [ps]),
+                Finset.sum_eq_single_of_mem Finset.univ (by simp [ps])]
+              · simp
+              · intro T hT hneT
+                simp [hneT]
+              · intro T hT hneT
+                simp [hneT]
+    rw [hsplit]
+    rw [if_pos hn]
+    rw [smul_add, hscale, hscale]
+  · rw [shirokovCenterProjection, shirokov_reynolds_all_elements]
+    have hsum :
+        (∑ T ∈ ps, bladeRepr ℝ n x T •
+          (if T = ∅ then (2 ^ n : ℝ) • cBlade ℝ n ∅ else
+            if Odd n ∧ T = Finset.univ then
+              (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) else 0)) =
+          bladeRepr ℝ n x ∅ • ((2 ^ n : ℝ) • cBlade ℝ n ∅) := by
+      rw [Finset.sum_eq_single_of_mem ∅ (by simp [ps])]
+      · simp [hn]
+      · intro T hT hneT
+        simp [hn, hneT]
+    rw [hsum]
+    rw [if_neg hn]
+    rw [hscale]
+    simp
+
 theorem shirokovCenterProjection_mem_center (n : ℕ)
     (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
     shirokovCenterProjection n x ∈

@@ -2440,10 +2440,10 @@ theorem shirokov_grade_two_support_sub (n : ℕ)
     simp [bladeRepr]
   exact hT (by rw [hcoord, haT, hbT]; simp)
 
-/-- The curvature defect is grade two if its two differentiated connection
-terms and the connection commutator are grade two. Together with compatibility,
-this yields the conditional flatness result without a monolithic support premise.
-The three support inputs remain the geometric obligations to derive. -/
+/-- A grade-two-preserving derivation direction sends grade-two connection
+values to grade-two terms. With this preservation law in both directions,
+grade-two connection coefficients, and generator compatibility, the curvature
+defect vanishes. The preservation law remains an explicit geometric input. -/
 theorem shirokov_clifford_compatibility_curvature_eq_zero_of_component_grade_two
     (n : ℕ)
     (K : DerivationLieLane ℝ
@@ -2455,16 +2455,24 @@ theorem shirokov_clifford_compatibility_curvature_eq_zero_of_component_grade_two
     (hgen₂ : ∀ v : Fin n → ℝ,
       covariantDerivative K (-C) y
         (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
-    (h₁ : ∀ T : Finset (Fin n),
-      bladeRepr ℝ n (K.operatorAction x (C y)) T ≠ 0 → T.card = 2)
-    (h₂ : ∀ T : Finset (Fin n),
-      bladeRepr ℝ n (K.operatorAction y (C x)) T ≠ 0 → T.card = 2)
     (hCx : ∀ T : Finset (Fin n),
       bladeRepr ℝ n (C x) T ≠ 0 → T.card = 2)
     (hCy : ∀ T : Finset (Fin n),
-      bladeRepr ℝ n (C y) T ≠ 0 → T.card = 2) :
+      bladeRepr ℝ n (C y) T ≠ 0 → T.card = 2)
+    (hKx : ∀ z : CliffordAlgebra (cliffordNegSqForm ℝ n),
+      (∀ T : Finset (Fin n), bladeRepr ℝ n z T ≠ 0 → T.card = 2) →
+      ∀ T : Finset (Fin n),
+        bladeRepr ℝ n (K.operatorAction x z) T ≠ 0 → T.card = 2)
+    (hKy : ∀ z : CliffordAlgebra (cliffordNegSqForm ℝ n),
+      (∀ T : Finset (Fin n), bladeRepr ℝ n z T ≠ 0 → T.card = 2) →
+      ∀ T : Finset (Fin n),
+        bladeRepr ℝ n (K.operatorAction y z) T ≠ 0 → T.card = 2) :
     K.operatorAction x (C y) - K.operatorAction y (C x) -
       algebraCommutator (C x) (C y) = 0 := by
+  have h₁ : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (K.operatorAction x (C y)) T ≠ 0 → T.card = 2 := hKx _ hCy
+  have h₂ : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (K.operatorAction y (C x)) T ≠ 0 → T.card = 2 := hKy _ hCx
   apply shirokov_clifford_compatibility_curvature_eq_zero_of_grade_two
     n K C x y hxy hgen₁ hgen₂
   have hbracket : ∀ T : Finset (Fin n),

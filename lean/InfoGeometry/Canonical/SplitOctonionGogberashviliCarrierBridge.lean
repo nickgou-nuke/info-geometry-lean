@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.GogberashviliSplitOctonionBasis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.SplitCayleyStabilizer
@@ -236,5 +241,27 @@ theorem cellToCanonical_j (i : Fin 3) :
       paperCanonicalLinearEquiv (-paperj i) := by
   change paperCanonicalLinearEquiv (cellToPaper (j i)) = _
   rw [cellToPaper_j]
+
+
+theorem cellToPaper_oneZ :
+    cellToPaper InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ =
+      paperOne := by
+  apply InfoGeometry.Algebra.ZornMatrix.ext
+  · simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ,
+      paperOne,
+      InfoGeometry.Algebra.ZornMatrix.I]
+  · funext i
+    fin_cases i <;>
+      simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ,
+        paperOne,
+        InfoGeometry.Algebra.ZornMatrix.I]
+  · funext i
+    fin_cases i <;>
+      simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ,
+        paperOne,
+        InfoGeometry.Algebra.ZornMatrix.I]
+  · simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ,
+      paperOne,
+      InfoGeometry.Algebra.ZornMatrix.I]
 
 end InfoGeometry.Canonical.SplitOctonionGogberashviliCarrierBridge

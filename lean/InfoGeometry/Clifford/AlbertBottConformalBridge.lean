@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.AlbertCayleyDickson
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordTensorBridge
@@ -178,5 +183,9 @@ theorem albert_bott_conformal_route :
   refine ⟨penrose_projective_null_nonempty, ?_⟩
   refine ⟨splitCl44_projective_null_nonempty, ?_⟩
   exact conformal_null_pair_exists
+
+noncomputable abbrev conformal_null_pair :
+    InfoGeometry.Clifford.ConformalLift55.ConformalNullPair :=
+  InfoGeometry.Clifford.ConformalLift55.conformalNullPair
 
 end InfoGeometry.Clifford.AlbertBottConformalBridge

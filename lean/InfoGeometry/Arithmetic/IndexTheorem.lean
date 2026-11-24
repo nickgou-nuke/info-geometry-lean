@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.SpectralDivisors
@@ -122,5 +127,11 @@ theorem topological_index_eq_spectral_flow
     (c : Cycle) :
     T.index c = T.spectralFlow c := by
   exact T.index_eq_spectralFlow c
+
+theorem requires an additional kernel/cokernel correspondence. -/
+
+/-- The signed integer charge of a finite marked divisor. -/
+def finiteDivisorIndex {ι : Type*} (marks : Finset ι) (order : ι → ℤ) : ℤ :=
+  ∑ a ∈ marks, order a
 
 end InfoGeometry.Arithmetic.IndexTheorem

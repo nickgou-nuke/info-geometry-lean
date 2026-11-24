@@ -595,4 +595,31 @@ theorem prefixLimitPrependBit_cylinder_image (b : Bool) (n : ℕ)
         rw [H.symm_apply_apply]
       rw [hconj, H.symm_apply_apply, hxy]
 
+
+theorem prefixLimitPrependBit_range_partition :
+    Set.range (ConcreteCategory.hom (prefixLimitPrependBit false)) ∩
+        Set.range (ConcreteCategory.hom (prefixLimitPrependBit true)) =
+      (∅ : Set (↑(limit prefixDiagram))) ∧
+      Set.range (ConcreteCategory.hom (prefixLimitPrependBit false)) ∪
+          Set.range (ConcreteCategory.hom (prefixLimitPrependBit true)) =
+        Set.univ := by
+  constructor
+  · rw [prefixLimitPrependBit_range false,
+      prefixLimitPrependBit_range true]
+    ext x
+    constructor
+    · intro hx
+      exact False.elim ((Set.disjoint_left.mp
+        prefixLimitBranchSet_false_true_disjoint hx.1) hx.2)
+    · intro hx
+      simp at hx
+  · ext x
+    constructor
+    · intro hx
+      exact Set.mem_univ x
+    · intro hx
+      rw [prefixLimitPrependBit_range false,
+        prefixLimitPrependBit_range true]
+      exact prefixLimitBranchSet_range_cover x
+
 end InfoGeometry.Canonical.UHFInductiveColimitBoundaryInverseLimit

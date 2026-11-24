@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Module.LinearMap.End
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -265,5 +270,24 @@ def trivialOperatorSurface
     G1_G2 := G1_G2 }
 
 end OperatorSurface
+
+
+def OperatorSurfaceLaws (S : OperatorSurface (V := V)) : Prop :=
+  S.Γ * S.Γ = 1 ∧
+  S.Γ * S.H = S.H * S.Γ ∧
+  S.Γ * S.Ep = S.Ep * S.Γ ∧
+  S.Γ * S.Em = S.Em * S.Γ ∧
+  S.Γ * S.G1 = -(S.G1 * S.Γ) ∧
+  S.Γ * S.G2 = -(S.G2 * S.Γ) ∧
+  superBracket false false S.H S.Ep = (2 : ℝ) • S.Ep ∧
+  superBracket false false S.H S.Em = (-2 : ℝ) • S.Em ∧
+  superBracket false false S.Ep S.Em = S.H ∧
+  superBracket false true S.H S.G1 = (1 : ℝ) • S.G1 ∧
+  superBracket false true S.H S.G2 = (-1 : ℝ) • S.G2 ∧
+  superBracket false true S.Ep S.G2 = S.G1 ∧
+  superBracket false true S.Em S.G1 = S.G2 ∧
+  superBracket true true S.G1 S.G1 = (2 : ℝ) • S.Ep ∧
+  superBracket true true S.G2 S.G2 = (-2 : ℝ) • S.Em ∧
+  superBracket true true S.G1 S.G2 = -S.H
 
 end InfoGeometry.Algebra.OSp12

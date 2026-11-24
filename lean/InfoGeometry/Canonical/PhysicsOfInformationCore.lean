@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.GrandCanonicalExperts
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SpectralInference
@@ -266,5 +271,8 @@ noncomputable def anomalyScale (S : SpectralHookDatum (E := E)) : ℝ :=
   CertifiedChiralSpectralTriple.epsilon S.chiralPackage
 
 end SpectralHooks
+
+
+def chiralPackage (S : SpectralHookDatum (E := E)) : CertifiedChiralSpectralTriple E := S
 
 end InfoGeometry.Canonical.PhysicsOfInformationCore

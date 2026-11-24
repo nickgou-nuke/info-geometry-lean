@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
@@ -184,6 +189,36 @@ theorem freudenthal_identity_diagonal (X : AlbertMatrix)
 The full real Freudenthal identity is not asserted here.  The integer-lattice
 version is proved below as `AlbertMatrixZ.freudenthal_identityZ`.
 -/
+/-- Primitive idempotents of J₃(𝕆_s) for the three generations. -/
+def e₁ : AlbertMatrix := { α₁ := 1, α₂ := 0, α₃ := 0, z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ }
+def e₂ : AlbertMatrix := { α₁ := 0, α₂ := 1, α₃ := 0, z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ }
+def e₃ : AlbertMatrix := { α₁ := 0, α₂ := 0, α₃ := 1, z₁ := zeroZ, z₂ := zeroZ, z₃ := zeroZ }
+
+structure PeirceDecomposition where
+  diag₁ : ℝ
+  diag₂ : ℝ
+  diag₃ : ℝ
+  off₁₂ : SplitOct
+  off₂₃ : SplitOct
+  off₃₁ : SplitOct
+
+/-- Peirce decomposition of an Albert matrix -/
+def peirce (X : AlbertMatrix) : PeirceDecomposition :=
+  { diag₁ := X.α₁, diag₂ := X.α₂, diag₃ := X.α₃,
+    off₁₂ := X.z₃, off₂₃ := X.z₁, off₃₁ := X.z₂ }
+
+
+theorem peirce_diag_proj (X : AlbertMatrix) :
+    (peirce X).diag₁ = traceBilin X e₁ ∧ (peirce X).diag₂ = traceBilin X e₂ ∧ (peirce X).diag₃ = traceBilin X e₃ := by
+  dsimp [peirce, traceBilin, e₁, e₂, e₃, octTrace, zeroZ]
+  exact ⟨by ring, by ring, by ring⟩
+
+
+theorem peirce_off_proj (X : AlbertMatrix) :
+    (peirce X).off₁₂ = X.z₃ ∧ (peirce X).off₂₃ = X.z₁ ∧ (peirce X).off₃₁ = X.z₂ := by
+  dsimp [peirce]
+  exact ⟨rfl, rfl, rfl⟩
+
 end AlbertMatrix
 
 end InfoGeometry.Algebra.CubicJordanOs

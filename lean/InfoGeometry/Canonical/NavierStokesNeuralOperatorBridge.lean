@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.NavierStokesBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.NeuralOperatorCore
@@ -135,6 +140,26 @@ theorem modularVelocityOperator_vorticityClosureResidualError_le_of_contract
       (E := E)
       Tok β C
       (readout := fun v : VelocityField E => ‖vorticityClosureResidual (E := E) v‖)
+      (hdom := hdom)
+      hKfield i)
+
+theorem modularVelocityOperator_momentumResidualError_le_of_contract
+    (Tok : Type _) (β : ℝ)
+    (C : ModularVelocityApproximationContract (E := E) Tok β)
+    (hdom : ∀ f g : VelocityFieldBundle (E := E) Tok, ∀ i : Tok,
+      pointwiseReadoutError (fun v : VelocityField E => ‖momentumResidual (E := E) v‖) i f g
+        ≤ C.costModel.totalCost f g)
+    {Kfield : HamiltonianFieldBundle (E := E) Tok}
+    (hKfield : C.domain Kfield)
+    (i : Tok) :
+    pointwiseReadoutError (fun v : VelocityField E => ‖momentumResidual (E := E) v‖) i
+      (modularVelocityOperator (E := E) Tok β Kfield)
+      (C.target Kfield) ≤ C.costBound := by
+  simpa using
+    (modularVelocityOperator_readoutError_le_of_contract
+      (E := E)
+      Tok β C
+      (readout := fun v : VelocityField E => ‖momentumResidual (E := E) v‖)
       (hdom := hdom)
       hKfield i)
 

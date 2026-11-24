@@ -242,4 +242,15 @@ theorem maxCal_current_vanishes_iff_detailed_balance
   rw [hcalibrated, ← hflowConstraint]
   simp [sub_eq_zero]
 
+
+theorem maxCal_state_stationary
+    {State : Type u}
+    (transition : State → State)
+    (markovState kmsState : State)
+    (hstationary : transition kmsState = kmsState)
+    (hselect : markovState = kmsState) :
+    transition markovState = markovState := by
+  rw [hselect]
+  exact hstationary
+
 end InfoGeometry.Canonical.MaximumCaliberKLSplit

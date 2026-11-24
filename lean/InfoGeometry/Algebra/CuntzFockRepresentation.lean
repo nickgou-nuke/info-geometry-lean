@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzKMSState
@@ -58,5 +63,15 @@ theorem leftMultiplication_cuntz_qccr_zero (n : ℕ) (i : Fin n) (x : CuntzAlg n
         (leftMultiplication n (cuntzS n i) x) - x = 0 := by
   rw [leftMultiplication_cuntz_isometry]
   exact sub_self x
+
+
+theorem nativeKMSInner_hermitian
+    (φ : CuntzAlg n →ₗ[ℂ] ℂ)
+    (hφ : ∀ a b : CuntzAlg n,
+      star (φ (star a * b)) = φ (star b * a))
+    (a b : CuntzAlg n) :
+    star (CuntzGNSRepresentation.kmsInner φ b a) =
+      CuntzGNSRepresentation.kmsInner φ a b :=
+  CuntzGNSRepresentation.kmsInner_hermitian φ hφ a b
 
 end InfoGeometry.Algebra.CuntzFockRepresentation

@@ -284,6 +284,18 @@ theorem kuboMoriPairing_conj_symm
           intro s hs
           exact D.kuboMoriIntegrand_conj_symm A B s
 
+
+theorem kuboMoriIntegrand_one_one
+    (D : FaithfulDensityOperator n) (s : ℝ) :
+    D.kuboMoriIntegrand (1 : FiniteOperatorAlgebra n)
+        (1 : FiniteOperatorAlgebra n) s = 1 := by
+  unfold kuboMoriIntegrand
+  simp only [star_one, mul_one]
+  rw [← D.rpow_add]
+  have hs : s + (1 - s) = 1 := by ring
+  rw [hs, D.rpow_one]
+  exact D.trace_one
+
 end FaithfulDensityOperator
 
 /-- The normalized identity is an explicit faithful qubit density operator. -/

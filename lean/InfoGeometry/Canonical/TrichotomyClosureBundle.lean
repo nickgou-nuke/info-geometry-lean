@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CliffordDiracAlgebra
@@ -67,5 +72,15 @@ theorem tomita_causal_reduction_involutive
   reduced_tomita_on_standard_involutive (H := H) K hK z
 
 end StandardSector
+
+/-- Summary wrapper for the trichotomy/sector bundle. -/
+theorem TrichotomySummaryTheorems
+    (T : KANTriple V) {S : CausalSplit V} {P : Module.End ℝ V}
+    (hP : IsConeCompatibleProjector S P) :
+    IsElliptic T.K ∧ IsHyperbolic T.A ∧ IsParabolic T.N ∧
+    (∀ x, x ∈ S.bulk → P x ∈ S.bulk) ∧
+    (∀ x, x ∈ S.boundary → P x ∈ S.boundary) ∧
+    (∀ x, x ∈ S.nullCone → P x ∈ S.nullCone) :=
+  trichotomy_closed_under_sector_split T hP
 
 end InfoGeometry.Canonical.TrichotomyClosureBundle

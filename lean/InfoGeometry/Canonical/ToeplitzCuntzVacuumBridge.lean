@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Star.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
@@ -306,6 +311,20 @@ theorem p0_supercharges_annihilation (g : ToeplitzCuntzGenerators R) :
          p0_susyHamiltonian_annihilation g,
          supercharges_vacuum_annihilation g,
          p0_supercharges_annihilation g⟩ -/
+
+theorem nontrivial_algebraic_vacuum_property
+    (g : ToeplitzCuntzGenerators R)
+    (hP0 : P0 g ≠ 0) :
+    ∃ p : R,
+      p ≠ 0 ∧
+      susyHamiltonian g * p = 0 ∧
+      QPlus g * p = 0 ∧
+      QMinus g * p = 0 := by
+  use P0 g
+  exact ⟨hP0,
+         susyHamiltonian_vacuum_annihilation g,
+         (supercharges_vacuum_annihilation g).1,
+         (supercharges_vacuum_annihilation g).2⟩
 
 end ToeplitzCuntzGenerators
 

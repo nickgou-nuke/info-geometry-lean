@@ -283,6 +283,13 @@ theorem primonVirasoroCentralChargeOwnerTarget :
   · exact operatorialCharge_eq_analyticIndex (P := P)
   · exact virasoroCentralCharge_eq_sugawara (P := P)
 
+theorem primeGas_kms_boundary
+    (x y : Carrier) :
+    deltaWeightedFunctional P.primeGas.density (x * y) =
+      deltaWeightedFunctional P.primeGas.density
+        (y * P.primeGas.imaginaryTime x) :=
+  P.primeGas.kms_boundary x y
+
 end Bridge
 
 end InfoGeometry.Canonical.PrimonVirasoroCentralCharge

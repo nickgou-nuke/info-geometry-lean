@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ZetaCoordinateSymmetry
@@ -210,5 +215,19 @@ theorem oddZeta_eq_lambert_plus_bernoulli
   R.transform m
 
 end RamanujanLambertSocket
+
+
+theorem centeredParameter_functionalDual (x : CenteredChart) :
+    centeredParameter (ZetaCenteredChart.functionalDual x) =
+      1 - centeredParameter x := by
+  apply Complex.ext <;> simp [centeredParameter, ZetaCenteredChart.functionalDual]
+  · ring
+
+
+theorem centeredParameter_criticalMirror (x : CenteredChart) :
+    centeredParameter (ZetaCenteredChart.criticalMirror x) =
+      1 - star (centeredParameter x) := by
+  apply Complex.ext <;> simp [centeredParameter, ZetaCenteredChart.criticalMirror]
+  · ring
 
 end InfoGeometry.Canonical.SouriauTomitaZetaCenteredBridge

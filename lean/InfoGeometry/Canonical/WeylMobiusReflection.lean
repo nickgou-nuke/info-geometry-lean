@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
@@ -54,5 +59,10 @@ theorem weyl_conj_Nt :
 theorem weyl_conj_N_transpose :
     W * Nᵀ * W = -Nᵀ := by
   simpa [Nt_eq_transpose] using weyl_conj_Nt
+
+
+theorem weyl_mobius_parity_comparison :
+    (W * K * W = K) ∧ (W * N * W = -N) := by
+  exact ⟨weyl_conj_K, weyl_conj_N⟩
 
 end InfoGeometry.Canonical.WeylMobiusReflection

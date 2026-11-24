@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.SpatialDerivativeBogoliubovIntertwiner
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularHamiltonianPregSupportBridge
@@ -94,6 +99,35 @@ Complete noncommutative regular-support packet for an ordered weight pair:
 * `Pzero` annihilates `Kambient` on both sides.
 -/
 theorem spatialDerivative_certifiedReduction_packet
+    (I : InfoGeometry.OperatorAlgebra.SpatialDerivativeBogoliubovIntertwiner.Intertwiner
+      (E := E) modularCore)
+    (c : CertifiedModularReduction (E := H₂))
+    (φ ψ : Weight)
+    (hDelta :
+      c.Δ = I.realizedSpatialDerivative φ ψ)
+    (hLog :
+      c.logOn c.logDomain =
+        -modularCore.relativeHamiltonian φ ψ) :
+    c.Δreg =
+        compress c.Preg (I.realizedSpatialDerivative φ ψ)
+      ∧ c.Kambient =
+        compress c.Preg (modularCore.relativeHamiltonian φ ψ)
+      ∧ c.Preg * c.Kambient = c.Kambient
+      ∧ c.Kambient * c.Preg = c.Kambient
+      ∧ c.Pzero * c.Kambient = 0
+      ∧ c.Kambient * c.Pzero = 0 := by
+  have hDeltaReg :=
+    deltaReg_eq_compress_realizedSpatialDerivative
+      (I := I) (c := c) φ ψ hDelta
+  have hK :=
+    Kambient_eq_compress_relativeHamiltonian
+      (c := c) φ ψ hLog
+  have hSupport := c.Kambient_supported_on_Preg
+  have hDefect := c.Kambient_kills_Pzero
+  exact
+    ⟨hDeltaReg, hK, hSupport.1, hSupport.2, hDefect.1, hDefect.2⟩
+
+theorem spatialDerivative_propertyReduction_packet
     (I : InfoGeometry.OperatorAlgebra.SpatialDerivativeBogoliubovIntertwiner.Intertwiner
       (E := E) modularCore)
     (c : CertifiedModularReduction (E := H₂))

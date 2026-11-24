@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 open Matrix Complex
@@ -110,3 +115,11 @@ theorem klein_throat_anomaly_vanishes (s : BoundaryState) (h_sewn : isSewn s) :
   rcases mul_eq_zero.mp h2 with (h2z | hz)
   · exact absurd h2z h2_nz
   · exact hz
+
+
+theorem concreteBoundaryState_not_sewn :
+    ¬ isSewn concreteBoundaryState := by
+  intro h_sewn
+  have h_entry := congrFun (congrFun h_sewn 0) 0
+  norm_num [isSewn, concreteBoundaryState, switch, Matrix.mul_apply] at h_entry
+

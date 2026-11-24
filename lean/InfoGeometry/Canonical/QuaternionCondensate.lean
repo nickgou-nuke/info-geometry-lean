@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -213,6 +218,55 @@ theorem torsionReadout_antisymm
   cases axis
   cases comm mu nu
   simp [realPart, mul, conj, neg]
+  ring
+
+
+theorem normSq_nonneg (q : H4) : 0 ≤ normSq q := by
+  unfold normSq
+  positivity
+
+
+theorem normSq_eq_zero_iff (q : H4) :
+    normSq q = 0 ↔ q = zero := by
+  cases q with
+  | mk re imI imJ imK =>
+      constructor
+      · intro h
+        dsimp [normSq] at h
+        have hre : re = 0 := by
+          nlinarith [sq_nonneg re, sq_nonneg imI, sq_nonneg imJ, sq_nonneg imK]
+        have hi : imI = 0 := by
+          nlinarith [sq_nonneg re, sq_nonneg imI, sq_nonneg imJ, sq_nonneg imK]
+        have hj : imJ = 0 := by
+          nlinarith [sq_nonneg re, sq_nonneg imI, sq_nonneg imJ, sq_nonneg imK]
+        have hk : imK = 0 := by
+          nlinarith [sq_nonneg re, sq_nonneg imI, sq_nonneg imJ, sq_nonneg imK]
+        simp [zero, hre, hi, hj, hk]
+      · intro h
+        cases h
+        norm_num [normSq, zero]
+
+
+theorem conj_mul (p q : H4) :
+    conj (mul p q) = mul (conj q) (conj p) := by
+  cases p
+  cases q
+  ext <;> simp [conj, mul] <;> ring
+
+
+theorem mul_assoc (p q r : H4) :
+    mul (mul p q) r = mul p (mul q r) := by
+  cases p
+  cases q
+  cases r
+  ext <;> simp [mul] <;> ring
+
+
+theorem realPart_commutator_zero (p q : H4) :
+    realPart (commutator p q) = 0 := by
+  cases p
+  cases q
+  simp [realPart, commutator, add, neg, mul]
   ring
 
 end H4

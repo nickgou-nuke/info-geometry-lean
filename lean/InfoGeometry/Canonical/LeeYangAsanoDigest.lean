@@ -1283,4 +1283,16 @@ def AsanoInductiveStepSourceClaim : Prop :=
 
 end AsanoInduction
 
+theorem leeYangPolydiscSourceClaim_of_property
+    (LY : LeeYangPolydiscWitness) :
+    ∀ N : ℕ, ∀ (D : FinitePrimeChainData N) (lam : ℝ), 0 < lam →
+      (∀ y : Fin N → ℂ,
+        (∀ i : Fin N, PrimeHurwitzLimit.InUnitDisk (y i)) →
+          multiPartition D lam y ≠ 0) ∧
+      (∀ y : Fin N → ℂ,
+        (∀ i : Fin N, PrimeHurwitzLimit.OutsideUnitDisk (y i)) →
+          multiPartition D lam y ≠ 0) := by
+  intro N D lam hLam
+  exact ⟨LY.1 D lam hLam, LY.2 D lam hLam⟩
+
 end InfoGeometry.Canonical.LeeYangAsanoDigest

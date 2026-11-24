@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorCylinderHomeomorph
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
@@ -46,5 +51,19 @@ theorem continuous_cantorShiftMap : Continuous cantorShiftMap := by
 theorem shift_preimage_prefixCylinder_subset {n : ℕ} (w : BitWord n) (x : CantorStream)
     (hx : x ∈ cantorShiftMap ⁻¹' prefixCylinder n w) :
     cantorShiftMap x ∈ prefixCylinder n w := hx
+
+theorem cantorShiftMap_preimage_prefixCylinder
+    (n : ℕ) (w : BitWord n) :
+    cantorShiftMap ⁻¹' prefixCylinder n w =
+      {x : CantorStream | ∀ i : Fin n, x (i.1 + 1) = w i} := by
+  ext x
+  change boundaryPrefix n (cantorShiftMap x) = w ↔
+    ∀ i : Fin n, x (i.1 + 1) = w i
+  constructor
+  · intro h i
+    simpa [cantorShiftMap, boundaryPrefix] using congrFun h i
+  · intro h
+    funext i
+    simpa [cantorShiftMap, boundaryPrefix] using h i
 
 end InfoGeometry.Canonical.CantorColimitProjectiveBoundaryBridge

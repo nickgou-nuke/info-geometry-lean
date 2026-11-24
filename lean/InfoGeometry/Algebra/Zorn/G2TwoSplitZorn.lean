@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.G2TwoAutomorphismTheorem
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionG2TypeGenerators
@@ -66,5 +71,16 @@ theorem finite_aut_card_eq_g2two_from_enumeration
     (h_enum : Fintype.card SplitOctF2Aut = 12096) :
     Fintype.card SplitOctF2Aut = g2twoOrder :=
   aut_splitOctF2_card_eq_g2twoOrder_from_enumeration h_enum
+
+/-- Concrete integer split-octonion `G₂(2)`-type generator witnesses. -/
+theorem integer_generator_property_packet :
+    (∀ X Y : SplitOct, rho (mulZ X Y) = mulZ (rho X) (rho Y)) ∧
+      (∀ X : SplitOct, rho (rho (rho X)) = X) ∧
+      (∀ X : SplitOct, detZ (rho X) = detZ X) ∧
+      (∀ X Y : SplitOct, tau (mulZ X Y) = mulZ (tau X) (tau Y)) ∧
+      (∀ X : SplitOct, tau (tau X) = X) ∧
+      (∀ X : SplitOct, detZ (tau X) = detZ X) := by
+  exact ⟨rho_mulZ, rho_order_three, rho_detZ,
+    tau_mulZ, tau_order_two, tau_detZ⟩
 
 end InfoGeometry.Algebra.Zorn.G2TwoSplitZorn

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -194,6 +199,16 @@ lemma squareFreeEnergy_nonneg
     0 ≤ squareFreeEnergy energy S := by
   unfold squareFreeEnergy
   exact Finset.sum_nonneg (fun p hp => henergy p hp)
+
+theorem Gamma_mul_self (S : SquareFreePrimeState PrimeLabel) :
+    Gamma S * Gamma S = 1 := by
+  rw [Gamma_eq_negOne_pow_fermionNumber]
+  rw [← pow_add]
+  have hpow : (-1 : ℤ) ^ (S.card + S.card) = 1 := by
+    rw [show S.card + S.card = 2 * S.card by omega]
+    rw [pow_mul]
+    norm_num
+  exact hpow
 
 end SquareFreePrimeState
 

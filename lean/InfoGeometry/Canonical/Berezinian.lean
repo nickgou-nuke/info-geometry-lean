@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.NCG.BerezinianGaussianFactorization
@@ -33,5 +38,9 @@ theorem ber_eq_one (a : ℝ) (ha : a ≠ 0) : ber a a ha = 1 := by
 theorem ber_diagonal_exp_eq_exp_str (a d : ℝ) :
     ber (Real.exp a) (Real.exp d) (Real.exp_ne_zero d) = Real.exp (a - d) := by
   simp [ber, Real.exp_sub]
+
+theorem ber_reciprocal_blocks (a : ℝ) (ha : a ≠ 0) :
+    ber a a⁻¹ (inv_ne_zero ha) = a ^ 2 := by
+  simp [ber, div_inv_eq_mul, pow_two]
 
 end InfoGeometry.Canonical.Berezinian

@@ -281,4 +281,11 @@ theorem physicalMass_nonnegative
 
 end OperatorBKMDriftFusion
 
+structure BKMDriftMetricDatum
+    (State : Type*) where
+  scale : ℝ → State → State
+  driftIntensity : State → ℝ
+  gaugeScale : State → ℝ
+  physicalMass : State → ℝ
+
 end InfoGeometry.Canonical.BKMDriftMetric

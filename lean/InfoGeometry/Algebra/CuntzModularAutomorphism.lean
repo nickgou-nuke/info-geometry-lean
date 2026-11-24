@@ -209,4 +209,15 @@ lemma sigmaEquiv_add_apply (n : ℕ) (primes : Fin n → ℕ) (t s : ℝ) (x : C
     sigmaEquiv n primes (t + s) x = sigmaEquiv n primes t (sigmaEquiv n primes s x) := by
   simp only [sigmaEquiv_apply, sigma_add, AlgHom.coe_comp, Function.comp_apply]
 
+
+theorem sigmaEquiv_trans (n : ℕ) (primes : Fin n → ℕ) (t s : ℝ) :
+    (sigmaEquiv n primes t).trans (sigmaEquiv n primes s) =
+      sigmaEquiv n primes (t + s) := by
+  apply AlgEquiv.ext
+  intro x
+  change sigma n primes s (sigma n primes t x) =
+    sigma n primes (t + s) x
+  have h := sigmaEquiv_add_apply n primes s t x
+  simpa [add_comm] using h.symm
+
 end InfoGeometry.Algebra.CuntzModularAutomorphism

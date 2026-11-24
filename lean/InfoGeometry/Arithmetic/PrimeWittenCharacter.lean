@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimonFinite
@@ -62,5 +67,17 @@ theorem finiteWittenCharacter_eq_dirichletWittenCharacter
     _ = InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter P q := by
       simpa [InfoGeometry.Arithmetic.SplitMajoranaPrimon.finiteEulerProduct] using
         (InfoGeometry.Arithmetic.SplitMajoranaPrimon.dirichletWittenCharacter_eq_eulerProduct P q).symm
+
+theorem finiteWittenCharacter_eq_logarithmicMajoranaLocalProduct
+    (P : InfoGeometry.Arithmetic.PrimeBitWittenIndex.PrimeRegister) (s : ℝ) :
+    finiteWittenCharacter P (fun p => Real.exp (-s * Real.log (p : ℝ))) =
+      ∏ p ∈ P.primes,
+        InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.localWittenCharacter p s := by
+  rw [finiteWittenCharacter_eq_eulerProduct]
+  refine Finset.prod_congr rfl ?_
+  intro p _hp
+  exact (
+    InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter.localWittenCharacter_eq_reciprocalEulerFactor
+      p s).symm
 
 end InfoGeometry.Arithmetic.PrimeWittenCharacter

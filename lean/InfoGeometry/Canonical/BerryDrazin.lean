@@ -200,4 +200,20 @@ theorem density_right_supported_readback :
 
 end HodgeDrazinThermodynamicEntropyPacket
 
+structure BerryDrazinData
+    (Op : Type*) [Ring Op] where
+  p_A : Op
+  H_L : Op
+  J : Op
+  JD : Op
+
+  p_A_idempotent : p_A * p_A = p_A
+  H_L_idempotent : H_L * H_L = H_L
+
+  J_comm_pA : J * p_A = p_A * J
+  JD_comm_pA : JD * p_A = p_A * JD
+  J_comm_HL : J * H_L = H_L * J
+  JD_comm_HL : JD * H_L = H_L * JD
+  J_JD_comm : J * JD = JD * J
+
 end InfoGeometry.Canonical.BerryDrazin

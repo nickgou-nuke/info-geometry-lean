@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorColimitExpectation
@@ -363,6 +368,20 @@ theorem markov_step_is_bayesian_projection
   exact hmin
 
 end BayesianProjection
+
+structure KMSStationarityData where
+  markov : MarkovDualOperator L
+  kmsState : LimitState L
+  kmsTwist : L.AInf →ₐ[R] L.AInf
+  kmsCondition : ∀ x y : L.AInf,
+    kmsState.functional (x * y) =
+      kmsState.functional (y * kmsTwist x)
+  detailedBalance : ∀ x y : L.AInf,
+    kmsState.functional (x * markov.T y) =
+      kmsState.functional (markov.T x * y)
+  uniqueInvariant : ∀ s : LimitState L,
+    markov.Tstar s = s → s = kmsState
+  stationary : markov.Tstar kmsState = kmsState
 
 end TensorLimitStateSpace
 

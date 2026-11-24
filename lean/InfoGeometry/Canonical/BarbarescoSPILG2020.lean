@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -97,6 +102,23 @@ theorem massieu_centered_second_difference (β : ℚ) :
   ring
 
 theorem certificate (F X Y Z : M2Q) :
+    commutator X Y = - commutator Y X ∧
+      (commutator X (commutator Y Z) +
+        commutator Y (commutator Z X) +
+        commutator Z (commutator X Y) = 0) ∧
+      kksForm F X X = 0 ∧
+      (souriauTheta F X (commutator Y Z) +
+        souriauTheta F Y (commutator Z X) +
+        souriauTheta F Z (commutator X Y) = 0) ∧
+      (massieu (0 + 1) - 2 * massieu 0 + massieu (0 - 1) = 1) := by
+  exact ⟨commutator_skew X Y,
+    commutator_jacobi X Y Z,
+    kks_alternating F X,
+    souriau_cocycle_jacobi F X Y Z,
+    massieu_centered_second_difference 0⟩
+
+
+theorem property (F X Y Z : M2Q) :
     commutator X Y = - commutator Y X ∧
       (commutator X (commutator Y Z) +
         commutator Y (commutator Z X) +

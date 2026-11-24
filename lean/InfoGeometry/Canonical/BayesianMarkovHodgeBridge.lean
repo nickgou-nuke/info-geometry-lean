@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BayesianMarkovChain
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.DiscreteHodgeStabilizer
@@ -101,5 +106,19 @@ theorem stationary_current_hodge_protection
     (B.stationary_current_is_harmonic) he hc
 
 end BayesianMarkovHodgePacket
+
+structure BayesianMarkovHodgeData
+    (bond : ∀ n : ℕ, A n →ₐ[R] A (n + 1))
+    (L : TensorInductiveLimit bond) where
+  kms : KMSStationarityData L
+  n0 : ℕ
+  n1 : ℕ
+  n2 : ℕ
+  d0 : Matrix (Fin n1) (Fin n0) ℝ
+  d1 : Matrix (Fin n2) (Fin n1) ℝ
+  stateToCurrent : LimitState L → Fin n1 → ℝ
+  current : Fin n1 → ℝ
+  stateToCurrent_eq : stateToCurrent kms.kmsState = current
+  harmonic_current : IsHarmonicCodeState d0 d1 current
 
 end InfoGeometry.Canonical.BayesianMarkovHodgeBridge

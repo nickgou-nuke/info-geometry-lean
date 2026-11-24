@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutBounds
@@ -79,5 +84,16 @@ theorem readout_stability_via_partial_prefix
       abs_add_le _ _
     _ ≤ (1 / 2 : ℝ) ^ N + |realBinaryPartialReadout N w - realBinaryPartialReadout N v| := by
       linarith [hw]
+
+
+theorem complex_readout_prefix_closedBall_mem
+    (N : ℕ) (w v : (ℕ → Bool))
+    (hprefix : ∀ n < N, w n = v n) :
+    binaryReadout v ∈
+      Metric.closedBall (binaryReadout w) ((1 / 2 : ℝ) ^ N) := by
+  rw [Metric.mem_closedBall]
+  have hbound := complex_readout_prefix_stability N w v hprefix
+  rw [dist_eq_norm]
+  simpa [norm_sub_rev] using hbound
 
 end InfoGeometry.Canonical.CantorBoundaryFinitePrecision

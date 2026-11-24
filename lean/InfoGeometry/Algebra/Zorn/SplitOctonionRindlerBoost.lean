@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 The split generator `l` as the algebraic carrier of a Rindler boost.
 
 This is an algebraic bridge only: acceleration selects the real rapidity
@@ -130,5 +135,14 @@ theorem splitOctonionBoost_modular_parameter (obs : RindlerObserver) (τmod : �
     splitOctonionBoost (rapidity obs (properTime_of_modularTime obs τmod)) =
       splitOctonionBoost (wedgeBoostParameter τmod) := by
   rw [rapidity_properTime_eq_wedgeBoostParameter]
+
+
+abbrev CZ := InfoGeometry.Algebra.Zorn.SplitOctonionWittPlanes.CZ
+
+
+theorem splitOctonionBoost_rapidity (obs : RindlerObserver) (τ : ℝ) :
+    splitOctonionBoost (rapidity obs τ) =
+      splitOctonionBoost (obs.a * τ) := by
+  rfl
 
 end InfoGeometry.Algebra.Zorn.SplitOctonionRindlerBoost

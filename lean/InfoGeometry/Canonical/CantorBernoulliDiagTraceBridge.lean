@@ -86,4 +86,13 @@ theorem projectiveLimitMeasure_integral_prefix_eq_stageTrace
   rw [projectiveLimitMeasure_integral_prefix_eq_DiagTrace,
     ← stageTrace_eq_DiagTrace]
 
+
+theorem diagTrace_cylinderIndicator_eq_fractalMeasure_toReal
+    (n : ℕ) (w : BitWord n) :
+    DiagTrace n (cylinderIndicator n w) =
+      ((fractalMeasure
+          (InfoGeometry.Canonical.UHFInductiveColimitBoundaryTopology.cylinderSet n w)).toReal : ℂ) := by
+  rw [DiagTrace_cylinderIndicator, fractalMeasure_topologyCylinderSet]
+  norm_num [ENNReal.toReal_ofNat]
+
 end InfoGeometry.Canonical.CantorBernoulliDiagTraceBridge

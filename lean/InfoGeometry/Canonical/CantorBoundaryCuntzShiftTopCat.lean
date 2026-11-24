@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorBoundaryCuntzShiftClopen
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
@@ -65,5 +70,22 @@ theorem prefixBitTopCatIso_target_is_clopen (b : Bool) :
     IsOpen (Set.range (prefixBit b)) ∧
       IsClosed (Set.range (prefixBit b)) :=
   isClopen_range_prefixBit b
+
+
+theorem prefixBitTopCat_targets_partition :
+    Disjoint (Set.range (prefixBit false)) (Set.range (prefixBit true)) ∧
+      Set.range (prefixBit false) ∪ Set.range (prefixBit true) = Set.univ := by
+  constructor
+  · refine Set.disjoint_left.2 ?_
+    intro x hx hy
+    rcases hx with ⟨u, hu⟩
+    rcases hy with ⟨v, hv⟩
+    have hhead := congrFun (hu.trans hv.symm) 0
+    simp [prefixBit] at hhead
+  · apply Set.eq_univ_of_forall
+    intro x
+    rcases prefixBit_range_cover x with hx | hx
+    · exact Set.mem_union_left _ hx
+    · exact Set.mem_union_right _ hx
 
 end InfoGeometry.Canonical.CantorBoundaryCuntzShift

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeMajoranaWittenCharacter
@@ -89,6 +94,15 @@ theorem majoranaChirality_eq_mobiusReadout
     (S : SquareFreePrimonState P) :
     S.majoranaChirality = S.mobiusReadout := by
   rw [majoranaChirality_eq_fermionParity, mobiusReadout_eq_fermionParity]
+
+theorem squareFreePrimonParity_packet
+    (S : SquareFreePrimonState P) :
+    S.majoranaChirality = S.fermionParity ∧
+      S.mobiusReadout = S.fermionParity ∧
+      S.majoranaChirality = S.mobiusReadout := by
+  exact ⟨majoranaChirality_eq_fermionParity S,
+    mobiusReadout_eq_fermionParity S,
+    majoranaChirality_eq_mobiusReadout S⟩
 
 end SquareFreePrimonState
 

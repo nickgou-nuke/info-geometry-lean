@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.IdeleClassZetaSymmetry
@@ -77,5 +82,10 @@ theorem ideleScaleCharacter_inverse
   simp [ideleScaleCharacter, IdeleClassLayer.inverse, Complex.exp_neg]
 
 end LogScale
+
+
+theorem ideleScaleCharacter_identity (s : ℂ) :
+    ideleScaleCharacter (IdeleClassLayer.identity : IdeleClassLayer G) s = 1 := by
+  simp [ideleScaleCharacter, IdeleClassLayer.identity]
 
 end InfoGeometry.Arithmetic.ConnesFiniteTraceBridge

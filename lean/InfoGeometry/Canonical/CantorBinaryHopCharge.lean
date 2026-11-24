@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorCuntzBasis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordCantorFock
@@ -151,5 +156,12 @@ theorem annihilate_annihilate_true_eq_zero :
     a_op * (a_op * cantorState true) = 0 := by
   ext i j <;> fin_cases i <;> fin_cases j <;>
     norm_num [a_op, cantorState, state_true, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem wordCharge_append (u v : List Bool) :
+    wordCharge (u ++ v) = wordCharge u + wordCharge v := by
+  induction u with
+  | nil => simp [wordCharge]
+  | cons b u ih =>
+      simp [wordCharge, ih, add_assoc]
 
 end InfoGeometry.Canonical.CantorBinaryHopCharge

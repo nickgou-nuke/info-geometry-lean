@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Basic
@@ -150,5 +155,17 @@ theorem binary_tree_partition_sum_eq_one (n : ℕ)
       rfl
     _ = inv2 ^ n * (2 : R) ^ n := by ring
     _ = 1 := h_inv
+
+theorem bcfw_four_point_decoupling
+    (dz : ℕ → M) (data : LogarithmicOneFormData (R := R) dz) (i j k l : ℕ) :
+    (alg.wedge (data.form dz i j) (data.form dz j k) +
+     alg.wedge (data.form dz j k) (data.form dz k i) +
+     alg.wedge (data.form dz k i) (data.form dz i j)) -
+    (alg.wedge (data.form dz j k) (data.form dz k l) +
+     alg.wedge (data.form dz k l) (data.form dz l j) +
+     alg.wedge (data.form dz l j) (data.form dz j k)) = 0 := by
+  have h1 := arnold_cohen_three_term_relation alg dz data i j k
+  have h2 := arnold_cohen_three_term_relation alg dz data j k l
+  rw [h1, h2, sub_self]
 
 end InfoGeometry.Canonical.ArnoldCohenBCFWBridge

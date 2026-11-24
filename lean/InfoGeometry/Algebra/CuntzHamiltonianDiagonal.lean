@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzContractionLemmas
@@ -68,5 +73,35 @@ theorem hamiltonian_commutes_projector (n : ℕ) (ε : Fin n → ℂ) (i : Fin n
     (cuntzS n i * cuntzSdag n i) * hamiltonian n ε := by
   change hamiltonian n ε * P n i = P n i * hamiltonian n ε
   rw [H_mul_P n ε i, P_mul_H n ε i]
+
+
+theorem hamiltonian_pow_diagonalization
+    (n : ℕ) (ε : Fin n → ℂ) (k : ℕ) (i j : Fin n) :
+    (cuntzS n i * cuntzSdag n i) * (hamiltonian n ε) ^ k *
+        (cuntzS n j * cuntzSdag n j) =
+      (if i = j then (ε i) ^ k • (cuntzS n i * cuntzSdag n i) else 0) := by
+  change P n i * (hamiltonian n ε) ^ k * P n j = _
+  by_cases hij : i = j
+  · subst j
+    calc
+      P n i * (hamiltonian n ε) ^ k * P n i =
+          (P n i * (hamiltonian n ε) ^ k) * P n i := by
+            rw [mul_assoc]
+      _ = ((ε i) ^ k • P n i) * P n i := by
+            rw [P_mul_H_pow]
+      _ = (ε i) ^ k • P n i := by
+            rw [smul_mul_assoc, P_idem]
+      _ = if i = i then (ε i) ^ k • (cuntzS n i * cuntzSdag n i) else 0 := by
+            simp [P]
+  · calc
+      P n i * (hamiltonian n ε) ^ k * P n j =
+          (P n i * (hamiltonian n ε) ^ k) * P n j := by
+            rw [mul_assoc]
+      _ = ((ε i) ^ k • P n i) * P n j := by
+            rw [P_mul_H_pow]
+      _ = 0 := by
+            rw [smul_mul_assoc, P_ortho n hij, smul_zero]
+      _ = if i = j then (ε i) ^ k • P n i else 0 := by
+            simp [hij]
 
 end InfoGeometry.Algebra.CuntzHamiltonianDiagonal

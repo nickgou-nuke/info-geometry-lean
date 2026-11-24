@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
@@ -107,6 +112,12 @@ theorem witten_index_finite (S : Finset ℕ) (β : ℝ) :
 theorem superPartition_eq (S : Finset ℕ) (β : ℝ) :
     superPartition S β = ∏ p ∈ S, (fermionFactor p β * bosonFactor p β) := by
   rw [superPartition, fermionPartition, bosonPartition]
+  simp [Finset.prod_mul_distrib, mul_comm]
+
+theorem finite_boson_fermion_product_readout (S : Finset ℕ) (β : ℝ) :
+    fermionPartition S β * bosonPartition S β =
+    ∏ p ∈ S, (fermionFactor p β * bosonFactor p β) := by
+  rw [fermionPartition, bosonPartition]
   simp [Finset.prod_mul_distrib, mul_comm]
 
 end InfoGeometry.Arithmetic.PrimonThermodynamics

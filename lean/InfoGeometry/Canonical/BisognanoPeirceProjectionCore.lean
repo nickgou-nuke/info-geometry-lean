@@ -51,4 +51,15 @@ theorem peirceProjection_krein_selfAdjoint :
     rw [smul_mul_assoc, J55_mul_one_add]
   norm_num
 
+/-- The Unruh temperature for acceleration `a`. -/
+def unruhTemperature (a : ℝ) : ℝ := a / (2 * Real.pi)
+
+/-- Thermal time / proper time relation: `2π/a = 1/(a/2π)` for `a > 0`.
+This fills a `by sorry` hole from the stash lane `BisognanoWichmannKreinWedge`. -/
+theorem thermalTime_properTime_relation (a : ℝ) (ha : a > 0) :
+    (2 * Real.pi / a : ℝ) = (1 : ℝ) / (a / (2 * Real.pi)) := by
+  have ha0 : a ≠ 0 := ne_of_gt ha
+  have hpi : (2 * Real.pi : ℝ) ≠ 0 := by positivity
+  field_simp [ha0, hpi]
+
 end InfoGeometry.Canonical.BisognanoPeirceProjectionCore

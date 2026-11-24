@@ -245,7 +245,8 @@ theorem compressed_gram_of_saturation
   by_cases hc : c = 0
   · have hnorm : ‖(T * L)ᵀ * R‖ ^ 2 = 0 := by simpa [hc] using hsat
     have hzero : (T * L)ᵀ * R = 0 := norm_eq_zero.mp (sq_eq_zero_iff.mp hnorm)
-    simp [hc, hzero]
+    rw [hzero]
+    simp [hc]
   · obtain ⟨hA0, hR0⟩ :=
       (scaled_compression_saturation_iff T C c hc hT hCs hC L hL R hR).mp hsat
     exact compressed_gram_of_residuals_zero T C c hT L hL R hR hA0 hR0

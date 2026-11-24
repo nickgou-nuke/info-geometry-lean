@@ -90,8 +90,8 @@ theorem readout_orthogonal_transport [DecidableEq m] [DecidableEq n]
         ((V : Matrix n n ℝ) * L) ((U : Matrix m m ℝ) * R) =
       readout T L R := by
   apply readout_intertwining
-  · exact Matrix.mem_orthogonalGroup_iff'.mp U.property
-  · rw [Matrix.mul_assoc, Matrix.mem_orthogonalGroup_iff'.mp V.property,
+  · exact (Matrix.mem_orthogonalGroup_iff' m ℝ).mp U.property
+  · rw [Matrix.mul_assoc, (Matrix.mem_orthogonalGroup_iff' n ℝ).mp V.property,
       Matrix.mul_one]
 
 /-- The right orthogonal factor cancels from the left Gram matrix. -/
@@ -130,7 +130,7 @@ theorem readout_left_gram [Fintype p] [Fintype q] [DecidableEq p] [DecidableEq q
         (U : Matrix p p ℝ) := by
   simpa only [readout_basis_change] using
     left_gram_basis_change (readout T L R) (U : Matrix p p ℝ) (V : Matrix q q ℝ)
-      (Matrix.mem_orthogonalGroup_iff.mp V.property)
+      ((Matrix.mem_orthogonalGroup_iff q ℝ).mp V.property)
 
 /-- Readout right-Gram covariance under native orthogonal frame changes. -/
 theorem readout_right_gram [Fintype p] [Fintype q] [DecidableEq p] [DecidableEq q]
@@ -142,7 +142,7 @@ theorem readout_right_gram [Fintype p] [Fintype q] [DecidableEq p] [DecidableEq 
         (V : Matrix q q ℝ) := by
   simpa only [readout_basis_change] using
     right_gram_basis_change (readout T L R) (U : Matrix p p ℝ) (V : Matrix q q ℝ)
-      (Matrix.mem_orthogonalGroup_iff.mp U.property)
+      ((Matrix.mem_orthogonalGroup_iff p ℝ).mp U.property)
 
 /-- Evenness in the left frame and signed orthogonal covariance force every entry to vanish.
 Only the orthogonal changes `-1` and `1` are needed for this obstruction. -/
@@ -156,10 +156,10 @@ theorem eq_zero_of_even_left_and_orthogonal_covariance
       F (L * U) (R * V) = Uᵀ * F L R * V)
     (L : Matrix n p ℝ) (R : Matrix m q ℝ) : F L R = 0 := by
   have hneg : (-1 : Matrix p p ℝ) ∈ Matrix.orthogonalGroup p ℝ := by
-    apply Matrix.mem_orthogonalGroup_iff.mpr
+    apply (Matrix.mem_orthogonalGroup_iff p ℝ).mpr
     simp
   have hone : (1 : Matrix q q ℝ) ∈ Matrix.orthogonalGroup q ℝ := by
-    apply Matrix.mem_orthogonalGroup_iff.mpr
+    apply (Matrix.mem_orthogonalGroup_iff q ℝ).mpr
     simp
   have hodd : F (-L) R = -F L R := by
     simpa only [Matrix.mul_neg, Matrix.mul_one, Matrix.transpose_neg,

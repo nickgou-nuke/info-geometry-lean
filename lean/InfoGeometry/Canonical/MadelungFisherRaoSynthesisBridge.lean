@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -43,5 +48,36 @@ theorem master_madelung_fisher_rao_synthesis
   madelung_fisher_rao_line_element u du dρ hu hdρ,
   madelung_quantum_potential_linearization u laplacian_u Q hQ hu
 ⟩
+
+theorem bohm_potential_eq_surprisal_laplacian_sub_gradientSq
+    (u dK d2K d2u : ℝ) (hu : 0 < u)
+    (hd2u : d2u = u * ((dK ^ 2) / 4 - d2K / 2)) :
+    - (1 / 2) * (d2u / u) = (1 / 4) * d2K - (1 / 8) * dK ^ 2 := by
+  have hu_ne : u ≠ 0 := ne_of_gt hu
+  rw [hd2u]
+  field_simp [hu_ne]
+  ring
+
+/-- The scalar surprisal-coordinate Bohm readout used in the doubled formulas. -/
+def surprisalBohmReadout (d2K dK : ℝ) : ℝ :=
+  (1 / 4) * d2K - (1 / 8) * dK ^ 2
+
+
+theorem doubled_surprisal_bohm_common_readout
+    (d2Kc d2Kr dKc dKr : ℝ) :
+    (surprisalBohmReadout (d2Kc + d2Kr) (dKc + dKr) +
+      surprisalBohmReadout (d2Kc - d2Kr) (dKc - dKr)) / 2 =
+      (1 / 4) * d2Kc - (1 / 8) * (dKc ^ 2 + dKr ^ 2) := by
+  unfold surprisalBohmReadout
+  ring
+
+
+theorem doubled_surprisal_bohm_relative_readout
+    (d2Kc d2Kr dKc dKr : ℝ) :
+    (surprisalBohmReadout (d2Kc + d2Kr) (dKc + dKr) -
+      surprisalBohmReadout (d2Kc - d2Kr) (dKc - dKr)) / 2 =
+      (1 / 4) * d2Kr - (1 / 4) * dKc * dKr := by
+  unfold surprisalBohmReadout
+  ring
 
 end InfoGeometry.Canonical.MadelungFisherRaoSynthesisBridge

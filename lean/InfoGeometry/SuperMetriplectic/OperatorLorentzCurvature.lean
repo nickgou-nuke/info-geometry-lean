@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperMetriplectic.DiscreteMellinHamiltonian
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WedgeBoostModularBridge
@@ -280,5 +285,33 @@ theorem wedgeBoost_modularTransport_eq_unruhBoost
       =
     InfoGeometry.Dynamics.unruhFlow (E := E) τwedge :=
   W.flow_at_wedgeParameter τwedge
+
+structure OperatorialCliffordFourierGradeData where
+  transformed : EndH
+  scalarGrade : EndH
+  vectorGrade : EndH
+  bivectorGrade : EndH
+  topologicalGrade : EndH
+
+structure BisognanoWichmannModularLorentzData where
+  modularFlow : ℝ → EndH
+  lorentzBoostFlow : ℝ → EndH
+
+structure ModularLorentzCommutatorCurvatureData where
+  modularFlowX : ℝ → EndH
+  modularFlowY : ℝ → EndH
+  lorentzBoostX : ℝ → EndH
+  lorentzBoostY : ℝ → EndH
+  curvatureCommutator : ℝ → ℝ → EndH
+  riemannReadout : ℝ → ℝ → EndH
+
+structure OperatorLorentzCurvatureData where
+  gradeSplit : OperatorialCliffordFourierGradeData (E := E)
+  boostX : BisognanoWichmannModularLorentzData (E := E)
+  boostY : BisognanoWichmannModularLorentzData (E := E)
+  drazinCoreProjector : EndH
+  drazinCoreModularGenerator : EndH
+  drazinCoreModularFlow : ℝ → EndH
+  curvature : ModularLorentzCommutatorCurvatureData (E := E)
 
 end InfoGeometry.SuperMetriplectic

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperMetriplectic.SouriauTomitaBKM
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DiscreteMellinModularBridge
@@ -212,5 +217,51 @@ theorem thermal_gap_eq_log_q
   simp [InfoGeometry.Canonical.DiscreteModularSpectrum.ModularMellinLattice.thermalTimeStep]
 
 end DiscreteMellinCasimirQuantizationPacket
+
+structure LogSampledDFTMellinData (Index : Type*) where
+  linearSample : Index → ℝ
+  logarithmicSample : Index → ℝ
+  logCoordinate : Index → ℝ
+  dftSpectrum : Index → ℝ
+  dmtSpectrum : Index → ℝ
+  log_sample_eq_coordinate :
+    ∀ k : Index, Real.log (logarithmicSample k) = logCoordinate k
+  dmt_eq_dft_on_logSamples :
+    dmtSpectrum = dftSpectrum
+
+structure DiscreteMellinModularHamiltonianData
+    (η0 Δη : ℝ) (P : ℤ → EndH) where
+  context :
+    OperatorialDiscreteModularHamiltonianContext (E := E) η0 Δη P
+  mellinWeight : ℤ → ℝ
+  mellinWeight_eq_discreteRapidity :
+    ∀ k : ℤ, mellinWeight k = discreteRapidity η0 Δη k
+  hamiltonianReadout : EndH
+  hamiltonianReadout_eq_context :
+    hamiltonianReadout = context.H
+
+structure DiscreteLorentzMellinQuantizationData
+    (η0 Δη : ℝ) (P : ℤ → EndH) where
+  dmt : LogSampledDFTMellinData ℤ
+  modularHamiltonian :
+    DiscreteMellinModularHamiltonianData (E := E) η0 Δη P
+  samples_match_owner :
+    ∀ k : ℤ, dmt.logarithmicSample k = logarithmicSample η0 Δη k
+  logCoordinates_match_rapidity :
+    ∀ k : ℤ, dmt.logCoordinate k = discreteRapidity η0 Δη k
+
+structure DiscreteMellinCasimirQuantizationData
+    (CIK : InfoGeometry.Canonical.CertifiedInverseKernel H₂) where
+  lattice : InfoGeometry.Canonical.DiscreteModularSpectrum.ModularMellinLattice E CIK
+  casimir :
+    InfoGeometry.Canonical.CasimirWeylDrazinContext.CasimirWeylDrazinData
+      (E := E) CIK
+  observable : EndH
+  bandlimited :
+    InfoGeometry.Canonical.DiscreteModularSpectrum.ModularMellinLattice.IsMellinBandlimited
+      lattice observable
+  mode : ℤ
+  zetaCasimirResidual_eq_mode_logGap :
+    casimir.zetaCasimirResidual = (mode : ℝ) * Real.log lattice.q
 
 end InfoGeometry.SuperMetriplectic

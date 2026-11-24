@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KleinQuadricGrothendieckDeRham
@@ -260,5 +265,62 @@ theorem timeCohomology_eq_circleIntegral_grothendieck_dlog (R : ℝ) (hR : 0 < R
   rw [timeCohomology_eq_two_pi_I, circleIntegral_grothendieck_dlog R hR]
 
 end
+
+
+theorem kleinDLogAlong_add_right
+    (P X Y : InfoGeometry.Projective.KleinQuadric.Plucker6 ℂ) :
+    kleinDLogAlong P
+        (InfoGeometry.Projective.KleinQuadric.Plucker6.add X Y) =
+      kleinDLogAlong P X + kleinDLogAlong P Y := by
+  have hpolar :
+      InfoGeometry.Projective.KleinQuadric.Plucker6.polar P
+          (InfoGeometry.Projective.KleinQuadric.Plucker6.add X Y) =
+        InfoGeometry.Projective.KleinQuadric.Plucker6.polar P X +
+          InfoGeometry.Projective.KleinQuadric.Plucker6.polar P Y := by
+    rcases P with ⟨p01, p02, p03, p12, p13, p23⟩
+    rcases X with ⟨x01, x02, x03, x12, x13, x23⟩
+    rcases Y with ⟨y01, y02, y03, y12, y13, y23⟩
+    simp [InfoGeometry.Projective.KleinQuadric.Plucker6.polar,
+      InfoGeometry.Projective.KleinQuadric.Plucker6.kleinQ,
+      InfoGeometry.Projective.KleinQuadric.Plucker6.add]
+    ring_nf
+  unfold kleinDLogAlong
+  rw [hpolar]
+  ring
+
+
+theorem kleinDLogAlong_scale_right
+    (c : ℂ) (P X : InfoGeometry.Projective.KleinQuadric.Plucker6 ℂ) :
+    kleinDLogAlong P
+        (InfoGeometry.Projective.KleinQuadric.Plucker6.scale c X) =
+      c * kleinDLogAlong P X := by
+  unfold kleinDLogAlong
+  rw [InfoGeometry.Projective.KleinQuadric.Plucker6.polar_scale_right]
+  ring
+
+
+theorem kleinDLogAlong_scale_left
+    (c : ℂ) (P X : InfoGeometry.Projective.KleinQuadric.Plucker6 ℂ)
+    (hc : c ≠ 0) :
+    kleinDLogAlong
+        (InfoGeometry.Projective.KleinQuadric.Plucker6.scale c P) X =
+      c⁻¹ * kleinDLogAlong P X := by
+  unfold kleinDLogAlong
+  rw [InfoGeometry.Projective.KleinQuadric.Plucker6.polar_scale_left,
+    InfoGeometry.Projective.KleinQuadric.Plucker6.kleinQ_scale]
+  field_simp [hc]
+
+
+theorem kleinDLogAlong_scale_scale
+    (c d : ℂ) (P X : InfoGeometry.Projective.KleinQuadric.Plucker6 ℂ)
+    (hc : c ≠ 0) :
+    kleinDLogAlong
+        (InfoGeometry.Projective.KleinQuadric.Plucker6.scale c P)
+        (InfoGeometry.Projective.KleinQuadric.Plucker6.scale d X) =
+      d * c⁻¹ * kleinDLogAlong P X := by
+  rw [kleinDLogAlong_scale_left c P
+      (InfoGeometry.Projective.KleinQuadric.Plucker6.scale d X) hc,
+    kleinDLogAlong_scale_right d P X]
+  ring
 
 end InfoGeometry.Projective.KleinQuadric.Time

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Quantum.FiniteMajoranaPairingBlocks
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -53,5 +58,23 @@ theorem canonicalMatching_weight_squared_eq_blockDeterminant
     (matchingWeight a) ^ 2 = finitePairingDeterminant a := by
   symm
   exact finitePairingDeterminant_eq_square a
+
+
+theorem pairSwap_zero : pairSwap (0 : Fin 2) = 1 := by
+  rfl
+
+
+theorem pairSwap_one : pairSwap (1 : Fin 2) = 0 := by
+  simp [pairSwap]
+
+
+theorem canonicalMatching_partner (N : ℕ) (p : MajoranaLabel N) :
+    (canonicalMatching N).partner p = (p.1, pairSwap p.2) := by
+  rfl
+
+
+theorem canonicalMatching_weight_eq_blockPfaffian {N : ℕ} (a : Fin N → ℝ) :
+    matchingWeight a = finitePairingPfaffian a := by
+  rfl
 
 end InfoGeometry.Quantum.FiniteMajoranaPerfectMatching

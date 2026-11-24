@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Tessellation.Incidence
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Tessellation.NilpotentFlow
@@ -114,6 +119,38 @@ theorem boundaryPrefix_one_true
     (ξ : InfiniteBinaryWordSpace) :
     boundaryPrefix 1 (boundaryCons true ξ) = [true] := by
   simp [boundaryPrefix]
+
+
+theorem leftFlowUnit_val
+    (w : List Bool) :
+    ((D.leftFlowUnit w : Opˣ) : Op) = 1 + (D.leftHop w).N := by
+  simpa [leftFlowUnit, IncidentLightray.flowUnit] using
+    (IncidentLightray.flowUnit_val
+      (D.leftHop w) (D.leftOrthogonal w))
+
+
+theorem rightFlowUnit_val
+    (w : List Bool) :
+    ((D.rightFlowUnit w : Opˣ) : Op) = 1 + (D.rightHop w).N := by
+  simpa [rightFlowUnit, IncidentLightray.flowUnit] using
+    (IncidentLightray.flowUnit_val
+      (D.rightHop w) (D.rightOrthogonal w))
+
+
+theorem leftFlowUnit_inv_val
+    (w : List Bool) :
+    (((D.leftFlowUnit w)⁻¹ : Opˣ) : Op) = 1 - (D.leftHop w).N := by
+  simpa [leftFlowUnit, IncidentLightray.flowUnit] using
+    (oneAddSquareZeroUnit_inv_val
+      (D.leftHop w).N (D.leftHop_square_zero w))
+
+
+theorem rightFlowUnit_inv_val
+    (w : List Bool) :
+    (((D.rightFlowUnit w)⁻¹ : Opˣ) : Op) = 1 - (D.rightHop w).N := by
+  simpa [rightFlowUnit, IncidentLightray.flowUnit] using
+    (oneAddSquareZeroUnit_inv_val
+      (D.rightHop w).N (D.rightHop_square_zero w))
 
 end CantorDiracSeaWalkDatum
 

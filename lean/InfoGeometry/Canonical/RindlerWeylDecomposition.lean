@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -114,5 +119,31 @@ theorem exp_two_mul_eta_eq_div (hr : 0 < r) (hs : 0 < s) :
   field_simp [hs.ne']
 
 end
+
+/-- Weyl reflection swaps the two diagonal coordinates. -/
+theorem xi_swap :
+    xi s r = xi r s := by
+  unfold xi
+  ring
+
+
+theorem eta_swap :
+    eta s r = -eta r s := by
+  unfold eta
+  ring
+
+
+theorem xi_mul_common_scale {a : Real} (ha : 0 < a) (hr : 0 < r) (hs : 0 < s) :
+    xi (a * r) (a * s) = Real.log a + xi r s := by
+  unfold xi
+  rw [Real.log_mul ha.ne' hr.ne', Real.log_mul ha.ne' hs.ne']
+  ring
+
+
+theorem eta_mul_common_scale {a : Real} (ha : 0 < a) (hr : 0 < r) (hs : 0 < s) :
+    eta (a * r) (a * s) = eta r s := by
+  unfold eta
+  rw [Real.log_mul ha.ne' hr.ne', Real.log_mul ha.ne' hs.ne']
+  ring
 
 end InfoGeometry.Canonical.RindlerWeylDecomposition

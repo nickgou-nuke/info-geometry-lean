@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -93,5 +98,56 @@ theorem lightAsParallelTransport (path : List JonesMatrix) (initial_state : Jone
     (resonatorHolonomy path).mulVec initial_state =
       (path.foldl (fun acc M => acc * M) 1).mulVec initial_state := by
   rfl
+
+
+abbrev PauliCoefficient := Fin 3 → ℂ
+
+
+def pauliVector (x : PauliCoefficient) : JonesMatrix :=
+  x 0 • pauli₁ + x 1 • pauli₂ + x 2 • pauli₃
+
+
+def pauliDot (x y : PauliCoefficient) : ℂ :=
+  x 0 * y 0 + x 1 * y 1 + x 2 * y 2
+
+
+def pauliCross (x y : PauliCoefficient) : PauliCoefficient := fun i =>
+  match i with
+  | 0 => x 1 * y 2 - x 2 * y 1
+  | 1 => x 2 * y 0 - x 0 * y 2
+  | 2 => x 0 * y 1 - x 1 * y 0
+
+
+theorem pauliVector_mul (x y : PauliCoefficient) :
+    pauliVector x * pauliVector y =
+      pauliDot x y • (1 : JonesMatrix) +
+        I • pauliVector (pauliCross x y) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [pauliVector, pauliDot, pauliCross, pauli₁, pauli₂, pauli₃,
+      Matrix.mul_apply, Fin.sum_univ_three, Matrix.smul_apply,
+      Complex.I_mul_I, Complex.I_sq, pow_two] <;>
+    ring_nf <;> simp [Complex.I_sq] <;> ring
+
+
+theorem pauliVector_mul_scalar_readout (x y : PauliCoefficient) :
+    (pauliVector x * pauliVector y) 0 0 +
+        (pauliVector x * pauliVector y) 1 1 =
+      2 * pauliDot x y := by
+  rw [pauliVector_mul]
+  simp [pauliDot, pauliVector, pauliCross, pauli₁, pauli₂, pauli₃,
+    Matrix.smul_apply]
+  ring
+
+
+theorem pauliVector_mul_antisymmetric_readout (x y : PauliCoefficient) :
+    pauliVector x * pauliVector y - pauliVector y * pauliVector x =
+      (2 * I) • pauliVector (pauliCross x y) := by
+  rw [pauliVector_mul, pauliVector_mul]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [pauliDot, pauliVector, pauliCross, Matrix.smul_apply,
+      Complex.I_mul_I, Complex.I_sq, pow_two] <;>
+    ring
 
 end JonesCalculus

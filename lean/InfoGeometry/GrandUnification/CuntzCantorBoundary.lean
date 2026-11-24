@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.GrandUnification.HodgeCartanTrifactor
@@ -44,6 +49,23 @@ the verified Trifactor geometry. -/
 theorem cuntz_boundary_identity :
     Cuntz_S_plus T + Cuntz_S_minus T + Cuntz_S_zero T = 1 := by
   unfold Cuntz_S_plus Cuntz_S_minus Cuntz_S_zero
+  unfold exact_op coexact_op harmonic_op
+  exact P_sum T
+
+/-- The exact TriFacet projector used by the boundary readout. -/
+abbrev boundaryProjector_plus (T : R) : R := exact_op T
+
+/-- The co-exact TriFacet projector used by the boundary readout. -/
+abbrev boundaryProjector_minus (T : R) : R := coexact_op T
+
+/-- The harmonic TriFacet projector used by the boundary readout. -/
+abbrev boundaryProjector_zero (T : R) : R := harmonic_op T
+
+/-- The three finite boundary projectors partition the unit. -/
+theorem boundaryProjectors_sum_one :
+    boundaryProjector_plus T + boundaryProjector_minus T +
+        boundaryProjector_zero T = 1 := by
+  unfold boundaryProjector_plus boundaryProjector_minus boundaryProjector_zero
   unfold exact_op coexact_op harmonic_op
   exact P_sum T
 

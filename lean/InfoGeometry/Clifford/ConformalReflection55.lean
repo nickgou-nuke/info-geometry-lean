@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.ConformalLift55
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
@@ -158,5 +163,25 @@ theorem J_swap_involutive_infinity :
     J p * (J p * p.v * J p) * J p = p.v := by
   rw [J_swap_infinity]
   exact J_swap_origin p
+
+/-- The canonical conformal reflection built from the native split-Bott pair. -/
+noncomputable abbrev canonicalJ : Cl55 :=
+  J ConformalLift55.conformalNullPair
+
+
+theorem canonicalJ_sq : canonicalJ ^ 2 = -1 := by
+  exact J_sq ConformalLift55.conformalNullPair
+
+
+theorem canonicalJ_swap_origin :
+    canonicalJ * ConformalLift55.conformalNullPair.u * canonicalJ =
+      ConformalLift55.conformalNullPair.v := by
+  exact J_swap_origin ConformalLift55.conformalNullPair
+
+
+theorem canonicalJ_swap_infinity :
+    canonicalJ * ConformalLift55.conformalNullPair.v * canonicalJ =
+      ConformalLift55.conformalNullPair.u := by
+  exact J_swap_infinity ConformalLift55.conformalNullPair
 
 end InfoGeometry.Clifford.ConformalReflection55

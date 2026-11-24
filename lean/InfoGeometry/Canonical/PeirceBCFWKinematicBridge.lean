@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.PeirceNullConeKinematicEmbedding
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BCFWOnShellShift
@@ -57,4 +62,29 @@ theorem complexifiedChannel_peirce_quadratic (M : Matrix (Fin 2) (Fin 2) ℝ) :
     embedRealSplit_quadratic_transport]
 
 end
+
+abbrev PeirceKinematicMomentum := Fin 4 → ℂ
+
+
+noncomputable def peirceKinematicInner
+    (p q : PeirceKinematicMomentum) : ℂ :=
+  (1 / 2 : ℂ) *
+    (p 0 * q 1 + p 1 * q 0 - p 2 * q 3 - p 3 * q 2)
+
+
+theorem peirceKinematicInner_self (p : PeirceKinematicMomentum) :
+    peirceKinematicInner p p =
+      p 0 * p 1 - p 2 * p 3 := by
+  simp [peirceKinematicInner]
+  ring
+
+
+theorem complexifyChannelCoordinates_inner_self (p : KinematicCoordinates) :
+    peirceKinematicInner (complexifyChannelCoordinates p)
+        (complexifyChannelCoordinates p) =
+      (channelQuadratic p : ℂ) := by
+  rw [peirceKinematicInner_self]
+  dsimp [complexifyChannelCoordinates, channelQuadratic]
+  norm_num
+
 end InfoGeometry.Canonical

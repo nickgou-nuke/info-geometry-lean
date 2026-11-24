@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.SpecialFunctions.Exp
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -158,6 +163,47 @@ theorem log_weylScaledGap_eq_log_gap0_sub_phi {gap0 phi : ℝ}
   unfold weylScaledGap
   rw [Real.log_mul (ne_of_gt (Real.exp_pos _)) (ne_of_gt hgap0)]
   rw [Real.log_exp]
+  ring
+
+/-- The parity splitting inherits nonnegativity from the one-pair gap. -/
+theorem majoranaPairSplitting_nonneg (lambda : ℝ) :
+    0 ≤ majoranaPairSplitting lambda := by
+  unfold majoranaPairSplitting
+  exact mul_nonneg (by norm_num) (majoranaPairGap_nonneg lambda)
+
+/-- The parity splitting closes exactly when the Majorana pair gap closes. -/
+theorem majoranaPairSplitting_eq_zero_iff (lambda : ℝ) :
+    majoranaPairSplitting lambda = 0 ↔ lambda = 0 := by
+  unfold majoranaPairSplitting
+  constructor
+  · intro h
+    apply (majoranaPairGap_eq_zero_iff lambda).mp
+    nlinarith
+  · intro h
+    rw [h]
+    simp [majoranaPairGap]
+
+/-- Weyl scaling preserves the exact positivity locus of the reference gap. -/
+theorem weylScaledGap_pos_iff (gap0 phi : ℝ) :
+    0 < weylScaledGap gap0 phi ↔ 0 < gap0 := by
+  unfold weylScaledGap
+  constructor
+  · intro h
+    nlinarith [Real.exp_pos (-phi)]
+  · intro h
+    exact mul_pos (Real.exp_pos _) h
+
+@[simp] theorem weylScaledGap_zero (gap0 : ℝ) :
+    weylScaledGap gap0 0 = gap0 := by
+  simp [weylScaledGap]
+
+/-! Weyl rescalings compose additively in their logarithmic parameter. -/
+
+theorem weylScaledGap_add (gap0 phi psi : ℝ) :
+    weylScaledGap (weylScaledGap gap0 phi) psi =
+      weylScaledGap gap0 (phi + psi) := by
+  unfold weylScaledGap
+  rw [show -(phi + psi) = -phi + -psi by ring, Real.exp_add]
   ring
 
 end InfoGeometry.Physics.BoundaryMajoranaMassGap

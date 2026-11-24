@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimeLeeYangFerromagnet
@@ -230,5 +235,28 @@ theorem partitionPolyN2_root_cayleyRoundTrip
   have hre : 1 + z.re = 0 := by
     simpa using congrArg Complex.re hpole
   linarith
+
+noncomputable def partitionPolyN1 : Polynomial ℂ :=
+  Polynomial.X + Polynomial.C (1 : ℂ)
+
+
+theorem partitionPolyN1_root_eq_neg_one
+    {z : ℂ} (hz : partitionPolyN1.IsRoot z) : z = -1 := by
+  have h : z + 1 = 0 := by
+    simpa [partitionPolyN1, Polynomial.IsRoot] using hz
+  linear_combination h
+
+
+theorem leeYangStabilityN1 :
+    ∀ z : ℂ, partitionPolyN1.IsRoot z → OnLeeYangCircle z := by
+  intro z hz
+  rw [partitionPolyN1_root_eq_neg_one hz]
+  norm_num [OnLeeYangCircle, Complex.normSq_apply]
+
+
+theorem partitionPolyN1_root_is_cayley_pole
+    {z : ℂ} (hz : partitionPolyN1.IsRoot z) : z.re = -1 := by
+  rw [partitionPolyN1_root_eq_neg_one hz]
+  norm_num
 
 end InfoGeometry.Canonical.PrimeLeeYangConcreteN2

@@ -196,6 +196,28 @@ def diagonalPrimitiveGuard :
     P.diagonalPrimitiveGuard = P.noDiagonalPrimitiveGuardCarrier :=
   rfl
 
+/-- The modular derivation is the commutator with the supplied generator. -/
+theorem modular_derivation_commutator
+    (ω : StateSpace)
+    (x : Obs) :
+    P.modularDerivation ω x =
+      P.modularGenerator ω * x - x * P.modularGenerator ω :=
+  rfl
+
+/-- Stabilizer membership is expectation invariance under the symmetry action. -/
+theorem stabilizer_iff_eval_invariant
+    (ω : StateSpace)
+    (g : Sym) :
+    P.stabilizer ω g ↔
+      ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x :=
+  Iff.rfl
+
+/-- The free-energy readout is evaluation of the supplied exponential weight. -/
+theorem freeEnergyReadout_eq_eval_exponentialWeight
+    (ω : StateSpace) :
+    P.freeEnergyReadout ω = P.eval ω (P.exponentialWeight ω) :=
+  rfl
+
 end OperatorErlangenLegendrePacket
 
 /-- Owner target for a supplied operator Erlangen--Legendre packet. -/
@@ -285,5 +307,24 @@ theorem criticalLine_zero_iff_spectral_value :
   P.zero_iff_spectral_value
 
 end HilbertPolyaOperatorPacket
+
+/-- Native operator Erlangen--Legendre readout theorem. -/
+theorem operatorErlangenLegendre
+    {Obs : Type uObs} {Sym : Type uSym} {StateSpace : Type uState}
+    [Ring Obs] [Group Sym] :
+    ∀ P : OperatorErlangenLegendrePacket.{uObs, uSym, uState, uPol} Obs Sym StateSpace,
+      (∀ (ω : StateSpace) (x : Obs),
+        P.modularDerivation ω x =
+          P.modularGenerator ω * x - x * P.modularGenerator ω) ∧
+      (∀ (ω : StateSpace) (g : Sym),
+        P.stabilizer ω g ↔
+          ∀ x : Obs, P.eval ω ((P.symmetryAction.act g) x) = P.eval ω x) ∧
+      (∀ ω : StateSpace,
+        P.freeEnergyReadout ω = P.eval ω (P.exponentialWeight ω)) := by
+  intro P
+  exact ⟨
+    (fun ω x => P.modular_derivation_commutator ω x),
+    (fun ω g => P.stabilizer_iff_eval_invariant ω g),
+    (fun ω => P.freeEnergyReadout_eq_eval_exponentialWeight ω)⟩
 
 end InfoGeometry.OperatorAlgebra.OperatorErlangenLegendre

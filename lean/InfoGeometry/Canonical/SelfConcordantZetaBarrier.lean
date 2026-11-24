@@ -321,4 +321,47 @@ theorem variationalRH_implies_criticalLine
     rw [hsum] at hEq
     linarith
 
+theorem isBarrierKernel_inv
+    (x : ℝ) :
+    isBarrierKernel x⁻¹ = x⁻¹ + Real.log x - 1 := by
+  unfold isBarrierKernel
+  rw [Real.log_inv]
+  ring
+
+theorem primeSpectralBarrier_pos_off_criticalLine
+    (S : Finset ℕ) (hS : ∀ p ∈ S, 1 < p) (hSne : S.Nonempty)
+    (σ : ℝ) (hσ : σ ≠ 1 / 2) :
+    0 < primeSpectralBarrier S σ := by
+  unfold primeSpectralBarrier
+  apply Finset.sum_pos'
+  · intro p hp
+    exact singlePrimeBarrier_nonneg p (hS p hp) σ
+  · rcases hSne with ⟨p, hp⟩
+    exact ⟨p, hp, singlePrimeBarrier_pos_off_criticalLine p (hS p hp) σ hσ⟩
+
+theorem primeSpectralBarrier_eq_zero_iff
+    (S : Finset ℕ) (hS : ∀ p ∈ S, 1 < p) (hSne : S.Nonempty)
+    (σ : ℝ) :
+    primeSpectralBarrier S σ = 0 ↔ σ = 1 / 2 := by
+  constructor
+  · intro hzero
+    by_contra hσ
+    have hpos := primeSpectralBarrier_pos_off_criticalLine S hS hSne σ hσ
+    linarith
+  · intro hσ
+    rw [hσ]
+    exact primeSpectralBarrier_eq_zero_on_criticalLine S hS
+
+theorem primeSpectralBarrier_pos_iff_off_criticalLine
+    (S : Finset ℕ) (hS : ∀ p ∈ S, 1 < p) (hSne : S.Nonempty)
+    (σ : ℝ) :
+    0 < primeSpectralBarrier S σ ↔ σ ≠ 1 / 2 := by
+  constructor
+  · intro hpos hσ
+    subst σ
+    rw [primeSpectralBarrier_eq_zero_on_criticalLine S hS] at hpos
+    linarith
+  · intro hσ
+    exact primeSpectralBarrier_pos_off_criticalLine S hS hSne σ hσ
+
 end InfoGeometry.Canonical.SelfConcordantZetaBarrier

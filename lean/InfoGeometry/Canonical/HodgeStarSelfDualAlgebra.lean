@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Module.LinearMap.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
@@ -138,5 +143,77 @@ theorem self_dual_anti_self_dual_orthogonal
   rw [S_P_minus half S hS2 y] at h1
   rw [B_neg_right B B_comm B_smul_left (P_plus half S x) (P_minus half S y)] at h1
   linarith
+
+/-- The two normalized eigensector components reconstruct the vector. -/
+theorem P_plus_add_P_minus (S : V →ₗ[ℝ] V) (x : V) :
+    P_plus (1 / 2 : ℝ) S x + P_minus (1 / 2 : ℝ) S x = x := by
+  rw [P_plus_apply, P_minus_apply]
+  module
+
+/-- The positive eigensector projector is idempotent. -/
+theorem P_plus_idempotent
+    (S : V →ₗ[ℝ] V)
+    (hS2 : S.comp S = LinearMap.id)
+    (x : V) :
+    P_plus (1 / 2 : ℝ) S (P_plus (1 / 2 : ℝ) S x) =
+      P_plus (1 / 2 : ℝ) S x := by
+  rw [P_plus_apply, S_P_plus (1 / 2 : ℝ) S hS2 x]
+  module
+
+/-- The negative eigensector projector is idempotent. -/
+theorem P_minus_idempotent
+    (S : V →ₗ[ℝ] V)
+    (hS2 : S.comp S = LinearMap.id)
+    (x : V) :
+    P_minus (1 / 2 : ℝ) S (P_minus (1 / 2 : ℝ) S x) =
+      P_minus (1 / 2 : ℝ) S x := by
+  rw [P_minus_apply, S_P_minus (1 / 2 : ℝ) S hS2 x]
+  module
+
+/-- The positive and negative eigensector projectors annihilate each other. -/
+theorem P_plus_P_minus_zero
+    (S : V →ₗ[ℝ] V)
+    (hS2 : S.comp S = LinearMap.id)
+    (x : V) :
+    P_plus (1 / 2 : ℝ) S (P_minus (1 / 2 : ℝ) S x) = 0 := by
+  rw [P_plus_apply, S_P_minus (1 / 2 : ℝ) S hS2 x]
+  module
+
+
+theorem P_minus_P_plus_zero
+    (S : V →ₗ[ℝ] V)
+    (hS2 : S.comp S = LinearMap.id)
+    (x : V) :
+    P_minus (1 / 2 : ℝ) S (P_plus (1 / 2 : ℝ) S x) = 0 := by
+  rw [P_minus_apply, S_P_plus (1 / 2 : ℝ) S hS2 x]
+  module
+
+
+theorem B_neg_left
+    (B : V → V → ℝ)
+    (B_comm : ∀ x y, B x y = B y x)
+    (B_smul_left : ∀ c x y, B (c • x) y = c * B x y)
+    (u v : V) :
+    B (-u) v = -B u v := by
+  rw [B_comm]
+  rw [B_neg_right B B_comm B_smul_left v u]
+  rw [B_comm]
+
+/-- The reverse order of the two Hodge-star eigensectors is orthogonal. -/
+theorem anti_self_dual_self_dual_orthogonal
+    (B : V → V → ℝ)
+    (B_comm : ∀ x y, B x y = B y x)
+    (B_smul_left : ∀ c x y, B (c • x) y = c * B x y)
+    (S : V →ₗ[ℝ] V)
+    (hS2 : S.comp S = LinearMap.id)
+    (hSadj : ∀ x y, B (S x) y = B x (S y))
+    (half : ℝ)
+    (x y : V) :
+    B (P_minus half S x) (P_plus half S y) = 0 := by
+  calc
+    B (P_minus half S x) (P_plus half S y) =
+        B (P_plus half S y) (P_minus half S x) := B_comm _ _
+    _ = 0 := self_dual_anti_self_dual_orthogonal
+      B B_comm B_smul_left S hS2 hSadj half y x
 
 end InfoGeometry.Canonical.HodgeStarSelfDualAlgebra

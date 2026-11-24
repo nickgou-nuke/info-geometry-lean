@@ -176,4 +176,44 @@ theorem embed_compatible (n : ℕ) (x : C.Stage n) :
 
 end LimitPassageSocket
 
+def limitPassage (C : InductiveOperatorChain) : Prop :=
+  ∀ (Q0 Qsharp0 : C.Stage 0),
+    (∀ n, SupergradedClosureAt (R := C.Stage n)
+      (C.iterMap n Q0) (C.iterMap n Qsharp0)) →
+      SupergradedClosureAt (R := LimitStage C)
+      (limitEmbed C 0 Q0) (limitEmbed C 0 Qsharp0)
+
+theorem limitPassage_of_stage_zero
+    (C : InductiveOperatorChain) :
+    limitPassage C := by
+  intro Q0 Qsharp0 hStages
+  rcases hStages 0 with ⟨h1, h2, h3, h4⟩
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · have h := congrArg (limitEmbed C 0) h1
+    simpa [InductiveOperatorChain.iterMap, map_add, map_mul] using h
+  · have h := congrArg (limitEmbed C 0) h2
+    simpa [InductiveOperatorChain.iterMap, map_add, map_mul] using h
+  · have h := congrArg (limitEmbed C 0) h3
+    simpa [InductiveOperatorChain.iterMap, map_add, map_mul] using h
+  · have h := congrArg (limitEmbed C 0) h4
+    simpa [InductiveOperatorChain.iterMap, map_add, map_mul] using h
+
+
+theorem limit_closure_stable (h : limitPassage C)
+    (Q0 Qsharp0 : C.Stage 0)
+    (hStages : ∀ n, SupergradedClosureAt (R := C.Stage n)
+      (C.iterMap n Q0) (C.iterMap n Qsharp0)) :
+    SupergradedClosureAt (R := LimitStage C)
+      (limitEmbed C 0 Q0) (limitEmbed C 0 Qsharp0) :=
+  h Q0 Qsharp0 hStages
+
+
+theorem limit_closure_stable_of_stage_zero
+    (Q0 Qsharp0 : C.Stage 0)
+    (hStages : ∀ n, SupergradedClosureAt (R := C.Stage n)
+      (C.iterMap n Q0) (C.iterMap n Qsharp0)) :
+    SupergradedClosureAt (R := LimitStage C)
+      (limitEmbed C 0 Q0) (limitEmbed C 0 Qsharp0) :=
+  limit_closure_stable (limitPassage_of_stage_zero C) Q0 Qsharp0 hStages
+
 end InfoGeometry.Canonical.InductiveClosurePacket

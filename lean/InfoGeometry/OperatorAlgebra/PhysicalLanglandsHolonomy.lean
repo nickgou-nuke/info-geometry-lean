@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/PhysicalLanglandsHolonomy.lean
 
 Witness-gated Kapustin-Witten / physical Langlands holonomy socket.
@@ -633,6 +638,66 @@ witness.
 -/
 theorem dualHolonomyRecoveryInstalledTarget :
     DualHolonomyRecoveryInstalledTarget := by
+  intro GState GdualState GLoop GdualLoop Scalar Memory W T D R γ hγ s
+  exact R.recovered_dualHolonomy_eq_hiddenMemory γ hγ s
+
+/-- The owner target follows by reading the supplied KW duality law. -/
+theorem physicalLanglandsHolonomy_readout :
+    ∀ (GState GdualState GLoop GdualLoop Scalar : Type*),
+    ∀ (W : WilsonReadoutDatum GState GLoop Scalar),
+    ∀ (T : THooftReadoutDatum GdualState GdualLoop Scalar),
+    ∀ (D : LanglandsDualPair GState GdualState GLoop GdualLoop),
+    ∀ _K : KWPhysicalDualityWitness GState GdualState GLoop GdualLoop Scalar W T D,
+    ∀ (γ : GLoop) (s : GState),
+      W.wilson γ s =
+        T.thooft (D.loopDual γ) (D.stateDual s) := by
+  intro GState GdualState GLoop GdualLoop Scalar W T D K γ s
+  exact K.wilson_readout_eq_dual_thooft γ s
+
+/-- The relational owner target follows from the supplied relational KW law. -/
+theorem relationalPhysicalLanglandsHolonomy_readout :
+    ∀ (GState GdualState GLoop GdualLoop Scalar : Type*),
+    ∀ (W : WilsonReadoutDatum GState GLoop Scalar),
+    ∀ (T : THooftReadoutDatum GdualState GdualLoop Scalar),
+    ∀ (D : LanglandsDualPair GState GdualState GLoop GdualLoop),
+    ∀ K : RelationalKWPhysicalDualityWitness
+        GState GdualState GLoop GdualLoop Scalar W T D,
+    ∀ (γ : GLoop) (s : GState),
+      K.scalarRel
+        (W.wilson γ s)
+        (T.thooft (D.loopDual γ) (D.stateDual s)) := by
+  intro GState GdualState GLoop GdualLoop Scalar W T D K γ s
+  exact K.wilson_rel_dual_thooft γ s
+
+/-- The recovery owner target follows by composing KW duality with recovery. -/
+theorem physicalLanglandsRecovery_readout :
+    ∀ (GState GdualState GLoop GdualLoop Scalar Memory : Type*),
+    ∀ (W : WilsonReadoutDatum GState GLoop Scalar),
+    ∀ (T : THooftReadoutDatum GdualState GdualLoop Scalar),
+    ∀ (D : LanglandsDualPair GState GdualState GLoop GdualLoop),
+    ∀ _K : KWPhysicalDualityWitness GState GdualState GLoop GdualLoop Scalar W T D,
+    ∀ R : DualHolonomyRecoveryWitness
+        GState GdualState GLoop GdualLoop Scalar Memory W T D,
+    ∀ (γ : GLoop),
+      R.recoveringLoop γ →
+    ∀ s : GState,
+      R.recoverFromDualHolonomy (W.wilson γ s) =
+        R.hiddenMemory s := by
+  intro GState GdualState GLoop GdualLoop Scalar Memory W T D K R γ hγ s
+  exact hiddenMemory_recovered_from_wilson_of_KW K R γ hγ s
+
+/-- Dual-holonomy recovery returns the hidden memory on recovering loops. -/
+theorem dualHolonomyRecovery
+    : ∀ (GState GdualState GLoop GdualLoop Scalar Memory : Type*),
+      ∀ (W : WilsonReadoutDatum GState GLoop Scalar),
+      ∀ (T : THooftReadoutDatum GdualState GdualLoop Scalar),
+      ∀ (D : LanglandsDualPair GState GdualState GLoop GdualLoop),
+      ∀ R : DualHolonomyRecoveryWitness
+        GState GdualState GLoop GdualLoop Scalar Memory W T D,
+      ∀ (γ : GLoop), R.recoveringLoop γ →
+        ∀ s : GState,
+          R.recoverFromDualHolonomy
+              (T.thooft (D.loopDual γ) (D.stateDual s)) = R.hiddenMemory s := by
   intro GState GdualState GLoop GdualLoop Scalar Memory W T D R γ hγ s
   exact R.recovered_dualHolonomy_eq_hiddenMemory γ hγ s
 

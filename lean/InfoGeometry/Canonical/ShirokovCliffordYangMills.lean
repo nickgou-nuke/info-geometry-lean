@@ -1082,6 +1082,20 @@ theorem shirokov_automorphism_frame_average (n : ℕ)
         φ (shirokovCenterProjection n (φ.symm x)) := by
           rw [map_nsmul]
 
+/-- The isometry-induced Clifford automorphism sends each ordered coordinate
+blade to the ordered product of the corresponding transformed frame vectors. -/
+theorem shirokov_isometry_map_blade
+    (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    (S : Finset (Fin n)) :
+    CliffordAlgebra.equivOfIsometry e (cBlade ℝ n S) =
+      ((bladeList S).map fun i =>
+        CliffordAlgebra.ι (cliffordNegSqForm ℝ n)
+          (e (Pi.single i (1 : ℝ)))).prod := by
+  simp only [cBlade, map_list_prod, List.map_map, Function.comp_def, cGen,
+    CliffordAlgebra.equivOfIsometry_apply, CliffordAlgebra.map_apply_ι]
+  rfl
+
 /-- Theorem 2.2 for an automorphism-transported standard frame. The connection
 coefficient is assumed grade two after pulling it back to the standard frame. -/
 theorem shirokov_theorem_2_2_automorphism_frame_grade_two

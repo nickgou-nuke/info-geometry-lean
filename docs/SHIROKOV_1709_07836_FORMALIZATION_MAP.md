@@ -203,10 +203,13 @@ standard-frame specialization.
 `shirokov_automorphism_frame_average` transports the average through a real
 Clifford algebra automorphism, and
 `shirokov_theorem_2_2_automorphism_frame_grade_two` gives the corresponding
-Theorem 2.2 result when the pulled-back coefficient is grade two. This covers
-automorphism images of the standard inverse-blade frame; arbitrary
-point-dependent dual-frame transport and its odd-dimensional reduced sum
-remain open.
+Theorem 2.2 result when the pulled-back coefficient is grade two.
+`shirokov_isometry_map_blade` identifies the frame blades for the automorphism
+induced by a quadratic-form isometry: they are ordered products of the
+transformed coordinate vectors. Thus the transport result applies to fixed
+orthogonal changes of frame in this negative-definite `Cl(0,n)` carrier.
+Arbitrary point-dependent dual-frame transport, other signatures, and the
+paper's odd-dimensional reduced sum remain open.
 The owner also includes the concrete noncommutativity witness
 `shirokov_generators_noncommute` for the first two generators of the real
 negative-definite two-dimensional Clifford algebra. This is a separate carrier

@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import InfoGeometry.Canonical.DrazinSupercharge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.DrazinModularSingularityBridge
@@ -2248,47 +2243,5 @@ theorem not_forall_superHamiltonian_eq_two_pi_modularHamiltonian
   · exact hModNonzero hModZero
 
 end Core
-
-theorem unruh_exponential_property_of_modularHamiltonian_sq_one
-    :
-    ∀ τmod : ℝ,
-      NormedSpace.exp
-        (τmod • ((2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E)))
-        =
-      WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod := by
-  intro τmod
-  have hSq :
-      (InfoGeometry.Dynamics.modularHamiltonian (E := E)
-        : EndH) * InfoGeometry.Dynamics.modularHamiltonian (E := E) = (1 : EndH) := by
-    exact InfoGeometry.Dynamics.modularHamiltonian_sq_one (E := E)
-  calc
-    NormedSpace.exp
-      (τmod • ((2 * Real.pi) • InfoGeometry.Dynamics.modularHamiltonian (E := E)))
-        =
-    NormedSpace.exp
-      ((τmod * (2 * Real.pi)) • InfoGeometry.Dynamics.modularHamiltonian (E := E)) := by
-        rw [smul_smul]
-    _ =
-      (Real.cosh (τmod * (2 * Real.pi))) • (1 : EndH)
-        + (Real.sinh (τmod * (2 * Real.pi)))
-            • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
-          simpa using
-            BogoliubovClosedForms.exp_eq_cosh_add_sinh_of_sq_eq_one
-              (E := E) (G := InfoGeometry.Dynamics.modularHamiltonian (E := E))
-              hSq
-              (τmod * (2 * Real.pi))
-    _ =
-      (Real.cosh (RealTomitaCore.wedgeBoostParameter τmod))
-        • (ContinuousLinearMap.id ℝ H₂)
-        + (Real.sinh (RealTomitaCore.wedgeBoostParameter τmod))
-            • InfoGeometry.Dynamics.modularHamiltonian (E := E) := by
-          have hOne : (1 : EndH) = (ContinuousLinearMap.id ℝ H₂) := by
-            ext x <;> rfl
-          rw [hOne]
-          simp [RealTomitaCore.wedgeBoostParameter, mul_comm]
-    _ = WedgeBoostModularBridge.unruhFlowOfModularTime (E := E) τmod := by
-          exact
-            (WedgeBoostModularBridge.unruhFlowOfModularTime_eq_modular_polynomial
-              (E := E) τmod).symm
 
 end InfoGeometry.Canonical.ModularSuperchargeClosure

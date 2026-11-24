@@ -127,12 +127,4 @@ theorem entropyProduction_nonneg_of_probe_hessian_nonneg
 
 end Bridge
 
-theorem operatorFisherReadout_diag
-    (X A : EndH) :
-    operatorFisherReadout (E := E) X X A
-      =
-    operatorFisherDiagonal (E := E) X A := by
-  unfold operatorFisherReadout operatorFisherDiagonal
-  simp [operatorInformationMetricPart, operatorInformationHessian]
-
 end InfoGeometry.Canonical.Operators

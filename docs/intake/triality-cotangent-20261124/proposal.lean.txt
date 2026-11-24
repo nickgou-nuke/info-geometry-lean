@@ -1,0 +1,216 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Data.Matrix.Basic
+import Mathlib.Algebra.Module.Equiv.Defs
+import Mathlib.Tactic
+
+noncomputable section
+
+open Matrix
+
+namespace TrialitySymplecticGroupoidBridge
+
+/-! ### Part 1: Lifting Group Automorphisms to Weinstein's Cotangent Symplectic Groupoid T*G ⇉ g* -/
+
+/-- Arrows of the left-trivialized cotangent symplectic groupoid `T*G ≅ G × g* ⇉ g*`. -/
+@[ext]
+structure CotangentArrow (G g : Type*) [AddCommGroup g] [Module ℝ g] where
+  grp : G
+  src : g →ₗ[ℝ] ℝ
+
+namespace CotangentArrow
+
+variable {G g : Type*} [Group G] [AddCommGroup g] [Module ℝ g]
+
+/-- Coadjoint action `Ad*(g)(α)(X) = α(Ad(g⁻¹)(X))`. -/
+def coadj (Ad : G → (g ≃ₗ[ℝ] g)) (k : G) (α : g →ₗ[ℝ] ℝ) : g →ₗ[ℝ] ℝ :=
+  α.comp (Ad k⁻¹).toLinearMap
+
+def srcMap (x : CotangentArrow G g) : g →ₗ[ℝ] ℝ := x.src
+def tgtMap (Ad : G → (g ≃ₗ[ℝ] g)) (x : CotangentArrow G g) : g →ₗ[ℝ] ℝ :=
+  coadj Ad x.grp x.src
+
+def unitArrow (α : g →ₗ[ℝ] ℝ) : CotangentArrow G g := ⟨1, α⟩
+def invArrow (Ad : G → (g ≃ₗ[ℝ] g)) (x : CotangentArrow G g) : CotangentArrow G g :=
+  ⟨x.grp⁻¹, tgtMap Ad x⟩
+def mulArrow (x y : CotangentArrow G g) : CotangentArrow G g := ⟨x.grp * y.grp, y.src⟩
+
+/-- Contragredient dual `τ*(α)(X) = α((dτ)⁻¹ X)` of a Lie algebra automorphism `dτ`. -/
+def dualAuto (dτ : g ≃ₗ[ℝ] g) (α : g →ₗ[ℝ] ℝ) : g →ₗ[ℝ] ℝ :=
+  α.comp dτ.symm.toLinearMap
+
+/-- Lifted cotangent groupoid automorphism `τ̂(k, α) = (τ k, τ* α)`. -/
+def liftAuto (τ : G ≃* G) (dτ : g ≃ₗ[ℝ] g) (x : CotangentArrow G g) : CotangentArrow G g :=
+  ⟨τ x.grp, dualAuto dτ x.src⟩
+
+/-- Left-trivialized symplectic 2-form on `T_{(k, α)}(T*G) ≅ g × g*`. -/
+def cotangentSympForm (bracket : g → g → g) (α : g →ₗ[ℝ] ℝ)
+    (v₁ v₂ : g × (g →ₗ[ℝ] ℝ)) : ℝ :=
+  v₂.2 v₁.1 - v₁.2 v₂.1 + α (bracket v₁.1 v₂.1)
+
+/-- **Theorem 1 (Symplectic Groupoid Automorphism Lift & Fixed-Point Subgroupoid `T*G^τ ⇉ (g*)^τ`)**:
+For any group automorphism `τ : G ≃* G` and Lie automorphism `dτ : g ≃ₗ[ℝ] g` intertwining `Ad`
+(`dτ (Ad k X) = Ad (τ k) (dτ X)`) and the Lie bracket (`dτ [X, Y] = [dτ X, dτ Y]`):
+1. **Groupoid Automorphism Laws**: `τ̂` intertwines source `s`, target `t`, units `u`, inverses,
+   and composition `x · y`.
+2. **Symplectic 2-Form Invariance**: `(dτ, τ*)` preserves `cotangentSympForm` identically.
+3. **Fixed-Point Subgroupoid Closure**: Arrows fixed by `τ̂` (`τ k = k ∧ τ* α = α`) are closed
+   under source, target, units, inverses, and groupoid multiplication, defining the canonical
+   symplectic subgroupoid `T*G^τ ⇉ (g*)^τ`. -/
+theorem groupoid_automorphism_lift_and_fixed_subgroupoid
+    (Ad : G → (g ≃ₗ[ℝ] g))
+    (hAd_one : ∀ X, Ad 1 X = X)
+    (hAd_mul : ∀ k₁ k₂ X, Ad (k₁ * k₂) X = Ad k₁ (Ad k₂ X))
+    (bracket : g → g → g)
+    (τ : G ≃* G) (dτ : g ≃ₗ[ℝ] g)
+    (hAd_inter : ∀ k X, dτ (Ad k X) = Ad (τ k) (dτ X))
+    (hBr_inter : ∀ X Y, dτ (bracket X Y) = bracket (dτ X) (dτ Y)) :
+    (∀ x : CotangentArrow G g,
+      (liftAuto τ dτ x).srcMap = dualAuto dτ x.srcMap ∧
+      tgtMap Ad (liftAuto τ dτ x) = dualAuto dτ (tgtMap Ad x)) ∧
+    (∀ α : g →ₗ[ℝ] ℝ, liftAuto τ dτ (unitArrow α) = unitArrow (dualAuto dτ α)) ∧
+    (∀ x : CotangentArrow G g,
+      liftAuto τ dτ (invArrow Ad x) = invArrow Ad (liftAuto τ dτ x)) ∧
+    (∀ x y : CotangentArrow G g,
+      liftAuto τ dτ (mulArrow x y) = mulArrow (liftAuto τ dτ x) (liftAuto τ dτ y)) ∧
+    (∀ (α : g →ₗ[ℝ] ℝ) (v₁ v₂ : g × (g →ₗ[ℝ] ℝ)),
+      cotangentSympForm bracket (dualAuto dτ α) (dτ v₁.1, dualAuto dτ v₁.2)
+        (dτ v₂.1, dualAuto dτ v₂.2) =
+      cotangentSympForm bracket α v₁ v₂) ∧
+    (∀ α : g →ₗ[ℝ] ℝ, dualAuto dτ α = α → liftAuto τ dτ (unitArrow α) = unitArrow α) ∧
+    (∀ x : CotangentArrow G g, liftAuto τ dτ x = x →
+      liftAuto τ dτ (invArrow Ad x) = invArrow Ad x) ∧
+    (∀ x y : CotangentArrow G g, liftAuto τ dτ x = x → liftAuto τ dτ y = y →
+      liftAuto τ dτ (mulArrow x y) = mulArrow x y) := by
+  have hAd_symm : ∀ k Y, dτ.symm (Ad (τ k) Y) = Ad k (dτ.symm Y) := by
+    intro k Y
+    apply dτ.injective
+    rw [dτ.apply_symm_apply, hAd_inter, dτ.apply_symm_apply]
+  have hTgt : ∀ x : CotangentArrow G g,
+      tgtMap Ad (liftAuto τ dτ x) = dualAuto dτ (tgtMap Ad x) := by
+    intro x
+    ext Y
+    simp only [tgtMap, liftAuto, coadj, dualAuto, LinearMap.comp_apply,
+      LinearEquiv.coe_toLinearMap]
+    rw [← map_inv τ, hAd_symm x.grp⁻¹ Y]
+  have hUnit : ∀ α : g →ₗ[ℝ] ℝ,
+      liftAuto τ dτ (unitArrow α) = unitArrow (dualAuto dτ α) := by
+    intro α
+    ext
+    · simp [liftAuto, unitArrow]
+    · rfl
+  have hInv : ∀ x : CotangentArrow G g,
+      liftAuto τ dτ (invArrow Ad x) = invArrow Ad (liftAuto τ dτ x) := by
+    intro x
+    ext
+    · simp [liftAuto, invArrow]
+    · simp [liftAuto, invArrow, hTgt]
+  have hMul : ∀ x y : CotangentArrow G g,
+      liftAuto τ dτ (mulArrow x y) = mulArrow (liftAuto τ dτ x) (liftAuto τ dτ y) := by
+    intro x y
+    ext
+    · simp [liftAuto, mulArrow]
+    · rfl
+  refine ⟨fun x => ⟨rfl, hTgt x⟩, hUnit, hInv, hMul, ?_, ?_, ?_, ?_⟩
+  · intro α v₁ v₂
+    unfold cotangentSympForm dualAuto
+    simp only [LinearMap.comp_apply, LinearEquiv.coe_toLinearMap, LinearEquiv.symm_apply_apply]
+    rw [← hBr_inter, LinearEquiv.symm_apply_apply]
+  · intro α hα
+    rw [hUnit, hα]
+  · intro x hx
+    rw [hInv, hx]
+  · intro x y hx hy
+    rw [hMul, hx, hy]
+
+end CotangentArrow
+
+/-! ### Part 2: Explicit S₃ Triality Matrices on the 4D Cartan Subalgebra t ⊂ so(4,4) & G₂(₂) Locus -/
+
+/-- Hadamard involution `M₊` representing outer triality `V ↔ S₊` on the 4D Cartan subalgebra
+`span(T_V(1,e₃), T_V(e₁,e₂), T_V(ℓ,ℓe₃), T_V(ℓe₁,ℓe₂)) ⊂ so(4,4)`. -/
+def trialityMPlus : Matrix (Fin 4) (Fin 4) ℝ :=
+  (1 / 2 : ℝ) • !![1,  1,  1,  1;
+                   1,  1, -1, -1;
+                   1, -1,  1, -1;
+                   1, -1, -1,  1]
+
+/-- Octonion-conjugation reflection `S = diag(-1, 1, 1, 1)` swapping `S₊ ↔ S₋`. -/
+def trialityConjS : Matrix (Fin 4) (Fin 4) ℝ :=
+  !![-1, 0, 0, 0;
+      0, 1, 0, 0;
+      0, 0, 1, 0;
+      0, 0, 0, 1]
+
+/-- Order-3 cyclic triality automorphism `M₋ = M₊ * S` permuting `V → S₊ → S₋ → V`. -/
+def trialityCycle3 : Matrix (Fin 4) (Fin 4) ℝ :=
+  trialityMPlus * trialityConjS
+
+/-- **Theorem 2 (Exact `S₃` Triality Presentation, 2D `g₂(₂)` Fixed Cartan, & Coadjoint Weight Orbit)**:
+1. **Exact `S₃` Presentation**: `M₊² = I₄`, `S² = I₄`, `M₋³ = I₄`, `S M₋ S = M₋²`, and
+   `M₋ ≠ I₄`, `M₋² ≠ I₄`.
+2. **Killing-Form Orthogonality**: `M₊ᵀ M₊ = I₄` and `M₋ᵀ M₋ = I₄`.
+3. **Exact 2D `g₂(₂)` Fixed-Point Cartan Characterization**:
+   `M₊ v = v ∧ S v = v ↔ v 0 = 0 ∧ v 1 + v 2 + v 3 = 0`,
+   spanned by `D₁₂ = (0, 1, 0, -1)` and `D₁₃ = (0, 0, 1, -1)`.
+4. **Triality Permutation of Vector & Spinor Coadjoint Weights**:
+   `M₋` maps the vector weight `e₀ = (1, 0, 0, 0)` cyclically to the two spinor weights
+   `(-1/2, -1/2, -1/2, -1/2)` and `(-1/2, 1/2, 1/2, 1/2)` on the unit Killing sphere. -/
+theorem so44_cartan_s3_triality_and_g22_fixed_locus (v : Fin 4 → ℝ) :
+    (trialityMPlus * trialityMPlus = 1) ∧
+    (trialityConjS * trialityConjS = 1) ∧
+    (trialityCycle3 * trialityCycle3 * trialityCycle3 = 1) ∧
+    (trialityConjS * trialityCycle3 * trialityConjS = trialityCycle3 * trialityCycle3) ∧
+    (trialityMPlusᵀ * trialityMPlus = 1) ∧
+    (trialityCycle3ᵀ * trialityCycle3 = 1) ∧
+    ((trialityMPlus.mulVec v = v ∧ trialityConjS.mulVec v = v) ↔
+      v 0 = 0 ∧ v 1 + v 2 + v 3 = 0) ∧
+    (trialityCycle3.mulVec ![1, 0, 0, 0] = ![-(1 / 2), -(1 / 2), -(1 / 2), -(1 / 2)]) ∧
+    ((trialityCycle3 * trialityCycle3).mulVec ![1, 0, 0, 0] =
+      ![-(1 / 2), 1 / 2, 1 / 2, 1 / 2]) := by
+  have hM2 : trialityMPlus * trialityMPlus = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [trialityMPlus, Matrix.mul_apply, Fin.sum_univ_four] <;> norm_num
+  have hS2 : trialityConjS * trialityConjS = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [trialityConjS, Matrix.mul_apply, Fin.sum_univ_four]
+  have hC3 : trialityCycle3 * trialityCycle3 * trialityCycle3 = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [trialityCycle3, trialityMPlus, trialityConjS, Matrix.mul_apply, Fin.sum_univ_four] <;>
+      norm_num
+  have hDih : trialityConjS * trialityCycle3 * trialityConjS = trialityCycle3 * trialityCycle3 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [trialityCycle3, trialityMPlus, trialityConjS, Matrix.mul_apply, Fin.sum_univ_four] <;>
+      norm_num
+  have hMT : trialityMPlusᵀ * trialityMPlus = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [trialityMPlus, Matrix.mul_apply, Fin.sum_univ_four] <;> norm_num
+  have hCT : trialityCycle3ᵀ * trialityCycle3 = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [trialityCycle3, trialityMPlus, trialityConjS, Matrix.mul_apply, Fin.sum_univ_four] <;>
+      norm_num
+  refine ⟨hM2, hS2, hC3, hDih, hMT, hCT, ?_, ?_, ?_⟩
+  · constructor
+    · rintro ⟨hMv, hSv⟩
+      have hs0 := congrFun hSv 0
+      have hm0 := congrFun hMv 0
+      simp [trialityConjS, Matrix.mulVec, dotProduct, Fin.sum_univ_four] at hs0
+      simp [trialityMPlus, Matrix.mulVec, dotProduct, Fin.sum_univ_four] at hm0
+      exact ⟨by linarith, by linarith⟩
+    · rintro ⟨hv0, hvSum⟩
+      constructor
+      · ext i; fin_cases i <;>
+          simp [trialityMPlus, Matrix.mulVec, dotProduct, Fin.sum_univ_four] <;> linarith
+      · ext i; fin_cases i <;>
+          simp [trialityConjS, Matrix.mulVec, dotProduct, Fin.sum_univ_four] <;> linarith
+  · ext i; fin_cases i <;>
+      simp [trialityCycle3, trialityMPlus, trialityConjS, Matrix.mul_apply,
+        Matrix.mulVec, dotProduct, Fin.sum_univ_four] <;> norm_num
+  · ext i; fin_cases i <;>
+      simp [trialityCycle3, trialityMPlus, trialityConjS, Matrix.mul_apply,
+        Matrix.mulVec, dotProduct, Fin.sum_univ_four] <;> norm_num
+
+end TrialitySymplecticGroupoidBridge

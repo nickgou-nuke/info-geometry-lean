@@ -10,24 +10,33 @@ from pathlib import Path
 import re
 
 ROOT = Path(__file__).resolve().parents[2]
-AUDIT = ROOT / "lean/InfoGeometry/Arithmetic/ZetaDihedralWeilKreinAudit.lean"
+AUDITS = {
+    "lean/InfoGeometry/Arithmetic/ZetaDihedralWeilKreinAudit.lean": 52,
+    "lean/InfoGeometry/Categorical/CompatibleColimitAudit.lean": 24,
+}
 ALLOWED_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("log", type=Path, help="Compiler output from the focused audit")
+    parser.add_argument("logs", type=Path, nargs="+", help="Fresh compiler output from both audits")
     args = parser.parse_args()
-    expected = re.findall(r"^#print axioms (\S+)\s*$", AUDIT.read_text(), re.MULTILINE)
-    if len(expected) != 46 or len(set(expected)) != 46:
-        raise SystemExit("Audit inventory must contain exactly 46 distinct declarations")
+    expected: list[str] = []
+    for audit, count in AUDITS.items():
+        names = re.findall(r"^#print axioms (\S+)\s*$", (ROOT / audit).read_text(), re.MULTILINE)
+        if len(names) != count or len(set(names)) != count:
+            raise SystemExit(f"{audit}: expected exactly {count} distinct declarations")
+        expected.extend(names)
+    if len(set(expected)) != sum(AUDITS.values()):
+        raise SystemExit("Declaration inventories must be disjoint")
 
     records: dict[str, list[list[str]]] = defaultdict(list)
     pattern = re.compile(
         r"'([^'\n]+)'\s+(?:depends on axioms:\s*\[([^\]]*)\]|"
         r"does not depend on any axioms)"
     )
-    for name, raw_axioms in pattern.findall(args.log.read_text()):
+    output = "\n".join(log.read_text() for log in args.logs)
+    for name, raw_axioms in pattern.findall(output):
         records[name].append([a.strip() for a in raw_axioms.split(",") if a.strip()])
 
     errors: list[str] = []
@@ -43,7 +52,7 @@ def main() -> int:
             errors.append(f"{name}: rejected axioms {sorted(rejected)}")
 
     print(json.dumps({
-        "audit": str(AUDIT.relative_to(ROOT)),
+        "audits": AUDITS,
         "expected_declarations": len(expected),
         "reported_declarations": len(records),
         "allowed_axioms": sorted(ALLOWED_AXIOMS),

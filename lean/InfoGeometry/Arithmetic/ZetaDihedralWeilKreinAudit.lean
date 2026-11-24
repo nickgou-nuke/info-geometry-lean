@@ -81,3 +81,12 @@ example {N : ℕ} (chi : DirichletCharacter ℂ N) {s : ℂ} (hs : 1 < s.re) :
 #print axioms InfoGeometry.Arithmetic.ActualRiemannZetaVonMangoldtBridge.actualRiemannZetaLogDerivative_eq_vonMangoldt_LSeries
 #print axioms InfoGeometry.Arithmetic.ZetaDihedral.critical_line_is_invariant_orbit
 #print axioms DirichletCharacter.LSeries_twist_vonMangoldt_eq
+
+-- Existing dependency declarations whose unused assumptions or simp arguments
+-- were repaired for the same pinned, warning-free validation target.
+#print axioms InfoGeometry.GrandUnification.ArchetypeDictionary.SplitInvolution.chiral_plus_add_chiral_minus
+#print axioms InfoGeometry.GrandUnification.ArchetypeDictionary.SplitInvolution.chiral_plus_add
+#print axioms InfoGeometry.GrandUnification.ArchetypeDictionary.SplitInvolution.chiral_minus_add
+#print axioms InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics.conjugationReflection_involutive
+#print axioms InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection_involutive
+#print axioms InfoGeometry.Krein.doubledHilbertBilin_to_doubled

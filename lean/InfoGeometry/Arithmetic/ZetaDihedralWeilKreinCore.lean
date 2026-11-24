@@ -81,8 +81,8 @@ theorem reflection_law_allows_positive_real_eigenvalue :
   let D : Module.End ℝ (ℝ × ℝ) :=
     (LinearMap.id : Module.End ℝ ℝ).prodMap (-LinearMap.id)
   refine ⟨J, D, (1, 0), ?_, ?_, ?_⟩
-  · ext v <;> rfl
-  · ext v <;> simp [J, D, Module.End.mul_apply]
+  · ext <;> rfl
+  · ext <;> simp [J, D, Module.End.mul_apply]
   · refine ⟨?_, ?_⟩
     · rw [Module.End.mem_eigenspace_iff]
       simp [D]

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
+import Mathlib.Algebra.BigOperators.Group.Finset.Sigma
 import Mathlib.Algebra.BigOperators.Field
 import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Ring
@@ -101,7 +102,7 @@ theorem cellCirculation_exact {G : Type*} [AddCommGroup G]
     cellCirculation
       (fun a b => potential (a + 1) b - potential a b)
       (fun a b => potential a (b + 1) - potential a b) i j = 0 := by
-  unfold cellCirculation
+  dsimp only [cellCirculation]
   abel
 
 end InfoGeometry.Canonical.FiniteIncidenceGaussBonnetStokes

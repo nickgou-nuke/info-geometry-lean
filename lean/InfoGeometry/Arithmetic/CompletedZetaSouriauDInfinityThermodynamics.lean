@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -20,12 +25,12 @@ theorem functionalReflection_involutive (s : ℂ) : functionalReflection (functi
 
 
 theorem conjugationReflection_involutive (s : ℂ) : conjugationReflection (conjugationReflection s) = s := by
-  simp [conjugationReflection, star_star]
+  simp [conjugationReflection]
 
 
 
 theorem antiunitaryCriticalReflection_involutive (s : ℂ) : antiunitaryCriticalReflection (antiunitaryCriticalReflection s) = s := by
-  simp [antiunitaryCriticalReflection, star_star]
+  simp [antiunitaryCriticalReflection]
 
 
 

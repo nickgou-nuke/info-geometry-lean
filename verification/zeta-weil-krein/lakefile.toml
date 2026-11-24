@@ -1,7 +1,7 @@
 name = "zeta_weil_krein_validation"
 srcDir = "../../lean"
 packagesDir = "../../.lake/packages"
-defaultTargets = ["InfoGeometry.Arithmetic.ZetaDihedralWeilKreinAudit"]
+defaultTargets = ["InfoGeometry.Arithmetic.ZetaDihedralWeilKreinAudit", "InfoGeometry.Categorical.CompatibleColimitAudit"]
 
 [[require]]
 name = "mathlib"

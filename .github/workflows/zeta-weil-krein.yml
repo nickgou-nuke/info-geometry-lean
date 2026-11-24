@@ -1,4 +1,4 @@
-name: Zeta Weil-Krein and finite Stokes
+name: Finite arithmetic and compatible colimits
 
 on:
   pull_request:
@@ -42,7 +42,7 @@ jobs:
             git rev-parse 'HEAD^{tree}'
             git status --short
           } | tee verification/zeta-weil-krein/logs/revision.log
-      - name: Screen the six changed owners
+      - name: Screen the finite and colimit owners
         shell: bash
         run: |
           set -euo pipefail
@@ -53,6 +53,13 @@ jobs:
             lean/InfoGeometry/LinearAlgebra/PositiveRadicalQuotient.lean
             lean/InfoGeometry/OperatorAlgebra/FiniteParitySupertrace.lean
             lean/InfoGeometry/Canonical/FiniteIncidenceGaussBonnetStokes.lean
+            lean/InfoGeometry/Categorical/CompatibleEndomorphisms.lean
+            lean/InfoGeometry/Categorical/CompatibleDerivations.lean
+            lean/InfoGeometry/Categorical/CompatibleColimitAudit.lean
+            lean/InfoGeometry/LinearAlgebra/CompatibleBilinearColimit.lean
+            lean/InfoGeometry/GrandUnification/ArchetypeDictionary.lean
+            lean/InfoGeometry/Arithmetic/CompletedZetaSouriauDInfinityThermodynamics.lean
+            lean/InfoGeometry/Krein/DoubledSpace.lean
           )
           python3 - "${owners[@]}" <<'PY' 2>&1 | tee verification/zeta-weil-krein/logs/proof-proxy.log
           from pathlib import Path
@@ -63,8 +70,8 @@ jobs:
           )
           root = Path.cwd()
           paths = sys.argv[1:]
-          if len(paths) != 6 or len(set(paths)) != 6:
-              raise SystemExit("Expected six distinct Lean owners")
+          if len(paths) != 13 or len(set(paths)) != 13:
+              raise SystemExit("Expected thirteen distinct Lean owners")
           cache = ActiveIndexCache(root, scope_paths=paths)
           failures = checker_index_mismatches(root)
           for path in paths:
@@ -100,17 +107,18 @@ jobs:
         run: |
           set -euo pipefail
           python3 verification/zeta-weil-krein/check.py exe cache get 2>&1 | tee verification/zeta-weil-krein/logs/cache.log
-      - name: Build the focused audit
+      - name: Build both focused audits
         shell: bash
         run: |
           set -euo pipefail
-          python3 verification/zeta-weil-krein/check.py --wfail build InfoGeometry.Arithmetic.ZetaDihedralWeilKreinAudit 2>&1 | tee verification/zeta-weil-krein/logs/build.log
+          python3 verification/zeta-weil-krein/check.py --wfail build InfoGeometry.Arithmetic.ZetaDihedralWeilKreinAudit InfoGeometry.Categorical.CompatibleColimitAudit 2>&1 | tee verification/zeta-weil-krein/logs/build.log
       - name: Inspect fresh declaration axiom output
         shell: bash
         run: |
           set -euo pipefail
           python3 verification/zeta-weil-krein/check.py env lean lean/InfoGeometry/Arithmetic/ZetaDihedralWeilKreinAudit.lean 2>&1 | tee verification/zeta-weil-krein/logs/axioms.log
-          python3 verification/zeta-weil-krein/check_axioms.py verification/zeta-weil-krein/logs/axioms.log > verification/zeta-weil-krein/logs/axiom-check.json
+          python3 verification/zeta-weil-krein/check.py env lean lean/InfoGeometry/Categorical/CompatibleColimitAudit.lean 2>&1 | tee verification/zeta-weil-krein/logs/colimit-axioms.log
+          python3 verification/zeta-weil-krein/check_axioms.py verification/zeta-weil-krein/logs/axioms.log verification/zeta-weil-krein/logs/colimit-axioms.log > verification/zeta-weil-krein/logs/axiom-check.json
       - name: Preserve verification evidence
         if: always()
         uses: actions/upload-artifact@v4

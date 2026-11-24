@@ -133,6 +133,7 @@ noncomputable def doubledHilbertBilin : LinearMap.BilinForm ℝ (DoubledSpace E)
       simp [real_inner_smul_right, mul_add])
 
 /-! Coordinate readback for the doubled Hilbert pairing. -/
+omit [CompleteSpace E] in
 lemma doubledHilbertBilin_to_doubled (x ξ y η : E) :
     doubledHilbertBilin (to_doubled x ξ) (to_doubled y η) =
       inner ℝ x y + inner ℝ ξ η := by

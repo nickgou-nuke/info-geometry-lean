@@ -92,9 +92,9 @@ theorem zornClifford_isSimpleRing :
 on the full Clifford algebra. This follows from simplicity, not dimension. -/
 theorem zornCliffordRepresentation_injective :
     Function.Injective (zornCliffordRepresentation (R := ℝ)) := by
-  letI : IsSimpleRing (CliffordAlgebra (zornNorm (R := ℝ))) :=
+  let : IsSimpleRing (CliffordAlgebra (zornNorm (R := ℝ))) :=
     zornClifford_isSimpleRing
-  letI : Nontrivial (ZornMatrix ℝ) :=
+  let : Nontrivial (ZornMatrix ℝ) :=
     (ZornMatrix.coordEquiv (R := ℝ)).nontrivial
   exact (zornCliffordRepresentation (R := ℝ)).toRingHom.injective
 
@@ -107,7 +107,7 @@ theorem zorn_finrank : Module.finrank ℝ (ZornMatrix ℝ) = 8 := by
 /-- The existing doubled real spinor carrier has dimension sixteen. -/
 theorem diracSpinor_finrank :
     Module.finrank ℝ (DiracSpinor16 (R := ℝ)) = 16 := by
-  letI : FiniteDimensional ℝ (ZornMatrix ℝ) := wittZornEquiv.finiteDimensional
+  let : FiniteDimensional ℝ (ZornMatrix ℝ) := wittZornEquiv.finiteDimensional
   change Module.finrank ℝ (ZornMatrix ℝ × ZornMatrix ℝ) = 16
   rw [Module.finrank_prod, zorn_finrank]
 
@@ -121,16 +121,16 @@ theorem zornClifford_finrank :
 /-- The endomorphism algebra of the doubled real carrier has dimension 256. -/
 theorem diracEnd_finrank :
     Module.finrank ℝ (Module.End ℝ (DiracSpinor16 (R := ℝ))) = 256 := by
-  letI : FiniteDimensional ℝ (ZornMatrix ℝ) := wittZornEquiv.finiteDimensional
+  let : FiniteDimensional ℝ (ZornMatrix ℝ) := wittZornEquiv.finiteDimensional
   rw [Module.finrank_linearMap, diracSpinor_finrank]
 
 /-- Faithfulness together with the proved equal dimensions makes the existing
 representation surjective onto the full endomorphism algebra. -/
 theorem zornCliffordRepresentation_surjective :
     Function.Surjective (zornCliffordRepresentation (R := ℝ)) := by
-  letI : FiniteDimensional ℝ (CliffordAlgebra (zornNorm (R := ℝ))) :=
+  let : FiniteDimensional ℝ (CliffordAlgebra (zornNorm (R := ℝ))) :=
     zornCliffordMatrixEquiv.symm.toLinearEquiv.finiteDimensional
-  letI : FiniteDimensional ℝ (ZornMatrix ℝ) := wittZornEquiv.finiteDimensional
+  let : FiniteDimensional ℝ (ZornMatrix ℝ) := wittZornEquiv.finiteDimensional
   have hdim : Module.finrank ℝ (CliffordAlgebra (zornNorm (R := ℝ))) =
       Module.finrank ℝ (Module.End ℝ (DiracSpinor16 (R := ℝ))) :=
     zornClifford_finrank.trans diracEnd_finrank.symm

@@ -247,3 +247,74 @@ Fresh elaboration, the actual axiom audit, root integration, and pre-push build
 acceptance remain pending. The focused GitHub workflow is the next compiler
 lane for this exact packet. Publication is for review and does not establish
 kernel acceptance or merge readiness.
+
+## Published parent failure and additive dependency repair
+
+The initial extension was published as PR #447 at
+`b52644e3a187674fee664c05ca5eecc95772e723`, with reviewed tree
+`45a9dc49e02e6a72aa01361f1e2c04f788fff042`. Its actual pre-commit hook passed.
+The first focused extension workflow is run `45374849384`.
+
+The parent's replacement run `45372272026` subsequently failed in actual
+Lean elaboration at the conjugation-zero step of `CanonicalZornRegularNorm`.
+The original compiler error and artifact hashes, independent source repair,
+and six passing static checks are recorded in the parent contract. Parent
+PR #441 now contains the additive two-site repair at
+`30fb78352e609a860bd6d406f1352a4a863738e1`, tree
+`ca50c2b1c781ae8e6a1184d31e84909b9a79cd91`. The repaired norm owner hash is
+`c8828faadc1a5a83c44a5c88a3cbad26887b403798da5e93cb8ac807e1f0aac5`.
+This extension incorporates that parent through an additive merge; it does
+not rewrite the original extension commit or alter any theorem statement.
+The new parent focused run is `45375944598`.
+
+The observed pinned-linter diagnostics also motivated a source check of the
+new faithfulness owner. The imported, default-on `HaveILetI` linter warns on
+tactic `letI` when the remaining goal is a proposition. All six local
+bindings in this owner meet that condition. Its pinned documentation states
+that ordinary `let` registers local instances, so the isolated repair changes
+exactly six `letI` tokens to `let`. Local types and values, imports, all ten
+theorem statements, and all five definitions are unchanged; no global instance
+is added and no linter is disabled. `source_scout` authored the correction and
+`audit_math` independently reviewed it: PASS.
+
+The final faithfulness source hash is
+`da3aa065b84246d67063cd9a6b1a7b0fe029c4b0437fcce3142d0226b8b16910`.
+This is a source-backed correction for a concrete warnings-as-errors risk,
+not an observed compiler result for that owner. The three new owners still
+have 41 theorems and 11 definitions; the focused inventory remains 74
+expected axiom records. Fresh compilation and actual axiom acceptance remain
+pending for the updated extension.
+
+
+### Final static receipt for the additive dependency update
+
+At 10:36:29 UTC on 2026-11-24 the six maintained static gates scoped to the
+changed norm and faithfulness owners had all returned exit 0. Semantic-content
+and OpenGauss findings were zero. The one nonblocking lexical warning in
+this two-source scope is the existing definitional equivalence-action readout.
+The full extension inventory remains 56 owner heads plus 18 reused names,
+74 expected axiom records and zero observed records.
+
+Independent comparison confirmed both repaired source hashes, unchanged
+public statements/imports/counts, exactly six local-binding token replacements
+in the faithfulness source, four staged paths, no unstaged differences or
+unmerged entries, merge parent `30fb78352e609a860bd6d406f1352a4a863738e1`, and
+unchanged captured source/control/index hashes throughout this check.
+
+Exact commands ran serially from the repository root:
+
+```bash
+python3 tools/quality/proof_proxy_staged_gate.py --strict lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean lean/InfoGeometry/Canonical/ZornCliffordFaithful.lean
+python3 tools/quality/semantic_vacuity_gate.py lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean lean/InfoGeometry/Canonical/ZornCliffordFaithful.lean --fail-on error --json-out /tmp/real-dirac-publication-recovery/triality-intake/qa/child-update-run-001/semantic-vacuity.json
+python3 tools/quality/semantic_content_audit.py --file-prefix lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean --file-prefix lean/InfoGeometry/Canonical/ZornCliffordFaithful.lean --gate --json-out /tmp/real-dirac-publication-recovery/triality-intake/qa/child-update-run-001/semantic-content.json --md-out /tmp/real-dirac-publication-recovery/triality-intake/qa/child-update-run-001/semantic-content.md
+python3 tools/infra/opengauss_screener.py lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean lean/InfoGeometry/Canonical/ZornCliffordFaithful.lean --strict --json
+python3 tools/infra/opengauss_cli.py refute lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean lean/InfoGeometry/Canonical/ZornCliffordFaithful.lean --strict --json
+python3 tools/infra/opengauss_cli.py review lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean lean/InfoGeometry/Canonical/ZornCliffordFaithful.lean --gate GATE_4 --json
+```
+
+- `static-gate-receipts.json` SHA-256: `8a2a25c31b9c5cd7295f95bb01976dab4d0bd2858c901243740fbee5f2e4bb50`.
+- `final-inspection.json` SHA-256: `bddfeb652faad2bb08c162a1f014f7409f3f23db9a4ff8fa80142d52adc2059a`.
+
+No compiler, lock probe, workflow syntax rerun, or remote job rerun occurred
+in this static lane. The updated source is ready for publication and the
+fresh focused CI check; kernel and actual axiom acceptance remain pending.

@@ -96,4 +96,24 @@ theorem heisenbergCocycle_eq_zero_of_cyclotomic_degree_sum_ne_zero
   rw [VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycle_modeFlip_jgen_jgen,
       hcocycle, neg_zero]
 
+
+theorem heisenberg_mode_flip_inverts_cyclotomic_degree (k : ℤ) :
+    heisenbergModeDegree (-k) = -heisenbergModeDegree k := by
+  exact heisenbergModeDegree_neg k
+
+
+theorem heisenberg_mode_flip_cocycle_sign
+    {𝕜 : Type*} [Field 𝕜]
+    (k l : ℤ) :
+    VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycleBilin 𝕜
+        (VirasoroProject.AbelianLieAlgebraOn.modeFlip 𝕜
+          (VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 k))
+        (VirasoroProject.AbelianLieAlgebraOn.modeFlip 𝕜
+          (VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 l)) =
+      -VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycleBilin 𝕜
+        (VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 k)
+        (VirasoroProject.AbelianLieAlgebraOn.jgen 𝕜 l) := by
+  exact VirasoroProject.AbelianLieAlgebraOn.heisenbergCocycle_modeFlip_jgen_jgen
+    𝕜 k l
+
 end InfoGeometry.Canonical

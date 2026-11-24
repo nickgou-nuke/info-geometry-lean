@@ -266,4 +266,12 @@ theorem carrier8NativeNullClifford_sq_zero (x : Carrier8) :
   exact InfoGeometry.Canonical.PACNativeCliffordBridge.pac44NativeNullClifford_sq_zero
     (carrier8ToPAC44 x)
 
+
+theorem e77_dim_exact : dim_e77 = 133 := by
+  rfl
+
+
+theorem e88_dim_exact : dim_e88 = 248 := by
+  rfl
+
 end InfoGeometry.Canonical.ExceptionalCliffordCompatibilityBridge

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -111,5 +116,31 @@ theorem matrixTraceState_mul_comm (n : ℕ) (A B : MatrixStage n) :
     matrixTraceState n (A * B) = matrixTraceState n (B * A) := by
   simp only [matrixTraceState_apply]
   rw [Matrix.trace_mul_comm]
+
+
+theorem matrixTraceState_star (n : ℕ) (A : MatrixStage n) :
+    star (matrixTraceState n A) = matrixTraceState n (star A) := by
+  rw [matrixTraceState_apply, matrixTraceState_apply]
+  calc
+    star ((1 / (2 ^ n : ℂ)) * Matrix.trace A) =
+        star (Matrix.trace A) * star (1 / (2 ^ n : ℂ)) := by
+          rw [StarMul.star_mul]
+    _ = Matrix.trace (star A) * (1 / (2 ^ n : ℂ)) := by
+          rw [← Matrix.trace_conjTranspose A]
+          congr 1
+          simp only [star_div₀, star_one, star_pow, star_ofNat]
+    _ = (1 / (2 ^ n : ℂ)) * Matrix.trace (star A) := by rw [mul_comm]
+
+/-- The real part of the normalized trace on `A* A` is nonnegative. -/
+theorem matrixTraceState_realPart_star_mul_self_nonneg
+    (n : ℕ) (A : MatrixStage n) :
+    0 ≤ (matrixTraceState n (star A * A)).re := by
+  rw [matrixTraceState_apply]
+  have h_cast : (1 / (2 ^ n : ℂ)) = ↑(1 / (2 ^ n : ℝ)) := by push_cast; rfl
+  have h_c_re : (1 / (2 ^ n : ℂ)).re = 1 / (2 ^ n : ℝ) := by rw [h_cast, Complex.ofReal_re]
+  have h_c_im : (1 / (2 ^ n : ℂ)).im = 0 := by rw [h_cast, Complex.ofReal_im]
+  rw [Complex.mul_re, h_c_re, h_c_im, zero_mul, sub_zero]
+  have h_factor : 0 ≤ 1 / (2 ^ n : ℝ) := by positivity
+  exact mul_nonneg h_factor (matrixTrace_star_mul_self_nonneg n A)
 
 end InfoGeometry.Canonical.CuntzMatrixTowerInstantiation

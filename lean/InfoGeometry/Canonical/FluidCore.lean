@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.InnerProductSpace.PiL2
@@ -25,5 +30,13 @@ class FluidOperator (σ : Type _) [NormedAddCommGroup σ] [InnerProductSpace ℝ
   /-- Gradient operator -/ gradient : σ →L[ℝ] σ
   /-- Laplacian operator -/ laplacian : σ →L[ℝ] σ
   /-- Time evolution map (parameter β) -/ timeEvolution : ℝ → σ → σ
+
+/-- Compatibility alias for legacy Navier‑Stokes operator -/
+abbrev NavierStokesOperator (E : Type _) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  VelocityField E
+
+/-- Compatibility alias for quantum Madelung operator -/
+abbrev MadelungOperator (E : Type _) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :=
+  VelocityField E
 
 end InfoGeometry.Canonical

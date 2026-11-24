@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CuntzStarInductiveSystem
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FilteredGNSHilbertColimit
@@ -68,5 +73,20 @@ theorem dense_iUnion_range_cuntzGNSStageToHilbertColimit :
 theorem cuntzGNSHilbertColimit_complete :
     CompleteSpace (CuntzGNSHilbertColimit Stage T ω) :=
   inferInstance
+
+
+theorem cuntzGNSStageToHilbertColimit_norm
+    (n : ℕ) (x : CuntzGNSStage Stage T ω n) :
+    ‖cuntzGNSStageToHilbertColimit Stage T ω n x‖ = ‖x‖ := by
+  exact (cuntzGNSStageToHilbertColimit Stage T ω n).norm_map x
+
+
+theorem cuntzGNSStageToHilbertColimit_inner
+    (n : ℕ) (x y : CuntzGNSStage Stage T ω n) :
+    inner ℂ
+        (cuntzGNSStageToHilbertColimit Stage T ω n x)
+        (cuntzGNSStageToHilbertColimit Stage T ω n y) =
+      inner ℂ x y := by
+  exact (cuntzGNSStageToHilbertColimit Stage T ω n).inner_map_map x y
 
 end InfoGeometry.Canonical.CuntzGNSFilteredSystem

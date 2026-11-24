@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
@@ -52,5 +57,17 @@ theorem master_chiral_algebra_commutant_synthesis
   c.commute_eMinus,
   c.commute_resolution
 ⟩
+
+/-- **Definition**: Commutant Operator T in A' satisfying [T, A] = 0 for all A in Chiral Algebra. -/
+structure ChiralCommutantData (R : Type*) [Ring R] where
+  T : R
+  ePlus : R
+  eMinus : R
+
+
+def ChiralCommutantLaws {R : Type*} [Ring R]
+    (c : ChiralCommutantData R) : Prop :=
+  c.T * c.ePlus = c.ePlus * c.T ∧
+  c.T * c.eMinus = c.eMinus * c.T
 
 end InfoGeometry.Canonical.ChiralAlgebraCommutantBridge

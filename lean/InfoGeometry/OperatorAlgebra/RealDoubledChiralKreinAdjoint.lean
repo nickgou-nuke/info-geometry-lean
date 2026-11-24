@@ -391,4 +391,99 @@ theorem chiralKreinAdjoint_peirceCorners (A : ChiralEnd (E := E)) :
       chiralKreinAdjoint_leftChiralProjector, chiralKreinAdjoint_rightChiralProjector,
       ContinuousLinearMap.comp_assoc]
 
+/-! ### Krein-Hilbert Norm Isometry, Majorant Inequality, and Centered Uncertainty Bound -/
+
+/-- The fundamental symmetry `η_chiral = J ∘ γ₅` is a norm isometry on the real-doubled
+chiral Hilbert space `H₂ (E := E)` (connecting the indefinite Krein form `[·, ·]_η` to its
+associated majorant Hilbert norm `‖·‖`, Homayouni–Mingarelli `2103.04372v1.pdf`, Eq. 2.1). -/
+@[simp]
+theorem norm_etaChiral (u : H₂ (E := E)) :
+    ‖etaChiral (E := E) u‖ = ‖u‖ := by
+  have h1 : ‖etaChiral (E := E) u‖ ^ 2 = ‖u‖ ^ 2 := by
+    rw [← real_inner_self_eq_norm_sq, ← real_inner_self_eq_norm_sq,
+      etaChiral_hilbert_isometry]
+  have h2 : |‖etaChiral (E := E) u‖| = |‖u‖| :=
+    (sq_eq_sq_iff_abs_eq_abs _ _).mp h1
+  simpa only [abs_norm] using h2
+
+/-- **Krein-Hilbert Majorant / Cauchy–Schwarz Inequality**: the indefinite Krein inner
+product `|[u, v]_η|` is dominated by the product of the majorant Hilbert norms `‖u‖ * ‖v‖`. -/
+theorem abs_chiralKreinForm_le_norm (u v : H₂ (E := E)) :
+    |chiralKreinForm u v| ≤ ‖u‖ * ‖v‖ := by
+  calc
+    |chiralKreinForm u v| = |inner ℝ (etaChiral (E := E) u) v| := by
+      rw [chiralKreinForm_eq_inner_eta]
+    _ ≤ ‖etaChiral (E := E) u‖ * ‖v‖ := abs_real_inner_le_norm _ _
+    _ = ‖u‖ * ‖v‖ := by rw [norm_etaChiral]
+
+/-- Centering two operators `A - a • I` and `B - b • I` by arbitrary real scalar shifts
+leaves their commutator `[A, B]` invariant. -/
+theorem centered_commutator_eq
+    (A B : ChiralEnd (E := E)) (a b : ℝ) :
+    let I := ContinuousLinearMap.id ℝ (H₂ (E := E))
+    ((A - a • I).comp (B - b • I) - (B - b • I).comp (A - a • I)) =
+      (A.comp B - B.comp A) := by
+  intro I
+  apply ContinuousLinearMap.ext
+  intro u
+  simp only [I, sub_apply, ContinuousLinearMap.comp_apply, map_sub,
+    smul_apply, map_smul, ContinuousLinearMap.id_apply,
+    smul_sub, smul_smul]
+  rw [mul_comm b a]
+  abel
+
+/-- **Krein Commutator Expectation Expansion**: for two `η_chiral`-self-adjoint operators
+`A, B`, the Krein expectation of their commutator `[u, (AB - BA) u]_η` equals the
+antisymmetric Krein cross-pairing `[A u, B u]_η - [B u, A u]_η`. -/
+theorem chiralKreinForm_commutator_etaChiral_eq
+    {A B : ChiralEnd (E := E)}
+    (hA : IsChiralKreinSelfAdjoint A)
+    (hB : IsChiralKreinSelfAdjoint B)
+    (u : H₂ (E := E)) :
+    chiralKreinForm u ((A.comp B - B.comp A) u) =
+      chiralKreinForm (A u) (B u) - chiralKreinForm (B u) (A u) := by
+  have hsub :
+      chiralKreinForm u ((A.comp B - B.comp A) u) =
+        chiralKreinForm u (A (B u)) - chiralKreinForm u (B (A u)) := by
+    rw [chiralKreinForm_eq_inner_eta, sub_apply,
+      ContinuousLinearMap.comp_apply, ContinuousLinearMap.comp_apply,
+      inner_sub_right, ← chiralKreinForm_eq_inner_eta, ← chiralKreinForm_eq_inner_eta]
+  rw [hsub, ← (isChiralKreinSelfAdjoint_iff_form A).mp hA u (B u),
+    ← (isChiralKreinSelfAdjoint_iff_form B).mp hB u (A u)]
+
+/-- **Centered Robertson–Krein Commutator Uncertainty Bound**: for any two
+`η_chiral`-self-adjoint operators `A, B`, any state `u`, and any scalar centering shifts
+`a, b : ℝ` (in particular, the Krein expectations), the magnitude of the Krein commutator
+expectation is bounded by `2 * ‖(A - a • I) u‖ * ‖(B - b • I) u‖` in the majorant Hilbert norm. -/
+theorem chiralKreinForm_centered_uncertainty_bound
+    {A B : ChiralEnd (E := E)}
+    (hA : IsChiralKreinSelfAdjoint A)
+    (hB : IsChiralKreinSelfAdjoint B)
+    (a b : ℝ) (u : H₂ (E := E)) :
+    let I := ContinuousLinearMap.id ℝ (H₂ (E := E))
+    |chiralKreinForm u ((A.comp B - B.comp A) u)| ≤
+      2 * ‖(A - a • I) u‖ * ‖(B - b • I) u‖ := by
+  intro I
+  set A' : ChiralEnd (E := E) := A - a • I
+  set B' : ChiralEnd (E := E) := B - b • I
+  have hA' : IsChiralKreinSelfAdjoint A' := by
+    rw [IsChiralKreinSelfAdjoint, chiralKreinAdjoint_sub, chiralKreinAdjoint_smul,
+      chiralKreinAdjoint_id, hA]
+  have hB' : IsChiralKreinSelfAdjoint B' := by
+    rw [IsChiralKreinSelfAdjoint, chiralKreinAdjoint_sub, chiralKreinAdjoint_smul,
+      chiralKreinAdjoint_id, hB]
+  have hcomm : A.comp B - B.comp A = A'.comp B' - B'.comp A' :=
+    (centered_commutator_eq A B a b).symm
+  rw [hcomm, chiralKreinForm_commutator_etaChiral_eq hA' hB' u]
+  have h1 : |chiralKreinForm (A' u) (B' u)| ≤ ‖A' u‖ * ‖B' u‖ :=
+    abs_chiralKreinForm_le_norm (A' u) (B' u)
+  have h2 : |chiralKreinForm (B' u) (A' u)| ≤ ‖B' u‖ * ‖A' u‖ :=
+    abs_chiralKreinForm_le_norm (B' u) (A' u)
+  calc
+    |chiralKreinForm (A' u) (B' u) - chiralKreinForm (B' u) (A' u)|
+        ≤ |chiralKreinForm (A' u) (B' u)| + |chiralKreinForm (B' u) (A' u)| :=
+      abs_sub _ _
+    _ ≤ ‖A' u‖ * ‖B' u‖ + ‖B' u‖ * ‖A' u‖ := add_le_add h1 h2
+    _ = 2 * ‖A' u‖ * ‖B' u‖ := by ring
+
 end InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinAdjoint

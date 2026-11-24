@@ -147,6 +147,35 @@ theorem leftRange_finrank {x : Z} (hx : x ≠ 0)
   rw [leftKernel_finrank hx hn, zorn_finrank] at hdim
   omega
 
+/-- Conjugate contraction places the conjugate left range in the left kernel
+for every null element, including zero. -/
+theorem conjugate_leftRange_le_leftKernel {x : Z}
+    (hn : ZornVectorMatrix.norm x = 0) :
+    LinearMap.range (leftMultiplication (ZornVectorMatrix.conj x)) ≤
+      LinearMap.ker (leftMultiplication x) := by
+  apply LinearMap.range_le_ker_iff.mpr
+  change leftMultiplication x * leftMultiplication (ZornVectorMatrix.conj x) = 0
+  rw [leftMultiplication_mul_conjugate, hn, zero_smul]
+
+/-- For a nonzero null element, conjugate multiplication fills the entire
+four-dimensional left kernel. The nonzero hypothesis is essential: at zero,
+the range is zero and the kernel is the whole eight-dimensional carrier. -/
+theorem conjugate_leftRange_eq_leftKernel {x : Z} (hx : x ≠ 0)
+    (hn : ZornVectorMatrix.norm x = 0) :
+    LinearMap.range (leftMultiplication (ZornVectorMatrix.conj x)) =
+      LinearMap.ker (leftMultiplication x) := by
+  letI : FiniteDimensional ℝ Z :=
+    FiniteDimensional.of_finrank_eq_succ zorn_finrank
+  have hc : ZornVectorMatrix.conj x ≠ 0 := by
+    intro h
+    apply hx
+    simpa only [ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_zero] using
+      congrArg ZornVectorMatrix.conj h
+  have hnconj : ZornVectorMatrix.norm (ZornVectorMatrix.conj x) = 0 := by
+    simpa only [ZornVectorMatrix.norm_conj] using hn
+  apply Submodule.eq_of_le_of_finrank_eq (conjugate_leftRange_le_leftKernel hn)
+  rw [leftRange_finrank hc hnconj, leftKernel_finrank hx hn]
+
 /-- The null kernel is maximal among norm-null subspaces. -/
 theorem leftKernel_maximal_null {x : Z} (hx : x ≠ 0)
     (hn : ZornVectorMatrix.norm x = 0) (W : Submodule ℝ Z)

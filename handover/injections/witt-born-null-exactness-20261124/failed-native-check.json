@@ -1,0 +1,131 @@
+{
+  "run_id": "14af0762cf8f4e7aa8f0fe3995cc0da3",
+  "status": "failed",
+  "suite": "klein-operator-hierarchy",
+  "targets": [
+    "InfoGeometry.Algebra.ZornNullIncidence",
+    "InfoGeometry.Canonical.ZornCliffordKleinHierarchy",
+    "InfoGeometry.Canonical.ZornCliffordSourceVolume",
+    "InfoGeometry.Lie.SplitOctonionNullPlaneCovariance"
+  ],
+  "wait_for_build_lock": false,
+  "commands": [
+    {
+      "module": "InfoGeometry.Algebra.ZornVectorMatrix",
+      "command": [
+        "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+        "-j1",
+        "-R",
+        "/tmp/info-geometry-zorn-primal-dual-20261124/lean",
+        "/tmp/info-geometry-zorn-primal-dual-20261124/lean/InfoGeometry/Algebra/ZornVectorMatrix.lean",
+        "-o",
+        "/tmp/info-geometry-zorn-primal-dual-20261124/.lake/klein-operator-hierarchy/lib/lean/InfoGeometry/Algebra/ZornVectorMatrix.olean"
+      ],
+      "returncode": -9,
+      "output": "",
+      "elapsed_seconds": 343.817,
+      "sampled_peak_rss_kib": 543976
+    }
+  ],
+  "audit_expected": true,
+  "audit_status": "not-run",
+  "force": true,
+  "started_at": "2026-11-24T13:30:33.423686+00:00",
+  "verifier_sha256": "293bd44367d8594ae9f51d8f9a148ca90e8a28cc8fa61e112aa3e5658a7a2ca5",
+  "lean": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "lean_binary_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+  "packages": {
+    "LeanSearchClient": {
+      "revision": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "search_path": "/workspace/scratch/058543be00a5/info-geometry-lean/.lake/packages/LeanSearchClient/.lake/build/lib/lean"
+    },
+    "Qq": {
+      "revision": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "search_path": "/workspace/scratch/058543be00a5/info-geometry-lean/.lake/packages/Qq/.lake/build/lib/lean"
+    },
+    "aesop": {
+      "revision": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "search_path": "/workspace/scratch/058543be00a5/info-geometry-lean/.lake/packages/aesop/.lake/build/lib/lean"
+    },
+    "batteries": {
+      "revision": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "search_path": "/workspace/scratch/058543be00a5/info-geometry-lean/.lake/packages/batteries/.lake/build/lib/lean"
+    },
+    "importGraph": {
+      "revision": "e928b72544873815af278d38681b31c0293588e3",
+      "search_path": "/workspace/scratch/058543be00a5/info-geometry-lean/.lake/packages/importGraph/.lake/build/lib/lean"
+    },
+    "mathlib": {
+      "revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "search_path": "/workspace/scratch/058543be00a5/info-geometry-lean/.lake/packages/mathlib/.lake/build/lib/lean"
+    },
+    "plausible": {
+      "revision": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "search_path": "/workspace/scratch/058543be00a5/info-geometry-lean/.lake/packages/plausible/.lake/build/lib/lean"
+    },
+    "proofwidgets": {
+      "revision": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "search_path": "/workspace/scratch/058543be00a5/info-geometry-lean/.lake/packages/proofwidgets/.lake/build/lib/lean"
+    }
+  },
+  "manifest_sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+  "owned_warning_as_error": true,
+  "lean_threads": 1,
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "modules": [
+    "InfoGeometry.Algebra.ZornVectorMatrix",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "InfoGeometry.Algebra.ZornPinorReconstruction",
+    "InfoGeometry.Algebra.ZornLeftCAR",
+    "InfoGeometry.Algebra.AlternativeDerivations",
+    "InfoGeometry.Algebra.ZornDerivationBridge",
+    "InfoGeometry.Algebra.ZornLeftInverse",
+    "InfoGeometry.Algebra.ZornLeftDeterminant",
+    "InfoGeometry.Algebra.ZornNullIncidence",
+    "InfoGeometry.Meta.Architecture",
+    "InfoGeometry.Canonical.ZornSpinor",
+    "InfoGeometry.Canonical.ZornCliffordRepresentation",
+    "InfoGeometry.Canonical.TetractysCliffordLorentzAction",
+    "InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge",
+    "InfoGeometry.Canonical.ZornCliffordKleinHierarchy",
+    "InfoGeometry.Algebra.ZornLeftGrading",
+    "InfoGeometry.Algebra.ZornLeftParity",
+    "InfoGeometry.Algebra.ZornLeftMajorana",
+    "InfoGeometry.Algebra.ZornChiralOperatorReconstruction",
+    "InfoGeometry.Canonical.ZornCliffordSourceVolume",
+    "InfoGeometry.Canonical.SplitOctonionAutomorphismCore",
+    "InfoGeometry.Lie.CanonicalZornDerivation",
+    "InfoGeometry.Lie.CanonicalZornRegularOperators",
+    "InfoGeometry.Lie.CanonicalZornRegularDerivation",
+    "InfoGeometry.Lie.SplitOctonionNullPlaneCovariance"
+  ],
+  "sources": {
+    "InfoGeometry.Algebra.ZornVectorMatrix": "d957700954286ae7baa0abfd7654721e4ffb5c2addd71d458c98a6480157095b",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Algebra.ZornPinorReconstruction": "0418a3d7d0d8ead22337d7408dfde060e4c8733968b04aec428fc50ffa8b79a6",
+    "InfoGeometry.Algebra.ZornLeftCAR": "b1445045646ba6784de0649136b620e9a62fab9837ae6368a441f5c1bc87d807",
+    "InfoGeometry.Algebra.AlternativeDerivations": "9a80b0be567dbd76d414146e4db2cdcd820b3dec3d30eb05a631a55abb12e8ee",
+    "InfoGeometry.Algebra.ZornDerivationBridge": "e4f05c20d58be19ef3982dc2126368d9e8ef8ec62508785737d6e92f047da041",
+    "InfoGeometry.Algebra.ZornLeftInverse": "46ad3b7f73e324ff2914ed19d5d1c6e244a610b45b49c4df4962ed7884c0d710",
+    "InfoGeometry.Algebra.ZornLeftDeterminant": "a45e8ccd3fc82182c68a01614669543f995a1ce7c8435d95535d32035be9f155",
+    "InfoGeometry.Algebra.ZornNullIncidence": "93c03658e0a7049f481bed255fbdb998cb00ac4e6bbb5b4f7162df34f11bd8e4",
+    "InfoGeometry.Meta.Architecture": "0f74caea1284e1c0dfc8d00d46357e0310a24aa12fc36fa7c0d02ef5f97e0434",
+    "InfoGeometry.Canonical.ZornSpinor": "48f85f87ec7de31afeeab4a57d7080fdceb1b597aad0e9b06bfadb64130340b5",
+    "InfoGeometry.Canonical.ZornCliffordRepresentation": "be13515e84681f38b49631c7d8d3f25543223c4da0263d0884928c837f511000",
+    "InfoGeometry.Canonical.TetractysCliffordLorentzAction": "598d9b63e57c44d296d2938a8a3a7d6bf08ce8aa58521f38bde75fe7d2e1bfd1",
+    "InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge": "70bd909ff2ce89343d63dfbeb0f975a196c1a71e88b86bc538673e0c2b7f3447",
+    "InfoGeometry.Canonical.ZornCliffordKleinHierarchy": "ea37f4082661ebee3c7519e290509c0162e51b9e4e2f61acca76e1db436cc5ba",
+    "InfoGeometry.Algebra.ZornLeftGrading": "ae7b66ed43a7bbf83abbde796b5efdbbb557719529c1267724df46216b1f6906",
+    "InfoGeometry.Algebra.ZornLeftParity": "165d1e42ef758b813c00255b6c8019d51b877287f58d9f161d6b01ca403f0e13",
+    "InfoGeometry.Algebra.ZornLeftMajorana": "a61df7ee69d765dd70c689254f63922284154c411774d552ad52efe32c374f93",
+    "InfoGeometry.Algebra.ZornChiralOperatorReconstruction": "94806af215c43ece8f5f79e6c99af71cefb993462ab850844b6363271a02399a",
+    "InfoGeometry.Canonical.ZornCliffordSourceVolume": "cfe9cb440f28021fbfc8a572355ca4d691133cae4e5a89e58494e7df890c6058",
+    "InfoGeometry.Canonical.SplitOctonionAutomorphismCore": "2ab260c58d18ed296e212aa743474ba14c546babdab010fcdf68e90173008159",
+    "InfoGeometry.Lie.CanonicalZornDerivation": "f86e43ea8a45fca8948410ea820cfb06ed3dd723e763cc0aa693504668d77ba5",
+    "InfoGeometry.Lie.CanonicalZornRegularOperators": "e173af4fb909cf1c3663ca5209450bdd42e92bec3e04a01c17909987c5dff5ae",
+    "InfoGeometry.Lie.CanonicalZornRegularDerivation": "0874b86ce59d18551a22875d5e91019801ec2e620e84949ee2a6b2f80f8e80e7",
+    "InfoGeometry.Lie.SplitOctonionNullPlaneCovariance": "43e69c589182d5eace8bf194b59648f7b110fb1549759d1805c0bef9e80346bd"
+  },
+  "audit_sha256": "db2f5841066eada24f0bac3900e73db41f20660c5d99ff4542ce02856d06bf5b",
+  "finished_at": "2026-11-24T13:36:17.568989+00:00"
+}

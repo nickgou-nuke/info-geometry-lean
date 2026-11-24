@@ -1,0 +1,15 @@
+{
+  "status": "passed",
+  "kind": "syntax-only",
+  "at_utc": "2026-11-24T13:49:20.986764+00:00",
+  "file_sha256": {
+    ".github/workflows/zorn-witt-born.yml": "e746f31072307210f33b722d41b95ebbc77de51a6749c48cc5e4f551593c4d32",
+    "verification/zorn-primal-dual/check.py": "801c1ccf518eb511a24896ec16853e00d9edfa323a5d3d30b4ac33ecfca44c2e"
+  },
+  "yaml_parser": "PyYAML BaseLoader",
+  "shell_blocks_checked": 7,
+  "embedded_python_blocks_checked": 4,
+  "checker_ast": "parsed",
+  "native_lean_compilation": false,
+  "scope": "YAML structure and syntax of checker, shell blocks, and embedded Python; no workflow execution"
+}

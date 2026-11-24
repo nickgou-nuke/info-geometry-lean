@@ -622,3 +622,4 @@ import InfoGeometry.Algebra.ZornNullIncidence
 import InfoGeometry.Canonical.ZornCliffordKleinHierarchy
 import InfoGeometry.Canonical.ZornCliffordSourceVolume
 import InfoGeometry.Lie.SplitOctonionNullPlaneCovariance
+import InfoGeometry.Canonical.ZornCliffordWittBorn

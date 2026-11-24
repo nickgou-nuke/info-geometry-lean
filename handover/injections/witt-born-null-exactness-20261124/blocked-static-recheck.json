@@ -1,0 +1,12 @@
+{
+  "status": "blocked",
+  "at_utc": "2026-11-24T13:52:28.371790+00:00",
+  "attempt": "Recheck proposed optional workflow provenance fields before staged source gate",
+  "error": "BuildLockBusyError",
+  "lock_metadata": {
+    "owner": "locked-lake-build:125:InfoGeometry.Canonical.ZornCl44BornReciprocity InfoGeometry.Canonical.ZornCl44DerivationInvariant InfoGeometry.Canonical.ZornCl44Faithfulness InfoGeometry.Canonical.ZornCl44NullIncidence InfoGeometry.Canonical.ZornCl44NullProjection InfoGeometry.Canonical.ZornCl44PrimalDual InfoGeometry.Canonical.ZornCl44TracePairing InfoGeometry.Canonical.ZornCl44Triality InfoGeometry.Canonical.ZornCl44TrialityBoost InfoGeometry.Canonical.ZornCl44TrialityDerivation InfoGeometry.Canonical.ZornCl44TrialityOrthogonal InfoGeometry.Canonical.ZornSignedConvention",
+    "pid": 125,
+    "acquiredAt": 1795528266.1126938
+  },
+  "actions": "No static test or staged gate started. Optional fields were removed by restoring the exact independently reviewed workflow bytes covered by the prior successful syntax receipt. No process or lock was altered."
+}

@@ -25,7 +25,7 @@ CHECKER = Path(__file__).resolve()
 STARTUP_CHECKER_HASH = hashlib.sha256(CHECKER.read_bytes()).hexdigest()
 ROOT = CHECKER.parents[2]
 sys.path.insert(0, str(ROOT))
-from tools.build_lock import BuildLockBusyError, acquire_build_lock
+from tools.build_lock import BuildLock, BuildLockBusyError, DEFAULT_BUILD_LOCK_PATH
 from tools.infra.build import _validate_lake_workspace_integrity
 
 NEW_TARGETS = [
@@ -41,13 +41,23 @@ KLEIN_TARGETS = [
     "InfoGeometry.Canonical.ZornCliffordSourceVolume",
     "InfoGeometry.Lie.SplitOctonionNullPlaneCovariance",
 ]
+COUNTEREXAMPLE_TARGETS = ["InfoGeometry.Verification.SuppliedTableCounterexample"]
+WITT_TARGET = "InfoGeometry.Canonical.ZornCliffordWittBorn"
+WITT_TARGETS = [*COUNTEREXAMPLE_TARGETS, *TARGETS, *KLEIN_TARGETS, WITT_TARGET]
 OWNED = [
     "InfoGeometry.Algebra.ZornLeftInverse",
     "InfoGeometry.Algebra.ZornLeftDeterminant",
     *NEW_TARGETS,
     *KLEIN_TARGETS,
+    *COUNTEREXAMPLE_TARGETS,
+    WITT_TARGET,
 ]
-SUITES = {"zorn-primal-dual": TARGETS, "klein-operator-hierarchy": KLEIN_TARGETS}
+SUITES = {
+    "zorn-primal-dual": TARGETS,
+    "klein-operator-hierarchy": KLEIN_TARGETS,
+    "supplied-zorn-counterexample": COUNTEREXAMPLE_TARGETS,
+    "witt-born-null-exactness": WITT_TARGETS,
+}
 PIN = "d13f23b723b8a846827a245b89c10fc7d3f11612"
 
 
@@ -178,7 +188,8 @@ def run(args: argparse.Namespace, out: Path, report: dict) -> int:
     env["LEAN_PATH"] = os.pathsep.join(map(str, paths))
     env.pop("LEAN_SRC_PATH", None)
     print(f"[{args.suite}] acquiring shared build lock", flush=True)
-    with acquire_build_lock(None, f"{args.suite}:{os.getpid()}", block=args.wait) as lock:
+    with BuildLock(DEFAULT_BUILD_LOCK_PATH, f"{args.suite}:{os.getpid()}",
+                   block=args.wait, shared=False) as lock:
         if digest(CHECKER) != STARTUP_CHECKER_HASH:
             raise RuntimeError("verifier changed while waiting; restart this invocation")
         if environment(args, lib) != (fingerprint, paths):

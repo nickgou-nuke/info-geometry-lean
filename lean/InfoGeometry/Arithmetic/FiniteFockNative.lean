@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -259,5 +264,22 @@ theorem trace_grandGibbsLinear_ne_zero
     (ε : ι → ℝ) (β μ : ℝ) :
     LinearMap.trace ℂ (Vec ι) (grandGibbsLinear ε β μ) ≠ 0 := by
   exact trace_gibbsLinear_ne_zero (fun i => ε i - μ) β
+
+
+theorem totalNumberLinear_apply
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (ψ : Vec ι) (occ : State ι) :
+    totalNumberLinear ψ occ =
+      ∑ i : ι, (if occ i then (1 : ℂ) else 0) * ψ occ := by
+  simp [totalNumberLinear, numberProjectorLinear]
+
+
+theorem grandGibbsLinear_apply
+    {ι : Type*} [Fintype ι] [DecidableEq ι]
+    (ε : ι → ℝ) (β μ : ℝ) (ψ : Vec ι) (occ : State ι) :
+    grandGibbsLinear ε β μ ψ occ =
+      (Real.exp (-β * (energy ε occ -
+        μ * ∑ i : ι, if occ i then (1 : ℝ) else 0)) : ℂ) * ψ occ := by
+  simp [grandGibbsLinear, gibbsLinear, energy_sub_const]
 
 end InfoGeometry.Arithmetic.FiniteFockNative

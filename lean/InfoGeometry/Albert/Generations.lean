@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -70,5 +75,12 @@ theorem three_generations_charge_sum_zero :
     (threeGenerationsFermions.map FermionQuantumNumbers.charge).sum = 0 := by
   dsimp [threeGenerationsFermions, singleGenFermions]
   norm_num
+
+
+theorem single_gen_fermions_count : singleGenFermions.length = 8 := rfl
+
+/-- The finite table has 24 entries after three copies are concatenated. -/
+theorem three_generation_decomposition :
+    threeGenerationsFermions.length = 24 := rfl
 
 end InfoGeometry.Albert.Generations

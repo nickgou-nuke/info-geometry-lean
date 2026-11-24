@@ -117,4 +117,13 @@ theorem Q_lightlike : Q 1 1 = 0 := by
 
 end QuadraticForm
 
+/-- J is nondegenerate because its determinant is non-zero. -/
+theorem nondegenerate : det J ≠ 0 := det_J_nonzero
+
+/-- J² = 1 via the projector algebra (computed entrywise). -/
+theorem J_sq_via_projectors : J * J = 1 := by
+  rw [J_as_projectors]
+  ext i j; fin_cases i <;> fin_cases j <;>
+    simp [P_plus, P_minus, Matrix.mul_apply]
+
 end Audit.KreinPosNegDecomposition

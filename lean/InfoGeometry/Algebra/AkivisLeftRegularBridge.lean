@@ -248,4 +248,22 @@ theorem zornVectorMatrix_normalizedAkivisJacobiator_eq_three_halves_associator
     (fun p q => zorn_right_alternative p q)]
   module
 
+
+theorem zornVectorMatrix_alternative_associator_swap12
+    (x y z : ZornVectorMatrix ℝ) :
+    _root_.associator y x z = -_root_.associator x y z := by
+  exact alternative_associator_swap12
+    (fun p q => zorn_left_alternative p q) y x z
+
+omit [IsScalarTower ℝ A A] [SMulCommClass ℝ A A] in
+
+
+theorem zornVectorMatrix_akivisJacobiator_eq_six_smul_associator
+    (x y z : ZornVectorMatrix ℝ) :
+    akivisJacobiator x y z =
+      (6 : ℝ) • _root_.associator x y z := by
+  exact alternative_akivisJacobiator_eq_six_smul_associator
+    (fun p q => zorn_left_alternative p q)
+    (fun p q => zorn_right_alternative p q) x y z
+
 end InfoGeometry.Algebra

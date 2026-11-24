@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzTensorQuotient
@@ -59,5 +64,18 @@ theorem matrix_unit_sq_off_diag (n : ℕ) (i j : Fin n) (hij : i ≠ j) :
 theorem matrix_unit_sum_diag_eq_one (n : ℕ) :
     (∑ i : Fin n, E n i i) = 1 := by
   simp [E, cuntz_ranges_sum_one n]
+
+
+def coefficientOperator (n : ℕ) (a : Fin n → Fin n → ℂ) : CuntzAlg n :=
+  ∑ i : Fin n, ∑ j : Fin n, a i j • E n i j
+
+
+theorem coefficientOperator_mul_expanded (n : ℕ)
+    (a b : Fin n → Fin n → ℂ) :
+    coefficientOperator n a * coefficientOperator n b =
+      ∑ i : Fin n, ∑ j : Fin n, ∑ k : Fin n, ∑ l : Fin n,
+        (a i j * b k l) • (E n i j * E n k l) := by
+  unfold coefficientOperator
+  simp_rw [Finset.sum_mul, Finset.mul_sum, smul_mul_smul]
 
 end InfoGeometry.Algebra.CuntzMatrixUnits

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -97,5 +102,22 @@ theorem master_bost_connes_kms_synthesis
   phase_stratification_disjoint β,
   critical_temperature_boundary β h_low
 ⟩
+
+
+def BostConnesSystemLaws {R : Type*} [Ring R]
+    (g : BostConnesSystem R) : Prop :=
+  (∀ n : ℕ+, g.x_star n * g.x n = 1) ∧
+  (∀ m n : ℕ+, g.x (m * n) = g.x m * g.x n) ∧
+  (∀ m n : ℕ+, g.x_star (m * n) = g.x_star n * g.x_star m) ∧
+  g.e 0 = 1 ∧
+  (∀ r s, g.e (r + s) = g.e r * g.e s) ∧
+  (∀ r, g.e (r + 1) = g.e r)
+
+theorem continuous_thermalKMSWeight (n : ℕ+) :
+    Continuous (fun β : ℝ => thermalKMSWeight β n) := by
+  unfold thermalKMSWeight
+  exact
+    (Real.continuous_const_rpow
+      (show (n : ℝ) ≠ 0 by exact_mod_cast n.ne_zero)).comp continuous_neg
 
 end InfoGeometry.Algebra.BostConnesKMSPhaseTransition

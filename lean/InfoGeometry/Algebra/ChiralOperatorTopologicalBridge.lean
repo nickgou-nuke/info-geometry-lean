@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ChiralOperatorSageTranslation
@@ -86,5 +91,31 @@ theorem topologicalOperatorSageGenerator_injective [CharZero A] :
   have h' := congrArg (operatorSageTopologicalToZorn (A := A)) h
   change operatorSageGenerator c = operatorSageGenerator d at h'
   exact operatorSageGenerator_injective h'
+
+
+theorem continuous_topologicalOperatorSageGenerator
+    (c : Fin 8) :
+    Continuous (fun _ : Unit => topologicalOperatorSageGenerator (A := A) c) :=
+  continuous_const
+
+
+theorem topologicalOperatorSageGenerator_table :
+    (topologicalOperatorSageGenerator (A := A) 0,
+      topologicalOperatorSageGenerator (A := A) 1,
+      topologicalOperatorSageGenerator (A := A) 2,
+      topologicalOperatorSageGenerator (A := A) 3,
+      topologicalOperatorSageGenerator (A := A) 4,
+      topologicalOperatorSageGenerator (A := A) 5,
+      topologicalOperatorSageGenerator (A := A) 6,
+      topologicalOperatorSageGenerator (A := A) 7) =
+    (operatorSageZornToTopological (operatorSageGenerator (A := A) 0),
+      operatorSageZornToTopological (operatorSageGenerator (A := A) 1),
+      operatorSageZornToTopological (operatorSageGenerator (A := A) 2),
+      operatorSageZornToTopological (operatorSageGenerator (A := A) 3),
+      operatorSageZornToTopological (operatorSageGenerator (A := A) 4),
+      operatorSageZornToTopological (operatorSageGenerator (A := A) 5),
+      operatorSageZornToTopological (operatorSageGenerator (A := A) 6),
+      operatorSageZornToTopological (operatorSageGenerator (A := A) 7)) := by
+  rfl
 
 end InfoGeometry.Algebra

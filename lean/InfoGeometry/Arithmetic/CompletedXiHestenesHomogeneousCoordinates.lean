@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -385,5 +390,27 @@ theorem centeredHestenesCoordinate_antiunitary_reflection
   congr 1
   simp [map_sub]
   ring
+
+
+theorem hestenesK_eq_swap_epsilon (X : HomogeneousCoord) :
+    hestenesK X = hestenesSwap (hestenesEpsilon X) := by
+  rfl
+
+
+theorem projectiveS_homogeneousCoord (s : ℂ) :
+    projectiveS (homogeneousCoord s) = s := by
+  simp [projectiveS, homogeneousCoord]
+
+
+theorem cartanFlow_apply (t : ℝ) (p q : ℂ) :
+    cartanFlow t (p, q) =
+      ((Real.exp t : ℂ) * p,
+        (Real.exp (-t) : ℂ) * q) :=
+  rfl
+
+
+theorem zetaWallpaperGlide_apply (u v : ℝ) :
+    zetaWallpaperGlide (u, v) = (-u, v + 1 / 2) := by
+  rfl
 
 end InfoGeometry.Arithmetic.CompletedXiHestenesHomogeneousCoordinates

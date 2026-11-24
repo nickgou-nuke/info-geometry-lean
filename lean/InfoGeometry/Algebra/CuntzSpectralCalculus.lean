@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzPrimonHamiltonian
@@ -28,5 +33,37 @@ theorem polynomial_spectral (n : ℕ) (ε : Fin n → ℂ) (p : Polynomial ℂ) 
   refine Finset.sum_congr rfl (λ i _ => ?_)
   rw [Polynomial.aeval_eq_sum_range (x := ε i) (p := p)]
   simp [Finset.sum_smul, mul_comm, smul_eq_mul]
+
+
+theorem polynomial_spectral_mul_P
+    (n : ℕ) (ε : Fin n → ℂ) (p : Polynomial ℂ) (i : Fin n) :
+    Polynomial.aeval (hamiltonian n ε) p * P n i =
+      (Polynomial.aeval (ε i) p) • P n i := by
+  rw [polynomial_spectral, Finset.sum_mul]
+  have h : ∀ j, (Polynomial.aeval (ε j) p • P n j) * P n i =
+      (if j = i then (Polynomial.aeval (ε i) p) • P n i else 0) := by
+    intro j
+    by_cases hji : j = i
+    · subst j
+      simp [P_idem n i]
+    · simp [P_ortho n hji, hji]
+  rw [Finset.sum_congr rfl (fun j _ => h j)]
+  simp [Finset.mem_univ]
+
+
+theorem P_mul_polynomial_spectral
+    (n : ℕ) (ε : Fin n → ℂ) (p : Polynomial ℂ) (i : Fin n) :
+    P n i * Polynomial.aeval (hamiltonian n ε) p =
+      (Polynomial.aeval (ε i) p) • P n i := by
+  rw [polynomial_spectral, Finset.mul_sum]
+  have h : ∀ j, P n i * (Polynomial.aeval (ε j) p • P n j) =
+      (if j = i then (Polynomial.aeval (ε i) p) • P n i else 0) := by
+    intro j
+    by_cases hji : j = i
+    · subst j
+      simp [P_idem n i]
+    · simp [P_ortho n (Ne.symm hji), hji]
+  rw [Finset.sum_congr rfl (fun j _ => h j)]
+  simp [Finset.mem_univ]
 
 end InfoGeometry.Algebra.CuntzSpectralCalculus

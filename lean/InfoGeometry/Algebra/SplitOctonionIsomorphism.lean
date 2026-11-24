@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.SplitOctonionQ
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
@@ -140,5 +145,34 @@ theorem isomorphism_packet :
       (hermitianPromotion X).mulTraceReversal.e22 = X.mulTraceReversal.e22) :=
   ⟨det_preserved, traceReversal_preserved,
     mulTraceReversal_e11_preserved, mulTraceReversal_e22_preserved⟩
+
+/-- The componentwise integer-to-rational promotion on split octonions is injective. -/
+theorem splitOctToSplitO_injective : Function.Injective splitOctToSplitO := by
+  intro x y h
+  cases x with
+  | mk a b x0 x1 x2 y0 y1 y2 =>
+      cases y with
+      | mk a' b' x0' x1' x2' y0' y1' y2' =>
+          have ha : a = a' := Int.cast_injective (congrArg (fun w : SplitO => w.a) h)
+          have hb : b = b' := Int.cast_injective (congrArg (fun w : SplitO => w.b) h)
+          have hx0 : x0 = x0' := Int.cast_injective (congrArg (fun w : SplitO => w.x0) h)
+          have hx1 : x1 = x1' := Int.cast_injective (congrArg (fun w : SplitO => w.x1) h)
+          have hx2 : x2 = x2' := Int.cast_injective (congrArg (fun w : SplitO => w.x2) h)
+          have hy0 : y0 = y0' := Int.cast_injective (congrArg (fun w : SplitO => w.y0) h)
+          have hy1 : y1 = y1' := Int.cast_injective (congrArg (fun w : SplitO => w.y1) h)
+          have hy2 : y2 = y2' := Int.cast_injective (congrArg (fun w : SplitO => w.y2) h)
+          rw [ha, hb, hx0, hx1, hx2, hy0, hy1, hy2]
+
+/-- The integral Zorn carrier embeds faithfully into its rational promotion. -/
+theorem hermitianPromotion_injective : Function.Injective hermitianPromotion := by
+  intro X Y h
+  cases X with
+  | mk xp xm z =>
+      cases Y with
+      | mk xp' xm' z' =>
+          have hxp : xp = xp' := congrArg (fun w : JordanCayleyInversionOsQ.Herm2x2OsQ => w.xp) h
+          have hxm : xm = xm' := congrArg (fun w : JordanCayleyInversionOsQ.Herm2x2OsQ => w.xm) h
+          have hz : z = z' := splitOctToSplitO_injective (congrArg (fun w : JordanCayleyInversionOsQ.Herm2x2OsQ => w.z) h)
+          rw [hxp, hxm, hz]
 
 end InfoGeometry.Algebra.SplitOctonionIsomorphism

@@ -33,43 +33,97 @@ def dihedralMatrix : DihedralGroup 3 → Matrix (Fin 4) (Fin 4) ℝ
   | .r i => cyclicTriality ^ i.val
   | .sr i => conjugationReflection * cyclicTriality ^ i.val
 
-set_option maxHeartbeats 2000000 in
 /-- The six concrete matrices respect the native dihedral multiplication. -/
 theorem dihedralMatrix_mul (a b : DihedralGroup 3) :
     dihedralMatrix (a * b) = dihedralMatrix a * dihedralMatrix b := by
+  have hrot (i j : ZMod 3) :
+      cyclicTriality ^ (i + j).val = cyclicTriality ^ i.val * cyclicTriality ^ j.val := by
+    rw [ZMod.val_add, ← pow_add]
+    simpa only [cyclicTriality_order] using
+      (pow_mod_orderOf cyclicTriality (i.val + j.val))
+  have hCS : cyclicTriality * conjugationReflection =
+      conjugationReflection * cyclicTriality ^ 2 := by
+    calc
+      cyclicTriality * conjugationReflection =
+          (conjugationReflection * conjugationReflection) *
+            (cyclicTriality * conjugationReflection) := by
+              rw [conjugationReflection_sq, one_mul]
+      _ = conjugationReflection *
+          (conjugationReflection * cyclicTriality * conjugationReflection) := by
+            simp only [mul_assoc]
+      _ = conjugationReflection * cyclicTriality ^ 2 := by rw [reflection_conj_cycle]
+  have hSC : conjugationReflection * cyclicTriality =
+      cyclicTriality ^ 2 * conjugationReflection := by
+    calc
+      conjugationReflection * cyclicTriality =
+          (conjugationReflection * cyclicTriality) *
+            (conjugationReflection * conjugationReflection) := by
+              rw [conjugationReflection_sq, mul_one]
+      _ = (conjugationReflection * cyclicTriality * conjugationReflection) *
+          conjugationReflection := by simp only [mul_assoc]
+      _ = cyclicTriality ^ 2 * conjugationReflection := by rw [reflection_conj_cycle]
+  have hconj (i : ZMod 3) : cyclicTriality ^ i.val * conjugationReflection =
+      conjugationReflection * cyclicTriality ^ (-i).val := by
+    rw [ZMod.neg_val']
+    fin_cases i
+    · change cyclicTriality ^ 0 * conjugationReflection =
+        conjugationReflection * cyclicTriality ^ 0
+      simp only [pow_zero, one_mul, mul_one]
+    · change cyclicTriality ^ 1 * conjugationReflection =
+        conjugationReflection * cyclicTriality ^ 2
+      simpa only [pow_one] using hCS
+    · change cyclicTriality ^ 2 * conjugationReflection =
+        conjugationReflection * cyclicTriality ^ 1
+      simpa only [pow_one] using hSC.symm
+  have hsub (i j : ZMod 3) : cyclicTriality ^ (j - i).val =
+      cyclicTriality ^ (-i).val * cyclicTriality ^ j.val := by
+    rw [sub_eq_add_neg, add_comm j (-i)]
+    exact hrot (-i) j
   cases a with
   | r i =>
     cases b with
     | r j =>
-      rw [DihedralGroup.r_mul_r]
-      fin_cases i <;> fin_cases j <;>
-        norm_num [dihedralMatrix, ZMod.val, Fin.val_add] <;>
-        ext k l <;> fin_cases k <;> fin_cases l <;>
-        norm_num [cyclicTriality, conjugationReflection, trialitySwapVS,
-          pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
+      change cyclicTriality ^ (i + j).val =
+        cyclicTriality ^ i.val * cyclicTriality ^ j.val
+      exact hrot i j
     | sr j =>
-      rw [DihedralGroup.r_mul_sr]
-      fin_cases i <;> fin_cases j <;>
-        norm_num [dihedralMatrix, ZMod.val, Fin.val_sub] <;>
-        ext k l <;> fin_cases k <;> fin_cases l <;>
-        norm_num [cyclicTriality, conjugationReflection, trialitySwapVS,
-          pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
+      change conjugationReflection * cyclicTriality ^ (j - i).val =
+        cyclicTriality ^ i.val * (conjugationReflection * cyclicTriality ^ j.val)
+      symm
+      calc
+        cyclicTriality ^ i.val * (conjugationReflection * cyclicTriality ^ j.val) =
+            (cyclicTriality ^ i.val * conjugationReflection) * cyclicTriality ^ j.val :=
+              (mul_assoc _ _ _).symm
+        _ = (conjugationReflection * cyclicTriality ^ (-i).val) * cyclicTriality ^ j.val := by
+          rw [hconj i]
+        _ = conjugationReflection *
+            (cyclicTriality ^ (-i).val * cyclicTriality ^ j.val) := mul_assoc _ _ _
+        _ = conjugationReflection * cyclicTriality ^ (j - i).val := by rw [← hsub i j]
   | sr i =>
     cases b with
     | r j =>
-      rw [DihedralGroup.sr_mul_r]
-      fin_cases i <;> fin_cases j <;>
-        norm_num [dihedralMatrix, ZMod.val, Fin.val_add] <;>
-        ext k l <;> fin_cases k <;> fin_cases l <;>
-        norm_num [cyclicTriality, conjugationReflection, trialitySwapVS,
-          pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
+      change conjugationReflection * cyclicTriality ^ (i + j).val =
+        (conjugationReflection * cyclicTriality ^ i.val) * cyclicTriality ^ j.val
+      rw [hrot i j, mul_assoc]
     | sr j =>
-      rw [DihedralGroup.sr_mul_sr]
-      fin_cases i <;> fin_cases j <;>
-        norm_num [dihedralMatrix, ZMod.val, Fin.val_sub] <;>
-        ext k l <;> fin_cases k <;> fin_cases l <;>
-        norm_num [cyclicTriality, conjugationReflection, trialitySwapVS,
-          pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
+      change cyclicTriality ^ (j - i).val =
+        (conjugationReflection * cyclicTriality ^ i.val) *
+          (conjugationReflection * cyclicTriality ^ j.val)
+      symm
+      calc
+        (conjugationReflection * cyclicTriality ^ i.val) *
+            (conjugationReflection * cyclicTriality ^ j.val) =
+            conjugationReflection *
+              ((cyclicTriality ^ i.val * conjugationReflection) * cyclicTriality ^ j.val) := by
+                simp only [mul_assoc]
+        _ = conjugationReflection *
+            ((conjugationReflection * cyclicTriality ^ (-i).val) * cyclicTriality ^ j.val) := by
+              rw [hconj i]
+        _ = (conjugationReflection * conjugationReflection) *
+            (cyclicTriality ^ (-i).val * cyclicTriality ^ j.val) := by simp only [mul_assoc]
+        _ = cyclicTriality ^ (-i).val * cyclicTriality ^ j.val := by
+          rw [conjugationReflection_sq, one_mul]
+        _ = cyclicTriality ^ (j - i).val := (hsub i j).symm
 
 /-- The full matrix representation, bundled as a native monoid homomorphism. -/
 def dihedralMatrixHom : DihedralGroup 3 →* Matrix (Fin 4) (Fin 4) ℝ where
@@ -90,7 +144,9 @@ theorem dihedralMatrixHom_injective : Function.Injective dihedralMatrixHom := by
       have h0 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℝ => M 0 0) h
       have h1 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℝ => M 0 1) h
       norm_num [cyclicTriality, conjugationReflection, trialitySwapVS, pow_succ,
-        Matrix.mul_apply, Fin.sum_univ_four] at h0 h1
+        Matrix.mul_apply, Fin.sum_univ_four] at h0 <;>
+        norm_num [cyclicTriality, conjugationReflection, trialitySwapVS, pow_succ,
+          Matrix.mul_apply, Fin.sum_univ_four] at h1
 
 /-- Conversion through native matrix units and the general linear group. -/
 def dihedralLinearAction :

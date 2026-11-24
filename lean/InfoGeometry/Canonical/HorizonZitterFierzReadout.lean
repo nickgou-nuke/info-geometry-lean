@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.HorizonZitterModes
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -68,5 +73,13 @@ theorem horizonZitter_fierz_quadric_readout
     (Z : HorizonZitterMode Obs) :
     K.residual.residual (horizonZitterFierzVector K.state K.channels Z) = 0 :=
   K.compatibility_assumption Z
+
+theorem horizonZitter_fierz_quadric_from_property
+    {Obs : Type*}
+    [Ring Obs] [Star Obs]
+    (K : HorizonZitterFierzCompatibilityAssumption Obs)
+    (Z : HorizonZitterMode Obs) :
+    K.residual.residual (horizonZitterFierzVector K.state K.channels Z) = 0 :=
+  K.compatibility_property Z
 
 end InfoGeometry.Canonical.HorizonZitterFierzReadout

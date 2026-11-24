@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.JordanWignerBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTower
@@ -317,6 +322,14 @@ theorem annihilation_creation_anticomm_raw :
 
 /-- The depth-one raw Cantor/Jordan-Wigner pair satisfies the CAR axioms. -/
 theorem depthOneCAR_axioms :
+    annihilationRaw * annihilationRaw = (0 : Op1) ∧
+    creationRaw * creationRaw = (0 : Op1) ∧
+    annihilationRaw * creationRaw + creationRaw * annihilationRaw = (4 : Op1) := by
+  exact ⟨annihilationRaw_sq_zero, creationRaw_sq_zero,
+    annihilation_creation_anticomm_raw⟩
+
+/-- The depth-one raw Cantor/Jordan-Wigner pair satisfies the CAR axioms. -/
+theorem depthOneCAR_propertys :
     annihilationRaw * annihilationRaw = (0 : Op1) ∧
     creationRaw * creationRaw = (0 : Op1) ∧
     annihilationRaw * creationRaw + creationRaw * annihilationRaw = (4 : Op1) := by

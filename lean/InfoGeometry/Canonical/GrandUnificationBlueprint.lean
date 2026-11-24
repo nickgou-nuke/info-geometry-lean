@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ConformalAlgebra
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InformationNumber
@@ -80,5 +85,10 @@ def UnificationComplete : Prop :=
     [FiniteDimensional ℝ E]
     (L : BayesianLoop E) (IST : InfoSpectralTriple E),
     AnomalyInflowClosure L IST
+
+
+theorem unificationComplete : UnificationComplete := by
+  intro E _ _ _ _ L IST hFlat
+  exact anomaly_inflow_cancellation L IST hFlat
 
 end InfoGeometry.Canonical.GrandUnificationBlueprint

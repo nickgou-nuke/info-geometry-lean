@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AmariSouriauThermodynamicGauge
@@ -348,5 +353,41 @@ theorem finite_operatorBoltzmannEntropy_eq_neg_log_delta_diag
   finite_stateSurprisal_eq_neg_log_delta_diag (n := n) q q0 i
 
 end FiniteDeltaPrimary
+
+structure InfinitesimalDictionaryModel
+    (Θ V State Op Alg X : Type*)
+    [AddCommGroup V] [AddGroup Op] [Ring Alg] where
+  logPartition : LogPartitionPotentialBridge Θ V
+  gauge : SouriauAmariGauge Alg Θ V X
+  divergence : State → State → ℝ
+  toOperator : State → Op
+  operatorPacket : NoncommutativeItakuraSaitoModel Op
+  pathConstraint : Alg
+  pathReadout : Alg → ℝ
+  pathConstraintScalar : ℝ
+  pathConstraintScalar_eq_readout : pathConstraintScalar = pathReadout pathConstraint
+  pathConstraint_eq_dlnQ : pathConstraint = gauge.flow.d_ln_Q
+  entropy_commutator :
+    gauge.flow.P_forward * gauge.flow.P_backward -
+      gauge.flow.P_backward * gauge.flow.P_forward = pathConstraint
+  /-- Infinitesimal generator of the Connes RN cocycle after choosing a readout lane. -/
+  connesInfinitesimal : Alg
+  /-- Modular-Hamiltonian difference `K_ψ - K_φ` in the same lane. -/
+  modularHamiltonianDifference : Alg
+  /-- Gradient of the Araki/Bregman relative entropy readout. -/
+  arakiRelativeEntropyGradient : Alg
+  /-- Self-concordant barrier force `-d log Q`. -/
+  selfConcordantBarrierForce : Alg
+  connes_eq_modular :
+    connesInfinitesimal = modularHamiltonianDifference
+  modular_eq_pathConstraint :
+    modularHamiltonianDifference = pathConstraint
+  arakiGradient_eq_neg_pathConstraint :
+    arakiRelativeEntropyGradient = -pathConstraint
+  barrierForce_eq_neg_pathConstraint :
+    selfConcordantBarrierForce = -pathConstraint
+  arakiCollapse : ∀ ω φ : State,
+    restrictedAraki (fun s t => divergence s t) ω φ =
+      operatorPacket.divergence (toOperator ω) (toOperator φ)
 
 end InfoGeometry.Canonical.InfinitesimalDictionaryBridge

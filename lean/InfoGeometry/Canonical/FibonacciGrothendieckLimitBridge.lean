@@ -106,4 +106,13 @@ theorem fibFusionGrothendieck_lzero_lift_eq_chargedFock_sugawara_lzero
   InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionGrothendieck_lzero_lift_eq_chargedFock_sugawara_lzero
     (𝕜 := 𝕜') α n
 
+theorem fibFusionGrothendieck_lzero_lift_of
+    (L : V →ₗ[𝕜] V) (n : Nat) (x : fibFusionClass) :
+    fibFusionLZeroLift L (fibFusionOf n x) =
+      fibFusionLZeroReadout L n x :=
+  InfoGeometry.Canonical.FibonacciGrothendieckLimit.fibFusionGrothendieck_lzero_lift_of
+    L n x
+
+omit [CharZero 𝕜] in
+
 end InfoGeometry.Canonical.FibonacciGrothendieckLimitBridge

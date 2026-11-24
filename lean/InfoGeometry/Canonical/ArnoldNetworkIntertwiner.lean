@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ArnoldNetworkPresentation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FierzReadout
@@ -79,5 +84,29 @@ theorem arnold_metric_readout_differs_from_fierz_on_pair_one :
   intro h
   rw [h, htarget] at hnorm
   norm_num at hnorm
+
+theorem arnoldToDoubledKrein_readoutPreservation_of_pointwise_eq
+    (n : Nat) (net : ArnoldMajoranaNetwork n E) (β : ℝ)
+    [Nonempty (Fin n)]
+    (hfix : ∀ e : ExpertIdx n, ∀ v : ArnoldMajoranaCarrier E,
+      (net.moe.experts e).apply v = v)
+    (hMetric : ∀ ψ : ArnoldMajoranaCarrier E,
+      arnoldMetricReadout (E := E) ψ
+        = (doubledFierzReadout (E := E)).hilbert ψ)
+    (hPhase : ∀ ψ : ArnoldMajoranaCarrier E,
+      arnoldPhaseReadout (E := E) ψ
+        = (doubledFierzReadout (E := E)).symplectic ψ) :
+    ReadoutPreservation
+      (arnoldToDoubledKreinIntertwiner_of_expertsFix
+        (E := E) n net β hfix) := by
+  refine ⟨?_, ?_⟩
+  · intro s
+    simpa [arnoldToDoubledKreinIntertwiner_of_expertsFix,
+      ArnoldNetworkPresentation.toQuantumPresentation, doubledFierzReadout,
+      FierzChannelReadout.toQuantumPresentation] using hMetric s
+  · intro s
+    simpa [arnoldToDoubledKreinIntertwiner_of_expertsFix,
+      ArnoldNetworkPresentation.toQuantumPresentation, doubledFierzReadout,
+      FierzChannelReadout.toQuantumPresentation] using hPhase s
 
 end InfoGeometry.Canonical.ArnoldNetworkIntertwiner

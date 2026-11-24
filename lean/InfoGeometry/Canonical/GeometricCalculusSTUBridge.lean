@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GeometricCalculusFreudenthalBridge
@@ -199,5 +204,18 @@ theorem stuQubitBoundaryFluxOwnerTarget :
   exact STUQubitBoundaryFluxBridge.scalarFlux_eq_hyperdeterminantEntropy W
 
 end
+
+theorem stuQubitBoundaryFlux_eq_hyperdeterminantEntropy :
+  ∀ (E : Type uE) (P : Type uP)
+    [NormedAddCommGroup E] [NormedSpace ℝ E] [CompleteSpace E]
+    [NormedAddCommGroup P] [NormedSpace ℝ P],
+    ∀ D : STUQubitBoundaryDatum.{uE, uP, uΩ} E P,
+      D.geometry = stuQubitChargeGeometry →
+        ∀ W : STUQubitBoundaryFluxBridge D,
+          FluxEqualsQuarticEntropy
+            D.A W.resolvent D.boundary W.normalizationFactor W.observer
+            D.geometry D.boundaryCharges := by
+  intro E P _ _ _ _ _ D _ W
+  exact STUQubitBoundaryFluxBridge.scalarFlux_eq_hyperdeterminantEntropy W
 
 end InfoGeometry.Canonical.GeometricCalculus

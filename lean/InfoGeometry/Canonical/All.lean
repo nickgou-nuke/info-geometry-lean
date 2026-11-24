@@ -752,6 +752,7 @@ import InfoGeometry.Canonical.WessZuminoGaugeConsistency
 import InfoGeometry.Canonical.ConnesSpectral1FormAlgebra
 import InfoGeometry.Canonical.AInfinityAlgebraHigherAssociativity
 import InfoGeometry.Canonical.ChernSimonsKnotInvariant
+import InfoGeometry.Canonical.UHFTracialStateCore
 import InfoGeometry.Canonical.UHFDirectLimitCARAlgebra
 import InfoGeometry.Canonical.QuantumGroupHopfAlgebra
 import InfoGeometry.Canonical.AtiyahSingerChiralIndex

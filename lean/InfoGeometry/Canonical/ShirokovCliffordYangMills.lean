@@ -179,6 +179,43 @@ theorem shirokov_even_grade_eigenvalues_injective {n : ℕ} (hn : Even n) :
     apply Fin.ext
     omega
 
+/-- In odd dimension, scalar and top-grade modes have the same sandwich
+eigenvalue, explaining why this one operator cannot separate all grades. -/
+theorem shirokov_odd_grade_eigenvalue_top_collision {n : ℕ} (hn : Odd n) :
+    shirokovGradeEigenvalue n 0 = shirokovGradeEigenvalue n n := by
+  obtain ⟨m, hm⟩ := hn
+  have hpM : (-1 : ℤ) ^ (m + m) = 1 := by
+    rw [← two_mul m, pow_mul]
+    norm_num
+  have hp : (-1 : ℤ) ^ (2 * m + 1) = -1 := by
+    calc
+      (-1 : ℤ) ^ (2 * m + 1) = (-1 : ℤ) ^ (2 * m) * (-1) := by
+        rw [pow_succ]
+      _ = (-1 : ℤ) ^ (m + m) * (-1) := by
+        rw [show 2 * m = m + m by omega]
+      _ = 1 * (-1) := by rw [hpM]
+      _ = -1 := by norm_num
+  rw [shirokovGradeEigenvalue, shirokovGradeEigenvalue, hm, pow_zero, hp]
+  push_cast
+  ring
+
+/-- The alternating grade eigenvalues are not injective in odd dimension. -/
+theorem shirokov_odd_grade_eigenvalues_not_injective {n : ℕ} (hn : Odd n) :
+    ¬ Function.Injective (fun i : Fin (n + 1) => shirokovGradeEigenvalue n i.val) := by
+  intro hinj
+  have hcollision :
+      shirokovGradeEigenvalue n (0 : Fin (n + 1)).val =
+        shirokovGradeEigenvalue n (⟨n, Nat.lt_succ_self n⟩ : Fin (n + 1)).val :=
+    shirokov_odd_grade_eigenvalue_top_collision hn
+  have heq := hinj hcollision
+  have hnpos : 0 < n := by obtain ⟨m, hm⟩ := hn; omega
+  have hne : (0 : Fin (n + 1)) ≠ ⟨n, Nat.lt_succ_self n⟩ := by
+    intro h
+    have hval := congrArg Fin.val h
+    simp at hval
+    omega
+  exact hne heq
+
 /-- The power coefficient matrix in Shirokov's even-dimensional projection formula.
 Its rows are powers and its columns correspond to the eigenvalues `λᵢ`. -/
 def shirokovGradeProjectionMatrix (n : ℕ) :

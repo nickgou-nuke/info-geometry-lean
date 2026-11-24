@@ -55,8 +55,11 @@ orthogonality and idempotence to arbitrary elements of the fixed carrier.
 `shirokov_even_grade_projector_sum_apply` proves completeness: summing all
 grade projectors recovers every element. `shirokov_even_grade_projector_range`
 identifies the range of each projector exactly with the span of ordered blades
-of that grade. Existence under the paper's moving-frame hypotheses remains
-open.
+of that grade. `shirokov_odd_grade_eigenvalue_top_collision` and
+`shirokov_odd_grade_eigenvalues_not_injective` establish why this sandwich
+interpolation cannot separate all grades in odd dimension: scalar and
+top-grade modes already share an eigenvalue. Existence under the paper's
+moving-frame hypotheses remains open.
 
 ## Implementation order
 

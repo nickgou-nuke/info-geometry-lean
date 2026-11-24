@@ -21,6 +21,7 @@ import InfoGeometry.Clifford.ChevalleyNeutralCompatibility
 import InfoGeometry.Clifford.ParaKreinObstructions
 import InfoGeometry.Clifford.NeutralCotangentHamiltonian
 import InfoGeometry.Geometry.ParaPotentialPullback
+import InfoGeometry.Canonical.UHFTracialStateCore
 import InfoGeometry.Canonical.HestenesCartanPhaseTransport
 import InfoGeometry.Canonical.Cl11LorentzCornerBounds
 import InfoGeometry.Lie.SplitOctonionTriadVolume

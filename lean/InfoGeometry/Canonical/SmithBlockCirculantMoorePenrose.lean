@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MoorePenrose
+import InfoGeometry.Lie.SplitOctonionCl33G2Stabilizer
 
 /-!
 # Smith block-circulant Moore-Penrose certificates
@@ -27,6 +33,21 @@ SymPy/Clifford lanes.
 namespace InfoGeometry.Canonical.SmithBlockCirculantMoorePenrose
 
 open InfoGeometry.Canonical
+
+/-- Closed non-commutativity witnesses for both matrix carriers used below (T16). -/
+theorem mat3_ring_noncomm_witness {S : Type*} [Ring S] [Nontrivial S] :
+    ∃ A B : Matrix (Fin 3) (Fin 3) S, A * B ≠ B * A :=
+  InfoGeometry.Lie.SplitOctonionCl33G2Stabilizer.mat3_ring_noncommutative
+
+theorem mat6_rat_noncomm_witness :
+    ∃ A B : Matrix (Fin 6) (Fin 6) ℚ, A * B ≠ B * A := by
+  let A : Matrix (Fin 6) (Fin 6) ℚ := fun i j => if i = 0 ∧ j = 1 then 1 else 0
+  let B : Matrix (Fin 6) (Fin 6) ℚ := fun i j => if i = 1 ∧ j = 0 then 1 else 0
+  refine ⟨A, B, ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 6) (Fin 6) ℚ => M 0 0) h
+  change (∑ k : Fin 6, A 0 k * B k 0) = (∑ k : Fin 6, B 0 k * A k 0) at h00
+  norm_num [A, B, Fin.sum_univ_succ] at h00
 
 noncomputable section
 
@@ -163,5 +184,9 @@ theorem smithAMP_isMoorePenrose :
   · native_decide
 
 end
+
+theorem smithAMP_det_eq :
+    Matrix.det smithAMP = (1 / 18 : ℚ) := by
+  native_decide
 
 end InfoGeometry.Canonical.SmithBlockCirculantMoorePenrose

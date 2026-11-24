@@ -1,0 +1,95 @@
+{
+  "run_id": "f1506feb2d554ce7858c48bf26de8538",
+  "status": "compiled",
+  "suite": "supplied-zorn-counterexample",
+  "targets": [
+    "InfoGeometry.Verification.SuppliedTableCounterexample"
+  ],
+  "wait_for_build_lock": false,
+  "commands": [
+    {
+      "module": "InfoGeometry.Verification.SuppliedTableCounterexample",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Verification/SuppliedTableCounterexample.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/supplied-zorn-counterexample/lib/lean/InfoGeometry/Verification/SuppliedTableCounterexample.olean",
+        "-DwarningAsError=true"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 0,
+      "output": "",
+      "elapsed_seconds": 1.367,
+      "sampled_peak_rss_kib": 0
+    }
+  ],
+  "audit_expected": true,
+  "audit_status": "passed",
+  "force": false,
+  "started_at": "2026-11-24T14:17:50.661269+00:00",
+  "verifier_sha256": "26c187c9fe392a441a17f198b9dc9eb90034fa7bdbd4154f8ca6c23f7461bb2b",
+  "lean": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "lean_binary_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+  "packages": {
+    "LeanSearchClient": {
+      "revision": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/LeanSearchClient/.lake/build/lib/lean"
+    },
+    "Qq": {
+      "revision": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/Qq/.lake/build/lib/lean"
+    },
+    "aesop": {
+      "revision": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/aesop/.lake/build/lib/lean"
+    },
+    "batteries": {
+      "revision": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/batteries/.lake/build/lib/lean"
+    },
+    "importGraph": {
+      "revision": "e928b72544873815af278d38681b31c0293588e3",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/importGraph/.lake/build/lib/lean"
+    },
+    "mathlib": {
+      "revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/mathlib/.lake/build/lib/lean"
+    },
+    "plausible": {
+      "revision": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/plausible/.lake/build/lib/lean"
+    },
+    "proofwidgets": {
+      "revision": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/proofwidgets/.lake/build/lib/lean"
+    }
+  },
+  "manifest_sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+  "owned_warning_as_error": true,
+  "lean_threads": 1,
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "modules": [
+    "InfoGeometry.Verification.SuppliedTableCounterexample"
+  ],
+  "sources": {
+    "InfoGeometry.Verification.SuppliedTableCounterexample": "21a3b723a83bdd4904e78369dd2879870a4edd5470b240fb6f72f5c6b2c1d9b0"
+  },
+  "audit_sha256": "bf991df99cf2429ad16d207224c344fed324eb902160450c1bb5c3f0a5ffa57c",
+  "audit": {
+    "command": [
+      "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+      "-j1",
+      "/home/runner/work/info-geometry-lean/info-geometry-lean/project/verification/supplied-zorn-counterexample/Audit.lean",
+      "-DwarningAsError=true"
+    ],
+    "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+    "returncode": 0,
+    "output": "AUDIT_MODULE_COUNT: InfoGeometry.Verification.SuppliedTableCounterexample: 17\nAUDIT_AXIOMS: [propext, Classical.choice, Quot.sound]\nAUDIT_COUNT: 17\n",
+    "elapsed_seconds": 4.874,
+    "sampled_peak_rss_kib": 0
+  },
+  "finished_at": "2026-11-24T14:17:57.256631+00:00"
+}

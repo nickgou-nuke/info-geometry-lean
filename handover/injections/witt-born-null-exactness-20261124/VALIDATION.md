@@ -2,9 +2,12 @@
 
 ## Status
 
-The genuine-Zorn additions have independent source review. Native elaboration
-and axiom acceptance of those additions remain pending. The scoped GitHub
-workflow is a separate check from the repository's existing integration gates.
+The supplied-table counterexample owner has compiled with warnings as errors
+and passed its declaration audit in scoped CI. The full suite has compiled
+eight repository modules and stopped at three unused-simp-argument errors in
+the determinant owner; full-suite acceptance remains pending. The genuine-Zorn
+additions also have independent source review. The scoped GitHub workflow is a
+separate check from the repository's existing integration gates.
 
 ## Local retry of the prior Klein closure
 
@@ -141,6 +144,41 @@ Repaired workflow SHA-256:
 `CI_BOOTSTRAP_REPAIR.md` records the source evidence and exact change. These
 repaired bytes still require the next actual CI result; the earlier syntax
 receipt is explicitly for the earlier hashes.
+
+## Second scoped CI result and determinant cleanup
+
+Run `45410082037`, job `138501185114`, tested merge revision
+`ec4afea58785435e5cdaeb04a509e1a9d85e05eb` for PR head
+`878d316cd554fee2742787af7213a219dcff4bbf`. The recorded tree was
+`9b702eb72257d4fea51d64044d86b09fcfc8473e`, exactly the published repair tree.
+The corrected native dependency preparation succeeded.
+
+The light suite compiled `InfoGeometry.Verification.SuppliedTableCounterexample`
+with warnings as errors and passed its axiom audit. It audited **17 declarations**,
+including private/generated declarations. Its transitive axiom set was
+`[propext, Classical.choice, Quot.sound]`. The receipt run ID is
+`f1506feb2d554ce7858c48bf26de8538`; status is `compiled`, audit status `passed`.
+This is the first completed native acceptance result for that owner.
+
+The full suite then compiled eight repository modules, including the genuine
+Zorn vector-matrix carrier, polarized left multiplication, and the new inverse
+owner. It stopped in `ZornLeftDeterminant.lean` because three redundant simp
+arguments were reported as errors under the unchanged warnings-as-errors rule:
+`Equiv.Perm.sign_swap` at line 121, `Matrix.det_smul` at line 147, and
+`zero_add` at line 162. No unsolved proof goals were reported in that owner.
+The full-suite receipt run ID is `afe0497bb3334d8f9676c58e5b5a9141`; status is
+`failed`, audit status `not-run`. Later modules were not reached, so the light
+suite's success does not certify their proofs.
+
+The follow-up source change removes exactly those three unused arguments. It
+does not disable linters, alter theorem statements, or weaken any validation
+gate. A new native run is required to accept the changed source and continue
+the selected dependency closure.
+
+Artifact `14928872917` has SHA-256
+`54d34ce36ffc0983cecaeddea95a2de15041b17e71437b1792090d965ccc08d7`.
+The exact source identity, both suite receipts, successful light audit output,
+and determinant diagnostic are preserved in `ci-45410082037/`.
 
 ## Results to record before acceptance
 

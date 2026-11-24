@@ -1,0 +1,21 @@
+/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornLeftDeterminant.lean:121:24: error: This simp argument is unused:
+  Equiv.Perm.sign_swap
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [s0, s1, s2, s3]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornLeftDeterminant.lean:147:33: error: This simp argument is unused:
+  Matrix.det_smul
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [hCB]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornLeftDeterminant.lean:162:65: error: This simp argument is unused:
+  zero_add
+
+Hint: Omit it from the simp argument list.
+  [apply] simp only [mul_one, one_mul, zero_mul, mul_zero, add_zero]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`

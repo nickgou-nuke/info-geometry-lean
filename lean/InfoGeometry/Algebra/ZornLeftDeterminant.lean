@@ -118,7 +118,7 @@ private theorem sign_sumComm_four :
     ext i
     rcases i with i | i <;> fin_cases i <;> decide
   rw [h]
-  simp [s0, s1, s2, s3, Equiv.Perm.sign_swap]
+  simp [s0, s1, s2, s3]
 
 /-- Exact scalar-diagonal block determinant, including a zero first pivot. -/
 theorem det_scalar_blocks (a b s : ℝ) (B C : Block)
@@ -144,7 +144,7 @@ theorem det_scalar_blocks (a b s : ℝ) (B C : Block)
           (Matrix.fromBlocks C (b • (1 : Block)) (0 : Block) B).det := hdet.symm
       _ = C.det * B.det := Matrix.det_fromBlocks_zero₂₁ _ _ _
       _ = (C * B).det := (Matrix.det_mul C B).symm
-      _ = s ^ 4 := by simp [hCB, Matrix.det_smul]
+      _ = s ^ 4 := by simp [hCB]
       _ = (-s) ^ 4 := by ring
   · have hAB : (a • (1 : Block)) * (a⁻¹ • B) = B := by
       rw [smul_mul_assoc, one_mul, smul_smul, mul_inv_cancel₀ ha, one_smul]
@@ -159,7 +159,7 @@ theorem det_scalar_blocks (a b s : ℝ) (B C : Block)
             Matrix.fromBlocks (1 : Block) (a⁻¹ • B) (0 : Block)
               ((b - a⁻¹ * s) • (1 : Block)) := by
       rw [Matrix.fromBlocks_multiply]
-      simp only [mul_one, one_mul, zero_mul, mul_zero, add_zero, zero_add]
+      simp only [mul_one, one_mul, zero_mul, mul_zero, add_zero]
       rw [hAB, hD]
     rw [hfactor, Matrix.det_mul, Matrix.det_fromBlocks_zero₁₂,
       Matrix.det_fromBlocks_zero₂₁]

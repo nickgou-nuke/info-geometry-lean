@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -183,5 +188,16 @@ theorem product_circulant {A B : Matrix (Fin n) (Fin n) K}
 end RetrocirculantClosureSystem
 
 end
+
+/-- Algebraic closure property for Smith Theorems 4 and 5. -/
+structure RetrocirculantClosureCertificate
+    (K : Type u) [Field K] {n : ℕ} where
+  isCirculant : Matrix (Fin n) (Fin n) K → Prop
+  isRetrocirculant : Matrix (Fin n) (Fin n) K → Prop
+  adjointClosure : ∀ A, isRetrocirculant A → isRetrocirculant (Matrix.transpose A)
+  addClosure : ∀ A B, isRetrocirculant A → isRetrocirculant B → isRetrocirculant (A + B)
+  productCirculant : ∀ A B, isRetrocirculant A → isRetrocirculant B → isCirculant (A * B)
+  evenPowerCirculant : ∀ A k, isRetrocirculant A → isCirculant (A ^ (2 * k))
+  oddPowerRetrocirculant : ∀ A k, isRetrocirculant A → isRetrocirculant (A ^ (2 * k + 1))
 
 end InfoGeometry.Canonical.SmithRetrocirculantMoorePenrose

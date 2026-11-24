@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.CuntzN
@@ -202,6 +207,10 @@ theorem sedenion_spinor_finite_digest_packet :
     SteeringSector.scalar_plus_five_triplets_eq_sixteen,
     SteeringSector.sum_tripletCardinality_eq_fifteen,
     natSub_nonassociative_witness⟩
+
+theorem natSub_nonassociative_property :
+    associatorReadout Nat.sub 5 3 1 ≠ rightAssociatedReadout Nat.sub 5 3 1 := by
+  norm_num [associatorReadout, rightAssociatedReadout]
 
 end InfoGeometry.Canonical.SedenionSpinorCuntzDrazinBridge
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ToeplitzCuntzThreeVacuumBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -272,5 +277,17 @@ theorem cyclicSupercharge_defect_annihilation_left : g.P0 * cyclicSupercharge g 
          cyclicSupercharge_defect_annihilation_left g,
          susyHamiltonian_defect_annihilation_right g,
          susyHamiltonian_defect_annihilation_left g⟩ -/
+
+/-- **Theorem**: Nontrivial 3-ary Algebraic Vacuum Witness. -/
+theorem nontrivial_3ary_algebraic_vacuum_property
+    (hP0 : g.P0 ≠ 0) :
+    ∃ p : A,
+      p ≠ 0 ∧
+      g.susyHamiltonian * p = 0 ∧
+      cyclicSupercharge g * p = 0 := by
+  use g.P0
+  exact ⟨hP0,
+         susyHamiltonian_defect_annihilation_right g,
+         cyclicSupercharge_defect_annihilation_right g⟩
 
 end ToeplitzCuntzThreeCyclicSuperchargeBridge

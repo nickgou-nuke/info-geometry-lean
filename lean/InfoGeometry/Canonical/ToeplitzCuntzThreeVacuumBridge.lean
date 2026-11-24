@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Star.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
@@ -246,5 +251,15 @@ theorem master_toeplitz_cuntz_three_vacuum_synthesis :
   defectProjection_star g,
   toeplitzCuntz3_resolution g
 ⟩
+
+/-- A nonzero defect prevents the excitation Hamiltonian from being the unit. -/
+theorem nontrivial_vacuum_property (hP0 : g.P0 ≠ 0) : g.susyHamiltonian ≠ 1 := by
+  intro hH
+  apply hP0
+  rw [susyHamiltonian_eq_one_sub_defect g] at hH
+  calc
+    g.P0 = 1 - (1 - g.P0) := by symm; exact sub_sub_cancel 1 g.P0
+    _ = 1 - 1 := by rw [hH]
+    _ = 0 := sub_self 1
 
 end InfoGeometry.Canonical.ToeplitzCuntzThreeVacuumBridge

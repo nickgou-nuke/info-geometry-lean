@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SplitOctonionThreeColorChiralRelations
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitQuaternionAssociativeCoassociativeCalibrationBridge
@@ -97,4 +102,13 @@ theorem polarizedBasis_isMatrixUnits (c : SplitOctonionColour) :
   <;> simp [threeColorPolarizedMul]
 
 end
+/-- Compute the product of two polarized basis elements in the polarized basis -/
+def polarizedMul (c : SplitOctonionColour) (a b : PolarizedBasisIdx) : StandardRationalSplitOctonion :=
+  ∑ k : PolarizedBasisIdx, (polarizedMulCoeff a b k : ℚ) • polarizedBasis c k
+
+/-- Verify that polarizedMul agrees with the actual split-octonion multiplication -/
+theorem polarizedMul_correct (c : SplitOctonionColour) (a b : PolarizedBasisIdx) :
+    polarizedMul c a b = splitOctonionMulQ (polarizedBasis c a) (polarizedBasis c b) := by
+  fin_cases a <;> fin_cases b <;> fin_cases c <;> native_decide
+
 end InfoGeometry.Canonical

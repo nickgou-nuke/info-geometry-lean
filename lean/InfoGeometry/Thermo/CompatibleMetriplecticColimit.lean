@@ -57,7 +57,7 @@ theorem energy_rate
     (e s : _root_.DirectLimit V f) (he : liftEnd f M hM e = 0) :
     form f B hB e (liftEnd f L hL e + liftEnd f M hM s) = 0 := by
   exact Physics.energy_conserved
-    (State := PUnit) (Tangent := fun _ => _root_.DirectLimit V f)
+    (State := Unit) (Tangent := fun _ => _root_.DirectLimit V f)
     (fun _ => form f B hB)
     (fun _ x y => (form_isSymm f B hB hSymm).eq x y)
     (fun _ => liftEnd f L hL) (fun _ => liftEnd f M hM)
@@ -65,7 +65,7 @@ theorem energy_rate
       have h := ((form_isSkewAdjoint_iff f B hB L hL).2 hSkew) x y
       simpa only [Pi.neg_apply, map_neg] using h)
     (fun _ x y => ((form_isSelfAdjoint_iff f B hB M hM).2 hSelf) x y)
-    (fun _ => e) (fun _ => s) (fun _ => he) PUnit.unit
+    (fun _ => e) (fun _ => s) (fun _ => he) Unit.unit
 
 /-- Entropy degeneracy removes the reversible contribution on the colimit. -/
 theorem entropy_rate_eq_dissipative
@@ -75,14 +75,14 @@ theorem entropy_rate_eq_dissipative
     form f B hB s (liftEnd f L hL e + liftEnd f M hM s) =
       form f B hB s (liftEnd f M hM s) := by
   exact Physics.entropyRate_eq_onsager_quadratic
-    (State := PUnit) (Tangent := fun _ => _root_.DirectLimit V f)
+    (State := Unit) (Tangent := fun _ => _root_.DirectLimit V f)
     (fun _ => form f B hB)
     (fun _ x y => (form_isSymm f B hB hSymm).eq x y)
     (fun _ => liftEnd f L hL) (fun _ => liftEnd f M hM)
     (fun _ x y => by
       have h := ((form_isSkewAdjoint_iff f B hB L hL).2 hSkew) x y
       simpa only [Pi.neg_apply, map_neg] using h)
-    (fun _ => e) (fun _ => s) (fun _ => hs) PUnit.unit
+    (fun _ => e) (fun _ => s) (fun _ => hs) Unit.unit
 
 /-- Nonnegative stage Onsager quadratics give a nonnegative limit entropy rate.
 Positivity of the pairing itself is not assumed or substituted for this law. -/

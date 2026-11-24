@@ -169,7 +169,12 @@ symmetry-predicate elaboration errors in the new consumer. Its six symmetry
 hypotheses now explicitly select `LinearMap.IsSymm`, matching `form_isSymm`.
 The alternative imported bilinear-form predicate is equivalent by native
 `LinearMap.BilinForm.isSymm_iff`; no mathematical hypothesis is strengthened.
-The repaired consumer still requires a fresh compiler and axiom result.
+The second hosted run, `45359391068`, cleared that mismatch but found an
+unconstrained universe for the dummy `PUnit` state index used by the existing
+rate-law adapter. The adapter now uses monomorphic `Unit`; its tangent fiber
+is still the full native `DirectLimit`. Neither the theorem statements nor
+their mathematical hypotheses change. The repaired consumer still requires
+a fresh compiler and axiom result.
 
 Local validation could not acquire another job's shared build lock. The
 queued prerequisite and unchanged pre-push invocation were stopped before

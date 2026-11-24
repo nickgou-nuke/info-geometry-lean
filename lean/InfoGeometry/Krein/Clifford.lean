@@ -84,6 +84,208 @@ lemma gradeProj_sum :
   simp [gradeProjPlus, gradeProjMinus, sub_eq_add_neg]
   module
 
+
+lemma gradeConj_involutive (A : H →L[ℝ] H) :
+    gradeConj (H := H) (gradeConj (H := H) A) = A := by
+  unfold gradeConj
+  ext x
+  change (KreinGradedModule.grade (H := H))
+      ((KreinGradedModule.grade (H := H))
+        (A ((KreinGradedModule.grade (H := H))
+          ((KreinGradedModule.grade (H := H)) x)))) = A x
+  simp [KreinGradedModule.grade_invol]
+
+
+lemma gradeConj_mul (A B : H →L[ℝ] H) :
+    gradeConj (H := H) (A * B) =
+      gradeConj (H := H) A * gradeConj (H := H) B := by
+  unfold gradeConj
+  ext x
+  simp [ContinuousLinearMap.comp_apply, gradeCLM_apply,
+    KreinGradedModule.grade_invol]
+
+
+lemma gradeConj_add (A B : H →L[ℝ] H) :
+    gradeConj (H := H) (A + B) =
+      gradeConj (H := H) A + gradeConj (H := H) B := by
+  unfold gradeConj
+  ext x
+  simp [ContinuousLinearMap.comp_apply, add_comm, add_left_comm, add_assoc]
+
+
+lemma gradeConj_smul (a : ℝ) (A : H →L[ℝ] H) :
+    gradeConj (H := H) (a • A) = a • gradeConj (H := H) A := by
+  unfold gradeConj
+  ext x
+  simp [ContinuousLinearMap.comp_apply]
+
+
+lemma gradeConj_neg (A : H →L[ℝ] H) :
+    gradeConj (H := H) (-A) = -gradeConj (H := H) A := by
+  unfold gradeConj
+  ext x
+  simp [ContinuousLinearMap.comp_apply]
+
+
+lemma isEven_mul {A B : H →L[ℝ] H}
+    (hA : IsEven (H := H) A) (hB : IsEven (H := H) B) :
+    IsEven (H := H) (A * B) := by
+  unfold IsEven at hA hB ⊢
+  rw [gradeConj_mul, hA, hB]
+
+
+lemma isOdd_mul_odd {A B : H →L[ℝ] H}
+    (hA : IsOdd (H := H) A) (hB : IsOdd (H := H) B) :
+    IsEven (H := H) (A * B) := by
+  unfold IsOdd at hA hB
+  unfold IsEven
+  rw [gradeConj_mul, hA, hB]
+  simp
+
+
+lemma isEven_mul_odd {A B : H →L[ℝ] H}
+    (hA : IsEven (H := H) A) (hB : IsOdd (H := H) B) :
+    IsOdd (H := H) (A * B) := by
+  unfold IsEven at hA
+  unfold IsOdd at hB ⊢
+  rw [gradeConj_mul, hA, hB]
+  simp
+
+
+lemma isOdd_mul_even {A B : H →L[ℝ] H}
+    (hA : IsOdd (H := H) A) (hB : IsEven (H := H) B) :
+    IsOdd (H := H) (A * B) := by
+  unfold IsOdd at hA ⊢
+  unfold IsEven at hB
+  rw [gradeConj_mul, hA, hB]
+  simp
+
+
+lemma isEven_add {A B : H →L[ℝ] H}
+    (hA : IsEven (H := H) A) (hB : IsEven (H := H) B) :
+    IsEven (H := H) (A + B) := by
+  unfold IsEven at hA hB ⊢
+  rw [gradeConj_add, hA, hB]
+
+
+lemma isOdd_add {A B : H →L[ℝ] H}
+    (hA : IsOdd (H := H) A) (hB : IsOdd (H := H) B) :
+    IsOdd (H := H) (A + B) := by
+  unfold IsOdd at hA hB ⊢
+  rw [gradeConj_add, hA, hB]
+  simpa [add_comm]
+
+
+lemma isEven_smul (a : ℝ) {A : H →L[ℝ] H}
+    (hA : IsEven (H := H) A) :
+    IsEven (H := H) (a • A) := by
+  unfold IsEven at hA ⊢
+  rw [gradeConj_smul, hA]
+
+
+lemma isOdd_smul (a : ℝ) {A : H →L[ℝ] H}
+    (hA : IsOdd (H := H) A) :
+    IsOdd (H := H) (a • A) := by
+  unfold IsOdd at hA ⊢
+  rw [gradeConj_smul, hA]
+  simp
+
+
+lemma gradeProjPlus_idempotent :
+    (gradeProjPlus (H := H)).comp (gradeProjPlus (H := H)) =
+      gradeProjPlus (H := H) := by
+  ext x
+  have hΓΓ :
+      (gradeCLM (H := H)).comp (gradeCLM (H := H)) =
+        ContinuousLinearMap.id ℝ H :=
+    gradeCLM_comp_self (H := H)
+  simp [gradeProjPlus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+
+lemma gradeProjMinus_idempotent :
+    (gradeProjMinus (H := H)).comp (gradeProjMinus (H := H)) =
+      gradeProjMinus (H := H) := by
+  ext x
+  have hΓΓ :
+      (gradeCLM (H := H)).comp (gradeCLM (H := H)) =
+        ContinuousLinearMap.id ℝ H :=
+    gradeCLM_comp_self (H := H)
+  simp [gradeProjMinus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+
+lemma gradeProjPlus_comp_minus :
+    (gradeProjPlus (H := H)).comp (gradeProjMinus (H := H)) = 0 := by
+  ext x
+  have hΓΓ :
+      (gradeCLM (H := H)).comp (gradeCLM (H := H)) =
+        ContinuousLinearMap.id ℝ H :=
+    gradeCLM_comp_self (H := H)
+  simp [gradeProjPlus, gradeProjMinus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+
+lemma gradeProjMinus_comp_plus :
+    (gradeProjMinus (H := H)).comp (gradeProjPlus (H := H)) = 0 := by
+  ext x
+  have hΓΓ :
+      (gradeCLM (H := H)).comp (gradeCLM (H := H)) =
+        ContinuousLinearMap.id ℝ H :=
+    gradeCLM_comp_self (H := H)
+  simp [gradeProjPlus, gradeProjMinus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+
+lemma gradeCLM_comp_gradeProjPlus :
+    (gradeCLM (H := H)).comp (gradeProjPlus (H := H)) =
+      gradeProjPlus (H := H) := by
+  ext x
+  have hΓΓ := gradeCLM_comp_self (H := H)
+  simp [gradeProjPlus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+
+lemma gradeCLM_comp_gradeProjMinus :
+    (gradeCLM (H := H)).comp (gradeProjMinus (H := H)) =
+      -(gradeProjMinus (H := H)) := by
+  ext x
+  have hΓΓ := gradeCLM_comp_self (H := H)
+  simp [gradeProjMinus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+
+lemma gradeProjPlus_comp_gradeCLM :
+    (gradeProjPlus (H := H)).comp (gradeCLM (H := H)) =
+      gradeProjPlus (H := H) := by
+  ext x
+  have hΓΓ := gradeCLM_comp_self (H := H)
+  simp [gradeProjPlus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+
+lemma gradeProjMinus_comp_gradeCLM :
+    (gradeProjMinus (H := H)).comp (gradeCLM (H := H)) =
+      -(gradeProjMinus (H := H)) := by
+  ext x
+  have hΓΓ := gradeCLM_comp_self (H := H)
+  simp [gradeProjMinus, ContinuousLinearMap.comp_apply, hΓΓ]
+  module
+
+
+lemma gradeProjPlus_isEven :
+    IsEven (H := H) (gradeProjPlus (H := H)) := by
+  unfold IsEven gradeConj
+  ext x
+  simp [gradeProjPlus, ContinuousLinearMap.comp_apply]
+
+
+lemma gradeProjMinus_isEven :
+    IsEven (H := H) (gradeProjMinus (H := H)) := by
+  unfold IsEven gradeConj
+  ext x
+  simp [gradeProjMinus, ContinuousLinearMap.comp_apply]
+
 end KreinGradedModule
 
 /-- Phase-5 canonical Clifford layer: a graded Krein module carrying a Clifford action. -/

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -499,6 +504,60 @@ def RegularSupportSecondLawTarget
 theorem regularSupportSecondLawTarget
     {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] :
     RegularSupportSecondLawTarget Op := by
+  intro S
+  exact ⟨
+    (fun x hx => split_second_law_on_regular_corner S x hx),
+    (fun x => S.defectReadout.supported_on_defect x)⟩
+
+structure RegularSupportSecondLawData
+    (Op : Type*) [Ring Op] [Star Op] [SMul ℝ Op] where
+  state : RealExpectationState Op
+  flow : ModularFlow Op
+  support : DrazinRegularSupport Op
+  dissipator : RegularOnsagerDissipator Op
+  support_fixed : ModularFixedSupport flow support
+
+theorem property_no_leakage
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
+    (C : RegularSupportSecondLawData Op) :
+    (∀ t : ℝ, leakageOperator C.flow C.support t = 0)
+      ∧
+    (∀ t : ℝ, rightLeakageOperator C.flow C.support t = 0) :=
+  no_leakage_of_modular_fixed_support
+    C.flow C.support C.support_fixed
+
+theorem property_defect_modular_fixed
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
+    (C : RegularSupportSecondLawData Op) :
+    ∀ t : ℝ, C.flow.sigma t C.support.q = C.support.q :=
+  defect_support_modular_fixed C.flow C.support C.support_fixed
+
+theorem property_second
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
+    (C : RegularSupportSecondLawData Op)
+    (x : Op)
+    (hx : InRegularCorner C.support x) :
+    0 ≤ entropyProduction C.state C.dissipator x :=
+  second_law_on_regular_support C.state C.support C.dissipator x hx
+
+theorem property_leakage_energy_zero
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op]
+    (C : RegularSupportSecondLawData Op) :
+    ∀ t : ℝ, leakageEnergy C.state C.flow C.support t = 0 :=
+  leakage_energy_zero_of_modular_fixed_support
+    C.state C.flow C.support C.support_fixed
+
+@[rep_depth krein]
+
+theorem regularSupportSecondLaw_properties
+    {Op : Type*} [Ring Op] [Star Op] [SMul ℝ Op] :
+    (∀ S : RegularHeatDefectMemorySplit Op,
+      (∀ x : Op,
+        InRegularCorner S.support x →
+          0 ≤ entropyProduction S.compressedState S.dissipator x) ∧
+      (∀ x : Op,
+        S.defectReadout.readout x =
+          S.defectReadout.readout (S.support.q * x * S.support.q))) := by
   intro S
   exact ⟨
     (fun x hx => split_second_law_on_regular_corner S x hx),

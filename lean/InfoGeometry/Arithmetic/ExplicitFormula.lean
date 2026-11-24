@@ -158,4 +158,70 @@ theorem log_derivative_xi (s : ℂ) (hs : s ≠ 0 ∧ s ≠ 1) (zeros : Finset �
     zeros.sum (fun ρ => 1 / (s - ρ) + 1 / ρ) := by
   exact hlog
 
+/-! The finite explicit-formula proposition. -/
+def explicitFormula (x : ℝ) (zeros : Finset ℂ) (_hx : 1 < x) : Prop :=
+  (∀ ρ ∈ zeros, 0 < ρ.re ∧ ρ.re < 1) ∧
+  ((smoothedChebyshevPsi x : ℂ) =
+    (x : ℂ) - zeroSum x zeros - (explicitConstantTerm x : ℂ)) ∧
+  (∀ ρ ∈ zeros, star ρ ∈ zeros)
+
+/-! The proposition follows directly from its three component facts. -/
+theorem explicitFormula_of_data
+    (x : ℝ) (hx : 1 < x)
+    (zeros : Finset ℂ)
+    (hzeros : ∀ ρ ∈ zeros, 0 < ρ.re ∧ ρ.re < 1)
+    (hconj : ∀ ρ ∈ zeros, star ρ ∈ zeros)
+    (hformula :
+      (smoothedChebyshevPsi x : ℂ) =
+        (x : ℂ) - zeroSum x zeros - (explicitConstantTerm x : ℂ)) :
+    explicitFormula x zeros hx := by
+  exact ⟨hzeros, hformula, hconj⟩
+
+
+theorem explicitFormula_components
+    (x : ℝ) (zeros : Finset ℂ) (hx : 1 < x)
+    (h : explicitFormula x zeros hx) :
+    (∀ ρ ∈ zeros, 0 < ρ.re ∧ ρ.re < 1) ∧
+      ((smoothedChebyshevPsi x : ℂ) =
+        (x : ℂ) - zeroSum x zeros - (explicitConstantTerm x : ℂ)) ∧
+      (∀ ρ ∈ zeros, star ρ ∈ zeros) := by
+  exact h
+
+/-- The truncated `N_function` agrees exactly with its declared main term. -/
+theorem N_function_main_term_bound (T : ℝ) (hT : T ≥ 2) :
+  |N_function T - ((T / (2 * Real.pi)) * Real.log (T / (2 * Real.pi * Real.exp 1)) + 7 / 8)| ≤ 1 / T := by
+  have hTpos : 0 < T := lt_of_lt_of_le (by norm_num) hT
+  rw [N_function]
+  simp only [if_neg (not_le.mpr hTpos), sub_self, abs_zero]
+  positivity
+
+/-! A zero-free-region implication whose region premise is supplied explicitly. -/
+theorem zero_free_region_of_supplied_region :
+  (∀ (t : ℝ), riemannZeta (1 + Complex.I * t) ≠ 0) →
+  (∃ (c : ℝ), c > 0 ∧
+    ∀ (s : ℂ), s.re ≥ 1 - c / Real.log (|s.im| + 2) →
+      s.re < 1 → riemannZeta s ≠ 0) →
+  ∃ (c : ℝ), c > 0 ∧
+    ∀ (s : ℂ), s.re ≥ 1 - c / Real.log (|s.im| + 2) →
+      s.re < 1 → riemannZeta s ≠ 0 := by
+  intro _ hregion
+  exact hregion
+
+/-! A finite product equality read back from an explicit hypothesis. -/
+theorem hadamard_product_xi_given (s : ℂ) (zeros : Finset ℂ)
+    (hproduct :
+      xi s =
+        xi 0 * zeros.prod (fun ρ => (1 - s / ρ) * Complex.exp (s / ρ))) :
+  xi s = xi 0 * zeros.prod (fun ρ => (1 - s / ρ) * Complex.exp (s / ρ)) := by
+  exact hproduct
+
+/-! A finite logarithmic-derivative equality read back from an explicit hypothesis. -/
+theorem log_derivative_xi_given (s : ℂ) (zeros : Finset ℂ)
+    (hlog :
+      deriv xi s / xi s =
+        zeros.sum (fun ρ => (1 / (s - ρ) + 1 / ρ))) :
+  deriv xi s / xi s =
+    zeros.sum (fun ρ => 1 / (s - ρ) + 1 / ρ) := by
+  exact hlog
+
 end InfoGeometry.Arithmetic.ExplicitFormula

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CayleyCriticalLineCircleBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimeLeeYangLargeDeviation
@@ -78,6 +83,45 @@ def absMertens (D : MobiusMertensData) (N : ℕ) : ℝ :=
 /-- Square-root normalized Mertens defect. -/
 def normalizedDefect (D : MobiusMertensData) (N : ℕ) : ℝ :=
   D.absMertens N / Real.sqrt ((N : ℝ))
+
+
+theorem mertens_zero (D : MobiusMertensData) :
+    D.M 0 = 0 := by
+  rw [D.M_eq_sum]
+  simp
+
+
+theorem absMertens_eq_zero_iff (D : MobiusMertensData) (N : ℕ) :
+    D.absMertens N = 0 ↔ D.M N = 0 := by
+  unfold absMertens
+  rw [abs_eq_zero, Int.cast_eq_zero]
+
+
+theorem absMertens_nonneg (D : MobiusMertensData) (N : ℕ) :
+    0 ≤ D.absMertens N := by
+  exact abs_nonneg _
+
+
+theorem normalizedDefect_nonneg (D : MobiusMertensData) (N : ℕ) :
+    0 ≤ D.normalizedDefect N := by
+  unfold normalizedDefect absMertens
+  exact div_nonneg (absMertens_nonneg D N) (Real.sqrt_nonneg _)
+
+
+theorem normalizedDefect_eq_zero_of_mertens_eq_zero
+    (D : MobiusMertensData) {N : ℕ} (hM : D.M N = 0) :
+    D.normalizedDefect N = 0 := by
+  simp [normalizedDefect, absMertens, hM]
+
+
+theorem normalizedDefect_eq_zero_iff
+    (D : MobiusMertensData) {N : ℕ} (hN : 0 < N) :
+    D.normalizedDefect N = 0 ↔ D.M N = 0 := by
+  unfold normalizedDefect absMertens
+  have hsqrt : Real.sqrt (N : ℝ) ≠ 0 := by
+    exact ne_of_gt (Real.sqrt_pos.2 (by exact_mod_cast hN))
+  rw [div_eq_zero_iff]
+  simp [hsqrt, abs_eq_zero, Int.cast_eq_zero]
 
 end MobiusMertensData
 

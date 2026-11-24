@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -756,5 +761,47 @@ theorem right_alternative_cancellation (X Y : SplitOct) :
 theorem moufang_identity (X Y Z : SplitOct) : 
     mulZ (mulZ X Y) (mulZ Z X) = mulZ X (mulZ (mulZ Y Z) X) := by
   ext <;> simp [mulZ] <;> ring_nf
+
+theorem detZ_split_signature (X : SplitOct) :
+    4 * detZ X =
+      (X.a + X.b) ^ 2 - (X.a - X.b) ^ 2
+        - (X.x0 + X.y0) ^ 2 + (X.x0 - X.y0) ^ 2
+        - (X.x1 + X.y1) ^ 2 + (X.x1 - X.y1) ^ 2
+        - (X.x2 + X.y2) ^ 2 + (X.x2 - X.y2) ^ 2 := by
+  simp [detZ]
+  ring
+
+/-- Coordinate expansion of the Zorn determinant. -/
+theorem detZ_coordinate_formula (X : SplitOct) :
+    detZ X = X.a * X.b -
+      (X.x0 * X.y0 + X.x1 * X.y1 + X.x2 * X.y2) := rfl
+
+/-- Right-regular action on the true nonassociative `SplitOct` carrier. -/
+def rightRegular (X : SplitOct) : SplitOct → SplitOct :=
+  fun Y => mulZ Y X
+
+/-- Right-regular multiplication inherits norm composition from `mulZ`. -/
+theorem rightRegular_normZ_mul (X Y : SplitOct) :
+    normZ (rightRegular X Y) = normZ Y * normZ X := by
+  simp [rightRegular, normZ_mul]
+
+
+theorem rightRegular_mul_defect (X Y Z : SplitOct) :
+    subZ (rightRegular X (rightRegular Y Z))
+        (rightRegular (mulZ Y X) Z) =
+      associator Z Y X := by
+  rfl
+
+/-- The two Peirce idempotents sum to the Zorn identity `⟨1,1,0,...⟩`. -/
+theorem ePlus_add_eMinus : ePlus + eMinus = ⟨1, 1, 0, 0, 0, 0, 0, 0⟩ := by
+  ext <;> simp [ePlus, eMinus]
+
+theorem anticommutator_up_down_same (i : Fin 3) :
+    mulZ (up i) (down i) + mulZ (down i) (up i) = ePlus + eMinus := by
+  fin_cases i <;> decide
+
+theorem commutator_up_down_same (i : Fin 3) :
+    mulZ (up i) (down i) - mulZ (down i) (up i) = ePlus - eMinus := by
+  fin_cases i <;> decide
 
 end InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundarySplitClifford
@@ -191,5 +196,70 @@ theorem su2Character_exp_mul_denominator
         Complex.exp ((m + 1) • (Complex.I * (θ : ℂ))) -
           Complex.exp (-((m + 1) • (Complex.I * (θ : ℂ)))) :=
   InfoGeometry.Canonical.WeylA1Character.su2Character_exp_mul_denominator θ m
+
+
+theorem weylDenominator_eq_one (t : ℕ → ℝ) :
+    weylDenominator t = 1 := by
+  simp [weylDenominator]
+
+
+theorem weylDenominator_ne_zero (t : ℕ → ℝ) :
+    weylDenominator t ≠ 0 := by
+  rw [weylDenominator_eq_one]
+  exact one_ne_zero
+
+
+def finiteWeylDenominator (N : ℕ) (t : ℕ → ℝ) : ℂ :=
+  ∏ j ∈ Finset.range N,
+    (Real.exp (t j / 2) - Real.exp (-(t j / 2) : ℝ) : ℂ)
+
+
+theorem finiteWeylDenominator_succ (N : ℕ) (t : ℕ → ℝ) :
+    finiteWeylDenominator (N + 1) t =
+      finiteWeylDenominator N t *
+        (Real.exp (t N / 2) - Real.exp (-(t N / 2) : ℝ) : ℂ) := by
+  rw [finiteWeylDenominator, finiteWeylDenominator, Finset.prod_range_succ]
+
+
+theorem finiteWeylDenominator_add (N M : ℕ) (t : ℕ → ℝ) :
+    finiteWeylDenominator (N + M) t =
+      finiteWeylDenominator N t *
+        (∏ j ∈ Finset.range M,
+          (Real.exp (t (N + j) / 2) -
+            Real.exp (-(t (N + j) / 2) : ℝ) : ℂ)) := by
+  rw [finiteWeylDenominator, finiteWeylDenominator, Finset.prod_range_add]
+
+
+theorem finiteWeylDenominator_nonzero_on_regular
+    (N : ℕ) (t : ℕ → ℝ)
+    (hreg : ∀ j < N, t j ≠ 0) :
+    finiteWeylDenominator N t ≠ 0 := by
+  intro hzero
+  unfold finiteWeylDenominator at hzero
+  have hprod :
+      ∏ j ∈ Finset.range N,
+          (Real.exp (t j / 2) - Real.exp (-(t j / 2) : ℝ) : ℂ) = 0 :=
+    hzero
+  rcases Finset.prod_eq_zero_iff.mp hprod with ⟨j, hj, hfactor⟩
+  have hjN : j < N := Finset.mem_range.mp hj
+  have hexp : Real.exp (t j / 2) = Real.exp (-(t j / 2)) := by
+    exact_mod_cast sub_eq_zero.mp hfactor
+  have hhalf : t j / 2 = -(t j / 2) := Real.exp_injective hexp
+  have hzero_weight : t j = 0 := by
+    linarith
+  exact hreg j hjN hzero_weight
+
+
+theorem finiteWeylDenominator_ne_zero_iff
+    (N : ℕ) (t : ℕ → ℝ) :
+    finiteWeylDenominator N t ≠ 0 ↔ ∀ j < N, t j ≠ 0 := by
+  constructor
+  · intro h j hj hjzero
+    apply h
+    unfold finiteWeylDenominator
+    apply Finset.prod_eq_zero
+    · exact Finset.mem_range.mpr hj
+    · simp [hjzero]
+  · exact finiteWeylDenominator_nonzero_on_regular N t
 
 end WeylCantorFock

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorCylinderLattice
@@ -210,5 +215,49 @@ theorem scoreLinear_one {n : Nat} (w : BinaryWord n) :
   exact scoreAt_one w
 
 end
+
+
+theorem pointDensity_sum {n : Nat} (w : (Fin n → Bool)) :
+    ∑ v : (Fin n → Bool), pointDensity w v =
+      (Fintype.card ((Fin n → Bool)) : ℝ) := by
+  classical
+  unfold pointDensity
+  simp
+
+
+theorem uniformMean_pointDensity {n : Nat} (w : (Fin n → Bool)) :
+    uniformMean (pointDensity w) = 1 := by
+  unfold uniformMean
+  rw [pointDensity_sum]
+  have hcard : (Fintype.card ((Fin n → Bool)) : ℝ) ≠ 0 := by
+    exact_mod_cast Fintype.card_ne_zero
+  field_simp [hcard]
+
+
+theorem scoreAt_pointDensity {n : Nat} (w : (Fin n → Bool)) :
+    scoreAt w (pointDensity w) =
+      (Fintype.card ((Fin n → Bool)) : ℝ) - 1 := by
+  unfold scoreAt
+  rw [uniformMean_pointDensity]
+  simp [pointDensity]
+
+
+theorem uniformMean_sub {n : Nat} (f g : (Fin n → Bool) → ℝ) :
+    uniformMean (fun w => f w - g w) = uniformMean f - uniformMean g := by
+  unfold uniformMean
+  rw [sum_sub_distrib]
+  ring
+
+
+theorem scoreAt_sub {n : Nat} (w : (Fin n → Bool))
+    (f g : (Fin n → Bool) → ℝ) :
+    scoreAt w (fun v => f v - g v) = scoreAt w f - scoreAt w g := by
+  simp [scoreAt, uniformMean_sub]
+  ring
+
+
+theorem scoreLinear_zero {n : Nat} (w : (Fin n → Bool)) :
+    scoreLinear w (0 : (Fin n → Bool) → ℝ) = 0 := by
+  simp [scoreLinear, scoreAt, uniformMean]
 
 end InfoGeometry.Canonical.CantorModularScoreFunctional

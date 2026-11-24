@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Basic.Real.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Order.Filter.AtTopBot.Basic
@@ -331,5 +336,57 @@ theorem largeDeviationPrinciple_readback
   W.largeDeviationPrinciple
 
 end PrimeChainLargeDeviationWitness
+
+theorem spinOccupation_eq_chainOccupation
+    (σ : IsingSpin) :
+    spinOccupation σ = PrimeFerromagneticChain.occupation σ := by
+  cases σ <;> simp [spinOccupation, PrimeFerromagneticChain.occupation]
+
+variable {n : ℕ}
+variable (C : PrimeFerromagneticChain n)
+
+theorem configurationLogEnergy_eq_chainOccupation_sum
+    (σ : Fin n → IsingSpin) :
+    configurationLogEnergy C σ =
+      ∑ i : Fin n,
+        PrimeFerromagneticChain.occupation (σ i) * C.siteEnergy i := by
+  unfold configurationLogEnergy
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [spinOccupation_eq_chainOccupation]
+
+/-- At zero inverse temperature, every finite spin configuration has unit weight. -/
+theorem finitePartition_zero_eq_card
+    (h : Fin n → ℝ) :
+    finitePartition C 0 h = Fintype.card (Fin n → IsingSpin) := by
+  unfold finitePartition boltzmannWeight
+  simp
+
+/-- The zero-temperature finite partition has the expected two-state count. -/
+theorem finitePartition_zero_eq_two_pow
+    (h : Fin n → ℝ) :
+    finitePartition C 0 h = (2 : ℝ) ^ n := by
+  rw [finitePartition_zero_eq_card]
+  have hcard : Fintype.card IsingSpin = 2 := by
+    rfl
+  rw [Fintype.card_fun, hcard]
+  simp [Fintype.card_fin]
+
+/-- The zero tilt leaves the finite Boltzmann partition unchanged. -/
+theorem tiltedPartition_zero_eq_finitePartition
+    (β : ℝ)
+    (h : Fin n → ℝ)
+    (O : (Fin n → IsingSpin) → ℝ) :
+    tiltedPartition C β h O 0 = finitePartition C β h := by
+  unfold tiltedPartition finitePartition boltzmannWeight
+  simp
+
+theorem logMomentGenerating_zero
+    (β : ℝ)
+    (h : Fin n → ℝ)
+    (O : (Fin n → IsingSpin) → ℝ) :
+    logMomentGenerating C β h O 0 = 0 := by
+  unfold logMomentGenerating tiltedPartition finitePartition boltzmannWeight
+  simp
 
 end InfoGeometry.Canonical.PrimeLeeYangLargeDeviation

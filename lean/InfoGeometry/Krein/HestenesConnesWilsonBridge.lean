@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.HestenesKreinVacuumBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.StandardFormOmegaVolumeBridge
@@ -364,6 +369,90 @@ theorem radon_nikodym_log_weyl_gauge_invariant
 theorem total_wilson_atom_volume_is_unity :
     (∑ w : Word, NaturalConeVolumeBridge.atomExpectation W.volume w) = 1 :=
   NaturalConeVolumeBridge.total_expectation_is_unity W.volume
+
+theorem radonNikodymLog_self
+    (parent : Word)
+    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0) :
+    W.radonNikodymLog parent parent = 0 := by
+  rw [W.radonNikodymLog_eq_neg_log_ratio parent parent]
+  rw [div_self hparent, Real.log_one, neg_zero]
+
+@[rep_depth projective]
+
+theorem wilsonHolonomy_self
+    (parent : Word)
+    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0) :
+    W.wilsonHolonomy parent parent = 0 := by
+  calc
+    W.wilsonHolonomy parent parent = W.radonNikodymLog parent parent :=
+      W.wilsonHolonomy_eq_radonNikodymLog parent parent
+    _ = 0 := W.radonNikodymLog_self parent hparent
+
+@[rep_depth projective]
+
+theorem radonNikodymLog_reverse
+    (parent child : Word)
+    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0)
+    (hchild : NaturalConeVolumeBridge.atomExpectation W.volume child ≠ 0) :
+    W.radonNikodymLog parent child =
+      -W.radonNikodymLog child parent := by
+  rw [W.radonNikodymLog_eq_neg_log_ratio parent child,
+    W.radonNikodymLog_eq_neg_log_ratio child parent]
+  rw [Real.log_div hchild hparent, Real.log_div hparent hchild]
+  ring
+
+@[rep_depth projective]
+
+theorem radonNikodymLog_add
+    (parent child grandchild : Word)
+    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0)
+    (hchild : NaturalConeVolumeBridge.atomExpectation W.volume child ≠ 0)
+    (hgrandchild :
+      NaturalConeVolumeBridge.atomExpectation W.volume grandchild ≠ 0) :
+    W.radonNikodymLog parent child + W.radonNikodymLog child grandchild =
+      W.radonNikodymLog parent grandchild := by
+  rw [W.radonNikodymLog_eq_neg_log_ratio parent child,
+    W.radonNikodymLog_eq_neg_log_ratio child grandchild,
+    W.radonNikodymLog_eq_neg_log_ratio parent grandchild]
+  rw [Real.log_div hchild hparent, Real.log_div hgrandchild hchild,
+    Real.log_div hgrandchild hparent]
+  ring
+
+@[rep_depth projective]
+
+theorem wilsonHolonomy_reverse
+    (parent child : Word)
+    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0)
+    (hchild : NaturalConeVolumeBridge.atomExpectation W.volume child ≠ 0) :
+    W.wilsonHolonomy parent child =
+      -W.wilsonHolonomy child parent := by
+  calc
+    W.wilsonHolonomy parent child = W.radonNikodymLog parent child :=
+      W.wilsonHolonomy_eq_radonNikodymLog parent child
+    _ = -W.radonNikodymLog child parent :=
+      W.radonNikodymLog_reverse parent child hparent hchild
+    _ = -W.wilsonHolonomy child parent := by
+      rw [W.wilsonHolonomy_eq_radonNikodymLog child parent]
+
+@[rep_depth projective]
+
+theorem wilsonHolonomy_add
+    (parent child grandchild : Word)
+    (hparent : NaturalConeVolumeBridge.atomExpectation W.volume parent ≠ 0)
+    (hchild : NaturalConeVolumeBridge.atomExpectation W.volume child ≠ 0)
+    (hgrandchild :
+      NaturalConeVolumeBridge.atomExpectation W.volume grandchild ≠ 0) :
+    W.wilsonHolonomy parent child + W.wilsonHolonomy child grandchild =
+      W.wilsonHolonomy parent grandchild := by
+  calc
+    W.wilsonHolonomy parent child + W.wilsonHolonomy child grandchild =
+        W.radonNikodymLog parent child + W.radonNikodymLog child grandchild := by
+          rw [W.wilsonHolonomy_eq_radonNikodymLog parent child,
+            W.wilsonHolonomy_eq_radonNikodymLog child grandchild]
+    _ = W.radonNikodymLog parent grandchild :=
+      W.radonNikodymLog_add parent child grandchild hparent hchild hgrandchild
+    _ = W.wilsonHolonomy parent grandchild :=
+      (W.wilsonHolonomy_eq_radonNikodymLog parent grandchild).symm
 
 end Bridge
 

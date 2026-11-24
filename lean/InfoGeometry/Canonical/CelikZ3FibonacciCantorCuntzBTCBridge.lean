@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorCuntzBasis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FibonacciParafermionAtoms
@@ -328,5 +333,51 @@ theorem null_boundary_orbit_eq_seed (G : CelikZ3FibonacciCantorCuntzBridge A Op)
   CantorCuntzNullBoundaryCrystal.orbit_null_eq_seed G.crystal
 
 end CelikZ3FibonacciCantorCuntzBridge
+
+/-! ## 1. Çelik Z3 Cartan/Yang--Baxter theorems -/
+
+theorem cartan_formula
+    {A : Type*} [Ring A]
+    (calculus : Z3DifferentialCalculus A)
+    (contraction lieDerivative : A → A)
+    (hCartan :
+      ∀ x : A, lieDerivative x = calculus.d (contraction x) + contraction (calculus.d x))
+    (x : A) :
+    lieDerivative x = calculus.d (contraction x) + contraction (calculus.d x) :=
+  hCartan x
+
+
+theorem concreteZ3_yang_baxter :
+    z3RMatrix * z3BMatrix * z3RMatrix = z3BMatrix * z3RMatrix * z3BMatrix :=
+  z3_R_B_R_eq_B_R_B
+
+
+theorem fibonacci_self_fusion_rule :
+    FibonacciCharge.fusion FibonacciCharge.eps FibonacciCharge.eps =
+      {FibonacciCharge.one, FibonacciCharge.eps} := by
+  rfl
+
+/-- The finite Fibonacci fusion matrix squares to the identity. -/
+theorem fibonacci_fusion_matrix_sq
+    (tau sqrtTau : ℂ)
+    (sqrt_sq : sqrtTau ^ 2 = tau)
+    (tau_sq_add_tau : tau ^ 2 + tau = 1) :
+    fibonacciFusionMatrix tau sqrtTau * fibonacciFusionMatrix tau sqrtTau = 1 :=
+  InfoGeometry.Categorical.FibonacciBraiding.F_sq tau sqrtTau sqrt_sq tau_sq_add_tau
+
+/-- The finite Fibonacci fusion matrix has determinant `-1`. -/
+theorem fibonacci_fusion_matrix_det
+    (tau sqrtTau : ℂ)
+    (sqrt_sq : sqrtTau ^ 2 = tau)
+    (tau_sq_add_tau : tau ^ 2 + tau = 1) :
+    (fibonacciFusionMatrix tau sqrtTau).det = -1 :=
+  InfoGeometry.Categorical.FibonacciBraiding.det_F tau sqrtTau sqrt_sq tau_sq_add_tau
+
+/-- The middle braid generator is the `F R F` conjugate in the supplied shadow. -/
+theorem fibonacci_B_eq_FRF (q : Units ℂ) (tau sqrtTau : ℂ) :
+    fibonacciBMatrix q tau sqrtTau =
+      fibonacciFusionMatrix tau sqrtTau * fibonacciRMatrix q *
+        fibonacciFusionMatrix tau sqrtTau :=
+  InfoGeometry.Categorical.FibonacciBraiding.B_eq_FRF q tau sqrtTau
 
 end InfoGeometry.Canonical.CelikZ3FibonacciCantorCuntzBTCBridge

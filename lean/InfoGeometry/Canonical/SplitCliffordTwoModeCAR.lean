@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordJordanWigner
@@ -114,5 +119,45 @@ theorem traceForm4_mode1_car :
 theorem traceForm4_mode2_car :
     tr4 (a2 * a2Dag + a2Dag * a2) = 4 := by
   simpa [mode2_car_identity] using tr4_one
+
+/-- Each annihilation operator is nilpotent. -/
+theorem mode1_square_zero :
+    a1 * a1 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [a1, Matrix.mul_apply, Fin.sum_univ_four]
+
+
+theorem mode2_square_zero :
+    a2 * a2 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [a2, Matrix.mul_apply, Fin.sum_univ_four]
+
+/-- Each creation operator is nilpotent. -/
+theorem mode1Dag_square_zero :
+    a1Dag * a1Dag = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [a1Dag, Matrix.mul_apply, Fin.sum_univ_four]
+
+
+theorem mode2Dag_square_zero :
+    a2Dag * a2Dag = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [a2Dag, Matrix.mul_apply, Fin.sum_univ_four]
+
+/-- The reversed mixed cross anticommutator also vanishes. -/
+theorem cross_mixed_anticommute_rev :
+    a2Dag * a1 + a1 * a2Dag = 0 := by
+  simpa [add_comm] using cross_mixed_anticommute
+
+/-- Creation operators in distinct modes anticommute. -/
+theorem cross_creation_anticommute :
+    a1Dag * a2Dag + a2Dag * a1Dag = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    norm_num [a1Dag, a2Dag, Matrix.mul_apply, Fin.sum_univ_four]
 
 end InfoGeometry.Canonical.SplitCliffordTwoModeCAR

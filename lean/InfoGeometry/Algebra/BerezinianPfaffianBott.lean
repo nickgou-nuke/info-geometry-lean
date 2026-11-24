@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 open Matrix
@@ -143,5 +148,50 @@ theorem det_J_via_projectors : det (P_plus - P_minus) = det (J : Matrix (Fin 2) 
     _ = det (J : Matrix (Fin 2) (Fin 2) ℂ) := by symm; exact det_J
 
 end Connections
+
+
+theorem J_transpose : J.transpose = J := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [J]
+
+
+noncomputable def Omega : Matrix (Fin 2) (Fin 2) ℂ := J * O
+
+
+theorem O_mul_J_eq_neg_J_mul_O : O * J = -(J * O) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [J, O, Matrix.mul_apply]
+
+
+theorem Omega_sq : Omega * Omega = -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [Omega]
+  calc
+    (J * O) * (J * O) = J * (O * J) * O := by noncomm_ring
+    _ = J * (-(J * O)) * O := by rw [O_mul_J_eq_neg_J_mul_O]
+    _ = -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+      calc
+        J * (-(J * O)) * O = -(J * J) * (O * O) := by noncomm_ring
+        _ = -(1 : Matrix (Fin 2) (Fin 2) ℂ) := by rw [J_sq, O_sq]; simp
+
+
+theorem Omega_transpose : Omega.transpose = -Omega := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [Omega, J, O, Matrix.transpose_apply,
+    Matrix.mul_apply]
+
+
+theorem J_mul_O_add_O_mul_J : J * O + O * J = 0 := by
+  rw [O_mul_J_eq_neg_J_mul_O]
+  abel
+
+
+theorem pfaffian2_Omega : Omega 0 1 = 1 := by
+  norm_num [Omega, J, O, Matrix.mul_apply]
+
+
+theorem det_Omega_eq_pfaffian2_sq :
+    Omega.det = (Omega 0 1) ^ 2 := by
+  norm_num [Omega, J, O, Matrix.det_fin_two, Matrix.mul_apply,
+    Fin.sum_univ_two]
 
 end Audit.BerezinianPfaffianBott

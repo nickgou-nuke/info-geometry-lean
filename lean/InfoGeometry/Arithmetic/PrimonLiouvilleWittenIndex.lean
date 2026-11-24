@@ -380,4 +380,71 @@ def unitMellinThermalVsDiracHeatKernelGuard : MellinThermalVsDiracHeatKernelGuar
   mellinThermalReadout := ℤ
   diracHeatReadout := ℤ
 
+/-! ## 3. Stable-branch projection / regularization -/
+
+def stableBranchRegularization
+    {PrimeLabel R : Type*} [DecidableEq PrimeLabel] [CommRing R]
+    (modes : Finset PrimeLabel) (qStable : PrimeLabel → R)
+    (regularizedReadout : R) : Prop :=
+  regularizedReadout = stableChiralIndex modes qStable
+
+
+theorem stableBranchRegularization_eq_stable
+    {PrimeLabel R : Type*} [DecidableEq PrimeLabel] [CommRing R]
+    (modes : Finset PrimeLabel) (qStable : PrimeLabel → R)
+    (regularizedReadout : R)
+    (h : stableBranchRegularization modes qStable regularizedReadout) :
+    regularizedReadout = stableChiralIndex modes qStable :=
+  h
+
+/-! ## 4. Readout packets and guardrails -/
+
+def projectedHyperbolicChiralIndex
+    {PrimeLabel R : Type*} [DecidableEq PrimeLabel] [CommRing R]
+    [TopologicalSpace R]
+    (modes : Finset PrimeLabel) (qStable qUnstable : PrimeLabel → R)
+    (rawReadout stableReadout unstableReadout : R)
+    (stableSequence : ℕ → R) (stableLimit : R) : Prop :=
+  rawReadout = stableReadout - unstableReadout ∧
+  stableReadout = stableChiralIndex modes qStable ∧
+  unstableReadout = unstableChiralIndex modes qUnstable ∧
+  Filter.Tendsto stableSequence Filter.atTop (nhds stableLimit) ∧
+  stableLimit = stableReadout ∧
+  rawReadout ≠ stableReadout
+
+
+theorem projectedHyperbolicChiralIndex_raw_split
+    {PrimeLabel R : Type*} [DecidableEq PrimeLabel] [CommRing R]
+    [TopologicalSpace R]
+    (modes : Finset PrimeLabel) (qStable qUnstable : PrimeLabel → R)
+    (rawReadout stableReadout unstableReadout : R)
+    (stableSequence : ℕ → R) (stableLimit : R)
+    (h : projectedHyperbolicChiralIndex modes qStable qUnstable
+      rawReadout stableReadout unstableReadout stableSequence stableLimit) :
+    rawReadout = stableReadout - unstableReadout := h.1
+
+
+theorem projectedHyperbolicChiralIndex_stable_oneLane
+    {PrimeLabel R : Type*} [DecidableEq PrimeLabel] [CommRing R]
+    [TopologicalSpace R]
+    (modes : Finset PrimeLabel) (qStable qUnstable : PrimeLabel → R)
+    (rawReadout stableReadout unstableReadout : R)
+    (stableSequence : ℕ → R) (stableLimit : R)
+    (h : projectedHyperbolicChiralIndex modes qStable qUnstable
+      rawReadout stableReadout unstableReadout stableSequence stableLimit) :
+    stableReadout = stableChiralIndex modes qStable := h.2.1
+
+
+theorem projectedHyperbolicChiralIndex_unstable_oneLane
+    {PrimeLabel R : Type*} [DecidableEq PrimeLabel] [CommRing R]
+    [TopologicalSpace R]
+    (modes : Finset PrimeLabel) (qStable qUnstable : PrimeLabel → R)
+    (rawReadout stableReadout unstableReadout : R)
+    (stableSequence : ℕ → R) (stableLimit : R)
+    (h : projectedHyperbolicChiralIndex modes qStable qUnstable
+      rawReadout stableReadout unstableReadout stableSequence stableLimit) :
+    unstableReadout = unstableChiralIndex modes qUnstable := h.2.2.1
+
+universe u v
+
 end InfoGeometry.Arithmetic.PrimonLiouvilleWittenIndex

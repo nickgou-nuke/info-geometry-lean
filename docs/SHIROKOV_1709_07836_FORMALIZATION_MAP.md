@@ -99,8 +99,12 @@ positive-definite orthonormal-frame results are special cases only.
    inverse-blade conjugation signs agree on complementary subsets. By the
    ordered-blade expansion, this yields the reduced powerset sum for every
    element of the fixed finite-stage negative-definite `Cl(0,n)` carrier. It
-   does not yet transport the identity to the paper's moving dual frame or
-   identify its connection derivative summand with this Reynolds summand.
+   also proves `shirokov_theorem_2_2_standard_frame_odd_reduced_sum`: under
+   the standard-frame compatibility equation, the paper's derivative
+   summands reduce to twice their lower-half sum. No grade-two assumption is
+   needed for this reduced identity. It does not yet transport the identity
+   to the paper's moving dual frame or derive the compatibility premise from
+   the paper's global geometric hypotheses.
 2. Connect the finite-coordinate `C+K` transfer's derivation family to the
    repository's CE/exterior-form carrier; derive its flatness and parallelness
    hypotheses from the Clifford-frame compatibility equations.

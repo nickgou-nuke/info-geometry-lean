@@ -1683,6 +1683,76 @@ theorem shirokov_theorem_2_2_standard_frame_grade_two
   rw [hzero] at hresult
   simpa using hresult
 
+/-- Odd-dimensional reduced Theorem 2.2 sum for the fixed standard inverse-
+blade frame. Compatibility makes each derivative summand `C - u C u⁻¹`;
+complementary blades have the same conjugation action. The result does not yet
+transport to the paper's varying dual frame. -/
+theorem shirokov_theorem_2_2_standard_frame_odd_reduced_sum
+    (n : ℕ) (hn : Odd n)
+    (D : CliffordAlgebra (cliffordNegSqForm ℝ n) →
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (C : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hcompat : ∀ S : Finset (Fin n),
+      D (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+        C * (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) -
+          (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) * C) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      D (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        (((shirokovInverseBladeUnit n S)⁻¹ :
+          (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      2 • ∑ S ∈ ((Finset.univ : Finset (Fin n)).powerset).filter
+        (fun S => 2 * S.card < n),
+        D (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+          (((shirokovInverseBladeUnit n S)⁻¹ :
+            (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+              CliffordAlgebra (cliffordNegSqForm ℝ n)) := by
+  apply shirokov_odd_complement_sum_reduction n hn
+  intro S
+  have hterm (T : Finset (Fin n)) :
+      D (shirokovInverseBladeUnit n T : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        (((shirokovInverseBladeUnit n T)⁻¹ :
+          (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+      C - (shirokovInverseBladeUnit n T : CliffordAlgebra (cliffordNegSqForm ℝ n)) * C *
+        (((shirokovInverseBladeUnit n T)⁻¹ :
+          (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n)) := by
+    rw [hcompat T]
+    have huinv :
+        (shirokovInverseBladeUnit n T : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+          (((shirokovInverseBladeUnit n T)⁻¹ :
+            (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+              CliffordAlgebra (cliffordNegSqForm ℝ n)) = 1 := by
+      rw [shirokovInverseBladeUnit_val, shirokovInverseBladeUnit_inv_val]
+      exact (shirokov_blade_inverse_formula n T).1
+    change (C * (shirokovInverseBladeUnit n T :
+        CliffordAlgebra (cliffordNegSqForm ℝ n)) -
+      (shirokovInverseBladeUnit n T : CliffordAlgebra (cliffordNegSqForm ℝ n)) * C) *
+        (((shirokovInverseBladeUnit n T)⁻¹ :
+          (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n)) = _
+    calc
+      _ = C * ((shirokovInverseBladeUnit n T :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+            (((shirokovInverseBladeUnit n T)⁻¹ :
+              (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+                CliffordAlgebra (cliffordNegSqForm ℝ n))) -
+          (shirokovInverseBladeUnit n T : CliffordAlgebra (cliffordNegSqForm ℝ n)) * C *
+            (((shirokovInverseBladeUnit n T)⁻¹ :
+              (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+                CliffordAlgebra (cliffordNegSqForm ℝ n)) := by noncomm_ring
+      _ = C - (shirokovInverseBladeUnit n T :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) * C *
+            (((shirokovInverseBladeUnit n T)⁻¹ :
+              (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+                CliffordAlgebra (cliffordNegSqForm ℝ n)) := by
+          congr 1
+          rw [huinv, mul_one]
+  rw [hterm S, hterm (Finset.univ \ S)]
+  congr 1
+  exact shirokov_odd_inverse_blade_conjugation_complement n hn S C
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

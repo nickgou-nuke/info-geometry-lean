@@ -89,6 +89,54 @@ theorem fenchelYoungGap_eq_bregman_at_dual
   rw [hstar]
   ring
 
+/--
+The Fenchel--Young gap is nonnegative precisely when the Fenchel--Young
+inequality holds.  This closes the gap-level side of the primal-dual identity
+above: the gap `F(x) + F*(η) - xη` is exactly the nonnegative slack.
+Retrieved context `entropy-28-00044` §3 (authority `retrieval_context_only`)
+states the equivalent Fenchel--Young/Bregman divergence identity; the inequality
+direction is proved here from the inequality hypothesis.
+-/
+theorem fenchelYoungGap_nonneg_of_inequality
+    (F Fstar : ℝ → ℝ)
+    (hFY : ∀ x η : ℝ, F x + Fstar η ≥ x * η)
+    (x η : ℝ) :
+    0 ≤ fenchelYoungGap F Fstar x η := by
+  simpa [fenchelYoungGap] using sub_nonneg.mpr (hFY x η)
+
+/--
+Faithfulness of the Bregman divergence under first-order strict convexity:
+`D_F(x, y) = 0` iff `x = y`.  Combined with `bregman_self` and
+`bregman_pos_of_firstOrderStrictConvex` this is the closing uniqueness lemma
+for the dually flat minimum characterization (retrieved context
+`docufgtdrdment.pdf` §3.2: the Bregman readout attains its unique minimum at
+the reference point).
+-/
+theorem bregman_eq_zero_iff_of_firstOrderStrictConvex
+    (F dF : ℝ → ℝ)
+    (hstrict : ∀ x y : ℝ, x ≠ y → F x > F y + dF y * (x - y))
+    (x y : ℝ) :
+    bregman F dF x y = 0 ↔ x = y := by
+  constructor
+  · intro h
+    by_contra hxy
+    have hpos : 0 < bregman F dF x y :=
+      bregman_pos_of_firstOrderStrictConvex F dF hstrict hxy
+    linarith
+  · intro h
+    subst x
+    exact bregman_self F dF y
+
+/-- The reference point is the unique strict minimizer of the Bregman readout
+under first-order strict convexity. -/
+theorem bregman_unique_min_of_firstOrderStrictConvex
+    (F dF : ℝ → ℝ)
+    (hstrict : ∀ x y : ℝ, x ≠ y → F x > F y + dF y * (x - y))
+    (x y : ℝ) (hyx : y ≠ x) :
+    bregman F dF x x < bregman F dF y x := by
+  rw [bregman_self]
+  exact bregman_pos_of_firstOrderStrictConvex F dF hstrict hyx
+
 theorem bregman_dual_identity
     (F Fstar dF dFstar : ℝ → ℝ) (x y : ℝ)
     (hstar_x : Fstar (dF x) = x * dF x - F x)

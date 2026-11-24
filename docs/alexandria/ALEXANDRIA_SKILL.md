@@ -35,9 +35,9 @@ python3 tools/alexandria/retrieve_context.py \
 ```
 
 ### Cross-Document Personalized PageRank (`graph_context_rank.py`)
-Use this when you want cross-paper conceptual bridging via `canonicalKey`, `math_archetype` co-occurrence, `entity_relation` edges, and multi-hop DAG propagation:
+Use this when you want cross-paper conceptual bridging via `canonicalKey`, `math_archetype` co-occurrence, `entity_relation` edges, and multi-hop DAG propagation (`graph_context_rank.py` requires `networkx`; use `.venv/bin/python3` or `/home/goutev/miniforge3/envs/sage/bin/python` rather than a bare `python3` lacking `networkx`):
 ```bash
-python3 tools/alexandria/graph_context_rank.py \
+.venv/bin/python3 tools/alexandria/graph_context_rank.py \
   --arango \
   --endpoint http://127.0.0.1:8538 \
   --database alexandria_dag_brain \
@@ -49,9 +49,19 @@ python3 tools/alexandria/graph_context_rank.py \
 ```
 Add `--json-out artifacts/alexandria_query.json --format json` when downstream scripts need structured provenance (`documentKey`, `contentHash`, `pageStart`, `pageEnd`, `entities`, `dagNeighbors`).
 
+### Unified Repo GraphRAG Explorer (`ask_repo.py` / `graph_rag_query.py`)
+Alexandria is opt-in via `--scope alexandria` (it is intentionally excluded from `--scope all`):
+```bash
+python3 tools/infra/ask_repo.py "Krein space fundamental symmetry Peirce decomposition" \
+  --scope alexandria \
+  --alexandria-endpoint http://127.0.0.1:8538 \
+  --alexandria-database alexandria_dag_brain \
+  --top-k 5 --brief
+```
+
 ### Offline Fallback (JSONL Artifacts Without ArangoDB)
 ```bash
-python3 tools/alexandria/graph_context_rank.py \
+.venv/bin/python3 tools/alexandria/graph_context_rank.py \
   --input-dir artifacts/alexandria_dag_brain \
   --query "multiple Peirce decomposition idempotent" \
   --top-k 8 \
@@ -156,3 +166,14 @@ flock -x /tmp/info-geometry-build.lock lake env lean --run tools/infra/axiom_che
 PYTHONDONTWRITEBYTECODE=1 /home/goutev/miniforge3/envs/sage/bin/python -m pytest -p no:cacheprovider -v \
   tests/alexandria tests/test_arango_env.py
 ```
+
+---
+
+## 7. Operational Lessons (DAG Audit Integration & Live `:8538` GraphRAG)
+
+- **Verify the execution environment alongside DAG audits:** When using repo-native Alexandria alongside the DAG audit, verify the active Python/ArangoDB environment before claiming a full semantic-ingest or live Arango run. Port `8530` (`infogeometry`) is the core Lean DAG lane and is forbidden for Alexandria by `guard_alexandria_target`. When live Alexandria-Arango is unavailable, use local JSONL digest/ranking (`--input-dir`) and report explicitly that live Alexandria-Arango querying was not performed.
+- **Live Alexandria GraphRAG target (`:8538` / `alexandria_dag_brain`):** The documented operational target is `http://127.0.0.1:8538` with database `alexandria_dag_brain`. Use `.venv/bin/python3` (the repo venv with `networkx` and `python-arango`, or `/home/goutev/miniforge3/envs/sage/bin/python`) and pass the explicit `--arango` flag (without `--arango`, the CLIs read local JSONL via `--input-dir`).
+- **Verified baseline queries (`authority = retrieval_context_only`):**
+  - `retrieve_context.py --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain --query "Krein space fundamental symmetry Peirce decomposition" --top-k 5 --hops 2 --format text` returned `5` BM25 hits (`59.78`–`65.76`) across `2103.04372v1.pdf`, `mccrimmon_jordan.pdf`, and `0110001v2.pdf`.
+  - `graph_context_rank.py --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain --query "Drazin inverse Riesz projector spectral decomposition" --top-k 5 --hops 2 --format text` built a `35`-node / `702`-edge subgraph and returned `5` PageRank hits (top `0.0634`).
+  - Both packets declare `authority = retrieval_context_only`: use them for source-discovery navigation, never as Lean proof evidence.

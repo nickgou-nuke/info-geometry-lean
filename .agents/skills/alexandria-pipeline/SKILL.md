@@ -8,9 +8,12 @@ metadata:
 # Alexandria Pipeline Operations
 
 Follow [docs/alexandria/README.md](../../../docs/alexandria/README.md),
-[docs/alexandria/ALEXANDRIA_SKILL.md](../../../docs/alexandria/ALEXANDRIA_SKILL.md), and
-[docs/alexandria/HYBRID_GRAPHRAG.md](../../../docs/alexandria/HYBRID_GRAPHRAG.md) for the full
-schema, archetype taxonomy, and retrieval commands.
+[docs/alexandria/ALEXANDRIA_SKILL.md](../../../docs/alexandria/ALEXANDRIA_SKILL.md),
+[docs/alexandria/HYBRID_GRAPHRAG.md](../../../docs/alexandria/HYBRID_GRAPHRAG.md),
+[tools/alexandria/README.md](../../../tools/alexandria/README.md),
+[configs/alexandria/README.md](../../../configs/alexandria/README.md), and
+[skills/alexandria-pipeline/SKILL.md](../../../skills/alexandria-pipeline/SKILL.md)
+for the full schema, archetype taxonomy, lane isolation, and retrieval commands.
 
 > **Authority boundary:** Alexandria hits carry `sourceAuthority: "retrieval_context_only"`.
 > Never present retrieved PDF/LaTeX chunks as Lean proof evidence or mathematical truth.
@@ -108,3 +111,11 @@ Pass `--allow-thinking` only if you want reasoning tokens enabled (`chat_templat
   PYTHONDONTWRITEBYTECODE=1 /home/goutev/miniforge3/envs/sage/bin/python -m pytest -p no:cacheprovider -v \
     tests/alexandria tests/test_arango_env.py
   ```
+
+## 5. Operational Lessons (DAG Audit Integration & Live `:8538` GraphRAG)
+
+- **DAG Audit & Environment Verification:** When using repo-native Alexandria alongside the DAG audit, verify the execution environment before claiming a full semantic-ingest or live Arango run. Port `8530` is the core Lean DAG lane (`infogeometry`) and is forbidden for Alexandria; if live Alexandria-Arango is unavailable, fall back to local JSONL digest/ranking (`--input-dir`) and explicitly report that live Alexandria-Arango querying was not performed.
+- **Live Alexandria GraphRAG Target (`:8538` / `alexandria_dag_brain`):** Use `.venv/bin/python3` (or `/home/goutev/miniforge3/envs/sage/bin/python`, which provide `networkx` and `python-arango`) and pass `--arango` explicitly (without `--arango`, the CLIs read local JSONL). Verified baseline runs:
+  - `retrieve_context.py --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain --query "Krein space fundamental symmetry Peirce decomposition" --top-k 5 --hops 2 --format text` → `5` BM25 hits (`59.78`–`65.76`) across `2103.04372v1.pdf`, `mccrimmon_jordan.pdf`, and `0110001v2.pdf`.
+  - `graph_context_rank.py --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain --query "Drazin inverse Riesz projector spectral decomposition" --top-k 5 --hops 2 --format text` → `35`-node / `702`-edge subgraph, `5` PageRank hits (top `0.0634`).
+  - Both packets declare `authority = retrieval_context_only`: source-discovery navigation only, never Lean proof evidence.

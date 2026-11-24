@@ -208,3 +208,59 @@ axiom acceptance of the repaired dependencies and this null/Born/volume
 packet remain pending. This packet still selects 80 expected axiom records;
 zero complete-packet axiom records have been observed. The new owners'
 previously recorded source/static reviews are unchanged by this merge.
+
+
+## Targeted finite-vector projection normalization
+
+The completed dependency run `45412837118` exposed nested `Matrix.vecHead`
+and `Matrix.vecTail` applications to scalar multiples of coordinate vectors
+in the concrete derivation proofs. A bounded review for that exact pattern
+found the same mechanism in the two private sparse-product helpers of
+`Canonical.ZornVolumeAction`: their inner native products contain terms such
+as `z.b • Pi.single 2 1`, consumed by further dot/cross products.
+
+The correction adds only `Matrix.vecHead` and `Matrix.vecTail` to the two
+existing simplification lists. Root prepared the isolated correction and
+`audit_math` independently approved its exact source delta. The readouts
+reduce to coordinate application and successor composition in the pinned
+Mathlib definitions. This is a source-supported normalization repair based
+on an analogous observed failure, not a claimed compiler result for the
+volume owner. Its four public statements, private helper statements,
+imports, signs, and declaration counts are unchanged.
+
+The new volume-owner SHA-256 is
+`649612bce0b75345d18e05ff43cdaed7668fd06f7f17a860ee53c720b476bbac`.
+The targeted checks of the null-kernel and Born-coordinate owners found no
+supported repetition of the three investigated normalization patterns;
+those files remain byte-identical to their original reviewed sources.
+
+### Local runtime and checkout recovery
+
+The guarded single-file local launch used the pinned `lake env lean -j1
+-M768` route after the maintained lock became available. Lake exited with
+SIGKILL before returning a Lean diagnostic. Package postflight checks
+passed, but the executor connection then failed and its temporary checkout
+and receipts were lost. The old observer's final exit and configuration
+restoration could not be certified; no theorem acceptance is inferred.
+
+A fresh ordinary checkout was recovered from published head
+`8a16f056b5f2f13e01b942ff8d10b234e0498114`, tree
+`ae130e76e0db576309a037dbdb199c1d594ae92d`. It was verified clean, with the
+published configuration bytes and tracked pre-commit hook restored. No
+local compiler retry is part of this update. Fresh kernel and axiom
+acceptance remain pending, with 80 expected and zero observed complete-packet
+axiom records.
+
+
+### Static receipt for projection normalization
+
+All six maintained gates scoped to `Canonical.ZornVolumeAction` returned
+exit 0, with zero vacuity warnings, zero semantic-content findings, and zero
+OpenGauss traps. Independent comparison confirmed that removing only the
+two added definition names reproduces the preceding source byte-for-byte;
+all declarations, statements, imports, and other proof bytes are preserved.
+The two staged files and selected controls stayed unchanged during the run.
+The independent inventory remains 60 owner heads plus 20 reused declarations:
+80 expected axiom records, zero observed. This static run launched no Lean
+compiler and does not certify kernel acceptance. Report SHA-256:
+`8721927059ef27a8a0c74d1383a52a65de6c67aed97c205729b94e9607c5aa18`.

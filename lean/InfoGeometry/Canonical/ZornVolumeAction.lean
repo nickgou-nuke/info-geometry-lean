@@ -47,7 +47,7 @@ private theorem positive_triple (z : ZornMatrix ℝ) :
   ext i <;> (try fin_cases i) <;>
     norm_num [reflect, ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis,
       ZornMatrix.mul_def, ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
-      Pi.single_apply]
+      Matrix.vecHead, Matrix.vecTail, Pi.single_apply]
 
 private theorem negative_quadruple (z : ZornMatrix ℝ) :
     L ell (L h[0] (L h[1] (L h[2] z))) = reflect z := by
@@ -56,7 +56,7 @@ private theorem negative_quadruple (z : ZornMatrix ℝ) :
     norm_num [reflect, ZornMatrix.zornPlus, ZornMatrix.zornMinus,
       ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis,
       ZornMatrix.mul_def, ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
-      Pi.single_apply]
+      Matrix.vecHead, Matrix.vecTail, Pi.single_apply]
 
 private theorem conj_q (i : Fin 3) : zornConj q[i] = -q[i] := by
   ext j <;> simp [zornConj, ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis]

@@ -50,7 +50,7 @@ def concreteBoundaryState : BoundaryState where
 def isSewn (s : BoundaryState) : Prop :=
   switch * s.rho * switch = s.rho
 
-lemma trace_rot (A B C : Matrix (Fin 2) (Fin 2) ℂ) : (A * B * C).trace = (B * C * A).trace := by
+lemma kleinBottle_trace_rot (A B C : Matrix (Fin 2) (Fin 2) ℂ) : (A * B * C).trace = (B * C * A).trace := by
   calc
     (A * B * C).trace = ((A * B) * C).trace := by simp [mul_assoc]
     _ = (C * (A * B)).trace := Matrix.trace_mul_comm (A * B) C
@@ -73,7 +73,7 @@ lemma chiral_trace_step2 (s : BoundaryState) :
     Matrix.trace (tilt * s.rho * switch * switch) = Matrix.trace (switch * tilt * s.rho * switch) := by
   calc
     Matrix.trace (tilt * s.rho * switch * switch) = Matrix.trace (switch * (tilt * s.rho * switch)) := by
-      simpa [mul_assoc] using (trace_rot switch (tilt * s.rho) switch).symm
+      simpa [mul_assoc] using (kleinBottle_trace_rot switch (tilt * s.rho) switch).symm
     _ = Matrix.trace (switch * tilt * s.rho * switch) := by simp [mul_assoc]
 
 lemma chiral_trace_step3 (s : BoundaryState) :

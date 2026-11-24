@@ -84,7 +84,15 @@ def threeColorPolarizedMul (c : SplitOctonionColour) (a b : PolarizedBasisIdx) :
 /-- Verify that polarizedMul agrees with the actual split-octonion multiplication -/
 theorem threeColorPolarizedMul_correct (c : SplitOctonionColour) (a b : PolarizedBasisIdx) :
     threeColorPolarizedMul c a b = splitOctonionMulQ (polarizedBasis c a) (polarizedBasis c b) := by
-  fin_cases a <;> fin_cases b <;> fin_cases c <;> native_decide
+  have hsum : ∀ f : PolarizedBasisIdx → StandardRationalSplitOctonion,
+      (∑ k : PolarizedBasisIdx, f k) =
+        f .nPlus + f .nMinus + f .sigmaPlus + f .sigmaMinus := by
+    intro f
+    rw [Fintype.sum_equiv polarizedBasisIdxEquivFin (f := f)
+      (g := fun i => f (polarizedBasisIdxEquivFin.symm i)) (fun x => by simp)]
+    simp [Fin.sum_univ_four, polarizedBasisIdxEquivFin, add_assoc]
+  cases a <;> cases b <;>
+    simp [threeColorPolarizedMul, hsum, polarizedMulCoeff, polarizedBasis]
 
 /-- The 4×4 matrix of multiplication coefficients for a fixed colour -/
 def polarizedMultiplicationMatrix (c : SplitOctonionColour) : Matrix (Fin 4) (Fin 4) (ℚ) :=
@@ -103,12 +111,12 @@ theorem polarizedBasis_isMatrixUnits (c : SplitOctonionColour) :
 
 end
 /-- Compute the product of two polarized basis elements in the polarized basis -/
-def polarizedMul (c : SplitOctonionColour) (a b : PolarizedBasisIdx) : StandardRationalSplitOctonion :=
+def threeColorPolarizedMulLegacy (c : SplitOctonionColour) (a b : PolarizedBasisIdx) : StandardRationalSplitOctonion :=
   ∑ k : PolarizedBasisIdx, (polarizedMulCoeff a b k : ℚ) • polarizedBasis c k
 
 /-- Verify that polarizedMul agrees with the actual split-octonion multiplication -/
 theorem polarizedMul_correct (c : SplitOctonionColour) (a b : PolarizedBasisIdx) :
-    polarizedMul c a b = splitOctonionMulQ (polarizedBasis c a) (polarizedBasis c b) := by
-  fin_cases a <;> fin_cases b <;> fin_cases c <;> native_decide
+    threeColorPolarizedMulLegacy c a b = splitOctonionMulQ (polarizedBasis c a) (polarizedBasis c b) :=
+  threeColorPolarizedMul_correct c a b
 
 end InfoGeometry.Canonical

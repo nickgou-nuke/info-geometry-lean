@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Causal.MetaCompiler
 
 namespace InfoGeometry.Causal.MetaCompiler.Tests
@@ -14,7 +19,7 @@ example {Node : Type*} [PartialOrder Node] [DecidableEq Node] [Fintype Node]
       schedule.length = Fintype.card Node ∧
       schedule.toFinset = Finset.univ ∧
       ∀ target, statement target :=
-  InfoGeometry.MetaCompiler.finite_certified_compilation statement rules
+  InfoGeometry.Causal.MetaCompiler.finite_certified_compilation statement rules
 
 example {α : Type*} [PartialOrder α] (a b : α)
     (hab : a < b) (hba : b < a) : False :=

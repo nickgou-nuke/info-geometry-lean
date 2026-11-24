@@ -1,4 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.Finsupp.Supported
+
+namespace InfoGeometry.External.Virasoro.ToMathlib.LinearAlgebra.Finsupp.Supported
 
 lemma finsum_mem_span {ι R V : Type*} [Semiring R] [AddCommMonoid V] [Module R V]
     (vs : ι → V) (cfs : ι → R) :
@@ -26,3 +33,5 @@ lemma finsum_mem_mem_span {ι R V : Type*}
     exact Submodule.mem_span_of_mem (Set.mem_image_of_mem vs his)
   · rw [finsum_mem_eq_zero_of_infinite h]
     exact Submodule.zero_mem _
+
+end InfoGeometry.External.Virasoro.ToMathlib.LinearAlgebra.Finsupp.Supported

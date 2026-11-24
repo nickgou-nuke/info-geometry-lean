@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Finset.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finset.Prod
@@ -18,7 +23,7 @@ symmetric-group quotient is asserted.
 
 set_option autoImplicit false
 
-namespace GromovProbability
+namespace InfoGeometry.GromovProbability
 
 variable {α β : Type*} [DecidableEq α] [DecidableEq β]
 
@@ -44,4 +49,4 @@ theorem product_state_measure (A : Finset α) (B : Finset β) :
     (A ×ˢ B).card = A.card * B.card := by
   exact Finset.card_product A B
 
-end GromovProbability
+end InfoGeometry.GromovProbability

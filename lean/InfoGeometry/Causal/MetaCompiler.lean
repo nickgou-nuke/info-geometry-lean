@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Causal.CertifiedDependencyCompiler
 
 namespace InfoGeometry.Causal.MetaCompiler
@@ -226,7 +231,7 @@ theorem finite_certified_compilation
 
 end InfoGeometry.Causal.MetaCompiler
 
-namespace InfoGeometry.MetaCompiler
+namespace InfoGeometry.Causal.MetaCompilerAlias
 
 open InfoGeometry.Causal.FiniteDependencySchedule
 open InfoGeometry.Causal.ProofCarryingSchedule
@@ -244,4 +249,4 @@ theorem finite_certified_compilation
       ∀ target, statement target :=
   InfoGeometry.Causal.MetaCompiler.finite_certified_compilation statement rules
 
-end InfoGeometry.MetaCompiler
+end InfoGeometry.Causal.MetaCompilerAlias

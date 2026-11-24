@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Block
@@ -49,7 +54,7 @@ def STr (M : BlockMat) : R :=
   Matrix.trace (GammaGrading * M)
 
 @[simp]
-theorem trace_fromBlocks_diag (A B : SubMat) :
+theorem dualExp_trace_fromBlocks_diag (A B : SubMat) :
     Matrix.trace (Matrix.fromBlocks A (0 : SubMat) (0 : SubMat) B) =
       Matrix.trace A + Matrix.trace B := by
   simp [Matrix.trace, Fintype.sum_sum_type]
@@ -64,7 +69,7 @@ theorem trace_commutator {R : Type*} [CommRing R] (A B : Matrix ι ι R) :
     Tr(D) = 0 -/
 theorem trace_chiral_block (A : SubMat) :
     Matrix.trace (Matrix.fromBlocks A (0 : SubMat) (0 : SubMat) (-A)) = 0 := by
-  rw [trace_fromBlocks_diag, Matrix.trace_neg, add_neg_cancel]
+  rw [dualExp_trace_fromBlocks_diag, Matrix.trace_neg, add_neg_cancel]
 
 /-- 🏆 THEOREM 3: A block-diagonal shape operator K₀ = [[A, 0], [0, B]] with Tr(A)=0, Tr(B)=0
     is simultaneously trace-free and supertrace-free:
@@ -76,13 +81,13 @@ theorem shape_traceless_and_supertraceless
     Matrix.trace (Matrix.fromBlocks A (0 : SubMat) (0 : SubMat) B) = 0 ∧
     STr (Matrix.fromBlocks A (0 : SubMat) (0 : SubMat) B) = 0 := by
   constructor
-  · rw [trace_fromBlocks_diag, hA, hB, add_zero]
+  · rw [dualExp_trace_fromBlocks_diag, hA, hB, add_zero]
   · dsimp [STr, GammaGrading]
     have h_mul : Matrix.fromBlocks (1 : SubMat) 0 0 (-1 : SubMat) *
           Matrix.fromBlocks A 0 0 B = Matrix.fromBlocks A 0 0 (-B) := by
       rw [Matrix.fromBlocks_multiply]
       simp
-    rw [h_mul, trace_fromBlocks_diag, Matrix.trace_neg, hA, hB, neg_zero, add_zero]
+    rw [h_mul, dualExp_trace_fromBlocks_diag, Matrix.trace_neg, hA, hB, neg_zero, add_zero]
 
 end TracelessDerivations
 

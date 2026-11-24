@@ -16,7 +16,7 @@ namespace InfoGeometry.Clifford
 open Matrix
 
 /-- Non-commutativity ground witness (`2 × 2` spin algebra over `ℂ`). -/
-theorem exists_noncomm_pair :
+theorem causalDiracMatrixBasisChange_exists_noncomm_pair :
     ∃ a b : _root_.InfoGeometry.Algebra.FiniteSpin.Mat2C, a * b ≠ b * a :=
   ⟨_root_.InfoGeometry.Algebra.FiniteSpin.J_plus,
    _root_.InfoGeometry.Algebra.FiniteSpin.J_minus,

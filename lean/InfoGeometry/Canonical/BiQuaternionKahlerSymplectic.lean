@@ -40,13 +40,13 @@ Kähler potential machinery.
 -/
 
 /-- Closed non-commutativity witnesses for the real matrix carriers used below (T16). -/
-theorem realMat2_noncomm_witness :
+theorem biQuaternionKahlerSymplectic_realMat2_noncomm_witness :
     ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A :=
   ⟨InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix,
     InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix,
     InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix_mul_tiltedMatrix_ne⟩
 
-theorem realMat4_noncomm_witness :
+theorem biQuaternionKahlerSymplectic_realMat4_noncomm_witness :
     ∃ A B : Matrix (Fin 4) (Fin 4) ℝ, A * B ≠ B * A := by
   let E01 : Matrix (Fin 4) (Fin 4) ℝ := fun i j => if i = 0 ∧ j = 1 then 1 else 0
   let E10 : Matrix (Fin 4) (Fin 4) ℝ := fun i j => if i = 1 ∧ j = 0 then 1 else 0

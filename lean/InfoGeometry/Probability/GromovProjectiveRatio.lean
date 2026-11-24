@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Fintype.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
@@ -21,7 +26,7 @@ set_option autoImplicit false
 
 open scoped BigOperators
 
-namespace GromovSystem
+namespace InfoGeometry.Probability.GromovProjectiveRatio
 
 variable {X : ℕ → Type*}
 
@@ -77,4 +82,4 @@ theorem normalization_incompatibility [∀ n, Fintype (X n)]
     exact mul_left_cancel₀ h_meas_nz h_mul
   exact h_sum_change h_sum_eq.symm
 
-end GromovSystem
+end InfoGeometry.Probability.GromovProjectiveRatio

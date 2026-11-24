@@ -205,6 +205,51 @@ identify open sockets and empty owners in source text, especially when
 - `graph_context_rank.py` computes retrieval ranking over local graph structure.
 - Optional `alexandria/arango_ingest.py` persists to Alexandria DB/collections.
 
+### Live GraphRAG verification (:8538 / `alexandria_dag_brain`)
+
+Both retrieval CLIs accept a mutually exclusive local mode (`--input-dir`) and
+live mode (`--arango`). Live retrieval requires the explicit `--arango` flag.
+Endpoint/database/credentials come from `configs/alexandria/.env` or the
+`ALEXANDRIA_ARANGO_*` environment aliases; defaults are `http://127.0.0.1:8532`
+and database `alexandria`. `guard_alexandria_target` rejects the core DAG port
+`:8530` and Hive port `:8540`, plus the `infogeometry`, `darwin_commits`,
+`hive_live`, and `aiclaw_auto_rag` databases. The `:8538` target used below is
+an allowed operational override; here the live database is
+`alexandria_dag_brain`.
+
+Use the repo venv (it has both `networkx` and `python-arango`):
+
+```bash
+.venv/bin/python3 tools/alexandria/retrieve_context.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "Krein space fundamental symmetry Peirce decomposition" \
+  --top-k 5 --hops 2 --format text
+```
+
+Observed: 5 BM25-ranked hits with scores from about `59.78` to `65.76`,
+across `2103.04372v1.pdf`, `mccrimmon_jordan.pdf`, and `0110001v2.pdf`.
+The packet records `scoreBreakdown.bm25`, lexical overlap, and a title flag,
+plus entity and DAG-neighbor context.
+
+```bash
+.venv/bin/python3 tools/alexandria/graph_context_rank.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "Drazin inverse Riesz projector spectral decomposition" \
+  --top-k 5 --hops 2 --format text
+```
+
+Observed: a 35-node, 702-edge cross-document subgraph with 5 ranked hits;
+top graph scores were `0.0634` (`2208.09149v1.pdf`), `0.0632`, `0.0601`,
+`0.0594` (`L-G-0010374276-0023403328.pdf`), and `0.0614` (`on_drazin.pdf`).
+The seeds come from BM25/lexical overlap and are reranked by personalized
+PageRank over adjacency, shared-entity, DAG, and optional De Bruijn edges.
+
+Both packets carry:
+`authority = retrieval_context_only` and
+`disclaimer = "Retrieval and navigation context only; NOT verified Lean proof evidence."`
+Treat these results as source-discovery evidence only; Lean owner files and
+kernel checks remain the truth authority.
+
 ## Coupling Points
 
 High-coupling interfaces to keep stable:

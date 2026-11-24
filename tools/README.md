@@ -27,6 +27,9 @@ This directory contains the maintained script surface around the Lean codebase.
   - compatibility wrapper: `tools/observability/lean_graph_overlay.py`
 - `tools/leantrail/`
   LeanTrail conformance, export, ingest, and path/failure tooling
+- `tools/alexandria/`
+  external-corpus ingest and GraphRAG retrieval (BM25 + PageRank navigation);
+  see [docs/DAGToolchainAndAlexandriaTrace.md](../docs/DAGToolchainAndAlexandriaTrace.md)
 
 There is also a real Python package under `src/igf/` that now owns a growing
 part of the artifact pipeline and CLI surface.
@@ -53,6 +56,27 @@ Python CLIs:
 
 - `igf`
 - `infogeometry`
+
+Alexandria GraphRAG smoke checks (repo venv has `networkx` and `python-arango`):
+
+```bash
+.venv/bin/python3 tools/alexandria/retrieve_context.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "Krein space fundamental symmetry Peirce decomposition" \
+  --top-k 5 --hops 2 --format text
+```
+
+```bash
+.venv/bin/python3 tools/alexandria/graph_context_rank.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "Drazin inverse Riesz projector spectral decomposition" \
+  --top-k 5 --hops 2 --format text
+```
+
+These are `retrieval_context_only` navigation results, not Lean proof evidence.
+The default Alexandria target is `:8532` / `alexandria`; `:8530` and `:8540`
+are forbidden by `guard_alexandria_target`. See
+[docs/DAGToolchainAndAlexandriaTrace.md](../docs/DAGToolchainAndAlexandriaTrace.md).
 
 ## Wrapper Rule
 

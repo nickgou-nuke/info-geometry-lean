@@ -172,6 +172,44 @@ audited by `tools/infra/arango_fidelity_audit.py`.
 For offline recall, prefer `local-search` / `local-neighborhood` / `local-attention`
 over live AQL unless the Arango mirror was just rebuilt from `artifacts/dag/index`.
 
+## External Alexandria corpus lane (separate from causal DAG memory)
+
+Alexandria is a different Arango lane: it stores paper/chunk/entity/relation
+retrieval graphs, not Lean declaration causality. It is useful for source
+discovery before owner-file work, but it has the same non-authority status as
+the DAG projection cache.
+
+Live CLIs require the explicit `--arango` flag; `--input-dir` selects local
+JSONL instead. Use `.venv/bin/python3` (the repo venv has `networkx` and
+`python-arango`). Verified operational target:
+
+```bash
+.venv/bin/python3 tools/alexandria/retrieve_context.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "Krein space fundamental symmetry Peirce decomposition" \
+  --top-k 5 --hops 2 --format text
+
+.venv/bin/python3 tools/alexandria/graph_context_rank.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "Drazin inverse Riesz projector spectral decomposition" \
+  --top-k 5 --hops 2 --format text
+```
+
+`retrieve_context.py` returns BM25-ranked chunks with `scoreBreakdown.bm25`,
+lexical overlap, and DAG-neighbor context. `graph_context_rank.py` seeds from
+BM25/lexical overlap and reranks with personalized PageRank over adjacency,
+shared-entity, DAG, and optional De Bruijn edges. Observed at `:8538`: 5 BM25
+hits (about `59.78`–`65.76`), and a 35-node/702-edge PageRank subgraph with
+top graph score `0.0634`.
+
+Defaults are `:8532` / database `alexandria`. `guard_alexandria_target`
+rejects the core DAG port `:8530`, Hive port `:8540`, and the `infogeometry`,
+`darwin_commits`, `hive_live`, `aiclaw_auto_rag` databases. Do not redirect
+Alexandria retrieval into those lanes. Both packets declare
+`authority = retrieval_context_only`; never promote a retrieved paper passage
+to a Lean theorem without owner inspection and kernel checking. Details are in
+`docs/DAGToolchainAndAlexandriaTrace.md`.
+
 ## Causal Snapshot Schema
 
 A causal apex records the purified current state:

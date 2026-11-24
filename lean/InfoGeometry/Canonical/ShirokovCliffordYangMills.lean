@@ -3003,6 +3003,45 @@ theorem shirokov_theorem_2_2_automorphism_frame_grade_two
   rw [hzero] at hresult
   simpa using hresult
 
+/-- Theorem 2.2 for an automorphism-transported frame under the exact
+center-projection condition used by the Reynolds reduction. Grade two is one
+sufficient way to establish this condition, but is not required here. -/
+theorem shirokov_theorem_2_2_automorphism_frame_of_center_projection_zero
+    (n : ℕ)
+    (φ : CliffordAlgebra (cliffordNegSqForm ℝ n) ≃ₐ[ℝ]
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (D : CliffordAlgebra (cliffordNegSqForm ℝ n) →
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (C : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hcompat : ∀ S : Finset (Fin n),
+      D (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+        C * (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) -
+          (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n)) * C)
+    (hcenter : φ (shirokovCenterProjection n (φ.symm C)) = 0) :
+    (∑ S : Finset (Fin n),
+      D (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        (↑((Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S))⁻¹) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      Fintype.card (Finset (Fin n)) • C := by
+  let transportedCenterProjection :
+      CliffordAlgebra (cliffordNegSqForm ℝ n) →
+        CliffordAlgebra (cliffordNegSqForm ℝ n) :=
+    fun z => φ (shirokovCenterProjection n (φ.symm z))
+  have haverage := shirokov_automorphism_frame_average n φ C
+  have hzero : transportedCenterProjection C = 0 := by
+    simpa [transportedCenterProjection] using hcenter
+  have hresult := shirokov_theorem_2_2_average_reduction
+    (R := ℝ) (A := CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (ι := Finset (Fin n)) D C transportedCenterProjection
+    (fun S => Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S))
+    hcompat (by simpa [transportedCenterProjection] using haverage)
+  rw [hzero] at hresult
+  simpa using hresult
+
 /-- Theorem 2.2 for a frame induced by an isometry of the fixed quadratic
 space. This exposes the moving blade units directly; the grade-two condition
 is read after transport back to the standard frame. -/

@@ -15,6 +15,7 @@ import os
 from pathlib import Path
 import re
 import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -24,7 +25,7 @@ CHECKER = Path(__file__).resolve()
 STARTUP_CHECKER_HASH = hashlib.sha256(CHECKER.read_bytes()).hexdigest()
 ROOT = CHECKER.parents[2]
 sys.path.insert(0, str(ROOT))
-from tools.build_lock import acquire_build_lock
+from tools.build_lock import BuildLockBusyError, acquire_build_lock
 from tools.infra.build import _validate_lake_workspace_integrity
 
 NEW_TARGETS = [
@@ -34,11 +35,19 @@ NEW_TARGETS = [
     "InfoGeometry.Geometry.SouriauCotangentGraphSigns",
 ]
 TARGETS = [*NEW_TARGETS, "InfoGeometry.Lie.SplitOctonionCliffordNoninjective"]
+KLEIN_TARGETS = [
+    "InfoGeometry.Algebra.ZornNullIncidence",
+    "InfoGeometry.Canonical.ZornCliffordKleinHierarchy",
+    "InfoGeometry.Canonical.ZornCliffordSourceVolume",
+    "InfoGeometry.Lie.SplitOctonionNullPlaneCovariance",
+]
 OWNED = [
     "InfoGeometry.Algebra.ZornLeftInverse",
     "InfoGeometry.Algebra.ZornLeftDeterminant",
     *NEW_TARGETS,
+    *KLEIN_TARGETS,
 ]
+SUITES = {"zorn-primal-dual": TARGETS, "klein-operator-hierarchy": KLEIN_TARGETS}
 PIN = "d13f23b723b8a846827a245b89c10fc7d3f11612"
 
 
@@ -116,18 +125,38 @@ def execute(command: list[str], env: dict, logfile: Path, lock_fd: int) -> dict:
     with logfile.open("w") as output:
         proc = subprocess.Popen(command, env=env, cwd=ROOT, text=True,
                                 stdout=output, stderr=subprocess.STDOUT, pass_fds=(lock_fd,))
-        while True:
+        try:
+            while True:
+                try:
+                    returncode = proc.wait(timeout=30)
+                    break
+                except subprocess.TimeoutExpired:
+                    status_file = Path(f"/proc/{proc.pid}/status")
+                    try:
+                        status = status_file.read_text()
+                    except (FileNotFoundError, ProcessLookupError):
+                        status = ""
+                    match = re.search(r"^VmHWM:\s+(\d+)\s+kB", status, re.M)
+                    if match:
+                        peak_rss_kib = max(peak_rss_kib, int(match[1]))
+                    print(f"[running] {int(time.monotonic() - started)}s; "
+                          f"peak RSS {peak_rss_kib // 1024} MiB; log {logfile.name}", flush=True)
+        except BaseException:
+            # Reap only this invocation's child before releasing its build lock.
+            # A second Ctrl-C must not interrupt the short cleanup and leave an
+            # active compiler behind an explicitly unlocked descriptor.
+            previous_sigint = signal.signal(signal.SIGINT, signal.SIG_IGN)
             try:
-                returncode = proc.wait(timeout=30)
-                break
-            except subprocess.TimeoutExpired:
-                status_file = Path(f"/proc/{proc.pid}/status")
-                status = status_file.read_text() if status_file.exists() else ""
-                match = re.search(r"^VmHWM:\s+(\d+)\s+kB", status, re.M)
-                if match:
-                    peak_rss_kib = max(peak_rss_kib, int(match[1]))
-                print(f"[running] {int(time.monotonic() - started)}s; "
-                      f"peak RSS {peak_rss_kib // 1024} MiB; log {logfile.name}", flush=True)
+                if proc.poll() is None:
+                    proc.terminate()
+                    try:
+                        proc.wait(timeout=10)
+                    except subprocess.TimeoutExpired:
+                        proc.kill()
+                        proc.wait()
+            finally:
+                signal.signal(signal.SIGINT, previous_sigint)
+            raise
     text = logfile.read_text()
     print(text, end="", flush=True)
     return {"command": command, "returncode": returncode, "output": text,
@@ -148,22 +177,22 @@ def run(args: argparse.Namespace, out: Path, report: dict) -> int:
     env = os.environ.copy()
     env["LEAN_PATH"] = os.pathsep.join(map(str, paths))
     env.pop("LEAN_SRC_PATH", None)
-    print("[zorn-primal-dual] waiting for shared build lock", flush=True)
-    with acquire_build_lock(None, f"zorn-primal-dual:{os.getpid()}", block=True) as lock:
+    print(f"[{args.suite}] acquiring shared build lock", flush=True)
+    with acquire_build_lock(None, f"{args.suite}:{os.getpid()}", block=args.wait) as lock:
         if digest(CHECKER) != STARTUP_CHECKER_HASH:
             raise RuntimeError("verifier changed while waiting; restart this invocation")
         if environment(args, lib) != (fingerprint, paths):
             raise RuntimeError("compiler or dependency environment changed while waiting")
         modules = closure(args.targets)
         sources = {m: digest(source(m)) for m in modules}
-        audit_file = CHECKER.with_name("Audit.lean")
+        audit_file = ROOT / "verification" / args.suite / "Audit.lean"
         audit_hash = digest(audit_file)
         previous_file = out / "compiled.json"
         previous = json.loads(previous_file.read_text()) if previous_file.exists() else {}
         compiled = dict(previous.get("sources", {})) if previous.get("environment") == fingerprint else {}
         report.update(modules=modules, sources=sources, audit_sha256=audit_hash, commands=[], status="running")
         receipt(out, report)
-        print(f"[zorn-primal-dual] checking {len(modules)} repository modules", flush=True)
+        print(f"[{args.suite}] checking {len(modules)} repository modules", flush=True)
         for module in modules:
             dest = lib / Path(module.replace(".", "/")).with_suffix(".olean")
             dep_outputs = [lib / Path(d.replace(".", "/")).with_suffix(".olean")
@@ -190,14 +219,18 @@ def run(args: argparse.Namespace, out: Path, report: dict) -> int:
             compiled[module] = sources[module]
             previous_file.write_text(json.dumps({"sources": compiled, "environment": fingerprint}, indent=2) + "\n")
             receipt(out, report)
-        if set(args.targets) == set(TARGETS):
+        if report["audit_expected"]:
             command = [str(args.lean), "-j1", str(audit_file), "-DwarningAsError=true"]
-            print("[audit] six new owners and two existing Clifford owners", flush=True)
+            print(f"[audit] {audit_file.relative_to(ROOT)}", flush=True)
+            report["audit_status"] = "running"
+            receipt(out, report)
             result = execute(command, env, out / "Audit.log", lock.fileno())
             report["audit"] = result
             if result["returncode"]:
+                report["audit_status"] = "failed"
                 report["status"] = "audit-failed"
                 return result["returncode"]
+            report["audit_status"] = "passed"
         for module in modules:
             if digest(source(module)) != sources[module]:
                 raise RuntimeError(f"source changed during validation: {module}")
@@ -210,7 +243,7 @@ def run(args: argparse.Namespace, out: Path, report: dict) -> int:
         if environment(args, lib) != (fingerprint, paths):
             raise RuntimeError("compiler or dependency environment changed during validation")
         report["status"] = "compiled"
-    print(f"[zorn-primal-dual] compiled {len(modules)} modules", flush=True)
+    print(f"[{args.suite}] compiled {len(modules)} modules", flush=True)
     return 0
 
 
@@ -219,18 +252,31 @@ def main() -> int:
     parser.add_argument("--lean", default=shutil.which("lean"))
     parser.add_argument("--packages", type=Path, default=ROOT / ".lake/packages")
     parser.add_argument("--force", action="store_true", help="recompile unchanged source closure")
-    parser.add_argument("--targets", nargs="+", default=TARGETS)
+    parser.add_argument("--suite", choices=SUITES, default="zorn-primal-dual")
+    parser.add_argument("--targets", nargs="+", help="override the selected suite's targets")
+    parser.add_argument("--no-wait-for-build-lock", dest="wait", action="store_false",
+                        default=True, help="record a blocked result if another build holds the lock")
     args = parser.parse_args()
+    if args.targets is None:
+        args.targets = SUITES[args.suite]
+    audit_expected = set(args.targets) == set(SUITES[args.suite])
     if not args.lean:
         parser.error("provide the pinned Lean executable with --lean")
-    out = ROOT / ".lake/zorn-primal-dual"
+    out = ROOT / ".lake" / args.suite
     out.mkdir(parents=True, exist_ok=True)
-    report = {"run_id": uuid.uuid4().hex, "status": "running", "targets": args.targets,
+    report = {"run_id": uuid.uuid4().hex, "status": "running", "suite": args.suite,
+              "targets": args.targets, "wait_for_build_lock": args.wait,
+              "commands": [], "audit_expected": audit_expected,
+              "audit_status": "not-run" if audit_expected else "not-selected",
               "force": args.force, "started_at": datetime.now(timezone.utc).isoformat(),
               "verifier_sha256": STARTUP_CHECKER_HASH}
     receipt(out, report)
     try:
         return run(args, out, report)
+    except BuildLockBusyError as error:
+        report.update(status="blocked", error=str(error), build_lock=error.metadata)
+        print(report["error"], file=sys.stderr, flush=True)
+        return 2
     except KeyboardInterrupt:
         report.update(status="interrupted", error="KeyboardInterrupt")
         return 130

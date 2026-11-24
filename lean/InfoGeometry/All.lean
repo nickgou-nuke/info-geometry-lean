@@ -618,3 +618,7 @@ import InfoGeometry.Algebra.ZornPrimalDual
 import InfoGeometry.Algebra.ZornChiralOperatorReconstruction
 import InfoGeometry.Canonical.SouriauAffineActionGroupoid
 import InfoGeometry.Geometry.SouriauCotangentGraphSigns
+import InfoGeometry.Algebra.ZornNullIncidence
+import InfoGeometry.Canonical.ZornCliffordKleinHierarchy
+import InfoGeometry.Canonical.ZornCliffordSourceVolume
+import InfoGeometry.Lie.SplitOctonionNullPlaneCovariance

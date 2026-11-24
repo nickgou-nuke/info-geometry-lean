@@ -396,3 +396,40 @@ records. Report SHA-256:
 This is static acceptance of the exact source hashes above. Fresh compiler
 and axiom acceptance of the structural repair remain pending. No verification
 gate, dependency pin, package source, or shared-cache policy was changed.
+
+## Structural proof compiler follow-up
+
+Focused run `45412042285`, job `138508146968`, checked the expected tree
+`bf1e1a98290b361cd751455088914e82d5b23f5b`. It built the norm,
+noninjectivity, and repaired Witt owners. The determinant owner returned
+diagnostics after 11 seconds, with neither earlier heartbeat timeout.
+It found an underconstrained identity-matrix dimension in the private signed
+exchange theorem and a rewrite for `b*a` after simplification had already
+normalized the expression to `a*b`. It also reported four unused
+simplification arguments. The missing exchange constant was a cascading
+error from the first issue. Fresh file checks and the axiom probe did not run:
+39 expected records, zero observed.
+
+Artifact `14931375742` was downloaded and digest-verified, SHA-256
+`487db08fc2fbb4dab320bfff7f6c62500e79e14de08cb52935e24af109ca9c7d`.
+The checked source/control hashes matched the published snapshot and stayed
+unchanged during the run. The independent scope receipt has SHA-256
+`cd6adb2624443e6e3392fbed924a33ae82d560b2e347a47fd2ab38c362b06003`.
+
+`source_scout` authored the isolated proof-only repair, and root and
+`audit_math` independently reviewed it against the exact diagnostics. It
+specifies the four-by-four types of the signed-exchange blocks, removes the
+already-normalized product rewrite, and removes only the four unused simp
+arguments. No theorem statement, import, count, warning policy, or gate
+criterion changes. Repaired source SHA-256:
+`099d55bfd89ab21c1fa3299d8169c971ecd1b4b14da93ac705d5128c318b4ab4`.
+Fresh acceptance of this exact source remains pending.
+
+The six maintained static gates scoped to this final ExactDet repair all
+returned zero, with zero vacuity/content findings and zero screener traps.
+All four public theorem statements and imports are unchanged. The frozen
+comparison confirmed both staged paths and all selected controls; inventory
+remains 29 owner heads plus 10 reused declarations, 39 expected and zero
+observed axiom records. Static report SHA-256:
+`d0961d42150ba8e7e6678f5d5c07ab8b577ad08fb86b2a1658241afa791ddd3e`.
+No compiler ran in this repair's static lane.

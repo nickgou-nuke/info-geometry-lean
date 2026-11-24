@@ -172,6 +172,7 @@ variable {M : Type*} [AddCommGroup M] [Module A M]
 def chiral_plus (x : M) : M := inv.P_plus • x
 def chiral_minus (x : M) : M := inv.P_minus • x
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 theorem chiral_plus_add_chiral_minus (x : M) : inv.chiral_plus x + inv.chiral_minus x = x := by
   dsimp [chiral_plus, chiral_minus]
   rw [← add_smul, P_plus_add_P_minus, one_smul]
@@ -192,10 +193,12 @@ theorem chiral_plus_minus_zero (x : M) : inv.chiral_plus (inv.chiral_minus x) = 
   dsimp [chiral_minus, chiral_plus]
   rw [smul_smul, P_plus_mul_P_minus, zero_smul]
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 theorem chiral_plus_add (x y : M) : inv.chiral_plus (x + y) = inv.chiral_plus x + inv.chiral_plus y := by
   dsimp [chiral_plus]
   rw [smul_add]
 
+omit [IsScalarTower R A A] [SMulCommClass R A A] in
 theorem chiral_minus_add (x y : M) : inv.chiral_minus (x + y) = inv.chiral_minus x + inv.chiral_minus y := by
   dsimp [chiral_minus]
   rw [smul_add]

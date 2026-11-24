@@ -117,4 +117,57 @@ theorem innerProductCore_inner_mk (B : LinearMap.BilinForm ℝ V) (hB : B.IsSymm
       (Submodule.Quotient.mk v) (Submodule.Quotient.mk w) = B v w := by
   exact quotientForm_mk B hB v w
 
+section Maps
+
+variable {W : Type*} [AddCommGroup W] [Module ℝ W]
+
+/-- Form preservation reflects membership in the radical of the target. -/
+theorem radical_comap_le (B : LinearMap.BilinForm ℝ V) (C : LinearMap.BilinForm ℝ W)
+    (f : V →ₗ[ℝ] W) (hcompat : ∀ x y, C (f x) (f y) = B x y) :
+    (LinearMap.ker C).comap f ≤ LinearMap.ker B := by
+  intro x hx
+  have hCx : C (f x) = 0 := LinearMap.mem_ker.mp hx
+  apply LinearMap.mem_ker.mpr
+  apply LinearMap.ext
+  intro y
+  rw [← hcompat x y, hCx, LinearMap.zero_apply, LinearMap.zero_apply]
+
+/-- Symmetry and nonnegativity of the target suffice for forward radical stability. -/
+theorem radical_map_le_of_nonneg
+    (B : LinearMap.BilinForm ℝ V) (C : LinearMap.BilinForm ℝ W)
+    (f : V →ₗ[ℝ] W) (hC : C.IsSymm) (hPSD : ∀ y, 0 ≤ C y y)
+    (hcompat : ∀ x y, C (f x) (f y) = B x y) :
+    LinearMap.ker B ≤ (LinearMap.ker C).comap f := by
+  intro x hx
+  change f x ∈ LinearMap.ker C
+  apply (C.apply_apply_same_eq_zero_iff hPSD hC).mp
+  rw [hcompat x x]
+  simpa only [LinearMap.zero_apply] using
+    LinearMap.congr_fun (LinearMap.mem_ker.mp hx) x
+
+/-- Native quotient maps preserve the descended forms when radicals map forward. -/
+theorem quotientForm_mapQ
+    (B : LinearMap.BilinForm ℝ V) (C : LinearMap.BilinForm ℝ W)
+    (hB : B.IsSymm) (hC : C.IsSymm) (f : V →ₗ[ℝ] W)
+    (hRad : LinearMap.ker B ≤ (LinearMap.ker C).comap f)
+    (hcompat : ∀ x y, C (f x) (f y) = B x y)
+    (x y : V ⧸ LinearMap.ker B) :
+    quotientForm C hC ((LinearMap.ker B).mapQ (LinearMap.ker C) f hRad x)
+      ((LinearMap.ker B).mapQ (LinearMap.ker C) f hRad y) = quotientForm B hB x y := by
+  refine Submodule.Quotient.induction_on _ x fun x => ?_
+  refine Submodule.Quotient.induction_on _ y fun y => ?_
+  exact hcompat x y
+
+/-- Form-preserving radical quotient maps are injective, even if the original map is not. -/
+theorem mapQ_injective
+    (B : LinearMap.BilinForm ℝ V) (C : LinearMap.BilinForm ℝ W)
+    (f : V →ₗ[ℝ] W) (hRad : LinearMap.ker B ≤ (LinearMap.ker C).comap f)
+    (hcompat : ∀ x y, C (f x) (f y) = B x y) :
+    Function.Injective ((LinearMap.ker B).mapQ (LinearMap.ker C) f hRad) := by
+  apply LinearMap.ker_eq_bot.mp
+  rw [Submodule.ker_mapQ,
+    le_antisymm (radical_comap_le B C f hcompat) hRad, Submodule.mkQ_map_self]
+
+end Maps
+
 end InfoGeometry.LinearAlgebra.PositiveRadicalQuotient

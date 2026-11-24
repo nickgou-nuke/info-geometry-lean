@@ -64,4 +64,27 @@ theorem arnoldFinite_traceless_commutator (n : ℕ)
   dsimp [IsTraceless]
   rw [Matrix.trace_sub, Matrix.trace_mul_comm, sub_self]
 
+/-- Adjoint preservation of finite incompressibility: conjugation by a
+determinant-one volume-preserving matrix keeps a traceless generator traceless. -/
+theorem arnoldFiniteGroup_adjoint_traceless (n : ℕ) (g : ArnoldFiniteGroup n)
+    (X : Matrix (Fin n) (Fin n) ℝ) (hX : IsTraceless n X) :
+    IsTraceless n ((g : Matrix (Fin n) (Fin n) ℝ) * X *
+      ((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ)) := by
+  have hginv : ((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ) *
+      (g : Matrix (Fin n) (Fin n) ℝ) = 1 := by
+    rw [← Matrix.SpecialLinearGroup.coe_mul, inv_mul_cancel,
+      Matrix.SpecialLinearGroup.coe_one]
+  dsimp [IsTraceless] at hX ⊢
+  calc
+    Matrix.trace ((g : Matrix (Fin n) (Fin n) ℝ) * X *
+        ((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ))
+        = Matrix.trace (((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ) *
+            ((g : Matrix (Fin n) (Fin n) ℝ) * X)) := by
+              rw [Matrix.trace_mul_comm]
+    _ = Matrix.trace ((((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ) *
+          (g : Matrix (Fin n) (Fin n) ℝ)) * X) := by rw [mul_assoc]
+    _ = Matrix.trace (1 * X) := by rw [hginv]
+    _ = Matrix.trace X := by simp
+    _ = 0 := hX
+
 end InfoGeometry.Physics.ArnoldFiniteGroupCore

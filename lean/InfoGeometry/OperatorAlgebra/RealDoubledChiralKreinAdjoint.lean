@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DiracHodgeDoubledSpace
@@ -17,6 +22,9 @@ namespace InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinAdjoint
 
 open InfoGeometry.Krein
 open InfoGeometry.OperatorAlgebra.RealDoubledChiralKrein
+
+set_option linter.unusedSectionVars false
+set_option linter.unusedSimpArgs false
 
 variable {E : Type*}
   [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
@@ -260,5 +268,127 @@ theorem chiralComplexStructure_isChiralKreinAntiIsometry :
   intro u v
   simp [complex_i, modular_j, spectral_epsilon, chiralKreinForm,
     WithLp.prod_inner_apply, real_inner_comm, add_comm, sub_eq_add_neg]
+
+/-! ## Packet A: Krein-Adjoint Jordan–Lie Duality, Skew-Expectation Vanishing, and Peirce Corners -/
+
+/-- A chiral Krein skew-adjoint operator satisfies `A♯ = -A`. -/
+def IsChiralKreinSkewAdjoint (A : ChiralEnd (E := E)) : Prop :=
+  chiralKreinAdjoint A = -A
+
+@[simp] theorem chiralKreinAdjoint_neg (A : ChiralEnd (E := E)) :
+    chiralKreinAdjoint (-A) = -chiralKreinAdjoint A := by
+  apply ContinuousLinearMap.ext
+  intro u
+  simp [chiralKreinAdjoint]
+
+@[simp] theorem chiralKreinAdjoint_sub (A B : ChiralEnd (E := E)) :
+    chiralKreinAdjoint (A - B) = chiralKreinAdjoint A - chiralKreinAdjoint B := by
+  rw [sub_eq_add_neg, chiralKreinAdjoint_add, chiralKreinAdjoint_neg, ← sub_eq_add_neg]
+
+/-- Symmetry of the real cross-sheet chiral Krein bilinear form. -/
+theorem chiralKreinForm_symm (u v : H₂ (E := E)) :
+    chiralKreinForm u v = chiralKreinForm v u := by
+  simp [chiralKreinForm, real_inner_comm, add_comm]
+
+/-- Homayouni–Mingarelli Lemma 50(1a): if `A` and `B` are chiral-Krein self-adjoint, then
+their Jordan anticommutator `A B + B A` is chiral-Krein self-adjoint. -/
+theorem isChiralKreinSelfAdjoint_anticommutator {A B : ChiralEnd (E := E)}
+    (hA : IsChiralKreinSelfAdjoint A) (hB : IsChiralKreinSelfAdjoint B) :
+    IsChiralKreinSelfAdjoint (A.comp B + B.comp A) := by
+  unfold IsChiralKreinSelfAdjoint at *
+  rw [chiralKreinAdjoint_add, chiralKreinAdjoint_comp, chiralKreinAdjoint_comp, hA, hB, add_comm]
+
+/-- Homayouni–Mingarelli Lemma 50(1b): if `A` and `B` are chiral-Krein self-adjoint, then
+their Lie commutator `A B - B A` is chiral-Krein skew-adjoint. -/
+theorem isChiralKreinSkewAdjoint_commutator {A B : ChiralEnd (E := E)}
+    (hA : IsChiralKreinSelfAdjoint A) (hB : IsChiralKreinSelfAdjoint B) :
+    IsChiralKreinSkewAdjoint (A.comp B - B.comp A) := by
+  unfold IsChiralKreinSkewAdjoint IsChiralKreinSelfAdjoint at *
+  rw [chiralKreinAdjoint_sub, chiralKreinAdjoint_comp, chiralKreinAdjoint_comp, hA, hB, neg_sub]
+
+/-- Over `ℝ`, every chiral-Krein skew-adjoint operator has identically zero diagonal
+Krein expectation `[K u, u] = 0`. -/
+theorem chiralKreinForm_self_eq_zero_of_isChiralKreinSkewAdjoint
+    {K : ChiralEnd (E := E)} (hK : IsChiralKreinSkewAdjoint K) (u : H₂ (E := E)) :
+    chiralKreinForm (K u) u = 0 := by
+  have h1 : chiralKreinForm (K u) u = -chiralKreinForm (K u) u := by
+    calc
+      chiralKreinForm (K u) u
+          = chiralKreinForm u (chiralKreinAdjoint K u) := chiralKreinForm_kreinAdjoint K u u
+      _ = chiralKreinForm u ((-K) u) := by rw [hK]
+      _ = -chiralKreinForm u (K u) := by
+            simp [chiralKreinForm, inner_neg_right, neg_add_rev, add_comm]
+      _ = -chiralKreinForm (K u) u := by rw [chiralKreinForm_symm]
+  linarith
+
+/-- Homayouni–Mingarelli Lemma 50(2) over `ℝ`: for chiral-Krein self-adjoint `A, B`,
+the commutator expectation `[[A, B] u, u]` vanishes identically. -/
+theorem chiralKreinForm_commutator_self_eq_zero
+    {A B : ChiralEnd (E := E)}
+    (hA : IsChiralKreinSelfAdjoint A) (hB : IsChiralKreinSelfAdjoint B)
+    (u : H₂ (E := E)) :
+    chiralKreinForm ((A.comp B - B.comp A) u) u = 0 :=
+  chiralKreinForm_self_eq_zero_of_isChiralKreinSkewAdjoint
+    (isChiralKreinSkewAdjoint_commutator hA hB) u
+
+/-- The chiral grading `γ₅` is skew-adjoint with respect to `chiralKreinAdjoint`. -/
+@[simp] theorem chiralKreinAdjoint_gamma5 :
+    chiralKreinAdjoint (gamma5 (E := E)) = -gamma5 (E := E) := by
+  apply ContinuousLinearMap.ext
+  intro v
+  apply ext_inner_left ℝ
+  intro u
+  have hη (w : H₂ (E := E)) : etaChiral (etaChiral w) = w := by
+    simpa [ContinuousLinearMap.comp_apply] using
+      congrArg (fun T : ChiralEnd (E := E) => T w) (etaChiral_involution (E := E))
+  calc
+    inner ℝ u (chiralKreinAdjoint (gamma5 (E := E)) v)
+        = chiralKreinForm (etaChiral u) (chiralKreinAdjoint (gamma5 (E := E)) v) := by
+            rw [chiralKreinForm_eq_inner_eta, hη]
+    _ = chiralKreinForm ((gamma5 (E := E)) (etaChiral u)) v :=
+          (chiralKreinForm_kreinAdjoint (gamma5 (E := E)) (etaChiral u) v).symm
+    _ = -chiralKreinForm (etaChiral u) ((gamma5 (E := E)) v) :=
+          gamma5_isChiralKreinSkewHermitian (etaChiral u) v
+    _ = -inner ℝ u ((gamma5 (E := E)) v) := by
+          rw [chiralKreinForm_eq_inner_eta, hη]
+    _ = inner ℝ u ((-gamma5 (E := E)) v) := by
+          rw [neg_apply, inner_neg_right]
+
+/-- The chiral Krein adjoint exchanges the left and right nullcone Peirce projectors. -/
+@[simp] theorem chiralKreinAdjoint_leftChiralProjector :
+    chiralKreinAdjoint (leftChiralProjector (E := E)) = rightChiralProjector (E := E) := by
+  dsimp [leftChiralProjector, rightChiralProjector]
+  rw [chiralKreinAdjoint_smul, chiralKreinAdjoint_add, chiralKreinAdjoint_id,
+    chiralKreinAdjoint_gamma5, ← sub_eq_add_neg]
+
+/-- The chiral Krein adjoint exchanges the right and left nullcone Peirce projectors. -/
+@[simp] theorem chiralKreinAdjoint_rightChiralProjector :
+    chiralKreinAdjoint (rightChiralProjector (E := E)) = leftChiralProjector (E := E) := by
+  dsimp [leftChiralProjector, rightChiralProjector]
+  rw [chiralKreinAdjoint_smul, chiralKreinAdjoint_sub, chiralKreinAdjoint_id,
+    chiralKreinAdjoint_gamma5, sub_neg_eq_add]
+
+/-- Chiral Peirce corner transformation under `chiralKreinAdjoint`:
+diagonal corners `(P A P)` and `(Q A Q)` swap sectors, whereas off-diagonal nullcone corners
+`(P A Q)` and `(Q A P)` are preserved in their respective corners. -/
+theorem chiralKreinAdjoint_peirceCorners (A : ChiralEnd (E := E)) :
+    let P := leftChiralProjector (E := E)
+    let Q := rightChiralProjector (E := E)
+    (chiralKreinAdjoint ((P.comp A).comp P) = (Q.comp (chiralKreinAdjoint A)).comp Q) ∧
+    (chiralKreinAdjoint ((Q.comp A).comp Q) = (P.comp (chiralKreinAdjoint A)).comp P) ∧
+    (chiralKreinAdjoint ((P.comp A).comp Q) = (P.comp (chiralKreinAdjoint A)).comp Q) ∧
+    (chiralKreinAdjoint ((Q.comp A).comp P) = (Q.comp (chiralKreinAdjoint A)).comp P) := by
+  dsimp only
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · rw [chiralKreinAdjoint_comp, chiralKreinAdjoint_comp,
+      chiralKreinAdjoint_leftChiralProjector, ContinuousLinearMap.comp_assoc]
+  · rw [chiralKreinAdjoint_comp, chiralKreinAdjoint_comp,
+      chiralKreinAdjoint_rightChiralProjector, ContinuousLinearMap.comp_assoc]
+  · rw [chiralKreinAdjoint_comp, chiralKreinAdjoint_comp,
+      chiralKreinAdjoint_leftChiralProjector, chiralKreinAdjoint_rightChiralProjector,
+      ContinuousLinearMap.comp_assoc]
+  · rw [chiralKreinAdjoint_comp, chiralKreinAdjoint_comp,
+      chiralKreinAdjoint_leftChiralProjector, chiralKreinAdjoint_rightChiralProjector,
+      ContinuousLinearMap.comp_assoc]
 
 end InfoGeometry.OperatorAlgebra.RealDoubledChiralKreinAdjoint

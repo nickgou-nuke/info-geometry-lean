@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Compatibility/MathlibUpperHalfPlaneShadow.lean
 
 Compatibility shadow between the pure real upper half-plane substrate and
@@ -218,4 +223,10 @@ theorem smul_shadow_SL2R_proof
     realToMathlibUHP_eq_toComplex,
     InfoGeometry.Geometry.RealUpperHalfPlane.smul_def] using
     (InfoGeometry.Geometry.RealUpperHalfPlane.toComplex_moebius g τ)
+
+theorem realChiralPhaseEquiv_mul (z w : RealChiralPhase) :
+    realChiralPhaseEquiv (InfoGeometry.Geometry.RealChiralPhase.mul z w) =
+      realChiralPhaseEquiv z * realChiralPhaseEquiv w := by
+  rfl
+
 end InfoGeometry.Compatibility

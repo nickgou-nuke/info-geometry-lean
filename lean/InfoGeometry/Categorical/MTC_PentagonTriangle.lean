@@ -158,4 +158,13 @@ theorem MacLane_Pentagon_Equation
       pentagonGamma1 zi zj zk zl zm = 1 :=
   pentagon_chart_cocycle_identity zi zj zk zl zm h_il h_ik h_km h_jm h_jl
 
+theorem diagonal_associator_vanishes
+    {R : Type*} [CommRing R]
+    {V : Type*} [AddCommGroup V] [Module R V]
+    (B : V →ₗ[R] V →ₗ[R] R)
+    (v_j x : ZornMatrix R V)
+    (z : R) :
+    associator B (ZornMatrix.diag (1 : R) z) x (star (mul B v_j x)) = ZornMatrix.diag 0 0 := by
+  exact op1_associator_vanishes_of_diag_left (B := B) v_j x z
+
 end InfoGeometry.Categorical.MTC_PentagonTriangle

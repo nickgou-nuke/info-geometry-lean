@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -150,5 +155,14 @@ theorem selfConcordantLogBarrier_packet :
       (∀ {x : ℝ}, 0 < x →
         logBarrierThirdAbs x = 2 * (Real.sqrt (logBarrierHessian x)) ^ 3) := by
   exact ⟨selfConcordantLogBarrierOwnerTarget, fun hx => logBarrier_selfConcordant_exact hx⟩
+
+theorem selfConcordantLogBarrier_properties :
+    (∀ x, x ∈ Set.Ioi (0 : ℝ) →
+      logBarrierThirdAbs x ≤ 2 * (Real.sqrt (logBarrierHessian x)) ^ 3) ∧
+      (∀ {x : ℝ}, 0 < x →
+        logBarrierThirdAbs x = 2 * (Real.sqrt (logBarrierHessian x)) ^ 3) := by
+  refine ⟨?_, fun hx => logBarrier_selfConcordant_exact hx⟩
+  intro x hx
+  exact logBarrier_selfConcordant_core hx
 
 end InfoGeometry.Convex.SelfConcordantLogBarrier

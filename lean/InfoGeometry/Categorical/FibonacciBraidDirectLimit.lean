@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.StableFibonacciAnyonBraidLimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topological.FibonacciColimit
@@ -160,5 +165,36 @@ theorem stable_projective_gate_cone_compat
       ι n (fibonacciProjectiveGate (Gate n) phase (readout n) w) :=
   stable_fibonacci_projective_gate_compat
     (φ := φ) (ι := ι) phase readout w h_readout h_ι_smul h_cone n
+
+theorem limit_fibonacci_readout_packet_of_finite_stage
+    {Stage : Nat → Type u} [∀ n : Nat, CommRing (Stage n)]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (n : Nat) (q qInv τ sqrtτ : Stage n)
+    (hArtin :
+      R_matrixOf q qInv * B_matrixOf q qInv τ sqrtτ * R_matrixOf q qInv =
+        B_matrixOf q qInv τ sqrtτ * R_matrixOf q qInv *
+          B_matrixOf q qInv τ sqrtτ)
+    (hInv : q * qInv = 1)
+    (hTau : τ ^ 2 + τ = 1)
+    (hSqrt : sqrtτ ^ 2 = τ)
+    (hPhase : q ^ 2 + qInv ^ 2 = τ) :
+    (limitRMatrix bond n q qInv * limitBMatrix bond n q qInv τ sqrtτ *
+        limitRMatrix bond n q qInv =
+      limitBMatrix bond n q qInv τ sqrtτ * limitRMatrix bond n q qInv *
+        limitBMatrix bond n q qInv τ sqrtτ) ∧
+      (directLimitOf (Stage := Stage) bond n q *
+          directLimitOf (Stage := Stage) bond n qInv = 1) ∧
+      (directLimitOf (Stage := Stage) bond n τ ^ 2 +
+          directLimitOf (Stage := Stage) bond n τ = 1) ∧
+      (directLimitOf (Stage := Stage) bond n sqrtτ ^ 2 =
+          directLimitOf (Stage := Stage) bond n τ) ∧
+      (directLimitOf (Stage := Stage) bond n q ^ 2 +
+          directLimitOf (Stage := Stage) bond n qInv ^ 2 =
+        directLimitOf (Stage := Stage) bond n τ) := by
+  refine ⟨limit_artin_relation_of_finite_stage bond n q qInv τ sqrtτ hArtin,
+    limit_inverse_relation_of_finite_stage bond n q qInv hInv,
+    limit_tau_relation_of_finite_stage bond n τ hTau,
+    limit_sqrt_tau_relation_of_finite_stage bond n τ sqrtτ hSqrt,
+    limit_phase_relation_of_finite_stage bond n q qInv τ hPhase⟩
 
 end InfoGeometry.Categorical.FibonacciBraidDirectLimit

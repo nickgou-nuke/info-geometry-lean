@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.YangBaxterZornBridge
@@ -386,5 +391,13 @@ theorem colimitNilpotent_sq_zero : colimitNilpotent * colimitNilpotent = 0 := by
   rw [hzero]
   change (colimit.ι zornStageFunctor 0).hom 0 = 0
   exact (colimit.ι zornStageFunctor 0).hom.map_zero
+
+theorem colimitNilpotent_smul_mul_smul (c d : ℂ) :
+    (c • colimitNilpotent) * (d • colimitNilpotent) = 0 := by
+  change colimitProduct (c • colimitNilpotent) (d • colimitNilpotent) = 0
+  rw [colimitProduct_smul_left, colimitProduct_smul_right,
+    show colimitProduct colimitNilpotent colimitNilpotent = 0 from
+      colimitNilpotent_sq_zero, smul_zero]
+  simp
 
 end InfoGeometry.Categorical.ZornUHFColimit

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Categorical.ModularDoubledRealHopfFibration
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -151,5 +156,18 @@ def toModularDoubledRealFibration
   projection_twist := projection_twist
 
 end FractalScaleProjectionColimit
+
+structure FractalScaleProjectionData where
+  StageTotal : ℕ → Type u
+  StageBase : ℕ → Type v
+  stageProjection : ∀ n : ℕ, StageTotal n → StageBase n
+  TotalLimit : Type w
+  BaseLimit : Type z
+  stageToLimit : (n : ℕ) → StageTotal n → TotalLimit
+  baseToLimit : (n : ℕ) → StageBase n → BaseLimit
+  limitProjection : TotalLimit → BaseLimit
+  projection_commutes :
+    ∀ (n : ℕ) (x : StageTotal n),
+      limitProjection (stageToLimit n x) = baseToLimit n (stageProjection n x)
 
 end InfoGeometry.Categorical.ModularDoubledRealTwistorColimit

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl11Matrix
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -227,5 +232,10 @@ theorem finiteTiltDiracShell_has_twoSidedInverse_iff (m : ℝ) :
     refine ⟨(m ^ 2 : ℝ)⁻¹ • finiteTiltDiracShell m, ?_, ?_⟩
     · rw [mul_smul_comm, finiteTiltDiracShell_sq, smul_smul, hcancel, one_smul]
     · rw [smul_mul_assoc, finiteTiltDiracShell_sq, smul_smul, hcancel, one_smul]
+
+theorem finiteTiltDiracShell_shell_square (m : ℝ) :
+    finiteTiltDiracShell m * finiteTiltDiracShell m =
+    (m ^ 2 : ℝ) • (1 : Mat2) :=
+  finiteTiltDiracShell_sq m
 
 end InfoGeometry.Clifford.FiniteTiltDiracShell

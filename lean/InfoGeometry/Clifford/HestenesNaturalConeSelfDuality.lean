@@ -66,4 +66,7 @@ theorem star_eq_self_of_mem_ringPositiveCone {x : B} (hx : x ∈ ringPositiveCon
 
 end NonCommRingPositiveCone
 
+def selfDuality_statement : Prop :=
+  NaturalCone Q v0 = DualCone Q v0 Tr
+
 end InfoGeometry.Clifford.Hestenes

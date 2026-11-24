@@ -6,7 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Lie.CanonicalZornRegularNorm
 import InfoGeometry.Lie.SplitOctonionWittPairingTransportBridge
 import Mathlib.LinearAlgebra.Determinant
-import Mathlib.Tactic.NormNum
+import Mathlib.Tactic.NormDet
 import Mathlib.Tactic.Ring
 
 /-!
@@ -16,9 +16,10 @@ This owner uses the existing Cartesian basis obtained
 from `canonicalToCoord`. The ordered coordinates of a state are
 `(a, x₀, x₁, x₂, b, y₀, y₁, y₂)`.
 
-The matrix readout is proved from the existing operator and basis. Its sparse
-determinant is expanded one size at a time, removing zero branches before
-expanding the next size. Basis independence then gives the exact fourth
+The matrix readout is proved from the action on an arbitrary coordinate
+vector, using the native equivalence between matrices and linear maps.
+Mathlib's proof-producing division-free determinant evaluator then computes
+the literal matrix determinant. Basis independence gives the exact fourth
 power of the existing reduced norm in every eight-element basis.
 -/
 
@@ -46,13 +47,17 @@ theorem leftRegular_cartesian_matrix (Z : ZornMatrix ℝ) :
          Z.y 0, 0, -Z.x 2, Z.x 1, 0, Z.b, 0, 0;
          Z.y 1, Z.x 2, 0, -Z.x 0, 0, 0, Z.b, 0;
          Z.y 2, -Z.x 1, Z.x 0, 0, 0, 0, 0, Z.b] := by
-  rw [LinearMap.toMatrix_map_left, LinearMap.toMatrix_map_right]
-  ext i j
-  rw [LinearMap.toMatrix_apply, Pi.basisFun_apply, Pi.basisFun_repr]
-  fin_cases i <;> fin_cases j <;>
-    norm_num [LinearMap.comp_apply, canonicalToCoord,
-      leftRegularRepresentation, leftMultiplication, ZornMatrix.mul,
-      ZornMatrix.dot, ZornMatrix.cross, Pi.single_apply]
+  rw [LinearMap.toMatrix_map_left, LinearMap.toMatrix_map_right,
+    LinearMap.toMatrix_eq_toMatrix']
+  apply Matrix.toLin'.injective
+  rw [Matrix.toLin'_toMatrix']
+  apply LinearMap.ext
+  intro v
+  funext i
+  change canonicalToCoord (Z * canonicalToCoord.symm v) i = _
+  fin_cases i <;>
+    simp [canonicalToCoord, Matrix.toLin'_apply, Matrix.mulVec, dotProduct,
+      Fin.sum_univ_eight, ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross] <;> ring
 
 set_option maxHeartbeats 1200000 in
 /-- The determinant of the eight-dimensional left action is the fourth
@@ -64,20 +69,8 @@ theorem det_leftRegular_eq_norm_pow_four
   rw [LinearMap.det_toMatrix_eq_det_toMatrix b
     ((Pi.basisFun ℝ (Fin 8)).map canonicalToCoord.symm)
     (leftRegularRepresentation Z), leftRegular_cartesian_matrix]
-  norm_num [Matrix.det_succ_row_zero (n := 7), Fin.sum_univ_succ,
-    Matrix.submatrix_apply, Fin.succAbove]
-  norm_num [Matrix.det_succ_row_zero (n := 6), Fin.sum_univ_succ,
-    Matrix.submatrix_apply, Fin.succAbove]
-  norm_num [Matrix.det_succ_row_zero (n := 5), Fin.sum_univ_succ,
-    Matrix.submatrix_apply, Fin.succAbove]
-  norm_num [Matrix.det_succ_row_zero (n := 4), Fin.sum_univ_succ,
-    Matrix.submatrix_apply, Fin.succAbove]
-  norm_num [Matrix.det_succ_row_zero (n := 3), Fin.sum_univ_succ,
-    Matrix.submatrix_apply, Fin.succAbove]
-  norm_num [Matrix.det_succ_row_zero (n := 2), Fin.sum_univ_succ,
-    Matrix.submatrix_apply, Fin.succAbove]
-  norm_num [Matrix.det_fin_two, Matrix.submatrix_apply, Fin.succAbove,
-    zornNormFun, ZornMatrix.dot]
+  eval_det
+  dsimp [zornNormFun, ZornMatrix.dot]
   ring
 
 end InfoGeometry.Lie.CanonicalZornRegularExactDet

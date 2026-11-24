@@ -119,3 +119,48 @@ required even if a target build succeeds.
 The theorem contract and evidence map state the mathematical boundaries.
 This source-review checkpoint alone does not promote any new declaration to
 `kernel_verified` and does not authorize skipping the publication hook.
+
+## Native follow-up: determinant and nonzero incidence witness
+
+The public revision `acbb4c0e8184478f502b400af94c19b23d08297c` contains
+the repaired #442 sources from `8a0131dc39d5db88382ab931b66e5e4c26fab2fe`.
+The complete artifacts from two native runs exposed the following remaining
+proof elaboration and resource failures in these inherited sources:
+
+- [Zorn/Souriau run 45406866380](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45406866380):
+  the nonzero phase-vector witness expanded the coordinate transport too early,
+  and the class-valued groupoid definition required `instance_reducible`.
+  Artifact `14925594798` SHA-256:
+  `0e733b916cb7e1248726207a0d2535da8428518f10c2ed0d1c796b753f0581d9`.
+- [Split/Clifford run 45406866384](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45406866384):
+  the 64-entry regular-matrix calculation reached its default heartbeat limit,
+  and recursive cofactor expansion reached its existing finite 1,200,000 limit.
+  Artifact `14927122918` SHA-256:
+  `58786bc465b2e5a70f028516b0c70b0cc1e516f2b493d88bd445513f343d92d3`.
+
+The matrix readout now compares the two actual linear actions using the native
+`Matrix.toLin'` equivalence and eight generic coordinate identities. The
+determinant uses Mathlib's `eval_det`, whose division-free Bird algorithm is
+connected to `Matrix.det` by proved identities and kernel-checkable certificates.
+The existing finite determinant budget is retained. No theorem statement,
+hypothesis, coordinate order, or norm convention changes.
+
+The nonzero witness first rewrites with the existing `phaseVector_coordinates`
+lemma and `map_zero`, then evaluates the same embeddings. The concrete null
+example and its nonzero conclusion are unchanged. The native groupoid witness
+adds only the compiler-requested reducibility annotation.
+
+Both candidates received independent mathematical and pinned-API source review.
+Their reviewed SHA-256 values are:
+
+| Source | SHA-256 |
+|---|---|
+| `CanonicalZornRegularExactDet.lean` | `903f274355a26e5b7220932620d330da318065ee28a411ffd8cb4175b5e4f0d1` |
+| `ZornSouriauIntakeChecks.lean` | `6fd66915c97218cd68e0dff29ebc00943abb5a9f6f77cb0a507bb2e8f1e401aa` |
+
+These changes require a new successful native receipt. The earlier failing
+runs establish diagnostics, not acceptance.
+
+The two repaired sources passed the staged proof gate, whitespace check,
+scoped placeholder audit (zero findings), source axiom/debt and scope audits
+(zero gaps), and semantic gate (two selected files, zero findings).

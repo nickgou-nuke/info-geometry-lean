@@ -1,0 +1,104 @@
+name: Native Zorn and Souriau intake
+
+"on":
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Lie/SplitOctonionRegularInvertibility.lean'
+      - 'lean/InfoGeometry/Lie/ZornChiralCircularFourVectorOperators.lean'
+      - 'lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean'
+      - 'lean/InfoGeometry/Algebraic/CartanSouriauActionGroupoid.lean'
+      - 'lean/InfoGeometry/Algebraic/CartanSouriauAffineCocycle.lean'
+      - 'lean/InfoGeometry/Algebraic/CotangentBilinearGraph.lean'
+      - 'lean/InfoGeometry/Analytic/FiniteNegativeLogPartition.lean'
+      - 'lean/InfoGeometry/Analytic/LogSumExp.lean'
+      - 'lean/InfoGeometry/Canonical/ZornSouriauIntakeChecks.lean'
+      - 'verification/zorn-souriau/**'
+      - 'verification/real-matrix-split/**'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'lean-toolchain'
+      - 'lakefile.lean'
+      - 'lake-manifest.json'
+      - '.github/workflows/zorn-souriau.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zorn-souriau-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      LEAN_NUM_THREADS: '2'
+      ZORN_SOURIAU_EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          submodules: false
+          persist-credentials: false
+      - name: Record and check the exact revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          def git(*args):
+              return subprocess.check_output(['git', *args], text=True).strip()
+          head = git('rev-parse', 'HEAD')
+          if head != os.environ['ZORN_SOURIAU_EXPECTED_SHA']:
+              raise SystemExit('Checkout differs from the requested revision')
+          Path('zorn-souriau-revision.json').write_text(json.dumps({
+              'head': head, 'tree': git('rev-parse', 'HEAD^{tree}'),
+              'status': git('status', '--short')}, indent=2) + '\n')
+          PY
+      - name: Restore pinned dependency artifacts
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ runner.os }}-lean4341-lake-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-zorn-souriau
+      - name: Install the exact repository toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          subprocess.run([str(Path.home() / '.elan/bin/elan'), 'toolchain', 'install',
+                          Path('lean-toolchain').read_text().strip()], check=True)
+          PY
+      - name: Hydrate artifacts at the focused package pins
+        run: python3 -B verification/real-matrix-split/check.py exe cache get
+      - name: Build, freshly elaborate, and audit native declarations
+        run: python3 -B verification/zorn-souriau/check.py --output "$RUNNER_TEMP/zorn-souriau-native"
+      - name: Preserve exact validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zorn-souriau-native-validation
+          path: |
+            zorn-souriau-revision.json
+            ${{ runner.temp }}/zorn-souriau-native
+      - name: Save validated dependency artifacts
+        if: success() && github.event_name == 'workflow_dispatch' && steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}

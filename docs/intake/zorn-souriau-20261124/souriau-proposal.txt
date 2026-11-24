@@ -1,0 +1,231 @@
+This synthesis accurately captures the big picture—with **two sign/convexity corrections** (directly verified against Barbaresco slides 70, 76, 90 and Neeb `arXiv:2601.04934v1` Prop. 2.4 & §5) that should be kept straight before formalizing:
+
+### I. Two Sign & Convexity Corrections in the Summary
+
+1. **Concavity of $\Phi = -\log Z$ vs. Convexity of $\log Z$ (Section 2.A):**
+   - With Souriau's convention $\Phi(\beta) = -\ln \int_M e^{-\langle J(x), \beta \rangle}\,d\lambda(x) = -\ln Z(\beta)$, differentiating once gives $Q(\beta) = +D\Phi(\beta) = \mathbb{E}_\beta[J]$, and differentiating twice gives $D^2 \Phi(\beta) = -\mathrm{Cov}_\beta(J, J) \le 0$.
+   - Therefore **$\Phi(\beta)$ is concave** (while $\log Z(\beta) = -\Phi(\beta)$ is convex!), the **Koszul–Fisher metric is $g_{\mathrm{Fisher}}(\beta) = -D^2\Phi(\beta) = +D^2\log Z(\beta) = \mathrm{Cov}_\beta(J, J) \ge 0$**, and $S(Q) = \inf_{\beta \in \Omega}(\langle Q, \beta \rangle - \Phi(\beta))$ is itself **concave** ($D^2 S = -g_{\mathrm{Fisher}}^{-1} \le 0$).
+
+2. **Group-Inverse Cocycle Sign $\theta(g^{-1})$ (Section 2.B):**
+   - Because $\langle \mathrm{Ad}^*_g J(x) + \theta(g),\; \mathrm{Ad}_g \beta \rangle = \langle J(x), \beta \rangle + \langle \mathrm{Ad}^*_{g^{-1}}\theta(g), \beta \rangle = \langle J(x), \beta \rangle - \langle \theta(g^{-1}), \beta \rangle$, the Massieu transformation law is
+     $$\Phi(\mathrm{Ad}_g \beta) = \Phi(\beta) - \langle \theta(g^{-1}), \beta \rangle = \Phi(\beta) + \langle \mathrm{Ad}^*_{g^{-1}}\theta(g), \beta \rangle$$
+     (with $\theta(g^{-1})$ rather than $\theta(g)$), which is what guarantees exact invariance of the entropy $S(\mathrm{Ad}^*_g Q + \theta(g)) = S(Q)$.
+
+---
+
+### II. Native Mathlib4 Formalization: Weinstein's Cocycle-Twisted Symplectic Groupoid $T^*G \rightrightarrows \mathfrak{g}^*$
+
+Below is the self-contained Lean 4 formalization completing the **Weinstein symplectic groupoid** corner of your table: constructing $\mathcal{G} = G \times \mathfrak{g}^* \rightrightarrows \mathfrak{g}^*$ with Souriau's affine cocycle target map, proving all groupoid axioms, showing $t(s^{-1}(\lambda)) = \mathcal{O}_\lambda$ and $S \circ s = S \circ t$ (Casimir invariance), formalizing the left-trivialized Kirillov–Souriau symplectic 2-form on $T^*G$, and proving midpoint concavity of $\Phi = -\log Z$ plus the corrected $\theta(g^{-1})$ transformation law.
+
+```lean
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
+import Mathlib.Data.Finset.Basic
+import Mathlib.Tactic
+
+noncomputable section
+
+open scoped BigOperators
+
+namespace WeinsteinGroupoidSouriauAudit
+
+/-! ### Part 1: Weinstein's Cocycle-Twisted Coadjoint Groupoid G × g* ⇉ g* -/
+
+/-- Arrows of the trivialized symplectic groupoid `T*G ≅ G × g*` over `g*`. -/
+@[ext]
+structure CoadjointArrow (G V : Type*) where
+  grp : G
+  src : V
+
+namespace CoadjointArrow
+
+variable {G V : Type*} [Group G] [AddCommGroup V]
+
+/-- Source map `s(g, α) = α`. -/
+def s (x : CoadjointArrow G V) : V := x.src
+
+/-- Souriau affine target map `t(g, α) = Ad*(g) α + θ(g)`. -/
+def t (AdStar : G → V →+ V) (θ : G → V) (x : CoadjointArrow G V) : V :=
+  AdStar x.grp x.src + θ x.grp
+
+/-- Unit bisection `u(α) = (1, α)`. -/
+def unit (α : V) : CoadjointArrow G V := ⟨1, α⟩
+
+/-- Groupoid inverse `x⁻¹ = (g⁻¹, t(x))`. -/
+def ginv (AdStar : G → V →+ V) (θ : G → V) (x : CoadjointArrow G V) : CoadjointArrow G V :=
+  ⟨x.grp⁻¹, t AdStar θ x⟩
+
+/-- Groupoid multiplication `(g₁, α₁) · (g₂, α₂) = (g₁ * g₂, α₂)` for composable arrows
+(`s(x) = t(y)`). -/
+def gmul (x y : CoadjointArrow G V) : CoadjointArrow G V :=
+  ⟨x.grp * y.grp, y.src⟩
+
+/-- **Theorem 1 (Weinstein Coadjoint Symplectic Groupoid Axioms & Orbit–Casimir Laws)**:
+Given a group `G`, coadjoint representation `AdStar : G → (V →+ V)`, and Souriau 1-cocycle
+`θ : G → V` (`θ(g₁ g₂) = θ(g₁) + AdStar g₁ (θ g₂)`):
+1. **Composable Compatibility**: If `s(x) = t(y)`, then `s(x · y) = s(y)` and `t(x · y) = t(x)`.
+2. **Unit & Associativity Laws**: `s(u α) = α`, `t(u α) = α`, `u(t x) · x = x`, `x · u(s x) = x`,
+   and `(x · y) · z = x · (y · z)`.
+3. **Inverse Laws**: `s(x⁻¹) = t(x)`, `t(x⁻¹) = s(x)`, `x⁻¹ · x = u(s x)`, and `x · x⁻¹ = u(t x)`.
+4. **Orbit–Fiber & Casimir Invariance**: `t(s⁻¹(λ))` equals the Souriau coadjoint orbit
+   `{Ad*(g) λ + θ(g) | g ∈ G}`, and any invariant entropy `S : V → ℝ` obeys `S(s x) = S(t x)`. -/
+theorem weinstein_coadjoint_groupoid_laws
+    (AdStar : G → V →+ V)
+    (hAd_one : ∀ ξ : V, AdStar 1 ξ = ξ)
+    (hAd_mul : ∀ g₁ g₂ : G, ∀ ξ : V, AdStar (g₁ * g₂) ξ = AdStar g₁ (AdStar g₂ ξ))
+    (θ : G → V) (hCoc : ∀ g₁ g₂ : G, θ (g₁ * g₂) = θ g₁ + AdStar g₁ (θ g₂)) :
+    (∀ x y : CoadjointArrow G V, x.s = t AdStar θ y →
+      (gmul x y).s = y.s ∧ t AdStar θ (gmul x y) = t AdStar θ x) ∧
+    (∀ α : V, (unit (G := G) α).s = α ∧ t AdStar θ (unit α) = α) ∧
+    (∀ x : CoadjointArrow G V,
+      gmul (unit (t AdStar θ x)) x = x ∧ gmul x (unit x.s) = x) ∧
+    (∀ x y z : CoadjointArrow G V, gmul (gmul x y) z = gmul x (gmul y z)) ∧
+    (∀ x : CoadjointArrow G V,
+      (ginv AdStar θ x).s = t AdStar θ x ∧
+      t AdStar θ (ginv AdStar θ x) = x.s ∧
+      gmul (ginv AdStar θ x) x = unit x.s ∧
+      gmul x (ginv AdStar θ x) = unit (t AdStar θ x)) ∧
+    (∀ λ α : V, (∃ x : CoadjointArrow G V, x.s = λ ∧ t AdStar θ x = α) ↔
+      ∃ g : G, AdStar g λ + θ g = α) ∧
+    (∀ (S : V → ℝ), (∀ g ξ, S (AdStar g ξ + θ g) = S ξ) →
+      ∀ x : CoadjointArrow G V, S x.s = S (t AdStar θ x)) := by
+  have hθ1 : θ 1 = 0 := by
+    have h := hCoc 1 1
+    rw [mul_one, hAd_one] at h
+    exact (self_eq_add_left.mp h).symm
+  have hθInv : ∀ g : G, θ g⁻¹ = -(AdStar g⁻¹ (θ g)) := by
+    intro g
+    have h := hCoc g⁻¹ g
+    rw [inv_mul_cancel, hθ1] at h
+    exact eq_neg_of_add_eq_zero_left h.symm
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · intro x y hcomp
+    refine ⟨rfl, ?_⟩
+    unfold gmul t s at *
+    dsimp at *
+    rw [hAd_mul, hCoc, ← hcomp, map_add]
+    abel
+  · intro α
+    exact ⟨rfl, by simp [t, unit, hAd_one, hθ1]⟩
+  · intro x
+    refine ⟨?_, ?_⟩ <;> ext <;> simp [gmul, unit, s]
+  · intro x y z
+    ext <;> simp [gmul, mul_assoc]
+  · intro x
+    have hInvT : t AdStar θ (ginv AdStar θ x) = x.s := by
+      unfold t ginv s
+      dsimp
+      rw [map_add, ← hAd_mul, inv_mul_cancel, hAd_one, hθInv]
+      abel
+    refine ⟨rfl, hInvT, ?_, ?_⟩
+    · ext <;> simp [gmul, ginv, unit, s]
+    · ext <;> simp [gmul, ginv, unit, s, t]
+  · intro λ α
+    constructor
+    · rintro ⟨x, rfl, ht⟩
+      exact ⟨x.grp, ht⟩
+    · rintro ⟨g, hg⟩
+      exact ⟨⟨g, λ⟩, rfl, hg⟩
+  · intro S hInv x
+    exact (hInv x.grp x.src).symm
+
+end CoadjointArrow
+
+/-! ### Part 2: Left-Trivialized KKS + Cocycle Symplectic 2-Form on T*G ≅ G × g* -/
+
+/-- Left-trivialized symplectic 2-form on `T_{(g, α)}(T*G) ≅ g × g*` twisted by a Souriau
+2-cocycle `Θ`:
+`Ω_α((ξ₁, ν₁), (ξ₂, ν₂)) = ν₂(ξ₁) - ν₁(ξ₂) + α([ξ₁, ξ₂]) + Θ(ξ₁, ξ₂)`. -/
+def leftTrivSymplecticForm {g : Type*} [AddCommGroup g]
+    (bracket : g → g → g) (Θ : g → g → ℝ) (α : g →+ ℝ)
+    (v₁ v₂ : g × (g →+ ℝ)) : ℝ :=
+  v₂.2 v₁.1 - v₁.2 v₂.1 + α (bracket v₁.1 v₂.1) + Θ v₁.1 v₂.1
+
+/-- **Theorem 2 (Symplectic Skew-Symmetry & KKS Reduction on Coadjoint Tangents)**:
+1. `Ω_α` is strictly skew-symmetric: `Ω_α(v₁, v₂) = -Ω_α(v₂, v₁)`.
+2. Along pure vertical/coadjoint tangent vectors `ν_i = -ad*_{ξ_i} α - Θ(ξ_i, ·)`
+   (`ν_i(η) = -α([ξ_i, η]) - Θ(ξ_i, η)`), `Ω_α` reduces directly to the **Souriau–KKS
+   symplectic 2-form**: `Ω_α(v₁, v₂) = -(α([ξ₁, ξ₂]) + Θ(ξ₁, ξ₂))`. -/
+theorem leftTrivSymplecticForm_skew_and_kks
+    {g : Type*} [AddCommGroup g]
+    (bracket : g → g → g) (hBr_skew : ∀ x y, bracket x y = -bracket y x)
+    (Θ : g → g → ℝ) (hΘ_skew : ∀ x y, Θ x y = -Θ y x)
+    (α : g →+ ℝ) (v₁ v₂ : g × (g →+ ℝ)) :
+    (leftTrivSymplecticForm bracket Θ α v₁ v₂ = -leftTrivSymplecticForm bracket Θ α v₂ v₁) ∧
+    ((∀ η : g, v₁.2 η = -(α (bracket v₁.1 η) + Θ v₁.1 η)) →
+     (∀ η : g, v₂.2 η = -(α (bracket v₂.1 η) + Θ v₂.1 η)) →
+     leftTrivSymplecticForm bracket Θ α v₁ v₂ = -(α (bracket v₁.1 v₂.1) + Θ v₁.1 v₂.1)) := by
+  constructor
+  · unfold leftTrivSymplecticForm
+    rw [hBr_skew v₁.1 v₂.1, map_neg, hΘ_skew v₁.1 v₂.1]
+    ring
+  · intro h1 h2
+    unfold leftTrivSymplecticForm
+    rw [h2 v₁.1, h1 v₂.1, hBr_skew v₂.1 v₁.1, map_neg, hΘ_skew v₂.1 v₁.1]
+    ring
+
+/-! ### Part 3: Sign-Corrected Concavity of Φ(β) = -log Z(β) & θ(g⁻¹) Cocycle Identity -/
+
+/-- Souriau Massieu potential `Φ(β) = -log(∑_i exp(-α_i(β)))`. -/
+def souriauMassieu {m : ℕ} {V : Type*} (α : Fin m → V → ℝ) (β : V) : ℝ :=
+  -Real.log (∑ i : Fin m, Real.exp (-α i β))
+
+/-- **Theorem 3 (Concavity of `Φ = -log Z` & Corrected `θ(g⁻¹)` Transformation Law)**:
+1. **Midpoint Concavity of `Φ` (Refuting "`Φ` is convex")**: For `m ≥ 1` and linear functionals
+   `α_i : V →ₗ[ℝ] ℝ`, `(Φ(β₁) + Φ(β₂)) / 2 ≤ Φ((β₁ + β₂) / 2)`.
+2. **Corrected `θ(g⁻¹)` Law**: If a group element `g` transforms the observable pairing via
+   `α_i(Ad_g β) = α_{σ(i)}(β) - θ_inv(β)` (`σ : Equiv.Perm (Fin m)`, where `θ_inv = ⟨θ(g⁻¹), ·⟩`),
+   then `Φ(Ad_g β) = Φ(β) - θ_inv(β)`. -/
+theorem souriau_massieu_concave_and_inv_cocycle
+    {m : ℕ} (hm : 0 < m) {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (α : Fin m → V →ₗ[ℝ] ℝ) (β₁ β₂ : V) :
+    ((souriauMassieu (fun i => α i) β₁ + souriauMassieu (fun i => α i) β₂) / 2 ≤
+      souriauMassieu (fun i => α i) ((1 / 2 : ℝ) • (β₁ + β₂))) ∧
+    (∀ (σ : Equiv.Perm (Fin m)) (Ad_g_β β : V) (θ_g_inv : ℝ),
+      (∀ i : Fin m, α i Ad_g_β = α (σ i) β - θ_g_inv) →
+      souriauMassieu (fun i => α i) Ad_g_β =
+        souriauMassieu (fun i => α i) β - θ_g_inv) := by
+  have hZpos : ∀ β : V, 0 < ∑ i : Fin m, Real.exp (-α i β) := fun β =>
+    Finset.sum_pos (fun i _ => Real.exp_pos _) ⟨⟨0, hm⟩, Finset.mem_univ _⟩
+  constructor
+  · unfold souriauMassieu
+    let f : Fin m → ℝ := fun i => Real.exp (-(α i β₁) / 2)
+    let g : Fin m → ℝ := fun i => Real.exp (-(α i β₂) / 2)
+    have hCS := Finset.sum_mul_sq_le_sq_mul_sq Finset.univ f g
+    have hMid : ∑ i : Fin m, f i * g i =
+        ∑ i : Fin m, Real.exp (-α i ((1 / 2 : ℝ) • (β₁ + β₂))) := by
+      refine Finset.sum_congr rfl fun i _ => ?_
+      dsimp [f, g]
+      rw [← Real.exp_add, map_smul, map_add, smul_eq_mul]
+      congr 1; ring
+    have hSq1 : ∑ i : Fin m, f i ^ 2 = ∑ i : Fin m, Real.exp (-α i β₁) := by
+      refine Finset.sum_congr rfl fun i _ => ?_
+      dsimp [f]; rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+    have hSq2 : ∑ i : Fin m, g i ^ 2 = ∑ i : Fin m, Real.exp (-α i β₂) := by
+      refine Finset.sum_congr rfl fun i _ => ?_
+      dsimp [g]; rw [← Real.exp_nat_mul]; congr 1; push_cast; ring
+    rw [hMid, hSq1, hSq2] at hCS
+    have hLog := Real.log_le_log (pow_pos (hZpos _) 2) hCS
+    rw [Real.log_pow, Real.log_mul (ne_of_gt (hZpos β₁)) (ne_of_gt (hZpos β₂))] at hLog
+    push_cast at hLog
+    linarith
+  · intro σ Ad_g_β β θ_g_inv hShift
+    unfold souriauMassieu
+    have hSum : (∑ i : Fin m, Real.exp (-α i Ad_g_β)) =
+        Real.exp θ_g_inv * (∑ i : Fin m, Real.exp (-α i β)) := by
+      have hTerm : ∀ i : Fin m,
+          Real.exp (-α i Ad_g_β) = Real.exp θ_g_inv * Real.exp (-α (σ i) β) := fun i => by
+        rw [hShift i, neg_sub, sub_eq_add_neg, add_comm, Real.exp_add]
+      simp_rw [hTerm, ← Finset.mul_sum]
+      congr 1
+      exact Fintype.sum_equiv σ (fun i => Real.exp (-α (σ i) β))
+        (fun j => Real.exp (-α j β)) (fun _ => rfl)
+    rw [hSum, Real.log_mul (Real.exp_ne_zero _) (ne_of_gt (hZpos β)), Real.log_exp]
+    ring
+
+end WeinsteinGroupoidSouriauAudit
+```

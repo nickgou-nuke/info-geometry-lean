@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Canonical.KahlerAtiyahSpinConnection
 import InfoGeometry.Canonical.ShirokovYangMillsTransfer
 import InfoGeometry.Clifford.CliffordExtensiveRotorsAndBiquaternions
+import InfoGeometry.Clifford.CliffordQuaternionFactorizationAndMasterAtlas
 import InfoGeometry.OperatorAlgebra.MaurerCartanFrameTransport
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basis
@@ -2140,6 +2141,88 @@ theorem shirokov_adjacent_simple_bivector_bracket_grade_two
   by_cases hEq : T = {i, k}
   · rw [hEq, Finset.card_pair (ne_of_lt (lt_trans hij hjk))]
   · simp [hEq] at hT
+
+/-- The commutator of any two ordered grade-two blades is supported in grade
+two in the fixed negative Clifford carrier. Even overlaps commute; a
+one-generator overlap produces the symmetric-difference blade. -/
+theorem shirokov_grade_two_blade_commutator_support {n : ℕ}
+    (S T U : Finset (Fin n)) (hS : S.card = 2) (hT : T.card = 2)
+    (hcoord : bladeRepr ℝ n
+      (algebraCommutator (cBlade ℝ n S) (cBlade ℝ n T)) U ≠ 0) :
+    U.card = 2 := by
+  let k := (S ∩ T).card
+  have hk_le : k ≤ 2 := by
+    dsimp [k]
+    exact (Finset.card_le_card Finset.inter_subset_left).trans_eq hS
+  have hswap := (cBlade_mul_swap_overlap ℝ n S T).2
+  have hzero : cBlade ℝ n S * cBlade ℝ n T =
+      cBlade ℝ n T * cBlade ℝ n S →
+      bladeRepr ℝ n (algebraCommutator (cBlade ℝ n S) (cBlade ℝ n T)) U = 0 := by
+    intro h
+    rw [algebraCommutator, h]
+    simp [bladeRepr]
+  by_cases hk0 : k = 0
+  · have hcomm : cBlade ℝ n S * cBlade ℝ n T =
+        cBlade ℝ n T * cBlade ℝ n S := by
+      have hsimp := hswap
+      simp [k, hS, hT, hk0] at hsimp
+      have hp : (-1 : ℝ) ^ 4 = 1 := by norm_num
+      rw [hp, one_smul] at hsimp
+      exact hsimp
+    exact False.elim (hcoord (hzero hcomm))
+  · by_cases hk1 : k = 1
+    · obtain ⟨s, hs⟩ := InfoGeometry.Clifford.CliffordQuaternionFactorizationAndMasterAtlas.cBlade_mul_cBlade_eq_signed_symmDiff ℝ n S T
+      have hanti : cBlade ℝ n S * cBlade ℝ n T =
+          -(cBlade ℝ n T * cBlade ℝ n S) := by
+        have hsimp := hswap
+        simp [k, hS, hT, hk1] at hsimp
+        have hp : (-1 : ℝ) ^ 3 = -1 := by norm_num
+        rw [hp, neg_one_smul] at hsimp
+        exact hsimp
+      have hsymm_card : (symmDiff S T).card = 2 := by
+        rw [Finset.symmDiff_def, Finset.card_union_of_disjoint]
+        · have hleft : (S \ T).card = 1 := by
+            have hcard := Finset.card_sdiff_add_card_inter S T
+            dsimp [k] at hk1
+            omega
+          have hright : (T \ S).card = 1 := by
+            have hcard := Finset.card_sdiff_add_card_inter T S
+            have hinter : (T ∩ S).card = 1 := by
+              simpa [Finset.inter_comm] using hk1
+            omega
+          simp [hleft, hright]
+        · refine Finset.disjoint_left.mpr ?_
+          intro x hxST hxTS
+          exact (Finset.mem_sdiff.mp hxTS).2 (Finset.mem_sdiff.mp hxST).1
+      have hcomm : algebraCommutator (cBlade ℝ n S) (cBlade ℝ n T) =
+          (2 * ((s : ℤ) : ℝ)) • cBlade ℝ n (symmDiff S T) := by
+        have hrev : cBlade ℝ n T * cBlade ℝ n S =
+            -(cBlade ℝ n S * cBlade ℝ n T) := by rw [hanti]; simp
+        have hcomm' : algebraCommutator (cBlade ℝ n S) (cBlade ℝ n T) =
+            2 • (cBlade ℝ n S * cBlade ℝ n T) := by
+          rw [algebraCommutator, hrev]
+          module
+        rw [hcomm', hs]
+        module
+      have hU : U = symmDiff S T := by
+        by_contra hU
+        apply hcoord
+        rw [hcomm]
+        have hlinear : bladeRepr ℝ n
+            ((2 * ((s : ℤ) : ℝ)) • cBlade ℝ n (symmDiff S T)) =
+            (2 * ((s : ℤ) : ℝ)) • bladeRepr ℝ n (cBlade ℝ n (symmDiff S T)) := by
+          simp [bladeRepr]
+        rw [hlinear, bladeRepr_cBlade]
+        simp [Pi.single_apply, hU]
+      rw [hU]
+      exact hsymm_card
+    · have hk2 : k = 2 := by omega
+      have hcomm : cBlade ℝ n S * cBlade ℝ n T =
+          cBlade ℝ n T * cBlade ℝ n S := by
+        have hsimp := hswap
+        simp [k, hS, hT, hk2] at hsimp
+        exact hsimp
+      exact False.elim (hcoord (hzero hcomm))
 
 /-- Conditional flatness consequence for Shirokov's compatibility equation
 in the negative-definite finite-stage Clifford algebra. Generator compatibility

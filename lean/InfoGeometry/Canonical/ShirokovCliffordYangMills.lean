@@ -573,6 +573,35 @@ theorem shirokov_frame_vectors_noncentral {B : Type*} [Ring B] [Algebra ℝ B]
   simp only [zero_mul] at hsqj
   exact (smul_ne_zero (hε j) one_ne_zero) hsqj.symm
 
+/-- A linear realization of a nondegenerate Clifford anticommutator is
+injective. If a vector maps to zero, its anticommutator with every image
+vanishes, so nondegeneracy forces the vector itself to vanish. This proves
+independence of the frame vectors, but not independence of all ordered frame
+products in odd dimension. -/
+theorem shirokov_clifford_frame_map_injective_of_nondegenerate_metric
+    {V B : Type*} [AddCommGroup V] [Module ℝ V]
+    [Ring B] [Algebra ℝ B] [NoZeroSMulDivisors ℝ B] [Nontrivial B]
+    (g : LinearMap.BilinForm ℝ V) (hg : g.Nondegenerate)
+    (h : V →ₗ[ℝ] B)
+    (hClifford : ∀ v w,
+      h v * h w + h w * h v = (2 * g v w) • (1 : B)) :
+    Function.Injective h := by
+  intro v w hvw
+  apply sub_eq_zero.mp
+  apply hg.1 (v - w)
+  intro z
+  have hzero : h (v - w) = 0 := by
+    rw [map_sub, hvw, sub_self]
+  have hrel := hClifford (v - w) z
+  rw [hzero] at hrel
+  have hscalar : (2 * g (v - w) z) • (1 : B) = 0 := by
+    simpa using hrel.symm
+  rcases smul_eq_zero.mp hscalar with hcoef | hone
+  · rcases mul_eq_zero.mp hcoef with htwo | hmetric
+    · norm_num at htwo
+    · exact hmetric
+  · exact (one_ne_zero hone).elim
+
 /-- The real-linear map underlying conjugation by a unit, used to transport a
 connection one-form without commuting its coefficient algebra. -/
 def shirokovFrameTransportLinear {A : Type*} [Ring A] [Algebra ℝ A]

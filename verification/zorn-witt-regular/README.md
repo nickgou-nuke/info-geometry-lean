@@ -35,7 +35,10 @@ declarations enter a freshly generated `#print axioms` probe. Only `propext`,
 `Classical.choice`, and `Quot.sound` are allowed. Private helpers are covered
 through their public consumers. The exact expected count is computed from
 the selected source; an inventory is not an observed axiom audit. The reviewed
-snapshot has 27 owner heads (9 + 12 + 2 + 4), giving 37 expected axiom records.
+snapshot has 29 owner heads (9 + 12 + 4 + 4), giving 39 expected axiom records.
+The two additional determinant-owner theorems witness noncommutativity of
+actual upper/lower chiral left-action matrices and of actual four-dimensional
+upper blocks in the same Cartesian representation.
 
 The verifier checks forbidden proof constructs, root/focused pins, the pinned
 Lean version, explicit builds, fresh elaboration, axiom records, and unchanged

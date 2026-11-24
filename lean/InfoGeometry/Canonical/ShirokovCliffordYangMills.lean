@@ -859,6 +859,54 @@ theorem shirokov_center_coordinate_support (n : ℕ)
   rw [map_smul, Pi.smul_apply, hzero]
   simp
 
+/-- A central element of the finite-stage `Cl(0,n)` is determined by its
+scalar coordinate and, in odd dimension, its top-blade coordinate. -/
+theorem shirokov_center_two_coordinate_expansion (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hx : x ∈ Subalgebra.center ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n))) :
+    x = bladeRepr ℝ n x ∅ • cBlade ℝ n ∅ +
+      if Odd n then
+        bladeRepr ℝ n x (Finset.univ : Finset (Fin n)) •
+          cBlade ℝ n (Finset.univ : Finset (Fin n))
+      else 0 := by
+  classical
+  apply shirokov_blade_coordinates_injective
+  ext T
+  simp only [map_add, map_smul, shirokovBladeCoordinates_cBlade,
+    Pi.smul_apply, Pi.single_apply]
+  change bladeRepr ℝ n x T = _
+  have hsupport (hEmpty : T ≠ ∅)
+      (hTop : ¬ (Odd n ∧ T = (Finset.univ : Finset (Fin n)))) :
+      bladeRepr ℝ n x T = 0 :=
+    shirokov_center_coordinate_support n x hx T hEmpty hTop
+  by_cases hEmpty : T = ∅
+  · subst T
+    by_cases hOdd : Odd n
+    · have hnpos : 0 < n := hOdd.pos
+      have hne : (Finset.univ : Finset (Fin n)) ≠ ∅ := by
+        intro h
+        have hmem : (⟨0, hnpos⟩ : Fin n) ∈
+            (Finset.univ : Finset (Fin n)) := Finset.mem_univ _
+        rw [h] at hmem
+        simpa using hmem
+      simp [hOdd, hne]
+    · simp [hOdd]
+  · by_cases hOdd : Odd n
+    · by_cases hTop : T = (Finset.univ : Finset (Fin n))
+      · subst T
+        have hne : (Finset.univ : Finset (Fin n)) ≠ ∅ := by
+          intro h
+          have hnpos : 0 < n := hOdd.pos
+          have hmem : (⟨0, hnpos⟩ : Fin n) ∈
+              (Finset.univ : Finset (Fin n)) := Finset.mem_univ _
+          rw [h] at hmem
+          simpa using hmem
+        simp [hOdd, hEmpty, hne]
+      · have hcoord := hsupport hEmpty (by simp [hOdd, hTop])
+        simp [hOdd, hEmpty, hTop, hcoord]
+    · have hcoord := hsupport hEmpty (by simp [hOdd])
+      simp [hOdd, hEmpty, hcoord]
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

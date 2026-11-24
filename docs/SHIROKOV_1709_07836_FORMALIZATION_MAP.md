@@ -177,8 +177,19 @@ odd-dimensional reduced-sum identity. The new
 element has zero ordered-blade coordinates outside the scalar coordinate and,
 in odd dimension, the top-blade coordinate. Its proof composes the center
 projection fixed-point theorem with the Reynolds coordinate-support theorem.
+`shirokov_center_two_coordinate_expansion` packages that support result as an
+explicit decomposition: every central element is its scalar blade component,
+plus its top-blade component when the dimension is odd. This is a center
+classification for the standard finite-stage `Cl(0,n)` carrier only; the
+paper's moving dual frame remains outside this theorem.
 This remains a statement about the repository's standard negative-definite
-finite-stage carrier, not a varying-frame classification theorem. Its targeted locked build of
+finite-stage carrier, not a varying-frame classification theorem. The updated
+owner passed both the locked Lean file check and the targeted locked Lake
+build of `InfoGeometry.Canonical.ShirokovCliffordYangMills` (9,091 jobs,
+exit code 0). The owner axiom audit, strict source screen, staged proof proxy
+gate, and diff checks also passed for this addition. These validations cover
+the owner and staged files only; they do not close the paper's remaining
+varying-frame contracts. The earlier targeted locked build of
 `InfoGeometry.Canonical.ShirokovCliffordYangMills` passed (9,091 jobs, exit
 code 0); the owner axiom audit passed (1 module, 0 failures), the strict
 OpenGauss source screen passed (0 traps), and the staged proof proxy gate

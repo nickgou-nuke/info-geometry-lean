@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.KahlerAtiyahSpinConnection
 import InfoGeometry.Canonical.ShirokovYangMillsTransfer
+import InfoGeometry.Clifford.GradedGraceContraction
 import InfoGeometry.Clifford.CliffordExtensiveRotorsAndBiquaternions
 import InfoGeometry.Clifford.CliffordQuaternionFactorizationAndMasterAtlas
 import InfoGeometry.OperatorAlgebra.MaurerCartanFrameTransport
@@ -2854,6 +2855,25 @@ noncomputable def shirokov_isometry_frame_blade_basis (n : ℕ)
     (S : Finset (Fin n)) :
     shirokov_isometry_frame_blade_basis n e S = shirokovIsometryFrameBlade n e S :=
   Module.Basis.mk_apply _ _ _
+
+/-- For any real quadratic form on a finite coordinate space, an isometry
+transports Mathlib's canonical Clifford blade basis to a basis. This extends
+the fixed `Cl(0,n)` result to arbitrary signatures for isometry-induced frames;
+it does not assert that every frame satisfying only the Clifford relations
+comes from such an isometry. -/
+noncomputable def shirokov_general_isometry_blade_basis {n : ℕ}
+    (Q : QuadraticForm ℝ (Fin n → ℝ))
+    (e : Q.IsometryEquiv Q) :
+    Module.Basis (Finset (Fin n)) ℝ (CliffordAlgebra Q) :=
+  (InfoGeometry.Clifford.GradedGraceContraction.cliffordBladeBasis Q).map
+    (CliffordAlgebra.equivOfIsometry e).toLinearEquiv
+
+@[simp] theorem shirokov_general_isometry_blade_basis_apply {n : ℕ}
+    (Q : QuadraticForm ℝ (Fin n → ℝ))
+    (e : Q.IsometryEquiv Q) (S : Finset (Fin n)) :
+    shirokov_general_isometry_blade_basis Q e S =
+      CliffordAlgebra.equivOfIsometry e
+        (InfoGeometry.Clifford.GradedGraceContraction.cliffordBladeBasis Q S) := rfl
 
 /-- Inverse ordered blade unit associated to a quadratic-form isometry frame. -/
 noncomputable def shirokovIsometryInverseBladeUnit (n : ℕ)

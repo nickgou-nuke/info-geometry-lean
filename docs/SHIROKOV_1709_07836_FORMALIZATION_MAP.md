@@ -59,7 +59,9 @@ of that grade. `shirokov_odd_grade_eigenvalue_top_collision` and
 `shirokov_odd_grade_eigenvalues_not_injective` establish why this sandwich
 interpolation cannot separate all grades in odd dimension: scalar and
 top-grade modes already share an eigenvalue. Existence under the paper's
-moving-frame hypotheses remains open.
+moving-frame hypotheses remains open. `shirokov_odd_grade_projection_matrix_det_eq_zero`
+and `shirokov_odd_grade_projection_matrix_not_isUnit` carry this obstruction
+through to the actual coefficient matrix: it is singular in odd dimension.
 
 ## Implementation order
 

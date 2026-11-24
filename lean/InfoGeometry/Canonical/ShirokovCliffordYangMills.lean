@@ -233,6 +233,35 @@ theorem shirokov_even_grade_projection_matrix_det_ne_zero {n : ℕ} (hn : Even n
       apply shirokov_even_grade_eigenvalues_injective hn
       exact_mod_cast hij)
 
+/-- The Vandermonde determinant vanishes in odd dimension because its scalar
+and top-grade columns coincide. -/
+theorem shirokov_odd_grade_projection_matrix_det_eq_zero {n : ℕ} (hn : Odd n) :
+    (shirokovGradeProjectionMatrix n).det = 0 := by
+  rw [shirokovGradeProjectionMatrix, Matrix.det_transpose]
+  apply Matrix.det_vandermonde_eq_zero_iff.mpr
+  have hnpos : 0 < n := by obtain ⟨m, hm⟩ := hn; omega
+  have hcollision :
+      (shirokovGradeEigenvalue n 0 : ℚ) =
+        (shirokovGradeEigenvalue n n : ℚ) := by
+    exact_mod_cast shirokov_odd_grade_eigenvalue_top_collision hn
+  refine ⟨0, ⟨n, Nat.lt_succ_self n⟩, ?_, ?_⟩
+  · exact hcollision
+  · intro h
+    have hval := congrArg Fin.val h
+    simp at hval
+    omega
+
+/-- In odd dimension the explicit grade-projection coefficient matrix is not
+invertible; the collision is a genuine rank obstruction. -/
+theorem shirokov_odd_grade_projection_matrix_not_isUnit {n : ℕ} (hn : Odd n) :
+    ¬ IsUnit (shirokovGradeProjectionMatrix n) := by
+  intro hunit
+  have hdet : IsUnit (shirokovGradeProjectionMatrix n).det :=
+    (Matrix.isUnit_iff_isUnit_det _).mp hunit
+  have hne : (shirokovGradeProjectionMatrix n).det ≠ 0 :=
+    isUnit_iff_ne_zero.mp hdet
+  exact hne (shirokov_odd_grade_projection_matrix_det_eq_zero hn)
+
 /-- The even-dimensional coefficient matrix in (1.8) is invertible over
 `ℚ`; the theorem is about the explicit finite power matrix, not yet the
 Clifford-valued projection identity. -/

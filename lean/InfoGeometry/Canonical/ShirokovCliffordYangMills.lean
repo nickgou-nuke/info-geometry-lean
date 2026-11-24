@@ -1452,6 +1452,41 @@ theorem shirokov_even_grade_projector_sum_apply {n : ℕ} (hn : Even n)
       simp [kS]
     _ = x := (shirokov_blade_expansion n x).symm
 
+/-- The subspace spanned by ordered blades of grade `k` in fixed `Cl(0,n)`. -/
+def shirokovGradeSubspace (n : ℕ) (k : Fin (n + 1)) :
+    Submodule ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)) :=
+  Submodule.span ℝ {x | ∃ S : Finset (Fin n), S.card = k.val ∧ x = cBlade ℝ n S}
+
+/-- The polynomial spectral projector has exactly the grade-`k` blade span as
+its range. This identifies the abstract range with the paper's grade space. -/
+theorem shirokov_even_grade_projector_range {n : ℕ} (hn : Even n)
+    (k : Fin (n + 1)) :
+    LinearMap.range (shirokovGradeProjector n k) = shirokovGradeSubspace n k := by
+  apply le_antisymm
+  · intro x hx
+    obtain ⟨y, rfl⟩ := LinearMap.mem_range.mp hx
+    rw [shirokov_even_grade_projector_apply hn k y]
+    apply sum_mem
+    intro S hS
+    by_cases hgrade : S.card = k.val
+    · rw [if_pos hgrade]
+      exact Submodule.smul_mem _ _
+        (Submodule.subset_span ⟨S, hgrade, rfl⟩)
+    · rw [if_neg hgrade]
+      exact Submodule.zero_mem _
+  · apply Submodule.span_le.mpr
+    intro x hx
+    obtain ⟨S, hgrade, rfl⟩ := hx
+    apply LinearMap.mem_range.mpr
+    refine ⟨cBlade ℝ n S, ?_⟩
+    rw [shirokov_even_grade_projector_blade hn k S]
+    have hidx :
+        (⟨S.card, Nat.lt_succ_of_le (by simpa using Finset.card_le_univ S)⟩ :
+          Fin (n + 1)) = k := by
+      apply Fin.ext
+      exact hgrade
+    simp [hidx]
+
 /-- Complementary inverse blades induce the same conjugation on every element
 of the fixed finite-stage `Cl(0,n)` algebra when `n` is odd. -/
 theorem shirokov_odd_inverse_blade_conjugation_complement (n : ℕ) (hn : Odd n)

@@ -1012,6 +1012,75 @@ theorem shirokov_clifford_compatibility_curvature_eq_zero_of_grade_two
     exact (sub_eq_zero.mp hcentral).symm
   · exact hgrade
 
+/-- Subtraction preserves ordered-blade grade-two support. This packages the
+linear-coordinate step needed to obtain support of a curvature expression
+from support of its individual terms. -/
+theorem shirokov_grade_two_support_sub (n : ℕ)
+    (a b : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (ha : ∀ T : Finset (Fin n), bladeRepr ℝ n a T ≠ 0 → T.card = 2)
+    (hb : ∀ T : Finset (Fin n), bladeRepr ℝ n b T ≠ 0 → T.card = 2) :
+    ∀ T : Finset (Fin n), bladeRepr ℝ n (a - b) T ≠ 0 → T.card = 2 := by
+  intro T hT
+  by_contra hcard
+  have haT : bladeRepr ℝ n a T = 0 := by
+    by_contra hne
+    exact hcard (ha T hne)
+  have hbT : bladeRepr ℝ n b T = 0 := by
+    by_contra hne
+    exact hcard (hb T hne)
+  have hcoord : bladeRepr ℝ n (a - b) T =
+      bladeRepr ℝ n a T - bladeRepr ℝ n b T := by
+    simp [bladeRepr]
+  exact hT (by rw [hcoord, haT, hbT]; simp)
+
+/-- The curvature defect is grade two if its two differentiated connection
+terms and the connection commutator are grade two. Together with compatibility,
+this yields the conditional flatness result without a monolithic support premise.
+The three support inputs remain the geometric obligations to derive. -/
+theorem shirokov_clifford_compatibility_curvature_eq_zero_of_component_grade_two
+    (n : ℕ)
+    (K : DerivationLieLane ℝ
+      (CliffordAlgebra (cliffordNegSqForm ℝ n)))
+    (C : OneForm K) (x y : K.L) (hxy : ⁅x, y⁆ = 0)
+    (hgen₁ : ∀ v : Fin n → ℝ,
+      covariantDerivative K (-C) x
+        (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
+    (hgen₂ : ∀ v : Fin n → ℝ,
+      covariantDerivative K (-C) y
+        (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
+    (h₁ : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (K.operatorAction x (C y)) T ≠ 0 → T.card = 2)
+    (h₂ : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (K.operatorAction y (C x)) T ≠ 0 → T.card = 2)
+    (hbracket : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (algebraCommutator (C x) (C y)) T ≠ 0 → T.card = 2) :
+    K.operatorAction x (C y) - K.operatorAction y (C x) -
+      algebraCommutator (C x) (C y) = 0 := by
+  apply shirokov_clifford_compatibility_curvature_eq_zero_of_grade_two
+    n K C x y hxy hgen₁ hgen₂
+  have hsplit : K.operatorAction x (C y) - K.operatorAction y (C x) -
+      algebraCommutator (C x) (C y) = K.operatorAction x (C y) -
+        (K.operatorAction y (C x) + algebraCommutator (C x) (C y)) := by
+    noncomm_ring
+  rw [hsplit]
+  apply shirokov_grade_two_support_sub n
+    (K.operatorAction x (C y))
+    (K.operatorAction y (C x) + algebraCommutator (C x) (C y)) h₁
+  intro T hT
+  by_contra hcard
+  have h₂T : bladeRepr ℝ n (K.operatorAction y (C x)) T = 0 := by
+    by_contra hne
+    exact hcard (h₂ T hne)
+  have hbrT : bladeRepr ℝ n (algebraCommutator (C x) (C y)) T = 0 := by
+    by_contra hne
+    exact hcard (hbracket T hne)
+  have hcoord : bladeRepr ℝ n
+      (K.operatorAction y (C x) + algebraCommutator (C x) (C y)) T =
+        bladeRepr ℝ n (K.operatorAction y (C x)) T +
+          bladeRepr ℝ n (algebraCommutator (C x) (C y)) T := by
+    simp [bladeRepr]
+  exact hT (by rw [hcoord, h₂T, hbrT]; simp)
+
 /-- The standard-frame center projection annihilates elements supported only
 in grade two, because the Reynolds average retains only scalar and odd-top
 coordinates. -/

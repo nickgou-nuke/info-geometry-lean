@@ -221,8 +221,12 @@ For Theorem 1.4, `shirokov_clifford_compatibility_curvature_eq_zero_of_grade_two
 closes the conditional last step on the fixed negative-definite finite-stage
 carrier: commuting derivation directions and generator compatibility make the
 defect central, and an explicit grade-two support premise forces it to vanish.
-The theorem does not derive that support premise from the paper's geometric
-hypotheses, nor does it cover other signatures or a varying base-space frame.
+`shirokov_grade_two_support_sub` and
+`shirokov_clifford_compatibility_curvature_eq_zero_of_component_grade_two`
+decompose this into support premises for the two differentiated connection
+terms and their commutator. Those component premises are still not derived
+from the paper's geometric hypotheses; other signatures and a varying
+base-space frame are also outside this theorem.
 The automorphism-frame average and Theorem 2.2 specialization passed the locked
 file check and targeted locked Lake build of
 `InfoGeometry.Canonical.ShirokovCliffordYangMills` (9,091 jobs, exit code 0).

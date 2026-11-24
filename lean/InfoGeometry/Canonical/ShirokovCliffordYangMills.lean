@@ -540,6 +540,83 @@ theorem shirokov_scalar_blade_reynolds_average (n : ℕ) :
           rw [← Finset.sum_smul]
           simp
 
+/-- Finite complement pairing reduces a complement-invariant powerset sum in
+odd dimension to subsets whose size is strictly below the midpoint. This is
+the combinatorial core of the odd-dimensional reduced sum in equation (2.3);
+complement invariance is kept as an explicit hypothesis. -/
+theorem shirokov_odd_complement_sum_reduction {A : Type*} [AddCommMonoid A]
+    (n : ℕ) (hn : Odd n) (f : Finset (Fin n) → A)
+    (hcomp : ∀ S : Finset (Fin n),
+      f S = f ((Finset.univ : Finset (Fin n)) \ S)) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset, f S) =
+      2 • ∑ S ∈ ((Finset.univ : Finset (Fin n)).powerset).filter
+        (fun S => 2 * S.card < n), f S := by
+  classical
+  rcases hn with ⟨k, hk⟩
+  let P := (Finset.univ : Finset (Fin n)).powerset
+  let L := P.filter (fun S => 2 * S.card < n)
+  let U := P.filter (fun S => n < 2 * S.card)
+  have hcard (S : Finset (Fin n)) :
+      ((Finset.univ : Finset (Fin n)) \ S).card = n - S.card := by
+    rw [Finset.card_sdiff_of_subset (Finset.subset_univ S), Finset.card_univ,
+      Fintype.card_fin]
+  have hdouble (S : Finset (Fin n)) :
+      2 * S.card < n ↔ n < 2 * ((Finset.univ : Finset (Fin n)) \ S).card := by
+    rw [hcard]
+    omega
+  have hsum : (∑ S ∈ L, f S) = ∑ S ∈ U, f S := by
+    refine Finset.sum_bij (fun S _ => (Finset.univ : Finset (Fin n)) \ S)
+      ?_ ?_ ?_ ?_
+    · intro S hS
+      change S ∈ P.filter (fun T => 2 * T.card < n) at hS
+      have hlow := (Finset.mem_filter.mp hS).2
+      change (Finset.univ : Finset (Fin n)) \ S ∈
+        P.filter (fun T => n < 2 * T.card)
+      exact Finset.mem_filter.mpr
+        ⟨Finset.mem_powerset.mpr Finset.sdiff_subset, (hdouble S).mp hlow⟩
+    · intro S hS T hT hST
+      have h := congrArg (fun X : Finset (Fin n) =>
+        (Finset.univ : Finset (Fin n)) \ X) hST
+      have hdoubleComp :
+          (Finset.univ : Finset (Fin n)) \ ((Finset.univ : Finset (Fin n)) \ T) = T := by
+        ext i
+        simp
+      simpa [hdoubleComp] using h
+    · intro T hT
+      change T ∈ P.filter (fun S => n < 2 * S.card) at hT
+      have hhigh := (Finset.mem_filter.mp hT).2
+      refine ⟨(Finset.univ : Finset (Fin n)) \ T, ?_, ?_⟩
+      · change (Finset.univ : Finset (Fin n)) \ T ∈
+          P.filter (fun S => 2 * S.card < n)
+        exact Finset.mem_filter.mpr
+          ⟨Finset.mem_powerset.mpr Finset.sdiff_subset,
+            (hdouble ((Finset.univ : Finset (Fin n)) \ T)).mpr (by simpa using hhigh)⟩
+      · ext i
+        simp
+    · intro S hS
+      exact hcomp S
+  have hdisj : Disjoint L U := by
+    rw [Finset.disjoint_left]
+    intro S hL hU
+    have hlow := (Finset.mem_filter.mp hL).2
+    have hhigh := (Finset.mem_filter.mp hU).2
+    omega
+  have hunion : L ∪ U = P := by
+    ext S
+    simp only [L, U, Finset.mem_union, Finset.mem_filter]
+    constructor
+    · rintro (⟨hP, _⟩ | ⟨hP, _⟩) <;> exact hP
+    · intro hP
+      have hne : 2 * S.card ≠ n := by omega
+      rcases lt_or_gt_of_ne hne with hlow | hhigh
+      · exact Or.inl ⟨hP, hlow⟩
+      · exact Or.inr ⟨hP, hhigh⟩
+  calc
+    (∑ S ∈ P, f S) = ∑ S ∈ L ∪ U, f S := by rw [hunion]
+    _ = (∑ S ∈ L, f S) + ∑ S ∈ U, f S := Finset.sum_union hdisj
+    _ = (∑ S ∈ L, f S) + ∑ S ∈ L, f S := by rw [← hsum]
+    _ = 2 • ∑ S ∈ L, f S := by simp [two_nsmul]
+
 /-- In odd dimension, the standard inverse-blade Reynolds average fixes the
 top-grade pseudoscalar as well as the scalar blade. -/
 theorem shirokov_odd_pseudoscalar_reynolds_average (n : ℕ) (hn : Odd n) :

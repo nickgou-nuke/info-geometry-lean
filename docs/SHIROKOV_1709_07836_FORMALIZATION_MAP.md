@@ -86,6 +86,13 @@ positive-definite orthonormal-frame results are special cases only.
    carrier. The identification of this average with the
    paper's center projection, transport to a varying dual frame, and the
    odd-dimensional reduced-sum identity required by Theorem 2.2 remain open.
+   The owner now proves `shirokov_odd_complement_sum_reduction`: for an odd
+   finite index cardinality and any complement-invariant function on its
+   powerset, the full sum is twice the sum over subsets strictly below the
+   midpoint. This is only the finite combinatorial pairing argument. The
+   paper's summand depends on a moving dual Clifford frame; its complement
+   invariance and the normalization/identification needed to derive equation
+   (2.3) from this lemma have not yet been proved.
 2. Connect the finite-coordinate `C+K` transfer's derivation family to the
    repository's CE/exterior-form carrier; derive its flatness and parallelness
    hypotheses from the Clifford-frame compatibility equations.
@@ -258,3 +265,7 @@ workspace errors, including `Canonical.Unification`,
 list also included many downstream targets. This is not an umbrella
 integration certificate. The paper is not fully formalized: the remaining
 theorem contracts above are still open.
+The odd complement-pairing lemma subsequently passed the locked file check and
+targeted owner build (9,091 jobs, exit code 0). Its complement-invariance
+hypothesis is explicit and has not yet been discharged for Shirokov's
+varying-frame summand.

@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Quantum/EntanglementMonogamy.lean
 
 Finite entanglement, monogamy, ER-incidence, and complexity interfaces.
@@ -380,9 +385,7 @@ theorem no_amps_independence_after_er_identification
     {M : MonogamyBackend}
     (E : EREPRIdentification M)
     (bridge : E.Bridge)
-    {B : M.System}
-    (_h_smooth : M.MaxEntangled B E.InteriorMode)
-    (_h_old : M.MaxEntangled B E.RadiationMode) :
+    {B : M.System} :
     ¬ M.Independent E.InteriorMode E.RadiationMode :=
   er_epr_evades_amps E bridge
 
@@ -479,5 +482,48 @@ theorem MonogamyBackend.not_all_three_relations
       · exact Or.inr (Or.inr hAR)
     · exact Or.inr (Or.inl hBR)
   · exact Or.inl hBA
+
+structure ObservableCorrelationData
+    (Q : BipartiteQuantumSystem)
+    (R : BipartiteReadout Q)
+    (state : Q.State) where
+  /-- Left observable used in the property. -/
+  leftObs : R.ObsL
+
+  /-- Right observable used in the property. -/
+  rightObs : R.ObsR
+
+  /-- Certified left marginal value. -/
+  leftValue : ℝ
+
+  /-- Certified right marginal value. -/
+  rightValue : ℝ
+
+  /-- Certified joint correlation value. -/
+  jointValue : ℝ
+
+  /-- Left marginal readout law. -/
+  outcomeL_eq :
+    R.outcomeL state leftObs = leftValue
+
+  /-- Right marginal readout law. -/
+  outcomeR_eq :
+    R.outcomeR state rightObs = rightValue
+
+  /-- Joint correlation readout law. -/
+  correlation_eq :
+    R.correlation state leftObs rightObs = jointValue
+
+/-! ## 6. Native entanglement monogamy theorem -/
+
+theorem entanglement_monogamy
+    : ∀ (System : Type)
+        (MaxEntangled Independent : System → System → Prop),
+      (∀ A B C,
+        MaxEntangled A B → MaxEntangled A C → Independent B C → False) →
+      ∀ B A R : System,
+        MaxEntangled B A → MaxEntangled B R → Independent A R → False := by
+  intro System MaxEntangled Independent hmonogamy B A R hBA hBR hAR
+  exact hmonogamy B A R hBA hBR hAR
 
 end InfoGeometry.Quantum.EntanglementMonogamy

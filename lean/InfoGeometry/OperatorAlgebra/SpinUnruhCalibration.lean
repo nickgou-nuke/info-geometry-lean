@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
@@ -286,5 +291,47 @@ attribute [rep_depth operator]
   unitSpinModularCompatibility
   unitSpinUnruhCalibration
   spinUnruhCalibrationOwnerTarget
+
+/-- The concrete unit modular acceleration calibration has the Unruh readout laws. -/
+theorem modularUnruhCalibration_properties :
+    unitModularAccelerationCalibration.betaModular = 2 * Real.pi ∧
+      unitModularAccelerationCalibration.betaPhysical =
+        (2 * Real.pi) / unitModularAccelerationCalibration.acceleration ∧
+      unitModularAccelerationCalibration.temperature =
+        unitModularAccelerationCalibration.acceleration / (2 * Real.pi) := by
+  exact ⟨
+    unitModularAccelerationCalibration.modular_beta_eq_two_pi,
+    unitModularAccelerationCalibration.physical_beta,
+    unitModularAccelerationCalibration.unruh_temperature⟩
+
+/-- The concrete unit-acceleration spin-Unruh calibration has the readout laws. -/
+theorem spinUnruhCalibration_properties
+    (State : Type*) :
+    (unitSpinUnruhCalibration State).temperature =
+        unruhTemperatureNatural (unitSpinUnruhCalibration State).spinModular ∧
+      0 < (unitSpinUnruhCalibration State).spinModular.acceleration := by
+  exact ⟨
+    (unitSpinUnruhCalibration State).temperature_eq_unruh,
+    (unitSpinUnruhCalibration State).spinModular.acceleration_positive⟩
+
+attribute [rep_depth operator]
+  SpinModularCompatibility
+  SpinModularCompatibility.acceleration_positive
+  unruhTemperatureNatural
+  UnruhTemperatureCalibration
+  UnruhTemperatureCalibration.temperature_eq_acceleration_over_two_pi
+  ModularAccelerationCalibration
+  ModularAccelerationCalibration.modular_beta_eq_two_pi
+  ModularAccelerationCalibration.physical_beta
+  ModularAccelerationCalibration.unruh_temperature
+  unruhTemperature
+  unruhBeta
+  ModularBoostTemperatureCalibration
+  ModularBoostTemperatureCalibration.temperature_eq_unruh
+  unitModularAccelerationCalibration
+  modularUnruhCalibration_properties
+  unitSpinModularCompatibility
+  unitSpinUnruhCalibration
+  spinUnruhCalibration_properties
 
 end InfoGeometry.OperatorAlgebra.SpinUnruhCalibration

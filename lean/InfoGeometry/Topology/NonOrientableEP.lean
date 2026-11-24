@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Basic
@@ -49,5 +54,15 @@ theorem model_is_KBZ_symmetric (α β γ : ℝ) : is_KBZ_symmetric (H_model α �
     simp [Real.sin_neg, Real.sin_add, Real.cos_add, Real.sin_pi, Real.cos_pi]
     ring
   exact And.intro hdx hdy
+
+
+abbrev kx (k : Momentum) : ℝ := k.1
+
+abbrev ky (k : Momentum) : ℝ := k.2
+
+
+abbrev dx (H : TwoBandHamiltonian) : Momentum → ℂ := H.1
+
+abbrev dy (H : TwoBandHamiltonian) : Momentum → ℂ := H.2
 
 end InfoGeometry.Topology.NonOrientableEP

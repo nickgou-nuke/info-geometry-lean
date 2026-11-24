@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Category.ModuleCat.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.ConcreteCategory.Basic
@@ -915,5 +920,17 @@ theorem car_realization_of_clifford_concrete :
     (hPol := cl11_concrete_ladder_realization E)
 
 end Cl11ConcreteRealization
+
+/-- Standard single-mode CAR property for an odd pair `(a, a†)`. -/
+def CARRelation (X : RealMajoranaCore) (a adag : X →ₗ[ℝ] X) : Prop :=
+  anticommutator a a = 0 ∧
+    anticommutator adag adag = 0 ∧
+    anticommutator a adag = (LinearMap.id : X →ₗ[ℝ] X)
+
+def MajoranaCAR (X : RealMajoranaCore) {Mode : Type*}
+    [AddCommGroup Mode] [Module ℝ Mode]
+    (g : Mode → Mode → ℝ) (γ : Mode → X →ₗ[ℝ] X) : Prop :=
+  ∀ u v : Mode,
+    anticommutator (γ u) (γ v) = (2 * g u v) • (LinearMap.id : X →ₗ[ℝ] X)
 
 end InfoGeometry.Quantum.RealMajoranaCategory

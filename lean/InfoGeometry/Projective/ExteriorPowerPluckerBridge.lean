@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.ExteriorPower.Basic
 import InfoGeometry.Algebra.GrassmannianCartanTower
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -436,5 +441,15 @@ theorem pluckerCoords_eq_wedgeVec4 (u v : Vec4) :
       (pluckerCoords u v 4) (pluckerCoords u v 5) =
       wedgeVec4 u v := by
   rfl
+
+
+abbrev PluckerCoords := Fin 6 → ℝ
+
+theorem exteriorKleinForm_zero_iff_exists_ιMulti
+    (X : ⋀[ℝ]^2 Vec4) :
+    exteriorKleinForm X = 0 ↔
+      ∃ u v : Vec4,
+        X = exteriorPower.ιMulti ℝ 2 ![u, v] :=
+  exteriorKleinForm_eq_zero_iff_decomposable X
 
 end InfoGeometry.Projective.ExteriorPowerPluckerBridge

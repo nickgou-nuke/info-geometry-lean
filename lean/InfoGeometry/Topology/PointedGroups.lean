@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Group.Defs
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Group.Hom.Defs
@@ -145,5 +150,15 @@ theorem actionY_eq :
   rfl
 
 end PointedGroupBraidWitness
+
+/- Conjugating actions compose according to multiplication of their bases. -/
+theorem conjugatingBraidAction_comp {G : Type} [Group G]
+    (base₁ base₂ x : G) :
+    conjugatingBraidAction base₁ (conjugatingBraidAction base₂ x) =
+      conjugatingBraidAction (base₁ * base₂) x := by
+  simp [conjugatingBraidAction, mul_assoc]
+
+def PointedGroupBraidData (Carrier : Type) [Group Carrier] :=
+  Carrier × Carrier × Carrier
 
 end InfoGeometry.Topology.PointedGroups

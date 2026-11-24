@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/SymmetryInvariants.lean
 
 Symmetry-invariant operator structures.
@@ -1590,5 +1595,21 @@ theorem hasInvariantOperatorOrigin_of_operatorSymmetryAction
     (S : OperatorSymmetryAction G Op) :
     HasInvariantOperatorOrigin G Op := by
   exact ⟨S, S.act_id, S.act_mul, S.map_one, S.map_mul⟩
+
+theorem symmetry_one_invariant :
+  ∀ (G : Type uG) [Group G],
+  ∀ (Op : Type uOp) [Ring Op],
+  ∀ α : SymmetryAction G Op,
+    IsInvariant α (1 : Op) := by
+  intro G _ Op _ α
+  exact IsInvariant.one α
+
+theorem invariant_one_projector :
+  ∀ (G : Type uG) [Group G],
+  ∀ (Op : Type uOp) [Ring Op],
+  ∀ α : SymmetryAction G Op,
+    IsInvariantProjector α (1 : Op) := by
+  intro G _ Op _ α
+  exact Projector.one_isInvariantProjector α
 
 end InfoGeometry.OperatorAlgebra

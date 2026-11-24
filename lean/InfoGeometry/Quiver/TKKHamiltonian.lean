@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Basic
@@ -280,5 +285,29 @@ theorem verify_candidate {V : Type*} [AddCommGroup V] [Module ℂ V] (A : ℕ) :
   intro _
   rcases a73_has_inversion (V := V) with ⟨H_ext, J1, J2, _, _, hInv⟩
   exact ⟨H_ext, J1, J2, hInv⟩
+
+
+def propertyBaseHamiltonian (V : Type*) [AddCommGroup V] [Module ℂ V] :
+    TKKHamiltonian_INC V where
+  H_osc := 0
+  H_rot := 0
+  H_triality := 0
+  H_Coulomb := 0
+  H_CSB := 0
+  H_CIB := 0
+  omega := 0
+  coeff_A := 0
+  delta_trip := 0
+
+
+def propertyExtremeHamiltonian (V : Type*) [AddCommGroup V] [Module ℂ V] :
+    TKKHamiltonian_ExtremeISB V where
+  H_base := propertyBaseHamiltonian V
+  H_continuum := 0
+  H_deformation := 0
+  H_pauli_def := 0
+  beta2 := 1
+  pairing_gap := 1
+  S_p := 0
 
 end TKKHamiltonian

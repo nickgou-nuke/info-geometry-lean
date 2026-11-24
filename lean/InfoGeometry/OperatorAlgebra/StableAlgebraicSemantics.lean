@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ErlangenJaynesGromov
@@ -221,5 +226,31 @@ theorem pullback_generator_readout (s : S) :
 end StableParabolicPacket
 
 end Erlangen
+
+theorem directLimit_squareZero_of_transport
+    {Stage : Nat → Type uStage} [∀ n : Nat, Semiring (Stage n)]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (property : ∀ n : Nat, Stage n)
+    (squareZero_zero : property 0 * property 0 = 0)
+    (transport : ∀ n : Nat, bond n (property n) = property (n + 1))
+    (n : Nat) :
+    directLimitOf bond n (property n) * directLimitOf bond n (property n) = 0 := by
+  exact map_squareZero (directLimitOf bond n)
+    (InfoGeometry.Algebra.InductiveSuperClosureLemmas.squareZero_all
+      bond property squareZero_zero transport n)
+
+theorem directLimit_parabolic_pow_of_transport
+    {Stage : Nat → Type uStage} [∀ n : Nat, Semiring (Stage n)]
+    (bond : ∀ n : Nat, Stage n →+* Stage (n + 1))
+    (property : ∀ n : Nat, Stage n)
+    (squareZero_zero : property 0 * property 0 = 0)
+    (transport : ∀ n : Nat, bond n (property n) = property (n + 1))
+    (n k : Nat) :
+    (1 + directLimitOf bond n (property n)) ^ k =
+      1 + k • directLimitOf bond n (property n) := by
+  exact one_add_squareZero_pow
+    (directLimitOf bond n (property n))
+    (directLimit_squareZero_of_transport bond property squareZero_zero transport n)
+    k
 
 end InfoGeometry.OperatorAlgebra.StableAlgebraicSemantics

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Quantum.HurwitzFenchel
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.FenchelConjugation
@@ -45,6 +50,25 @@ The composition normalization on the state $y$.
 $(x \bullet \overline{x}) \bullet y = n(x)y$
 -/
 theorem fenchel_state_normalization (x y : HurwitzSpace) :
+    hurwitz_mul (hurwitz_mul x (hurwitz_conj x)) y = (hurwitz_norm x * y.1, hurwitz_norm x * y.2) := by
+  ext
+  · dsimp [hurwitz_mul, hurwitz_conj, hurwitz_norm]
+    ring
+  · dsimp [hurwitz_mul, hurwitz_conj, hurwitz_norm]
+    ring
+
+/-- The finite complex-coordinate product associates for this conjugate pair. -/
+theorem complex_coordinate_associativity_patch (x y : ComplexCoordinate) :
+    hurwitz_mul (hurwitz_mul x (hurwitz_conj x)) y = 
+      hurwitz_mul x (hurwitz_mul (hurwitz_conj x) y) := by
+  ext
+  · dsimp [hurwitz_mul, hurwitz_conj]
+    ring
+  · dsimp [hurwitz_mul, hurwitz_conj]
+    ring
+
+/-- Multiplication by a coordinate and its conjugate normalizes the state. -/
+theorem complex_coordinate_state_normalization (x y : ComplexCoordinate) :
     hurwitz_mul (hurwitz_mul x (hurwitz_conj x)) y = (hurwitz_norm x * y.1, hurwitz_norm x * y.2) := by
   ext
   · dsimp [hurwitz_mul, hurwitz_conj, hurwitz_norm]

@@ -1,7 +1,7 @@
 /-
 Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Formalization Team
+Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Data.Matrix.Basic
@@ -119,5 +119,24 @@ theorem boltzmannSurprisalOperator_eigenvector
     boltzmannSurprisalOperator kB W *ᵥ v =
       (kB * Real.log W) • v := by
   rw [boltzmannSurprisalOperator_mulVec, boltzmannEntropy]
+
+
+theorem entropy_preserving_iterate_maps_leaf
+    {X R : Type*}
+    (S : X → R) (f : X → X)
+    (hf : ∀ x, S (f x) = S x)
+    (c : R) (k : ℕ) :
+    Set.MapsTo (f^[k]) (entropyLeaf S c) (entropyLeaf S c) := by
+  intro x hx
+  exact (entropy_preserving_iterate S f hf k x).trans hx
+
+
+theorem trace_conjugate_iff
+    {n R : Type*} [Fintype n] [DecidableEq n]
+    [CommSemiring R]
+    (U V A : Matrix n n R)
+    (hVU : V * U = 1) (c : R) :
+    Matrix.trace (conjugate U V A) = c ↔ Matrix.trace A = c := by
+  rw [trace_conjugate U V A hVU]
 
 end InfoGeometry.Thermodynamics.FiniteEntropyLeaves

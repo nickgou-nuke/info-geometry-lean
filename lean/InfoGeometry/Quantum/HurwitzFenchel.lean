@@ -94,4 +94,13 @@ theorem hurwitz_fenchel_equality (x y : HurwitzSpace) :
   dsimp [hurwitz_inner, hurwitz_mul, hurwitz_conj, hurwitz_one]
   ring
 
+/-- Two real coordinates for the complex-plane model. -/
+abbrev ComplexCoordinate := ℝ × ℝ
+
+/-- The coordinate identity underlying the finite Fenchel readout. -/
+theorem complex_coordinate_fenchel_equality (x y : ComplexCoordinate) :
+    hurwitz_inner (hurwitz_mul x (hurwitz_conj y)) hurwitz_one = hurwitz_inner x y := by
+  dsimp [hurwitz_inner, hurwitz_mul, hurwitz_conj, hurwitz_one]
+  ring
+
 end InfoGeometry.Quantum

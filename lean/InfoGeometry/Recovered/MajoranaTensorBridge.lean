@@ -93,7 +93,7 @@ noncomputable def majoranaSpacetimeVector (t x y z : ℝ) : MajoranaMatrix :=
 
 /-- Pure associativity fact for conjugation by an inverse matrix. -/
 theorem majorana_lorentz_sandwich (S V S_inv : MajoranaMatrix)
-    (_h_inv : S * S_inv = 1) (h_inv2 : S_inv * S = 1) :
+(h_inv2 : S_inv * S = 1) :
     (S * V * S_inv) * (S * V * S_inv) = S * (V * V) * S_inv := by
   calc
     (S * V * S_inv) * (S * V * S_inv)
@@ -162,5 +162,104 @@ theorem cuntzGeneratorIdentities :
   · ext i j <;> fin_cases i <;> fin_cases j <;>
       simp [cuntzGeneratorPlus, cuntzGeneratorMinus, gamma0_maj, gamma2_maj,
         Matrix.mul_apply, Fin.sum_univ_four] <;> ring
+
+
+lemma gamma0_gamma1_anticommute :
+    gamma0_maj * gamma1_maj + gamma1_maj * gamma0_maj = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma0_maj, gamma1_maj]
+
+
+lemma gamma0_gamma2_anticommute :
+    gamma0_maj * gamma2_maj + gamma2_maj * gamma0_maj = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma0_maj, gamma2_maj]
+
+
+lemma gamma1_gamma2_anticommute :
+    gamma1_maj * gamma2_maj + gamma2_maj * gamma1_maj = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma1_maj, gamma2_maj]
+
+
+lemma gamma1_gamma3_anticommute :
+    gamma1_maj * gamma3_maj + gamma3_maj * gamma1_maj = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma1_maj, gamma3_maj]
+
+
+lemma gamma2_gamma3_anticommute :
+    gamma2_maj * gamma3_maj + gamma3_maj * gamma2_maj = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [gamma2_maj, gamma3_maj]
+
+/-- The displayed Majorana generators anticommute in every mixed pair. -/
+theorem majorana_mixed_anticommutation :
+    gamma0_maj * gamma1_maj + gamma1_maj * gamma0_maj = 0 ∧
+    gamma0_maj * gamma2_maj + gamma2_maj * gamma0_maj = 0 ∧
+    gamma1_maj * gamma2_maj + gamma2_maj * gamma1_maj = 0 ∧
+    gamma1_maj * gamma3_maj + gamma3_maj * gamma1_maj = 0 ∧
+    gamma2_maj * gamma3_maj + gamma3_maj * gamma2_maj = 0 := by
+  exact ⟨gamma0_gamma1_anticommute, gamma0_gamma2_anticommute,
+    gamma1_gamma2_anticommute, gamma1_gamma3_anticommute,
+    gamma2_gamma3_anticommute⟩
+
+/-- Statement for the basic chiral trace identities. -/
+theorem chiralTrace :
+    chiralSupertrace 1 = 0 ∧
+      Matrix.trace chiralProjectorL = 2 ∧
+      Matrix.trace chiralProjectorR = 2 := by
+  unfold chiralSupertrace chiralProjectorL chiralProjectorR
+
+  have hgamma5 : gamma5_maj =
+      !![ 0,  0,  0,  1;
+          0,  0, -1,  0;
+          0, -1,  0,  0;
+          1,  0,  0,  0] := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [gamma5_maj, gamma0_maj, gamma1_maj, gamma2_maj, gamma3_maj,
+        Matrix.mul_apply, Fin.sum_univ_four]
+  rw [hgamma5]
+  constructor
+  · norm_num [Matrix.trace, Matrix.mul_apply, Fin.sum_univ_four,
+      Matrix.cons_val_two, Matrix.cons_val_three]
+  constructor <;>
+    norm_num [Matrix.trace, Fin.sum_univ_four,
+      Matrix.cons_val_two, Matrix.cons_val_three]
+
+/-- Statement for the nilpotent/anticommutator identities. -/
+theorem cuntzGenerator :
+    cuntzGeneratorPlus * cuntzGeneratorPlus = 0 ∧
+      cuntzGeneratorMinus * cuntzGeneratorMinus = 0 ∧
+      cuntzGeneratorPlus * cuntzGeneratorMinus +
+        cuntzGeneratorMinus * cuntzGeneratorPlus = 1 := by
+
+  have h0 : gamma0_maj * gamma0_maj = (1 : MajoranaMatrix) :=
+    majoranaSignatureSquares.1
+  have h2 : gamma2_maj * gamma2_maj = (-1 : MajoranaMatrix) :=
+    majoranaSignatureSquares.2.2.1
+  have h02 : gamma0_maj * gamma2_maj = -(gamma2_maj * gamma0_maj) :=
+    eq_neg_of_add_eq_zero_left gamma0_gamma2_anticommute
+  constructor
+  · dsimp [cuntzGeneratorPlus]
+    simp only [add_mul, mul_add, smul_mul_assoc, mul_smul_comm]
+    rw [h0, h2, h02]
+    module
+  constructor
+  · dsimp [cuntzGeneratorMinus]
+    simp only [sub_mul, mul_sub, smul_mul_assoc, mul_smul_comm]
+    rw [h0, h2, h02]
+    module
+  · dsimp [cuntzGeneratorPlus, cuntzGeneratorMinus]
+    simp only [add_mul, mul_add, sub_mul, mul_sub, smul_mul_assoc,
+      mul_smul_comm]
+    rw [h0, h2, h02]
+    module
 
 end InfoGeometry.MajoranaTensorBridge

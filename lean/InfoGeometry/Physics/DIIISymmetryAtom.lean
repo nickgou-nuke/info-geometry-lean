@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.RealBdGDIIIAtom
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -102,5 +107,18 @@ theorem cl11DIIIPackage_root_laws :
       ContinuousLinearMap.id ℝ H₂
     exact (canonicalDIIIProxy (E := E)).C_sq
   · exact chiral_symmetry_eq_epsilon (E := E)
+
+structure ClassDIIISymmetryData (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H] where
+  T : H →L[ℝ] H
+  C : H →L[ℝ] H
+
+
+def ClassDIIISymmetryLaws
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    [CompleteSpace H] (P : ClassDIIISymmetryData H) : Prop :=
+  P.T.comp P.T = -(ContinuousLinearMap.id ℝ H) ∧
+  P.C.comp P.C = ContinuousLinearMap.id ℝ H ∧
+  P.T.comp P.C = -(P.C.comp P.T)
 
 end InfoGeometry.Physics.DIIISymmetryAtom

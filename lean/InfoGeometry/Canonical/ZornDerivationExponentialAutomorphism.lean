@@ -1,3 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Analysis.Normed.Operator.NormedSpace
+import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.Calculus.Deriv.Basic
+import Mathlib.Algebra.Module.Basic
+import Mathlib.Algebra.Algebra.Basic
 import InfoGeometry.Lie.CanonicalZornDerivationExponential
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Lie.CanonicalZornDerivationOneParameterGroup

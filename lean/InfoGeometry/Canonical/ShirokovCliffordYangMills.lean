@@ -602,6 +602,32 @@ theorem shirokov_clifford_frame_map_injective_of_nondegenerate_metric
     · exact hmetric
   · exact (one_ne_zero hone).elim
 
+/-- Dual scalar readouts with a diagonal pairing certify linear independence.
+This packages the final linear-algebra step for Shirokov's ordered-frame
+products; constructing the readouts from the odd-volume trace condition is a
+separate Clifford-algebra argument. -/
+theorem shirokov_linearIndependent_of_dual_scalar_readouts
+    {ι B : Type*} [Fintype ι] [DecidableEq ι] [AddCommGroup B] [Module ℝ B]
+    (v : ι → B) (readout : ι → B →ₗ[ℝ] ℝ)
+    (hdiag : ∀ i j, readout i (v j) = if i = j then 1 else 0) :
+    LinearIndependent ℝ v := by
+  classical
+  rw [Fintype.linearIndependent_iff]
+  intro f hsum i
+  have hreadout := congrArg (readout i) hsum
+  rw [map_zero] at hreadout
+  have hf : readout i (∑ j, f j • v j) = f i := by
+    simp only [map_sum, map_smul, smul_eq_mul]
+    rw [Finset.sum_eq_single i]
+    · simp [hdiag]
+    · intro j _ hji
+      have : i ≠ j := ne_comm.mp hji
+      simp [hdiag, this]
+    · intro hi
+      exact (hi (Finset.mem_univ i)).elim
+  rw [hf] at hreadout
+  exact hreadout
+
 /-- The real-linear map underlying conjugation by a unit, used to transport a
 connection one-form without commuting its coefficient algebra. -/
 def shirokovFrameTransportLinear {A : Type*} [Ring A] [Algebra ℝ A]

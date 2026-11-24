@@ -388,4 +388,30 @@ theorem pseudoYangMillsCurrent_background_plus_parallel
   intro i hi
   rw [yangMillsCurrentTerm_background_plus_parallel D C K hflat hparallel i j]
 
+omit [DecidableEq ι] in
+/-- Finite-coordinate pseudo-Euclidean form of Shirokov's Theorem 4.1.
+The background is flat, `K` is covariantly constant, and its raised-index
+double-commutator is the prescribed source `J`. The conclusion gives both
+Yang--Mills equations for `B = C + K`, with the stated curvature convention. -/
+theorem pseudoYangMills_solution_background_plus_parallel
+    [Algebra ℝ A]
+    (D : DerivationFamily (ι := ι) (A := A)) (C K : ι → A)
+    (hflat : ∀ i j,
+      D.apply i (C j) - D.apply j (C i) - commutator (C i) (C j) = 0)
+    (hparallel : ∀ i j, D.apply i (K j) = commutator (C i) (K j))
+    (ε : ι → ℝ) (J : ι → A)
+    (hsource : ∀ j,
+      ε j • ∑ i, ε i • commutator (K i) (commutator (K i) (K j)) = J j) :
+    (∀ i j,
+      fieldStrength D (fun k => C k + K k) i j = -commutator (K i) (K j)) ∧
+    (∀ j,
+      pseudoYangMillsCurrent D ε (fun k => C k + K k)
+        (fieldStrength D (fun k => C k + K k)) j = J j) := by
+  constructor
+  · intro i j
+    exact fieldStrength_background_plus_parallel D C K hflat hparallel i j
+  · intro j
+    rw [pseudoYangMillsCurrent_background_plus_parallel D C K hflat hparallel ε j]
+    exact hsource j
+
 end InfoGeometry.Canonical.ShirokovYangMillsTransfer

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.LSeries.RiemannZeta
@@ -74,6 +79,25 @@ Proves that eigenvalue reflection $z \mapsto -z$ on the spectral axis correspond
 $$\left(\frac{1}{2} + z\right) + \left(\frac{1}{2} - z\right) = 1.$$
 -/
 theorem spectral_reflection_sum_identity (z : ℂ) :
+    ((1 / 2 : ℂ) + z) + ((1 / 2 : ℂ) - z) = 1 := by
+  ring
+
+theorem centered_evenness_iff_affine_reflection
+    (data : CompletedXiData) (z : ℂ) :
+    data.xi z = data.xi (-z) ↔ data.lambda (1 / 2 + z) = data.lambda (1 / 2 - z) := by
+  constructor
+  · intro h
+    rw [data.xi_def z, data.xi_def (-z)] at h
+    have h_sub : (1 / 2 : ℂ) + (-z) = 1 / 2 - z := by ring
+    rw [h_sub] at h
+    exact h
+  · intro h
+    rw [data.xi_def z, data.xi_def (-z)]
+    have h_sub : (1 / 2 : ℂ) + (-z) = 1 / 2 - z := by ring
+    rw [h_sub]
+    exact h
+
+theorem affine_reflection_sum_identity (z : ℂ) :
     ((1 / 2 : ℂ) + z) + ((1 / 2 : ℂ) - z) = 1 := by
   ring
 

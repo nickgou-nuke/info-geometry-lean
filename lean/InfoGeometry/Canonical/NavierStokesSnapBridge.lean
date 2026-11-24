@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Canonical/NavierStokesSnapBridge.lean
 
 Navier-Stokes projection snap guardrail.
@@ -434,6 +439,23 @@ theorem protectedNavierStokesSnapSectorInstalledTarget
     (State Charge : Type*) [Zero Charge] :
     ProtectedNavierStokesSnapSectorInstalledTarget State Charge := by
   intro S t
+  exact S.cannot_relax_to_flat t
+
+
+theorem navierStokes_hidden_nontrivial
+    {State Classical Hidden : Type*}
+    (B : NavierStokesOperatorSnapBridge State Classical Hidden)
+    (s : State)
+    (hExtreme : B.classical.ClassicalExtreme (B.classical.project s)) :
+    B.operator.HiddenNontrivial (B.operator.hiddenReadout s) := by
+  exact B.projected_extreme_implies_hidden_nontrivial s hExtreme
+
+
+theorem protectedNavierStokes_no_relaxation
+    {State Charge : Type*} [Zero Charge]
+    (S : ProtectedNavierStokesSnapSector State Charge)
+    (t : ℝ) :
+    S.obstructionFlow.flow t S.snappedState ∉ S.obstructionFlow.Flat := by
   exact S.cannot_relax_to_flat t
 
 end InfoGeometry.Canonical.NavierStokesSnapBridge

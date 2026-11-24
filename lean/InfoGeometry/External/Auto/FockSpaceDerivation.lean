@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -45,5 +50,22 @@ def CondensateState (F : Type*) := F → Prop
 
 def condensate_coherent_state (α : ℂ) (state_alpha : F) : CondensateState F :=
   fun _ => state_alpha = state_alpha
+
+/-! ## Null-matrix kernel data -/
+
+structure NullPauliKernelData where
+  matrix : Matrix (Fin 2) (Fin 2) ℂ
+  null : Matrix.det matrix = (0 : ℂ)
+  kernelVector : Fin 2 → ℂ
+  kernelVector_nonzero : kernelVector ≠ 0
+  annihilated : matrix.mulVec kernelVector = 0
+
+/-! ## Explicit coherent-state property data -/
+
+structure CoherentStateData (F : Type*) where
+  parameter : ℂ
+  state : F
+  satisfies : F → Prop
+  state_satisfies : satisfies state
 
 end noncomputable section

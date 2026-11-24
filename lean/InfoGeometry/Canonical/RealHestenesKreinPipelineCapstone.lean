@@ -151,6 +151,12 @@ theorem drazinResidueReadout_of_deltaZero
     drazinResidueReadout P.residue φ x = φ x :=
   CauchyResidueReadback.drazinResidueReadout_of_deltaZero P.residue φ hx
 
+theorem property_descends
+    {x y : H₂}
+    (hxy : HomologyEquivalent (E := E) P.frame.Dsrc x y) :
+    P.property x = P.property y :=
+  property_descends_to_homologyEquivalent (E := E) P.property_vanishes hxy
+
 end RealHestenesKreinPipeline
 
 end DoubledPipeline
@@ -230,6 +236,9 @@ theorem maps_harmonicProjectorFixed
     P.stabilization.stabilized.Hsrc (P.stabilization.embed x) =
       P.stabilization.embed x :=
   P.stabilization.maps_harmonicProjectorFixed hx
+
+
+abbrev stabilization : BottStabilizedHomologyFrame (E := E) (F := F) := P
 
 end BottStabilizedPipeline
 

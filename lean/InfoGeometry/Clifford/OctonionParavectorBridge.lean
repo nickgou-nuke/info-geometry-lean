@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
@@ -228,5 +233,28 @@ theorem octonion_paravector_bridge_synthesis
     paravectorMul_one D,
     imaginary_sq D,
     S.projected_mul⟩
+
+theorem imaginary_mul_imaginary_add_swap (D : OctonionParavectorData V)
+    (u v : V) :
+    paravectorMul D (imaginary u) (imaginary v) +
+        paravectorMul D (imaginary v) (imaginary u) =
+      scalar (-2 * D.inner u v) := by
+  rw [imaginary_mul_imaginary, imaginary_mul_imaginary_swap]
+  ext
+  · simp [scalar]
+    ring
+  · change D.cross u v + -D.cross u v = 0
+    module
+
+theorem imaginary_mul_imaginary_sub_swap (D : OctonionParavectorData V)
+    (u v : V) :
+    paravectorMul D (imaginary u) (imaginary v) -
+        paravectorMul D (imaginary v) (imaginary u) =
+      imaginary (2 • D.cross u v) := by
+  rw [imaginary_mul_imaginary, imaginary_mul_imaginary_swap]
+  ext
+  · simp [imaginary]
+  · simp [imaginary]
+    module
 
 end InfoGeometry.Clifford.OctonionParavectorBridge

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -31,6 +36,14 @@ theorem alignment_amplifies_isospin_breaking :
     BE2_ratio_19_2_exp > BE2_ratio_15_2_exp := by
   unfold BE2_ratio_19_2_exp BE2_ratio_15_2_exp
   norm_num
+
+def BE2_ratio_15_2_reference : ℝ := (115 : ℝ) / 100
+
+
+theorem A47_reference_ratio_matches :
+    abs (BE2_ratio_15_2_exp - BE2_ratio_15_2_reference) /
+      BE2_ratio_15_2_reference < (3 : ℝ) / 100 := by
+  norm_num [BE2_ratio_15_2_exp, BE2_ratio_15_2_reference]
 
 end A47MirrorNuclei
 

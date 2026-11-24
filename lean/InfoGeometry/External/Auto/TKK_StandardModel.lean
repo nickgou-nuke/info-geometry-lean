@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Subalgebra
@@ -88,5 +93,14 @@ theorem su3_commutes_with_isospin
     -- In a strict formalization, the Lie bracket [x, y] evaluates to 0.
     (x : tkk.g_0) ∈ su3_sub ∧ (y : tkk.g_0) ∈ su2_sub := by
   exact ⟨x.property, y.property⟩
+
+/-- A chosen degree-zero element, with its membership proof retained. -/
+structure DegreeZeroElement (tkk : TKKGrading (L := L)) where
+  value : tkk.g_0
+
+/-- A chosen degree-zero subalgebra and one of its elements. -/
+structure DegreeZeroSubalgebraElement (tkk : TKKGrading (L := L)) where
+  carrier : LieSubalgebra ℂ tkk.g_0
+  value : carrier
 
 end TKK_StandardModel

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -108,5 +113,22 @@ theorem eventually_exact_GG_on_vector {𝕜 V : Type*} [CommRing 𝕜] [AddCommG
   -- use the supplied eventual vanishing of the concrete defect action
   -- to remove the residual term on this vector
   simpa [hN, sub_eq_add_neg, add_assoc, add_left_comm, add_comm] using hv
+
+/-- Finite evaluation of `[L,G]` with explicit defect. -/
+theorem superBracket_L_G_eq_with_defect
+    (N m r : ℤ) (J ψ : ℤ → Module.End 𝕜 V) :
+    (L_trunc N m J ψ) * (G_trunc N r J ψ) - (G_trunc N r J ψ) * (L_trunc N m J ψ)
+      = ((m : 𝕜) / 2 - (r : 𝕜)) • G_trunc N (m + r) J ψ + defect_LG N m r J ψ := by
+  unfold defect_LG
+  abel_nf
+
+/-- Finite evaluation of `{G,G}` with explicit defect. -/
+theorem superBracket_G_G_eq_with_defect
+    (N r s : ℤ) (J ψ : ℤ → Module.End 𝕜 V) (central_N : ℤ → ℤ → 𝕜) :
+    (G_trunc N r J ψ) * (G_trunc N s J ψ) + (G_trunc N s J ψ) * (G_trunc N r J ψ)
+      = (2 : 𝕜) • L_trunc N (r + s) J ψ + (central_N r s) • (1 : Module.End 𝕜 V)
+        + defect_GG N r s J ψ central_N := by
+  unfold defect_GG
+  abel_nf
 
 end InfoGeometry.Canonical.SuperVirasoro

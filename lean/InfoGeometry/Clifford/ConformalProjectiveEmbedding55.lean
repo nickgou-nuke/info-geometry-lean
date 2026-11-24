@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.ConformalLift55
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -148,7 +153,6 @@ of `x` to the scaled embedding of the geometric inverse `q⁻¹x`.
 theorem conformal_inversion_maps_to_geoInv (x : Cl55) (q : ℝ)
     (hx_ortho_u : x * P.u = - P.u * x)
     (hx_ortho_v : x * P.v = - P.v * x)
-    (_hx_sq : x * x = q • (1 : Cl55))
     (hq : q ≠ 0) :
     - (S P * F P x q * S P) = q • F P (geoInv x q) (1 / q) := by
   dsimp [F, geoInv, n_zero, n_infty]
@@ -247,6 +251,23 @@ theorem F_sq_zero (x : Cl55) (q : ℝ)
   rw [h_rearrange]
   rw [h_x_v_cancel, h_x_u_cancel, h_uv_cancel]
   simp
+
+theorem geoInv_involutive (x : Cl55) (x_sq : ℝ) (hx : x_sq ≠ 0) :
+    geoInv (geoInv x x_sq) (1 / x_sq) = x := by
+  dsimp [geoInv]
+  rw [smul_smul]
+  have hscalar : (1 / (1 / x_sq)) * (1 / x_sq) = (1 : ℝ) := by
+    field_simp
+  rw [hscalar, one_smul]
+
+/-- Conjugation by the conformal inversion sphere is an involution. -/
+theorem S_conjugation_involutive (x : Cl55) :
+    S P * (S P * x * S P) * S P = x := by
+  have hS2 : S P * S P = 1 := S_sq P
+  calc
+    S P * (S P * x * S P) * S P =
+        (S P * S P) * x * (S P * S P) := by noncomm_ring
+    _ = x := by rw [hS2]; simp
 
 end InfoGeometry.Clifford.ConformalProjectiveEmbedding55
 

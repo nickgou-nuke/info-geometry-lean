@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Categorical.FibonacciBraidDirectLimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Convex.SelfDualCone
@@ -141,5 +146,21 @@ theorem staged_selfDualCone_extends_to_colimit
       pairing (Set.iUnion K) :=
   InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension.properCarrier_selfDualCone_extends_to_algebra
     pairing K hmono hself hdetect
+
+structure ActionModel (A : Type*) [Semiring A] where
+  /-- Hilbert self-dual positive cone. -/
+  positiveCone : SelfDualCone E
+  /-- Finite Fibonacci braid-word action on the carrier. -/
+  braidAction : FibonacciBraidWord → E → E
+  /-- Algebraic direct-limit matrix-observable action on the carrier. -/
+  limitObservableAction : Matrix (Fin 2) (Fin 2) A → E → E
+
+def ActionModelLaws {A : Type*} [Semiring A]
+    (C : ActionModel (E := E) A) : Prop :=
+  (∀ w : FibonacciBraidWord,
+    Set.MapsTo (C.braidAction w) (C.positiveCone.cone : Set E) C.positiveCone.cone) ∧
+  (∀ M : Matrix (Fin 2) (Fin 2) A,
+    Set.MapsTo (C.limitObservableAction M)
+      (C.positiveCone.cone : Set E) C.positiveCone.cone)
 
 end InfoGeometry.Categorical.FibonacciSelfDualCarrier

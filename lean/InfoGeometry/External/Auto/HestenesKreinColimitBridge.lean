@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.External.Auto.tomita_kms_v4
@@ -217,5 +222,36 @@ theorem oneStageColimit_synthesis :
     exact oneStageColimit.J_compat n x
   · intro n x
     exact oneStageColimit.I_compat n x
+
+/-- A colimit-lift interface mirroring the repo's direct-limit style. -/
+structure HestenesKreinCompatibleLift (T : HestenesKreinTower) where
+  Carrier : Type*
+  [hAdd : AddCommGroup Carrier]
+  [hMod : Module ℝ Carrier]
+  inc : ∀ n, T.Stage n →ₗ[ℝ] Carrier
+  hInc : ∀ n, (inc (n + 1)).comp (T.emb n) = inc n
+  Jlim : Carrier →ₗ[ℝ] Carrier
+  Ilim : Carrier →ₗ[ℝ] Carrier
+  J_compat : ∀ n (x : T.Stage n), Jlim (inc n x) = inc n (T.mirror n x)
+  I_compat : ∀ n (x : T.Stage n), Ilim (inc n x) = inc n (T.rotor n x)
+
+attribute [instance] HestenesKreinCompatibleLift.hAdd HestenesKreinCompatibleLift.hMod
+
+/-- The corresponding one-stage compatible-lift package. -/
+def oneStageCompatibleLift : HestenesKreinCompatibleLift oneStageTower where
+  Carrier := M2R
+  inc := fun _ => LinearMap.id
+  hInc := by
+    intro n
+    ext X
+    rfl
+  Jlim := matrixStage.mirror
+  Ilim := matrixStage.rotor
+  J_compat := by
+    intro n x
+    rfl
+  I_compat := by
+    intro n x
+    rfl
 
 end HestenesKreinColimitBridge

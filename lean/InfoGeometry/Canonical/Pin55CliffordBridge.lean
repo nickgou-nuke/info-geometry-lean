@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.ConformalGeneratorLemmas55
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.ConformalLieAlgebra55Dilation
@@ -240,5 +245,58 @@ theorem jordanCliffordPolarizationEvidence55Installed :
           (InfoGeometry.Canonical.Herm2x2OsO55RationalBridge.toVec55Q X)) ∧
     PolarizationReadback55 := by
   exact ⟨jordanDet, jordanNullSwap, polarization⟩
+
+
+theorem nullPair_phase_factorization
+    {A : Type*} [Ring A] (u v : A)
+    (hu : u * u = 0) (hv : v * v = 0)
+    (hcar : u * v + v * u = 1) :
+    u - v = (u * v - v * u) * (u + v) := by
+  have huv : u * v * u = u := by
+    calc
+      u * v * u = (u * v + v * u) * u := by
+        rw [add_mul, mul_assoc v u u, hu, mul_zero, add_zero]
+      _ = 1 * u := by rw [hcar]
+      _ = u := one_mul _
+  have vuv : v * u * v = v := by
+    calc
+      v * u * v = (u * v + v * u) * v := by
+        rw [add_mul, mul_assoc u v v, hv, mul_zero, zero_add]
+      _ = 1 * v := by rw [hcar]
+      _ = v := one_mul _
+  calc
+    u - v = u * v * u - v * u * v := by rw [huv, vuv]
+    _ = (u * v - v * u) * (u + v) := by
+      simp only [sub_mul, mul_add]
+      rw [mul_assoc u v v, hv, mul_zero,
+        mul_assoc v u u, hu, mul_zero]
+      abel
+
+
+theorem nullPair_phase_reverse_factorization
+    {A : Type*} [Ring A] (u v : A)
+    (hu : u * u = 0) (hv : v * v = 0)
+    (hcar : u * v + v * u = 1) :
+    (u + v) * (u * v - v * u) = -(u - v) := by
+  have huv : u * v * u = u := by
+    calc
+      u * v * u = (u * v + v * u) * u := by
+        rw [add_mul, mul_assoc v u u, hu, mul_zero, add_zero]
+      _ = 1 * u := by rw [hcar]
+      _ = u := one_mul _
+  have vuv : v * u * v = v := by
+    calc
+      v * u * v = (u * v + v * u) * v := by
+        rw [add_mul, mul_assoc u v v, hv, mul_zero, zero_add]
+      _ = 1 * v := by rw [hcar]
+      _ = v := one_mul _
+  calc
+    (u + v) * (u * v - v * u) =
+        u * u * v - u * v * u + v * u * v - v * v * u := by
+      noncomm_ring
+    _ = -(u - v) := by
+      rw [hu, zero_mul, hv, zero_mul,
+        huv, vuv]
+      abel
 
 end InfoGeometry.Canonical.Pin55CliffordBridge

@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Geometry/BilingualPoincareMetric.lean
 
 Invariant Poincare metric layer for the bilingual upper half-plane.
@@ -778,6 +783,20 @@ def poincareMetricCore
     (ξ η : TangentAt Z) : ℝ :=
   let Yinv : EndH := (Y.unit⁻¹).val
   Tr.tr ((Yinv.comp ξ.op).comp (Yinv.comp η.op))
+
+def IsPhaseLinearMobiusBlock
+    (D : ProjectivePolarizedBigradedBogoliubovDatum (E := E))
+    (M : PhaseLinearMobiusCoefficients D) : Prop :=
+  PhaseLinear D M.A ∧
+    PhaseLinear D M.B ∧
+      PhaseLinear D M.C ∧
+        PhaseLinear D M.Dop
+
+/-- Every phase-linear Mobius coefficient packet satisfies the admissible block carrier. -/
+theorem isPhaseLinearMobiusBlock_of_phaseLinear
+    (M : PhaseLinearMobiusCoefficients D) :
+    IsPhaseLinearMobiusBlock D M := by
+  exact ⟨M.A_phase, M.B_phase, M.C_phase, M.D_phase⟩
 
 end BilingualUpperHalfPlane
 

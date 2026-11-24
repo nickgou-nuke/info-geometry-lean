@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HolographicSouriauReconstruction
@@ -207,5 +212,13 @@ def pin55WallpaperSocketOfPremises
   grade_readout := hGrade
 
 end
+
+structure WallpaperKleinClassification where
+  candidate : Set Mat2Q
+
+structure Pin55CartanWallpaperData where
+  cartan : Set Mat10Q
+  grade : Fin 5 → Set Mat10Q
+  wallpaperAction : Fin 8 → Mat10Q → Mat10Q
 
 end InfoGeometry.Canonical.WallpaperKleinBottleCartan

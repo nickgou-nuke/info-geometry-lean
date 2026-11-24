@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -61,6 +66,35 @@ theorem noise_invariant :
     _ = 1 - M.regularSupport := by
           rw [M.flow_one, M.regular_invariant]
     _ = M.noiseSupport := rfl
+
+
+theorem flow_zero :
+    ∀ t : ℝ, M.modularFlow t 0 = 0 := by
+  intro t
+  have h := M.flow_sub t (1 : Op) 1
+  simpa using h
+
+
+theorem flow_neg (t : ℝ) (X : Op) :
+    M.modularFlow t (-X) = -M.modularFlow t X := by
+  have h := M.flow_sub t (0 : Op) X
+  simpa [M.flow_zero t] using h
+
+
+theorem flow_add (t : ℝ) (X Y : Op) :
+    M.modularFlow t (X + Y) = M.modularFlow t X + M.modularFlow t Y := by
+  have h := M.flow_sub t X (-Y)
+  simpa [sub_eq_add_neg, M.flow_neg t Y] using h
+
+
+theorem regularSupport_add_noiseSupport :
+    M.regularSupport + M.noiseSupport = 1 := by
+  simp [noiseSupport]
+
+
+theorem noiseSupport_add_regularSupport :
+    M.noiseSupport + M.regularSupport = 1 := by
+  simp [noiseSupport, add_comm]
 
 end ModularRegularSupport
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.CategoryTheory.Category.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.CategoryTheory.Limits.Shapes.Terminal
@@ -73,5 +78,10 @@ lemma healthy_boundary_annihilation (node : DAGNode)
   · unfold boundary_operator
     rw [if_pos heq]
   · contradiction
+
+
+def zpe (state : VacuumState) : ℝ := state.1
+
+def winding_number (state : VacuumState) : ℤ := state.2
 
 end VacuumGroundstate

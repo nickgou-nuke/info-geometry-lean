@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.ProperCarrierStageDetector
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension
@@ -119,5 +124,19 @@ theorem properCarrier_inductiveColimit_mem_iff_dualPositive
   have hcone : IsSelfDualCone pairing (Set.iUnion K) :=
     properCarrier_inductiveColimit_selfDualCone pairing K hmono hself hstage
   exact hcone x
+
+structure ProperCarrierStagePacket {E : Type u} (pairing : E → E → ℝ) where
+  carrier : ℕ → Set E
+  mono : Monotone carrier
+  selfDual : ∀ n : ℕ, IsSelfDualCone pairing (carrier n)
+  stageIndex : HasFiniteCarrierStage carrier
+
+/-- Membership in the inductive union is equivalent to membership at some stage. -/
+theorem properCarrier_inductiveColimit_mem_iff_exists_stage
+    {E : Type u}
+    (K : ℕ → Set E)
+    (x : E) :
+    x ∈ Set.iUnion K ↔ ∃ n : ℕ, x ∈ K n := by
+  exact Set.mem_iUnion
 
 end InfoGeometry.Canonical.ProperCarrierInductiveColimit

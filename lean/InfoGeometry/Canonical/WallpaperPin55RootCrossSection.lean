@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WallpaperKleinBottleCartan
@@ -381,5 +386,77 @@ theorem wallpaper_pin55_root_cross_section_packet (g r : Fin 8) :
     weylD5CrossSection_preserves_splitMetric55 g⟩
 
 end
+
+/-- Data table for the transformed lifted roots. -/
+def d5ActionData : Fin 8 → Fin 8 → D5RootData
+  | 0, 0 => ⟨0, 2, 0, 0⟩
+  | 0, 1 => ⟨0, 2, 1, 0⟩
+  | 0, 2 => ⟨1, 2, 0, 0⟩
+  | 0, 3 => ⟨1, 2, 1, 0⟩
+  | 0, 4 => ⟨0, 1, 0, 0⟩
+  | 0, 5 => ⟨0, 1, 1, 1⟩
+  | 0, 6 => ⟨0, 1, 0, 1⟩
+  | 0, 7 => ⟨0, 1, 1, 0⟩
+  | 1, 0 => ⟨1, 2, 0, 1⟩
+  | 1, 1 => ⟨1, 2, 1, 1⟩
+  | 1, 2 => ⟨0, 2, 1, 1⟩
+  | 1, 3 => ⟨0, 2, 0, 1⟩
+  | 1, 4 => ⟨0, 1, 1, 0⟩
+  | 1, 5 => ⟨0, 1, 0, 1⟩
+  | 1, 6 => ⟨0, 1, 0, 0⟩
+  | 1, 7 => ⟨0, 1, 1, 1⟩
+  | 2, 0 => ⟨0, 2, 1, 0⟩
+  | 2, 1 => ⟨0, 2, 0, 0⟩
+  | 2, 2 => ⟨1, 2, 1, 0⟩
+  | 2, 3 => ⟨1, 2, 0, 0⟩
+  | 2, 4 => ⟨0, 1, 1, 1⟩
+  | 2, 5 => ⟨0, 1, 0, 0⟩
+  | 2, 6 => ⟨0, 1, 1, 0⟩
+  | 2, 7 => ⟨0, 1, 0, 1⟩
+  | 3, 0 => ⟨1, 2, 1, 1⟩
+  | 3, 1 => ⟨1, 2, 0, 1⟩
+  | 3, 2 => ⟨0, 2, 0, 1⟩
+  | 3, 3 => ⟨0, 2, 1, 1⟩
+  | 3, 4 => ⟨0, 1, 0, 1⟩
+  | 3, 5 => ⟨0, 1, 1, 0⟩
+  | 3, 6 => ⟨0, 1, 1, 1⟩
+  | 3, 7 => ⟨0, 1, 0, 0⟩
+  | 4, 0 => ⟨0, 2, 0, 1⟩
+  | 4, 1 => ⟨0, 2, 1, 1⟩
+  | 4, 2 => ⟨1, 2, 1, 1⟩
+  | 4, 3 => ⟨1, 2, 0, 1⟩
+  | 4, 4 => ⟨0, 1, 0, 1⟩
+  | 4, 5 => ⟨0, 1, 1, 0⟩
+  | 4, 6 => ⟨0, 1, 0, 0⟩
+  | 4, 7 => ⟨0, 1, 1, 1⟩
+  | 5, 0 => ⟨1, 2, 0, 0⟩
+  | 5, 1 => ⟨1, 2, 1, 0⟩
+  | 5, 2 => ⟨0, 2, 0, 0⟩
+  | 5, 3 => ⟨0, 2, 1, 0⟩
+  | 5, 4 => ⟨0, 1, 0, 0⟩
+  | 5, 5 => ⟨0, 1, 1, 1⟩
+  | 5, 6 => ⟨0, 1, 1, 0⟩
+  | 5, 7 => ⟨0, 1, 0, 1⟩
+  | 6, 0 => ⟨0, 2, 1, 1⟩
+  | 6, 1 => ⟨0, 2, 0, 1⟩
+  | 6, 2 => ⟨1, 2, 0, 1⟩
+  | 6, 3 => ⟨1, 2, 1, 1⟩
+  | 6, 4 => ⟨0, 1, 1, 0⟩
+  | 6, 5 => ⟨0, 1, 0, 1⟩
+  | 6, 6 => ⟨0, 1, 1, 1⟩
+  | 6, 7 => ⟨0, 1, 0, 0⟩
+  | 7, 0 => ⟨1, 2, 1, 0⟩
+  | 7, 1 => ⟨1, 2, 0, 0⟩
+  | 7, 2 => ⟨0, 2, 1, 0⟩
+  | 7, 3 => ⟨0, 2, 0, 0⟩
+  | 7, 4 => ⟨0, 1, 1, 1⟩
+  | 7, 5 => ⟨0, 1, 0, 0⟩
+  | 7, 6 => ⟨0, 1, 0, 1⟩
+  | 7, 7 => ⟨0, 1, 1, 0⟩
+
+/-- The property table always chooses two distinct `D₅` coordinates. -/
+theorem d5ActionData_ne (g r : Fin 8) :
+    (d5ActionData g r).i ≠ (d5ActionData g r).j := by
+  fin_cases g <;> fin_cases r <;> decide
 
 end InfoGeometry.Canonical.WallpaperPin55RootCrossSection

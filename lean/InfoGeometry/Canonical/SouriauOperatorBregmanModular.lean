@@ -220,6 +220,13 @@ theorem modularDeviationAtOne_eq (ξ : g) :
       NormedSpace.exp ((-1 : ℝ) • R.modularHamiltonian ξ) - 1 := by
   rfl
 
+
+abbrev rep {g : Type*} (R : SouriauOperatorRepresentation (E := E) g) :
+    g → OperatorPrimal (E := E) :=
+  R
+
+variable {g : Type*} (R : SouriauOperatorRepresentation (E := E) g)
+
 end SouriauOperatorRepresentation
 
 /-- Link to the existing regular-cone Bregman root: diagonal divergence vanishes. -/
@@ -232,5 +239,23 @@ theorem regularConeBregman_self_readback
     (U : RegularConePoint (E := E) c) :
     operatorBregmanDivergence (E := E) ω gradPhi U U = 0 := by
   simpa using operatorBregmanDivergence_self (E := E) ω gradPhi U
+
+structure BoundedOperatorFirstOrderConvexityDatum
+    (ψ : H₂)
+    (Phi : OperatorPrimal (E := E) → ℝ)
+    (gradPhi : OperatorPrimal (E := E) → OperatorDual (E := E)) : Prop where
+  lower_bound : ∀ X Y,
+    Phi Y + operatorProductPairing (E := E) ψ (gradPhi Y) (X - Y) ≤
+      Phi X
+
+theorem boundedOperatorBregman_nonneg
+    (ψ : H₂)
+    (Phi : OperatorPrimal (E := E) → ℝ)
+    (gradPhi : OperatorPrimal (E := E) → OperatorDual (E := E))
+    (C : BoundedOperatorFirstOrderConvexityDatum (E := E) ψ Phi gradPhi)
+    (X Y : OperatorPrimal (E := E)) :
+    0 ≤ boundedOperatorBregman (E := E) ψ Phi gradPhi X Y := by
+  unfold boundedOperatorBregman
+  linarith [C.lower_bound X Y]
 
 end InfoGeometry.Canonical.SouriauOperatorBregmanModular

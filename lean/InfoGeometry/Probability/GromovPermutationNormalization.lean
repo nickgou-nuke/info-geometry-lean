@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
+import Mathlib.Data.Real.Basic
 import Mathlib.Data.Set.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Logic.Equiv.Basic

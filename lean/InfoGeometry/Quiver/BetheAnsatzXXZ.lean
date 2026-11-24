@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 Copyright (c) 2024 InfoGeometry. All rights reserved.
 Koroteev-Zeitlin: 3D Mirror Symmetry for
 Instanton Moduli Spaces
@@ -6,6 +11,7 @@ Comm. Math. Phys. 403(2), 1005-1068 (2023)
 
 XXZ Bethe Ansatz equations and QQ-system
 -/
+import Mathlib.Data.Complex.Basic
 import Mathlib.Basic.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Finset.Basic

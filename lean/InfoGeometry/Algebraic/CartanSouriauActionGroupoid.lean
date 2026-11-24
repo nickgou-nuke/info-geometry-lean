@@ -23,6 +23,7 @@ open CategoryTheory
 variable {G M : Type*} [Group G] [AddCommGroup M]
 
 /-- The already established cocycle action, as a native group action. -/
+@[instance_reducible]
 def affineMulAction (D : Datum (G := G) (M := M)) : MulAction G M where
   smul := affineAction D
   one_smul := affineAction_one D
@@ -51,7 +52,7 @@ theorem affineActionGroupoid_nonempty_hom_iff
     (D : Datum (G := G) (M := M)) (μ ν : M) :
     Nonempty (affineActionObject D μ ⟶ affineActionObject D ν) ↔
       ∃ g : G, affineAction D g μ = ν := by
-  letI := affineMulAction D
+  let := affineMulAction D
   constructor
   · rintro ⟨f⟩
     exact ⟨f.hom, f.map_val⟩

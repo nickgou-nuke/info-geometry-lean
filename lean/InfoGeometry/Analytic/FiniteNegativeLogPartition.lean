@@ -121,7 +121,7 @@ theorem negativeLogPartition_permute_sub [Nonempty ι]
       _ = Real.exp c * ∑ i, Real.exp (-energy (σ i)) := by
         rw [Finset.mul_sum]
       _ = Real.exp c * ∑ i, Real.exp (-energy i) := by
-        rw [σ.sum_comp (fun i => Real.exp (-energy i))]
+        rw [Equiv.sum_comp σ (fun i => Real.exp (-energy i))]
   rw [hSum, Real.log_mul (Real.exp_ne_zero c) (partition_sum_pos energy).ne',
     Real.log_exp]
   ring

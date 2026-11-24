@@ -119,14 +119,14 @@ theorem isUnit_leftRegular_iff (Z : CanonicalZorn) :
     have hconjZ : zornConj Z = 0 :=
       leftRegularRepresentation_injective (hconj.trans (map_zero leftRegularRepresentation).symm)
     have hZ : Z = 0 := by
-      simpa [zornConj] using congrArg zornConj hconjZ
+      simpa only [zornConj, neg_neg, neg_zero] using congrArg zornConj hconjZ
     have hzero : leftRegularRepresentation Z = 0 := by
       rw [hZ, map_zero]
     have h10 : (1 : Module.End ℝ CanonicalZorn) = 0 :=
       hunit.mul_left_cancel (by rw [mul_one, mul_zero, hzero])
     have hscalar := congrArg (fun T : Module.End ℝ CanonicalZorn =>
       (T (1 : CanonicalZorn)).a) h10
-    simpa using hscalar
+    simp at hscalar
   · intro hnorm
     exact ⟨⟨leftRegularRepresentation Z,
       (zornNormFun Z)⁻¹ • leftRegularRepresentation (zornConj Z),

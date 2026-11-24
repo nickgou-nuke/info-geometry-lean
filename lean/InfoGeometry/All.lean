@@ -22,6 +22,7 @@ import InfoGeometry.Clifford.ParaKreinObstructions
 import InfoGeometry.Clifford.NeutralCotangentHamiltonian
 import InfoGeometry.Geometry.ParaPotentialPullback
 import InfoGeometry.Prequantum.GNSQuotientStrictPositivity
+import InfoGeometry.Canonical.BisognanoPeirceProjectionCore
 import InfoGeometry.Canonical.ConnesInfimumDistance
 import InfoGeometry.Canonical.UHFTracialStateCore
 import InfoGeometry.Canonical.HestenesCartanPhaseTransport

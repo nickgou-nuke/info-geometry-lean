@@ -614,3 +614,7 @@ import InfoGeometry.LinearAlgebra.OrderedQuotientBasis
 import InfoGeometry.Algebra.FreeOperatorSymmetry
 import InfoGeometry.Canonical.OperatorBasisExamples
 import InfoGeometry.Algebra.OperatorBasisAudit
+import InfoGeometry.Algebra.ZornPrimalDual
+import InfoGeometry.Algebra.ZornChiralOperatorReconstruction
+import InfoGeometry.Canonical.SouriauAffineActionGroupoid
+import InfoGeometry.Geometry.SouriauCotangentGraphSigns

@@ -157,33 +157,62 @@ Casimir owners remain distinct from the operator-colimit contribution.
 
 ## Validation
 
-Independent semantic source review passed for the implementation. Static QA
-passed the staged whitespace check, strict proof-proxy gate, seventeen-file
-active-index inspection, semantic-vacuity screen at error severity, and
-strict OpenGauss screen. The semantic screen reported 21 reviewed findings in
-existing declarations and none in the eleven new declarations.
+The selected theorem surface passed the complete
+[hosted focused workflow](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45360324260)
+on 2026-11-24. The accepted implementation revision is
+`d83f97a4911844c2dbc4001ef2601c93568e37d0`, tree
+`e9cd04a95b637ef34884c80d9397f26a6290aec2`.
 
-Kernel acceptance is pending. The first hosted run, `45357274534`, compiled
-the four operator equivalences and existing dependencies but found two
-symmetry-predicate elaboration errors in the new consumer. Its six symmetry
-hypotheses now explicitly select `LinearMap.IsSymm`, matching `form_isSymm`.
-The alternative imported bilinear-form predicate is equivalent by native
-`LinearMap.BilinForm.isSymm_iff`; no mathematical hypothesis is strengthened.
-The second hosted run, `45359391068`, cleared that mismatch but found an
-unconstrained universe for the dummy `PUnit` state index used by the existing
-rate-law adapter. The adapter now uses monomorphic `Unit`; its tangent fiber
-is still the full native `DirectLimit`. Neither the theorem statements nor
-their mathematical hypotheses change. The repaired consumer still requires
-a fresh compiler and axiom result.
+Independent semantic review passed. Independent QA verified the exact hosted
+revision, original evidence archive digest, build output, and fresh axiom
+logs, then reran the committed axiom checker on the downloaded logs.
 
-Local validation could not acquire another job's shared build lock. The
-queued prerequisite and unchanged pre-push invocation were stopped before
-any local Lake process started, so the repair does not race those checks.
-No local compiler or publication-gate success is claimed. The draft PR's
-isolated pinned workflow checks the exact published source independently.
+| Check | Observed result |
+| --- | --- |
+| Three focused audit targets, `--wfail` | Passed, 3,809 selected Lake jobs; no Lean warnings or errors. |
+| Fresh compiler output from all three audits | Passed; 87 expected declarations, 87 reported records. |
+| Axiom allow-list | Passed; only `propext`, `Classical.choice`, and `Quot.sound`. |
+| Source proof gate and strict OpenGauss screen | Passed for all seventeen explicit Lean files. |
+| Semantic-vacuity screen at error severity | Passed; 21 reviewed findings in existing declarations, none in the eleven new declarations. |
+| Staged whitespace and actual pre-commit hooks | Passed for the implementation and both narrow repairs. |
+| Dependency integrity | Lean `v4.34.1` and all nine dependency URL/revision pairs agree with the root pins, including Mathlib `d13f23b723b8a846827a245b89c10fc7d3f11612`. |
 
-The focused runner retains the exact root Lean and Mathlib pins and
-serializes local compiler work under the shared build lock. Root path
-dependencies `HomotopyHypothesis`, `Atlas`, and `GIFT` are absent in this
-checkout. A focused result does not certify the root-package build or its
-publication gate.
+The accepted command was:
+
+```bash
+python3 verification/zeta-weil-krein/check.py --wfail build \
+  InfoGeometry.Arithmetic.ZetaDihedralWeilKreinAudit \
+  InfoGeometry.Categorical.CompatibleColimitAudit \
+  InfoGeometry.Thermo.CompatibleMetriplecticColimitAudit
+```
+
+The workflow then ran fresh `check.py env lean` invocations on each audit and
+`check_axioms.py` on those three logs. Independent QA reproduced the checker
+result: exit 0, no errors, and parsed JSON equal to the hosted result.
+The verification archive SHA-256 is
+`44d9b4ee238907ef5914e8baad29daf298066b2256c15120d5eaade06bd38ee0`.
+
+The accepted metriplectic owner SHA-256 is
+`8e571f10b2c6bec7681a05c84804d1b44883ea3a0a89ea2d4f0e1c3e0524a3c2`.
+The bilinear-colimit owner and new audit hashes are, respectively,
+`dd59cb8df8997d13cbd987209884fcdaaf9a57433fd407bb5ae53ac8a938ba1b`
+and `3be4dd1d29dca8ca5bf2084c44db56ea7f576f65624a5d457a02ca43a52ca52f`.
+
+Two earlier hosted runs exposed elaboration issues now closed by the
+accepted run. Run `45357274534` required explicit `LinearMap.IsSymm` in six
+consumer hypotheses; native `LinearMap.BilinForm.isSymm_iff` proves the
+alternative imported predicate equivalent. Run `45359391068` required a
+fixed universe for the dummy state index. The adapter now uses monomorphic
+`Unit`, while its tangent fiber remains the full native `DirectLimit`.
+Neither repair changes the mathematical assumptions or conclusions.
+
+Local compiler and unchanged pre-push attempts, including an attempt on the
+accepted implementation revision, remained queued behind another job's
+shared build lock. They were stopped while still waiting, before any local
+Lake process started. No local compiler or publication-gate success is
+claimed. The kernel evidence above comes from the isolated hosted runner.
+
+Root path dependencies `HomotopyHypothesis`, `Atlas`, and `GIFT` remain absent
+in this checkout. The accepted scope is the stated algebraic colimit and
+rate-law surface and its audited import closure. It does not certify the
+root-package build, the complete repository, or its publication gate.

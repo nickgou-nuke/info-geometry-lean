@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -97,6 +102,15 @@ theorem m1_p1_balanced :
 theorem zero_zero_balanced :
     Balanced zero zero := by
   rfl
+
+theorem balanced_iff_opposite_grades (a b : FiveGrade) :
+    Balanced a b ↔
+      (a = p2 ∧ b = m2) ∨
+      (a = m2 ∧ b = p2) ∨
+      (a = p1 ∧ b = m1) ∨
+      (a = m1 ∧ b = p1) ∨
+      (a = zero ∧ b = zero) := by
+  cases a <;> cases b <;> simp [Balanced, weight]
 
 end FiveGrade
 

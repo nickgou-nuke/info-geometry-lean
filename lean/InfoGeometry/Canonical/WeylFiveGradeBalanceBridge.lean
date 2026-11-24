@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.FiveGradedInformationLedger
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.WeylGWVolumeBridge
@@ -83,6 +88,15 @@ theorem negOne_posOne_balanced :
 theorem zero_zero_balanced :
     Balanced zero zero := by
   rfl
+
+theorem balanced_iff_opposite_grades (a b : WeylFiveGrade) :
+    Balanced a b ↔
+      (a = posTwo ∧ b = negTwo) ∨
+      (a = negTwo ∧ b = posTwo) ∨
+      (a = posOne ∧ b = negOne) ∨
+      (a = negOne ∧ b = posOne) ∨
+      (a = zero ∧ b = zero) := by
+  cases a <;> cases b <;> simp [Balanced, weight]
 
 end WeylFiveGrade
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- Cohomology of spectra and cohomology theories - Wave 5 of the Spectral port.
 Ported from cmu-phil/Spectral/cohomology/basic.hlean (Lean 2 HoTT) to Lean 4.28.x / mathlib4. -/
 
@@ -116,6 +121,13 @@ theorem Hh_comp {n : ℤ} {X Y Z : Type u} (g : Y → Z) (f : X → Y)
     (x : HH T n X) :
     Hh T (g ∘ f) x = Hh T g (Hh T f x) :=
   T.map_comp n g f x
+
+/-- The induced homology map respects pointwise equality of underlying maps. -/
+theorem Hh_congr {n : ℤ} {X Y : Type u} {f g : X → Y} (h : ∀ x, f x = g x)
+    (x : HH T n X) : Hh T f x = Hh T g x := by
+  have hfg : f = g := funext h
+  subst g
+  rfl
 
 end HomologyTheory
 

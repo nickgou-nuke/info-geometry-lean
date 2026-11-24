@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Canonical.RelativePotentialDiscreteBridge
+import InfoGeometry.Projective.GaugeReduction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativePotentialScalarBridge
 import InfoGeometry.Canonical.SinkhornKMSCore
@@ -1007,5 +1008,130 @@ theorem projectiveLogGenerator_countRay_eq_projectiveCountHamiltonianProfile
       (α := Fin n) (q := countRay counts hcounts) (q0 := countRay ref href) (a := i)
 
 end PositiveCounts
+
+section CountRadonNikodymCalculus
+
+variable {n : Nat}
+
+/-- Self Radon–Nikodym count ratio equals `1` on nonzero counts (`1201.4196v1.pdf` Section 5). -/
+@[rep_depth count, simp]
+theorem relativeCountDensity_self
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, counts i ≠ 0)
+    (i : Fin n) :
+    relativeCountDensity n counts counts i = 1 := by
+  unfold relativeCountDensity
+  exact div_self (hcounts i)
+
+/-- Self logarithmic Radon–Nikodym count density vanishes on nonzero counts. -/
+@[rep_depth count, simp]
+theorem relativeCountLogDensity_self
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, counts i ≠ 0)
+    (i : Fin n) :
+    relativeCountLogDensity n counts counts i = 0 := by
+  unfold relativeCountLogDensity
+  rw [relativeCountDensity_self counts hcounts i, Real.log_one]
+
+/-- Self raw count modular profile vanishes on nonzero counts. -/
+@[rep_depth count, simp]
+theorem relativeCountModularProfile_self
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, counts i ≠ 0)
+    (i : Fin n) :
+    relativeCountModularProfile n counts counts i = 0 := by
+  unfold relativeCountModularProfile
+  rw [relativeCountLogDensity_self counts hcounts i, neg_zero]
+
+/-- **Radon–Nikodym Multiplicative Chain Rule** on raw counts (`1201.4196v1.pdf` Cor. 5.13):
+`(counts / ref) * (ref / base) = counts / base`. -/
+@[rep_depth count]
+theorem relativeCountDensity_mul_cocycle
+    (counts ref base : RelativeCounts n)
+    (href : ∀ i : Fin n, ref i ≠ 0)
+    (hbase : ∀ i : Fin n, base i ≠ 0)
+    (i : Fin n) :
+    relativeCountDensity n counts ref i * relativeCountDensity n ref base i =
+      relativeCountDensity n counts base i :=
+  (rawCountDelta_cocycle n counts ref base href hbase i).symm
+
+/-- **Radon–Nikodym Inversion** on raw counts: `(counts / ref)⁻¹ = ref / counts`. -/
+@[rep_depth count, simp]
+theorem relativeCountDensity_inv
+    (counts ref : RelativeCounts n)
+    (i : Fin n) :
+    (relativeCountDensity n counts ref i)⁻¹ = relativeCountDensity n ref counts i := by
+  unfold relativeCountDensity
+  exact inv_div (counts i) (ref i)
+
+/-- **Antisymmetry of Logarithmic Count Density** at `count (L0)`. -/
+@[rep_depth count, simp]
+theorem relativeCountLogDensity_symm
+    (counts ref : RelativeCounts n)
+    (i : Fin n) :
+    relativeCountLogDensity n ref counts i = -relativeCountLogDensity n counts ref i := by
+  unfold relativeCountLogDensity
+  rw [← relativeCountDensity_inv counts ref i, Real.log_inv]
+
+/-- **Antisymmetry of Raw Count Modular Profile** at `count (L0)`. -/
+@[rep_depth count, simp]
+theorem relativeCountModularProfile_symm
+    (counts ref : RelativeCounts n)
+    (i : Fin n) :
+    relativeCountModularProfile n ref counts i = -relativeCountModularProfile n counts ref i := by
+  unfold relativeCountModularProfile
+  rw [relativeCountLogDensity_symm]
+
+/-- **Additive Cocycle of Raw Count Modular Profile** at `count (L0)`. -/
+@[rep_depth count]
+theorem relativeCountModularProfile_cocycle
+    (counts ref base : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i)
+    (hbase : ∀ i : Fin n, 0 < base i)
+    (i : Fin n) :
+    relativeCountModularProfile n counts base i =
+      relativeCountModularProfile n counts ref i +
+        relativeCountModularProfile n ref base i := by
+  unfold relativeCountModularProfile
+  rw [relativeCountLogDensity_cocycle n counts ref base hcounts href hbase i]
+  ring
+
+/-- Pointwise Radon–Nikodym density recovery `ref i * (counts i / ref i) = counts i`. -/
+@[rep_depth count]
+theorem ref_mul_relativeCountDensity
+    (counts ref : RelativeCounts n)
+    (href : ∀ i : Fin n, ref i ≠ 0)
+    (i : Fin n) :
+    ref i * relativeCountDensity n counts ref i = counts i := by
+  unfold relativeCountDensity
+  exact mul_div_cancel₀ (counts i) (href i)
+
+/-- **Discrete Radon–Nikodym Change-of-Measure Expectation Identity** at `count (L0)`. -/
+@[rep_depth count]
+theorem sum_ref_mul_relativeCountDensity_mul
+    (counts ref φ : RelativeCounts n)
+    (href : ∀ i : Fin n, ref i ≠ 0) :
+    (∑ i : Fin n, ref i * (relativeCountDensity n counts ref i * φ i)) =
+      ∑ i : Fin n, counts i * φ i := by
+  refine Finset.sum_congr rfl ?_
+  intro i _
+  rw [← mul_assoc, ref_mul_relativeCountDensity counts ref href i]
+
+/-- **Total-Mass Recovery via Radon–Nikodym Density** at `count (L0)`. -/
+@[rep_depth count]
+theorem sum_ref_mul_relativeCountDensity_eq_countMass
+    [Nonempty (Fin n)]
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, ref i ≠ 0) :
+    (∑ i : Fin n, ref i * relativeCountDensity n counts ref i) =
+      countMass counts hcounts := by
+  unfold countMass positiveMeasureOfCounts InfoGeometry.PositiveMeasure.Z
+  refine Finset.sum_congr rfl ?_
+  intro i _
+  exact ref_mul_relativeCountDensity counts ref href i
+
+end CountRadonNikodymCalculus
 
 end InfoGeometry.Canonical.RelativePotentialCountBridge

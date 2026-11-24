@@ -88,6 +88,8 @@ theorem submodule_bracket_closure_iff_mul_closure
     exact bracket_closure_eq_mul_closure U hcomm hanti
 
 
+namespace NonAssociativeBracketClosure
+
 def commutator (x y : A) : A := x * y - y * x
 
 
@@ -106,5 +108,7 @@ theorem mul_eq_half_add_commutator (x y : A) :
       rw [add_smul]
     _ = x * y := by
       rw [← mul_two, inv_mul_cancel₀ (NeZero.ne (2 : R)), one_smul]
+
+end NonAssociativeBracketClosure
 
 end InfoGeometry.Canonical

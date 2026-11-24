@@ -165,17 +165,19 @@ yet identify the Reynolds average with the algebraic center projection. The
 owner now also proves `shirokov_odd_top_blade_mem_center` for odd `n` by
 commuting the volume blade with the Clifford generators and extending over
 their generated algebra, then composes this with the support formula in
-`shirokov_reynolds_mem_center`. This proves that the standard finite-frame
-average lands in the algebraic center of `Cl(0,n)`. It does not yet prove
-that this average is the identity on every central element, classify the
-whole center in the chosen coordinates, or transport the result to the
-paper's varying dual frame. Its targeted locked build of
+`shirokov_reynolds_mem_center`. The owner further proves
+`shirokov_reynolds_eq_card_smul_of_mem_center`: the unnormalized average acts
+as multiplication by `2^n` on every central element. After normalization,
+`shirokovCenterProjection` has range in the algebraic center, fixes every
+central element, and is idempotent. Thus the standard-frame finite-stage
+operator is a genuine projection onto the center of `Cl(0,n)`. This does not
+yet transport the result to the paper's varying dual frame or prove the
+odd-dimensional reduced-sum identity. Its targeted locked build of
 `InfoGeometry.Canonical.ShirokovCliffordYangMills` passed (9,091 jobs, exit
-code 0), the owner axiom audit passed (1 module, 0 failures), and the strict
-OpenGauss source screen passed (0 traps). The staged proof proxy gate also
-passed for these task-owned paths. These checks cover this owner and staged
-surface only; they do not certify the whole repository or close the remaining
-paper contracts.
+code 0); the owner axiom audit passed (1 module, 0 failures), the strict
+OpenGauss source screen passed (0 traps), and the staged proof proxy gate
+passed. These checks cover this owner and staged surface only; they do not
+certify the whole repository or close the remaining paper contracts.
 The earlier strict screen of the new Shirokov bridge reported zero traps. The
 automated GATE_4 review was rejected before
 kernel verification because the repository-wide staged Lean set fails its QMS

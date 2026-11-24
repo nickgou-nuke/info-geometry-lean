@@ -782,6 +782,65 @@ theorem shirokov_reynolds_mem_center (n : ℕ)
         (2 ^ n : ℝ)
     · simp [hEmpty, hTop]
 
+/-- The unnormalized Reynolds average acts as multiplication by the number of
+frame blades on every element of the algebraic center. -/
+theorem shirokov_reynolds_eq_card_smul_of_mem_center (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hx : x ∈ Subalgebra.center ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n))) :
+    shirokovReynolds n x = (2 ^ n : ℝ) • x := by
+  unfold shirokovReynolds
+  calc
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) * x *
+          cBlade ℝ n S) =
+      ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset, x := by
+        apply Finset.sum_congr rfl
+        intro S hS
+        let b := cBlade ℝ n S
+        let ε : ℝ := (-1) ^ (S.card * (S.card + 1) / 2)
+        have hcomm := (Subalgebra.mem_center_iff.mp hx) b
+        have hinv := (shirokov_blade_inverse_formula n S).1
+        change (ε • b) * x * b = x
+        calc
+          (ε • b) * x * b = ε • (b * x * b) := by simp only [smul_mul_assoc]
+          _ = ε • (x * b * b) := by rw [hcomm]
+          _ = x * ((ε • b) * b) := by noncomm_ring
+          _ = x := by simpa [b, ε] using congrArg (fun z => x * z) hinv
+    _ = (2 ^ n : ℝ) • x := by
+      simp only [Finset.sum_const, Finset.card_powerset, Finset.card_univ,
+        Fintype.card_fin, nsmul_eq_mul, Algebra.smul_def]
+      congr 1
+      norm_cast
+
+/-- The normalized standard-frame Reynolds operator, valued in the algebraic
+center of the finite-stage Clifford algebra. -/
+def shirokovCenterProjection (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    CliffordAlgebra (cliffordNegSqForm ℝ n) :=
+  ((2 ^ n : ℝ)⁻¹) • shirokovReynolds n x
+
+theorem shirokovCenterProjection_mem_center (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    shirokovCenterProjection n x ∈
+      Subalgebra.center ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)) := by
+  apply Subalgebra.smul_mem _ (shirokov_reynolds_mem_center n x)
+
+theorem shirokovCenterProjection_fixes_center (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hx : x ∈ Subalgebra.center ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n))) :
+    shirokovCenterProjection n x = x := by
+  have hpow : (2 ^ n : ℝ) ≠ 0 := pow_ne_zero _ (by norm_num)
+  change ((2 ^ n : ℝ)⁻¹) • shirokovReynolds n x = x
+  rw [shirokov_reynolds_eq_card_smul_of_mem_center n x hx, smul_smul]
+  simp [hpow]
+
+theorem shirokovCenterProjection_idempotent (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    shirokovCenterProjection n (shirokovCenterProjection n x) =
+      shirokovCenterProjection n x :=
+  shirokovCenterProjection_fixes_center n _
+    (shirokovCenterProjection_mem_center n x)
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

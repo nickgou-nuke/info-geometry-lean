@@ -142,6 +142,13 @@ theorem pauli_sub (t₁ x₁ y₁ z₁ t₂ x₂ y₂ z₂ : ℝ) :
   unfold pauli
   module
 
+/-- Addition of four-vectors is addition of their real Pauli representatives. -/
+theorem pauli_add (t₁ x₁ y₁ z₁ t₂ x₂ y₂ z₂ : ℝ) :
+    pauli t₁ x₁ y₁ z₁ + pauli t₂ x₂ y₂ z₂ =
+      pauli (t₁ + t₂) (x₁ + x₂) (y₁ + y₂) (z₁ + z₂) := by
+  unfold pauli
+  module
+
 theorem pauli_det_eq_zero_iff (t x y z : ℝ) :
     (pauli t x y z).det = 0 ↔ intervalSq t x y z = 0 := by
   rw [pauli_det, sq_eq_zero_iff]
@@ -242,6 +249,16 @@ theorem diracVector_sq (t x y z : ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [timeGamma, intervalSq, Matrix.mul_apply, Fin.sum_univ_four] <;> ring
+
+/-- Polarization retains the real Clifford signature `(-+++)`. -/
+theorem diracVector_anticomm (t₁ x₁ y₁ z₁ t₂ x₂ y₂ z₂ : ℝ) :
+    diracVector t₁ x₁ y₁ z₁ * diracVector t₂ x₂ y₂ z₂ +
+      diracVector t₂ x₂ y₂ z₂ * diracVector t₁ x₁ y₁ z₁ =
+      (-2 * (t₁ * t₂ - x₁ * x₂ - y₁ * y₂ - z₁ * z₂)) • (1 : Matrix4) := by
+  simp only [diracVector, pauli_explicit]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [timeGamma] <;> ring
 
 theorem diracVector_det (t x y z : ℝ) :
     (diracVector t x y z).det = intervalSq t x y z ^ 2 := by

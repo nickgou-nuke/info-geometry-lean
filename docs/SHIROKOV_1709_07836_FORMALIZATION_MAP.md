@@ -192,6 +192,19 @@ standard-frame Reynolds center projection annihilates any grade-two-supported
 element. This can discharge the center-projection term in the conditional
 Theorem 2.2 reduction once a separate theorem identifies the paper's varying
 dual-frame sum with this standard average.
+`shirokovInverseBladeUnit` now packages each inverse ordered blade as a unit,
+and `shirokov_standard_frame_average` identifies its finite conjugation sum
+with the normalized Reynolds center projection. Composing that identity with
+`shirokov_center_projection_eq_zero_of_grade_two` proves
+`shirokov_theorem_2_2_standard_frame_grade_two`: for a compatible derivation
+and a grade-two-supported connection coefficient, the standard-frame average
+equals the frame cardinality times that coefficient. This is still a
+standard-frame specialization; no isometry or dual-frame transport theorem
+for the paper's moving frame has been established.
+The owner also includes the concrete noncommutativity witness
+`shirokov_generators_noncommute` for the first two generators of the real
+negative-definite two-dimensional Clifford algebra. This is a separate carrier
+sanity check; it does not strengthen the standard-frame theorem.
 This remains a statement about the repository's standard negative-definite
 finite-stage carrier, not a varying-frame classification theorem. The updated
 owner passed both the locked Lean file check and the targeted locked Lake

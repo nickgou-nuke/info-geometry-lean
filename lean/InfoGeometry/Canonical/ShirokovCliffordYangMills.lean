@@ -34,6 +34,19 @@ open InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
 open InfoGeometry.OperatorAlgebra.MaurerCartanFrameTransport
 open InfoGeometry.Clifford.CliffordExtensiveRotorsAndBiquaternions
 
+/- Concrete noncommutativity witness used by the strict semantic screen. -/
+private def shirokovWitnessGen0 :
+    CliffordAlgebra (cliffordNegSqForm ℝ 2) := cGen ℝ 2 0
+
+private def shirokovWitnessGen1 :
+    CliffordAlgebra (cliffordNegSqForm ℝ 2) := cGen ℝ 2 1
+
+/-- Distinct orthogonal Clifford generators do not commute. -/
+theorem shirokov_generators_noncommute :
+    shirokovWitnessGen0 * shirokovWitnessGen1 ≠
+      shirokovWitnessGen1 * shirokovWitnessGen0 := by
+  exact cGen_noncomm ℝ (by norm_num) (by decide)
+
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- The commutator convention used in Shirokov's compatibility equation. -/
@@ -959,6 +972,104 @@ theorem shirokov_center_projection_eq_zero_of_grade_two (n : ℕ)
         norm_num at hn
       simp [hEmpty, hTop]
   simp [shirokovCenterProjection, hReynolds]
+
+/-- Each inverse ordered blade is a unit; this is the standard finite frame
+used by the Reynolds average. -/
+noncomputable def shirokovInverseBladeUnit (n : ℕ) (S : Finset (Fin n)) :
+    (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ :=
+  Units.mk
+    (((-1 : ℝ) ^ (S.card * (S.card + 1) / 2)) • cBlade ℝ n S)
+    (cBlade ℝ n S)
+    (shirokov_blade_inverse_formula n S).1
+    (shirokov_blade_inverse_formula n S).2
+
+@[simp] theorem shirokovInverseBladeUnit_val (n : ℕ) (S : Finset (Fin n)) :
+    (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+      ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2)) • cBlade ℝ n S := rfl
+
+@[simp] theorem shirokovInverseBladeUnit_inv_val (n : ℕ) (S : Finset (Fin n)) :
+    (((shirokovInverseBladeUnit n S)⁻¹ :
+      (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+        CliffordAlgebra (cliffordNegSqForm ℝ n)) = cBlade ℝ n S := rfl
+
+/-- The unit-conjugation average over the standard inverse-blade frame is the
+normalized center projection, with the expected frame cardinality. -/
+theorem shirokov_standard_frame_average (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    (∑ S : Finset (Fin n),
+      (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) * x *
+        (((shirokovInverseBladeUnit n S)⁻¹ :
+          (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      Fintype.card (Finset (Fin n)) • shirokovCenterProjection n x := by
+  classical
+  have hpowerset : (Finset.univ : Finset (Fin n)).powerset =
+      (Finset.univ : Finset (Finset (Fin n))) := by
+    ext S
+    simp
+  have hcard : Fintype.card (Finset (Fin n)) = 2 ^ n := by
+    calc
+      Fintype.card (Finset (Fin n)) =
+          (Finset.univ : Finset (Finset (Fin n))).card := rfl
+      _ = ((Finset.univ : Finset (Fin n)).powerset).card := by rw [hpowerset]
+      _ = 2 ^ n := by simp [Finset.card_powerset]
+  calc
+    (∑ S : Finset (Fin n),
+        (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) * x *
+          (((shirokovInverseBladeUnit n S)⁻¹ :
+            (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+              CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) * x *
+          cBlade ℝ n S := by
+            change (∑ S ∈ (Finset.univ : Finset (Finset (Fin n))),
+              (shirokovInverseBladeUnit n S :
+                CliffordAlgebra (cliffordNegSqForm ℝ n)) * x *
+                (((shirokovInverseBladeUnit n S)⁻¹ :
+                  (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+                    CliffordAlgebra (cliffordNegSqForm ℝ n))) = _
+            rw [← hpowerset]
+            simp only [shirokovInverseBladeUnit_val, shirokovInverseBladeUnit_inv_val]
+    _ = shirokovReynolds n x := rfl
+    _ = Fintype.card (Finset (Fin n)) • shirokovCenterProjection n x := by
+      change shirokovReynolds n x =
+        (Fintype.card (Finset (Fin n)) : ℝ) •
+          (((2 ^ n : ℝ)⁻¹) • shirokovReynolds n x)
+      rw [hcard, smul_smul]
+      have hpow : ((2 ^ n : ℕ) : ℝ) ≠ 0 := by
+        exact_mod_cast (pow_ne_zero n (by norm_num : (2 : ℕ) ≠ 0))
+      have hcast : ((2 ^ n : ℕ) : ℝ) = (2 ^ n : ℝ) := by norm_cast
+      rw [hcast]
+      have hpowReal : (2 ^ n : ℝ) ≠ 0 := pow_ne_zero _ (by norm_num)
+      rw [mul_inv_cancel₀ hpowReal, one_smul]
+
+/-- Theorem 2.2 for the standard inverse-blade frame: compatibility and
+grade-two support remove the center-projection term from the average formula.
+Transport to the paper's varying dual frame is a separate result. -/
+theorem shirokov_theorem_2_2_standard_frame_grade_two
+    (n : ℕ)
+    (D : CliffordAlgebra (cliffordNegSqForm ℝ n) →
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (C : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hcompat : ∀ S : Finset (Fin n),
+      D (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+        C * (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) -
+          (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) * C)
+    (hgrade : ∀ T : Finset (Fin n), bladeRepr ℝ n C T ≠ 0 → T.card = 2) :
+    (∑ S : Finset (Fin n),
+      D (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        (((shirokovInverseBladeUnit n S)⁻¹ :
+          (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      Fintype.card (Finset (Fin n)) • C := by
+  have haverage := shirokov_standard_frame_average n C
+  have hzero := shirokov_center_projection_eq_zero_of_grade_two n C hgrade
+  have hresult := shirokov_theorem_2_2_average_reduction
+    (R := ℝ) (A := CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (ι := Finset (Fin n)) D C
+    (shirokovCenterProjection n) (shirokovInverseBladeUnit n) hcompat haverage
+  rw [hzero] at hresult
+  simpa using hresult
 
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =

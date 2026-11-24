@@ -1403,6 +1403,22 @@ theorem shirokov_even_grade_projector_compose_blade {n : ℕ} (hn : Even n)
     rw [if_neg hj, zero_smul, map_zero]
     simp [hS]
 
+/-- The grade projectors are mutually orthogonal on arbitrary multivectors:
+`P_i P_k = 0` for `i ≠ k`, and `P_k` is idempotent. -/
+theorem shirokov_even_grade_projector_compose_apply {n : ℕ} (hn : Even n)
+    (i k : Fin (n + 1)) (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    shirokovGradeProjector n i (shirokovGradeProjector n k x) =
+      if i = k then shirokovGradeProjector n k x else 0 := by
+  conv_lhs => arg 2; rw [shirokov_blade_expansion n x]
+  simp only [map_sum, map_smul]
+  rw [shirokov_even_grade_projector_apply hn k x]
+  by_cases hik : i = k
+  · subst i
+    simp_rw [shirokov_even_grade_projector_compose_blade hn k k]
+    simp
+  · simp_rw [shirokov_even_grade_projector_compose_blade hn i k]
+    simp [hik]
+
 /-- Complementary inverse blades induce the same conjugation on every element
 of the fixed finite-stage `Cl(0,n)` algebra when `n` is odd. -/
 theorem shirokov_odd_inverse_blade_conjugation_complement (n : ℕ) (hn : Odd n)

@@ -177,6 +177,55 @@ theorem shirokov_clifford_compatibility_curvature_central
     (fun a b => K.operatorAction_leibniz y a b)
     hcomm hcompat₁ hcompat₂
 
+/-- Under the file's compatibility convention
+`Dᵢ a = [Cᵢ,a]`, the curvature-defect expression reduces algebraically to
+`[C₁,C₂]`. Generator compatibility suffices because the covariant derivative
+is a derivation on the Clifford algebra. -/
+theorem shirokov_curvature_defect_eq_connection_commutator
+    {n : ℕ}
+    (K : DerivationLieLane ℝ
+      (CliffordAlgebra (cliffordNegSqForm ℝ n)))
+    (C : OneForm K) (x y : K.L)
+    (hgen₁ : ∀ v : Fin n → ℝ,
+      covariantDerivative K (-C) x
+        (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
+    (hgen₂ : ∀ v : Fin n → ℝ,
+      covariantDerivative K (-C) y
+        (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0) :
+    K.operatorAction x (C y) - K.operatorAction y (C x) -
+        algebraCommutator (C x) (C y) = algebraCommutator (C x) (C y) := by
+  have hparallel₁ := covariantDerivative_zero_of_clifford_generators
+    (Q := cliffordNegSqForm ℝ n) (Kcl := K) (-C) x hgen₁
+  have hparallel₂ := covariantDerivative_zero_of_clifford_generators
+    (Q := cliffordNegSqForm ℝ n) (Kcl := K) (-C) y hgen₂
+  have hcompat₁ : ∀ a : CliffordAlgebra (cliffordNegSqForm ℝ n),
+      K.operatorAction x a = algebraCommutator (C x) a := by
+    intro a
+    have h : K.operatorAction x a + -(C x * a) + a * C x = 0 := by
+      simpa [covariantDerivative] using hparallel₁ a
+    have h' : K.operatorAction x a = C x * a + -(a * C x) := by
+      calc
+        K.operatorAction x a =
+            (K.operatorAction x a + -(C x * a) + a * C x) +
+              (C x * a + -(a * C x)) := by abel
+        _ = C x * a + -(a * C x) := by rw [h]; simp
+    simpa [algebraCommutator, sub_eq_add_neg] using h'
+  have hcompat₂ : ∀ a : CliffordAlgebra (cliffordNegSqForm ℝ n),
+      K.operatorAction y a = algebraCommutator (C y) a := by
+    intro a
+    have h : K.operatorAction y a + -(C y * a) + a * C y = 0 := by
+      simpa [covariantDerivative] using hparallel₂ a
+    have h' : K.operatorAction y a = C y * a + -(a * C y) := by
+      calc
+        K.operatorAction y a =
+            (K.operatorAction y a + -(C y * a) + a * C y) +
+              (C y * a + -(a * C y)) := by abel
+        _ = C y * a + -(a * C y) := by rw [h]; simp
+    simpa [algebraCommutator, sub_eq_add_neg] using h'
+  rw [hcompat₁ (C y), hcompat₂ (C x)]
+  dsimp [algebraCommutator]
+  noncomm_ring
+
 /-- Shirokov Theorem 2.1 on an ordered frame: compatibility on each frame
 generator propagates to every ordered product, with no commutativity assumption
 on the coefficient algebra. -/
@@ -1011,6 +1060,43 @@ theorem shirokov_clifford_compatibility_curvature_eq_zero_of_grade_two
           algebraCommutator (C x) (C y)) = 0 at hcentral
     exact (sub_eq_zero.mp hcentral).symm
   · exact hgrade
+
+/-- If the connection values have a grade-two commutator, compatibility and
+commuting directions force the curvature defect to vanish on `Cl(0,n)`. This
+reduces the remaining geometric grade argument to bivector commutator closure. -/
+theorem shirokov_curvature_flat_of_grade_two_connection_commutator
+    (n : ℕ)
+    (K : DerivationLieLane ℝ
+      (CliffordAlgebra (cliffordNegSqForm ℝ n)))
+    (C : OneForm K) (x y : K.L) (hxy : ⁅x, y⁆ = 0)
+    (hgen₁ : ∀ v : Fin n → ℝ,
+      covariantDerivative K (-C) x
+        (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
+    (hgen₂ : ∀ v : Fin n → ℝ,
+      covariantDerivative K (-C) y
+        (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
+    (hbracket : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (algebraCommutator (C x) (C y)) T ≠ 0 → T.card = 2) :
+    K.operatorAction x (C y) - K.operatorAction y (C x) -
+      algebraCommutator (C x) (C y) = 0 := by
+  have hcentral := shirokov_clifford_compatibility_curvature_central
+    (Q := cliffordNegSqForm ℝ n) (K := K) (C := C) x y hxy hgen₁ hgen₂
+  have hdef := shirokov_curvature_defect_eq_connection_commutator
+    K C x y hgen₁ hgen₂
+  have hcenter : algebraCommutator (C x) (C y) ∈
+      Subalgebra.center ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)) := by
+    rw [Subalgebra.mem_center_iff]
+    intro a
+    have h := hcentral a
+    change algebraCommutator
+      (K.operatorAction x (C y) - K.operatorAction y (C x) -
+        algebraCommutator (C x) (C y)) a = 0 at h
+    rw [hdef] at h
+    exact (sub_eq_zero.mp h).symm
+  have hzero := shirokov_center_grade_two_eq_zero n
+    (algebraCommutator (C x) (C y)) hcenter hbracket
+  rw [hdef]
+  exact hzero
 
 /-- Subtraction preserves ordered-blade grade-two support. This packages the
 linear-coordinate step needed to obtain support of a curvature expression

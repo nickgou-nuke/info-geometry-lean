@@ -2224,6 +2224,121 @@ theorem shirokov_grade_two_blade_commutator_support {n : ℕ}
         exact hsimp
       exact False.elim (hcoord (hzero hcomm))
 
+/-- The coordinate-defined grade-two subspace of the fixed `Cl(0,n)` carrier. -/
+def shirokovGradeTwoSpan (n : ℕ) :
+    Submodule ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)) :=
+  Submodule.span ℝ (Set.range fun S : {S : Finset (Fin n) // S.card = 2} =>
+    cBlade ℝ n S.1)
+
+/-- An element with only grade-two ordered-blade coordinates belongs to the
+span of the grade-two blades. -/
+theorem shirokov_grade_two_supported_mem_span (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hgrade : ∀ S : Finset (Fin n), bladeRepr ℝ n x S ≠ 0 → S.card = 2) :
+    x ∈ shirokovGradeTwoSpan n := by
+  rw [shirokov_blade_expansion n x]
+  apply Submodule.sum_mem
+  intro S hS
+  by_cases hcoord : bladeRepr ℝ n x S = 0
+  · simp [hcoord]
+  · apply Submodule.smul_mem
+    apply Submodule.subset_span
+    exact Set.mem_range.mpr ⟨⟨S, hgrade S hcoord⟩, rfl⟩
+
+private theorem algebraCommutator_add_left {A : Type*} [Ring A]
+    (x y z : A) : algebraCommutator (x + y) z =
+      algebraCommutator x z + algebraCommutator y z := by
+  simp only [algebraCommutator, add_mul, mul_add]
+  noncomm_ring
+
+private theorem algebraCommutator_add_right {A : Type*} [Ring A]
+    (x y z : A) : algebraCommutator x (y + z) =
+      algebraCommutator x y + algebraCommutator x z := by
+  simp only [algebraCommutator, add_mul, mul_add]
+  noncomm_ring
+
+private theorem algebraCommutator_smul_left
+    (r : ℝ) (x y : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    algebraCommutator (r • x) y = r • algebraCommutator x y := by
+  simp only [algebraCommutator, Algebra.smul_mul_assoc, Algebra.mul_smul_comm,
+    smul_sub]
+
+private theorem algebraCommutator_smul_right
+    (r : ℝ) (x y : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    algebraCommutator x (r • y) = r • algebraCommutator x y := by
+  simp only [algebraCommutator, Algebra.smul_mul_assoc, Algebra.mul_smul_comm,
+    smul_sub]
+
+/-- Commutators of arbitrary elements supported in grade two remain in the
+grade-two span. This lifts the ordered-blade pair calculation by bilinearity. -/
+theorem shirokov_grade_two_commutator_mem_span (n : ℕ)
+    (x y : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hx : x ∈ shirokovGradeTwoSpan n) (hy : y ∈ shirokovGradeTwoSpan n) :
+    algebraCommutator x y ∈ shirokovGradeTwoSpan n := by
+  refine Submodule.span_induction
+    (p := fun x _ => ∀ y ∈ shirokovGradeTwoSpan n,
+      algebraCommutator x y ∈ shirokovGradeTwoSpan n)
+    ?_ ?_ ?_ ?_ hx y hy
+  · rintro z ⟨S, rfl⟩ y hy
+    refine Submodule.span_induction
+      (p := fun y _ => algebraCommutator (cBlade ℝ n S.1) y ∈
+        shirokovGradeTwoSpan n) ?_ ?_ ?_ ?_ hy
+    · rintro w ⟨T, rfl⟩
+      apply shirokov_grade_two_supported_mem_span n
+      intro U hU
+      exact shirokov_grade_two_blade_commutator_support S.1 T.1 U S.2 T.2 hU
+    · simp [algebraCommutator]
+    · intro a b _ _ ha hb
+      rw [algebraCommutator_add_right]
+      exact (shirokovGradeTwoSpan n).add_mem ha hb
+    · intro r a _ ha
+      rw [algebraCommutator_smul_right]
+      exact (shirokovGradeTwoSpan n).smul_mem r ha
+  · simp [algebraCommutator]
+  · intro x₁ x₂ _ _ hx₁ hx₂ z hz
+    rw [algebraCommutator_add_left]
+    exact (shirokovGradeTwoSpan n).add_mem (hx₁ z hz) (hx₂ z hz)
+  · intro r x _ hx z hz
+    rw [algebraCommutator_smul_left]
+    exact (shirokovGradeTwoSpan n).smul_mem r (hx z hz)
+
+/-- The coordinate support formulation of Lie closure for arbitrary
+grade-two elements of the fixed negative Clifford carrier. -/
+theorem shirokov_grade_two_commutator_closed (n : ℕ)
+    (x y : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hx : ∀ S : Finset (Fin n), bladeRepr ℝ n x S ≠ 0 → S.card = 2)
+    (hy : ∀ S : Finset (Fin n), bladeRepr ℝ n y S ≠ 0 → S.card = 2)
+    (U : Finset (Fin n))
+    (hcoord : bladeRepr ℝ n (algebraCommutator x y) U ≠ 0) :
+    U.card = 2 := by
+  have hspan := shirokov_grade_two_commutator_mem_span n x y
+    (shirokov_grade_two_supported_mem_span n x hx)
+    (shirokov_grade_two_supported_mem_span n y hy)
+  by_contra hU
+  have hcoord_span : ∀ z ∈ shirokovGradeTwoSpan n,
+      shirokovBladeCoordinates n z U = 0 := by
+    intro z hz
+    change z ∈ Submodule.span ℝ
+      (Set.range fun S : {S : Finset (Fin n) // S.card = 2} => cBlade ℝ n S.1) at hz
+    refine Submodule.span_induction (R := ℝ)
+      (p := fun z _ => shirokovBladeCoordinates n z U = 0) ?_ ?_ ?_ ?_ hz
+    · rintro z ⟨S, rfl⟩
+      have hUS : U ≠ S.1 := by
+        intro heq
+        apply hU
+        simpa [heq] using S.2
+      simp [shirokovBladeCoordinates_cBlade, Pi.single_apply, hUS]
+    · simp [shirokovBladeCoordinates]
+    · intro z w _ _ hz hw
+      simp only [map_add, Pi.add_apply]
+      rw [hz, hw, zero_add]
+    · intro r z _ hz
+      simp only [map_smul, Pi.smul_apply]
+      rw [hz, smul_zero]
+  have hzero := hcoord_span _ hspan
+  change shirokovBladeCoordinates n (algebraCommutator x y) U ≠ 0 at hcoord
+  exact hcoord hzero
+
 /-- Conditional flatness consequence for Shirokov's compatibility equation
 in the negative-definite finite-stage Clifford algebra. Generator compatibility
 and commuting derivation directions centralize the curvature defect; the

@@ -300,6 +300,13 @@ decompose this into support premises for the two differentiated connection
 terms and their commutator. Those component premises are still not derived
 from the paper's geometric hypotheses; other signatures and a varying
 base-space frame are also outside this theorem.
+The ordered-blade pair support result now lifts by bilinearity to
+`shirokov_grade_two_commutator_mem_span`, and
+`shirokov_grade_two_commutator_closed` gives the corresponding coordinate
+support theorem for arbitrary grade-two-supported elements of this fixed
+`Cl(0,n)` carrier. This closes the finite-stage Lie-closure step; it does not
+derive grade-two support from the paper's moving-frame hypotheses or extend
+the result to other signatures.
 The automorphism-frame average and Theorem 2.2 specialization passed the locked
 file check and targeted locked Lake build of
 `InfoGeometry.Canonical.ShirokovCliffordYangMills` (9,091 jobs, exit code 0).

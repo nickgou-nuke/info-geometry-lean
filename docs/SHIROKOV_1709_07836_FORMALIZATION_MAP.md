@@ -172,7 +172,10 @@ whole center in the chosen coordinates, or transport the result to the
 paper's varying dual frame. Its targeted locked build of
 `InfoGeometry.Canonical.ShirokovCliffordYangMills` passed (9,091 jobs, exit
 code 0), the owner axiom audit passed (1 module, 0 failures), and the strict
-OpenGauss source screen passed (0 traps).
+OpenGauss source screen passed (0 traps). The staged proof proxy gate also
+passed for these task-owned paths. These checks cover this owner and staged
+surface only; they do not certify the whole repository or close the remaining
+paper contracts.
 The earlier strict screen of the new Shirokov bridge reported zero traps. The
 automated GATE_4 review was rejected before
 kernel verification because the repository-wide staged Lean set fails its QMS

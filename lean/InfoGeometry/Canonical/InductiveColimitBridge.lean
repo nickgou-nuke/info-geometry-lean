@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TensorTowerColimit
@@ -194,5 +199,13 @@ theorem transported_equiv_to_same_colimit
     (T.finite_equiv_transports n m x y hxy)
 
 end CompatibleFiniteEquivalenceTower
+
+/-- A concrete sequential directed system with a cocone into a proposed limit. -/
+structure SequentialStageSystem where
+  Stage : ℕ → Type u
+  Limit : Type v
+  bond : ∀ n : ℕ, Stage n → Stage (n + 1)
+  toLimit : ∀ n : ℕ, Stage n → Limit
+  cone_comm : ∀ (n : ℕ) (x : Stage n), toLimit (n + 1) (bond n x) = toLimit n x
 
 end InfoGeometry.Canonical.InductiveColimitBridge

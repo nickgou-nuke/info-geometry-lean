@@ -115,4 +115,11 @@ theorem canonicalAtlas_sixthRoot_and_central_readout
   · exact canonicalAtlas_effectiveCubeRoot (𝕜 := 𝕜) α p hp
   · exact canonicalAtlas_currentSugawara_central (𝕜 := 𝕜) α p hp
 
+/-- The combined atlas still exposes the three cyclic projectors. -/
+theorem canonicalAtlas_cubicProjectors_sum
+    (α : 𝕜) (p : ℂˣ) (hp : (p : ℂ) ^ 6 = 1)
+    (Z : ZornMatrix ℂ) :
+    cubicProjectorZero Z + cubicProjectorPlus Z + cubicProjectorMinus Z = Z :=
+  cubicProjectors_sum_of_sixthRoot Z
+
 end InfoGeometry.Canonical.HeisenbergCyclotomicAtlas

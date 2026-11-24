@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -33,7 +38,7 @@ theorem hilbertSchmidt_symmetry (A B : Matrix (Fin n) (Fin n) ℝ) :
   intro i _
   apply Finset.sum_congr rfl
   intro j _
-  ring
+  ring_nf
 
 /-- **Theorem**: Hilbert-Schmidt Metric Positive Semi-Definiteness: <A, A>_HS ≥ 0. -/
 theorem hilbertSchmidt_pos_semidef (A : Matrix (Fin n) (Fin n) ℝ) :
@@ -61,5 +66,23 @@ theorem hilbertSchmidt_energy_conservation (sys : HilbertSchmidtMetriplecticSyst
 theorem hilbertSchmidt_dissipation_nonneg (dS : Matrix (Fin n) (Fin n) ℝ) :
     0 ≤ hilbertSchmidtPairing dS dS :=
   hilbertSchmidt_pos_semidef dS
+
+theorem hilbertSchmidt_commutator_energy_orthogonal
+    (H rho : Matrix (Fin n) (Fin n) ℝ)
+    (hH : H.transpose = H)
+    (hrho : rho.transpose = rho) :
+    hilbertSchmidtPairing (H * rho - rho * H) H = 0 := by
+  dsimp [hilbertSchmidtPairing]
+  rw [Matrix.transpose_sub, Matrix.transpose_mul, Matrix.transpose_mul,
+    hH, hrho, Matrix.sub_mul, Matrix.trace_sub]
+  have h₁ : trace (rho * H * H) = trace (H * (rho * H)) := by
+    calc
+      trace (rho * H * H) = trace ((rho * H) * H) := by
+        rw [Matrix.mul_assoc]
+      _ = trace (H * (rho * H)) := Matrix.trace_mul_comm (rho * H) H
+  have h₂ : trace (H * rho * H) = trace (H * (rho * H)) := by
+    rw [Matrix.mul_assoc]
+  rw [h₁, h₂]
+  exact sub_self _
 
 end HilbertSchmidtMatrix

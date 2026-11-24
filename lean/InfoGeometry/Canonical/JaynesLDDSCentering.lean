@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
@@ -144,5 +149,13 @@ theorem square_of_one_add_squareZero {y : A}
   noncomm_ring [hy]
 
 end IdentityCentered
+
+
+abbrev density (D : FiniteLDDSDatum ι) : ι → ℝ := D.1
+
+
+abbrev reference (D : FiniteLDDSDatum ι) : ι → ℝ := D.2
+
+variable {ι : Type*} [Fintype ι]
 
 end InfoGeometry.Canonical.JaynesLDDSCentering

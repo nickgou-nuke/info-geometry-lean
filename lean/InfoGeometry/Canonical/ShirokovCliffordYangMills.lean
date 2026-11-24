@@ -9,6 +9,7 @@ import InfoGeometry.Clifford.CliffordExtensiveRotorsAndBiquaternions
 import InfoGeometry.OperatorAlgebra.MaurerCartanFrameTransport
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basis
+import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
 import Mathlib.LinearAlgebra.Vandermonde
 
 /-!
@@ -202,6 +203,38 @@ theorem shirokov_even_grade_projection_matrix_isUnit {n : ℕ} (hn : Even n) :
     IsUnit (shirokovGradeProjectionMatrix n) := by
   rw [Matrix.isUnit_iff_isUnit_det]
   exact isUnit_iff_ne_zero.mpr (shirokov_even_grade_projection_matrix_det_ne_zero hn)
+
+/-- Vandermonde matrix for the eigenvalues of the standard-frame sandwich on
+the fixed negative-definite carrier. -/
+def shirokovSandwichPowerMatrix (n : ℕ) :
+    Matrix (Fin (n + 1)) (Fin (n + 1)) ℚ :=
+  Matrix.vandermonde (fun i : Fin (n + 1) =>
+    -(shirokovGradeEigenvalue n i.val : ℚ))
+
+/-- The sandwich power matrix is invertible for even dimension. -/
+theorem shirokov_even_sandwich_power_matrix_isUnit {n : ℕ} (hn : Even n) :
+    IsUnit (shirokovSandwichPowerMatrix n) := by
+  rw [shirokovSandwichPowerMatrix, Matrix.isUnit_iff_isUnit_det]
+  apply isUnit_iff_ne_zero.mpr
+  rw [Matrix.det_vandermonde_ne_zero_iff]
+  intro i j hij
+  apply shirokov_even_grade_eigenvalues_injective hn
+  exact_mod_cast (neg_injective hij)
+
+/-- The inverse Vandermonde coefficients interpolate the Kronecker delta on
+the sandwich eigenvalues. This is the scalar grade-isolation step in (1.8). -/
+theorem shirokov_even_grade_scalar_interpolation {n : ℕ} (hn : Even n)
+    (i k : Fin (n + 1)) :
+    (∑ j : Fin (n + 1),
+      (-(shirokovGradeEigenvalue n i.val : ℚ)) ^ (j : ℕ) *
+        (shirokovSandwichPowerMatrix n)⁻¹ j k) = if i = k then 1 else 0 := by
+  have hdet : IsUnit (shirokovSandwichPowerMatrix n).det := by
+    exact (Matrix.isUnit_iff_isUnit_det _).mp
+      (shirokov_even_sandwich_power_matrix_isUnit hn)
+  have hinv := Matrix.mul_nonsing_inv (shirokovSandwichPowerMatrix n) hdet
+  have hentry := congrFun (congrFun hinv i) k
+  simpa [shirokovSandwichPowerMatrix, Matrix.mul_apply, Matrix.vandermonde,
+    Matrix.one_apply] using hentry
 
 /-- Shirokov's standard-frame sandwich operator on the negative-definite
 finite-stage algebra `Cl(0,n)`. -/

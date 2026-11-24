@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CognitiveArchetype
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CognitiveLineage
@@ -131,5 +136,33 @@ def detectArchetypes (B : BlackBookPacket) : Array String :=
 /-- Conservative shadow detector for black-book integration packets. -/
 def detectShadows (B : BlackBookPacket) : Array String :=
   InfoGeometry.Canonical.CognitiveShadow.detectShadows B.residualDebt
+
+structure BlackBookData where
+  /-- Stable source anchor, e.g. a chapter or note identifier. -/
+  sourceAnchor : String
+
+  /-- Raw symbolic seed extracted from the source material. -/
+  symbolicSeed : String
+
+  /-- Conjectural statements that this seed suggests. -/
+  conjectures : Array String
+
+  /-- Candidate theorem names suggested by the source. -/
+  theoremCandidates : Array Lean.Name
+
+  /-- Theorems already owned by this black-book corridor. -/
+  ownedTheorems : Array Lean.Name
+
+  /-- Recognized archetype tags attached to the corridor. -/
+  archetypeTags : Array String
+
+  /-- Explicit residual debt that remains after integration. -/
+  residualDebt : Array String
+
+  /-- Archive or packet manifest refs. -/
+  manifests : Array String
+
+  /-- Current integration status. -/
+  status : String
 
 end InfoGeometry.Canonical.BlackBookIntegration

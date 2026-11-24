@@ -181,4 +181,17 @@ Boolean cube structure.
 def fullDictionaryEquiv : PrimeBitState P ≃ ArithmeticRegister P :=
   (stateToSubsetEquiv P).trans (subsetToArithmeticEquiv P)
 
+theorem state_sign_preservation (ψ : PrimeBitState P) :
+    (subsetWeylSign (occupiedPrimeSet P ψ) : ℤ) =
+      fermionParityOfState P ψ := by
+  calc
+    (subsetWeylSign (occupiedPrimeSet P ψ) : ℤ) =
+        ArithmeticFunction.moebius
+          (subsetToArithmeticEquiv P (stateToSubsetEquiv P ψ)).val := by
+      exact sign_preservation P (stateToSubsetEquiv P ψ)
+    _ = ArithmeticFunction.moebius (representedNatOfState P ψ) := by
+      rfl
+    _ = fermionParityOfState P ψ :=
+      mobius_representedNatOfState_eq_fermionParity P ψ
+
 end InfoGeometry.Canonical.BooleanCubeDictionary

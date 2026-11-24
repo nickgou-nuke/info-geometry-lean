@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.FiniteMajoranaBraiding
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure
@@ -188,5 +193,15 @@ theorem lifted_commutes_deck (P : BoundaryLoopClosurePacket)
   liftedBoundaryLoopAction_commutes_deck P.loop x
 
 end BoundaryLoopClosurePacket
+
+/-- A finite packet of boundary loop symmetry data. -/
+structure BoundaryLoopClosureData where
+  /-- Cayley--Möbius inversion. -/
+  cayley : CayleyMobiusInversion ℕ
+  /-- Loop word acting on boundary labels. -/
+  loop : BoundaryLoopWord
+  /-- Explicit finite commutation with the Cayley--Möbius inversion. -/
+  commutes_with_cayley : ∀ n : ℕ,
+    cayley.inv (evalBraidWord loop n) = evalBraidWord loop (cayley.inv n)
 
 end InfoGeometry.Canonical.BoundaryLoopSuperClosure

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CPTTensorColimitIdentification
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Prequantum.AlgebraicGNSState
@@ -96,5 +101,36 @@ theorem stage_star (n : ℕ) (x : Stage n) :
   P.stage_star_readback n x
 
 end CPTDirectLimitGNSPacket
+
+structure CPTDirectLimitGNSData where
+  /-- Carrier-level involution on the identified direct-limit algebra. -/
+  carrierStar : CPTGNSCarrier → CPTGNSCarrier
+  /-- Involution law. -/
+  star_involutive : Function.Involutive carrierStar
+  /-- Anti-multiplicativity on the carrier. -/
+  star_mul : ∀ x y : CPTGNSCarrier, carrierStar (x * y) = carrierStar y * carrierStar x
+  /-- Additivity of the carrier involution. -/
+  star_add : ∀ x y : CPTGNSCarrier, carrierStar (x + y) = carrierStar x + carrierStar y
+  /-- Compatibility of the carrier involution with the real scalar action. -/
+  star_smul : ∀ (r : ℝ) (x : CPTGNSCarrier),
+    carrierStar (r • x) = r • carrierStar x
+  /-- The direct-limit state functional on the carrier. -/
+  state : CPTGNSCarrier →ₗ[ℝ] ℝ
+  /-- Normalization of the state. -/
+  normalized : state 1 = 1
+  /-- Positivity on algebraic squares. -/
+  positive : ∀ x : CPTGNSCarrier, 0 ≤ state (carrierStar x * x)
+  /-- Symmetry of the quadratic pairing. -/
+  symmetric : ∀ x y : CPTGNSCarrier, state (carrierStar y * x) = state (carrierStar x * y)
+  /-- Finite-stage algebraic states at every depth. -/
+  stage_state : ∀ n : ℕ, RealAlgebraicState (Stage n)
+  /-- The carrier state reads back each finite stage through the canonical embedding. -/
+  stage_readback :
+    ∀ n : ℕ, ∀ x : Stage n, state (cptTensorInductiveLimit.inj n x) =
+      (stage_state n).eval x
+  /-- The carrier involution reads back the stagewise involution. -/
+  stage_star_readback :
+    ∀ n : ℕ, ∀ x : Stage n, carrierStar (cptTensorInductiveLimit.inj n x) =
+      cptTensorInductiveLimit.inj n (star x)
 
 end InfoGeometry.Canonical.CPTDirectLimitGNS

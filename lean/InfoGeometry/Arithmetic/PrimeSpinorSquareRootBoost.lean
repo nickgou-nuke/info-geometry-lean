@@ -314,4 +314,15 @@ def intEmptyPrimeSpinorPacket : PrimeSpinorSquareRootPacket ℕ ℤ where
   modes := ∅
   amplitude := fun _ => 0
 
+
+abbrev plus {R : Type*} (u : PrimeSpinor R) : R := u.1
+
+
+abbrev minus {R : Type*} (u : PrimeSpinor R) : R := u.2
+
+structure PrimeSpinorSquareRootData
+    (PrimeLabel R : Type*) [DecidableEq PrimeLabel] [CommRing R] where
+  modes : Finset PrimeLabel
+  amplitude : PrimeLabel → R
+
 end InfoGeometry.Arithmetic.PrimeSpinorSquareRootBoost

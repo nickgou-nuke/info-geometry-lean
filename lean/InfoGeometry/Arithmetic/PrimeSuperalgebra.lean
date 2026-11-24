@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.LSeries.Nonvanishing
@@ -371,5 +376,13 @@ theorem inverse_infiniteComplexBosonicEulerProduct_eq_inverse_riemannZeta
     (infiniteComplexBosonicEulerProduct s)⁻¹ = (riemannZeta s)⁻¹ := by
   exact congrArg (fun z : ℂ => z⁻¹)
     (infiniteComplexBosonicEulerProduct_eq_riemannZeta hs)
+
+theorem finitePrimeSupertrace_mul_finiteBosonicPrimePartition_eq_one
+    (P : PrimeCutoff) (β : ℝ)
+    (hdenom : finitePrimeDenominator P β ≠ 0) :
+    finitePrimeSupertrace P β * finiteBosonicPrimePartition P β = 1 := by
+  rw [finitePrimeSupertrace_eq_denominator]
+  unfold finiteBosonicPrimePartition
+  exact mul_inv_cancel₀ hdenom
 
 end InfoGeometry.Arithmetic.PrimeSuperalgebra

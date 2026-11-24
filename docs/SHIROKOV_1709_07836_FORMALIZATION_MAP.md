@@ -362,3 +362,10 @@ owner file check and targeted Lake build, the owner axiom audit (1 module,
 0 failures), and the strict source screen (0 traps). These checks verify the
 derivation-lane theorem only; they do not construct smooth spin-group fields
 on the paper's pseudo-Euclidean base space.
+The new `shirokov_general_isometry_blade_basis` also passed the locked owner
+file check and targeted module build (9,099 jobs, exit code 0), owner axiom
+check (1 module, 0 failures), scoped source debt audit (0 open gaps), strict
+OpenGauss screen (0 traps), and strict staged proof-proxy gate. This extends
+the transported canonical blade basis to any real quadratic form on a finite
+coordinate space, conditional on an isometry; it does not prove the odd-volume
+trace criterion for arbitrary Clifford frames.

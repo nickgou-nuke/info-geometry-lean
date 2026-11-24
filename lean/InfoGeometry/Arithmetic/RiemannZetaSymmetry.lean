@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Gamma.Basic
@@ -35,5 +40,26 @@ If ρ is a zero of xi(s), then 1 - ρ is also a zero.
 -/
 def riemann_zeta_zero_symmetry_prop (zeta : ℂ → ℂ) : Prop :=
   ∀ ρ : ℂ, completed_zeta zeta ρ = 0 → completed_zeta zeta (1 - ρ) = 0
+
+/-- Zeros inherit the reflection symmetry of the completed function. -/
+theorem zero_symmetry_of_reflection
+    (zeta : ℂ → ℂ)
+    (hreflect : riemann_zeta_reflection_symmetry_prop zeta) :
+    riemann_zeta_zero_symmetry_prop zeta := by
+  intro ρ hzero
+  rw [← hreflect ρ]
+  exact hzero
+
+
+theorem reflection_zero_iff
+    (zeta : ℂ → ℂ)
+    (hreflect : riemann_zeta_reflection_symmetry_prop zeta)
+    (ρ : ℂ) :
+    completed_zeta zeta ρ = 0 ↔ completed_zeta zeta (1 - ρ) = 0 := by
+  constructor
+  · exact zero_symmetry_of_reflection zeta hreflect ρ
+  · intro hzero
+    have htransport := zero_symmetry_of_reflection zeta hreflect (1 - ρ) hzero
+    simpa only [sub_sub_cancel] using htransport
 
 end InfoGeometry.Arithmetic.RiemannZetaSymmetry

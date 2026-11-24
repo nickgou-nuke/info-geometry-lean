@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Automorphic/RoelckeSelbergSpectral.lean
 
 Abstract Roelcke-Selberg spectral interface.
@@ -250,6 +255,13 @@ theorem hecke_mem_pCuspidal
   map_mem_pCuspidal_of_commutes
     W (R.hecke i) (R.hecke_commutes_cuspidal i) hF
 
+/-- Historical statement name, now derived from the explicit span equality. -/
+theorem roelckeSelberg_complete :
+    Submodule.span ℝ
+        (simultaneousCuspidalEigenvectors W R.laplacian R.hecke) =
+      W.pCuspidalSubspace :=
+  R.roelckeSelberg
+
 end RoelckeSelbergSpectralDatum
 
 /-! ## 4. Joint Laplace-Hecke eigenspaces -/
@@ -447,6 +459,14 @@ def potentialOnPacket
     (_P : CuspidalEigenpacket R chi)
     (s : ℂ) : ℝ :=
   L.potential chi s
+
+/-- Historical statement name, now the explicit local-factor law. -/
+theorem eulerProduct_finite_local_factor :
+    ∀ chi s, s ∈ L.convergenceRegion chi →
+      ∃ finitePlaces : Finset HeckeIndex,
+        L.value chi s =
+          ∏ i ∈ finitePlaces, L.localFactor i chi s :=
+  L.eulerProduct
 
 end AutomorphicLFunctionDatum
 

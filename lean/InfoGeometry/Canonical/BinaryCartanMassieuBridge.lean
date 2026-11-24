@@ -266,4 +266,14 @@ theorem binaryMassieu_neg_eq (a u : ℝ) :
   have h : a * -u = -(a * u) := by ring
   rw [h, Real.cosh_neg]
 
+
+theorem binaryParameters_zero (a u : ℝ) :
+    binaryParameters a u 0 = a * u := by
+  rfl
+
+
+theorem binaryParameters_one (a u : ℝ) :
+    binaryParameters a u 1 = -(a * u) := by
+  rfl
+
 end InfoGeometry.Canonical.BinaryCartanMassieuBridge

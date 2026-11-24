@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.BogoliubovOptimalTransport
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SouriauKreinMetriplecticContext
@@ -211,6 +216,17 @@ theorem rg_fixed_point_flow_isOptimal
     IsOptimalBogoliubovFlow B.reduction
       (canonicalBogoliubovFlow B.reduction) :=
   canonicalBogoliubovFlow_isOptimal B.reduction
+
+theorem dissipative_flow_eq_onsager_channel :
+    B.metriplecticFlow.dissipativeFlow = B.metric.onsager B.X :=
+  rfl
+
+@[rep_depth transport]
+
+theorem total_flow_eq_bogoliubov_add_onsager :
+    B.metriplecticFlow.totalFlow =
+      canonicalBogoliubovFlow B.reduction B.time + B.metric.onsager B.X :=
+  rfl
 
 end Bridge
 

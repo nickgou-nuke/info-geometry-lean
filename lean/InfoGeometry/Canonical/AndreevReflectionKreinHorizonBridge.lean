@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -66,6 +71,8 @@ theorem andreev_reflection_unitarity_conservation
       Matrix.mul_apply, Fin.sum_univ_two, ← Complex.normSq_eq_conj_mul_self] using hentry
   exact_mod_cast hcomplex
 
+def subgapScatteringUnitarity (r_N r_A : ℝ) : ℝ := r_N + r_A
+
 end Andreev
 
 namespace ImageCharge
@@ -83,5 +90,14 @@ theorem boundary_image_charge_compensation (q R : ℝ) (hR : R ≠ 0) :
   ring
 
 end ImageCharge
+
+/-- Explicit 2x2 Matrix Multiplication for Horizon & Andreev Operators. -/
+def mat2Mul (A B : Matrix (Fin 2) (Fin 2) ℂ) (i j : Fin 2) : ℂ :=
+  A i 0 * B 0 j + A i 1 * B 1 j
+
+theorem rindler_horizon_null_locus (x : ℂ) :
+    kreinNullNorm x x = 0 := by
+  dsimp [kreinNullNorm]
+  ring
 
 end AndreevReflectionKreinHorizonBridge

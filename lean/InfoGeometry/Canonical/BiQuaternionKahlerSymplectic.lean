@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Tactic
+import InfoGeometry.Algebra.MatrixNoncommutativity
 
 /-!
 # InfoGeometry.Canonical.BiQuaternionKahlerSymplectic
@@ -32,6 +38,23 @@ Smooth/nonlinear symplectic geometry, nondegeneracy as an abstract bundle form,
 Hamiltonian vector fields, Jacobi identity on function algebras, and analytic
 Kähler potential machinery.
 -/
+
+/-- Closed non-commutativity witnesses for the real matrix carriers used below (T16). -/
+theorem realMat2_noncomm_witness :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A :=
+  ⟨InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix,
+    InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix,
+    InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix_mul_tiltedMatrix_ne⟩
+
+theorem realMat4_noncomm_witness :
+    ∃ A B : Matrix (Fin 4) (Fin 4) ℝ, A * B ≠ B * A := by
+  let E01 : Matrix (Fin 4) (Fin 4) ℝ := fun i j => if i = 0 ∧ j = 1 then 1 else 0
+  let E10 : Matrix (Fin 4) (Fin 4) ℝ := fun i j => if i = 1 ∧ j = 0 then 1 else 0
+  refine ⟨E01, E10, ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℝ => M 0 0) h
+  change (∑ k : Fin 4, E01 0 k * E10 k 0) = (∑ k : Fin 4, E10 0 k * E01 k 0) at h00
+  norm_num [E01, E10, Fin.sum_univ_four] at h00
 
 namespace InfoGeometry.Canonical.BiQuaternionKahlerSymplectic
 
@@ -132,6 +155,21 @@ theorem dot4_pos_of_exists_ne_zero (x : R4) (hx : ∃ i : Fin 4, x i ≠ 0) :
     nlinarith [sq_nonneg (x 0), sq_nonneg (x 1), sq_nonneg (x 2), h3]
 
 theorem exists_symplectic_witness_of_nonzero (x : R4) (hx : ∃ i : Fin 4, x i ≠ 0) :
+    ∃ y : R4, 0 < symplecticI x y := by
+  refine ⟨I4c.mulVec x, ?_⟩
+  rw [symplecticI_apply_I4c_mulVec]
+  exact dot4_pos_of_exists_ne_zero x hx
+
+/-! The bilinear Kähler compatibility behind the diagonal readout. -/
+
+theorem symplecticI_I4c_mulVec_eq_dot4 (x y : R4) :
+    symplecticI x (I4c.mulVec y) = dot4 x y := by
+  dsimp [symplecticI, dot4]
+  simp [I4c, Matrix.mulVec, dotProduct, Fin.sum_univ_succ]
+  ring
+
+
+theorem exists_symplectic_property_of_nonzero (x : R4) (hx : ∃ i : Fin 4, x i ≠ 0) :
     ∃ y : R4, 0 < symplecticI x y := by
   refine ⟨I4c.mulVec x, ?_⟩
   rw [symplecticI_apply_I4c_mulVec]

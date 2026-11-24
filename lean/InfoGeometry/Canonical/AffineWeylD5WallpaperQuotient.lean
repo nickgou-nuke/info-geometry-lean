@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.V4D4WeylEmbedding
@@ -209,4 +214,33 @@ theorem affine_wallpaper_lift_is_homomorphism (a b : AffineWallpaperD4) :
     exact (weylD5CrossSection2_is_homomorphism a.g b.g).symm
 
 end
+
+theorem weylD5CrossSection2_injective :
+    Function.Injective weylD5CrossSection2 := by
+  intro a b h
+  fin_cases a <;> fin_cases b <;>
+    simp [weylD5CrossSection2] at h ⊢ <;>
+      norm_num at h
+
+
+theorem affine_wallpaper_lift_injective :
+    Function.Injective affine_wallpaper_lift := by
+  intro a b h
+  have hW : weylD5CrossSection2 a.g = weylD5CrossSection2 b.g :=
+    congrArg AffineWeylD5.W h
+  have hT : latticeEmbed a.t = latticeEmbed b.t := by
+    simpa [affine_wallpaper_lift] using congrArg AffineWeylD5.T h
+  have ht : a.t = b.t := by
+    apply Prod.ext
+    · have h0 := congrFun hT 0
+      exact_mod_cast (show (a.t.1 : ℚ) = b.t.1 by
+        simpa [latticeEmbed] using h0)
+    · have h1 := congrFun hT 1
+      exact_mod_cast (show (a.t.2 : ℚ) = b.t.2 by
+        simpa [latticeEmbed] using h1)
+  have hg : a.g = b.g := weylD5CrossSection2_injective hW
+  cases a
+  cases b
+  simp_all
+
 end InfoGeometry.Canonical.AffineWeylD5WallpaperQuotient

@@ -296,11 +296,12 @@ carrier: commuting derivation directions and generator compatibility make the
 defect central, and an explicit grade-two support premise forces it to vanish.
 `shirokov_grade_two_support_sub` and
 `shirokov_clifford_compatibility_curvature_eq_zero_of_component_grade_two`
-decompose this into grade-two connection values and grade-two-preservation
-premises for the two derivation directions; bracket support is then derived
-from bilinear closure. The preservation premises are not yet derived from the
-paper's geometric hypotheses; other signatures and a varying base-space frame
-are also outside this theorem.
+decompose this into grade-two connection values and submodule-preservation
+premises for the two derivation directions. `shirokov_grade_two_span_coordinate_eq_zero`
+converts the submodule output back to coordinate support, and bracket support
+is derived from bilinear closure. The preservation premises are not yet derived
+from the paper's geometric hypotheses; other signatures and a varying
+base-space frame are also outside this theorem.
 The ordered-blade pair support result now lifts by bilinearity to
 `shirokov_grade_two_commutator_mem_span`, and
 `shirokov_grade_two_commutator_closed` gives the corresponding coordinate

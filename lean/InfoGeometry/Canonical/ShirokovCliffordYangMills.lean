@@ -2245,6 +2245,34 @@ theorem shirokov_grade_two_supported_mem_span (n : ℕ)
     apply Submodule.subset_span
     exact Set.mem_range.mpr ⟨⟨S, hgrade S hcoord⟩, rfl⟩
 
+/-- Coordinates outside grade two vanish on the grade-two blade submodule. -/
+theorem shirokov_grade_two_span_coordinate_eq_zero (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hx : x ∈ shirokovGradeTwoSpan n) (U : Finset (Fin n))
+    (hU : U.card ≠ 2) : bladeRepr ℝ n x U = 0 := by
+  have hcoord_span : ∀ z ∈ shirokovGradeTwoSpan n,
+      shirokovBladeCoordinates n z U = 0 := by
+    intro z hz
+    change z ∈ Submodule.span ℝ
+      (Set.range fun S : {S : Finset (Fin n) // S.card = 2} => cBlade ℝ n S.1) at hz
+    refine Submodule.span_induction (R := ℝ)
+      (p := fun z _ => shirokovBladeCoordinates n z U = 0) ?_ ?_ ?_ ?_ hz
+    · rintro z ⟨S, rfl⟩
+      have hUS : U ≠ S.1 := by
+        intro heq
+        apply hU
+        simpa [heq] using S.2
+      simp [shirokovBladeCoordinates_cBlade, Pi.single_apply, hUS]
+    · simp [shirokovBladeCoordinates]
+    · intro z w _ _ hz hw
+      simp only [map_add, Pi.add_apply]
+      rw [hz, hw, zero_add]
+    · intro r z _ hz
+      simp only [map_smul, Pi.smul_apply]
+      rw [hz, smul_zero]
+  have hzero := hcoord_span x hx
+  exact hzero
+
 private theorem algebraCommutator_add_left {A : Type*} [Ring A]
     (x y z : A) : algebraCommutator (x + y) z =
       algebraCommutator x z + algebraCommutator y z := by
@@ -2315,29 +2343,8 @@ theorem shirokov_grade_two_commutator_closed (n : ℕ)
     (shirokov_grade_two_supported_mem_span n x hx)
     (shirokov_grade_two_supported_mem_span n y hy)
   by_contra hU
-  have hcoord_span : ∀ z ∈ shirokovGradeTwoSpan n,
-      shirokovBladeCoordinates n z U = 0 := by
-    intro z hz
-    change z ∈ Submodule.span ℝ
-      (Set.range fun S : {S : Finset (Fin n) // S.card = 2} => cBlade ℝ n S.1) at hz
-    refine Submodule.span_induction (R := ℝ)
-      (p := fun z _ => shirokovBladeCoordinates n z U = 0) ?_ ?_ ?_ ?_ hz
-    · rintro z ⟨S, rfl⟩
-      have hUS : U ≠ S.1 := by
-        intro heq
-        apply hU
-        simpa [heq] using S.2
-      simp [shirokovBladeCoordinates_cBlade, Pi.single_apply, hUS]
-    · simp [shirokovBladeCoordinates]
-    · intro z w _ _ hz hw
-      simp only [map_add, Pi.add_apply]
-      rw [hz, hw, zero_add]
-    · intro r z _ hz
-      simp only [map_smul, Pi.smul_apply]
-      rw [hz, smul_zero]
-  have hzero := hcoord_span _ hspan
-  change shirokovBladeCoordinates n (algebraCommutator x y) U ≠ 0 at hcoord
-  exact hcoord hzero
+  exact hcoord (shirokov_grade_two_span_coordinate_eq_zero n
+    (algebraCommutator x y) hspan U (by simpa using hU))
 
 /-- Conditional flatness consequence for Shirokov's compatibility equation
 in the negative-definite finite-stage Clifford algebra. Generator compatibility
@@ -2459,20 +2466,26 @@ theorem shirokov_clifford_compatibility_curvature_eq_zero_of_component_grade_two
       bladeRepr ℝ n (C x) T ≠ 0 → T.card = 2)
     (hCy : ∀ T : Finset (Fin n),
       bladeRepr ℝ n (C y) T ≠ 0 → T.card = 2)
-    (hKx : ∀ z : CliffordAlgebra (cliffordNegSqForm ℝ n),
-      (∀ T : Finset (Fin n), bladeRepr ℝ n z T ≠ 0 → T.card = 2) →
-      ∀ T : Finset (Fin n),
-        bladeRepr ℝ n (K.operatorAction x z) T ≠ 0 → T.card = 2)
-    (hKy : ∀ z : CliffordAlgebra (cliffordNegSqForm ℝ n),
-      (∀ T : Finset (Fin n), bladeRepr ℝ n z T ≠ 0 → T.card = 2) →
-      ∀ T : Finset (Fin n),
-        bladeRepr ℝ n (K.operatorAction y z) T ≠ 0 → T.card = 2) :
+    (hKx : ∀ z ∈ shirokovGradeTwoSpan n,
+      K.operatorAction x z ∈ shirokovGradeTwoSpan n)
+    (hKy : ∀ z ∈ shirokovGradeTwoSpan n,
+      K.operatorAction y z ∈ shirokovGradeTwoSpan n) :
     K.operatorAction x (C y) - K.operatorAction y (C x) -
       algebraCommutator (C x) (C y) = 0 := by
   have h₁ : ∀ T : Finset (Fin n),
-      bladeRepr ℝ n (K.operatorAction x (C y)) T ≠ 0 → T.card = 2 := hKx _ hCy
+      bladeRepr ℝ n (K.operatorAction x (C y)) T ≠ 0 → T.card = 2 := by
+    intro T hT
+    by_contra hT2
+    exact hT (shirokov_grade_two_span_coordinate_eq_zero n
+      (K.operatorAction x (C y)) (hKx _
+        (shirokov_grade_two_supported_mem_span n (C y) hCy)) T (by simpa using hT2))
   have h₂ : ∀ T : Finset (Fin n),
-      bladeRepr ℝ n (K.operatorAction y (C x)) T ≠ 0 → T.card = 2 := hKy _ hCx
+      bladeRepr ℝ n (K.operatorAction y (C x)) T ≠ 0 → T.card = 2 := by
+    intro T hT
+    by_contra hT2
+    exact hT (shirokov_grade_two_span_coordinate_eq_zero n
+      (K.operatorAction y (C x)) (hKy _
+        (shirokov_grade_two_supported_mem_span n (C x) hCx)) T (by simpa using hT2))
   apply shirokov_clifford_compatibility_curvature_eq_zero_of_grade_two
     n K C x y hxy hgen₁ hgen₂
   have hbracket : ∀ T : Finset (Fin n),

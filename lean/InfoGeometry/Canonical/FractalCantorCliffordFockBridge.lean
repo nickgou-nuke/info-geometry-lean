@@ -567,4 +567,21 @@ theorem cl11Rep_ι_zero_one_eq_structure_operator
 
 /-! ## 4. Theorem surfaces -/
 
+theorem boundaryConsList_append
+    (pre post : List Bool) (ξ : (ℕ → Bool)) :
+    boundaryConsList (pre ++ post) ξ =
+      boundaryConsList pre (boundaryConsList post ξ) := by
+  induction pre with
+  | nil => rfl
+  | cons b bs ih =>
+      simp [boundaryConsList, ih]
+
+theorem cantorHausdorffReadout_eq_middleThirdsCantor
+    {Op H : Type*} [Ring Op] [StarRing Op]
+    [NormedAddCommGroup H] [NormedSpace ℂ H] [SMul Op H]
+    (T : CuntzCantorSpectralTriple Op H)
+    (hT : T.spectralDimension = Real.log 2 / Real.log 3) :
+    cantorHausdorffReadout T = Real.log 2 / Real.log 3 := by
+  simp [cantorHausdorffReadout, hT]
+
 end FractalCantorCliffordFockBridge

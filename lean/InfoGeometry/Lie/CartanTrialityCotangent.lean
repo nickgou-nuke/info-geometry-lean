@@ -7,6 +7,7 @@ import InfoGeometry.Lie.CartanTrialityRepresentation
 import InfoGeometry.Geometry.CotangentActionGroupoid
 import InfoGeometry.Geometry.FiniteCotangentInvariants
 import Mathlib.Algebra.Group.Equiv.TypeTags
+import Mathlib.LinearAlgebra.Basis.VectorSpace
 import Mathlib.LinearAlgebra.Dual.Lemmas
 
 /-!

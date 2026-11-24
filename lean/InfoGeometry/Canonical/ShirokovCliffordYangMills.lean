@@ -974,6 +974,44 @@ theorem shirokov_center_grade_two_eq_zero (n : ℕ)
     exact hne (shirokov_center_coordinate_support n x hx T hEmpty hTop)
   exact hcoord
 
+/-- Conditional flatness consequence for Shirokov's compatibility equation
+in the negative-definite finite-stage Clifford algebra. Generator compatibility
+and commuting derivation directions centralize the curvature defect; the
+explicit grade-two support hypothesis then forces that central defect to zero.
+This isolates the remaining geometric obligation: deriving `hgrade` from the
+paper's frame hypotheses. -/
+theorem shirokov_clifford_compatibility_curvature_eq_zero_of_grade_two
+    (n : ℕ)
+    (K : DerivationLieLane ℝ
+      (CliffordAlgebra (cliffordNegSqForm ℝ n)))
+    (C : OneForm K) (x y : K.L) (hxy : ⁅x, y⁆ = 0)
+    (hgen₁ : ∀ v : Fin n → ℝ,
+      covariantDerivative K (-C) x
+        (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
+    (hgen₂ : ∀ v : Fin n → ℝ,
+      covariantDerivative K (-C) y
+        (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
+    (hgrade : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n
+        (K.operatorAction x (C y) - K.operatorAction y (C x) -
+          algebraCommutator (C x) (C y)) T ≠ 0 → T.card = 2) :
+    K.operatorAction x (C y) - K.operatorAction y (C x) -
+      algebraCommutator (C x) (C y) = 0 := by
+  apply shirokov_center_grade_two_eq_zero n
+    (K.operatorAction x (C y) - K.operatorAction y (C x) -
+      algebraCommutator (C x) (C y))
+  · apply Subalgebra.mem_center_iff.mpr
+    intro a
+    have hcentral := shirokov_clifford_compatibility_curvature_central
+      (Q := cliffordNegSqForm ℝ n) (K := K) (C := C) x y hxy hgen₁ hgen₂ a
+    change
+      (K.operatorAction x (C y) - K.operatorAction y (C x) -
+        algebraCommutator (C x) (C y)) * a -
+        a * (K.operatorAction x (C y) - K.operatorAction y (C x) -
+          algebraCommutator (C x) (C y)) = 0 at hcentral
+    exact (sub_eq_zero.mp hcentral).symm
+  · exact hgrade
+
 /-- The standard-frame center projection annihilates elements supported only
 in grade two, because the Reynolds average retains only scalar and odd-top
 coordinates. -/

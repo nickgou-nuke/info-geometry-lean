@@ -113,14 +113,16 @@ theorem leftRegular_primal_dual_anticommutator (x p : Fin 4 → ℝ) :
           wittPairing x p • (1 : InfoGeometry.Canonical.ZornMatrix ℝ) := by
     simp only [wittZornEquiv_coordinates]
     apply ZornMatrix.ext
-    · simp [ZornMatrix.mul, ZornMatrix.dot, wittPairing] <;> ring
-    · simp [ZornMatrix.mul, ZornMatrix.dot, wittPairing] <;> ring
+    · simp [ZornMatrix.mul, ZornMatrix.dot, wittPairing]
+      ring
+    · simp [ZornMatrix.mul, ZornMatrix.dot, wittPairing]
+      ring
     · funext i
       fin_cases i <;>
-        simp [ZornMatrix.mul, ZornMatrix.cross, wittPairing] <;> ring
+        simp [ZornMatrix.mul, ZornMatrix.cross, wittPairing]
     · funext i
       fin_cases i <;>
-        simp [ZornMatrix.mul, ZornMatrix.cross, wittPairing] <;> ring
+        simp [ZornMatrix.mul, ZornMatrix.cross, wittPairing]
   rw [leftRegular_anticommutator, hprod]
   simp only [map_sub, map_add, map_smul, leftRegular_one]
 

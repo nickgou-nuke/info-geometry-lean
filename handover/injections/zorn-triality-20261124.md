@@ -318,3 +318,60 @@ python3 tools/infra/opengauss_cli.py review lean/InfoGeometry/Lie/CanonicalZornR
 No compiler, lock probe, workflow syntax rerun, or remote job rerun occurred
 in this static lane. The updated source is ready for publication and the
 fresh focused CI check; kernel and actual axiom acceptance remain pending.
+
+## Current-head compiler findings and native proof repair
+
+Run `45376538757`, job `138397436561`, checked the published tree
+`32fc1371525a4f118a9d60298605d749f0c02d08` and failed during the selected
+build. Artifact `14916290555` has SHA-256
+`ec06f6278d69e11408b6d3e1bf297d88484e2307e3e6f318a80685e6350d6ef9`;
+its build log has SHA-256
+`e88f3265103131d0296dc1bed46b7b373e05aa84acd51813dd684bd37bcd7d3a`.
+Fresh file checks and the 74-record axiom audit did not run.
+
+The triality owner's local notation used field projection syntax rejected
+by the pinned quotation precheck. Two separate commutator proof steps also
+failed: bottom-up simplification distributed scalar subtraction before
+factoring the products, and `noncomm_ring` left negative scalar actions
+inside ordered endomorphism products. The faithfulness proof required
+evaluation of `(wittDualityEquiv p) x`, while its supplied equality used
+`wittPairing x p`.
+
+`audit_math` authored the isolated triality repair and `source_scout`
+independently reviewed it. It uses explicit `QuadraticMap.polarBilin`,
+ordered scalar rewrites, then distributivity/associativity and additive
+normalization. All ordered triple products are preserved. Its SHA-256 is
+`09267ddee1e54a89741357ed0a6adab1f4653aa8a5742914f1fb8247b4cf373f`.
+
+`source_scout` authored the faithfulness repair and `audit_math` independently
+reviewed it. The exact existing `wittDualityEquiv` definition and
+`toDualPlus_apply` lemma now expose the required evaluation in the local
+simplification list. Its SHA-256 is
+`6924f0d33fca0a25c03f60dad0ab658d6bef318a9f6f4749cd95ff0f0885d40c`.
+Every public statement, hypothesis, import, and count in both owners is
+unchanged; the extension inventory remains 74 expected axiom records.
+
+The additive update also merges parent revision
+`98d294795ee7356b2b98c827bc739bc04e01b298`. The parent now uses a finite
+block-determinant argument, actual noncommutativity witnesses for its two
+matrix sizes, and the compiler-directed Witt warning repairs. Its selected
+inventory is separately 39 expected records. Its repaired norm owner built
+in the preceding actual CI; the new block proof still awaits fresh kernel
+acceptance. Both published histories are preserved by an ordinary merge.
+
+### Independent static receipt for the current repair
+
+The six maintained gates scoped to the two changed child owners all returned
+zero. There were zero semantic-content findings and zero screener traps.
+Five nonblocking lexical vacuity warnings concern the same definitional
+application readouts recorded previously. All twenty public theorem
+statements in these two owners, all their imports, and their declaration
+counts are unchanged. The full inventory remains 56 owner heads plus 18
+reused declarations: 74 expected and zero observed axiom records.
+
+The final comparison confirmed all seven staged paths, selected control
+hashes, and exact agreement of the four inherited parent paths with merge
+parent `98d294795ee7356b2b98c827bc739bc04e01b298`. The unrelated new intake
+contract was preserved. Report SHA-256:
+`e712e945429ed526744ca46cd6f8c8284281d7b7ff7239608669238489edf08c`.
+No compiler ran in this static lane; fresh kernel/axiom acceptance is pending.

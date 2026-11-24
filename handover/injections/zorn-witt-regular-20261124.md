@@ -298,3 +298,101 @@ This receipt is a source/static PASS for the exact repair. No local compiler,
 new lock probe, workflow rerun, or axiom audit occurred in this static lane.
 A new published CI run must establish whether the repaired proof elaborates
 and whether dependent owners and all 37 axiom records pass.
+
+## Second compiler receipt and block-determinant repair
+
+The current-head focused run `45375944598`, job `138382168259`, actually built
+the repaired norm owner with SHA-256
+`c8828faadc1a5a83c44a5c88a3cbad26887b403798da5e93cb8ac807e1f0aac5`.
+It then failed in the determinant owner: the original matrix readout exceeded
+the default 200,000-heartbeat budget, and the Laplace expansion exceeded its
+1,200,000-heartbeat budget at the five-dimensional minors. The Witt owner
+built with six tactic warnings at four source sites. Fresh warning-as-error
+checks and the 37-record axiom audit did not run.
+
+Artifact `14914884707` has SHA-256
+`7a81db59661cc8b07c473725594b132327e729ef3ac1f9f5540487a6d626b077`.
+Its build log has SHA-256
+`edd544f2e7b0d54d5f17e3fa9a8fe84c589bf049fc15320fb892b2b4532e7470`.
+The CI recorded tree `ca50c2b1c781ae8e6a1184d31e84909b9a79cd91`, matching
+the parent head under review.
+
+Root replaced the determinant proof with exact finite block algebra, and
+`source_scout` independently reviewed the candidate. The actual matrix is
+`[[a I₄, B], [C, b I₄]]`, with a direct proof of `C * B = (x · y) I₄`.
+For `a ≠ 0`, multiplying on the right by `[[I₄,-B],[0,a I₄]]` gives a
+block-triangular matrix; cancellation of `a^4` yields the determinant.
+For `a = 0`, the signed exchange `[[0,-I₄],[I₄,0]]` has determinant one and
+reduces the calculation to `det(-C * B)`. Both branches give the fourth
+power of the native norm. No corner invertibility assumption, analytic
+limit, or raised heartbeat budget remains. The operator-to-matrix proof now
+compares the action on arbitrary coordinate vectors in eight rows.
+
+The determinant candidate SHA-256 is
+`ad1e4526d472b76e0097e2d248058713dde64fb697c095a2e2b39c15a437acbe`.
+Both public theorem statements are unchanged. Private helpers expose the
+block calculation locally, and the native Mathlib Schur-complement import
+supplies the determinant of a block matrix with identity in its first corner.
+
+`source_scout` repaired exactly the four reported Witt proof-script sites;
+`audit_math` independently reviewed the delta. Scalar `simp`/`ring` steps
+are sequential and the two unreachable vector `ring` tails are removed.
+Its SHA-256 is
+`4db8f9c4dd672a1f0b2d57224a659970d4ad688c1857c7ed7f299fc700fb15bb`.
+All public statements, hypotheses, and counts are preserved.
+
+A local pinned-runtime feasibility check at the unchanged prior snapshot
+did not produce a theorem result. The first launch was stopped by an
+inherited allocation bound before elaboration; a second launch under normal
+limits exited with SIGKILL after 131 seconds, before emitting a module
+result. QA sent no termination signal to the started Lake. The recorded
+maximum waited-child RSS does not establish the cause of SIGKILL. Both
+temporary packages-directory overrides were restored byte-for-byte; all
+nine package revisions, URLs, clean-source checks, and source/control hashes
+remained correct. No axiom records were observed. These are infrastructure
+outcomes, separate from the new proof candidates' pending kernel acceptance.
+
+### Explicit matrix noncommutativity
+
+The first static run on the block refactor found T16 on its private Cartesian
+matrix helper. Semantic vacuity/content were clean, while four of the six
+gates rejected the missing closed matrix witness. The response adds the
+actual upper-zero and lower-zero chiral left-action matrices: `(A * B) 0 0`
+is one and `(B * A) 0 0` is zero. Two equality fields identify these witnesses
+with the native basis-dependent `LinearMap.toMatrix` expressions.
+
+`source_scout` authored the isolated insertion, and root and `audit_math`
+independently reviewed it. The updated determinant owner SHA-256 is
+`43bfb3117e2076450d387ca2f0aa731444463bb44568dcd51b05e25293f4059d`.
+All preceding candidate bytes are preserved. Its two existing statements
+remain unchanged and one new theorem records the actual noncommutativity.
+The packet now has 28 public owner heads plus 10 reused declarations,
+therefore 38 expected axiom records. No gate criterion was changed.
+
+The second run confirmed that the maintained gate requires a witness for
+each concrete matrix carrier used by products. The eight-dimensional witness
+does not cover the four-dimensional off-diagonal blocks. A second closed
+theorem therefore uses the actual upper blocks for `chiralUpperBasis 0` and
+`chiralUpperBasis 1`; their ordered products differ at entry `(1,2)` by one
+versus zero. Its two equality fields expose the exact four-by-four matrices.
+Root independently reviewed `source_scout`'s isolated 16-line insertion.
+The final determinant-owner SHA-256 is
+`746827d3e234185eeb0c6b724c18ee7e916acee63498ca5325ac56031efdbf00`.
+The original two public statements are still unchanged. There are now
+29 public owner heads plus 10 reused declarations: 39 expected axiom records.
+
+### Final static disposition for this repair
+
+Run 003 passed all six maintained gates on the two changed owners: strict
+proof proxy, semantic vacuity, semantic content, strict OpenGauss screener,
+strict refutation scan, and static GATE_4. All commands returned zero, with
+zero vacuity/content findings and zero screener traps. The frozen comparison
+confirmed the source/control bytes, four staged paths, and the unchanged
+original public statements. The independent inventory confirmed 29 owner
+heads plus 10 reused declarations, 39 expected and zero observed axiom
+records. Report SHA-256:
+`83bdd312fe6ef907f228c7847e1b2c3c0511eb114bd26e76e5eac3524e4fea47`.
+
+This is static acceptance of the exact source hashes above. Fresh compiler
+and axiom acceptance of the structural repair remain pending. No verification
+gate, dependency pin, package source, or shared-cache policy was changed.

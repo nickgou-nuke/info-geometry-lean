@@ -38,7 +38,7 @@ namespace InfoGeometry.Canonical.ZornInfinitesimalTriality
 open InfoGeometry.Canonical.ZornClifford
 open InfoGeometry.Lie.SplitOctonionEllCircularPeirceBasis
 
-local notation "P" => (zornNorm (R := ℝ)).polarBilin
+local notation "P" => QuadraticMap.polarBilin (zornNorm (R := ℝ))
 local notation "Γ" => (diracGammaLinear (R := ℝ))
 local notation "L" => leftRegularRepresentation
 
@@ -103,14 +103,15 @@ theorem dirac_bivector_commutator (a b v : ZornMatrix ℝ) :
         (1 / 4 : ℝ) •
           ((Γ a * Γ b - Γ b * Γ a) * Γ v -
             Γ v * (Γ a * Γ b - Γ b * Γ a)) := by
-      simp only [smul_mul_assoc, mul_smul_comm, smul_sub]
+      rw [smul_mul_assoc, mul_smul_comm, smul_sub]
     _ = (1 / 4 : ℝ) •
         (Γ a * (Γ b * Γ v + Γ v * Γ b) -
           Γ b * (Γ a * Γ v + Γ v * Γ a) -
           (Γ a * Γ v + Γ v * Γ a) * Γ b +
           (Γ b * Γ v + Γ v * Γ b) * Γ a) := by
       congr 1
-      noncomm_ring
+      simp only [mul_sub, sub_mul, mul_add, add_mul, mul_assoc]
+      abel
     _ = Γ (vectorBivector a b v) := by
       simp only [diracGammaLinear_anticommutator, vectorBivector_apply,
         mul_smul_comm, smul_mul_assoc, mul_one, one_mul, map_smul, map_sub]

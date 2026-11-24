@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -319,7 +324,9 @@ theorem spacetime_eigenvalues (t x y z : ℝ) :
     have hreal :
         (t + spatialRadius x y z)^2 - 2 * t * (t + spatialRadius x y z) +
           (t^2 - x^2 - y^2 - z^2) = 0 := by
-      nlinarith [hr]
+      ring_nf
+      rw [hr]
+      ring_nf
     exact_mod_cast hreal
   constructor
   · unfold spacetimeCharacteristic
@@ -327,9 +334,11 @@ theorem spacetime_eigenvalues (t x y z : ℝ) :
     have hreal :
         (t - spatialRadius x y z)^2 - 2 * t * (t - spatialRadius x y z) +
           (t^2 - x^2 - y^2 - z^2) = 0 := by
-      nlinarith [hr]
+      ring_nf
+      rw [hr]
+      ring_nf
     exact_mod_cast hreal
-  · ring
+  · ring_nf
 
 /-- The eigenvalue spacing (level spacing) in terms of spacetime coordinates:
     S = λ₁ − λ₂ = 2r
@@ -599,3 +608,63 @@ example (t x y z : ℝ) :
   trace_X_squared_spacetime t x y z
 
 end
+
+theorem nuclear_spacing_eq_spacetime_spacing (E₀ γ ω_rot j_x : ℝ) :
+    nuclearSpacing E₀ γ ω_rot j_x = spacetimeSpacing (ω_rot * j_x) 0 γ ∧
+      (nuclearSpacing E₀ γ ω_rot j_x)^2 = 4 * (γ^2 + (ω_rot * j_x)^2) := by
+  have hspacing :
+      nuclearSpacing E₀ γ ω_rot j_x = spacetimeSpacing (ω_rot * j_x) 0 γ := by
+    unfold nuclearSpacing nuclearSpacetimeRadius spacetimeSpacing spatialRadius
+    congr 1
+    congr 1
+    ring
+  constructor
+  · exact hspacing
+  · calc
+      (nuclearSpacing E₀ γ ω_rot j_x)^2 = (spacetimeSpacing (ω_rot * j_x) 0 γ)^2 := by
+        rw [hspacing]
+      _ = 4 * ((ω_rot * j_x)^2 + 0^2 + γ^2) :=
+        wignerDyson_is_spatialVolume (ω_rot * j_x) 0 γ
+      _ = 4 * (γ^2 + (ω_rot * j_x)^2) := by ring
+
+---------------------------------------------------------------
+-- Part 7:  Shared matrix template (finite identities only)
+---------------------------------------------------------------
+
+/- **Parameterization table (2×2 Hermitian matrices):**
+
+    ┌──────────────┬─────────────────┬──────────────────────┐
+    │ Theory        │ Parameterization │ Physical Meaning    │
+    ├──────────────┼─────────────────┼──────────────────────┤
+    │ Spacetime     │ X = [t+z  x−iy] │ Minkowski 4-vector  │
+    │ (Twistor)     │     [x+iy t−z ] │                      │
+    ├──────────────┼─────────────────┼──────────────────────┤
+    │ GUE (RMT)     │ H = [a   c−id] │ Random Hamiltonian   │
+    │               │     [c+id  b ] │                      │
+    ├──────────────┼─────────────────┼──────────────────────┤
+    │ Chiral Cone   │ H = E_R N₊ +   │ AQFT modular engine  │
+    │ (this repo)   │     E_L N₋ +   │                      │
+    │               │     W S₊ + W*S₋│                      │
+    ├──────────────┼─────────────────┼──────────────────────┤
+    │ Quaternion    │ q = a + bi +   │ SU(2) spinor rotation│
+    │ (ℍ)           │     cj + dk    │                      │
+    ├──────────────┼─────────────────┼──────────────────────┤
+    │ Nuclear       │ γ, ω_rot, j_x  │ Triaxial simulator   │
+    │ (Goutev-Tonev)│                 │                      │
+    └──────────────┴─────────────────┴──────────────────────┘
+
+    All five rows use the same 2×2 Hermitian matrix template, after choosing
+    an interpretation for the four real parameters.
+    The eigenvalue spacing S = λ₁ − λ₂ is:
+    - In spacetime: S = 2r = 2√(x²+y²+z²)     (spatial diameter)
+    - In GUE:      S = √((a−b)² + 4(c²+d²))    (level spacing)
+    - In chiral:   S = √((E_R−E_L)² + 4|W|²)  (modular gap)
+    - In nuclear:  S = 2√(γ² + (ω_rot·j_x)²)  (γ-ray energy diff)
+
+    The Wigner–Dyson P(S) ∝ S² is the r² radial volume element.
+    The equality of formulas is algebraic. The physical interpretation is a
+    roadmap hypothesis, not a proved theorem. -/
+---------------------------------------------------------------
+-- Part 8:  Finite Verifications
+---------------------------------------------------------------
+

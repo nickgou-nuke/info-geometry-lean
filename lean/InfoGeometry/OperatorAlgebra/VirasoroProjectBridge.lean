@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/VirasoroProjectBridge.lean
 
 Partial transport between the abstract Virasoro socket and the
@@ -146,5 +151,10 @@ theorem currentHeisenbergVirasoroDatum_bracket
       LinearMap.commutator, Ring.lie_def, Algebra.smul_def] using h
   · simpa [currentHeisenbergVirasoroDatum, virasoroCentralCoefficient, hmn,
       LinearMap.commutator, Ring.lie_def, Algebra.smul_def] using h
+
+/-- Alias for compatibility with prime bridge naming. -/
+theorem virasoro_project_is_property :
+    ∃ V : VirasoroDatum (VirasoroAlgebra ℝ), VirasoroProjectRealizes V :=
+  virasoro_project_has_realized_datum
 
 end InfoGeometry.OperatorAlgebra.VirasoroProjectBridge

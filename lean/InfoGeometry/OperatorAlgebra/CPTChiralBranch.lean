@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/CPTChiralBranch.lean
 
 CPT branch of the modular chiral mirror.
@@ -158,6 +163,22 @@ theorem cptChiralBranchOwnerTarget
     (Op : Type*) [Ring Op] [Algebra ℝ Op] :
     CPTChiralBranchOwnerTarget Op := by
   intro B
+  exact ⟨
+    (fun x => B.tomitaMirror_eq_J_conj x),
+    (fun x hM hL => B.algebra_left_to_commutant_right hM hL),
+    (fun x hM hR => B.algebra_right_to_commutant_left hM hR)⟩
+
+/-- Owner target for reading a supplied CPT-calibrated Tomita/chiral branch. -/
+theorem cptChiralBranch_properties
+    {Op : Type*} [Ring Op] [Algebra ℝ Op]
+    (B : CPTChiralTomitaBranch Op) :
+    (∀ x : Op, B.tomita.Jconj x = (B.mirror.J * x) * B.mirror.J) ∧
+    (∀ x : Op, x ∈ B.tomita.M → B.LeftSupported x →
+      B.tomita.Jconj x ∈ B.tomita.Mcomm ∧
+        B.RightSupported (B.tomita.Jconj x)) ∧
+    (∀ x : Op, x ∈ B.tomita.M → B.RightSupported x →
+      B.tomita.Jconj x ∈ B.tomita.Mcomm ∧
+        B.LeftSupported (B.tomita.Jconj x)) := by
   exact ⟨
     (fun x => B.tomitaMirror_eq_J_conj x),
     (fun x hM hL => B.algebra_left_to_commutant_right hM hL),

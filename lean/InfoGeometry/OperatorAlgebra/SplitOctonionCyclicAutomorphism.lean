@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -79,5 +84,11 @@ theorem rho_transports_lower_cycle :
       rho (mulZ down1 down2) = mulZ (rho down1) (rho down2) ∧
       rho (mulZ down2 down0) = mulZ (rho down2) (rho down0) := by
   exact ⟨rho_mulZ down0 down1, rho_mulZ down1 down2, rho_mulZ down2 down0⟩
+
+/-- The cyclic map is additive on the explicit Zorn carrier. -/
+theorem rho_add (X Y : SplitOct) : rho (X + Y) = rho X + rho Y := by
+  cases X
+  cases Y
+  rfl
 
 end InfoGeometry.OperatorAlgebra.SplitOctonions.CyclicAutomorphism

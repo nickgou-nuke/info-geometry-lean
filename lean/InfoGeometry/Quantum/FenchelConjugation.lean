@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Quantum.HurwitzFenchel
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -55,5 +60,13 @@ theorem fenchel_loop_reflexivity (x : HurwitzSpace) :
     ring
   · dsimp [fenchel_conjugation]
     ring
+
+/-- The coordinate reflection matches the algebraic conjugation operation. -/
+theorem fenchel_conjugation_eq_coordinate_conj (x : ComplexCoordinate) :
+    fenchel_conjugation x = hurwitz_conj x := by
+  ext
+  · dsimp [fenchel_conjugation, hurwitz_inner, hurwitz_one, hurwitz_conj]
+    ring
+  · dsimp [fenchel_conjugation, hurwitz_conj]
 
 end InfoGeometry.Quantum

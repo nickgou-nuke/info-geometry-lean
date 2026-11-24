@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/CPTSymmetryBranch.lean
 
 CPT/PCT symmetry branch.
@@ -766,6 +771,21 @@ data.
 -/
 theorem cptSymmetryBranchOwnerTarget :
     CPTSymmetryBranchOwnerTarget := by
+  intro H _ _ C
+  exact C.CPT_exchanges_chiral_sectors
+
+/-! ## 6. Integrated CPT symmetry theorem -/
+
+theorem cptSymmetryBranch :
+    ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
+    ∀ C : IntegratedCPTSymmetryBranch H,
+      C.modularCPT.J.comp C.chiralMirror.Pleft =
+          C.chiralMirror.Pright.comp C.modularCPT.J ∧
+      C.modularCPT.J.comp C.chiralMirror.Pright =
+          C.chiralMirror.Pleft.comp C.modularCPT.J ∧
+      (∀ v : H,
+        C.chiralMirror.chiralCharge (C.modularCPT.J v) =
+          -C.chiralMirror.chiralCharge v) := by
   intro H _ _ C
   exact C.CPT_exchanges_chiral_sectors
 

@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/StinespringTomitaLightcone.lean
 
 Stinespring-Tomita dilation over the chiral lightcone.
@@ -428,5 +433,26 @@ theorem stinespringTomitaChiralLightcone_packet
     Nonempty
       (StinespringTomitaChiralLightconeDilation Op GlobalOp H Q C Φ) :=
   stinespringTomitaChiralLightconeOwnerTarget Op GlobalOp H Q C Φ h
+
+/-- Construct the Stinespring-Tomita dilation from compatibility data. -/
+theorem stinespringTomitaDilation_properties
+    (Op GlobalOp : Type*)
+    [Ring Op] [Module ℝ Op]
+    [Ring GlobalOp] [Module ℝ GlobalOp]
+    (Φ : LocalChannel Op)
+    (h : StinespringTomitaDilation Op GlobalOp Φ) :
+    (∀ x : Op,
+        Φ.map x =
+          h.compress (h.globalEvolution (h.embed x))) ∧
+      (∀ x : Op, h.embed x ∈ h.tomita.M) ∧
+      (∀ x : Op, h.leakage x ∈ h.tomita.Mcomm) ∧
+      (∀ x : Op,
+        h.globalEvolution (h.embed x) =
+          h.embed (Φ.map x) + h.leakage x) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · exact h.channel_factorization
+  · exact h.embed_mem_observable
+  · exact h.leakage_mem_commutant
+  · exact h.accounting
 
 end InfoGeometry.OperatorAlgebra.StinespringTomitaLightcone

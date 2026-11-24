@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/ClosureInvolution.lean
 
 Fixed equalizers for closure involutions.
@@ -643,6 +648,13 @@ theorem theta_eq_neg_self_of_mem_antiFixed
     (hx : x ∈ C.AntiFixed) :
     C.theta x = -x :=
   (C.mem_antiFixed_iff x).mp hx
+
+/-- If `v` is fixed, then `θ v = v`. -/
+theorem theta_eq_self_of_fixed
+    {v : V}
+    (hv : v ∈ C.Fixed) :
+    C.theta v = v :=
+  (C.mem_fixed_iff v).mp hv
 
 end LinearClosureInvolution
 

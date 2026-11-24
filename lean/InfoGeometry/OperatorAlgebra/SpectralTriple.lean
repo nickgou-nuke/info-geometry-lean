@@ -536,6 +536,13 @@ theorem cyclicCocycle_triple_product_rotation
   · calc
       readout ((a * b) * c) = readout (c * (a * b)) := hcyc (a * b) c
 
+/-- A cyclic-cocycle readout is cyclic when its cyclicity property is supplied. -/
+theorem cyclicCocycle_cyclicity
+    (readout : A → ℝ)
+    (hcyc : ∀ a b : A, readout (a * b) = readout (b * a)) :
+    ∀ a b : A, readout (a * b) = readout (b * a) := by
+  exact hcyc
+
 end RenormalizedIntegrationBackend
 
 /-! ## 9. Real, phase-compatible spectral triple -/

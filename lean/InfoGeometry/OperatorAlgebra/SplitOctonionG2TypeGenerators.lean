@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.SplitOctonionCyclicAutomorphism
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -77,5 +82,13 @@ theorem rhoAfterTau_mulZ (X Y : SplitOct) :
 theorem rhoAfterTau_detZ (X : SplitOct) : detZ (rhoAfterTau X) = detZ X := by
   unfold rhoAfterTau
   rw [rho_detZ, tau_detZ]
+
+/-- The signed flip is additive on the explicit Zorn carrier. -/
+theorem tau_add (X Y : SplitOct) : tau (X + Y) = tau X + tau Y := by
+  cases X
+  cases Y
+  ext <;>
+    simp [tau, add_a, add_b, add_x0, add_x1, add_x2, add_y0, add_y1, add_y2] <;>
+    ring
 
 end InfoGeometry.OperatorAlgebra.SplitOctonions.G2TypeGenerators

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.SelfDualConeColimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -66,5 +71,18 @@ theorem properCarrier_selfDualCone_extends_to_algebra
     IsSelfDualCone pairing (Set.iUnion K) := by
   apply selfDualCone_extends_to_colimit pairing K hmono hself
   exact selfDualCone_dual_exhaustive_of_stage_detector pairing K hdetect
+
+/-- Finite-stage detection is equivalent to dual-positive exhaustiveness on the union. -/
+theorem stage_detector_iff_dual_exhaustive
+    {E : Type*}
+    (pairing : E → E → ℝ)
+    (K : ℕ → Set E) :
+    (∀ x, (∀ y, y ∈ Set.iUnion K → 0 ≤ pairing x y) → ∃ n : ℕ, x ∈ K n) ↔
+      ∀ x, (∀ y, y ∈ Set.iUnion K → 0 ≤ pairing x y) → x ∈ Set.iUnion K := by
+  constructor
+  · exact selfDualCone_dual_exhaustive_of_stage_detector pairing K
+  · intro hexhaustive x hx
+    rcases Set.mem_iUnion.mp (hexhaustive x hx) with ⟨n, hxn⟩
+    exact ⟨n, hxn⟩
 
 end InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Sqrt
@@ -141,5 +146,11 @@ def tripotentToProjector : TripotentEigenvalue → Matrix (Fin 2) (Fin 2) ℝ
 /-- Sandwich formula: OP1 · X · OP2 isolates color off-diagonals -/
 def sandwichColorIsolation (X : Matrix (Fin 2) (Fin 2) ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
   OP1 * X * OP2
+
+
+abbrev J (C : ComplexStructure) : Matrix (Fin 2) (Fin 2) ℝ := C.1
+
+
+abbrev J_squared (C : ComplexStructure) : C.J * C.J = -1 := C.2
 
 end PeirceLadder

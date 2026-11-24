@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.InnerProductSpace.Adjoint
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.Basic
@@ -155,5 +160,10 @@ lemma gns_positive_square_is_adjoint_comp (a : ℂ) :
 lemma gns_state_on_positive_square_as_cyclic_coefficient (a : ℂ) :
     inner ℂ Omega (pi (involution a * a) Omega) = omega (involution a * a) := by
   exact gns_vector_state_recovers_state (involution a * a)
+
+lemma gns_cyclic_property (x : GNSHilbert) :
+    ∃ u : ℂ, pi u Omega = x := by
+  refine ⟨x, ?_⟩
+  simp [Omega, pi_apply]
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSConcrete

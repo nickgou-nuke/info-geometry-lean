@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.CliffordBott
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -238,5 +243,12 @@ theorem rnStatePath_hasDerivAt_zero
       (τ.toLinearMap (nilpotentRNGenerator * a)) 0 := by
   have h := affineStatePath_hasDerivAt_zero τ R.epsilonReadout R.epsilonReadout_one a
   simpa [rnStatePath, R.readout_law a] using h
+
+abbrev ParabolicRNPath
+    (τ : Cl_inftyState)
+    (R : NilpotentRNReadout τ) : Prop :=
+  ∀ (t : ℝ) (a : Cl_infty),
+    (rnStatePath τ R t).toLinearMap a =
+      τ.toLinearMap (parabolicRNDensity t * a)
 
 end InfoGeometry.Quantum.StateSpace

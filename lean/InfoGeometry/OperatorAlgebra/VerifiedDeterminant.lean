@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/VerifiedDeterminant.lean
 
 The individuation of the determinant.
@@ -111,6 +116,10 @@ theorem conjugation_invariant
     (U : InvertibleTransport Op) :
     D.det (U.conjugate A) = D.det A :=
   D.invariant A U
+
+def realMatrixDeterminant
+    (n : ℕ) : Matrix (Fin n) (Fin n) ℝ → ℝ :=
+  Matrix.det
 
 end VerifiedDeterminant
 

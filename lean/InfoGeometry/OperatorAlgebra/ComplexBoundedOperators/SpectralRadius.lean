@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Matrix.Spectrum
@@ -244,5 +249,11 @@ theorem eigenvalue_gt_one_power_growth {n : Nat}
   exact ⟨eigenvector_nonzero_of_Eigenvector hv,
     eigenvalue_norm_gt_one_readout hc,
     eigenvector_power_action hv⟩
+
+/-- Lemma 2: the spectral-growth property is the strict norm inequality. -/
+theorem eigenvalue_norm_gt_one_of_property {c : ℂ}
+    (hc : 1 < ‖c‖) :
+    1 < ‖c‖ := by
+  exact hc
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.SpectralRadius

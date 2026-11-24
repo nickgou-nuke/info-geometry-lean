@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.ProperCarrierSelfDualConeExtension
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -120,5 +125,17 @@ theorem properCarrier_selfDualCone_extends_to_univ_of_stageIndex
     iUnion_eq_univ_of_finiteCarrierStage K hstage
   simpa [hUnion] using
     properCarrier_selfDualCone_extends_of_stageIndex pairing K hmono hself hstage
+
+/-- The stage-index structure is equivalent to pointwise finite-stage coverage. -/
+theorem hasFiniteCarrierStage_iff_exists_stage
+    {E : Type*} (K : ℕ → Set E) :
+    Nonempty (HasFiniteCarrierStage K) ↔ ∀ x : E, ∃ n : ℕ, x ∈ K n := by
+  constructor
+  · rintro ⟨h⟩ x
+    exact ⟨h.stage x, h.mem_stage x⟩
+  · intro h
+    classical
+    let stage : E → ℕ := fun x => Classical.choose (h x)
+    exact ⟨⟨stage, fun x => Classical.choose_spec (h x)⟩⟩
 
 end InfoGeometry.OperatorAlgebra.ProperCarrierStageDetector

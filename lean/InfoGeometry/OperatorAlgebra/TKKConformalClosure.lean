@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/TKKConformalClosure.lean
 
 TKK conformal closure and Ricci-flux sockets.
@@ -810,5 +815,61 @@ variable
 variable (C : Closure J V W L State Geometry)
 
 end Closure
+
+structure PinLiftData
+    (L W : Type*)
+    [AddCommGroup L] [Module ℝ L]
+    [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup W] [Module ℝ W] where
+
+  /-- Quadratic form on `W`, intended signature `(5,5)`. -/
+  quadraticForm : QuadraticForm ℝ W
+
+  /-- Infinitesimal conformal action at the Lie algebra level. -/
+  infinitesimalAction : L →ₗ[ℝ] W →ₗ[ℝ] W
+
+  /-- Predicate for admissible conformal motions. -/
+  IsConformalMotion : (W →ₗ[ℝ] W) → Prop
+
+  /-- The infinitesimal action is a Lie homomorphism. -/
+  infinitesimalAction_lie :
+    ∀ X Y : L,
+      infinitesimalAction ⁅X, Y⁆ =
+        (infinitesimalAction X).comp (infinitesimalAction Y) -
+        (infinitesimalAction Y).comp (infinitesimalAction X)
+
+  /-- Abstract Pin group carrier (double cover of `O(quadraticForm)`). -/
+  PinGroupCarrier : Type*
+
+  /-- Abstract group multiplication on `PinGroupCarrier`. -/
+  pinMul : PinGroupCarrier → PinGroupCarrier → PinGroupCarrier
+
+  /-- Abstract unit of `PinGroupCarrier`. -/
+  pinOne : PinGroupCarrier
+
+  /-- Scalar embedding `ℝ → PinGroupCarrier` (multiples of the identity). -/
+  scalarEmbed : ℝ → PinGroupCarrier
+
+  /-- Clifford generator map `W → PinGroupCarrier`. -/
+  cliffordGen : W → PinGroupCarrier
+
+  /--
+  Clifford squaring relation: `ι(w) · ι(w) = Q(w) · 1`.
+
+  This is the defining relation of the Clifford algebra `Cl(W, Q)` from which
+  the Pin group is constructed.
+  -/
+  clifford_sq :
+    ∀ w : W,
+      pinMul (cliffordGen w) (cliffordGen w) =
+        scalarEmbed (quadraticForm w)
+
+  /-- Group-level Pin action on `W`. -/
+  pinAction : PinGroupCarrier → W →ₗ[ℝ] W
+
+  /-- The Pin action preserves the quadratic form. -/
+  pinAction_preserves_Q :
+    ∀ (g : PinGroupCarrier) (w : W),
+      quadraticForm (pinAction g w) = quadraticForm w
 
 end InfoGeometry.OperatorAlgebra.TKKConformalClosure

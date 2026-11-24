@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/AnomalousFlowStabilization.lean
 
 Anomalous flow stabilization sockets.
@@ -78,5 +83,19 @@ theorem stable_nonflat_of_anomaly_and_charge
   W.anomaly_forces_stable_nonflat x hanom hcharge
 
 end AnomalousFlowStabilizationWitness
+
+
+theorem additive_flow_zero
+    {State : Type*}
+    (flow : ℝ → State → State)
+    (hadd : ∀ s t x, flow (s + t) x = flow s (flow t x))
+    (hzero : ∀ x, flow 0 x = x)
+    (x : State) :
+    flow 0 x = x := by
+  calc
+    flow 0 x = flow (0 + 0) x := by rw [zero_add]
+    _ = flow 0 (flow 0 x) := hadd 0 0 x
+    _ = flow 0 x := by rw [hzero]
+    _ = x := hzero x
 
 end InfoGeometry.OperatorAlgebra.AnomalousFlowStabilization

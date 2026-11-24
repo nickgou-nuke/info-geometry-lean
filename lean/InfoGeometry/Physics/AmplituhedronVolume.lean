@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.LSeries.RiemannZeta
@@ -104,5 +109,11 @@ theorem amplituhedronVolume_zeta (β : ℂ) (hβ : 1 < β.re) :
   apply tsum_congr
   intro n
   simpa [dirichletTerm, Nat.cast_add, Nat.cast_one] using dirichletTerm_eq_inv_cpow β n
+
+
+theorem amplituhedronVolume_zeta_on_halfplane :
+    ∀ β : ℂ, 1 < β.re → amplituhedronVolume β = riemannZeta β := by
+  intro β hβ
+  exact amplituhedronVolume_zeta β hβ
 
 end InfoGeometry.Physics.AmplituhedronVolume

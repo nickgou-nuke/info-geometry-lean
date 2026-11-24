@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Recovered.SplitQuaternionMatricesRecovered
@@ -41,5 +46,12 @@ same determinant calculation. -/
 def nicaAmplituhedronVolume_from_twistorDeterminants_statement : Prop :=
   ∀ readout01 readout23 volume : ℝ,
     volume = Real.sqrt ((readout01) ^ 2) * Real.sqrt ((readout23) ^ 2)
+
+theorem nicaAmplituhedronVolume_statement_false :
+    ¬ (∀ readout01 readout23 volume : ℝ,
+      volume = Real.sqrt (readout01 ^ 2) * Real.sqrt (readout23 ^ 2)) := by
+  intro h
+  have hbad := h 1 1 0
+  norm_num at hbad
 
 end InfoGeometry.Recovered.TwistorAmplituhedronPluckerBridge

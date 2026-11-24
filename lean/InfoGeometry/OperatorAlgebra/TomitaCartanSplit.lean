@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/TomitaCartanSplit.lean
 
 Tomita-Cartan splitting and the origin of the doubled Krein sign.
@@ -1580,5 +1585,16 @@ theorem defect_nil_supported
   B.defect_supported_by_nil x hx
 
 end TomitaDrazinBridge
+
+/-- Cartan compact/noncompact generators obey the native sign-routing laws. -/
+theorem tomitaCartanSplit_signs :
+    ∀ (Op : Type uOp) [Ring Op],
+    ∀ C : TomitaCartanDatum Op,
+    (∀ X : Op, C.IsCompactGenerator X → C.globalGenerator X = X + C.mirror X) ∧
+    (∀ X : Op, C.IsNoncompactGenerator X → C.globalGenerator X = X - C.mirror X) := by
+  intro Op _ C
+  exact ⟨
+    (fun X hX => C.globalGenerator_compact hX),
+    (fun X hX => C.globalGenerator_noncompact hX)⟩
 
 end InfoGeometry.OperatorAlgebra.TomitaCartanSplit

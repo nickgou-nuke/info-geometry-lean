@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Architecture.SpinFactor
 import Mathlib.LinearAlgebra.Dimension.Finrank
 
@@ -41,5 +46,10 @@ lemma zero_point_energy_positive (S : SpinFactorState E)
     · norm_num
     · linarith
   exact lt_of_lt_of_le h_floor_pos S.cramer_rao_floor
+
+theorem zero_point_energy_topological_obstruction (S : SpinFactorState E)
+    (h_pos : 0 < Module.finrank ℝ E) :
+    0 < S.variance_limit :=
+  zero_point_energy_positive S h_pos
 
 end InfoGeometry.Quantum.ZeroPointEnergy

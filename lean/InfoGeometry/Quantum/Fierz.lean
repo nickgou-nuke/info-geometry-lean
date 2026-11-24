@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Quantum.Fock
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HilbertBridge
@@ -94,5 +99,20 @@ theorem information_fierz_majorana (ψ : DoubledSpace E) (hM : IsMajoranaBelief 
     (infoHilbert ψ)^2 = (infoScalar ψ)^2 + (infoSymplectic ψ)^2 := by
   rw [information_fierz_identity (E := E) ψ, hM]
   ring
+
+theorem information_fierz_majorana_sqrt (ψ : DoubledSpace E) (hM : IsMajoranaBelief ψ) :
+    infoHilbert ψ =
+      Real.sqrt ((infoScalar ψ)^2 + (infoSymplectic ψ)^2) := by
+  have hsq_nonneg : 0 ≤ (infoScalar ψ)^2 + (infoSymplectic ψ)^2 := by
+    rw [← information_fierz_majorana (E := E) ψ hM]
+    exact sq_nonneg (infoHilbert ψ)
+  have h1 : infoHilbert ψ ≤ Real.sqrt ((infoScalar ψ)^2 + (infoSymplectic ψ)^2) := by
+    rw [Real.le_sqrt (infoHilbert_nonneg ψ) hsq_nonneg]
+    rw [information_fierz_majorana (E := E) ψ hM]
+  have h2 : Real.sqrt ((infoScalar ψ)^2 + (infoSymplectic ψ)^2) ≤ infoHilbert ψ := by
+    rw [Real.sqrt_le_iff]
+    refine ⟨infoHilbert_nonneg ψ, ?_⟩
+    rw [information_fierz_majorana (E := E) ψ hM]
+  exact le_antisymm h1 h2
 
 end InfoGeometry.Quantum.Fierz

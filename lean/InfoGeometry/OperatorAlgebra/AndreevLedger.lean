@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/AndreevLedger.lean
 
 Andreev reflection as a particle-hole closure ledger.
@@ -214,6 +219,19 @@ theorem particle_hole_preserves_zeroMode
             rw [hψ]
     _ = 0 := by
             simp
+
+/-- Particle-hole energy pairing is reversible. -/
+theorem particle_hole_flips_energy_iff
+    {ψ : V}
+    {ε : ℝ} :
+    B.IsEnergyEigenvector ψ ε ↔
+      B.IsEnergyEigenvector (B.theta ψ) (-ε) := by
+  constructor
+  · intro hψ
+    exact B.particle_hole_flips_energy hψ
+  · intro hθψ
+    have h := B.particle_hole_flips_energy hθψ
+    simpa [B.theta_involutive ψ] using h
 
 end BdGHamiltonianLedger
 

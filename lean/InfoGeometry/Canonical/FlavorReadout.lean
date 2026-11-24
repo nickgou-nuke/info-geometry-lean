@@ -144,6 +144,7 @@ theorem readout_right_gram [Fintype p] [Fintype q] [DecidableEq p] [DecidableEq 
     right_gram_basis_change (readout T L R) (U : Matrix p p ℝ) (V : Matrix q q ℝ)
       ((Matrix.mem_orthogonalGroup_iff p ℝ).mp U.property)
 
+omit [Fintype m] [Fintype n] in
 /-- Evenness in the left frame and signed orthogonal covariance force every entry to vanish.
 Only the orthogonal changes `-1` and `1` are needed for this obstruction. -/
 theorem eq_zero_of_even_left_and_orthogonal_covariance

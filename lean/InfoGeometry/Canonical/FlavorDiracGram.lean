@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 
 import InfoGeometry.Canonical.FlavorReadout
 import InfoGeometry.Streaming.BipartiteGraphDirac
+import Mathlib.Algebra.Order.Star.Real
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import Mathlib.LinearAlgebra.Pi
@@ -53,11 +54,13 @@ theorem diracBlock_intertwines (Y : Matrix m n ℝ) (x : m ⊕ n → ℝ) :
   · ext i
     simp only [LinearEquiv.sumArrowLequivProdArrow_apply_fst,
       Matrix.fromBlocks_mulVec, Matrix.zero_mulVec, zero_add, add_zero,
-      Sum.elim_inl, Matrix.transpose_transpose] <;> rfl
+      Sum.elim_inl, Matrix.transpose_transpose]
+    rfl
   · ext j
     simp only [LinearEquiv.sumArrowLequivProdArrow_apply_snd,
       Matrix.fromBlocks_mulVec, Matrix.zero_mulVec, zero_add, add_zero,
-      Sum.elim_inr] <;> rfl
+      Sum.elim_inr]
+    rfl
 
 /-- The diagonal sign matrix represents the existing bipartite grading. -/
 theorem gradingBlock_intertwines (x : m ⊕ n → ℝ) :
@@ -70,7 +73,7 @@ theorem gradingBlock_intertwines (x : m ⊕ n → ℝ) :
       Matrix.fromBlocks_mulVec, grading]
   · ext j
     simp [LinearEquiv.sumArrowLequivProdArrow_apply_snd,
-      Matrix.fromBlocks_mulVec, grading]
+      Matrix.fromBlocks_mulVec, Matrix.neg_mulVec, grading]
 
 /-- The represented grading is an involution. -/
 theorem gradingBlock_sq :
@@ -115,6 +118,7 @@ theorem diracBlock_anticommutes_gradingBlock (Y : Matrix m n ℝ) :
   rw [Matrix.fromBlocks_multiply, Matrix.fromBlocks_multiply, Matrix.fromBlocks_add]
   simp
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- Column transformations of the signed operator readout induce the displayed
 Dirac-block congruence. The two transformation matrices are arbitrary real
 matrices; orthogonality is unnecessary for this identity. -/

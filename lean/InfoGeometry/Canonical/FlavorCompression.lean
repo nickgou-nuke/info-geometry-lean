@@ -34,6 +34,7 @@ variable {m n k p : Type*}
 variable [Fintype m] [Fintype n] [Fintype k] [Fintype p]
 variable [DecidableEq m] [DecidableEq n] [DecidableEq k] [DecidableEq p]
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- The native Frobenius norm squared is the rectangular matrix Gram trace. -/
 theorem frobenius_norm_sq_eq_trace (W : Matrix m n ℝ) :
     ‖W‖ ^ 2 = trace (Wᵀ * W) := by
@@ -44,11 +45,13 @@ theorem frobenius_norm_sq_eq_trace (W : Matrix m n ℝ) :
     Matrix.transpose_apply, pow_two]
   exact Finset.sum_comm
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- Either matrix Gram trace computes the same Frobenius energy. -/
 theorem frobenius_norm_sq_eq_trace_mul_transpose (W : Matrix m n ℝ) :
     ‖W‖ ^ 2 = trace (W * Wᵀ) :=
   (frobenius_norm_sq_eq_trace W).trans (Matrix.trace_mul_comm Wᵀ W)
 
+omit [Fintype k] [DecidableEq m] [DecidableEq k] in
 /-- Compressing by a symmetric idempotent retains its ordered Gram sandwich. -/
 theorem projection_gram (P : Matrix m m ℝ) (hPs : Pᵀ = P) (hP : P * P = P)
     (W : Matrix m k ℝ) :
@@ -59,6 +62,7 @@ theorem projection_gram (P : Matrix m m ℝ) (hPs : Pᵀ = P) (hP : P * P = P)
       simp only [Matrix.mul_assoc]
     _ = Wᵀ * P * W := by rw [hP]
 
+omit [Fintype k] [DecidableEq k] in
 /-- The full Gram matrix splits into its orthogonal projection and residual. -/
 theorem projection_gram_decomposition
     (P : Matrix m m ℝ) (hPs : Pᵀ = P) (hP : P * P = P)
@@ -72,6 +76,7 @@ theorem projection_gram_decomposition
   rw [Matrix.mul_sub, Matrix.mul_one, Matrix.sub_mul]
   abel
 
+omit [DecidableEq m] in
 /-- An orthonormal column frame determines an idempotent range projection. -/
 theorem frame_projection_idempotent (R : Matrix m p ℝ) (hR : Rᵀ * R = 1) :
     (R * Rᵀ) * (R * Rᵀ) = R * Rᵀ := by
@@ -80,6 +85,7 @@ theorem frame_projection_idempotent (R : Matrix m p ℝ) (hR : Rᵀ * R = 1) :
       simp only [Matrix.mul_assoc]
     _ = R * Rᵀ := by rw [hR, Matrix.mul_one]
 
+omit [Fintype k] [DecidableEq k] in
 /-- Exact matrix-valued loss identity for orthonormal frame compression. -/
 theorem compression_gram_decomposition
     (R : Matrix m p ℝ) (hR : Rᵀ * R = 1) (W : Matrix m k ℝ) :
@@ -97,6 +103,7 @@ theorem compression_gram_decomposition
       rw [projection_gram (R * Rᵀ) hPs hP]
       simp only [Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_assoc]
 
+omit [DecidableEq k] in
 /-- Frobenius Pythagoras with the actual orthogonal-compression residual. -/
 theorem compression_norm_sq_decomposition
     (R : Matrix m p ℝ) (hR : Rᵀ * R = 1) (W : Matrix m k ℝ) :
@@ -107,12 +114,14 @@ theorem compression_norm_sq_decomposition
     ← frobenius_norm_sq_eq_trace ((1 - R * Rᵀ) * W)] at h
   exact h
 
+omit [DecidableEq k] in
 /-- Compression loss is exactly the squared norm of the discarded component. -/
 theorem compression_loss
     (R : Matrix m p ℝ) (hR : Rᵀ * R = 1) (W : Matrix m k ℝ) :
     ‖W‖ ^ 2 - ‖Wᵀ * R‖ ^ 2 = ‖(1 - R * Rᵀ) * W‖ ^ 2 := by
   rw [compression_norm_sq_decomposition R hR W, add_sub_cancel_left]
 
+omit [DecidableEq k] in
 theorem compression_norm_sq_le
     (R : Matrix m p ℝ) (hR : Rᵀ * R = 1) (W : Matrix m k ℝ) :
     ‖Wᵀ * R‖ ^ 2 ≤ ‖W‖ ^ 2 := by
@@ -120,6 +129,7 @@ theorem compression_norm_sq_le
   rw [compression_loss R hR W]
   exact sq_nonneg ‖(1 - R * Rᵀ) * W‖
 
+omit [DecidableEq k] in
 /-- Equality of compression energies means that no matrix component is discarded. -/
 theorem compression_norm_sq_eq_iff
     (R : Matrix m p ℝ) (hR : Rᵀ * R = 1) (W : Matrix m k ℝ) :
@@ -134,6 +144,7 @@ theorem compression_norm_sq_eq_iff
     simp only [hz, norm_zero, zero_pow (by decide : (2 : ℕ) ≠ 0)] at h
     exact (sub_eq_zero.mp h).symm
 
+omit [Fintype k] [DecidableEq m] [DecidableEq n] [DecidableEq k] in
 /-- The response Gram identity is transported through an arbitrary left frame. -/
 theorem scaled_response_gram
     (T : Matrix m n ℝ) (C : Matrix n n ℝ) (c : ℝ)
@@ -146,6 +157,7 @@ theorem scaled_response_gram
     _ = c ^ 2 • (Lᵀ * C * L) := by
       rw [hT, Matrix.mul_smul, Matrix.smul_mul]
 
+omit [DecidableEq m] [DecidableEq n] [DecidableEq k] in
 theorem scaled_response_norm_sq
     (T : Matrix m n ℝ) (C : Matrix n n ℝ) (c : ℝ)
     (hT : Tᵀ * T = c ^ 2 • C) (L : Matrix n k ℝ) :

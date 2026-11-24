@@ -1,0 +1,87 @@
+name: Triality and cotangent action groupoids
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'verification/triality-cotangent/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/triality-cotangent.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: triality-cotangent-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: legendre-incidence-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Restore checked source artifacts
+        uses: actions/cache@v4
+        with:
+          path: verification/triality-cotangent/.lake/build
+          key: triality-cotangent-source-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('lean/**/*.lean', 'verification/triality-cotangent/lakefile.toml', 'verification/triality-cotangent/lake-manifest.json') }}
+          restore-keys: |
+            triality-cotangent-source-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Restore the pinned Mathlib artifacts
+        run: python3 verification/triality-cotangent/check.py exe cache get
+      - name: Build the owners and inspect all public declaration axioms
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/triality-cotangent/audit.py
+          python3 verification/triality-cotangent/check.py build 2>&1 | tee triality-cotangent-build.log
+          python3 verification/triality-cotangent/check.py env lean lean/InfoGeometry/Geometry/TrialityCotangentAudit.lean 2>&1 | tee triality-cotangent-axioms.log
+          python3 verification/triality-cotangent/audit.py --log triality-cotangent-axioms.log
+      - name: Screen the changed mathematical owners
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/Geometry/CotangentActionGroupoid.lean
+          lean/InfoGeometry/Geometry/CotangentLieForm.lean
+          lean/InfoGeometry/Geometry/FiniteCotangentInvariants.lean
+          lean/InfoGeometry/Geometry/CotangentFixedShear.lean
+          lean/InfoGeometry/Lie/CartanTriality.lean
+          lean/InfoGeometry/Lie/CartanTrialityRepresentation.lean
+          lean/InfoGeometry/Lie/CartanTrialityCotangent.lean
+          lean/InfoGeometry/Geometry/TrialityCotangentAudit.lean
+      - name: Rebuild the existing Cartan consumer after extraction
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/triality-cotangent/check.py build InfoGeometry.Lie.KreinCl44SplitG2DerivationPosetSynthesis 2>&1 | tee triality-cotangent-regression.log
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: triality-cotangent-validation
+          path: |
+            triality-cotangent-build.log
+            triality-cotangent-axioms.log
+            triality-cotangent-regression.log

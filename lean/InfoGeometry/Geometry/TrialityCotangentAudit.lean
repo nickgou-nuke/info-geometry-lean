@@ -1,0 +1,231 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Geometry.CotangentActionGroupoid
+import InfoGeometry.Geometry.CotangentLieForm
+import InfoGeometry.Geometry.FiniteCotangentInvariants
+import InfoGeometry.Geometry.CotangentFixedShear
+import InfoGeometry.Lie.CartanTriality
+import InfoGeometry.Lie.CartanTrialityRepresentation
+import InfoGeometry.Lie.CartanTrialityCotangent
+
+/-!
+# Triality and cotangent-groupoid declaration audit
+
+This module audits the explicitly declared public definitions and theorems
+in the mathematical owners above, including named instances. It is a validation target,
+not an umbrella import.
+Regenerate with `python3 verification/triality-cotangent/audit.py --write`.
+The validator compares actual Lean axiom output with this complete list.
+-/
+
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.coadj
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.coadj_apply
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.coadj_one
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.coadj_mul
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.coadj_inv_coadj
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.coadj_coadj_inv
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.coadjointAction
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.CotangentGroupoid
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.cotangentGroupoid
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.Arrow
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.source
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.target
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.unit
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.inverse
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.Composable
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.comp
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.source_unit
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.target_unit
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.source_inverse
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.target_inverse
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.inverse_inverse
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.source_comp
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.target_comp
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.unit_comp
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.comp_unit
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.inverse_comp
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.comp_inverse
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.comp_assoc
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.object
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.toHom
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fromHom
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.target_fromHom
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fromHom_toHom
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.toHom_comp_label
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fromHom_comp
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.coadj_intertwine
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.lift
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.lift_fixed_iff
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.source_lift
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.target_lift
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.composable_lift
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.lift_unit
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.lift_inverse
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.lift_comp
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.liftFunctor
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.liftFunctor_faithful
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.liftFunctor_full
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.liftFunctor_essSurj
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.liftFunctor_isEquivalence
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.liftEquivalence
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixed_endpoints
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixed_unit
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixed_inverse
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixed_comp
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixedSubgroup
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixedDual
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixedAction
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.FixedGroupoid
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixedGroupoid
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixedInclusion
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixedInclusion_obj_injective
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixedInclusion_faithful
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixedInclusion_arrow_fixed
+#print axioms InfoGeometry.Geometry.CotangentActionGroupoid.fixedInclusion_hom_range_iff
+
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentLift
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentLift_apply
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentLift_neutral
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentLift_omega
+#print axioms InfoGeometry.Geometry.CotangentLieForm.bracketForm
+#print axioms InfoGeometry.Geometry.CotangentLieForm.bracketForm_apply
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentForm
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentForm_apply
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentForm_isAlt
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentForm_skew
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentForm_nondegenerate
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentForm_invariant
+#print axioms InfoGeometry.Geometry.CotangentLieForm.cotangentForm_lieEquiv
+
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.cardInvertible
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.averagingProjection
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.averagingProjection_apply
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.averagingProjection_fixed
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.averagingProjection_action
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.invariantDual_action
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.invariantDual_average
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.extendInvariantDual
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.invariantDualEquiv
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.invariantDualEquiv_apply
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.invariantDualEquiv_symm_apply
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.fixedPhaseInclusion
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.fixedCotangentEquiv
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.fixedCotangentEquiv_omega
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.fixedCotangentForm
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.fixedCotangentForm_isAlt
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.fixedCotangentForm_nondegenerate
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.fixedCotangentLieForm
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.fixedCotangentLieForm_isAlt
+#print axioms InfoGeometry.Geometry.FiniteCotangentInvariants.fixedCotangentLieForm_nondegenerate
+
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.shear
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.shear_fixed_iff
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.dual_coordinates
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.shear_dual_fixed_iff
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixedPrimal
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixedDual
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixed_pairing_zero
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixedPrimalEquiv
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixedDualEquiv
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixed_phase_finrank
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixedPhaseInclusion
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixedOmega
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixedOmega_eq_zero
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixedOmega_not_nondegenerate
+#print axioms InfoGeometry.Geometry.CotangentFixedShear.fixed_dual_restriction_zero
+
+#print axioms InfoGeometry.Lie.KreinCl44SplitG2DerivationPosetSynthesis.trialitySwapVS
+#print axioms InfoGeometry.Lie.KreinCl44SplitG2DerivationPosetSynthesis.trialitySwapSpin
+#print axioms InfoGeometry.Lie.KreinCl44SplitG2DerivationPosetSynthesis.trialityCycle3
+#print axioms InfoGeometry.Lie.KreinCl44SplitG2DerivationPosetSynthesis.cartan_s3_triality_presentation
+#print axioms InfoGeometry.Lie.KreinCl44SplitG2DerivationPosetSynthesis.triality_mat4_noncommutative
+#print axioms InfoGeometry.Lie.KreinCl44SplitG2DerivationPosetSynthesis.s3FixedCartanSubmodule
+#print axioms InfoGeometry.Lie.KreinCl44SplitG2DerivationPosetSynthesis.cartan_s3_fixed_subspace_iff
+#print axioms InfoGeometry.Lie.KreinCl44SplitG2DerivationPosetSynthesis.s3FixedCartanEquiv
+#print axioms InfoGeometry.Lie.KreinCl44SplitG2DerivationPosetSynthesis.finrank_s3FixedCartanSubmodule
+#print axioms InfoGeometry.Lie.CartanTriality.conjugationReflection
+#print axioms InfoGeometry.Lie.CartanTriality.cyclicTriality
+#print axioms InfoGeometry.Lie.CartanTriality.coordinateChange
+#print axioms InfoGeometry.Lie.CartanTriality.coordinateChange_sq
+#print axioms InfoGeometry.Lie.CartanTriality.coordinateChange_orthogonal
+#print axioms InfoGeometry.Lie.CartanTriality.coordinateChange_mulVec
+#print axioms InfoGeometry.Lie.CartanTriality.coordinateChange_conj_hadamard
+#print axioms InfoGeometry.Lie.CartanTriality.coordinateChange_conj_reflection
+#print axioms InfoGeometry.Lie.CartanTriality.coordinateChange_conj_cycle
+#print axioms InfoGeometry.Lie.CartanTriality.conjugationReflection_sq
+#print axioms InfoGeometry.Lie.CartanTriality.cyclicTriality_cube
+#print axioms InfoGeometry.Lie.CartanTriality.cyclicTriality_ne_one
+#print axioms InfoGeometry.Lie.CartanTriality.cyclicTriality_sq_ne_one
+#print axioms InfoGeometry.Lie.CartanTriality.cyclicTriality_order
+#print axioms InfoGeometry.Lie.CartanTriality.reflection_conj_cycle
+#print axioms InfoGeometry.Lie.CartanTriality.hadamard_reflection_noncommutative
+#print axioms InfoGeometry.Lie.CartanTriality.hadamard_orthogonal
+#print axioms InfoGeometry.Lie.CartanTriality.reflection_orthogonal
+#print axioms InfoGeometry.Lie.CartanTriality.cycle_orthogonal
+#print axioms InfoGeometry.Lie.CartanTriality.fixedCartan
+#print axioms InfoGeometry.Lie.CartanTriality.mem_fixedCartan_iff
+#print axioms InfoGeometry.Lie.CartanTriality.fixedCartanEquiv
+#print axioms InfoGeometry.Lie.CartanTriality.finrank_fixedCartan
+#print axioms InfoGeometry.Lie.CartanTriality.fixedCartanBasis
+#print axioms InfoGeometry.Lie.CartanTriality.fixedCartanBasis_zero
+#print axioms InfoGeometry.Lie.CartanTriality.fixedCartanBasis_one
+#print axioms InfoGeometry.Lie.CartanTriality.coordinateChange_mem_fixedCartan_iff
+#print axioms InfoGeometry.Lie.CartanTriality.vectorWeight
+#print axioms InfoGeometry.Lie.CartanTriality.spinorWeightMinus
+#print axioms InfoGeometry.Lie.CartanTriality.spinorWeightPlus
+#print axioms InfoGeometry.Lie.CartanTriality.cycle_vectorWeight
+#print axioms InfoGeometry.Lie.CartanTriality.cycle_spinorWeightMinus
+#print axioms InfoGeometry.Lie.CartanTriality.cycle_spinorWeightPlus
+#print axioms InfoGeometry.Lie.CartanTriality.weight_orbit_distinct
+#print axioms InfoGeometry.Lie.CartanTriality.weight_orbit_norm_sq
+
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralMatrix
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralMatrix_mul
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralMatrixHom
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralMatrixHom_injective
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralLinearAction
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralLinearAction_apply
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralLinearAction_injective
+#print axioms InfoGeometry.Lie.CartanTriality.labelCycle
+#print axioms InfoGeometry.Lie.CartanTriality.labelReflection
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralPermutation
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralPermutationHom
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralPermutationHom_injective
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralPermutationHom_bijective
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralPermutationEquiv
+#print axioms InfoGeometry.Lie.CartanTriality.s3LinearAction
+#print axioms InfoGeometry.Lie.CartanTriality.s3LinearAction_injective
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralMatrix_rotation
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralMatrix_reflection
+#print axioms InfoGeometry.Lie.CartanTriality.dihedralMatrix_hadamard
+#print axioms InfoGeometry.Lie.CartanTriality.fixed_by_dihedral_iff
+#print axioms InfoGeometry.Lie.CartanTriality.fixed_by_s3_iff
+
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.cartanRepresentation
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.cartanRepresentation_apply
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.cartanRepresentation_invariants
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.contragredient_eq_dual
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.CartanVectorGroup
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.vectorAdjoint
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.vectorGroupAuto
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.vectorGroupAuto_apply
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.vectorAdjoint_intertwine
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.vectorCotangentEquivalence
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.vector_target_eq_source
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.vector_comp_coordinate
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.fixed_vector_arrows_iff
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.phaseAction
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.phaseAction_preserves_omega
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.fixed_phase_iff
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.invariantCartanEquiv
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.invariantCartanDualEquiv
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.fixedCartanCotangentEquiv
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.fixedCartanCotangentEquiv_omega
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.finrank_cartan_invariants
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.finrank_cartan_dual_invariants
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.finrank_fixed_cartan_phase
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.fixed_cartan_phase_nondegenerate
+#print axioms InfoGeometry.Lie.CartanTrialityCotangent.fixed_cartan_phase_isAlt

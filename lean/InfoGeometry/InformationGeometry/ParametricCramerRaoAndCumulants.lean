@@ -10,6 +10,7 @@ import InfoGeometry.Information.MultiLogPotential
 import InfoGeometry.Epistemology.ChentsovMetricInvariance
 import InfoGeometry.InformationGeometry.ArakiDonaldVariational
 import InfoGeometry.Canonical.CramerRaoUncertainty
+import Mathlib.Data.Matrix.Mul
 import Mathlib.Analysis.Convex.Deriv
 
 /-!
@@ -780,6 +781,313 @@ theorem secondDeriv_logPartition_slice_eq_fisherQuadratic {d : ℕ}
   rfl
 
 end MultivariateExpFamily
+
+/-! ### 5. General Finite-Dimensional Multivariate Cramér–Rao, Fisher Matrix, and χ² Unification -/
+
+section MultivariateCramerRaoAndChiSq
+
+open scoped Matrix
+
+/-- Unifies parametric `modelFisherInfo` with the inverse-prior Pearson `χ²` quadratic sum
+`∑ x, dp x * dp x / P.p x` (matching `ChentsovMetricInvariance.fisherMetric P dp dp`). -/
+theorem modelFisherInfo_eq_pearsonChiSq {α : Type*} [Fintype α]
+    (P : ProbInterior α) (dp : α → ℝ) :
+    modelFisherInfo P dp = ∑ x, dp x * dp x / P.p x := by
+  unfold modelFisherInfo score
+  refine Finset.sum_congr rfl ?_
+  intro x _
+  have hp : P.p x ≠ 0 := ne_of_gt (P.pos x)
+  field_simp [hp]
+
+/-- The `d × d` finite-dimensional parametric Fisher information matrix
+`I_{j,k}(P) = ∑ x, P(x) * score(dp_j)(x) * score(dp_k)(x)`. -/
+def fisherMatrix {α : Type*} [Fintype α] {d : ℕ}
+    (P : ProbInterior α) (dp : Fin d → α → ℝ) : Matrix (Fin d) (Fin d) ℝ :=
+  fun j k => ∑ x, P.p x * (score P.p (dp j) x * score P.p (dp k) x)
+
+/-- The `m × m` finite-dimensional estimator covariance matrix
+`Σ_{a,b}(P, T) = ∑ x, P(x) * (T_a(x) - E_P[T_a]) * (T_b(x) - E_P[T_b])`. -/
+def estimatorCovMatrix {α : Type*} [Fintype α] {m : ℕ}
+    (P : ProbInterior α) (T : Fin m → α → ℝ) : Matrix (Fin m) (Fin m) ℝ :=
+  fun a b => ∑ x, P.p x * ((T a x - statMeanOf P.p (T a)) * (T b x - statMeanOf P.p (T b)))
+
+/-- The `m × d` finite-dimensional estimator sensitivity / Jacobian matrix
+`J_{a,j} = ∑ x, dp_j(x) * T_a(x)`. -/
+def estimatorJacobian {α : Type*} [Fintype α] {m d : ℕ}
+    (dp : Fin d → α → ℝ) (T : Fin m → α → ℝ) : Matrix (Fin m) (Fin d) ℝ :=
+  fun a j => ∑ x, dp j x * T a x
+
+/-- Every entry of `fisherMatrix` equals Chentsov's bilinear `fisherMetric`. -/
+theorem fisherMatrix_eq_fisherMetric {α : Type*} [Fintype α] {d : ℕ}
+    (P : ProbInterior α) (dp : Fin d → α → ℝ) (j k : Fin d) :
+    fisherMatrix P dp j k = fisherMetric P (dp j) (dp k) := by
+  unfold fisherMatrix score
+  rw [fisherMetric_eq_score_expectation]
+
+/-- Every entry of `fisherMatrix` equals the inverse-prior Pearson `χ²` bilinear sum
+`∑ x, dp j x * dp k x / P.p x`. -/
+theorem fisherMatrix_eq_pearsonChiSq {α : Type*} [Fintype α] {d : ℕ}
+    (P : ProbInterior α) (dp : Fin d → α → ℝ) (j k : Fin d) :
+    fisherMatrix P dp j k = ∑ x, dp j x * dp k x / P.p x := by
+  unfold fisherMatrix score
+  refine Finset.sum_congr rfl ?_
+  intro x _
+  have hp : P.p x ≠ 0 := ne_of_gt (P.pos x)
+  field_simp [hp]
+
+theorem fisherMatrix_symm {α : Type*} [Fintype α] {d : ℕ}
+    (P : ProbInterior α) (dp : Fin d → α → ℝ) :
+    (fisherMatrix P dp)ᵀ = fisherMatrix P dp := by
+  ext j k
+  rw [Matrix.transpose_apply]
+  unfold fisherMatrix
+  refine Finset.sum_congr rfl ?_
+  intro x _
+  ring
+
+theorem estimatorCovMatrix_symm {α : Type*} [Fintype α] {m : ℕ}
+    (P : ProbInterior α) (T : Fin m → α → ℝ) :
+    (estimatorCovMatrix P T)ᵀ = estimatorCovMatrix P T := by
+  ext a b
+  rw [Matrix.transpose_apply]
+  unfold estimatorCovMatrix
+  refine Finset.sum_congr rfl ?_
+  intro x _
+  ring
+
+lemma score_linearComb {α : Type*} {d : ℕ}
+    (p : α → ℝ) (dp : Fin d → α → ℝ) (v : Fin d → ℝ) (x : α) :
+    score p (fun y => ∑ j, v j * dp j y) x = ∑ j, v j * score p (dp j) x := by
+  unfold score
+  rw [Finset.sum_div]
+  refine Finset.sum_congr rfl ?_
+  intro j _
+  ring
+
+lemma statMeanOf_linearComb {α : Type*} [Fintype α] {m : ℕ}
+    (p : α → ℝ) (T : Fin m → α → ℝ) (u : Fin m → ℝ) :
+    statMeanOf p (fun x => ∑ a, u a * T a x) = ∑ a, u a * statMeanOf p (T a) := by
+  unfold statMeanOf
+  calc
+    ∑ x, p x * ∑ a, u a * T a x
+        = ∑ x, ∑ a, u a * (p x * T a x) := by
+          refine Finset.sum_congr rfl (fun x _ => ?_)
+          rw [Finset.mul_sum]
+          refine Finset.sum_congr rfl (fun a _ => by ring)
+    _ = ∑ a, ∑ x, u a * (p x * T a x) := Finset.sum_comm
+    _ = ∑ a, u a * ∑ x, p x * T a x := by
+          refine Finset.sum_congr rfl (fun a _ => (Finset.mul_sum _ _ _).symm)
+
+/-- Quadratic form `vᵀ I(P) v` equals directional `modelFisherInfo` along `∑ j, v j * dp j`. -/
+theorem fisherMatrix_quadratic_eq_modelFisherInfo {α : Type*} [Fintype α] {d : ℕ}
+    (P : ProbInterior α) (dp : Fin d → α → ℝ) (v : Fin d → ℝ) :
+    dotProduct v ((fisherMatrix P dp).mulVec v) =
+      modelFisherInfo P (fun x => ∑ j, v j * dp j x) := by
+  calc
+    dotProduct v ((fisherMatrix P dp).mulVec v)
+        = ∑ j, ∑ k, ∑ x, P.p x * (v j * score P.p (dp j) x) * (v k * score P.p (dp k) x) := by
+          simp only [dotProduct, Matrix.mulVec, fisherMatrix]
+          refine Finset.sum_congr rfl (fun j _ => ?_)
+          rw [Finset.mul_sum]
+          refine Finset.sum_congr rfl (fun k _ => ?_)
+          rw [Finset.sum_mul, Finset.mul_sum]
+          refine Finset.sum_congr rfl (fun x _ => by ring)
+    _ = ∑ j, ∑ x, ∑ k, P.p x * (v j * score P.p (dp j) x) * (v k * score P.p (dp k) x) := by
+          refine Finset.sum_congr rfl (fun j _ => Finset.sum_comm)
+    _ = ∑ x, ∑ j, ∑ k, P.p x * (v j * score P.p (dp j) x) * (v k * score P.p (dp k) x) :=
+          Finset.sum_comm
+    _ = ∑ x, P.p x * (∑ j, v j * score P.p (dp j) x) ^ 2 := by
+          refine Finset.sum_congr rfl (fun x _ => ?_)
+          rw [sq, Finset.sum_mul]
+          simp only [Finset.mul_sum]
+          refine Finset.sum_congr rfl (fun j _ => Finset.sum_congr rfl (fun k _ => by ring))
+    _ = modelFisherInfo P (fun x => ∑ j, v j * dp j x) := by
+          unfold modelFisherInfo
+          refine Finset.sum_congr rfl (fun x _ => ?_)
+          rw [score_linearComb]
+
+theorem fisherMatrix_quadratic_nonneg {α : Type*} [Fintype α] {d : ℕ}
+    (P : ProbInterior α) (dp : Fin d → α → ℝ) (v : Fin d → ℝ) :
+    0 ≤ dotProduct v ((fisherMatrix P dp).mulVec v) := by
+  rw [fisherMatrix_quadratic_eq_modelFisherInfo]
+  exact modelFisherInfo_nonneg P _
+
+/-- Quadratic form `uᵀ Σ(P, T) u` equals directional `statVariance` of `∑ a, u a * T a`. -/
+theorem estimatorCovMatrix_quadratic_eq_statVariance {α : Type*} [Fintype α] {m : ℕ}
+    (P : ProbInterior α) (T : Fin m → α → ℝ) (u : Fin m → ℝ) :
+    dotProduct u ((estimatorCovMatrix P T).mulVec u) =
+      statVariance P.p (fun x => ∑ a, u a * T a x) := by
+  have hcent : ∀ x,
+      (∑ a, u a * T a x) - statMeanOf P.p (fun y => ∑ a, u a * T a y) =
+        ∑ a, u a * (T a x - statMeanOf P.p (T a)) := by
+    intro x
+    rw [statMeanOf_linearComb, ← Finset.sum_sub_distrib]
+    refine Finset.sum_congr rfl (fun a _ => by ring)
+  calc
+    dotProduct u ((estimatorCovMatrix P T).mulVec u)
+        = ∑ a, ∑ b, ∑ x, P.p x * (u a * (T a x - statMeanOf P.p (T a))) *
+            (u b * (T b x - statMeanOf P.p (T b))) := by
+          simp only [dotProduct, Matrix.mulVec, estimatorCovMatrix]
+          refine Finset.sum_congr rfl (fun a _ => ?_)
+          rw [Finset.mul_sum]
+          refine Finset.sum_congr rfl (fun b _ => ?_)
+          rw [Finset.sum_mul, Finset.mul_sum]
+          refine Finset.sum_congr rfl (fun x _ => by ring)
+    _ = ∑ a, ∑ x, ∑ b, P.p x * (u a * (T a x - statMeanOf P.p (T a))) *
+          (u b * (T b x - statMeanOf P.p (T b))) := by
+          refine Finset.sum_congr rfl (fun a _ => Finset.sum_comm)
+    _ = ∑ x, ∑ a, ∑ b, P.p x * (u a * (T a x - statMeanOf P.p (T a))) *
+          (u b * (T b x - statMeanOf P.p (T b))) := Finset.sum_comm
+    _ = ∑ x, P.p x * (∑ a, u a * (T a x - statMeanOf P.p (T a))) ^ 2 := by
+          refine Finset.sum_congr rfl (fun x _ => ?_)
+          rw [sq, Finset.sum_mul]
+          simp only [Finset.mul_sum]
+          refine Finset.sum_congr rfl (fun a _ => Finset.sum_congr rfl (fun b _ => by ring))
+    _ = statVariance P.p (fun x => ∑ a, u a * T a x) := by
+          unfold statVariance
+          refine Finset.sum_congr rfl (fun x _ => ?_)
+          rw [hcent x]
+
+theorem estimatorCovMatrix_quadratic_nonneg {α : Type*} [Fintype α] {m : ℕ}
+    (P : ProbInterior α) (T : Fin m → α → ℝ) (u : Fin m → ℝ) :
+    0 ≤ dotProduct u ((estimatorCovMatrix P T).mulVec u) := by
+  rw [estimatorCovMatrix_quadratic_eq_statVariance]
+  exact statVariance_nonneg P _
+
+/-- Bilinear Jacobian pairing `uᵀ J v = ∑ x, (∑ j, v j * dp j x) * (∑ a, u a * T a x)`. -/
+theorem estimatorJacobian_bilinear_eq_sum {α : Type*} [Fintype α] {m d : ℕ}
+    (dp : Fin d → α → ℝ) (T : Fin m → α → ℝ) (u : Fin m → ℝ) (v : Fin d → ℝ) :
+    dotProduct u ((estimatorJacobian dp T).mulVec v) =
+      ∑ x, (∑ j, v j * dp j x) * (∑ a, u a * T a x) := by
+  calc
+    dotProduct u ((estimatorJacobian dp T).mulVec v)
+        = ∑ a, ∑ j, ∑ x, (v j * dp j x) * (u a * T a x) := by
+          simp only [dotProduct, Matrix.mulVec, estimatorJacobian]
+          refine Finset.sum_congr rfl (fun a _ => ?_)
+          rw [Finset.mul_sum]
+          refine Finset.sum_congr rfl (fun j _ => ?_)
+          rw [Finset.sum_mul, Finset.mul_sum]
+          refine Finset.sum_congr rfl (fun x _ => by ring)
+    _ = ∑ a, ∑ x, ∑ j, (v j * dp j x) * (u a * T a x) := by
+          refine Finset.sum_congr rfl (fun a _ => Finset.sum_comm)
+    _ = ∑ x, ∑ a, ∑ j, (v j * dp j x) * (u a * T a x) := Finset.sum_comm
+    _ = ∑ x, (∑ j, v j * dp j x) * (∑ a, u a * T a x) := by
+          refine Finset.sum_congr rfl (fun x _ => ?_)
+          rw [Finset.sum_comm, Finset.sum_mul]
+          refine Finset.sum_congr rfl (fun j _ => ?_)
+          rw [Finset.mul_sum]
+
+/-- **General Finite-Dimensional Multivariate Cramér–Rao Quadratic Inequality**:
+for any `d` tangent score directions `dp` with zero total mass and any `m`-component
+estimator `T`, `(uᵀ J v)² ≤ (uᵀ Σ u) * (vᵀ I v)`. -/
+theorem multivariate_cramer_rao_quadratic {α : Type*} [Fintype α] {m d : ℕ}
+    (P : ProbInterior α) (dp : Fin d → α → ℝ) (T : Fin m → α → ℝ)
+    (hzero : ∀ j : Fin d, ∑ x, dp j x = 0)
+    (u : Fin m → ℝ) (v : Fin d → ℝ) :
+    (dotProduct u ((estimatorJacobian dp T).mulVec v)) ^ 2 ≤
+      dotProduct u ((estimatorCovMatrix P T).mulVec u) *
+        dotProduct v ((fisherMatrix P dp).mulVec v) := by
+  rw [estimatorJacobian_bilinear_eq_sum,
+    estimatorCovMatrix_quadratic_eq_statVariance,
+    fisherMatrix_quadratic_eq_modelFisherInfo]
+  have hzero_v : ∑ x, (∑ j, v j * dp j x) = 0 := by
+    rw [Finset.sum_comm]
+    refine Finset.sum_eq_zero (fun j _ => ?_)
+    rw [← Finset.mul_sum, hzero j, mul_zero]
+  exact cramer_rao_covariance_bound P (fun x => ∑ j, v j * dp j x)
+    (fun x => ∑ a, u a * T a x) hzero_v
+
+/-- **General Finite-Dimensional Matrix Cramér–Rao Inequality (Loewner / Schur Complement Form)**:
+for any right inverse `Iinv` of the Fisher information matrix `I = fisherMatrix P dp`,
+`uᵀ (J I⁻¹ Jᵀ) u ≤ uᵀ Σ u`, i.e., `Σ - J I⁻¹ Jᵀ` is positive semidefinite. -/
+theorem multivariate_cramer_rao_loewner {α : Type*} [Fintype α] {m d : ℕ}
+    (P : ProbInterior α) (dp : Fin d → α → ℝ) (T : Fin m → α → ℝ)
+    (hzero : ∀ j : Fin d, ∑ x, dp j x = 0)
+    (Iinv : Matrix (Fin d) (Fin d) ℝ)
+    (hIinv : fisherMatrix P dp * Iinv = 1)
+    (u : Fin m → ℝ) :
+    let J := estimatorJacobian dp T
+    dotProduct u ((J * Iinv * Jᵀ).mulVec u) ≤
+      dotProduct u ((estimatorCovMatrix P T).mulVec u) := by
+  intro J
+  let v : Fin d → ℝ := Iinv.mulVec (Jᵀ.mulVec u)
+  have hIv : (fisherMatrix P dp).mulVec v = Jᵀ.mulVec u := by
+    dsimp [v]
+    rw [Matrix.mulVec_mulVec, hIinv, Matrix.one_mulVec]
+  have hquad_eq :
+      dotProduct u ((J * Iinv * Jᵀ).mulVec u) = dotProduct u (J.mulVec v) := by
+    simp [v, Matrix.mul_assoc, Matrix.mulVec_mulVec]
+  have hfisher_eq :
+      dotProduct v ((fisherMatrix P dp).mulVec v) = dotProduct u (J.mulVec v) := by
+    rw [hIv]
+    simp only [dotProduct, Matrix.mulVec, Matrix.transpose_apply]
+    calc
+      (∑ i, v i * ∑ j, J j i * u j) =
+          ∑ i, ∑ j, v i * (J j i * u j) := by
+            apply Finset.sum_congr rfl
+            intro i hi
+            rw [Finset.mul_sum]
+      _ = ∑ j, ∑ i, v i * (J j i * u j) := Finset.sum_comm
+      _ = ∑ j, u j * ∑ i, J j i * v i := by
+            apply Finset.sum_congr rfl
+            intro j hj
+            rw [Finset.mul_sum]
+            apply Finset.sum_congr rfl
+            intro i hi
+            ring
+  have hcr := multivariate_cramer_rao_quadratic P dp T hzero u v
+  rw [hfisher_eq] at hcr
+  have hq_nonneg : 0 ≤ dotProduct u (J.mulVec v) := by
+    rw [← hfisher_eq]
+    exact fisherMatrix_quadratic_nonneg P dp v
+  have hcov_nonneg : 0 ≤ dotProduct u ((estimatorCovMatrix P T).mulVec u) :=
+    estimatorCovMatrix_quadratic_nonneg P T u
+  rw [hquad_eq]
+  rcases eq_or_lt_of_le hq_nonneg with hq0 | hqpos
+  · rw [← hq0]
+    exact hcov_nonneg
+  · have hcr' :
+        dotProduct u (J.mulVec v) * dotProduct u (J.mulVec v) ≤
+          dotProduct u ((estimatorCovMatrix P T).mulVec u) * dotProduct u (J.mulVec v) := by
+      simpa [sq] using hcr
+    exact le_of_mul_le_mul_right hcr' hqpos
+
+/-- **Unbiased Multivariate Matrix Cramér–Rao Lower Bound (`J = 1`)**:
+`uᵀ I⁻¹ u ≤ uᵀ Σ u` for every direction `u : Fin d → ℝ`. -/
+theorem multivariate_cramer_rao_unbiased_loewner {α : Type*} [Fintype α] {d : ℕ}
+    (P : ProbInterior α) (dp : Fin d → α → ℝ) (T : Fin d → α → ℝ)
+    (hzero : ∀ j : Fin d, ∑ x, dp j x = 0)
+    (hunbiased : estimatorJacobian dp T = 1)
+    (Iinv : Matrix (Fin d) (Fin d) ℝ)
+    (hIinv : fisherMatrix P dp * Iinv = 1)
+    (u : Fin d → ℝ) :
+    dotProduct u (Iinv.mulVec u) ≤
+      dotProduct u ((estimatorCovMatrix P T).mulVec u) := by
+  have h := multivariate_cramer_rao_loewner P dp T hzero Iinv hIinv u
+  simpa [hunbiased] using h
+
+/-- **Multivariate Unification with `CramerRaoUncertainty.heisenberg_from_cramer_rao`**:
+for any dual directions `(u, v)` normalized by `uᵀ J v = 1`, the directional covariance
+`uᵀ Σ u` and Fisher-induced momentum variance `VarP = (1/4) * (vᵀ I v)` satisfy the
+Heisenberg uncertainty bound `(uᵀ Σ u) * VarP ≥ 1/4`. -/
+theorem multivariate_heisenberg_from_cramer_rao {α : Type*} [Fintype α] {m d : ℕ}
+    (P : ProbInterior α) (dp : Fin d → α → ℝ) (T : Fin m → α → ℝ)
+    (hzero : ∀ j : Fin d, ∑ x, dp j x = 0)
+    (u : Fin m → ℝ) (v : Fin d → ℝ)
+    (hnorm : dotProduct u ((estimatorJacobian dp T).mulVec v) = 1)
+    (VarP : ℝ)
+    (h_momentum_var : VarP = (1 / 4) * dotProduct v ((fisherMatrix P dp).mulVec v)) :
+    dotProduct u ((estimatorCovMatrix P T).mulVec u) * VarP ≥ (1 / 4) := by
+  have hcr := multivariate_cramer_rao_quadratic P dp T hzero u v
+  rw [hnorm, one_pow] at hcr
+  exact InfoGeometry.Canonical.CramerRaoUncertainty.heisenberg_from_cramer_rao
+    (dotProduct u ((estimatorCovMatrix P T).mulVec u))
+    VarP
+    (dotProduct v ((fisherMatrix P dp).mulVec v))
+    hcr
+    h_momentum_var
+
+end MultivariateCramerRaoAndChiSq
 
 end InfoGeometry.InformationGeometry.ParametricCramerRaoAndCumulants
 

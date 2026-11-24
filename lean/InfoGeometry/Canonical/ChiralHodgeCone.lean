@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -120,5 +125,24 @@ theorem chiralTrace_vanishes_of_sewn {n : ℕ} (γ ρ : Mat n)
       _ = 0 := by simp
   have htwo_ne : (2 : ℂ) ≠ 0 := by norm_num
   exact (mul_eq_zero.mp htwo).resolve_left htwo_ne
+
+theorem chiralTrace_vanishes_of_anticommute {n : ℕ} (γ ρ : Mat n)
+    (hanti : γ * ρ = -(ρ * γ)) :
+    chiralTrace γ ρ = 0 := by
+  unfold chiralTrace
+  have hneg : Matrix.trace (γ * ρ) = -Matrix.trace (γ * ρ) := by
+    calc
+      Matrix.trace (γ * ρ) = Matrix.trace (-(ρ * γ)) := by
+        rw [hanti]
+      _ = -Matrix.trace (ρ * γ) := by simp
+      _ = -Matrix.trace (γ * ρ) := by rw [Matrix.trace_mul_comm]
+  have htwo : (2 : ℂ) * Matrix.trace (γ * ρ) = 0 := by
+    calc
+      (2 : ℂ) * Matrix.trace (γ * ρ) =
+          Matrix.trace (γ * ρ) + Matrix.trace (γ * ρ) := by ring
+      _ = Matrix.trace (γ * ρ) + (-Matrix.trace (γ * ρ)) := by
+        nth_rw 2 [hneg]
+      _ = 0 := by simp
+  exact (mul_eq_zero.mp htwo).resolve_left (by norm_num)
 
 end InfoGeometry.Canonical.ChiralHodgeCone

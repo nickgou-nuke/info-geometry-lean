@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CayleyWittenPeirceParityBridge
@@ -704,5 +709,7 @@ theorem parityPacket_ncard : parityPacket.ncard = 4 := by
 
 theorem paritySubmonoid_ncard : paritySubmonoid.carrier.ncard = 4 := by
   exact parityPacket_ncard
+
+theorem Star_sq : Star_op * Star_op = 1 := hodgeStar_sq
 
 end InfoGeometry.Canonical.CayleyPeirceKleinFourBridge

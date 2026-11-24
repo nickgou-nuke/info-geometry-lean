@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SuperBracketHestenesKreinClosure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FiniteMajoranaBraiding
@@ -255,5 +260,12 @@ theorem liftedBraidBoundaryAction_commutes_deck (w : BraidWord)
     liftedBraidBoundaryAction w (deckInvolution x) =
       deckInvolution (liftedBraidBoundaryAction w x) :=
   liftToDoubleCover_commutes_deck (braidBoundaryAction w) x
+
+
+abbrev inv (C : CayleyMobiusInversion X) : X → X := C.1
+
+abbrev inv_inv (C : CayleyMobiusInversion X) : ∀ x : X, C.inv (C.inv x) = x := C.2
+
+variable (C : CayleyMobiusInversion X)
 
 end InfoGeometry.Canonical.CayleyMobiusBoundaryBraidClosure

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorProjectiveLimit
@@ -68,5 +73,18 @@ theorem projective_readout_prefix_tail
   rw [hp] at hl
   rw [← hl] at hdecomp
   exact hdecomp
+
+
+theorem finitePrefixReadoutFn_projective_prefix
+    (p : InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit)
+    (N : ℕ) :
+    finitePrefixReadoutFn (π N p) =
+      finitePrefixReadout
+        (InfoGeometry.Canonical.FractalCantorCliffordFockBridge.boundaryPrefix N
+          (toCantor p)) := by
+  unfold finitePrefixReadoutFn
+  have hl := bitWordPrefix_list_eq N (toCantor p)
+  rw [boundaryPrefix_toCantor_eq_word p N] at hl
+  exact congrArg finitePrefixReadout hl
 
 end InfoGeometry.Canonical.CantorProjectiveReadoutBridge

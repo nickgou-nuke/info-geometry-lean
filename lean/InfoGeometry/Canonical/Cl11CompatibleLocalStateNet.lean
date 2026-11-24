@@ -194,4 +194,12 @@ theorem cl11CompatibleLocalStateNet_state_embedMap
 - no Virasoro-limit theorem asserted in this module
 -/
 
+
+theorem cl11CompatibleLocalStateNet_compatible (n : ℕ) (a : MatStage (n + 1)) :
+    cl11CompatibleLocalStateNet.state (n + 1) a =
+      cl11CompatibleLocalStateNet.state n
+        (cl11CompatibleLocalStateNet.restrict n a) := by
+  symm
+  exact normalizedTrace_stageRestrict n a
+
 end InfoGeometry.Canonical.Cl11CompatibleLocalStateNet

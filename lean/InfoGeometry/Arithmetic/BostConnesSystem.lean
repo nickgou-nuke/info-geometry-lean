@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Nat.Factorization.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.PNat.Basic
@@ -261,7 +266,7 @@ theorem liouville_one : liouville 1 = 1 := by
 
 The Liouville function takes values in {+1, -1}.
 -/
-theorem liouville_sq (n : ℕ) (_hn : n ≥ 1) : liouville n * liouville n = 1 := by
+theorem liouville_sq (n : ℕ) : liouville n * liouville n = 1 := by
   unfold liouville
   rw [← pow_add]
   have : Omega n + Omega n = 2 * Omega n := by omega
@@ -272,7 +277,7 @@ theorem liouville_sq (n : ℕ) (_hn : n ≥ 1) : liouville n * liouville n = 1 :
 
 This follows from Ω(mn) = Ω(m) + Ω(n).
 -/
-theorem liouville_mul (m n : ℕ) (_hm : m ≥ 1) (_hn : n ≥ 1) (hm0 : m ≠ 0) (hn0 : n ≠ 0) :
+theorem liouville_mul (m n : ℕ) (hm0 : m ≠ 0) (hn0 : n ≠ 0) :
     liouville (m * n) = liouville m * liouville n := by
   unfold liouville
   rw [Omega_mul m n hm0 hn0, pow_add]
@@ -300,7 +305,7 @@ theorem liouville_prime_mul (p n : ℕ) (hp : Nat.Prime p) (hn : n ≥ 1) :
     liouville (p * n) = - liouville n := by
   have hp0 : p ≠ 0 := hp.ne_zero
   have hn0 : n ≠ 0 := by omega
-  rw [liouville_mul p n (by omega) hn hp0 hn0, liouville_prime p hp]
+  rw [liouville_mul p n hp0 hn0, liouville_prime p hp]
   ring
 
 /--
@@ -308,10 +313,13 @@ theorem liouville_prime_mul (p n : ℕ) (hp : Nat.Prime p) (hn : n ≥ 1) :
 
 Since Ω(n²) = 2·Ω(n) is always even, the Liouville sign is +1.
 -/
-theorem liouville_sq' (n : ℕ) (_hn : n ≥ 1) : liouville (n ^ 2) = 1 := by
+theorem liouville_sq' (n : ℕ) : liouville (n ^ 2) = 1 := by
   unfold liouville Omega
   have : ArithmeticFunction.cardFactors (n ^ 2) = 2 * ArithmeticFunction.cardFactors n := by
     rw [ArithmeticFunction.cardFactors_pow, mul_comm]
   rw [this, pow_mul, show ((-1 : ℤ)^2) = 1 by norm_num, one_pow]
+
+/-- Positive-integer indexed multiplicative generators. -/
+abbrev MultiplicativeIndexingHom (Op : Type*) [Monoid Op] := ℕ+ →* Op
 
 end InfoGeometry.Arithmetic.BostConnesSystem

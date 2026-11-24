@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Topology.Algebra.Order.LiminfLimsup
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
@@ -202,6 +207,19 @@ instance : AddCommGroup (hestenesKreinCohomology (C : deRhamComplex M V) k) :=
   by
     change AddCommGroup (hkCycles C k ⧸ hkBoundaries C k)
     infer_instance
+
+/-! The pointwise square-zero ax!om exposed as native linear-map algebra. -/
+
+theorem d_comp_d_zero (C : deRhamComplex M V) (k : ℕ) :
+    (C.d (k + 1)).comp (C.d k) = 0 := by
+  ext x
+  exact F.d_sq_zero k x
+
+
+theorem range_d_le_ker_d (C : deRhamComplex M V) (k : ℕ) :
+    LinearMap.range (C.d k) ≤ LinearMap.ker (C.d (k + 1)) := by
+  rintro _ ⟨x, rfl⟩
+  exact F.d_sq_zero k x
 
 end deRhamComplex
 

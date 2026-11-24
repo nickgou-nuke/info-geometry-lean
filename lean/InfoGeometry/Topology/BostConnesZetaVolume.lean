@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.AnyonicBraidedVolume
@@ -44,3 +49,10 @@ theorem bulk_volume_equals_zeta_two
   -- exact-rational partition value of the arithmetic vacuum.
   use 1
   rw [one_mul]
+
+/-- The supplied volume packet admits the trivial scale readout at `β = 2`. -/
+theorem bulk_volume_unit_scale :
+    ∃ (scale : ℝ), scale * (Real.pi^2 / 6) = Real.pi^2 / 6 := by
+  use 1
+  rw [one_mul]
+

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperMetriplectic.BlackHoleEntropy
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.SplitSuperGeometry
@@ -193,6 +198,13 @@ theorem supervolumePotential_eq_neg_log_superBerezinian
     (n : ℕ) (x : SplitCliffordEnd n) :
     (superEffectiveAction n) x = - Real.log ((superBerezinian n) x) :=
   InfoGeometry.Algebraic.SplitSuperGeometry.superEffectiveAction_eq_neg_log_superBerezinian n x
+
+
+theorem superBerezinianReadout_pos
+    (n : ℕ) (x : SplitCliffordEnd n) :
+    0 < SplitParitySupertraceShadow.superBerezinianReadout x x := by
+  change 0 < superBerezinian n x
+  exact InfoGeometry.Algebraic.SplitSuperGeometry.superBerezinian_pos n x
 
 end SplitParitySupertraceTranslation
 

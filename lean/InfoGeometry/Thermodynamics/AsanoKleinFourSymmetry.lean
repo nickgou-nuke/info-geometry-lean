@@ -72,4 +72,7 @@ theorem v4SymmetricCore_subset (S : Set ℂ) :
   unfold v4Action at hid
   exact hid
 
+def IsV4Symmetric (S : Set ℂ) : Prop :=
+  ∀ (g : V4) (z : ℂ), z ∈ S → v4Action g z ∈ S
+
 end InfoGeometry.Thermodynamics.AsanoKleinFourSymmetry

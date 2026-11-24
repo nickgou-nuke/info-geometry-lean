@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Convex.Legendre
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Potential.LogPotential
@@ -107,6 +112,19 @@ theorem KL_param_eq_bregman (θ θ' : ℝ) :
 theorem fisher_nonneg (θ : ℝ) :
     0 ≤ B.legendre.fisher θ :=
   B.legendre.fisher_nonneg θ
+
+
+theorem thermodynamicForce_eq_zero_of_equilibrium
+    (hcomm :
+      B.gauge.flow.P_forward * B.gauge.flow.P_backward -
+        B.gauge.flow.P_backward * B.gauge.flow.P_forward =
+        B.gauge.flow.d_ln_Q)
+    (heq : entropy_production B.gauge.flow = 0) :
+    B.thermodynamicForce = 0 := by
+  have hforce : entropy_production B.gauge.flow = B.thermodynamicForce := by
+    apply B.entropy_production_eq_dlogQ
+    exact hcomm
+  rw [← hforce, heq]
 
 end Bridge
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperMetriplectic.Axioms
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.AssociativeSuperBracket
@@ -369,5 +374,13 @@ theorem blocks_vanish_of_anomaly_zero
   rw [G.trace_eq_anomaly, hAnomaly]
 
 end PerfectCFTDissipationGate
+
+structure ConformalBulkViscosityData where
+  traceStress : ℝ
+  bulkViscosity : ℝ
+  conformalAnomaly : ℝ
+  trace_eq_anomaly : traceStress = conformalAnomaly
+  bulkViscosity_eq_zero_of_trace_zero :
+    traceStress = 0 → bulkViscosity = 0
 
 end InfoGeometry.SuperMetriplectic

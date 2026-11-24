@@ -274,4 +274,7 @@ theorem localModularShift_add (ε s t : ℝ) (A : Mat2R) :
       localModularShift ε s (localModularShift ε t A) := by
   exact modularShift_add (H := localEnergy ε) s t A
 
+
+abbrev LocalMat := M2R
+
 end InfoGeometry.Thermo.CantorGibbsModularBridge

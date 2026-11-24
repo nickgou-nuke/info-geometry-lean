@@ -1081,6 +1081,74 @@ theorem shirokov_clifford_compatibility_curvature_eq_zero_of_component_grade_two
     simp [bladeRepr]
   exact hT (by rw [hcoord, h₂T, hbrT]; simp)
 
+/-- A grade-two Clifford coefficient is uniquely determined by its commutator
+action on all Clifford vectors. The difference centralizes the generators,
+hence the generated algebra, and the center/grade-two intersection is zero.
+This is the uniqueness component of Shirokov's spin-valued commutator system
+on the fixed negative-definite finite-stage carrier. -/
+theorem shirokov_grade_two_unique_of_vector_commutators (n : ℕ)
+    (A B : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hA : ∀ T : Finset (Fin n), bladeRepr ℝ n A T ≠ 0 → T.card = 2)
+    (hB : ∀ T : Finset (Fin n), bladeRepr ℝ n B T ≠ 0 → T.card = 2)
+    (hcomm : ∀ v : Fin n → ℝ,
+      algebraCommutator A (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) =
+        algebraCommutator B (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v)) :
+    A = B := by
+  have hcentralVec : ∀ v : Fin n → ℝ,
+      (A - B) * CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v =
+        CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * (A - B) := by
+    intro v
+    have h := hcomm v
+    dsimp [algebraCommutator] at h
+    calc
+      (A - B) * CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v =
+          A * CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v -
+            B * CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v := by rw [sub_mul]
+      _ = CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * A -
+          CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * B := by
+            calc
+              _ = (A * CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v -
+                  CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * A) -
+                    (B * CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v -
+                      CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * B) +
+                    (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * A -
+                      CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * B) := by abel
+              _ = (B * CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v -
+                  CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * B) -
+                    (B * CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v -
+                      CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * B) +
+                    (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * A -
+                      CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * B) := by rw [h]
+              _ = CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * A -
+                    CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * B := by abel
+      _ = CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v * (A - B) := by rw [mul_sub]
+  have hcenter : A - B ∈
+      Subalgebra.center ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)) := by
+    rw [Subalgebra.mem_center_iff]
+    intro z
+    have hz : z ∈ Algebra.adjoin ℝ
+        (Set.range (CliffordAlgebra.ι (cliffordNegSqForm ℝ n))) := by
+      rw [CliffordAlgebra.adjoin_range_ι (Q := cliffordNegSqForm ℝ n)]
+      trivial
+    refine Algebra.adjoin_induction ?_ ?_ ?_ ?_ hz
+    · intro v hv
+      rcases hv with ⟨v, rfl⟩
+      exact (hcentralVec v).symm
+    · intro r
+      exact Algebra.commutes r (A - B)
+    · intro x y hx hy hxc hyc
+      rw [add_mul, mul_add, hxc, hyc]
+    · intro x y hx hy hxc hyc
+      calc
+        (x * y) * (A - B) = x * (y * (A - B)) := by rw [mul_assoc]
+        _ = x * ((A - B) * y) := by rw [hyc]
+        _ = (x * (A - B)) * y := by rw [← mul_assoc]
+        _ = ((A - B) * x) * y := by rw [hxc]
+        _ = (A - B) * (x * y) := by rw [mul_assoc]
+  have hgrade := shirokov_grade_two_support_sub n A B hA hB
+  have hzero := shirokov_center_grade_two_eq_zero n (A - B) hcenter hgrade
+  exact sub_eq_zero.mp hzero
+
 /-- The standard-frame center projection annihilates elements supported only
 in grade two, because the Reynolds average retains only scalar and odd-top
 coordinates. -/

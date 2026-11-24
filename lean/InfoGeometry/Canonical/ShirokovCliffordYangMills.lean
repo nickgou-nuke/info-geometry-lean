@@ -895,6 +895,21 @@ theorem shirokov_blade_coordinates_injective (n : ℕ) :
     simp [Pi.single_apply]
   exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hdim).2 hsurj
 
+/-- The standard ordered blade family is linearly independent, as witnessed
+by the owner's injective coordinate readout. -/
+theorem shirokov_standard_blades_linearIndependent (n : ℕ) :
+    LinearIndependent ℝ
+      (fun S : Finset (Fin n) => cBlade ℝ n S) := by
+  have hker : LinearMap.ker (shirokovBladeCoordinates n) = ⊥ :=
+    LinearMap.ker_eq_bot.mpr (shirokov_blade_coordinates_injective n)
+  have hcoords : LinearIndependent ℝ
+      (fun S : Finset (Fin n) =>
+        shirokovBladeCoordinates n (cBlade ℝ n S)) := by
+    simpa [Pi.basisFun] using
+      (Pi.basisFun ℝ (Finset (Fin n))).linearIndependent
+  exact (LinearMap.linearIndependent_iff
+    (shirokovBladeCoordinates n) hker).mp hcoords
+
 /-- Every element of `Cl(0,n)` has its canonical finite ordered-blade expansion. -/
 theorem shirokov_blade_expansion (n : ℕ)
     (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
@@ -1612,6 +1627,65 @@ theorem shirokov_isometry_map_blade
   simp only [cBlade, map_list_prod, List.map_map, Function.comp_def, cGen,
     CliffordAlgebra.equivOfIsometry_apply, CliffordAlgebra.map_apply_ι]
   rfl
+
+/-- An isometry-transformed frame has an independent family of all ordered
+blades. This proves finite-stage basis independence for isometry-induced
+frames in the negative-definite Clifford carrier. -/
+theorem shirokov_isometry_frame_blades_linearIndependent (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n)) :
+    LinearIndependent ℝ
+      (fun S : Finset (Fin n) => shirokovIsometryFrameBlade n e S) := by
+  have hstandard := shirokov_standard_blades_linearIndependent n
+  have hmap := hstandard.map'
+    (CliffordAlgebra.equivOfIsometry e).toLinearMap
+    (LinearMap.ker_eq_bot.mpr (CliffordAlgebra.equivOfIsometry e).injective)
+  convert hmap using 1
+  funext S
+  exact (shirokov_isometry_map_blade n e S).symm
+
+/-- Isometry-transformed ordered blades span the whole finite-stage Clifford
+algebra, by transporting the standard blade expansion through its algebra
+equivalence. -/
+theorem shirokov_isometry_frame_blades_span_eq_top (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n)) :
+    Submodule.span ℝ
+      (Set.range (fun S : Finset (Fin n) => shirokovIsometryFrameBlade n e S)) = ⊤ := by
+  rw [Submodule.eq_top_iff']
+  intro x
+  let φ := CliffordAlgebra.equivOfIsometry e
+  have hx : x = ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      bladeRepr ℝ n (φ.symm x) S • shirokovIsometryFrameBlade n e S := by
+    calc
+      x = φ (φ.symm x) := (φ.apply_symm_apply x).symm
+      _ = φ (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+          bladeRepr ℝ n (φ.symm x) S • cBlade ℝ n S) := by
+            exact congrArg φ (shirokov_blade_expansion n (φ.symm x))
+      _ = _ := by
+            rw [map_sum]
+            apply Finset.sum_congr rfl
+            intro S hS
+            rw [map_smul, shirokov_isometry_map_blade]
+  rw [hx]
+  apply Submodule.sum_mem
+  intro S hS
+  apply Submodule.smul_mem
+  apply Submodule.subset_span
+  exact ⟨S, rfl⟩
+
+/-- The isometry-transformed ordered blades form a basis of `Cl(0,n)`. This is
+the full basis conclusion for frames induced by quadratic-form isometries. -/
+noncomputable def shirokov_isometry_frame_blade_basis (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n)) :
+    Module.Basis (Finset (Fin n)) ℝ
+      (CliffordAlgebra (cliffordNegSqForm ℝ n)) :=
+  Module.Basis.mk (shirokov_isometry_frame_blades_linearIndependent n e)
+    (shirokov_isometry_frame_blades_span_eq_top n e).symm.le
+
+@[simp] theorem shirokov_isometry_frame_blade_basis_apply (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    (S : Finset (Fin n)) :
+    shirokov_isometry_frame_blade_basis n e S = shirokovIsometryFrameBlade n e S :=
+  Module.Basis.mk_apply _ _ _
 
 /-- Inverse ordered blade unit associated to a quadratic-form isometry frame. -/
 noncomputable def shirokovIsometryInverseBladeUnit (n : ℕ)

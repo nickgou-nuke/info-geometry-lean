@@ -1369,6 +1369,26 @@ theorem shirokov_even_grade_projector_apply {n : ℕ} (hn : Even n)
   rw [← hrepr]
   simp [hgrade, smul_smul]
 
+/-- Successive grade projectors select matching blade degree and annihilate
+different degrees. -/
+theorem shirokov_even_grade_projector_compose_blade {n : ℕ} (hn : Even n)
+    (i k : Fin (n + 1)) (S : Finset (Fin n)) :
+    shirokovGradeProjector n i (shirokovGradeProjector n k (cBlade ℝ n S)) =
+      (if i = k then
+        (if (⟨S.card, Nat.lt_succ_of_le (by simpa using Finset.card_le_univ S)⟩ :
+            Fin (n + 1)) = k then (1 : ℝ) else 0) • cBlade ℝ n S
+       else 0) := by
+  rw [shirokov_even_grade_projector_blade hn k S]
+  by_cases hik : i = k
+  · subst i
+    simp only [hik, if_true]
+    rw [shirokov_even_grade_projector_blade hn k S]
+    by_cases hS : (⟨S.card, Nat.lt_succ_of_le (by simpa using Finset.card_le_univ S)⟩ :
+        Fin (n + 1)) = k
+    · simp [hS]
+    · simp [hS]
+  · simp [hik]
+
 /-- Complementary inverse blades induce the same conjugation on every element
 of the fixed finite-stage `Cl(0,n)` algebra when `n` is odd. -/
 theorem shirokov_odd_inverse_blade_conjugation_complement (n : ℕ) (hn : Odd n)

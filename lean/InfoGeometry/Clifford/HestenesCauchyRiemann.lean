@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -247,5 +252,47 @@ def source {ψ : ℝ → ℝ → HestenesSpinor}
     (_ : HestenesAnalyticSocket ψ) : ℝ → ℝ → HestenesSpinor := ψ
 
 end HestenesAnalyticSocket
+
+
+/-! ### Left-translation equivariance of the Hestenes CR operator
+
+Ported from the older stash lane, whose `SatisfiesCR` predicate was replaced by
+the coordinate-wise `satisfy_hestenes_cr`.  The operator-level content survives:
+left multiplication by an even spinor distributes over addition and carries the
+CR operator by the same factor, hence preserves its vanishing locus.
+-/
+
+/-- Left multiplication distributes over addition in the toy even-spinor algebra. -/
+theorem hestenes_hMul_add_left (A X Y : HestenesSpinor) :
+    hMul A (X + Y) = hMul A X + hMul A Y := by
+  change hMul A ⟨X.a + Y.a, X.b + Y.b, X.c + Y.c, X.d + Y.d⟩ =
+    ⟨(hMul A X).a + (hMul A Y).a, (hMul A X).b + (hMul A Y).b,
+     (hMul A X).c + (hMul A Y).c, (hMul A X).d + (hMul A Y).d⟩
+  cases A
+  cases X
+  cases Y
+  ext <;> simp [hMul] <;> ring
+
+/-- Left multiplication acts on both directional operator entries. -/
+def leftTranslate (A : HestenesSpinor) (D : HestenesPartialDerivs) : HestenesPartialDerivs where
+  dx := A * D.dx
+  dy := A * D.dy
+
+/-- The Hestenes CR operator is equivariant under left translation. -/
+theorem hestenesCROperator_leftTranslate (A : HestenesSpinor) (D : HestenesPartialDerivs) :
+    hestenesCROperator (leftTranslate A D) = A * hestenesCROperator D := by
+  unfold hestenesCROperator leftTranslate
+  rw [even_algebra_mul_assoc]
+  exact (hestenes_hMul_add_left A D.dx (D.dy * bivector_i)).symm
+
+/-- Left translation preserves the vanishing of the Hestenes CR operator. -/
+theorem hestenesCROperator_leftTranslate_eq_zero
+    (A : HestenesSpinor) (D : HestenesPartialDerivs)
+    (hD : hestenesCROperator D = 0) :
+    hestenesCROperator (leftTranslate A D) = 0 := by
+  rw [hestenesCROperator_leftTranslate, hD]
+  change hMul A ⟨0, 0, 0, 0⟩ = ⟨0, 0, 0, 0⟩
+  cases A
+  ext <;> simp [hMul]
 
 end InfoGeometry.Clifford.HestenesCauchyRiemann

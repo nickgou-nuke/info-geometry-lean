@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -37,7 +42,7 @@ theorem hilbertSchmidtPairing_symm (A B : MatrixSpace n) :
   intro i hi
   apply Finset.sum_congr rfl
   intro j hj
-  ring
+  ring_nf
 
 /-- Nonnegativity of the Hilbert--Schmidt quadratic form. -/
 theorem hilbertSchmidtPairing_nonneg (A : MatrixSpace n) :
@@ -70,5 +75,20 @@ theorem hilbertSchmidt_energy_conservation
 theorem hilbertSchmidt_dissipation_nonneg (dS : MatrixSpace n) :
     0 ≤ hilbertSchmidtPairing dS dS :=
   hilbertSchmidtPairing_nonneg dS
+
+theorem hilbertSchmidt_metriplectic_summary
+    (sys : HilbertSchmidtMetriplecticSystem n) :
+    ((∀ A B : MatrixSpace n,
+        hilbertSchmidtPairing A B = hilbertSchmidtPairing B A) ∧
+      (∀ A : MatrixSpace n, 0 ≤ hilbertSchmidtPairing A A)) ∧
+    (hilbertSchmidtPairing
+        (sys.H * sys.rho - sys.rho * sys.H) sys.H = 0) := by
+  constructor
+  · constructor
+    · intro A B
+      exact hilbertSchmidtPairing_symm A B
+    · intro A
+      exact hilbertSchmidtPairing_nonneg A
+  · exact hilbertSchmidt_energy_conservation sys
 
 end SouriauHilbertSchmidtOnsager

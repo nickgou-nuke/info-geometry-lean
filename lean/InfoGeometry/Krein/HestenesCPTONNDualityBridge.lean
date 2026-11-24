@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.HestenesD4HurwitzBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HestenesRealStructures
@@ -263,6 +268,63 @@ theorem total_hurwitz_root_expectation_onn_invariant :
             intro i _hi
             exact B.hurwitzRoot_expectation_onn_invariant i
     _ = 1 := B.arithmetic.total_hurwitz_root_expectation_is_unity
+
+theorem thetaConjugate_mul (A C : EndH) :
+    B.thetaConjugate (A * C) = B.thetaConjugate A * B.thetaConjugate C := by
+  unfold thetaConjugate
+  calc
+    B.theta * (A * C) * B.theta = B.theta * A * C * B.theta := by
+          noncomm_ring
+    _ = B.theta * A * (B.theta * B.theta) * C * B.theta := by
+          rw [B.theta_involutive]
+          simp
+    _ = (B.theta * A * B.theta) * (B.theta * C * B.theta) := by
+          noncomm_ring
+
+@[simp]
+
+theorem thetaConjugate_thetaConjugate (A : EndH) :
+    B.thetaConjugate (B.thetaConjugate A) = A := by
+  unfold thetaConjugate
+  calc
+    B.theta * (B.theta * A * B.theta) * B.theta =
+        B.theta * B.theta * A * B.theta * B.theta := by
+          noncomm_ring
+    _ = A := by
+          simp [B.theta_involutive, mul_assoc]
+
+@[simp]
+
+theorem thetaConjugate_zero :
+    B.thetaConjugate (0 : EndH) = 0 := by
+  simp [thetaConjugate]
+
+@[simp]
+
+theorem thetaConjugate_one :
+    B.thetaConjugate (1 : EndH) = 1 := by
+  simp [thetaConjugate, B.theta_involutive]
+
+
+theorem thetaConjugate_add (A C : EndH) :
+    B.thetaConjugate (A + C) = B.thetaConjugate A + B.thetaConjugate C := by
+  simp [thetaConjugate, add_mul, mul_add]
+
+
+theorem thetaConjugate_neg (A : EndH) :
+    B.thetaConjugate (-A) = -B.thetaConjugate A := by
+  simp [thetaConjugate]
+
+
+theorem thetaConjugate_eq_self_of_commute
+    (A : EndH) (hA : B.theta * A = A * B.theta) :
+    B.thetaConjugate A = A := by
+  unfold thetaConjugate
+  calc
+    B.theta * A * B.theta = A * B.theta * B.theta := by
+      rw [hA]
+    _ = A := by
+      rw [mul_assoc, B.theta_involutive, mul_one]
 
 end Bridge
 

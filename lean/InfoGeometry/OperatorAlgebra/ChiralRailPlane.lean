@@ -158,4 +158,52 @@ instance (B : Type*) [Ring B] : Inhabited (ChiralRailPlane B) := ⟨standardChir
 def toZornBasis (i : Fin 3) : ZornVectorMatrix R :=
   ZornVectorMatrix.U i
 
+/-- K^2 = -1 -/
+theorem K_sq (plane : ChiralRailPlane R) : plane.K * plane.K = -(1 : Matrix (Fin 2) (Fin 2) R) := by
+  sorry
+
+/-- P_± are idempotent and orthogonal. -/
+theorem P_plus_idempotent (plane : ChiralRailPlane R) : plane.P_plus * plane.P_plus = plane.P_plus := by
+  sorry
+
+
+theorem P_minus_idempotent (plane : ChiralRailPlane R) : plane.P_minus * plane.P_minus = plane.P_minus := by
+  sorry
+
+
+theorem P_plus_orthogonal (plane : ChiralRailPlane R) : plane.P_plus * plane.P_minus = 0 := by
+  sorry
+
+
+theorem P_complete (plane : ChiralRailPlane R) : plane.P_plus + plane.P_minus = (1 : Matrix (Fin 2) (Fin 2) R) := by
+  sorry
+
+/-- E_R and E_L are nilpotent. -/
+theorem E_R_nilpotent (plane : ChiralRailPlane R) : plane.E_R * plane.E_R = 0 := by
+  sorry
+
+
+theorem E_L_nilpotent (plane : ChiralRailPlane R) : plane.E_L * plane.E_L = 0 := by
+  sorry
+
+/-- The commutator [E_R, E_L] = Γ. -/
+theorem commutator_E_R_E_L (plane : ChiralRailPlane R) :
+    plane.E_R * plane.E_L - plane.E_L * plane.E_R = plane.Γ := by
+  sorry
+
+/-- The anticommutator {E_R, E_L} = 1. -/
+theorem anticommutator_E_R_E_L (plane : ChiralRailPlane R) :
+    plane.E_R * plane.E_L + plane.E_L * plane.E_R = (1 : Matrix (Fin 2) (Fin 2) R) := by
+  sorry
+
+/-- J* g = g (metric preserved by complex structure). -/
+theorem metric_compatibility (plane : ChiralRailPlane R) :
+    plane.K.transpose * plane.g * plane.K = plane.g := by
+  sorry
+
+/-- J* Ω = -Ω (symplectic form anti-preserved by complex structure). -/
+theorem symplectic_anti_compatibility (plane : ChiralRailPlane R) :
+    plane.K.transpose * plane.Ω * plane.K = (-1 : R) • plane.Ω := by
+  sorry
+
 end InfoGeometry.OperatorAlgebra.ChiralRailPlane

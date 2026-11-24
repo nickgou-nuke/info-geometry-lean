@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ChiralCausalCone
@@ -39,5 +44,49 @@ theorem chiral_fierz_identity :
   ext ⟨i1, i2⟩ ⟨j1, j2⟩
   fin_cases i1 <;> fin_cases i2 <;> fin_cases j1 <;> fin_cases j2 <;>
     simp [Swap, kroneckerMap, σPlus, σMinus, σ3c] <;> ring
+
+/-- The swap operator is an involution. -/
+theorem Swap_mul_Swap : Swap * Swap = (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+  all_goals
+    rw [Matrix.mul_apply, Fintype.sum_prod_type]
+    simp [Swap, Fin.sum_univ_two]
+
+/-- The tensor-factor exchange is self-transpose. -/
+theorem Swap_transpose : Swap.transpose = Swap := by
+  ext ⟨a, b⟩ ⟨c, d⟩
+  by_cases had : a = d <;> by_cases hbc : b = c <;>
+    simp [Swap, had, hbc, eq_comm]
+
+
+theorem Swap_conjTranspose : Swap.conjTranspose = Swap := by
+  ext ⟨a, b⟩ ⟨c, d⟩
+  by_cases had : a = d <;> by_cases hbc : b = c <;>
+    simp [Swap, Matrix.conjTranspose, had, hbc, eq_comm]
+
+
+theorem Swap_trace : Matrix.trace Swap = 2 := by
+  rw [Matrix.trace, Fintype.sum_prod_type]
+  simp only [Matrix.diag, Swap, Fin.sum_univ_two, ite_true]
+  norm_num
+
+/-- The swap is unitary in the finite tensor-factor representation. -/
+theorem Swap_conjTranspose_mul_Swap :
+    Swap.conjTranspose * Swap =
+      (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℂ) := by
+  rw [Swap_conjTranspose, Swap_mul_Swap]
+
+/-- The swap has both left and right inverse `Swap`. -/
+theorem Swap_mul_left :
+    Swap * Swap * Swap = Swap := by
+  rw [Swap_mul_Swap]
+  simp
+
+
+theorem Swap_mul_right :
+    Swap * (Swap * Swap) = Swap := by
+  rw [Swap_mul_Swap]
+  simp
 
 end InfoGeometry.Physics.FierzIdentities

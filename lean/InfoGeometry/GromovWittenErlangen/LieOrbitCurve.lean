@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -166,6 +171,90 @@ def constructKleinGromovPacket
     (D : LanglandsDualOrbitCurveWitness C)
     (V : VirtualLocalizationOrbitPacket G T Target Coeff) :
     KleinGromovPacket G T Target Coeff :=
+  { orbitCurves := C
+    localizationGraph := Γ
+    dualTransport := D
+    virtualLocalization := V }
+
+structure LieOrbitCurveData (G T Target : Type*) where
+  /-- Root/coroot shadow for symmetry combinatorics. -/
+  rootShadow : HomogeneousRootShadow G
+  /-- Realization of fixed labels as fixed sectors in the target. -/
+  fixedSector : rootShadow.FixedLabel → Target
+  /-- One-dimensional torus-orbit sectors between fixed labels. -/
+  OrbitCurve : rootShadow.FixedLabel → rootShadow.FixedLabel → Type
+  /-- Root/coroot label of an orbit sector. -/
+  orbitRoot : ∀ {x y : rootShadow.FixedLabel},
+    OrbitCurve x y → rootShadow.RootLabel
+  /-- Degree class carried by the orbit sector. -/
+  orbitDegree : ∀ {x y : rootShadow.FixedLabel},
+    OrbitCurve x y → rootShadow.CurveDegree
+  /-- Degree is the root-degree attached to the orbit root label. -/
+  orbitDegree_eq_rootDegree :
+    ∀ {x y : rootShadow.FixedLabel} (C : OrbitCurve x y),
+      orbitDegree C = rootShadow.rootDegree (orbitRoot C)
+
+structure LocalizationGraphData (G T Target : Type*) where
+  /-- Underlying orbit skeleton. -/
+  orbitData : LieOrbitCurveData G T Target
+  /-- Vertices of the localization graph. Pinned to `Type` for universe safety. -/
+  Vertex : Type
+  /-- Map from graph vertices to fixed labels. -/
+  vertexLabel : Vertex → orbitData.rootShadow.FixedLabel
+  /-- Edges of the localization graph. Pinned to `Type` for universe safety. -/
+  Edge : Type
+  /-- Edge source. -/
+  source : Edge → Vertex
+  /-- Edge target. -/
+  target : Edge → Vertex
+  /-- Edge orbit realization. -/
+  edgeCurve :
+    ∀ e : Edge,
+      orbitData.OrbitCurve
+        (vertexLabel (source e))
+        (vertexLabel (target e))
+  /-- Edge degree class. -/
+  edgeDegree : Edge → orbitData.rootShadow.CurveDegree
+  /-- Compatibility with orbit-degree. -/
+  edgeDegree_eq :
+    ∀ e : Edge,
+      edgeDegree e = orbitData.orbitDegree (edgeCurve e)
+
+structure VirtualLocalizationOrbitData (G T Target Coeff : Type*) where
+  graph : LocalizationGraphData G T Target
+  /-- Vertex-sector contribution term. -/
+  vertexContribution : graph.Vertex → Coeff
+  /-- Edge-sector contribution term / inverse Euler denominator. -/
+  edgeContribution : graph.Edge → Coeff
+
+structure LanglandsKleinGromovData (G LG T Target : Type*) where
+  orbit : LieOrbitCurveData G T Target
+  dualShadow : HomogeneousRootShadow LG
+  dualTransport :
+    LanglandsDualCurveDegreeTransport G LG orbit.rootShadow dualShadow
+
+
+structure LanglandsDualOrbitCurveData {G T Target : Type*}
+    (C : LieOrbitCurveData G T Target) where
+  /-- Langlands-dual group type. Pinned to `Type` for universe safety. -/
+  DualGroup : Type
+  dualShadow : HomogeneousRootShadow DualGroup
+  dualTransport :
+    LanglandsDualCurveDegreeTransport G DualGroup C.rootShadow dualShadow
+
+structure KleinGromovData (G T Target Coeff : Type*) where
+  orbitCurves : LieOrbitCurveData G T Target
+  localizationGraph : LocalizationGraphData G T Target
+  dualTransport : LanglandsDualOrbitCurveData orbitCurves
+  virtualLocalization : VirtualLocalizationOrbitData G T Target Coeff
+
+def constructKleinGromovData
+    {G T Target Coeff : Type*}
+    (C : LieOrbitCurveData G T Target)
+    (Γ : LocalizationGraphData G T Target)
+    (D : LanglandsDualOrbitCurveData C)
+    (V : VirtualLocalizationOrbitData G T Target Coeff) :
+    KleinGromovData G T Target Coeff :=
   { orbitCurves := C
     localizationGraph := Γ
     dualTransport := D

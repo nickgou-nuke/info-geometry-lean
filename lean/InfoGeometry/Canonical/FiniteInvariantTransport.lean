@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -256,5 +261,88 @@ theorem commutator_preserved_along_ringHom_chain
               rw [map_sub, map_mul, map_mul]
         _ = φ (n + k) (chainApply (fun i a => φ i a) n k c) := by
               rw [ih]
+
+
+theorem chainApply_add {α : Type*}
+    (next : Nat → α → α) (n k l : Nat) (x : α) :
+    chainApply next n (k + l) x =
+      chainApply next (n + k) l (chainApply next n k x) := by
+  induction l with
+  | zero => simp [chainApply]
+  | succ l ih =>
+      simp [Nat.add_succ, chainApply, ih, Nat.add_assoc]
+
+
+theorem chainApply_add_preserved
+    {A : Type*} [Semiring A]
+    (φ : Nat → A →+* A)
+    (n k : Nat) (x y : A) :
+    chainApply (fun i a => φ i a) n k (x + y) =
+      chainApply (fun i a => φ i a) n k x +
+        chainApply (fun i a => φ i a) n k y := by
+  induction k with
+  | zero => simp [chainApply]
+  | succ k ih =>
+      simp [chainApply, ih, map_add]
+
+
+theorem chainApply_mul_preserved
+    {A : Type*} [Semiring A]
+    (φ : Nat → A →+* A)
+    (n k : Nat) (x y : A) :
+    chainApply (fun i a => φ i a) n k (x * y) =
+      chainApply (fun i a => φ i a) n k x *
+        chainApply (fun i a => φ i a) n k y := by
+  induction k with
+  | zero => simp [chainApply]
+  | succ k ih =>
+      simp [chainApply, ih, map_mul]
+
+
+theorem chainApply_neg_preserved
+    {A : Type*} [Ring A]
+    (φ : Nat → A →+* A)
+    (n k : Nat) (x : A) :
+    chainApply (fun i a => φ i a) n k (-x) =
+      -chainApply (fun i a => φ i a) n k x := by
+  induction k with
+  | zero => simp [chainApply]
+  | succ k ih =>
+      simp [chainApply, ih, map_neg]
+
+
+theorem chainApply_sub_preserved
+    {A : Type*} [Ring A]
+    (φ : Nat → A →+* A)
+    (n k : Nat) (x y : A) :
+    chainApply (fun i a => φ i a) n k (x - y) =
+      chainApply (fun i a => φ i a) n k x -
+        chainApply (fun i a => φ i a) n k y := by
+  induction k with
+  | zero => simp [chainApply]
+  | succ k ih =>
+      simp [chainApply, ih, map_sub]
+
+
+theorem chainApply_zero_preserved
+    {A : Type*} [Semiring A]
+    (φ : Nat → A →+* A)
+    (n k : Nat) :
+    chainApply (fun i a => φ i a) n k 0 = 0 := by
+  induction k with
+  | zero => simp [chainApply]
+  | succ k ih =>
+      simp [chainApply, ih]
+
+
+theorem chainApply_one_preserved
+    {A : Type*} [Semiring A]
+    (φ : Nat → A →+* A)
+    (n k : Nat) :
+    chainApply (fun i a => φ i a) n k 1 = 1 := by
+  induction k with
+  | zero => simp [chainApply]
+  | succ k ih =>
+      simp [chainApply, ih]
 
 end InfoGeometry.Canonical.FiniteInvariantTransport

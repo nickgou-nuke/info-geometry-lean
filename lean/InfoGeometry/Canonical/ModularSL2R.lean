@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.HypercomplexTriad
@@ -76,5 +81,52 @@ theorem traceForm_K_N : traceForm K N = 0 ∧ traceForm K Nᵀ = 0 := by
     norm_num [K_eval, N, Matrix.mul_apply, Fin.sum_univ_two]
   · unfold traceForm tr
     norm_num [K_eval, N, Matrix.mul_apply, Fin.sum_univ_two, Matrix.transpose_apply]
+
+
+theorem comm_K_N :
+    K * N - N * K = 2 • N := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [N, K_eval, Matrix.mul_apply, Fin.sum_univ_two]
+
+
+theorem comm_K_N_transpose :
+    K * Nᵀ - Nᵀ * K = -(2 : ℝ) • Nᵀ := by
+  have h : K * Nt - Nt * K = -(2 : ℝ) • Nt := by
+    ext i j <;> fin_cases i <;> fin_cases j <;>
+      norm_num [Nt, K_eval, Matrix.mul_apply, Fin.sum_univ_two]
+  simpa [Nt_eq_transpose] using h
+
+
+theorem comm_N_K :
+    N * K - K * N = -(2 : ℝ) • N := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [N, K_eval, Matrix.mul_apply, Fin.sum_univ_two]
+
+
+theorem comm_N_transpose_K :
+    Nᵀ * K - K * Nᵀ = (2 : ℝ) • Nᵀ := by
+  simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
+    (congrArg Neg.neg comm_K_N_transpose)
+
+
+theorem comm_N_transpose_N :
+    Nᵀ * N - N * Nᵀ = -K := by
+  simpa [sub_eq_add_neg, add_comm, add_left_comm, add_assoc] using
+    (congrArg Neg.neg comm_N_N_transpose)
+
+
+theorem N_square : N * N = 0 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two]
+
+
+theorem N_transpose_square : Nᵀ * Nᵀ = 0 := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [N, Matrix.mul_apply, Fin.sum_univ_two, Matrix.transpose_apply]
+
+
+theorem traceForm_N_transpose_N : traceForm Nᵀ N = 1 := by
+  unfold traceForm tr
+  norm_num [N, Matrix.mul_apply, Fin.sum_univ_two, Matrix.transpose_apply]
 
 end InfoGeometry.Canonical.ModularSL2R

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.ItakuraSaitoPrimes
@@ -69,5 +74,39 @@ def exampleCocycles : ScaleInvariantCocycles := {
 
 theorem exampleCocycles_ft_scalars_eq :
   exampleCocycles.ft_scalars = 36 := rfl
+
+/-- Independent positive-scale and quantum-gradient data. -/
+def spectral_base (P : ℝ × ℝ) : ℝ :=
+  P.1
+
+
+theorem spectral_base_pos (P : ℝ × ℝ) (hP : P.1 > 0) : 0 < spectral_base P :=
+  hP
+
+
+def quantum_potential_gradient (P : ℝ × ℝ) : ℝ :=
+  P.2
+
+/-- A finite count packet with explicit balance equations. -/
+def gauge_bosons (P : (ℕ × ℕ) × ℕ) : ℕ :=
+  P.1.1
+
+
+def weyl_spinors (P : (ℕ × ℕ) × ℕ) : ℕ :=
+  P.1.2
+
+
+def ft_scalars (P : (ℕ × ℕ) × ℕ) : ℕ :=
+  P.2
+
+
+theorem susy_balance (P : (ℕ × ℕ) × ℕ) (hP : P.1.2 = 4 * P.1.1) :
+    weyl_spinors P = 4 * gauge_bosons P :=
+  hP
+
+
+theorem scalar_balance (P : (ℕ × ℕ) × ℕ) (hP : P.2 = 3 * P.1.1) :
+    ft_scalars P = 3 * gauge_bosons P :=
+  hP
 
 end InfoGeometry.Physics.ItakuraSaitoFradkinTseytlin

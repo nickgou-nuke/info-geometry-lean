@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Basic
@@ -91,5 +96,51 @@ theorem isPathConnected_metriplecticEvolution_image_of_pathConnected
     hdom.image
       ((continuous_metriplecticEvolution_of D dH dS dA hH hS hA hPoisson hMetric).comp
         continuous_subtype_val)
+
+
+theorem metriplecticEvolution_eq_bracket_of_entropy
+    (D : Data Obs) (dH dA : Obs) :
+    metriplecticEvolution D dH D.S dA = bracket D dA dH := rfl
+
+
+theorem metriplecticEvolution_entropy_nonneg (D : Data Obs) :
+    0 ≤ metriplecticEvolution D D.H D.S D.S := by
+  unfold metriplecticEvolution
+  exact InfoGeometry.Geometry.MetriplecticStructure.entropy_total_evolution_nonnegative D
+
+
+theorem bracket_energy_energy_zero (D : Data Obs) :
+    bracket D D.H D.H = 0 := by
+  unfold bracket
+  rw [D.poisson_self, D.metric_H_casimir]
+  simp
+
+
+theorem bracket_hamiltonian_entropy_zero (D : Data Obs) :
+    bracket D D.H D.S = 0 := by
+  unfold bracket
+  rw [InfoGeometry.Geometry.MetriplecticStructure.poisson_energy_entropy_zero D,
+    D.metric_H_casimir D.S]
+  simp
+
+
+theorem bracket_entropy_entropy_eq_metric (D : Data Obs) :
+    bracket D D.S D.S = D.metric D.S D.S := by
+  unfold bracket
+  rw [D.poisson_self]
+  simp
+
+
+theorem bracket_entropy_entropy_nonneg (D : Data Obs) :
+    0 ≤ bracket D D.S D.S := by
+  rw [bracket_entropy_entropy_eq_metric]
+  exact D.metric_nonneg D.S
+
+
+theorem bracket_entropy_hamiltonian_eq_metric (D : Data Obs) :
+    bracket D D.S D.H = D.metric D.S D.S := by
+  unfold bracket
+  rw [D.poisson_S_casimir]
+  simp
 
 end SouriauMetriplectic

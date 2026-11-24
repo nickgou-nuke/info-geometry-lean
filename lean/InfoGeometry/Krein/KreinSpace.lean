@@ -431,6 +431,74 @@ noncomputable def kreinQuad : QuadraticMap ℝ H ℝ :=
   simp [kreinQuad_apply, kreinInner_def, inner_smul_left, inner_smul_right]
   ring
 
+noncomputable def leftRightAction
+    (A B X : H →L[ℝ] H) : H →L[ℝ] H :=
+  A.comp (X.comp B)
+
+@[simp] lemma leftRightAction_apply
+    (A B X : H →L[ℝ] H) (u : H) :
+    leftRightAction A B X u = A (X (B u)) := rfl
+
+/-- Left-right actions compose with the opposite order on the right. -/
+lemma leftRightAction_comp
+    (A B C D X : H →L[ℝ] H) :
+    leftRightAction A B (leftRightAction C D X) =
+      leftRightAction (A.comp C) (D.comp B) X := by
+  ext u
+  rfl
+
+/-- Conjugation by a bounded operator, using its Hilbert adjoint on the right. -/
+noncomputable def positiveConjugation
+    (A X : H →L[ℝ] H) : H →L[ℝ] H :=
+  leftRightAction A (ContinuousLinearMap.adjoint A) X
+
+@[simp] lemma positiveConjugation_apply
+    (A X : H →L[ℝ] H) (u : H) :
+    positiveConjugation A X u =
+      A (X (ContinuousLinearMap.adjoint A u)) := rfl
+
+/-- Hilbert positivity is preserved by the paired left/right action. -/
+lemma inner_positiveConjugation_nonneg
+    (A X : H →L[ℝ] H)
+    (hX : ∀ u : H, 0 ≤ ⟪X u, u⟫_ℝ)
+    (u : H) :
+    0 ≤ ⟪positiveConjugation A X u, u⟫_ℝ := by
+  change 0 ≤ ⟪A (X (ContinuousLinearMap.adjoint A u)), u⟫_ℝ
+  rw [← ContinuousLinearMap.adjoint_inner_right]
+  exact hX _
+
+lemma positiveConjugation_comp
+    (A B X : H →L[ℝ] H) :
+    positiveConjugation (A.comp B) X =
+      positiveConjugation A (positiveConjugation B X) := by
+  ext u
+  simp [positiveConjugation, leftRightAction,
+    ContinuousLinearMap.adjoint_comp, ContinuousLinearMap.comp_assoc]
+
+/-- Conjugation using the Krein adjoint rather than the Hilbert adjoint. -/
+noncomputable def kreinConjugation
+    (A X : H →L[ℝ] H) : H →L[ℝ] H :=
+  leftRightAction A (kreinAdjoint A) X
+
+@[simp] lemma kreinConjugation_apply
+    (A X : H →L[ℝ] H) (u : H) :
+    kreinConjugation A X u = A (X (kreinAdjoint A u)) := rfl
+
+/-- Krein adjunction is compatible with Krein conjugation. -/
+lemma kreinAdjoint_kreinConjugation
+    (A X : H →L[ℝ] H) :
+    kreinAdjoint (kreinConjugation A X) =
+      kreinConjugation A (kreinAdjoint X) := by
+  simp [kreinConjugation, leftRightAction, kreinAdjoint_comp,
+    kreinAdjoint_involutive, ContinuousLinearMap.comp_assoc]
+
+/-- Krein-self-adjoint operators remain Krein-self-adjoint under conjugation. -/
+lemma isKreinSelfAdjoint_kreinConjugation
+    (A X : H →L[ℝ] H)
+    (hX : IsKreinSelfAdjoint X) :
+    IsKreinSelfAdjoint (kreinConjugation A X) := by
+  rw [IsKreinSelfAdjoint, kreinAdjoint_kreinConjugation, hX]
+
 end KreinSpace
 
 /-! ## Instance 1: Any Hilbert space with `J = id` -/

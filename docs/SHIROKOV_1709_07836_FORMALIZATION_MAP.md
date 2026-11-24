@@ -52,7 +52,9 @@ with the ordered-blade-coordinate grade projection. The follow-up
 `shirokov_even_grade_projector_compose_blade` proves the composition law on
 individual blades, and `shirokov_even_grade_projector_compose_apply` lifts
 orthogonality and idempotence to arbitrary elements of the fixed carrier.
-Existence under the paper's moving-frame hypotheses remains open.
+`shirokov_even_grade_projector_sum_apply` proves completeness: summing all
+grade projectors recovers every element. Existence under the paper's
+moving-frame hypotheses remains open.
 
 ## Implementation order
 

@@ -1419,6 +1419,39 @@ theorem shirokov_even_grade_projector_compose_apply {n : ℕ} (hn : Even n)
   · simp_rw [shirokov_even_grade_projector_compose_blade hn i k]
     simp [hik]
 
+/-- Summing over all grades recovers the identity on the full Clifford
+algebra, so the polynomial spectral projectors form a complete decomposition. -/
+theorem shirokov_even_grade_projector_sum_apply {n : ℕ} (hn : Even n)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    (∑ k : Fin (n + 1), shirokovGradeProjector n k x) = x := by
+  calc
+    (∑ k : Fin (n + 1), shirokovGradeProjector n k x) =
+        ∑ k : Fin (n + 1), ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+          if S.card = k.val then bladeRepr ℝ n x S • cBlade ℝ n S else 0 := by
+      apply Finset.sum_congr rfl
+      intro k hk
+      exact shirokov_even_grade_projector_apply hn k x
+    _ = ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        ∑ k : Fin (n + 1),
+          if S.card = k.val then bladeRepr ℝ n x S • cBlade ℝ n S else 0 := by
+      rw [Finset.sum_comm]
+    _ = ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        bladeRepr ℝ n x S • cBlade ℝ n S := by
+      apply Finset.sum_congr rfl
+      intro S hS
+      let kS : Fin (n + 1) :=
+        ⟨S.card, Nat.lt_succ_of_le (by simpa using Finset.card_le_univ S)⟩
+      rw [Fintype.sum_eq_single kS (fun k hne => by
+        have hkval : k.val ≠ S.card := by
+          intro heq
+          apply hne
+          apply Fin.ext
+          change k.val = S.card
+          exact heq
+        simp [Ne.symm hkval])]
+      simp [kS]
+    _ = x := (shirokov_blade_expansion n x).symm
+
 /-- Complementary inverse blades induce the same conjugation on every element
 of the fixed finite-stage `Cl(0,n)` algebra when `n` is odd. -/
 theorem shirokov_odd_inverse_blade_conjugation_complement (n : ℕ) (hn : Odd n)

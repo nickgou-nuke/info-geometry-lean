@@ -214,3 +214,21 @@ The raw attachment remains byte-identical at 22,525 bytes. No dependency
 pin, gate implementation, existing source owner, package source, or shared
 cache was changed by this packet. Publication for review does not establish
 kernel acceptance, root integration, or merge readiness.
+
+### First published CI attempt and checkout repair
+
+GitHub Actions run `45363178386`, job `138338108096`, failed at checkout on
+2026-11-24 at 09:16:57 UTC. Source checkout itself succeeded, but
+`actions/checkout@v4` then recursively inspected submodules while removing
+credentials. It rejected the existing gitlink `external_ref/open-math-harness`
+because `.gitmodules` has no URL for it. Toolchain installation, cache hydration,
+compilation, and axiom checks were all skipped; no verification artifact was
+created. This failure provides no Lean proof result.
+
+The workflow now uses the repository's existing public exact-revision checkout
+pattern: initialize an ordinary Git checkout, fetch the trusted `GITHUB_SHA`
+without recursing into submodules, check it out detached, and assert exact HEAD
+equality. GitHub metadata confirms the repository is public. This requires no
+token or persistent credentials and preserves every gitlink, dependency pin,
+source file, and proof gate. It also preserves validation of GitHub's PR merge
+revision. No missing submodule URL was guessed or installed.

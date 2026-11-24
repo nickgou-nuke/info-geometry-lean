@@ -42,10 +42,17 @@ jobs:
     env:
       LEAN_NUM_THREADS: '2'
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: false
-          persist-credentials: false
+      - name: Check out the exact public revision
+        shell: bash
+        env:
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --no-recurse-submodules origin "$GITHUB_SHA"
+          git -c submodule.recurse=false checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
       - name: Record the checked revision
         shell: bash
         run: |

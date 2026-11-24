@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CanonicalZornCliffordRepresentation
@@ -235,6 +240,13 @@ theorem real_spin44_zorn_triality_closure (x : RealSplit44) :
   exact ⟨realSplit44_projective_null x, realSplit44_vector_grade_plus x,
     vectorQuadratic_realSplit44ToVector8 x,
     realClifford44Representation_ι x, realGamma_sq x⟩
+
+theorem realSplit44_null_diracGamma_sq
+    (x : RealSplit44) (hx : realQuadratic44 x = 0) :
+    diracGamma (realSplit44ToVector8 x) *
+        diracGamma (realSplit44ToVector8 x) = 0 := by
+  rw [diracGamma_sq, vectorQuadratic_realSplit44ToVector8, hx]
+  simp
 
 end CanonicalZornRealSpin44
 

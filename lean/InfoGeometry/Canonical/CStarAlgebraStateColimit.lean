@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Star.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Basic
@@ -409,6 +414,17 @@ theorem state_readout_transition
     (fun f : Stage i →⋆ₐ[ℂ] Ainf => f a)
     (cocone.ι_comm hij)
   simpa using congrArg ω.functional h
+
+
+def leg (cocone : StarInductiveCocone (Ainf := Ainf) Stage sys)
+    (i : I) : Stage i →⋆ₐ[ℂ] Ainf := cocone.1 i
+
+
+theorem compatibility (cocone : StarInductiveCocone (Ainf := Ainf) Stage sys)
+    {i j : I} (hij : i ≤ j) :
+    (leg (Stage := Stage) (sys := sys) cocone j).comp (sys.map hij) =
+      leg (Stage := Stage) (sys := sys) cocone i :=
+  cocone.2 hij
 
 end StarInductiveCocone
 

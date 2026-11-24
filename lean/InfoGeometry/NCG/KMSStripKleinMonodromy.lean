@@ -290,7 +290,8 @@ theorem endGluedReflect_involutive (q : EndGluedRing) :
   exact Or.inl (by ring)
 
 theorem endGluedReflect_compactifiedTime (t : ℝ) :
-    endGluedReflect ⟦compactifiedTime t⟧ = ⟦compactifiedTime (-t)⟧ := by
+    endGluedReflect (Quotient.mk endGluingSetoid (compactifiedTime t)) =
+      Quotient.mk endGluingSetoid (compactifiedTime (-t)) := by
   rw [compactifiedTime_neg]
   rfl
 

@@ -104,7 +104,14 @@ positive-definite orthonormal-frame results are special cases only.
    summands reduce to twice their lower-half sum. No grade-two assumption is
    needed for this reduced identity. It does not yet transport the identity
    to the paper's moving dual frame or derive the compatibility premise from
-   the paper's global geometric hypotheses.
+   the paper's global geometric hypotheses. Finally,
+   `shirokov_theorem_2_2_standard_frame_odd_grade_two` combines that reduction
+   with the full standard-frame average: for odd `n`, grade-two-supported `C`,
+   and the explicit standard-frame compatibility premise, the lower-half
+   derivative sum is `(2^(n-1) : ℝ) • C`. This remains a fixed-frame,
+   negative-definite `Cl(0,n)` result; it does not establish the moving dual
+   frame formula or derive either hypothesis from the paper's geometric
+   setup.
 2. Connect the finite-coordinate `C+K` transfer's derivation family to the
    repository's CE/exterior-form carrier; derive its flatness and parallelness
    hypotheses from the Clifford-frame compatibility equations.
@@ -132,6 +139,12 @@ owner (lines 276, 419, and 487); it reports no hit on the new declarations.
 The two added frame-derivative declarations also report only
 `[propext, Classical.choice, Quot.sound]` in `#print axioms`; so does
 `shirokov_pseudo_frame_derivative_yang_mills`.
+The new `shirokov_theorem_2_2_standard_frame_odd_grade_two` extension passed
+the locked owner build (9,091 jobs, exit code 0), the owner axiom checker
+(1 module passed), and the strict OpenGauss screen (0 traps). The owner build
+and direct file check report existing linter warnings in this enlarged file
+and its dependencies; no warning-free claim is made here. A staged proof-proxy
+gate passed for the two task-owned files.
 The compatibility-to-centrality theorem and its final cleaned proof passed a
 9,029-job targeted build of `InfoGeometry.Canonical.ShirokovCliffordYangMills`
 (exit code 0). Replayed dependencies emitted pre-existing warnings. The native

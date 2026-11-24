@@ -1753,6 +1753,83 @@ theorem shirokov_theorem_2_2_standard_frame_odd_reduced_sum
   congr 1
   exact shirokov_odd_inverse_blade_conjugation_complement n hn S C
 
+/-- Odd-dimensional standard-frame Theorem 2.2 in normalized lower-half form.
+Under the grade-two condition, compatibility and complement pairing give the
+reduced sum `2^(n-1) • C`. -/
+theorem shirokov_theorem_2_2_standard_frame_odd_grade_two
+    (n : ℕ) (hn : Odd n)
+    (D : CliffordAlgebra (cliffordNegSqForm ℝ n) →
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (C : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hcompat : ∀ S : Finset (Fin n),
+      D (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+        C * (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) -
+          (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) * C)
+    (hgrade : ∀ T : Finset (Fin n), bladeRepr ℝ n C T ≠ 0 → T.card = 2) :
+    (∑ S ∈ ((Finset.univ : Finset (Fin n)).powerset).filter
+      (fun S => 2 * S.card < n),
+      D (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        (((shirokovInverseBladeUnit n S)⁻¹ :
+          (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      (2 ^ (n - 1) : ℝ) • C := by
+  have hred := shirokov_theorem_2_2_standard_frame_odd_reduced_sum
+    n hn D C hcompat
+  have hfull := shirokov_theorem_2_2_standard_frame_grade_two n D C hcompat hgrade
+  have hpowerset : (Finset.univ : Finset (Fin n)).powerset =
+      (Finset.univ : Finset (Finset (Fin n))) := by
+    ext S
+    simp
+  have hcard : Fintype.card (Finset (Fin n)) = 2 ^ n := by
+    calc
+      Fintype.card (Finset (Fin n)) =
+          (Finset.univ : Finset (Finset (Fin n))).card := rfl
+      _ = ((Finset.univ : Finset (Fin n)).powerset).card := by rw [hpowerset]
+      _ = 2 ^ n := by simp
+  have hcardR : (Fintype.card (Finset (Fin n)) : ℝ) = 2 ^ n := by
+    exact_mod_cast hcard
+  have hfull' :
+      (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+        D (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+          (((shirokovInverseBladeUnit n S)⁻¹ :
+            (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+              CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+        (Fintype.card (Finset (Fin n)) : ℝ) • C := by
+    calc
+      _ = ∑ S : Finset (Fin n),
+          D (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+            (((shirokovInverseBladeUnit n S)⁻¹ :
+              (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+                CliffordAlgebra (cliffordNegSqForm ℝ n)) := by
+          rw [← hpowerset]
+      _ = Fintype.card (Finset (Fin n)) • C := hfull
+  rcases hn with ⟨k, hk⟩
+  have hnval : n = 2 * k + 1 := by omega
+  have hnsub : n - 1 = 2 * k := by omega
+  have hfactor : (2 : ℝ) * (2 ^ (n - 1) : ℝ) = (2 ^ n : ℝ) := by
+    calc
+      (2 : ℝ) * (2 ^ (n - 1) : ℝ) = 2 * (2 ^ (2 * k) : ℝ) := by
+            congr 1
+            exact congrArg (fun m : ℕ => (2 : ℝ) ^ m) hnsub
+      _ = (2 ^ (2 * k + 1) : ℝ) := by rw [pow_succ]; ring
+      _ = (2 ^ n : ℝ) := congrArg (fun m : ℕ => (2 : ℝ) ^ m) hnval.symm
+  have hredR := hred
+  have hmul : (2 : ℝ) •
+      (∑ S ∈ ((Finset.univ : Finset (Fin n)).powerset).filter
+        (fun S => 2 * S.card < n),
+        D (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        (((shirokovInverseBladeUnit n S)⁻¹ :
+          (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      (2 : ℝ) • ((2 ^ (n - 1) : ℝ) • C) := by
+    calc
+      _ = ((Fintype.card (Finset (Fin n)) : ℝ)) • C := hredR.symm.trans hfull'
+      _ = (2 ^ n : ℝ) • C := by rw [hcardR]
+      _ = (2 : ℝ) • ((2 ^ (n - 1) : ℝ) • C) := by
+        rw [← hfactor, smul_smul]
+  exact (smul_right_injective (R := ℝ) (M := CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (by norm_num : (2 : ℝ) ≠ 0)) hmul
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

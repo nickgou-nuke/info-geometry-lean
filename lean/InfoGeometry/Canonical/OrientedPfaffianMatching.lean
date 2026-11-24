@@ -1,4 +1,9 @@
-import Mathlib
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.GroupTheory.Perm.Sign
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -20,6 +25,21 @@ structure PerfectMatching where
   fixed_free : ∀ i, partner i ≠ i
 
 namespace PerfectMatching
+
+/-- Pair each index with its copy in the other summand. This constructs a
+matching on every doubled index type without assuming a matching in advance. -/
+def doubled (α : Type*) : PerfectMatching (ι := α ⊕ α) where
+  partner := Sum.swap
+  involutive := Sum.swap_swap
+  fixed_free := by
+    intro i
+    cases i <;> simp
+
+@[simp] theorem doubled_partner_inl (i : ι) :
+    (doubled ι).partner (Sum.inl i) = Sum.inr i := rfl
+
+@[simp] theorem doubled_partner_inr (i : ι) :
+    (doubled ι).partner (Sum.inr i) = Sum.inl i := rfl
 
 variable (M : PerfectMatching (ι := ι))
 

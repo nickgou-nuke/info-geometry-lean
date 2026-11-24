@@ -199,12 +199,23 @@ with the normalized Reynolds center projection. Composing that identity with
 `shirokov_theorem_2_2_standard_frame_grade_two`: for a compatible derivation
 and a grade-two-supported connection coefficient, the standard-frame average
 equals the frame cardinality times that coefficient. This is still a
-standard-frame specialization; no isometry or dual-frame transport theorem
-for the paper's moving frame has been established.
+standard-frame specialization.
+`shirokov_automorphism_frame_average` transports the average through a real
+Clifford algebra automorphism, and
+`shirokov_theorem_2_2_automorphism_frame_grade_two` gives the corresponding
+Theorem 2.2 result when the pulled-back coefficient is grade two. This covers
+automorphism images of the standard inverse-blade frame; arbitrary
+point-dependent dual-frame transport and its odd-dimensional reduced sum
+remain open.
 The owner also includes the concrete noncommutativity witness
 `shirokov_generators_noncommute` for the first two generators of the real
 negative-definite two-dimensional Clifford algebra. This is a separate carrier
 sanity check; it does not strengthen the standard-frame theorem.
+The automorphism-frame average and Theorem 2.2 specialization passed the locked
+file check and targeted locked Lake build of
+`InfoGeometry.Canonical.ShirokovCliffordYangMills` (9,091 jobs, exit code 0).
+The owner axiom audit passed (1 module, 0 failures), and the strict source
+screen reported 0 traps. These checks cover the owner, not the full repository.
 This remains a statement about the repository's standard negative-definite
 finite-stage carrier, not a varying-frame classification theorem. The updated
 owner passed both the locked Lean file check and the targeted locked Lake

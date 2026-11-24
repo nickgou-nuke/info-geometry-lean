@@ -34,7 +34,7 @@ open InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
 open InfoGeometry.OperatorAlgebra.MaurerCartanFrameTransport
 open InfoGeometry.Clifford.CliffordExtensiveRotorsAndBiquaternions
 
-/- Concrete noncommutativity witness used by the strict semantic screen. -/
+/-- The first two generators in the concrete negative-definite `Cl(0,2)`. -/
 private def shirokovWitnessGen0 :
     CliffordAlgebra (cliffordNegSqForm ℝ 2) := cGen ℝ 2 0
 
@@ -1042,6 +1042,86 @@ theorem shirokov_standard_frame_average (n : ℕ)
       rw [hcast]
       have hpowReal : (2 ^ n : ℝ) ≠ 0 := pow_ne_zero _ (by norm_num)
       rw [mul_inv_cancel₀ hpowReal, one_smul]
+
+/-- The Reynolds identity transports to any frame obtained by applying a real
+Clifford algebra automorphism to the standard inverse-blade frame. -/
+theorem shirokov_automorphism_frame_average (n : ℕ)
+    (φ : CliffordAlgebra (cliffordNegSqForm ℝ n) ≃ₐ[ℝ]
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    (∑ S : Finset (Fin n),
+      (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+        CliffordAlgebra (cliffordNegSqForm ℝ n)) * x *
+        (↑((Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S))⁻¹) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      Fintype.card (Finset (Fin n)) •
+        φ (shirokovCenterProjection n (φ.symm x)) := by
+  calc
+    _ = ∑ S : Finset (Fin n),
+        φ ((shirokovInverseBladeUnit n S :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+          (φ.symm x) * cBlade ℝ n S) := by
+            apply Finset.sum_congr rfl
+            intro S hS
+            change φ (shirokovInverseBladeUnit n S :
+              CliffordAlgebra (cliffordNegSqForm ℝ n)) * x * φ (cBlade ℝ n S) =
+              φ ((shirokovInverseBladeUnit n S :
+                CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+                (φ.symm x) * cBlade ℝ n S)
+            simp only [map_mul, AlgEquiv.apply_symm_apply]
+    _ = φ (∑ S : Finset (Fin n),
+        (shirokovInverseBladeUnit n S :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+          (φ.symm x) * cBlade ℝ n S) := by rw [map_sum]
+    _ = φ (Fintype.card (Finset (Fin n)) •
+        shirokovCenterProjection n (φ.symm x)) := by
+          congr 1
+          simpa only [shirokovInverseBladeUnit_inv_val] using
+            shirokov_standard_frame_average n (φ.symm x)
+    _ = Fintype.card (Finset (Fin n)) •
+        φ (shirokovCenterProjection n (φ.symm x)) := by
+          rw [map_nsmul]
+
+/-- Theorem 2.2 for an automorphism-transported standard frame. The connection
+coefficient is assumed grade two after pulling it back to the standard frame. -/
+theorem shirokov_theorem_2_2_automorphism_frame_grade_two
+    (n : ℕ)
+    (φ : CliffordAlgebra (cliffordNegSqForm ℝ n) ≃ₐ[ℝ]
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (D : CliffordAlgebra (cliffordNegSqForm ℝ n) →
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (C : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hcompat : ∀ S : Finset (Fin n),
+      D (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+        C * (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) -
+          (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n)) * C)
+    (hgrade : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (φ.symm C) T ≠ 0 → T.card = 2) :
+    (∑ S : Finset (Fin n),
+      D (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        (↑((Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S))⁻¹) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      Fintype.card (Finset (Fin n)) • C := by
+  let transportedCenterProjection :
+      CliffordAlgebra (cliffordNegSqForm ℝ n) →
+        CliffordAlgebra (cliffordNegSqForm ℝ n) :=
+    fun z => φ (shirokovCenterProjection n (φ.symm z))
+  have haverage := shirokov_automorphism_frame_average n φ C
+  have hzero : transportedCenterProjection C = 0 := by
+    dsimp [transportedCenterProjection]
+    rw [shirokov_center_projection_eq_zero_of_grade_two n (φ.symm C) hgrade]
+    exact map_zero φ
+  have hresult := shirokov_theorem_2_2_average_reduction
+    (R := ℝ) (A := CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (ι := Finset (Fin n)) D C transportedCenterProjection
+    (fun S => Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S))
+    hcompat (by simpa [transportedCenterProjection] using haverage)
+  rw [hzero] at hresult
+  simpa using hresult
 
 /-- Theorem 2.2 for the standard inverse-blade frame: compatibility and
 grade-two support remove the center-projection term from the average formula.

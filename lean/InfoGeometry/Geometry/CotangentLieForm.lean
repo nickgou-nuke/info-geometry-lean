@@ -30,6 +30,8 @@ namespace InfoGeometry.Geometry.CotangentLieForm
 open InfoGeometry.Clifford.NeutralPhaseSpaceCore
 open InfoGeometry.Canonical.SouriauContragredientPairing
 
+section Linear
+
 variable {V : Type*} [AddCommGroup V] [Module ℝ V]
 
 /-- The full paired primal/contragredient lift on the existing phase carrier. -/
@@ -44,17 +46,18 @@ def cotangentLift (e : V ≃ₗ[ℝ] V) :
 theorem cotangentLift_neutral (e : V ≃ₗ[ℝ] V) (z w : PhaseSpaceCarrier V) :
     canonicalNeutralBilin (cotangentLift e z) (cotangentLift e w) =
       canonicalNeutralBilin z w := by
-  simp [canonicalNeutralBilin_apply, cotangentLift_apply,
-    contragredient_pairing_invariant]
+  simp [canonicalNeutralBilin_apply, cotangentLift_apply]
 
 /-- The lift preserves the existing canonical skew form with its stated sign. -/
 theorem cotangentLift_omega (e : V ≃ₗ[ℝ] V) (z w : PhaseSpaceCarrier V) :
     neutralOmega (cotangentLift e z) (cotangentLift e w) = neutralOmega z w := by
-  simp [neutralOmega_apply, cotangentLift_apply, contragredient_pairing_invariant]
+  simp [neutralOmega_apply, cotangentLift_apply]
+
+end Linear
 
 section Lie
 
-variable [LieRing V] [LieAlgebra ℝ V]
+variable {V : Type*} [LieRing V] [LieAlgebra ℝ V]
 
 /-- A covector evaluated on the native Lie bracket is a bilinear form. -/
 def bracketForm (α : Module.Dual ℝ V) : LinearMap.BilinForm ℝ V where

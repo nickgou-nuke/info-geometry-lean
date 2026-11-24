@@ -25,6 +25,8 @@ open InfoGeometry.Clifford.NeutralPhaseSpaceCore
 open InfoGeometry.Geometry.CotangentLieForm
 open scoped BigOperators
 
+section Linear
+
 variable {G V : Type*} [Group G] [Fintype G] [AddCommGroup V] [Module ℝ V]
 
 local instance cardInvertible : Invertible (Fintype.card G : ℝ) :=
@@ -149,9 +151,11 @@ theorem fixedCotangentForm_nondegenerate (ρ : Representation ℝ G V) :
     rw [← fixedCotangentEquiv_omega]
     exact hz w
 
+end Linear
+
 section Lie
 
-variable [LieRing V] [LieAlgebra ℝ V]
+variable {G V : Type*} [Group G] [Fintype G] [LieRing V] [LieAlgebra ℝ V]
 
 /-- The bracket-corrected ambient form restricted to the actual fixed factors. -/
 def fixedCotangentLieForm (ρ : Representation ℝ G V) (α : Module.Dual ℝ V) :

@@ -310,8 +310,13 @@ def fixedCartanEquiv : (Fin 2 → ℝ) ≃ₗ[ℝ] fixedCartan where
     apply Subtype.ext
     have hv := (mem_fixedCartan_iff v.1).mp v.2
     ext i
-    fin_cases i <;> simp only [Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Matrix.cons_val_two, Matrix.cons_val_three] <;> linarith [hv.1, hv.2]
+    fin_cases i
+    · change 0 = v.1 0
+      exact hv.1.symm
+    · rfl
+    · rfl
+    · change -(v.1 1 + v.1 2) = v.1 3
+      linarith [hv.2]
   map_add' p q := by
     apply Subtype.ext
     ext i
@@ -344,8 +349,8 @@ theorem fixedCartanBasis_one :
 theorem coordinateChange_mem_fixedCartan_iff (v : Fin 4 → ℝ) :
     coordinateChange.mulVec v ∈ fixedCartan ↔ v ∈ s3FixedCartanSubmodule := by
   rw [mem_fixedCartan_iff, cartan_s3_fixed_subspace_iff, coordinateChange_mulVec]
-  simp only [Fin.isValue, Matrix.cons_val_zero, Matrix.cons_val_one,
-    Matrix.cons_val_two, Matrix.cons_val_three]
+  change (-v 3 = 0 ∧ v 1 + v 2 + -v 0 = 0) ↔
+    (v 3 = 0 ∧ v 0 = v 1 + v 2)
   constructor
   · rintro ⟨h0, hsum⟩
     exact ⟨by linarith, by linarith⟩

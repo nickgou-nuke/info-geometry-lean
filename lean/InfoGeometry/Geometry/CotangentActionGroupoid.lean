@@ -66,6 +66,7 @@ theorem coadj_mul (Ad : G →* (V ≃ₗ[R] V)) (k l : G) (α : Module.Dual R V)
   rw [← coadj_mul, mul_inv_cancel, coadj_one]
 
 /-- The genuine group action required by Mathlib's action groupoid. -/
+@[instance_reducible]
 def coadjointAction (Ad : G →* (V ≃ₗ[R] V)) : MulAction G (Module.Dual R V) where
   smul := fun k α => coadj Ad k α
   one_smul := coadj_one Ad
@@ -73,12 +74,10 @@ def coadjointAction (Ad : G →* (V ≃ₗ[R] V)) : MulAction G (Module.Dual R V
 
 /-- The native algebraic groupoid of the contragredient action. -/
 abbrev CotangentGroupoid (Ad : G →* (V ≃ₗ[R] V)) :=
-  letI := coadjointAction Ad
-  ActionCategory G (Module.Dual R V)
+  @ActionCategory G inferInstance (Module.Dual R V) (coadjointAction Ad)
 
-instance cotangentGroupoid (Ad : G →* (V ≃ₗ[R] V)) : Groupoid (CotangentGroupoid Ad) := by
-  letI := coadjointAction Ad
-  exact inferInstanceAs (Groupoid (ActionCategory G (Module.Dual R V)))
+instance cotangentGroupoid (Ad : G →* (V ≃ₗ[R] V)) : Groupoid (CotangentGroupoid Ad) :=
+  @ActionCategory.instGroupoid (Module.Dual R V) G inferInstance (coadjointAction Ad)
 
 /-- Source-trivialized arrows, before selecting their endpoints. -/
 abbrev Arrow (G V : Type*) [AddCommMonoid V] [Module R V] := G × Module.Dual R V
@@ -156,13 +155,11 @@ theorem comp_assoc (Ad : G →* (V ≃ₗ[R] V)) (x y z : Arrow (R := R) G V)
 
 /-- The dual point as an object of the native groupoid. -/
 def object (Ad : G →* (V ≃ₗ[R] V)) (α : Module.Dual R V) : CotangentGroupoid Ad :=
-  letI := coadjointAction Ad
-  (ActionCategory.objEquiv G (Module.Dual R V)) α
+  @ActionCategory.objEquiv G inferInstance (Module.Dual R V) (coadjointAction Ad) α
 
 /-- Every source-trivialized arrow gives a morphism with its actual endpoints. -/
 def toHom (Ad : G →* (V ≃ₗ[R] V)) (x : Arrow (R := R) G V) :
     object Ad (source x) ⟶ object Ad (target Ad x) :=
-  letI := coadjointAction Ad
   Functor.Elements.homMk x.1 rfl
 
 /-- A native morphism determines its source-trivialized arrow. -/
@@ -265,14 +262,12 @@ theorem lift_comp (Ad : G →* (V ≃ₗ[R] V))
 def liftFunctor (Ad : G →* (V ≃ₗ[R] V))
     (τ : G ≃* G) (dτ : V ≃ₗ[R] V)
     (hAd : ∀ k v, dτ (Ad k v) = Ad (τ k) (dτ v)) :
-    CotangentGroupoid Ad ⥤ CotangentGroupoid Ad := by
-  letI := coadjointAction Ad
-  exact
+    CotangentGroupoid Ad ⥤ CotangentGroupoid Ad :=
     { obj := fun α => object Ad (contragredient dτ α.val)
       map := fun {α β} f => Functor.Elements.homMk (τ f.hom) (by
         change coadj Ad (τ f.hom) (contragredient dτ α.val) = contragredient dτ β.val
-        rw [coadj_intertwine Ad τ dτ hAd]
-        exact congrArg (contragredient dτ) f.map_val)
+        exact (coadj_intertwine Ad τ dτ hAd f.hom α.val).trans
+          (congrArg (contragredient dτ) f.map_val))
       map_id := fun α => by
         apply Functor.Elements.hom_ext
         exact τ.map_one
@@ -298,8 +293,14 @@ instance liftFunctor_full (Ad : G →* (V ≃ₗ[R] V))
     · apply (contragredientLinearEquiv dτ).injective
       change contragredient dτ (coadj Ad (τ.symm f.hom) α.val) =
         contragredient dτ β.val
-      rw [← coadj_intertwine Ad τ dτ hAd, τ.apply_symm_apply]
-      exact f.map_val
+      calc
+        contragredient dτ (coadj Ad (τ.symm f.hom) α.val) =
+            coadj Ad (τ (τ.symm f.hom)) (contragredient dτ α.val) :=
+          (coadj_intertwine Ad τ dτ hAd (τ.symm f.hom) α.val).symm
+        _ = coadj Ad f.hom (contragredient dτ α.val) :=
+          congrArg (fun k => coadj Ad k (contragredient dτ α.val))
+            (τ.apply_symm_apply f.hom)
+        _ = contragredient dτ β.val := f.map_val
     · apply Functor.Elements.hom_ext
       exact τ.apply_symm_apply f.hom
 
@@ -311,8 +312,8 @@ instance liftFunctor_essSurj (Ad : G →* (V ≃ₗ[R] V))
   intro α
   refine ⟨object Ad (contragredient dτ.symm α.val), ?_⟩
   change object Ad (contragredient dτ (contragredient dτ.symm α.val)) = α
-  rw [contragredient_symm_right]
-  exact ActionCategory.back_coe α
+  exact (congrArg (object Ad) (contragredient_symm_right dτ α.val)).trans
+    (ActionCategory.back_coe α)
 
 instance liftFunctor_isEquivalence (Ad : G →* (V ≃ₗ[R] V))
     (τ : G ≃* G) (dτ : V ≃ₗ[R] V)
@@ -366,13 +367,17 @@ def fixedDual (dτ : V ≃ₗ[R] V) : Submodule R (Module.Dual R V) :=
   (contragredient dτ).fixedSubmodule
 
 /-- The fixed subgroup acts on the fixed dual submodule. -/
+@[instance_reducible]
 def fixedAction (Ad : G →* (V ≃ₗ[R] V))
     (τ : G ≃* G) (dτ : V ≃ₗ[R] V)
     (hAd : ∀ k v, dτ (Ad k v) = Ad (τ k) (dτ v)) :
     MulAction (fixedSubgroup τ) (fixedDual dτ) where
   smul k α := ⟨coadj Ad k.1 α.1, by
     change contragredient dτ (coadj Ad k.1 α.1) = coadj Ad k.1 α.1
-    rw [← coadj_intertwine Ad τ dτ hAd, k.property, α.property]⟩
+    have hk : τ k.1 = k.1 := k.property
+    have hα : contragredient dτ α.1 = α.1 := α.property
+    exact (coadj_intertwine Ad τ dτ hAd k.1 α.1).symm.trans
+      (congrArg₂ (fun k α => coadj Ad k α) hk hα)⟩
   one_smul α := by
     apply Subtype.ext
     exact coadj_one Ad α.1
@@ -384,24 +389,20 @@ def fixedAction (Ad : G →* (V ≃ₗ[R] V))
 abbrev FixedGroupoid (Ad : G →* (V ≃ₗ[R] V))
     (τ : G ≃* G) (dτ : V ≃ₗ[R] V)
     (hAd : ∀ k v, dτ (Ad k v) = Ad (τ k) (dτ v)) :=
-  letI := fixedAction Ad τ dτ hAd
-  ActionCategory (fixedSubgroup τ) (fixedDual dτ)
+  @ActionCategory (fixedSubgroup τ) inferInstance (fixedDual dτ) (fixedAction Ad τ dτ hAd)
 
 instance fixedGroupoid (Ad : G →* (V ≃ₗ[R] V))
     (τ : G ≃* G) (dτ : V ≃ₗ[R] V)
     (hAd : ∀ k v, dτ (Ad k v) = Ad (τ k) (dτ v)) :
-    Groupoid (FixedGroupoid Ad τ dτ hAd) := by
-  letI := fixedAction Ad τ dτ hAd
-  exact inferInstanceAs (Groupoid (ActionCategory (fixedSubgroup τ) (fixedDual dτ)))
+    Groupoid (FixedGroupoid Ad τ dτ hAd) :=
+  @ActionCategory.instGroupoid (fixedDual dτ) (fixedSubgroup τ) inferInstance
+    (fixedAction Ad τ dτ hAd)
 
 /-- Inclusion remembers the underlying dual point and group element. -/
 def fixedInclusion (Ad : G →* (V ≃ₗ[R] V))
     (τ : G ≃* G) (dτ : V ≃ₗ[R] V)
     (hAd : ∀ k v, dτ (Ad k v) = Ad (τ k) (dτ v)) :
-    FixedGroupoid Ad τ dτ hAd ⥤ CotangentGroupoid Ad := by
-  letI := coadjointAction Ad
-  letI := fixedAction Ad τ dτ hAd
-  exact
+    FixedGroupoid Ad τ dτ hAd ⥤ CotangentGroupoid Ad :=
     { obj := fun α => object Ad α.val.1
       map := fun f => Functor.Elements.homMk f.hom.1 (congrArg Subtype.val f.map_val)
       map_id := fun α => rfl
@@ -412,9 +413,9 @@ theorem fixedInclusion_obj_injective (Ad : G →* (V ≃ₗ[R] V))
     (τ : G ≃* G) (dτ : V ≃ₗ[R] V)
     (hAd : ∀ k v, dτ (Ad k v) = Ad (τ k) (dτ v)) :
     Function.Injective (fixedInclusion Ad τ dτ hAd).obj := by
-  letI := fixedAction Ad τ dτ hAd
   intro α β h
-  apply (ActionCategory.objEquiv (fixedSubgroup τ) (fixedDual dτ)).symm.injective
+  apply (@ActionCategory.objEquiv (fixedSubgroup τ) inferInstance (fixedDual dτ)
+    (fixedAction Ad τ dτ hAd)).symm.injective
   apply Subtype.ext
   exact congrArg (fun x : CotangentGroupoid Ad => x.val) h
 

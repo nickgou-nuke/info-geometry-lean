@@ -1134,4 +1134,230 @@ theorem sum_ref_mul_relativeCountDensity_eq_countMass
 
 end CountRadonNikodymCalculus
 
+section CountRelativeEntropyAndCsiszar
+
+variable {n : Nat}
+
+/-- Scaling a positive count profile by `c > 0` matches `PositiveMeasure.scale`. -/
+@[rep_depth count]
+theorem positiveMeasureOfCounts_smul
+    (c : ℝ) (hc : 0 < c)
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i) :
+    positiveMeasureOfCounts (c • counts) (fun i => mul_pos hc (hcounts i)) =
+      InfoGeometry.PositiveMeasure.scale c hc (positiveMeasureOfCounts counts hcounts) := by
+  ext i
+  rfl
+
+/-- Total count mass is positively homogeneous of degree 1. -/
+@[rep_depth count, simp]
+theorem countMass_smul
+    [Nonempty (Fin n)]
+    (c : ℝ) (hc : 0 < c)
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i) :
+    countMass (c • counts) (fun i => mul_pos hc (hcounts i)) =
+      c * countMass counts hcounts := by
+  unfold countMass positiveMeasureOfCounts InfoGeometry.PositiveMeasure.Z
+  simp only [Pi.smul_apply, smul_eq_mul]
+  rw [← Finset.mul_sum]
+
+/-- Count-level KL-like relative entropy `∑ i, counts i * log (counts i / ref i)`
+(`1-s2.0-S0001870818303281-main.pdf`, Section 2.1). -/
+@[rep_depth count]
+noncomputable def countKLLike
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) : ℝ :=
+  InfoGeometry.PositiveMeasure.klLike
+    (positiveMeasureOfCounts counts hcounts)
+    (positiveMeasureOfCounts ref href)
+
+/-- Count-level generalized Kullback–Leibler divergence on unnormalized positive counts. -/
+@[rep_depth count]
+noncomputable def countGeneralizedKL
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) : ℝ :=
+  InfoGeometry.PositiveMeasure.generalizedKL
+    (positiveMeasureOfCounts counts hcounts)
+    (positiveMeasureOfCounts ref href)
+
+/-- Explicit expression of `countKLLike` via the `count (L0)` logarithmic density. -/
+@[rep_depth count]
+theorem countKLLike_eq_sum_mul_relativeCountLogDensity
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countKLLike counts ref hcounts href =
+      ∑ i : Fin n, counts i * relativeCountLogDensity n counts ref i := rfl
+
+/-- **Two-Scale Homogeneous Relative Entropy Law** on unnormalized counts
+(`1-s2.0-S0001870818303281-main.pdf`, Section 2.1, p. 4):
+`S(c • counts, d • ref) = c * S(counts, ref) + c * countMass counts * log (c / d)`. -/
+@[rep_depth count]
+theorem countKLLike_scale_scale_two
+    [Nonempty (Fin n)]
+    (c d : ℝ) (hc : 0 < c) (hd : 0 < d)
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countKLLike (c • counts) (d • ref)
+        (fun i => mul_pos hc (hcounts i)) (fun i => mul_pos hd (href i)) =
+      c * countKLLike counts ref hcounts href +
+        c * countMass counts hcounts * Real.log (c / d) := by
+  unfold countKLLike countMass
+  rw [positiveMeasureOfCounts_smul c hc counts hcounts,
+    positiveMeasureOfCounts_smul d hd ref href]
+  exact InfoGeometry.PositiveMeasure.klLike_scale_scale_two c d hc hd
+    (positiveMeasureOfCounts counts hcounts) (positiveMeasureOfCounts ref href)
+
+/-- Mass-slack decomposition `countGeneralizedKL = countKLLike + (Z ref - Z counts)`. -/
+@[rep_depth count]
+theorem countGeneralizedKL_eq_countKLLike_add_mass_diff
+    [Nonempty (Fin n)]
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countGeneralizedKL counts ref hcounts href =
+      countKLLike counts ref hcounts href +
+        (countMass ref href - countMass counts hcounts) :=
+  InfoGeometry.PositiveMeasure.generalizedKL_eq_klLike_add_Z
+    (positiveMeasureOfCounts counts hcounts)
+    (positiveMeasureOfCounts ref href)
+
+/-- Nonnegativity of generalized KL on unnormalized positive counts. -/
+@[rep_depth count]
+theorem countGeneralizedKL_nonneg
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    0 ≤ countGeneralizedKL counts ref hcounts href :=
+  InfoGeometry.PositiveMeasure.generalizedKL_nonneg
+    (positiveMeasureOfCounts counts hcounts)
+    (positiveMeasureOfCounts ref href)
+
+/-- Faithfulness: generalized KL on positive counts vanishes iff the count profiles agree. -/
+@[rep_depth count]
+theorem countGeneralizedKL_eq_zero_iff
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countGeneralizedKL counts ref hcounts href = 0 ↔ counts = ref := by
+  unfold countGeneralizedKL
+  rw [InfoGeometry.PositiveMeasure.generalizedKL_eq_zero_iff]
+  constructor
+  · intro h
+    funext i
+    exact congrArg (fun μ : InfoGeometry.PositiveMeasure (Fin n) ℝ => μ i) h
+  · intro h
+    ext i
+    exact congrFun h i
+
+/-- Positive homogeneity of generalized KL under common count rescaling. -/
+@[rep_depth count]
+theorem countGeneralizedKL_scale_scale
+    (c : ℝ) (hc : 0 < c)
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countGeneralizedKL (c • counts) (c • ref)
+        (fun i => mul_pos hc (hcounts i)) (fun i => mul_pos hc (href i)) =
+      c * countGeneralizedKL counts ref hcounts href := by
+  unfold countGeneralizedKL
+  rw [positiveMeasureOfCounts_smul c hc counts hcounts,
+    positiveMeasureOfCounts_smul c hc ref href]
+  exact InfoGeometry.PositiveMeasure.generalizedKL_scale_scale c hc
+    (positiveMeasureOfCounts counts hcounts) (positiveMeasureOfCounts ref href)
+
+/-- **Count (`L0`) to Projective (`L1`) Scale–Shape Decomposition of Generalized KL**:
+splits `countGeneralizedKL` into total mass times the normalized `countRay` KL divergence
+plus the scalar mass-ratio Bregman term `gklTerm (countMass counts) (countMass ref)`. -/
+@[rep_depth projective]
+theorem countGeneralizedKL_projective_radial_decomposition
+    [Nonempty (Fin n)]
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countGeneralizedKL counts ref hcounts href =
+      countMass counts hcounts *
+          InfoGeometry.PositiveMeasure.generalizedKL
+            (gaugeSection (countRay counts hcounts))
+            (gaugeSection (countRay ref href)) +
+        InfoGeometry.PositiveMeasure.gklTerm
+          (countMass counts hcounts) (countMass ref href) := by
+  unfold countGeneralizedKL countMass
+  rw [countRay, countRay, gaugeSection_mk, gaugeSection_mk]
+  exact InfoGeometry.PositiveMeasure.generalizedKL_projective_radial_decomposition
+    (positiveMeasureOfCounts counts hcounts) (positiveMeasureOfCounts ref href)
+
+/-- Expresses the radial `gklTerm` of total count masses directly via `countMassShift`. -/
+@[rep_depth projective]
+theorem gklTerm_countMass_eq_neg_massShift
+    [Nonempty (Fin n)]
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    InfoGeometry.PositiveMeasure.gklTerm
+        (countMass counts hcounts) (countMass ref href) =
+      -(countMass counts hcounts * countMassShift counts ref hcounts href) -
+        countMass counts hcounts + countMass ref href := by
+  unfold InfoGeometry.PositiveMeasure.gklTerm
+  rw [countMassShift_eq_neg_log_countRelativeVolumeChange]
+  unfold countRelativeVolumeChange
+  ring
+
+/-- **Csiszár $f$-Divergence on Raw Counts** (`bbcde69c9c7c18038e28111c6eb6ad94b938.pdf`, Eq. 46):
+`D_f[counts, ref] = ∑ i, ref i * f (counts i / ref i)`. -/
+@[rep_depth count]
+noncomputable def countCsiszarDivergence
+    (f : ℝ → ℝ) (counts ref : RelativeCounts n) : ℝ :=
+  ∑ i : Fin n, ref i * f (relativeCountDensity n counts ref i)
+
+/-- Vanishing of count-level Csiszár $f$-divergence on equal nonzero counts when `f 1 = 0`. -/
+@[rep_depth count, simp]
+theorem countCsiszarDivergence_self
+    (f : ℝ → ℝ) (hf1 : f 1 = 0)
+    (counts : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, counts i ≠ 0) :
+    countCsiszarDivergence f counts counts = 0 := by
+  unfold countCsiszarDivergence
+  refine Finset.sum_eq_zero ?_
+  intro i _
+  rw [relativeCountDensity_self counts hcounts i, hf1, mul_zero]
+
+/-- Degree-1 homogeneity of count-level Csiszár $f$-divergence under common nonzero rescaling. -/
+@[rep_depth count]
+theorem countCsiszarDivergence_common_smul
+    (f : ℝ → ℝ) (c : ℝ) (hc : c ≠ 0)
+    (counts ref : RelativeCounts n) :
+    countCsiszarDivergence f (c • counts) (c • ref) =
+      c * countCsiszarDivergence f counts ref := by
+  unfold countCsiszarDivergence
+  rw [relativeCountDensity_common_smul n c hc counts ref, Finset.mul_sum]
+  refine Finset.sum_congr rfl ?_
+  intro i _
+  simp only [Pi.smul_apply, smul_eq_mul, mul_assoc]
+
+/-- Exact specialization: Csiszár divergence with generator `t ↦ t * log t - t + 1`
+equals `countGeneralizedKL` on strictly positive count profiles. -/
+@[rep_depth count]
+theorem countCsiszarDivergence_klGenerator_eq_countGeneralizedKL
+    (counts ref : RelativeCounts n)
+    (hcounts : ∀ i : Fin n, 0 < counts i)
+    (href : ∀ i : Fin n, 0 < ref i) :
+    countCsiszarDivergence (fun t => t * Real.log t - t + 1) counts ref =
+      countGeneralizedKL counts ref hcounts href := by
+  unfold countCsiszarDivergence countGeneralizedKL
+    InfoGeometry.PositiveMeasure.generalizedKL
+    InfoGeometry.PositiveMeasure.gklTerm
+    positiveMeasureOfCounts relativeCountDensity
+  refine Finset.sum_congr rfl ?_
+  intro i _
+  have hri : ref i ≠ 0 := (href i).ne'
+  dsimp only
+  field_simp [hri]
+
+end CountRelativeEntropyAndCsiszar
+
 end InfoGeometry.Canonical.RelativePotentialCountBridge

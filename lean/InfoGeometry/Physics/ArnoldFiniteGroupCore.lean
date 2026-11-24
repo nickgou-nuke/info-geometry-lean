@@ -87,4 +87,45 @@ theorem arnoldFiniteGroup_adjoint_traceless (n : ℕ) (g : ArnoldFiniteGroup n)
     _ = Matrix.trace X := by simp
     _ = 0 := hX
 
+/-- Trace pairing is invariant under the finite Arnold adjoint action;
+this is the finite analogue of conservation of the helicity/Casimir pairing. -/
+theorem arnoldFiniteGroup_tracePairing_invariant (n : ℕ) (g : ArnoldFiniteGroup n)
+    (X Y : Matrix (Fin n) (Fin n) ℝ) :
+    Matrix.trace (((g : Matrix (Fin n) (Fin n) ℝ) * X *
+        ((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ)) *
+      ((g : Matrix (Fin n) (Fin n) ℝ) * Y *
+        ((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ))) =
+    Matrix.trace (X * Y) := by
+  let gg : Matrix (Fin n) (Fin n) ℝ := g
+  let gh : Matrix (Fin n) (Fin n) ℝ := (g⁻¹ : ArnoldFiniteGroup n)
+  have hhg0 : ((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ) *
+      (g : Matrix (Fin n) (Fin n) ℝ) = 1 := by
+    rw [← Matrix.SpecialLinearGroup.coe_mul, inv_mul_cancel,
+      Matrix.SpecialLinearGroup.coe_one]
+  have hhg : gh * gg = 1 := by simpa [gh, gg] using hhg0
+  change Matrix.trace ((gg * X * gh) * (gg * Y * gh)) = Matrix.trace (X * Y)
+  calc
+    Matrix.trace ((gg * X * gh) * (gg * Y * gh))
+        = Matrix.trace ((gg * X) * (gh * gg) * Y * gh) := by
+            congr 1
+            ac_rfl
+    _ = Matrix.trace ((gg * X) * 1 * Y * gh) := by rw [hhg]
+    _ = Matrix.trace ((gg * (X * Y)) * gh) := by
+            congr 1
+            simp only [mul_assoc, one_mul]
+    _ = Matrix.trace (gh * gg * (X * Y)) := by
+            rw [Matrix.trace_mul_cycle]
+    _ = Matrix.trace (1 * (X * Y)) := by rw [hhg]
+    _ = Matrix.trace (X * Y) := by simp
+
+/-- Quadratic trace invariant of a finite incompressible generator. -/
+theorem arnoldFiniteGroup_quadratic_trace_invariant (n : ℕ)
+    (g : ArnoldFiniteGroup n) (X : Matrix (Fin n) (Fin n) ℝ) :
+    Matrix.trace (((g : Matrix (Fin n) (Fin n) ℝ) * X *
+        ((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ)) *
+      ((g : Matrix (Fin n) (Fin n) ℝ) * X *
+        ((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ))) =
+    Matrix.trace (X * X) :=
+  arnoldFiniteGroup_tracePairing_invariant n g X X
+
 end InfoGeometry.Physics.ArnoldFiniteGroupCore

@@ -39,6 +39,8 @@ Declarations:
 - `isTraceless_smul`
 - `arnoldFinite_traceless_commutator`
 - `arnoldFiniteGroup_adjoint_traceless`
+- `arnoldFiniteGroup_tracePairing_invariant`
+- `arnoldFiniteGroup_quadratic_trace_invariant`
 
 These give the finite determinant-one volume-preserving group and the
 trace-zero incompressible Lie-algebra closure.

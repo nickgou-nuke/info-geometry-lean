@@ -63,6 +63,7 @@ import InfoGeometry.Krein.DoubledSpaceMatrix
 import InfoGeometry.Krein.DoubledMatrixClockBridge
 import InfoGeometry.Krein.SplitCliffordNN
 import InfoGeometry.Krein.InvolutiveSelfDualCarrier
+import InfoGeometry.Krein.FundamentalSymmetrySpectralProjectors
 import InfoGeometry.Krein.CarrierTransport
 import InfoGeometry.Krein.CarrierWithGenerator
 import InfoGeometry.Krein.TomitaMatrixAtom

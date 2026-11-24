@@ -173,6 +173,7 @@ import InfoGeometry.Clifford.CuntzSplitClifford22
 import InfoGeometry.Geometry.AssociativeGaugeConnection
 import InfoGeometry.Krein.TransitionWeakValue
 import InfoGeometry.Krein.TransitionWeakValueExamples
+import InfoGeometry.Krein.FundamentalSymmetrySpectralProjectors
 import InfoGeometry.Meta.FiniteTemperleyLiebTrace
 import InfoGeometry.Probability.AdditiveGluing
 import InfoGeometry.GrandUnification.LatticeCantorPercolationApollonianDictionary

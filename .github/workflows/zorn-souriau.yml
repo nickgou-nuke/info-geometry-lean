@@ -38,11 +38,21 @@ jobs:
       LEAN_NUM_THREADS: '2'
       ZORN_SOURIAU_EXPECTED_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
-          submodules: false
-          persist-credentials: false
+      # This repository is public. Fetching without a token keeps credentials
+      # out of the checkout and avoids recursive cleanup of unrelated gitlinks.
+      - name: Check out the exact public revision without credentials
+        shell: bash
+        env:
+          ZORN_SOURIAU_REPOSITORY_URL: ${{ github.server_url }}/${{ github.repository }}.git
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "$ZORN_SOURIAU_REPOSITORY_URL"
+          git -c credential.helper= -c http.extraheader= fetch \
+            --no-tags --no-recurse-submodules --depth=1 origin \
+            "$ZORN_SOURIAU_EXPECTED_SHA"
+          git -c submodule.recurse=false checkout --detach "$ZORN_SOURIAU_EXPECTED_SHA"
       - name: Record and check the exact revision
         shell: bash
         run: |

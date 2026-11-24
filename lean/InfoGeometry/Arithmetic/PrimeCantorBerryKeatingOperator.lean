@@ -1,3 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Geometry.RealRotorCore
+import InfoGeometry.Geometry.FiniteMatrixResolventKernel
+import InfoGeometry.Compatibility.MathlibUpperHalfPlaneShadow
+import InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimeCantorZetaDiracOperator

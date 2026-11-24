@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Arithmetic/PrimitiveSouriauPipeline.lean
 
 Owner-target surface for the primitive/Souriau/projective arithmetic sidecar
@@ -18,6 +23,7 @@ existence/uniqueness, the prime number theorem, analytic continuation, or a
 global KL/Jensen theorem.
 -/
 
+import InfoGeometry.Canonical.SelfDualNormalConeBridge
 import InfoGeometry.Arithmetic.ArithmeticKMS
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimitiveSouriauZeta

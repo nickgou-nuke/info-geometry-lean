@@ -2043,6 +2043,104 @@ theorem shirokov_center_grade_two_eq_zero (n : ℕ)
     exact hne (shirokov_center_coordinate_support n x hx T hEmpty hTop)
   exact hcoord
 
+/-- Bracketing two adjacent ordered simple bivectors in the fixed negative
+Clifford carrier produces the third bivector, with the sign determined by
+the generator square `-1`. This is a basis-level instance of grade-two Lie
+closure; it does not yet establish closure for arbitrary grade-two sums. -/
+private theorem shirokov_cGen_pair_eq_blade {n : ℕ} {i k : Fin n} (hik : i < k) :
+    cGen ℝ n i * cGen ℝ n k = cBlade ℝ n {i, k} := by
+  have hne : i ≠ k := ne_of_lt hik
+  have hlen : (bladeList ({i, k} : Finset (Fin n))).length = 2 := by
+    rw [bladeList_length, Finset.card_pair hne]
+  have hpw := bladeList_pairwise_lt ({i, k} : Finset (Fin n))
+  have hlist : bladeList ({i, k} : Finset (Fin n)) = [i, k] := by
+    rcases hL : bladeList ({i, k} : Finset (Fin n)) with _ | ⟨a, _ | ⟨b, _ | ⟨c, tl⟩⟩⟩
+    · simp [hL] at hlen
+    · simp [hL] at hlen
+    · rw [hL] at hpw
+      have hab : a < b := (List.pairwise_cons.mp hpw).1 b (by simp)
+      have ha : a ∈ ({i, k} : Finset (Fin n)) :=
+        mem_bladeList.mp (by rw [hL]; simp)
+      have hb : b ∈ ({i, k} : Finset (Fin n)) :=
+        mem_bladeList.mp (by rw [hL]; simp)
+      simp only [Finset.mem_insert, Finset.mem_singleton] at ha hb
+      rcases ha with rfl | rfl <;> rcases hb with rfl | rfl
+      · exact False.elim (lt_irrefl _ hab)
+      · rfl
+      · exact False.elim (lt_irrefl _ (lt_trans hik hab))
+      · exact False.elim (lt_irrefl _ hab)
+    · simp [hL] at hlen
+  simp [cBlade, hlist]
+
+theorem shirokov_adjacent_simple_bivector_bracket {n : ℕ}
+    {i j k : Fin n} (hij : i < j) (hjk : j < k) :
+    algebraCommutator (cGen ℝ n i * cGen ℝ n j)
+        (cGen ℝ n j * cGen ℝ n k) =
+      (-2 : ℝ) • cBlade ℝ n {i, k} := by
+  have hii : cGen ℝ n j * cGen ℝ n j =
+      -(1 : CliffordAlgebra (cliffordNegSqForm ℝ n)) := cGen_sq ℝ n j
+  have hji : cGen ℝ n j * cGen ℝ n i = -(cGen ℝ n i * cGen ℝ n j) :=
+    cGen_anticomm hij.ne'
+  have hkj : cGen ℝ n k * cGen ℝ n j = -(cGen ℝ n j * cGen ℝ n k) :=
+    cGen_anticomm hjk.ne'
+  have hki : cGen ℝ n k * cGen ℝ n i = -(cGen ℝ n i * cGen ℝ n k) :=
+    cGen_anticomm (lt_trans hij hjk).ne'
+  have hleft :
+      (cGen ℝ n i * cGen ℝ n j) * (cGen ℝ n j * cGen ℝ n k) =
+        -(cGen ℝ n i * cGen ℝ n k) := by
+    rw [show (cGen ℝ n i * cGen ℝ n j) * (cGen ℝ n j * cGen ℝ n k) =
+      cGen ℝ n i * (cGen ℝ n j * cGen ℝ n j) * cGen ℝ n k by noncomm_ring,
+      hii]
+    noncomm_ring
+  have hright :
+      (cGen ℝ n j * cGen ℝ n k) * (cGen ℝ n i * cGen ℝ n j) =
+        cGen ℝ n i * cGen ℝ n k := by
+    calc
+      (cGen ℝ n j * cGen ℝ n k) * (cGen ℝ n i * cGen ℝ n j) =
+          cGen ℝ n j * (cGen ℝ n k * cGen ℝ n i) * cGen ℝ n j := by
+            noncomm_ring
+      _ = cGen ℝ n j * (-(cGen ℝ n i * cGen ℝ n k)) * cGen ℝ n j := by
+            rw [hki]
+      _ = -((cGen ℝ n j * cGen ℝ n i) *
+          (cGen ℝ n k * cGen ℝ n j)) := by noncomm_ring
+      _ = -((-(cGen ℝ n i * cGen ℝ n j)) *
+          (-(cGen ℝ n j * cGen ℝ n k))) := by rw [hji, hkj]
+      _ = -((cGen ℝ n i * cGen ℝ n j) *
+          (cGen ℝ n j * cGen ℝ n k)) := by noncomm_ring
+      _ = cGen ℝ n i * cGen ℝ n k := by rw [hleft]; simp
+  rw [algebraCommutator, hleft, hright]
+  rw [shirokov_cGen_pair_eq_blade (lt_trans hij hjk)]
+  module
+
+/-- The adjacent-generator bracket has blade-coordinate support in grade two. -/
+theorem shirokov_adjacent_simple_bivector_bracket_grade_two
+    {n : ℕ} {i j k : Fin n} (hij : i < j) (hjk : j < k)
+    (T : Finset (Fin n))
+    (hT : bladeRepr ℝ n
+      (algebraCommutator (cGen ℝ n i * cGen ℝ n j)
+        (cGen ℝ n j * cGen ℝ n k)) T ≠ 0) :
+    T.card = 2 := by
+  have hcoord : bladeRepr ℝ n
+      (algebraCommutator (cGen ℝ n i * cGen ℝ n j)
+        (cGen ℝ n j * cGen ℝ n k)) T =
+      if T = {i, k} then -2 else 0 := by
+    rw [shirokov_adjacent_simple_bivector_bracket hij hjk]
+    change ((cliffordEndRep ℝ n) ((-2 : ℝ) • cBlade ℝ n {i, k})
+      (Pi.single ∅ (1 : ℝ))) T = if T = {i, k} then -2 else 0
+    have hrepr :
+        (cliffordEndRep ℝ n (cBlade ℝ n {i, k})) (Pi.single ∅ (1 : ℝ)) =
+          Pi.single ({i, k} : Finset (Fin n)) (1 : ℝ) := by
+      simpa [bladeRepr] using bladeRepr_cBlade ℝ n ({i, k} : Finset (Fin n))
+    rw [map_smul]
+    simp only [LinearMap.smul_apply, Pi.smul_apply]
+    rw [hrepr]
+    simp only [Pi.single_apply]
+    split_ifs <;> simp [Finset.card_pair (ne_of_lt (lt_trans hij hjk))]
+  rw [hcoord] at hT
+  by_cases hEq : T = {i, k}
+  · rw [hEq, Finset.card_pair (ne_of_lt (lt_trans hij hjk))]
+  · simp [hEq] at hT
+
 /-- Conditional flatness consequence for Shirokov's compatibility equation
 in the negative-definite finite-stage Clifford algebra. Generator compatibility
 and commuting derivation directions centralize the curvature defect; the

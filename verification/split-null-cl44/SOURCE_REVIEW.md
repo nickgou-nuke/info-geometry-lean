@@ -164,3 +164,38 @@ source axiom/debt and scope audits, and semantic gate (two files, zero findings)
 The placeholder audit has zero hard findings and the same six reviewed
 normalization/ordered-product soft flags described above. The base-owner pair
 passed its corresponding source gates separately with zero placeholder findings.
+
+## Successful target build and warning-only follow-up
+
+[Run 45410443191](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45410443191)
+checked `860458be8e974cfce0574a8e163d30bb4a6074d7`. **All four target modules
+and their imported dependencies built successfully** (9,034 jobs). The repaired
+determinant owner also built successfully. The subsequent fresh-source stage
+failed with warnings treated as errors. Artifact `14929780737` has verified
+SHA-256 `59a75489963889deffcfe588779520d11f3b6a190b4e2050f33e626583018803`.
+
+The complete log contains exactly five diagnostics in the four selected owners:
+two unnecessary sequential-focus warnings in the trace owner, and one deprecated
+negation tactic plus two local-instance style warnings in the null owner. The
+Born and Dirac transport owners have no diagnostics. The minimal follow-up makes
+exactly the compiler-directed replacements: two `<;> ring` to `; ring`,
+`push_neg` to `push Not`, and two proposition-local `letI` declarations to `let`.
+Pinned Lean/Mathlib implementations confirm the same tactic engine and local
+instance availability. No statements, hypotheses, imports, or mathematical
+proof steps change, and no linter is disabled.
+
+An independent reviewer checked the complete log and exact candidate diffs.
+The updated source hashes are:
+
+| Source | SHA-256 |
+|---|---|
+| `CanonicalZornRegularTrace.lean` | `529c5c9e4bee8ec363132263e73a0f33cfcd0aab31486c2676c42edcc6696104` |
+| `CanonicalZornNullIncidence.lean` | `2f0abeeb69cb9da8ce7d09e44eec4a3bb3df61ff2ef65d4fe2760a4c32bd07b5` |
+
+The successful target build is recorded at its exact revision. Fresh
+warnings-as-errors elaboration and the final native declaration/axiom
+transaction still require a successful receipt for the warning-only revision.
+
+The two warning-only sources passed the staged proof gate and whitespace,
+placeholder, source axiom/debt, scope, and semantic checks. Both scoped
+placeholder and semantic audits reported zero findings.

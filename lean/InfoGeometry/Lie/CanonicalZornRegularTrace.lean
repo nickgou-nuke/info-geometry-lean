@@ -78,7 +78,7 @@ theorem trace_leftRegular (X : CanonicalZorn) :
   rw [LinearMap.trace_eq_matrix_trace ℝ
     ((Pi.basisFun ℝ (Fin 8)).map canonicalToCoord.symm),
     leftRegular_cartesian_matrix]
-  simp [Matrix.trace, Matrix.diag, Fin.sum_univ_eight, realZornTrace] <;> ring
+  simp [Matrix.trace, Matrix.diag, Fin.sum_univ_eight, realZornTrace]; ring
 
 /-- Trace of a conjugate regular product, in the native unhalved convention. -/
 theorem trace_leftRegular_mul_conj (X Y : CanonicalZorn) :
@@ -91,7 +91,7 @@ theorem trace_leftRegular_mul_conj (X Y : CanonicalZorn) :
     leftRegular_cartesian_matrix]
   simp [Matrix.trace, Matrix.diag, Matrix.mul_apply, Fin.sum_univ_eight,
     zornConj, QuadraticMap.polar, zornNorm_apply, zornNormFun,
-    ZornMatrix.dot] <;> ring
+    ZornMatrix.dot]; ring
 
 /-- Cyclic trace gives the opposite-order conjugate product. -/
 theorem trace_conj_mul_leftRegular (X Y : CanonicalZorn) :

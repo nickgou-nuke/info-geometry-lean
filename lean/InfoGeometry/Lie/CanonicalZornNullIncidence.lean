@@ -42,7 +42,7 @@ theorem exists_polar_eq_one (X : CanonicalZorn) (hX : X ≠ 0) :
   obtain ⟨Y, hY⟩ : ∃ Y : CanonicalZorn,
       QuadraticMap.polar (zornNorm (R := ℝ)) X Y ≠ 0 := by
     by_contra h
-    push_neg at h
+    push Not at h
     exact hX (canonicalPolar_nondegenerate X h)
   refine ⟨(QuadraticMap.polar (zornNorm (R := ℝ)) X Y)⁻¹ • Y, ?_⟩
   rw [QuadraticMap.polar_smul_right, smul_eq_mul, inv_mul_cancel₀ hY]
@@ -92,7 +92,7 @@ theorem range_conj_eq_ker (X : CanonicalZorn) (hX0 : X ≠ 0)
 theorem finrank_ker_eq_four (X : CanonicalZorn) (hX0 : X ≠ 0)
     (hX : zornNormFun X = 0) :
     Module.finrank ℝ (LinearMap.ker (leftRegularRepresentation X)) = 4 := by
-  letI : FiniteDimensional ℝ CanonicalZorn :=
+  let : FiniteDimensional ℝ CanonicalZorn :=
     FiniteDimensional.of_finrank_eq_succ canonicalZorn_finrank
   obtain ⟨Y, hXY⟩ := exists_polar_eq_one X hX0
   have ht := (null_kernel_projection X Y hX hXY).trace
@@ -109,7 +109,7 @@ theorem finrank_range_conj_eq_four (X : CanonicalZorn) (hX0 : X ≠ 0)
 theorem finrank_range_eq_four (X : CanonicalZorn) (hX0 : X ≠ 0)
     (hX : zornNormFun X = 0) :
     Module.finrank ℝ (LinearMap.range (leftRegularRepresentation X)) = 4 := by
-  letI : FiniteDimensional ℝ CanonicalZorn :=
+  let : FiniteDimensional ℝ CanonicalZorn :=
     FiniteDimensional.of_finrank_eq_succ canonicalZorn_finrank
   have hrank := LinearMap.finrank_range_add_finrank_ker (leftRegularRepresentation X)
   rw [finrank_ker_eq_four X hX0 hX, canonicalZorn_finrank] at hrank

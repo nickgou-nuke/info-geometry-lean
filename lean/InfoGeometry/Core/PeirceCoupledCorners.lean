@@ -249,4 +249,94 @@ theorem star_mem_peirce01 (hp : IsSelfAdjoint p) (hu : u ∈ peirce10 p) :
 
 end Star
 
+section MultiplePeirceDecomposition
+
+open scoped BigOperators
+
+variable {ι : Type*}
+
+/-- The `(i, j)` Peirce block `e i * a * e j` associated with an indexed family
+of elements `e : ι → A` (McCrimmon, *A Taste of Jordan Algebras*, I.6.3, multiple
+Peirce decomposition / matrix archetype rules). -/
+def multiPeirceCorner (e : ι → A) (i j : ι) (a : A) : A :=
+  e i * a * e j
+
+@[simp]
+theorem multiPeirceCorner_apply (e : ι → A) (i j : ι) (a : A) :
+    multiPeirceCorner e i j a = e i * a * e j := rfl
+
+/-- **Finite $n$-Block Peirce Decomposition**: if `∑ i, e i = 1`, then every element
+`a : A` decomposes as the double sum of its `(i, j)` Peirce corners `e i * a * e j`. -/
+theorem multiPeirce_decomposition [Fintype ι] (e : ι → A)
+    (hsum : (∑ i : ι, e i) = 1) (a : A) :
+    (∑ i : ι, ∑ j : ι, multiPeirceCorner e i j a) = a := by
+  have hinner : ∀ i : ι, (∑ j : ι, multiPeirceCorner e i j a) = e i * a := by
+    intro i
+    calc
+      (∑ j : ι, e i * a * e j) = (e i * a) * (∑ j : ι, e j) := by
+        rw [Finset.mul_sum]
+      _ = e i * a := by rw [hsum, mul_one]
+  calc
+    (∑ i : ι, ∑ j : ι, multiPeirceCorner e i j a)
+        = ∑ i : ι, (e i * a) := Finset.sum_congr rfl (fun i _ => hinner i)
+    _ = (∑ i : ι, e i) * a := by rw [Finset.sum_mul]
+    _ = a := by rw [hsum, one_mul]
+
+/-- General product of two multi-Peirce corners before applying orthogonality/idempotency. -/
+theorem multiPeirceCorner_mul (e : ι → A) (i j k l : ι) (a b : A) :
+    multiPeirceCorner e i j a * multiPeirceCorner e k l b =
+      e i * a * (e j * e k) * b * e l := by
+  simp only [multiPeirceCorner, mul_assoc]
+
+/-- **Matrix Archetype Off-Matching Multiplication Rule** (`P_{ij} · P_{kl} = 0` for `j ≠ k`):
+if `e j * e k = 0` whenever `j ≠ k`, the product of mismatched Peirce blocks vanishes. -/
+theorem multiPeirceCorner_mul_of_ne (e : ι → A)
+    (horth : ∀ ⦃j k : ι⦄, j ≠ k → e j * e k = 0)
+    {i j k l : ι} (hjk : j ≠ k) (a b : A) :
+    multiPeirceCorner e i j a * multiPeirceCorner e k l b = 0 := by
+  rw [multiPeirceCorner_mul, horth hjk, mul_zero, zero_mul, zero_mul]
+
+/-- **Matrix Archetype Matching Multiplication Rule** (`P_{ij} · P_{jk} ⊆ P_{ik}`):
+if `e j` is idempotent, the product of matching Peirce blocks `(i, j)` and `(j, k)`
+lands inside the `(i, k)` Peirce block. -/
+theorem multiPeirceCorner_mul_of_eq (e : ι → A)
+    (hidem : ∀ j : ι, IsIdempotentElem (e j))
+    (i j k : ι) (a b : A) :
+    multiPeirceCorner e i j a * multiPeirceCorner e j k b =
+      multiPeirceCorner e i k (a * e j * b) := by
+  rw [multiPeirceCorner_mul, (hidem j).eq]
+  simp only [multiPeirceCorner, mul_assoc]
+
+/-- **Multi-Peirce Corner Idempotency / Orthogonality**: applying the `(i, j)` corner
+projection to a `(k, l)` corner yields the `(i, j)` corner when `(i, j) = (k, l)` and
+`0` otherwise. -/
+theorem multiPeirceCorner_proj [DecidableEq ι] (e : ι → A)
+    (hidem : ∀ i : ι, IsIdempotentElem (e i))
+    (horth : ∀ ⦃i j : ι⦄, i ≠ j → e i * e j = 0)
+    (i j k l : ι) (a : A) :
+    multiPeirceCorner e i j (multiPeirceCorner e k l a) =
+      if i = k ∧ j = l then multiPeirceCorner e i j a else 0 := by
+  by_cases hik : i = k
+  · subst hik
+    by_cases hjl : j = l
+    · subst hjl
+      simp only [and_self, ↓reduceIte, multiPeirceCorner]
+      calc
+        e i * (e i * a * e j) * e j
+            = (e i * e i) * a * (e j * e j) := by simp only [mul_assoc]
+        _ = e i * a * e j := by rw [(hidem i).eq, (hidem j).eq]
+    · simp only [hjl, and_false, ↓reduceIte, multiPeirceCorner]
+      have hlj : l ≠ j := Ne.symm hjl
+      calc
+        e i * (e i * a * e l) * e j
+            = e i * e i * a * (e l * e j) := by simp only [mul_assoc]
+        _ = 0 := by rw [horth hlj, mul_zero]
+  · simp only [hik, false_and, ↓reduceIte, multiPeirceCorner]
+    calc
+      e i * (e k * a * e l) * e j
+          = (e i * e k) * a * e l * e j := by simp only [mul_assoc]
+      _ = 0 := by rw [horth hik, zero_mul, zero_mul, zero_mul]
+
+end MultiplePeirceDecomposition
+
 end InfoGeometry.Core.PeirceCoupledCorners

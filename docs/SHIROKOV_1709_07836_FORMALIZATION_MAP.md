@@ -93,13 +93,14 @@ positive-definite orthonormal-frame results are special cases only.
    paper's summand depends on a moving dual Clifford frame; its complement
    invariance and the normalization/identification needed to derive equation
    (2.3) from this lemma have not yet been proved. The owner additionally
-   proves `shirokov_odd_blade_character_complement_invariant` and
-   `shirokov_odd_blade_reynolds_reduced_sum`: for each ordered blade in the
-   fixed standard negative-definite `Cl(0,n)` frame, the actual inverse-blade
-   conjugation summand is complement-invariant and its full powerset sum
-   reduces to twice the lower-half sum. This does not yet establish the
-   reduction for arbitrary connection coefficients or the paper's moving
-   dual frame.
+   proves `shirokov_odd_blade_character_complement_invariant`,
+   `shirokov_odd_blade_reynolds_reduced_sum`, and
+   `shirokov_odd_reynolds_reduced_sum`: for each ordered blade, the standard
+   inverse-blade conjugation signs agree on complementary subsets. By the
+   ordered-blade expansion, this yields the reduced powerset sum for every
+   element of the fixed finite-stage negative-definite `Cl(0,n)` carrier. It
+   does not yet transport the identity to the paper's moving dual frame or
+   identify its connection derivative summand with this Reynolds summand.
 2. Connect the finite-coordinate `C+K` transfer's derivation family to the
    repository's CE/exterior-form carrier; derive its flatness and parallelness
    hypotheses from the Clifford-frame compatibility equations.

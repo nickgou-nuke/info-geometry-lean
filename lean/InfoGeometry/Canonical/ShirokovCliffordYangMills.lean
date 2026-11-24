@@ -875,6 +875,47 @@ theorem shirokov_blade_expansion (n : ℕ)
   change bladeRepr ℝ n x T = _
   simp [Pi.single_apply]
 
+/-- Complementary inverse blades induce the same conjugation on every element
+of the fixed finite-stage `Cl(0,n)` algebra when `n` is odd. -/
+theorem shirokov_odd_inverse_blade_conjugation_complement (n : ℕ) (hn : Odd n)
+    (S : Finset (Fin n)) (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    (((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) * x *
+        cBlade ℝ n S) =
+      (((-1 : ℝ) ^ ((Finset.univ \ S).card *
+        ((Finset.univ \ S).card + 1) / 2) •
+          cBlade ℝ n (Finset.univ \ S)) * x * cBlade ℝ n (Finset.univ \ S)) := by
+  rw [shirokov_blade_expansion n x]
+  simp only [Finset.mul_sum, Finset.sum_mul]
+  apply Finset.sum_congr rfl
+  intro T hT
+  have hblade :
+      ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+          cBlade ℝ n T * cBlade ℝ n S =
+        ((-1 : ℝ) ^ ((Finset.univ \ S).card *
+          ((Finset.univ \ S).card + 1) / 2) •
+            cBlade ℝ n (Finset.univ \ S)) * cBlade ℝ n T *
+          cBlade ℝ n (Finset.univ \ S) := by
+    rw [shirokov_inverse_blade_conjugation_sign,
+      shirokov_inverse_blade_conjugation_sign,
+      shirokov_odd_blade_character_complement_invariant n hn S T]
+  simpa only [mul_smul_comm, smul_mul_assoc] using
+    congrArg (fun y => bladeRepr ℝ n x T • y) hblade
+
+/-- The standard inverse-blade Reynolds sum of any element of finite-stage
+`Cl(0,n)` reduces to twice the lower-half sum in odd dimension. -/
+theorem shirokov_odd_reynolds_reduced_sum (n : ℕ) (hn : Odd n)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) * x *
+        cBlade ℝ n S) =
+      2 • ∑ S ∈ ((Finset.univ : Finset (Fin n)).powerset).filter
+        (fun S => 2 * S.card < n),
+        ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) * x *
+          cBlade ℝ n S := by
+  apply shirokov_odd_complement_sum_reduction n hn
+  intro S
+  exact shirokov_odd_inverse_blade_conjugation_complement n hn S x
+
 /-- Reynolds average on every element of the finite-stage Clifford algebra, in
 ordered-blade coordinates. Its support is scalar, plus odd top grade. -/
 theorem shirokov_reynolds_all_elements (n : ℕ)

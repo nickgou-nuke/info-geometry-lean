@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Quantum.MajoranaPfaffianBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -43,5 +48,18 @@ theorem finitePairingDeterminant_eq_square {N : ℕ} (a : Fin N → ℝ) :
   unfold finitePairingDeterminant finitePairingPfaffian
   simp_rw [pairingBlock_det]
   rw [← Finset.prod_pow]
+
+
+abbrev PairingBlock := M2R
+
+
+theorem pairingBlock_pfaffian (a : ℝ) :
+    pfaffian2 (pairingBlock a) = a := by
+  rfl
+
+
+theorem finitePairingPfaffian_eq_product {N : ℕ} (a : Fin N → ℝ) :
+    finitePairingPfaffian a = ∏ k, a k := by
+  rfl
 
 end InfoGeometry.Quantum.FiniteMajoranaPairingBlocks

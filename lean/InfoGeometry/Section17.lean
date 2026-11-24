@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -155,5 +160,51 @@ theorem section17_capstone :
     basis_product_Qi_Qj, basis_product_Qj_Qk, basis_product_Qk_Qi,
     basis_product_Qj_Qi, basis_product_Qk_Qj, basis_product_Qi_Qk,
     biquatToMatrix_eq_section16_evenToMatrix⟩
+
+/-- The explicit biquaternion coordinate map is complex-linear. -/
+def biquatToMatrixLinear : BiquatCoord →ₗ[ℂ] Mat2C where
+  toFun := biquatToMatrix
+  map_add' q r := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [biquatToMatrix, Matrix.smul_apply] <;> ring
+  map_smul' c q := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [biquatToMatrix, Matrix.smul_apply] <;> ring
+
+/-- The explicit inverse coordinate map is complex-linear. -/
+def matrixToBiquatLinear : Mat2C →ₗ[ℂ] BiquatCoord where
+  toFun := matrixToBiquat
+  map_add' M N := by
+    funext i
+    fin_cases i <;>
+      simp [matrixToBiquat] <;> ring
+  map_smul' c M := by
+    funext i
+    fin_cases i <;>
+      simp [matrixToBiquat] <;> ring
+
+/-- The biquaternion coordinate carrier and `M₂(ℂ)` are linearly equivalent. -/
+def biquatMatrixLinearEquiv : BiquatCoord ≃ₗ[ℂ] Mat2C :=
+  LinearEquiv.ofBijective biquatToMatrixLinear
+    ⟨by
+      intro q r h
+      have h' := congrArg matrixToBiquat h
+      simpa [biquatToMatrixLinear, matrixToBiquat_biquatToMatrix] using h',
+      by
+        intro M
+        exact ⟨matrixToBiquat M, by
+          simpa [biquatToMatrixLinear] using biquatToMatrix_matrixToBiquat M⟩⟩
+
+@[simp] theorem biquatMatrixLinearEquiv_apply (q : BiquatCoord) :
+    biquatMatrixLinearEquiv q = biquatToMatrix q := rfl
+
+@[simp] theorem biquatMatrixLinearEquiv_symm_apply (M : Mat2C) :
+    biquatMatrixLinearEquiv.symm M = matrixToBiquat M := by
+  apply (biquatMatrixLinearEquiv.injective)
+  rw [biquatMatrixLinearEquiv.apply_symm_apply]
+  change M = biquatToMatrix (matrixToBiquat M)
+  exact (biquatToMatrix_matrixToBiquat M).symm
 
 end Section17

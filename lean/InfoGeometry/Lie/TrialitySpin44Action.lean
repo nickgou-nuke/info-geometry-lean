@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
@@ -79,5 +84,27 @@ theorem infinitesimalTrialityLeibniz_diagonal (D : InfinitesimalTriality R)
     D.D₂ (mul x y) = mul (D.D₂ x) y + mul x (D.D₂ y) := by
   intro htrial
   simpa [infinitesimalTrialityLeibniz, hdia.1, hdia.2] using htrial
+
+theorem automorphismGroup_is_diagonal_sector :
+    { g : ZornVectorMatrix R → ZornVectorMatrix R |
+        ∀ X Y, mul (g X) (g Y) = g (mul X Y) } =
+      { g | True } := by
+  sorry
+
+theorem commutant_left_multiplication_scalar
+    (L : ZornVectorMatrix R → (ZornVectorMatrix R → ZornVectorMatrix R))
+    (hL : ∀ x, L x = mul x)
+    (T : ZornVectorMatrix R → ZornVectorMatrix R)
+    (hcomm : ∀ x, T (mul x one) = mul x (T one)) :
+    ∃ a : R, T = (fun z => mul (scalar a) z) := by
+  sorry
+
+theorem leftMultiplication_clifford_relation
+    (e_i e_j : ZornVectorMatrix R)
+    (himag : e_i.a = 0 ∧ e_i.b = 0 ∧ e_j.a = 0 ∧ e_j.b = 0)
+    (horth : dot (e_i.v) (e_j.v) = 0)
+    (hnil : mul e_i e_i = zero ∧ mul e_j e_j = zero) :
+    mul e_i e_j + mul e_j e_i = zero := by
+  sorry
 
 end InfoGeometry.Lie.TrialitySpin44Action

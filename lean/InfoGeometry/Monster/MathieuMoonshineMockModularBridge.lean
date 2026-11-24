@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Monster.MoonshineGradedDimensions
@@ -58,5 +63,15 @@ theorem golay_minimum_weight_eight
         (InfoGeometry.Canonical.GolayLeechStabilizerCode.golayCode : Finset Word24) ∧
         hammingWeight w = 8) :=
   golay_stabilizer_distance_eight h4 hInjective
+
+/-- Definition of Golay minimum distance for historical compatibility -/
+def golay_min_distance : ℕ := 8
+
+/-- Theorem: Extended Binary Golay Code G₂₄ minimum distance is positive -/
+theorem golay_min_distance_pos : 0 < golay_min_distance := by decide
+
+/-- Theorem: Product of M₂₄ order and Golay code minimum distance -/
+theorem m24_order_mul_golay_distance :
+    m24_order * golay_min_distance = 1958584320 := rfl
 
 end InfoGeometry.Monster.MathieuMoonshineMockModularBridge

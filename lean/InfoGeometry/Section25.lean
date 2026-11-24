@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -80,5 +85,25 @@ theorem section25_capstone :
   exact ⟨scalarRealityReadout_im_zero, Section24.quaternion_norm_scalar,
     Section24.hamilton_basis_with_triple, Section24.quaternion_metric_symmetric,
     Section24.torsionCommutatorShadow_antisymmetric⟩
+
+/-- Quaternion norm scalar identity reused in the revised statement. -/
+theorem revised_quaternion_norm_scalar (Q : Quat) :
+    Section8.Quat.conj Q * Q = Section8.Quat.scalar (Section8.Quat.normSq Q) :=
+  Section24.quaternion_norm_scalar Q
+
+/-- Finite metric symmetry reused in the revised statement. -/
+theorem revised_quaternion_metric_symmetric
+    (e : Fin 4 → Fin 4 → ℝ) (mu nu : Fin 4) :
+    Section22.quaternionInducedMetric e mu nu =
+      Section22.quaternionInducedMetric e nu mu :=
+  Section24.quaternion_metric_symmetric e mu nu
+
+/-- Finite torsion shadow antisymmetry reused in the revised statement. -/
+theorem revised_torsionCommutatorShadow_antisymmetric
+    (kappa : ℂ) (B : Fin 4 → Fin 4 → Fin 4 → ℂ)
+    (lam mu nu : Fin 4) :
+    Section24.torsionCommutatorShadow kappa B lam nu mu =
+      -Section24.torsionCommutatorShadow kappa B lam mu nu :=
+  Section24.torsionCommutatorShadow_antisymmetric kappa B lam mu nu
 
 end Section25

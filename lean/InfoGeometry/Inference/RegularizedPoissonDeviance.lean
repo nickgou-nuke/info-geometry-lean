@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
@@ -73,5 +78,25 @@ theorem poissonDevianceEnergy_nonneg
     (i : Data) (θ : Theta) :
     0 ≤ M.devianceEnergy i θ := by
   exact poissonDeviance_nonneg (M.observed_nonneg i) (M.mean_pos i θ)
+
+
+theorem poissonDeviance_self_eq_zero (x : ℝ) :
+    poissonDeviance x x = 0 := by
+  by_cases hx : x = 0
+  · simp [poissonDeviance, hx, poissonBregman]
+  · simp [poissonDeviance, poissonBregman, hx]
+
+
+noncomputable def poissonDevianceGibbsFactor
+    (y lam ε : ℝ) : ℝ :=
+  Real.exp (-poissonDeviance y lam / ε)
+
+
+theorem poissonDevianceGibbsFactor_self_eq_one
+    (x ε : ℝ) :
+    poissonDevianceGibbsFactor x x ε = 1 := by
+  unfold poissonDevianceGibbsFactor
+  rw [poissonDeviance_self_eq_zero x, neg_zero, zero_div]
+  simpa using Real.exp_zero
 
 end InfoGeometry.Inference

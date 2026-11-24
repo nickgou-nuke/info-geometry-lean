@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Normed.Algebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Basic
@@ -150,6 +155,40 @@ completion or identify the limit with any external Dirac/Virasoro flow.
 theorem general_colimit_completion_debt (S T : ℝ) (N : A) (hN : N * N = 0) :
     nilpotent_exp S N * nilpotent_exp T N = nilpotent_exp (S + T) N :=
   nilpotent_exp_mul S T N hN
+
+
+theorem nilpotent_exp_mul_neg (T : ℝ) (N : A) (hN : N * N = 0) :
+    nilpotent_exp T N * nilpotent_exp (-T) N = 1 := by
+  rw [nilpotent_exp_mul T (-T) N hN]
+  simp [nilpotent_exp]
+
+
+theorem nilpotent_exp_neg_mul (T : ℝ) (N : A) (hN : N * N = 0) :
+    nilpotent_exp (-T) N * nilpotent_exp T N = 1 := by
+  rw [nilpotent_exp_mul (-T) T N hN]
+  simp [nilpotent_exp]
+
+theorem finite_prod_seq_eventually_constant (T : ℝ) (N : A) (hN : N * N = 0) :
+    Filter.EventuallyEq atTop
+      (fun n : ℕ => finite_prod_seq T N n)
+      (fun _ => nilpotent_exp T N) := by
+  unfold nilpotent_exp
+  rw [Filter.EventuallyEq, eventually_atTop]
+  use 1
+  intro n hn
+  have hn_gt : n > 0 := by linarith
+  exact finite_prod_seq_val T N hN n hn_gt
+
+/-
+The legacy name is retained for downstream compatibility.  Its conclusion
+is a `Tendsto` statement along the tail filter `atTop`, not an operation at a
+natural number called infinity.
+-/
+
+/- A terminology-safe alias for the universal/topological readout. -/
+theorem finite_to_universal_readout (T : ℝ) (N : A) (hN : N * N = 0) :
+    Tendsto (fun n : ℕ => finite_prod_seq T N n) atTop (nhds (nilpotent_exp T N)) := by
+  exact finite_to_infinite_limit T N hN
 
 end InfoGeometry.Algebra.NilpotentFiniteProductLimit
 

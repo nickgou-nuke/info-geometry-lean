@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -242,5 +247,57 @@ All 11 theorems are `fin_cases` kernel-checked, 0 sorries.
 theorem capstone_all_lemmas_proved :
     σPlus * σPlus = 0 ∧ (σMinus * σMinus = 0 ∧ (σPlus * σMinus - σMinus * σPlus = σ3 ∧ (σPlusᴴ = σMinus ∧ σ3ᴴ = σ3))) := by
   exact ⟨σPlus_sq, ⟨σMinus_sq, ⟨commutator_σPlus_σMinus, ⟨σPlus_adjoint, σ3_adjoint⟩⟩⟩⟩
+
+theorem pauli_vector_mul_decomposition
+    (a₁ a₂ a₃ b₁ b₂ b₃ : ℂ) :
+    (a₁ • σ1 + a₂ • σ2 + a₃ • σ3) *
+        (b₁ • σ1 + b₂ • σ2 + b₃ • σ3) =
+      (a₁ * b₁ + a₂ * b₂ + a₃ * b₃) • σ0 +
+        (Complex.I * (a₂ * b₃ - a₃ * b₂)) • σ1 +
+        (Complex.I * (a₃ * b₁ - a₁ * b₃)) • σ2 +
+        (Complex.I * (a₁ * b₂ - a₂ * b₁)) • σ3 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [σ0, σ1, σ2, σ3, Matrix.mul_apply, Fin.sum_univ_two] <;>
+    ring_nf <;>
+    simp [Complex.I_sq] <;>
+    ring
+
+@[simp] theorem σ1_sq : σ1 * σ1 = σ0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [σ0, σ1, Matrix.mul_apply,
+    Fin.sum_univ_two]
+
+@[simp] theorem σ2_sq : σ2 * σ2 = σ0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [σ0, σ2, Matrix.mul_apply,
+    Fin.sum_univ_two, Complex.I_sq]
+
+@[simp] theorem σ3_sq : σ3 * σ3 = σ0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [σ0, σ3, Matrix.mul_apply,
+    Fin.sum_univ_two]
+
+theorem pauli_vector_anticommutator
+    (a₁ a₂ a₃ b₁ b₂ b₃ : ℂ) :
+    ((a₁ • σ1 + a₂ • σ2 + a₃ • σ3) *
+        (b₁ • σ1 + b₂ • σ2 + b₃ • σ3)) +
+      ((b₁ • σ1 + b₂ • σ2 + b₃ • σ3) *
+        (a₁ • σ1 + a₂ • σ2 + a₃ • σ3)) =
+      (2 * (a₁ * b₁ + a₂ * b₂ + a₃ * b₃)) • σ0 := by
+  rw [pauli_vector_mul_decomposition, pauli_vector_mul_decomposition]
+  module
+
+theorem pauli_vector_commutator
+    (a₁ a₂ a₃ b₁ b₂ b₃ : ℂ) :
+    ((a₁ • σ1 + a₂ • σ2 + a₃ • σ3) *
+        (b₁ • σ1 + b₂ • σ2 + b₃ • σ3)) -
+      ((b₁ • σ1 + b₂ • σ2 + b₃ • σ3) *
+        (a₁ • σ1 + a₂ • σ2 + a₃ • σ3)) =
+      (2 * Complex.I * (a₂ * b₃ - a₃ * b₂)) • σ1 +
+        (2 * Complex.I * (a₃ * b₁ - a₁ * b₃)) • σ2 +
+        (2 * Complex.I * (a₁ * b₂ - a₂ * b₁)) • σ3 := by
+  rw [pauli_vector_mul_decomposition, pauli_vector_mul_decomposition]
+  module
 
 end InfoGeometry.Quantum.PauliSoldering

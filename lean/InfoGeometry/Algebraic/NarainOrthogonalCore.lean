@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- 
 InfoGeometry/Algebraic/NarainOrthogonalCore.lean
 
@@ -136,5 +141,29 @@ def canonicalNarainOrthogonalCore (n : ℕ) : NarainOrthogonalCore n where
   parityTwist :=
     { toLinearEquiv := chargeParityTwistLinearEquiv n
       preserves_hyperbolicPair := chargeParityTwist_preserves_hyperbolicPair n }
+
+theorem chargeSwap_involutive (n : ℕ) (q : SplitCharge n) :
+    chargeSwapLinearEquiv n (chargeSwapLinearEquiv n q) = q := by
+  rfl
+
+
+theorem chargeSwap_preserves_hyperbolicNorm
+    (n : ℕ) (q : SplitCharge n) :
+    SplitCharge.hyperbolicNorm (chargeSwapLinearEquiv n q) =
+      SplitCharge.hyperbolicNorm q := by
+  unfold SplitCharge.hyperbolicNorm
+  exact chargeSwap_preserves_hyperbolicPair n q q
+
+theorem chargeParityTwist_involutive (n : ℕ) (q : SplitCharge n) :
+    chargeParityTwistLinearEquiv n (chargeParityTwistLinearEquiv n q) = q := by
+  ext i <;> simp [chargeParityTwistLinearEquiv_apply]
+
+
+theorem chargeParityTwist_preserves_hyperbolicNorm
+    (n : ℕ) (q : SplitCharge n) :
+    SplitCharge.hyperbolicNorm (chargeParityTwistLinearEquiv n q) =
+      SplitCharge.hyperbolicNorm q := by
+  unfold SplitCharge.hyperbolicNorm
+  exact chargeParityTwist_preserves_hyperbolicPair n q q
 
 end InfoGeometry.Algebraic.Split

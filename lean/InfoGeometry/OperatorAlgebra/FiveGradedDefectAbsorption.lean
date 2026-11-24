@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/FiveGradedDefectAbsorption.lean
 
 Five-graded defect absorption and central/contact memory.
@@ -125,6 +130,12 @@ theorem linearCombination_mem_plus_two
   exact G.gPosTwo.add_mem
     (G.gPosTwo.smul_mem r (A.defect_mem_plus_two s))
     (A.defect_mem_plus_two t)
+
+/-- The closure defect is stored in the top contact/memory grade. -/
+theorem defect_is_plus_two_memory
+    (s : State) :
+    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo :=
+  A.defect_mem_plus_two s
 
 end DefectAbsorbedInPlusTwo
 
@@ -450,5 +461,23 @@ theorem mass_le_of_saturated_and_centralNorm_le
     B₁.mass s ≤ B₂.mass s := by
   rw [h₁, h₂]
   exact hNorm
+
+theorem fiveGradeDefectAbsorption_mem_plusTwo :
+  ∀ (L State Defect : Type*)
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Defect] [Module ℝ Defect],
+  ∀ G : FiveGrading L,
+  ∀ D : ThreeGradeClosureDefect State Defect,
+  ∀ A : DefectAbsorbedInPlusTwo L State Defect G D,
+  ∀ s : State,
+    A.defectToPlusTwo (D.defect s) ∈ G.gPosTwo := by
+  intro L State Defect _ _ _ _ _ _ G D A s
+  exact A.defect_is_plus_two_memory s
+
+theorem bpsBound_properties
+    {State : Type*} (B : BPSBoundDatum State) :
+    (∀ s : State, 0 ≤ B.centralNorm s) ∧
+      (∀ s : State, B.centralNorm s ≤ B.mass s) := by
+  exact ⟨B.centralNorm_nonnegative, B.centralNorm_le_mass⟩
 
 end InfoGeometry.OperatorAlgebra.FiveGradedDefectAbsorption

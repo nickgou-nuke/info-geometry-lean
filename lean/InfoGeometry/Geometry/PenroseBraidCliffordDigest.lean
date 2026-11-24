@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -118,5 +123,30 @@ theorem cliffordF_sq : cliffordF * cliffordF = -1 := by
 /-- The two concrete Clifford generators anticommute. -/
 theorem cliffordEF_anticommute : cliffordE * cliffordF + cliffordF * cliffordE = 0 := by
   decide
+
+/-- The quotient relation is reflexive via the zero lattice shift. -/
+theorem klein_bottle_rel_refl (a : ℝ × ℝ) : KleinBottleRel a a := by
+  refine ⟨0, 0, ?_, ?_⟩
+  · norm_num
+  · norm_num
+
+/-- The finite shift is nontrivial, so its order is not a proper divisor of five. -/
+theorem fiveCycle_ne_one : fiveCycle ≠ 1 := by
+  native_decide
+
+/-- The finite shift has exact order five. -/
+theorem fiveCycle_order : orderOf fiveCycle = 5 := by
+  apply orderOf_eq_of_pow_and_pow_div_prime (n := 5)
+  · norm_num
+  · exact fiveCycle_pow_five
+  · intro p hp hdiv
+    have hp_le : p ≤ 5 := Nat.le_of_dvd (by norm_num) hdiv
+    interval_cases p
+    · norm_num at hp
+    · norm_num at hp
+    · norm_num at hdiv
+    · norm_num at hdiv
+    · norm_num at hdiv
+    · simpa using fiveCycle_ne_one
 
 end InfoGeometry.Geometry.PenroseBraidCliffordDigest

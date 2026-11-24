@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
@@ -35,5 +40,57 @@ theorem det_zero_null : null_mat.det = (0 : ℂ) := by simp [null_mat, Matrix.de
 theorem pfaffian_sq_eq_det : (J_skew 0 1) ^ 2 = J_skew.det := by simp [J_skew, Matrix.det_fin_two]
 theorem berezinian_example : A_even.det / D_odd.det = (-4 : ℂ) := by
   simp [A_even, D_odd, Matrix.det_fin_two] <;> ring
+
+
+def pfaffian2 (A : Matrix (Fin 2) (Fin 2) ℂ) : ℂ := A 0 1
+
+
+theorem J_skew_sq : J_skew * J_skew = -I₂ := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [J_skew, I₂, Matrix.mul_apply, Fin.sum_univ_two]
+
+
+theorem s1_sq : s1 * s1 = I₂ := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [s1, I₂, Matrix.mul_apply, Fin.sum_univ_two]
+
+
+theorem s2_sq : s2 * s2 = I₂ := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [s2, I₂, Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
+
+
+theorem s3_sq : s3 * s3 = I₂ := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [s3, I₂, Matrix.mul_apply, Fin.sum_univ_two]
+
+
+theorem J_skew_eq_I_s2 : J_skew = Complex.I • s2 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [J_skew, s2, Matrix.smul_apply, Complex.I_sq]
+
+
+theorem pfaffian2_sq_eq_det_of_skew
+    (A : Matrix (Fin 2) (Fin 2) ℂ)
+    (hskew : A.transpose = -A) :
+    pfaffian2 A ^ 2 = A.det := by
+  have h00 : A 0 0 = -A 0 0 := by
+    simpa using congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 0) hskew
+  have h11 : A 1 1 = -A 1 1 := by
+    simpa using congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 1 1) hskew
+  have h10 : A 1 0 = -A 0 1 := by
+    simpa using congrArg (fun M : Matrix (Fin 2) (Fin 2) ℂ => M 0 1) hskew
+  have hz00 : A 0 0 = 0 := by
+    linear_combination h00 / 2
+  have hz11 : A 1 1 = 0 := by
+    linear_combination h11 / 2
+  rw [pfaffian2, Matrix.det_fin_two]
+  simp [hz00, hz11, h10]
+  ring
 
 end TrifactorGeometry

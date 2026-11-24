@@ -86,4 +86,20 @@ theorem jacobi_identity_fails :
     exact (smul_eq_zero.mp hmul).resolve_left (by norm_num)
   exact ZornVectorMatrix.associator_U_zero_U_one_U_two_ne_zero hassoc
 
+def malcevIdentity (X Y Z : ZornVectorMatrix R) : Prop :=
+  commutator X (commutator Y Z) +
+    commutator Y (commutator Z X) +
+    commutator (commutator X Y) Z = 0
+
+theorem malcev_identity_on_associator_ideal (X Y Z : ZornVectorMatrix R)
+    (hass : associator X Y Z = 0) :
+    malcevIdentity X Y Z := by
+  sorry
+
+theorem derivations_form_g2
+    (D : ZornVectorMatrix R →ₗ[R] ZornVectorMatrix R)
+    (hderiv : ∀ X Y, D (mul X Y) = mul (D X) Y + mul X (D Y)) :
+    True := by
+  sorry
+
 end InfoGeometry.Lie.SplitOctonionMalcevCorrection

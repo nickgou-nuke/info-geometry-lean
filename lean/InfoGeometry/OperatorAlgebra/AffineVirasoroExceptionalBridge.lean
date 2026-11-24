@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/AffineVirasoroExceptionalBridge.lean
 
 Bridge between exceptional E8-type ledgers and affine/Virasoro boundary
@@ -123,6 +128,30 @@ theorem virasoro_central_commutes
     ⁅B.virasoro.centralCharge, X⁆ = 0 :=
   B.virasoro.central_commutes X
 
+theorem finiteToVirasoro_apply (x : Finite) :
+    B.finiteToVirasoro x =
+      B.affineToVirasoro (B.finiteToAffine x) :=
+  rfl
+
+/-- The two historical readout names unfold to the same canonical map. -/
+theorem centralCharge_eq_hiddenGradeMemory
+    (s : State) :
+    B.centralChargeReadout s = B.calibratedHiddenGradeMemoryReadout s :=
+  rfl
+
 end ExceptionalAffineVirasoroBridge
+
+theorem exceptionalAffineVirasoroBridge_centralCharge_eq_hiddenGradeMemory :
+  ∀ (Finite Affine Vir State Charge : Type*)
+    [AddCommGroup Finite] [Module ℝ Finite]
+    [AddCommGroup Affine] [Module ℝ Affine]
+    [AddCommGroup Vir] [Module ℝ Vir] [LieRing Vir] [LieAlgebra ℝ Vir]
+    [AddCommGroup State] [Module ℝ State]
+      [AddCommGroup Charge] [Module ℝ Charge],
+  ∀ B : ExceptionalAffineVirasoroBridge Finite Affine Vir State Charge,
+  ∀ s : State,
+    B.centralChargeReadout s = B.calibratedHiddenGradeMemoryReadout s := by
+  intro Finite Affine Vir State Charge _ _ _ _ _ _ _ _ _ _ _ _ B s
+  exact B.centralCharge_eq_hiddenGradeMemory s
 
 end InfoGeometry.OperatorAlgebra.AffineVirasoroExceptionalBridge

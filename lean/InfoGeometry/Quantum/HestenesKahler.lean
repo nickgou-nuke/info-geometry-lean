@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Quantum.GeometricTensor
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.GeometricTensorOperatorLift
@@ -866,5 +871,44 @@ theorem starCertifiedEinsteinAnomalyStateInducedDynamics_eq_gauge_add_source
       (starCertifiedEinsteinAnomalyStateDatum (E := E) SCI) ψ A
 
 end StateDependentLayer
+
+noncomputable def propertyProjectorObstructionAxis
+    (CCI : CertifiedConformalInference E) :
+    BigradedOperator (E := E) where
+  op := CCI.liftedProjectorObstructionOperator
+  phaseParity := .even
+  superParity := .even
+  hasPhaseParity := by
+    show IsPhaseLinear (E := E)
+      (InfoGeometry.Canonical.MongeAmpereDualSheetBridge.dualSheetLift
+        (E := E) CCI.chiralAnomalyOperator)
+    exact
+      CertifiedConformalInference.dualSheetLift_isPhaseLinear
+        (E := E) (A := CCI.chiralAnomalyOperator)
+
+@[simp] theorem propertyProjectorObstructionAxis_bidegree
+    (CCI : CertifiedConformalInference E) :
+    (propertyProjectorObstructionAxis (E := E) CCI).bidegree
+      =
+    (PhaseParity.even, SuperParity.even) := rfl
+
+noncomputable def propertyProjectorObstructionStateDatum
+    (CCI : CertifiedConformalInference E) :
+    StateModularDatum E :=
+  constantStateModularDatum (E := E) CCI.liftedProjectorObstructionOperator
+
+theorem propertyProjectorObstructionStateInducedDynamics_eq_gauge_add_source
+    (CCI : CertifiedConformalInference E) (ψ : H₂) (A : EndH) :
+    stateInducedDynamics (E := E)
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
+      =
+    stateGaugeDynamics (E := E)
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
+      +
+    stateSourceDynamics (E := E)
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A := by
+  exact
+    stateInducedDynamics_eq_gauge_add_source (E := E)
+      (propertyProjectorObstructionStateDatum (E := E) CCI) ψ A
 
 end InfoGeometry.Quantum

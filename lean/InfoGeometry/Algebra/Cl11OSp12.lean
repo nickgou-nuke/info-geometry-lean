@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.NoncommRing
@@ -226,5 +231,33 @@ theorem osp_supercharge_oscillator_closure
       susyOscillatorHamiltonian B F := by
   unfold Qplus Qminus susyOscillatorHamiltonian
   rw [qplus_qminus_factor B F I, qminus_qplus_factor B F I]
+
+
+def BosonicOscillatorSurfaceLaws
+    {Op : Type*} [Ring Op] (B : BosonicOscillatorSurface Op) : Prop :=
+  B.a * B.adag - B.adag * B.a = 1
+
+
+def FermionicCARSurfaceLaws
+    {Op : Type*} [Ring Op] (F : FermionicCARSurface Op) : Prop :=
+  F.b * F.b = 0 ∧
+  F.bdag * F.bdag = 0 ∧
+  F.b * F.bdag + F.bdag * F.b = 1
+
+
+theorem cl11FermionicCARSurface_laws :
+    FermionicCARSurfaceLaws cl11FermionicCARSurface := by
+  exact ⟨b_sq, bdag_sq, anticomm_bbdag⟩
+
+def BosonFermionInterfaceLaws
+    {Op : Type*} [Ring Op]
+    (B : BosonicOscillatorSurface Op) (F : FermionicCARSurface Op)
+    : Prop :=
+  B.a * F.b = F.b * B.a ∧
+  B.adag * F.b = F.b * B.adag ∧
+  B.a * F.bdag = F.bdag * B.a ∧
+  B.adag * F.bdag = F.bdag * B.adag
+
+variable {Op : Type*} [Ring Op]
 
 end InfoGeometry.Algebra.Cl11OSp12

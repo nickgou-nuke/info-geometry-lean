@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
@@ -194,5 +199,32 @@ theorem supertrace_eq_squarefree_filter :
   exact P.mobius.finiteSupertrace_eq_squarefree_filter P.support P.beta
 
 end FinitePrimonThermalPacket
+
+
+def mathlibMobiusCoefficient (n : ℕ) : ℝ :=
+  (ArithmeticFunction.moebius n : ℤ)
+
+
+theorem mathlibMobiusCoefficient_eq_zero_of_not_squarefree
+    {n : ℕ} (h : ¬ IsSquarefreeState n) :
+    mathlibMobiusCoefficient n = 0 := by
+  unfold mathlibMobiusCoefficient
+  rw [ArithmeticFunction.moebius_eq_zero_of_not_squarefree h]
+  norm_num
+
+
+theorem mathlibMobiusCoefficient_sq_eq_one_of_squarefree
+    {n : ℕ} (h : IsSquarefreeState n) :
+    mathlibMobiusCoefficient n ^ 2 = 1 := by
+  unfold mathlibMobiusCoefficient
+  exact_mod_cast ArithmeticFunction.moebius_sq_eq_one_of_squarefree h
+
+
+def canonicalMobiusCoefficient : MobiusCoefficient where
+  coeff := mathlibMobiusCoefficient
+  coeff_eq_zero_of_not_squarefree :=
+    fun n h => mathlibMobiusCoefficient_eq_zero_of_not_squarefree h
+  coeff_sq_eq_one_of_squarefree :=
+    fun n h => mathlibMobiusCoefficient_sq_eq_one_of_squarefree h
 
 end InfoGeometry.Arithmetic.PrimonGasSupertrace

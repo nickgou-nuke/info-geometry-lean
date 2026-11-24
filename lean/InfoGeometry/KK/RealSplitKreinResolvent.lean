@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.KK.RealSplitKreinKasparovCycle
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -77,6 +82,39 @@ lemma comp_right_isCompactEnd
     IsCompactEnd H (R.resolvent.comp T) := by
   simpa [IsCompactEnd, ContinuousLinearMap.coe_comp] using
     IsCompactOperator.comp_clm (hf := R.isCompactOperator) (g := T)
+
+lemma shiftedApply_surjective
+    (R : RealSplitKreinResolventData H domain D) :
+    Function.Surjective R.shiftedApply := by
+  intro x
+  exact ⟨⟨R.resolvent x, R.resolvent_mem_domain x⟩,
+    R.shiftedApply_resolvent x⟩
+
+/-- A left inverse forces the bounded resolvent representative to be injective. -/
+lemma resolvent_injective
+    (R : RealSplitKreinResolventData H domain D) :
+    Function.Injective R.resolvent := by
+  intro x y hxy
+  calc
+    x = R.shiftedApply ⟨R.resolvent x, R.resolvent_mem_domain x⟩ :=
+      (R.shiftedApply_resolvent x).symm
+    _ = R.shiftedApply ⟨R.resolvent y, R.resolvent_mem_domain y⟩ := by
+      apply congrArg R.shiftedApply
+      apply Subtype.ext
+      exact hxy
+    _ = y := R.shiftedApply_resolvent y
+
+lemma resolvent_shiftedApply
+    (R : RealSplitKreinResolventData H domain D)
+    (hinj : Function.Injective R.shiftedApply)
+    (x : {x // x ∈ domain}) :
+    R.resolvent (R.shiftedApply x) = x.1 := by
+  have hsub :
+      (⟨R.resolvent (R.shiftedApply x),
+          R.resolvent_mem_domain (R.shiftedApply x)⟩ : {x // x ∈ domain}) = x := by
+    apply hinj
+    simp only [R.shiftedApply_resolvent]
+  exact congrArg Subtype.val hsub
 
 end RealSplitKreinResolventData
 

@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Arithmetic/ProjectivePrimePartition.lean
 
 Witness-gated modular flow of von Mangoldt weights over the projective
@@ -111,6 +116,63 @@ lemma modularFlowReadout_pos_of_mem_positive_weight
   exact projectivePrimePartition_pos_of_mem_positive_weight hnA hΛ hn
 
 end ProjectivePrimeCalibration
+
+theorem projectivePrimePartition_pos_iff_mem_positive_weight
+    (A : Finset ℕ) (u : ℝ) :
+    0 < projectivePrimePartition A u ↔
+      ∃ n ∈ A, 0 < realVonMangoldt n ∧ 1 < n := by
+  constructor
+  · intro h
+    by_contra hmem
+    push_neg at hmem
+    have hz : projectivePrimePartition A u = 0 := by
+      unfold projectivePrimePartition arithmeticPrimePartition
+      rw [Finset.sum_eq_zero]
+      intro n hn
+      by_cases hn1 : 1 < n
+      · have hΛ0 : realVonMangoldt n = 0 := by
+          apply le_antisymm
+          · apply le_of_not_gt
+            intro hΛ
+            exact (not_lt_of_ge (hmem n hn hΛ)) hn1
+          · exact realVonMangoldt_nonneg n
+        rw [hΛ0, zero_mul]
+      · rw [primitiveMellinKernel_eq_zero_of_le_one (le_of_not_gt hn1)]
+        simp
+    linarith
+  · rintro ⟨n, hnA, hΛ, hn⟩
+    exact projectivePrimePartition_pos_of_mem_positive_weight hnA hΛ hn
+
+theorem projectivePrimePartition_pos_of_mem_prime
+    {A : Finset ℕ} {u : ℝ} {p : ℕ}
+    (hpA : p ∈ A) (hp : p.Prime) :
+    0 < projectivePrimePartition A u := by
+  apply projectivePrimePartition_pos_of_mem_positive_weight hpA
+    ((realVonMangoldt_pos_iff p).mpr hp.isPrimePow)
+  exact hp.one_lt
+
+theorem projectivePrimePartition_ne_zero_of_mem_prime
+    {A : Finset ℕ} {u : ℝ} {p : ℕ}
+    (hpA : p ∈ A) (hp : p.Prime) :
+    projectivePrimePartition A u ≠ 0 := by
+  exact ne_of_gt (projectivePrimePartition_pos_of_mem_prime hpA hp)
+
+theorem projectivePrimePartition_eq_zero_iff_no_mem_positive_weight
+    (A : Finset ℕ) (u : ℝ) :
+    projectivePrimePartition A u = 0 ↔
+      ¬ ∃ n ∈ A, 0 < realVonMangoldt n ∧ 1 < n := by
+  constructor
+  · intro h hpos
+    have hstrict : 0 < projectivePrimePartition A u :=
+      (projectivePrimePartition_pos_iff_mem_positive_weight A u).2 hpos
+    linarith
+  · intro hnone
+    have hnotpos : ¬ 0 < projectivePrimePartition A u := by
+      intro hpos
+      exact hnone
+        ((projectivePrimePartition_pos_iff_mem_positive_weight A u).1 hpos)
+    exact le_antisymm (le_of_not_gt hnotpos)
+      (projectivePrimePartition_nonneg A u)
 
 end InfoGeometry.Arithmetic.ProjectivePrimePartition
 

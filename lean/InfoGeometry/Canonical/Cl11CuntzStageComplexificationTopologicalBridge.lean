@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.Cl11MarkovJonesTopologicalColimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit
@@ -18,6 +23,8 @@ separate proof of transition compatibility.
 noncomputable section
 
 namespace InfoGeometry.Canonical.Cl11CuntzStageComplexificationTopologicalBridge
+open InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.CblinfunMatrix
+
 
 open CategoryTheory
 open scoped Kronecker
@@ -223,5 +230,25 @@ theorem complexifyClStage_normalizedTraceTopCat_readout
   change (matrixTraceFunctional n (complexifyClStage n A)).re = _
   rw [complexifyClStage_normalizedTrace]
   exact Complex.ofReal_re _
+
+
+theorem complexifyClStage_finiteOperatorTrace (n : ℕ) (A : ClStage n) :
+    SouriauOnsagerBKM.finiteOperatorTrace
+        (matrixOp (complexifyClStage n A)) =
+      Complex.ofReal (Matrix.trace A) := by
+  unfold SouriauOnsagerBKM.finiteOperatorTrace
+  rw [matrixOfOp_matrixOp]
+  exact complexifyClStage_trace n A
+
+
+theorem complexifyClStage_finiteOperatorNormalizedTrace (n : ℕ) (A : ClStage n) :
+    (1 / (2 ^ n : ℂ)) *
+        SouriauOnsagerBKM.finiteOperatorTrace
+          (matrixOp (complexifyClStage n A)) =
+      Complex.ofReal (normalizedTrace n A) := by
+  rw [complexifyClStage_finiteOperatorTrace]
+  unfold normalizedTrace
+  rw [Complex.ofReal_div]
+  simp [div_eq_mul_inv, mul_comm]
 
 end InfoGeometry.Canonical.Cl11CuntzStageComplexificationTopologicalBridge

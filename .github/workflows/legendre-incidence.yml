@@ -1,0 +1,78 @@
+name: Legendre incidence and cotangent operators
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'verification/legendre-incidence/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/legendre-incidence.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: legendre-incidence-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore pinned dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: legendre-incidence-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Restore checked source artifacts
+        uses: actions/cache@v4
+        with:
+          path: verification/legendre-incidence/.lake/build
+          key: legendre-incidence-source-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('lean/**/*.lean', 'verification/legendre-incidence/lakefile.toml', 'verification/legendre-incidence/lake-manifest.json') }}
+          restore-keys: |
+            legendre-incidence-source-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Restore the pinned Mathlib artifacts
+        run: python3 verification/legendre-incidence/check.py exe cache get
+      - name: Build the owners and inspect all public declaration axioms
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/legendre-incidence/audit.py
+          python3 verification/legendre-incidence/check.py build 2>&1 | tee legendre-incidence-build.log
+          python3 verification/legendre-incidence/check.py env lean lean/InfoGeometry/Twistor/LegendreIncidenceAudit.lean 2>&1 | tee legendre-incidence-axioms.log
+          python3 verification/legendre-incidence/audit.py --log legendre-incidence-axioms.log
+      - name: Screen the changed mathematical owners
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/Twistor/FenchelContactIncidence.lean
+          lean/InfoGeometry/Twistor/FenchelContactTransport.lean
+          lean/InfoGeometry/Geometry/LegendreGraphGeometry.lean
+          lean/InfoGeometry/Geometry/CotangentOperators.lean
+          lean/InfoGeometry/Twistor/LegendreIncidenceAudit.lean
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: legendre-incidence-validation
+          path: |
+            legendre-incidence-build.log
+            legendre-incidence-axioms.log

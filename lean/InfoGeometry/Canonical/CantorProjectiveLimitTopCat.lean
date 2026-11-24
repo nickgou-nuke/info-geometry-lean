@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorProjectiveLimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
@@ -72,5 +77,21 @@ theorem cantorProjectiveLimit_projection_readout (n : ℕ) (x : CantorBoundary) 
         (cantorProjectiveLimitTopCatIso.hom x) =
       boundaryPrefix n x := by
   exact cantorHomeomorph_projection x n
+
+
+theorem topCat_hom_ext_of_projective_projections
+    {X : Type} [TopologicalSpace X]
+    (f g : TopCat.of X ⟶ TopCat.of PrefixProjectiveLimit)
+    (h : ∀ n : ℕ,
+      f ≫ projectiveProjectionTopCatHom n =
+        g ≫ projectiveProjectionTopCatHom n) :
+    f = g := by
+  apply TopCat.hom_ext
+  apply ContinuousMap.ext
+  intro x
+  apply InfoGeometry.Canonical.CantorProjectiveLimit.ext_of_all_projections_eq
+  intro n
+  have hn := congrArg (fun k => k x) (h n)
+  simpa [TopCat.comp_app] using hn
 
 end InfoGeometry.Canonical.CantorProjectiveLimitTopCat

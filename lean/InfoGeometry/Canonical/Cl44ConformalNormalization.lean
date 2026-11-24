@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic.NormNum
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCl44TKKJordanLieBridge
@@ -352,6 +357,15 @@ def Cl44ConformalNormalizationOwnerTarget : Prop :=
 /-- The corrected normalization owner target is inhabited. -/
 theorem cl44ConformalNormalizationOwnerTarget :
     Cl44ConformalNormalizationOwnerTarget :=
+  ⟨QuadraticLightConeConformalRoute.canonical,
+    SpinFactorConformalRoute.canonical,
+    TrialityLeviPlacement.canonical⟩
+
+
+theorem cl44ConformalNormalization_properties :
+    QuadraticLightConeConformalRoute ∧
+      SpinFactorConformalRoute ∧
+      TrialityLeviPlacement :=
   ⟨QuadraticLightConeConformalRoute.canonical,
     SpinFactorConformalRoute.canonical,
     TrialityLeviPlacement.canonical⟩

@@ -150,4 +150,12 @@ theorem cognitive_archetype_involution_projector_identities
 
 end NonCommutativeOperatorRealization
 
+
+def ArchetypeKind.label : ArchetypeKind → String
+  | .involutionProjector => "InvolutionProjector"
+  | .cocycleTransport => "CocycleTransport"
+  | .projectiveNormalization => "ProjectiveNormalization"
+  | .symmetryInvariantGeometry => "SymmetryInvariantGeometry"
+  | .grothendieckCompletion => "GrothendieckCompletion"
+
 end InfoGeometry.Canonical.CognitiveArchetype

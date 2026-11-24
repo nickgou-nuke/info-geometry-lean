@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorProjectiveLimitTopCat
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorProjectiveLimitFiniteReadoutTopCat
@@ -157,5 +162,20 @@ theorem categoricalLimitPrefixExtend_projectionTopCat_square {n : ℕ}
     (projectivePrefixExtend_projectionTopCat_square w)
   have h2i := congrFun (congrArg (fun f => f) h2) i
   exact h1.trans h2i
+
+
+def projectiveToCategoricalLimitCompHausIso :
+    CompHaus.of PrefixProjectiveLimit ≅
+      CompHaus.of (↑(limit prefixDiagram)) where
+  hom := CompHausLike.ofHom _
+    projectiveToCategoricalLimitTopCatIso.hom.hom
+  inv := CompHausLike.ofHom _
+    projectiveToCategoricalLimitTopCatIso.inv.hom
+  hom_inv_id := by
+    apply InducedCategory.hom_ext
+    exact projectiveToCategoricalLimitTopCatIso.hom_inv_id
+  inv_hom_id := by
+    apply InducedCategory.hom_ext
+    exact projectiveToCategoricalLimitTopCatIso.inv_hom_id
 
 end InfoGeometry.Canonical.CantorProjectiveLimitCategoricalIsoTopCat

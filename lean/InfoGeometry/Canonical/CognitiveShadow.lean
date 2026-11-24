@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CognitiveArchetype
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -85,5 +90,27 @@ def detectShadows (observedTerms : Array String) : Array String :=
 def detectedShadows (observedTerms : Array String) : Array DetectedShadow :=
   knownShadows.filter (fun T => T.detects observedTerms) |>.map (fun T =>
     { template := T, observedTerms := observedTerms })
+
+
+def ShadowKind.label : ShadowKind → String
+  | .honestSorryTriage => "HonestSorryTriage"
+  | .obfuscationSuspicion => "ObfuscationSuspicion"
+  | .orphanGenuineReview => "OrphanGenuineReview"
+  | .axiomaticFrontierReview => "AxiomaticFrontierReview"
+  | .alignmentCandidateReview => "AlignmentCandidateReview"
+  | .educationalAliasProtection => "EducationalAliasProtection"
+
+
+def ShadowPolicy.label : ShadowPolicy → String
+  | .proofHoleTriage => "route to proof-hole triage"
+  | .quarantineExplicitBridge => "quarantine or require explicit bridge obligation"
+  | .preserveAndExpose => "preserve and bridge/expose"
+  | .quarantineAndBridge => "quarantine or bridge; do not vacuum"
+  | .kernelObligation => "route through kernel obligation"
+  | .blockDestructiveSurgery => "block destructive surgery"
+
+
+def ShadowStatus.label : ShadowStatus → String
+  | .recognized => "recognized"
 
 end InfoGeometry.Canonical.CognitiveShadow

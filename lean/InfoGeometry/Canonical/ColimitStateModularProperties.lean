@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CPTCstarStateLimit
@@ -113,5 +118,8 @@ theorem modular_kms_limit_persistence
   rw [h_extends n (y * (σ n).auto x)]
   -- Close with the local KMS condition
   exact h_local_kms n x y
+
+/-- Compatibility accessor for the native stage ring homomorphism. -/
+abbrev auto (σ : ModularAutomorphism n) : Stage n →+* Stage n := σ
 
 end InfoGeometry.Canonical.ColimitStateModularProperties

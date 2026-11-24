@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CuntzPrimitiveExactness
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -118,5 +123,13 @@ theorem differentiableOn_ball_with_cuntz_vacuum_exact
     Metric.isOpen_ball (differentiableOn_ball_to_isExactOn hf) C
 
 end InfoGeometry.Canonical.CuntzExactnessBridge
+
+theorem cuntzDerivative_add
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
+    (A B : Op) :
+    cuntzDerivative C (A + B) = cuntzDerivative C A + cuntzDerivative C B := by
+  unfold cuntzDerivative
+  simp only [add_mul, mul_add]
+  abel
 
 end noncomputable section

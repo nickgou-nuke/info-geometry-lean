@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CartanDecomposition
@@ -145,6 +150,14 @@ theorem spectralProjector_commutator_dilationGap_eq_zero_of_rightProjector_commu
   have hχ : IK.chiralAnomaly = 0 :=
     (IK.chiralScale_eq_zero_iff_chiralAnomaly_eq_zero).mp hScale
   simp [hχ]
+
+
+theorem chiralScale_eq_zero_iff_spectralProjector_commutes_metricProjector :
+    IK.chiralScale = 0 ↔
+      IK.spectralProjector * IK.metricProjector =
+        IK.metricProjector * IK.spectralProjector := by
+  rw [IK.chiralScale_eq_zero_iff_chiralAnomaly_eq_zero]
+  simp [InverseKernel.chiralAnomaly, sub_eq_zero]
 
 end InverseKernel
 

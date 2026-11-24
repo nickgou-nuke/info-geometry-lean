@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorProjectiveLimitTopCat
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutTopCat
@@ -49,5 +54,19 @@ theorem projectiveLimitReadout_cantor_compatibility :
   rw [TopCat.comp_app]
   change realBinaryReadout (toCantor (ofCantor x)) = realBinaryReadout x
   rw [toCantor_ofCantor]
+
+
+theorem projectiveLimitReadout_range_eq_unitInterval :
+    Set.range (fun p : PrefixProjectiveLimit =>
+      realBinaryReadout (toCantor p)) = Set.Icc (0 : ℝ) 1 := by
+  ext y
+  constructor
+  · rintro ⟨p, rfl⟩
+    exact realBinaryReadout_mem_unitInterval (toCantor p)
+  · intro hy
+    rw [← realBinaryReadout_range_eq_unitInterval] at hy
+    obtain ⟨x, hx⟩ := hy
+    refine ⟨ofCantor x, ?_⟩
+    simpa [toCantor_ofCantor] using hx
 
 end InfoGeometry.Canonical.CantorProjectiveLimitReadoutTopCat

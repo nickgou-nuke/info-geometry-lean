@@ -107,4 +107,21 @@ theorem cartan_collapse_of_unitRelativeVolumeBit
       (CI := CI) (M := M) hScaleFromKahler bit
   exact cartan_collapse_of_normal CI hNormal
 
+/-- Canonical naming alias for the positive chiral projector. -/
+noncomputable abbrev chiralProjectorPlus (CI : ConformalInference E) : E →L[ℝ] E :=
+  generalizedChiralPlus CI
+
+/-- Canonical naming alias for the negative chiral projector. -/
+noncomputable abbrev chiralProjectorMinus (CI : ConformalInference E) : E →L[ℝ] E :=
+  generalizedChiralMinus CI
+
+theorem anomaly_as_structure_constant (CI : ConformalInference E) :
+    CI.chiralAnomaly
+      = CI.spectralChiralProjector * CI.metricChiralProjector
+          - CI.metricChiralProjector * CI.spectralChiralProjector := by
+  simp [ConformalInference.chiralAnomaly, ConformalInference.spectralChiralProjector,
+    ConformalInference.metricChiralProjector]
+
+omit [FiniteDimensional ℝ E] in
+
 end InfoGeometry.Canonical.ChiralCliffordBridge

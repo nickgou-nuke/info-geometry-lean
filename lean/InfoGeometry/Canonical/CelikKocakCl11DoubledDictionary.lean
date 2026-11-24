@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CelikKocakCl11ConcretePacket
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.RealSplitClifford
@@ -128,6 +133,10 @@ theorem target_J_sq :
     ((canonical (E := E)).target.J).comp ((canonical (E := E)).target.J) =
       ContinuousLinearMap.id ℝ (InfoGeometry.Krein.DoubledSpace E) := by
   simpa using (canonical (E := E)).target.J_sq
+
+def canonicalTarget :
+    Quantum.RealSplitCl11Action (InfoGeometry.Krein.DoubledSpace E) :=
+  Quantum.doubledSpaceCl11Action (E := E)
 
 end FiniteCl11DoubledDictionary
 end CelikKocakCl11DoubledDictionary

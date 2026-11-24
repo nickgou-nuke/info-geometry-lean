@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Cantor.CantorRandomWalk
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.L2CantorCommutation
@@ -189,5 +194,25 @@ theorem prefix_noAdjacentFinite_cons_true_of_head_false
     NoAdjacentFinite (prefixWord (consBit true x.1) n) := by
   exact prefix_noAdjacentFinite
     ⟨consBit true x.1, noAdjacentOnes_cons_true_of_head_false x hhead⟩ n
+
+
+theorem noAdjacentOnes_cons_true_iff_head_false
+    (x : GoldenMeanBoundary) :
+    NoAdjacentOnes (consBit true x.1) ↔ x.1 0 = false := by
+  constructor
+  · intro h
+    by_cases hx : x.1 0 = false
+    · exact hx
+    · have hxtrue : x.1 0 = true := by
+        cases hbit : x.1 0 <;> simp_all
+      have hpair :
+          consBit true x.1 0 = true ∧
+            consBit true x.1 (0 + 1) = true := by
+        constructor
+        · rfl
+        · simpa [consBit] using hxtrue
+      exact False.elim (h 0 hpair)
+  · intro hhead
+    exact noAdjacentOnes_cons_true_of_head_false x hhead
 
 end InfoGeometry.Canonical.CantorGoldenMeanBitwordBridge

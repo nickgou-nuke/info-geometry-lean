@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CompletedZetaPotentialSymmetryBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CompletedZetaPotentialAndRealGibbsFisherBridge
@@ -149,5 +154,9 @@ theorem actualCenteredXiData_centered_symmetry_packet (z : ℂ) :
         star ((centeredData actualCanonicalCompletedXiDatum).xi z) := by
   exact ⟨centeredData_even_of_reflection actualCanonicalCompletedXiDatum z,
     centeredData_conj_of_schwarz actualCanonicalCompletedXiDatum z⟩
+
+
+abbrev CanonicalDatum :=
+  InfoGeometry.Canonical.CompletedZetaPotentialSymmetry.CompletedXiDatum
 
 end InfoGeometry.Canonical.CompletedXiDatumInteropBridge

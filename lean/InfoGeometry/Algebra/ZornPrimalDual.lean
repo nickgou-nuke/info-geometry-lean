@@ -49,7 +49,7 @@ def encode : ((Fin 4 → ℝ) × (Fin 4 → ℝ)) ≃ₗ[ℝ] Z where
     simp only [Prod.fst_add, Prod.snd_add, map_add]
     abel
   map_smul' c xp := by
-    simp only [Prod.smul_fst, Prod.smul_snd, map_smul, smul_add]
+    simp only [Prod.smul_fst, Prod.smul_snd, map_smul, smul_add, RingHom.id_apply]
 
 /-- A dual four-vector determines the `(+---)` incidence functional. -/
 def hyperplane (p : Fin 4 → ℝ) : Module.Dual ℝ (Fin 4 → ℝ) where
@@ -90,13 +90,13 @@ theorem primal_square (x : Fin 4 → ℝ) :
     ZornVectorMatrix.mul (primal x) (primal x) = x 0 • primal x := by
   ext i <;> (try fin_cases i) <;>
     simp [primal, ZornVectorMatrix.mul, ZornVectorMatrix.smul,
-      ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
+      ZornVec3.dot, ZornVec3.cross] <;> ring
 
 theorem dual_square (p : Fin 4 → ℝ) :
     ZornVectorMatrix.mul (dual p) (dual p) = p 0 • dual p := by
   ext i <;> (try fin_cases i) <;>
     simp [dual, ZornVectorMatrix.mul, ZornVectorMatrix.smul,
-      ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
+      ZornVec3.dot, ZornVec3.cross] <;> ring
 
 theorem primal_operator_square (x : Fin 4 → ℝ) :
     leftMultiplication (primal x) * leftMultiplication (primal x) =
@@ -118,10 +118,12 @@ theorem mixed_operator_anticommutator (x p : Fin 4 → ℝ) :
   have h : ZornVectorMatrix.mul (primal x) (dual p) +
       ZornVectorMatrix.mul (dual p) (primal x) =
       p 0 • primal x + x 0 • dual p - hyperplane p x • ZornVectorMatrix.one := by
+    rw [_root_.sub_eq_add_neg (p 0 • primal x + x 0 • dual p)
+      (hyperplane p x • ZornVectorMatrix.one)]
     ext i <;> (try fin_cases i) <;>
       simp [primal, dual, hyperplane, ZornVectorMatrix.mul, ZornVectorMatrix.add,
-        ZornVectorMatrix.sub, ZornVectorMatrix.neg, ZornVectorMatrix.smul,
-        ZornVectorMatrix.one, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
+        ZornVectorMatrix.smul, ZornVectorMatrix.one, ZornVec3.dot, ZornVec3.cross,
+        Fin.sum_univ_three] <;> ring
   rw [leftMultiplication_anticommutator, h, map_sub, map_add, map_smul,
     map_smul, map_smul, leftMultiplication_one]
 

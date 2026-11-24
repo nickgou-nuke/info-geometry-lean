@@ -1,0 +1,346 @@
+{
+  "run_id": "8b0e3c0135d84076b86bb0015b70fc6a",
+  "status": "failed",
+  "suite": "witt-born-null-exactness",
+  "targets": [
+    "InfoGeometry.Verification.SuppliedTableCounterexample",
+    "InfoGeometry.Algebra.ZornPrimalDual",
+    "InfoGeometry.Algebra.ZornChiralOperatorReconstruction",
+    "InfoGeometry.Canonical.SouriauAffineActionGroupoid",
+    "InfoGeometry.Geometry.SouriauCotangentGraphSigns",
+    "InfoGeometry.Lie.SplitOctonionCliffordNoninjective",
+    "InfoGeometry.Algebra.ZornNullIncidence",
+    "InfoGeometry.Canonical.ZornCliffordKleinHierarchy",
+    "InfoGeometry.Canonical.ZornCliffordSourceVolume",
+    "InfoGeometry.Lie.SplitOctonionNullPlaneCovariance",
+    "InfoGeometry.Canonical.ZornCliffordWittBorn"
+  ],
+  "wait_for_build_lock": false,
+  "commands": [
+    {
+      "module": "InfoGeometry.Verification.SuppliedTableCounterexample",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Verification/SuppliedTableCounterexample.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/witt-born-null-exactness/lib/lean/InfoGeometry/Verification/SuppliedTableCounterexample.olean",
+        "-DwarningAsError=true"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 0,
+      "output": "",
+      "elapsed_seconds": 1.618,
+      "sampled_peak_rss_kib": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.ZornVectorMatrix",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornVectorMatrix.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/witt-born-null-exactness/lib/lean/InfoGeometry/Algebra/ZornVectorMatrix.olean"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 0,
+      "output": "",
+      "elapsed_seconds": 151.72,
+      "sampled_peak_rss_kib": 2532332
+    },
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/witt-born-null-exactness/lib/lean/InfoGeometry/Algebra/FiniteSpinAlgebra.olean"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 0,
+      "output": "",
+      "elapsed_seconds": 3.822,
+      "sampled_peak_rss_kib": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.ZornPinorReconstruction",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/witt-born-null-exactness/lib/lean/InfoGeometry/Algebra/ZornPinorReconstruction.olean"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 0,
+      "output": "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:38:37: warning: This simp argument is unused:\n  ZornVectorMatrix.add\n\nHint: Omit it from the simp argument list.\n  [apply] simp\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:39:38: warning: This simp argument is unused:\n  ZornVectorMatrix.smul\n\nHint: Omit it from the simp argument list.\n  [apply] simp\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:74:26: warning: This simp argument is unused:\n  ZornVectorMatrix.add\n\nHint: Omit it from the simp argument list.\n  [apply] simp [polePlus, poleMinus, ZornVectorMatrix.E11, ZornVectorMatrix.E22, ZornVectorMatrix.one]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:82:6: warning: This simp argument is unused:\n  ZornVectorMatrix.smul\n\nHint: Omit it from the simp argument list.\n  [apply] simp [gamma, ZornVectorMatrix.offDiagonal, ZornVectorMatrix.mul, ZornVectorMatrix.one, ZornVec3.dot,\n    ZornVec3.cross, Fin.sum_univ_three]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:90:6: warning: This simp argument is unused:\n  ZornVectorMatrix.smul\n\nHint: Omit it from the simp argument list.\n  [apply] simp [kappa, ZornVectorMatrix.offDiagonal, ZornVectorMatrix.mul, ZornVectorMatrix.one, ZornVec3.dot,\n    ZornVec3.cross, Fin.sum_univ_three]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:99:6: warning: This simp argument is unused:\n  ZornVectorMatrix.smul\n\nHint: Omit it from the simp argument list.\n  [apply] simp [gamma, ZornVectorMatrix.offDiagonal, ZornVectorMatrix.mul, ZornVectorMatrix.one, ZornVectorMatrix.add,\n    ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:99:51: warning: This simp argument is unused:\n  ZornVectorMatrix.add\n\nHint: Omit it from the simp argument list.\n  [apply] simp [gamma, ZornVectorMatrix.offDiagonal, ZornVectorMatrix.mul, ZornVectorMatrix.smul, ZornVectorMatrix.one,\n    ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:100:60: warning: Unused tactic linter: `ring` does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:100:60: warning: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:120:6: warning: This simp argument is unused:\n  ZornVectorMatrix.zero\n\nHint: Omit it from the simp argument list.\n  [apply] simp [creation, ZornVectorMatrix.offDiagonal, ZornVectorMatrix.mul, ZornVec3.dot, ZornVec3.cross]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:120:72: warning: Unused tactic linter: `rfl` does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:120:72: warning: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:126:6: warning: This simp argument is unused:\n  ZornVectorMatrix.zero\n\nHint: Omit it from the simp argument list.\n  [apply] simp [annihilation, ZornVectorMatrix.offDiagonal, ZornVectorMatrix.mul, ZornVec3.dot, ZornVec3.cross]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:126:72: warning: Unused tactic linter: `rfl` does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:126:72: warning: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:134:6: warning: This simp argument is unused:\n  ZornVectorMatrix.smul\n\nHint: Omit it from the simp argument list.\n  [apply] simp [creation, annihilation, polePlus, ZornVectorMatrix.E11, ZornVectorMatrix.offDiagonal,\n    ZornVectorMatrix.mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:134:83: warning: Unused tactic linter: `ring` does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:134:83: warning: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:142:6: warning: This simp argument is unused:\n  ZornVectorMatrix.smul\n\nHint: Omit it from the simp argument list.\n  [apply] simp [creation, annihilation, poleMinus, ZornVectorMatrix.E22, ZornVectorMatrix.offDiagonal,\n    ZornVectorMatrix.mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:142:79: warning: Used `tac1 <;> tac2` where `(tac1; tac2)` would suffice\n\nNote: This linter can be disabled with `set_option linter.unnecessarySeqFocus false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:158:84: warning: Unused tactic linter: `ring` does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:158:84: warning: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:165:62: warning: Unused tactic linter: `ring` does nothing\n\nNote: This linter can be disabled with `set_option linter.unusedTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:165:62: warning: this tactic is never executed\n\nNote: This linter can be disabled with `set_option linter.unreachableTactic false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:174:4: warning: This simp argument is unused:\n  ZornVectorMatrix.add\n\nHint: Omit it from the simp argument list.\n  [apply] simp [kappa, creation, annihilation, ZornVectorMatrix.offDiagonal]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:221:42: warning: This simp argument is unused:\n  ZornVectorMatrix.add\n\nHint: Omit it from the simp argument list.\n  [apply] simp\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean:223:42: warning: This simp argument is unused:\n  ZornVectorMatrix.smul\n\nHint: Omit it from the simp argument list.\n  [apply] simp\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n",
+      "elapsed_seconds": 15.348,
+      "sampled_peak_rss_kib": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.ZornLeftCAR",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornLeftCAR.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/witt-born-null-exactness/lib/lean/InfoGeometry/Algebra/ZornLeftCAR.olean"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 0,
+      "output": "",
+      "elapsed_seconds": 6.228,
+      "sampled_peak_rss_kib": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.AlternativeDerivations",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/AlternativeDerivations.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/witt-born-null-exactness/lib/lean/InfoGeometry/Algebra/AlternativeDerivations.olean"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 0,
+      "output": "",
+      "elapsed_seconds": 4.673,
+      "sampled_peak_rss_kib": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.ZornDerivationBridge",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornDerivationBridge.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/witt-born-null-exactness/lib/lean/InfoGeometry/Algebra/ZornDerivationBridge.olean"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 0,
+      "output": "",
+      "elapsed_seconds": 2.369,
+      "sampled_peak_rss_kib": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.ZornLeftInverse",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornLeftInverse.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/witt-born-null-exactness/lib/lean/InfoGeometry/Algebra/ZornLeftInverse.olean",
+        "-DwarningAsError=true"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 0,
+      "output": "",
+      "elapsed_seconds": 2.369,
+      "sampled_peak_rss_kib": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.ZornLeftDeterminant",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornLeftDeterminant.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/witt-born-null-exactness/lib/lean/InfoGeometry/Algebra/ZornLeftDeterminant.olean",
+        "-DwarningAsError=true"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 0,
+      "output": "",
+      "elapsed_seconds": 7.38,
+      "sampled_peak_rss_kib": 0
+    },
+    {
+      "module": "InfoGeometry.Algebra.ZornPrimalDual",
+      "command": [
+        "/home/runner/.elan/toolchains/leanprover--lean4---v4.34.1/bin/lean",
+        "-j1",
+        "-R",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPrimalDual.lean",
+        "-o",
+        "/home/runner/work/info-geometry-lean/info-geometry-lean/project/.lake/witt-born-null-exactness/lib/lean/InfoGeometry/Algebra/ZornPrimalDual.olean",
+        "-DwarningAsError=true"
+      ],
+      "cwd": "/home/runner/work/info-geometry-lean/info-geometry-lean/project",
+      "returncode": 1,
+      "output": "/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPrimalDual.lean:51:20: error: unsolved goals\nc : \u211d\nxp : (Fin 4 \u2192 \u211d) \u00d7 (Fin 4 \u2192 \u211d)\n\u22a2 c \u2022 primal xp.1 + c \u2022 dual xp.2 = (RingHom.id \u211d) c \u2022 primal xp.1 + (RingHom.id \u211d) c \u2022 dual xp.2\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPrimalDual.lean:86:8: error: declaration uses `sorry`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPrimalDual.lean:93:36: error: This simp argument is unused:\n  Fin.sum_univ_three\n\nHint: Omit it from the simp argument list.\n  [apply] simp [primal, ZornVectorMatrix.mul, ZornVectorMatrix.smul, ZornVec3.dot, ZornVec3.cross]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPrimalDual.lean:99:36: error: This simp argument is unused:\n  Fin.sum_univ_three\n\nHint: Omit it from the simp argument list.\n  [apply] simp [dual, ZornVectorMatrix.mul, ZornVectorMatrix.smul, ZornVec3.dot, ZornVec3.cross]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\nTry this:\n  [apply] ring_nf\n  \n  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.\n    \n  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.\nTry this:\n  [apply] ring_nf\n  \n  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.\n    \n  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.\nTry this:\n  [apply] ring_nf\n  \n  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.\n    \n  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.\nTry this:\n  [apply] ring_nf\n  \n  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.\n    \n  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.\nTry this:\n  [apply] ring_nf\n  \n  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.\n    \n  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.\nTry this:\n  [apply] ring_nf\n  \n  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.\n    \n  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.\nTry this:\n  [apply] ring_nf\n  \n  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.\n    \n  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.\nTry this:\n  [apply] ring_nf\n  \n  The `ring` tactic failed to close the goal. Use `ring_nf` to obtain a normal form.\n    \n  Note that `ring` works primarily in *commutative* rings. If you have a noncommutative ring, abelian group or module, consider using `noncomm_ring`, `abel` or `module` instead.\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPrimalDual.lean:120:79: error: unsolved goals\ncase a\nx p : Fin 4 \u2192 \u211d\n\u22a2 x 1 * p 1 + x 2 * p 2 + x 3 * p 3 =\n    ({ a := p 0 * x 0, v := fun i => p 0 * ![x 1, x 2, x 3] i, w := fun i => x 0 * ![p 1, p 2, p 3] i,\n          b := p 0 * x 0 } -\n        { a := -(x 1 * p 1) - x 2 * p 2 - x 3 * p 3 + p 0 * x 0, v := fun i => 0, w := fun i => 0,\n          b := -(x 1 * p 1) - x 2 * p 2 - x 3 * p 3 + p 0 * x 0 }).a\n\ncase v.\u00ab0\u00bb\nx p : Fin 4 \u2192 \u211d\n\u22a2 p 0 * x 1 =\n    ({ a := p 0 * x 0, v := fun i => p 0 * ![x 1, x 2, x 3] i, w := fun i => x 0 * ![p 1, p 2, p 3] i,\n            b := p 0 * x 0 } -\n          { a := p 0 * x 0 - x 1 * p 1 - x 2 * p 2 - x 3 * p 3, v := fun i => 0, w := fun i => 0,\n            b := p 0 * x 0 - x 1 * p 1 - x 2 * p 2 - x 3 * p 3 }).v\n      0\n\ncase v.\u00ab1\u00bb\nx p : Fin 4 \u2192 \u211d\n\u22a2 p 0 * x 2 =\n    ({ a := p 0 * x 0, v := fun i => p 0 * ![x 1, x 2, x 3] i, w := fun i => x 0 * ![p 1, p 2, p 3] i,\n            b := p 0 * x 0 } -\n          { a := p 0 * x 0 - x 2 * p 2 - x 1 * p 1 - x 3 * p 3, v := fun i => 0, w := fun i => 0,\n            b := p 0 * x 0 - x 2 * p 2 - x 1 * p 1 - x 3 * p 3 }).v\n      1\n\ncase v.\u00ab2\u00bb\nx p : Fin 4 \u2192 \u211d\n\u22a2 p 0 * x 3 =\n    ({ a := p 0 * x 0, v := fun i => p 0 * ![x 1, x 2, x 3] i, w := fun i => x 0 * ![p 1, p 2, p 3] i,\n            b := p 0 * x 0 } -\n          { a := p 0 * x 0 - x 3 * p 3 - x 1 * p 1 - x 2 * p 2, v := fun i => 0, w := fun i => 0,\n            b := p 0 * x 0 - x 3 * p 3 - x 1 * p 1 - x 2 * p 2 }).v\n      2\n\ncase w.\u00ab0\u00bb\nx p : Fin 4 \u2192 \u211d\n\u22a2 x 0 * p 1 =\n    ({ a := x 0 * p 0, v := fun i => p 0 * ![x 1, x 2, x 3] i, w := fun i => x 0 * ![p 1, p 2, p 3] i,\n            b := x 0 * p 0 } -\n          { a := x 0 * p 0 - p 1 * x 1 - x 2 * p 2 - x 3 * p 3, v := fun i => 0, w := fun i => 0,\n            b := x 0 * p 0 - p 1 * x 1 - x 2 * p 2 - x 3 * p 3 }).w\n      0\n\ncase w.\u00ab1\u00bb\nx p : Fin 4 \u2192 \u211d\n\u22a2 x 0 * p 2 =\n    ({ a := x 0 * p 0, v := fun i => p 0 * ![x 1, x 2, x 3] i, w := fun i => x 0 * ![p 1, p 2, p 3] i,\n            b := x 0 * p 0 } -\n          { a := x 0 * p 0 - p 2 * x 2 - x 1 * p 1 - x 3 * p 3, v := fun i => 0, w := fun i => 0,\n            b := x 0 * p 0 - p 2 * x 2 - x 1 * p 1 - x 3 * p 3 }).w\n      1\n\ncase w.\u00ab2\u00bb\nx p : Fin 4 \u2192 \u211d\n\u22a2 x 0 * p 3 =\n    ({ a := x 0 * p 0, v := fun i => p 0 * ![x 1, x 2, x 3] i, w := fun i => x 0 * ![p 1, p 2, p 3] i,\n            b := x 0 * p 0 } -\n          { a := x 0 * p 0 - p 3 * x 3 - x 1 * p 1 - x 2 * p 2, v := fun i => 0, w := fun i => 0,\n            b := x 0 * p 0 - p 3 * x 3 - x 1 * p 1 - x 2 * p 2 }).w\n      2\n\ncase b\nx p : Fin 4 \u2192 \u211d\n\u22a2 p 1 * x 1 + p 2 * x 2 + p 3 * x 3 =\n    ({ a := p 0 * x 0, v := fun i => p 0 * ![x 1, x 2, x 3] i, w := fun i => x 0 * ![p 1, p 2, p 3] i,\n          b := p 0 * x 0 } -\n        { a := -(p 1 * x 1) - p 2 * x 2 - p 3 * x 3 + p 0 * x 0, v := fun i => 0, w := fun i => 0,\n          b := -(p 1 * x 1) - p 2 * x 2 - p 3 * x 3 + p 0 * x 0 }).b\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPrimalDual.lean:123:8: error: This simp argument is unused:\n  ZornVectorMatrix.sub\n\nHint: Omit it from the simp argument list.\n  [apply] simp [primal, dual, hyperplane, ZornVectorMatrix.mul, ZornVectorMatrix.add, ZornVectorMatrix.neg,\n    ZornVectorMatrix.smul, ZornVectorMatrix.one, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n/home/runner/work/info-geometry-lean/info-geometry-lean/project/lean/InfoGeometry/Algebra/ZornPrimalDual.lean:123:30: error: This simp argument is unused:\n  ZornVectorMatrix.neg\n\nHint: Omit it from the simp argument list.\n  [apply] simp [primal, dual, hyperplane, ZornVectorMatrix.mul, ZornVectorMatrix.add, ZornVectorMatrix.sub,\n    ZornVectorMatrix.smul, ZornVectorMatrix.one, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]\n\nNote: This linter can be disabled with `set_option linter.unusedSimpArgs false`\n",
+      "elapsed_seconds": 6.879,
+      "sampled_peak_rss_kib": 0
+    }
+  ],
+  "audit_expected": true,
+  "audit_status": "not-run",
+  "force": false,
+  "started_at": "2026-11-24T14:30:04.608208+00:00",
+  "verifier_sha256": "26c187c9fe392a441a17f198b9dc9eb90034fa7bdbd4154f8ca6c23f7461bb2b",
+  "lean": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "lean_binary_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+  "packages": {
+    "LeanSearchClient": {
+      "revision": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/LeanSearchClient/.lake/build/lib/lean"
+    },
+    "Qq": {
+      "revision": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/Qq/.lake/build/lib/lean"
+    },
+    "aesop": {
+      "revision": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/aesop/.lake/build/lib/lean"
+    },
+    "batteries": {
+      "revision": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/batteries/.lake/build/lib/lean"
+    },
+    "importGraph": {
+      "revision": "e928b72544873815af278d38681b31c0293588e3",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/importGraph/.lake/build/lib/lean"
+    },
+    "mathlib": {
+      "revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/mathlib/.lake/build/lib/lean"
+    },
+    "plausible": {
+      "revision": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/plausible/.lake/build/lib/lean"
+    },
+    "proofwidgets": {
+      "revision": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "search_path": "/home/runner/work/_temp/zorn-witt-native-packages/proofwidgets/.lake/build/lib/lean"
+    }
+  },
+  "manifest_sha256": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+  "owned_warning_as_error": true,
+  "lean_threads": 1,
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "modules": [
+    "InfoGeometry.Verification.SuppliedTableCounterexample",
+    "InfoGeometry.Algebra.ZornVectorMatrix",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "InfoGeometry.Algebra.ZornPinorReconstruction",
+    "InfoGeometry.Algebra.ZornLeftCAR",
+    "InfoGeometry.Algebra.AlternativeDerivations",
+    "InfoGeometry.Algebra.ZornDerivationBridge",
+    "InfoGeometry.Algebra.ZornLeftInverse",
+    "InfoGeometry.Algebra.ZornLeftDeterminant",
+    "InfoGeometry.Algebra.ZornPrimalDual",
+    "InfoGeometry.Algebra.ZornLeftGrading",
+    "InfoGeometry.Algebra.ZornLeftParity",
+    "InfoGeometry.Algebra.ZornLeftMajorana",
+    "InfoGeometry.Algebra.ZornChiralOperatorReconstruction",
+    "InfoGeometry.Canonical.SouriauCoadjointCovariance",
+    "InfoGeometry.Algebra.CartanSouriauAffineCocycle",
+    "InfoGeometry.Canonical.CartanSouriauCocycleGibbsCharacter",
+    "InfoGeometry.Canonical.SouriauAffineActionGroupoid",
+    "InfoGeometry.Meta.Architecture",
+    "InfoGeometry.Clifford.NeutralPhaseSpaceCore",
+    "InfoGeometry.Geometry.DualFlatKreinLegendreGraph",
+    "InfoGeometry.Geometry.SouriauCotangentGraphSigns",
+    "InfoGeometry.Algebra.UnitizationNonAssoc",
+    "InfoGeometry.Algebra.KingdonAlgebra",
+    "InfoGeometry.Canonical.ZornVectorMatrixExplicit",
+    "InfoGeometry.Physics.ZornMatrixSU3.Vector3",
+    "InfoGeometry.Physics.ZornMatrixSU3.ZornMatrixCore",
+    "InfoGeometry.Algebra.KingdonSplitOctonion",
+    "InfoGeometry.Canonical.ZornSpinor",
+    "InfoGeometry.Algebra.Zorn.Basic",
+    "InfoGeometry.Algebra.Zorn.Composition",
+    "InfoGeometry.Algebra.Zorn.G2TrifactorSU3",
+    "InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge",
+    "InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge",
+    "InfoGeometry.Lie.SplitOctonionImaginaryAction",
+    "InfoGeometry.Lie.SplitOctonionCliffordAction",
+    "InfoGeometry.Algebra.ZornAlternativeLaws",
+    "InfoGeometry.Lie.SplitOctonionAnnihilatorDimension",
+    "InfoGeometry.Lie.SplitOctonionCliffordNoninjective",
+    "InfoGeometry.Algebra.ZornNullIncidence",
+    "InfoGeometry.Canonical.ZornCliffordRepresentation",
+    "InfoGeometry.Canonical.TetractysCliffordLorentzAction",
+    "InfoGeometry.Canonical.ZornCliffordKleinHierarchy",
+    "InfoGeometry.Canonical.ZornCliffordSourceVolume",
+    "InfoGeometry.Canonical.SplitOctonionAutomorphismCore",
+    "InfoGeometry.Lie.CanonicalZornDerivation",
+    "InfoGeometry.Lie.CanonicalZornRegularOperators",
+    "InfoGeometry.Lie.CanonicalZornRegularDerivation",
+    "InfoGeometry.Lie.SplitOctonionNullPlaneCovariance",
+    "InfoGeometry.Canonical.ZornCliffordWittBorn"
+  ],
+  "sources": {
+    "InfoGeometry.Verification.SuppliedTableCounterexample": "21a3b723a83bdd4904e78369dd2879870a4edd5470b240fb6f72f5c6b2c1d9b0",
+    "InfoGeometry.Algebra.ZornVectorMatrix": "d957700954286ae7baa0abfd7654721e4ffb5c2addd71d458c98a6480157095b",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Algebra.ZornPinorReconstruction": "0418a3d7d0d8ead22337d7408dfde060e4c8733968b04aec428fc50ffa8b79a6",
+    "InfoGeometry.Algebra.ZornLeftCAR": "b1445045646ba6784de0649136b620e9a62fab9837ae6368a441f5c1bc87d807",
+    "InfoGeometry.Algebra.AlternativeDerivations": "9a80b0be567dbd76d414146e4db2cdcd820b3dec3d30eb05a631a55abb12e8ee",
+    "InfoGeometry.Algebra.ZornDerivationBridge": "e4f05c20d58be19ef3982dc2126368d9e8ef8ec62508785737d6e92f047da041",
+    "InfoGeometry.Algebra.ZornLeftInverse": "46ad3b7f73e324ff2914ed19d5d1c6e244a610b45b49c4df4962ed7884c0d710",
+    "InfoGeometry.Algebra.ZornLeftDeterminant": "25aaf00c189af0cf97d087c49a651903b3355b54102be89f2a2161edc559aa7a",
+    "InfoGeometry.Algebra.ZornPrimalDual": "9ef2e4467d67cc3ced74b3c641d7f3fbb6fb53586a7266829594fadebf3ab3b9",
+    "InfoGeometry.Algebra.ZornLeftGrading": "ae7b66ed43a7bbf83abbde796b5efdbbb557719529c1267724df46216b1f6906",
+    "InfoGeometry.Algebra.ZornLeftParity": "165d1e42ef758b813c00255b6c8019d51b877287f58d9f161d6b01ca403f0e13",
+    "InfoGeometry.Algebra.ZornLeftMajorana": "a61df7ee69d765dd70c689254f63922284154c411774d552ad52efe32c374f93",
+    "InfoGeometry.Algebra.ZornChiralOperatorReconstruction": "94806af215c43ece8f5f79e6c99af71cefb993462ab850844b6363271a02399a",
+    "InfoGeometry.Canonical.SouriauCoadjointCovariance": "6b7a5fcfda6606f0668ef5f433fe1df0062814fc73798ce591d411b0d40a6753",
+    "InfoGeometry.Algebra.CartanSouriauAffineCocycle": "81b70343874fd2c23e8952901ce75e8fb66590ff84a68145186c4b5a08bd65a1",
+    "InfoGeometry.Canonical.CartanSouriauCocycleGibbsCharacter": "c7074cd6856a45f3a39e493a12a5de635599e2900f70f4a333bc2df9181ad2d6",
+    "InfoGeometry.Canonical.SouriauAffineActionGroupoid": "a6fcb4b8509f357247876b810199975fb7dc1c22881f5835baac2e7473ee82e6",
+    "InfoGeometry.Meta.Architecture": "0f74caea1284e1c0dfc8d00d46357e0310a24aa12fc36fa7c0d02ef5f97e0434",
+    "InfoGeometry.Clifford.NeutralPhaseSpaceCore": "1e9af32b34ffef78d0bc93a446abd1f90fb8d7b58583db10efc39aba46cf2093",
+    "InfoGeometry.Geometry.DualFlatKreinLegendreGraph": "f58996abcccdcabac4e7b4c6089b1e1b6aee3d9db84bc6bafc04d218a91f70c3",
+    "InfoGeometry.Geometry.SouriauCotangentGraphSigns": "7bcc993fed599eb1678656da73b963cda1effdb79dbc6aa64c622d45d86c778f",
+    "InfoGeometry.Algebra.UnitizationNonAssoc": "f0ab8757b80a8feaa1a02a25dd2211f55bcbb7884e8573bb66f78686a515883f",
+    "InfoGeometry.Algebra.KingdonAlgebra": "8cecf2f006c9452ca13f673019d25df30308ec9def4e583317db20fa9b9ca555",
+    "InfoGeometry.Canonical.ZornVectorMatrixExplicit": "f5dd3c0246b8975de76f676cb8b257f93af236a873916e2e1cf14ce96c21905d",
+    "InfoGeometry.Physics.ZornMatrixSU3.Vector3": "37d6bfdf9dabafa9856ec0d1373dc4b2c0a3073c54805b2c53e985bbe7fa61e3",
+    "InfoGeometry.Physics.ZornMatrixSU3.ZornMatrixCore": "8501102473ee9bdf33d9aab9d5454716577839d3363706565b272d007f753cb3",
+    "InfoGeometry.Algebra.KingdonSplitOctonion": "95d0f30b49f93699ceb8636c85cf2ef267c7ac3407e8903bb2a0c79f8d771816",
+    "InfoGeometry.Canonical.ZornSpinor": "48f85f87ec7de31afeeab4a57d7080fdceb1b597aad0e9b06bfadb64130340b5",
+    "InfoGeometry.Algebra.Zorn.Basic": "ca39e8f0947d2772d03897e8e7d331fad0d370cd1018fc039cac942e313f2d02",
+    "InfoGeometry.Algebra.Zorn.Composition": "e2984dbfe170193a5e9afe442904b63c9b5e32d457cf6ddc9bc0e6cd418efe85",
+    "InfoGeometry.Algebra.Zorn.G2TrifactorSU3": "a394b5279aff943176a575619abb0d6c47d202d9ca42fdc406a27e9a26f46144",
+    "InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge": "bc8883e53d90e60f7864f534ae594b00c1ea0006261c089803a6d31277d299ee",
+    "InfoGeometry.Algebra.Zorn.CanonicalVectorMatrixBridge": "70bd909ff2ce89343d63dfbeb0f975a196c1a71e88b86bc538673e0c2b7f3447",
+    "InfoGeometry.Lie.SplitOctonionImaginaryAction": "62d12044704e6e270bacb25e759fd1c1c2a2dd060dbd2b6f49193e3fafbf22ae",
+    "InfoGeometry.Lie.SplitOctonionCliffordAction": "09b1da1216cd3cf95288b62c016cfce46eb85eefeac0ee72bcef89ce5f0ea382",
+    "InfoGeometry.Algebra.ZornAlternativeLaws": "fb63f9e0cf1b1a4efb0cbe0799417357aa1722b003f55ce0ae11518aa6be2f9b",
+    "InfoGeometry.Lie.SplitOctonionAnnihilatorDimension": "bdd36bbda30f9093a1091a418ebfaf11ff5013a8cafd84114b8180bf1db3ad83",
+    "InfoGeometry.Lie.SplitOctonionCliffordNoninjective": "dc8570a47bced3215ed0415998d5d7fe9390b79611d45f34b9e2c5e6c558f1f6",
+    "InfoGeometry.Algebra.ZornNullIncidence": "b6818a42c5c3f6057878438891042eb36fd479d69d3eb3ec433f7eb97e9b24a2",
+    "InfoGeometry.Canonical.ZornCliffordRepresentation": "be13515e84681f38b49631c7d8d3f25543223c4da0263d0884928c837f511000",
+    "InfoGeometry.Canonical.TetractysCliffordLorentzAction": "598d9b63e57c44d296d2938a8a3a7d6bf08ce8aa58521f38bde75fe7d2e1bfd1",
+    "InfoGeometry.Canonical.ZornCliffordKleinHierarchy": "ea37f4082661ebee3c7519e290509c0162e51b9e4e2f61acca76e1db436cc5ba",
+    "InfoGeometry.Canonical.ZornCliffordSourceVolume": "cfe9cb440f28021fbfc8a572355ca4d691133cae4e5a89e58494e7df890c6058",
+    "InfoGeometry.Canonical.SplitOctonionAutomorphismCore": "2ab260c58d18ed296e212aa743474ba14c546babdab010fcdf68e90173008159",
+    "InfoGeometry.Lie.CanonicalZornDerivation": "f86e43ea8a45fca8948410ea820cfb06ed3dd723e763cc0aa693504668d77ba5",
+    "InfoGeometry.Lie.CanonicalZornRegularOperators": "e173af4fb909cf1c3663ca5209450bdd42e92bec3e04a01c17909987c5dff5ae",
+    "InfoGeometry.Lie.CanonicalZornRegularDerivation": "0874b86ce59d18551a22875d5e91019801ec2e620e84949ee2a6b2f80f8e80e7",
+    "InfoGeometry.Lie.SplitOctonionNullPlaneCovariance": "43e69c589182d5eace8bf194b59648f7b110fb1549759d1805c0bef9e80346bd",
+    "InfoGeometry.Canonical.ZornCliffordWittBorn": "cc252e95448fb4e51f13fbe8cebc2d2ea55aa28f6ed3bc58979859f94d2ca0ce"
+  },
+  "audit_sha256": "6a7bc6bf3595b5cc29f38b8515f082c463ec7d3756f67f8f8dfbbc19068e5d30",
+  "finished_at": "2026-11-24T14:33:27.197631+00:00"
+}

@@ -3,11 +3,12 @@
 ## Status
 
 The supplied-table counterexample owner has compiled with warnings as errors
-and passed its declaration audit in scoped CI. The full suite has compiled
-eight repository modules and stopped at three unused-simp-argument errors in
-the determinant owner; full-suite acceptance remains pending. The genuine-Zorn
-additions also have independent source review. The scoped GitHub workflow is a
-separate check from the repository's existing integration gates.
+and passed its declaration audit in scoped CI. The latest full suite compiled
+nine repository modules, including the repaired determinant owner, and stopped
+at scalar-hom and native-subtraction proof obligations in the primal/dual owner.
+Full-suite acceptance remains pending. The genuine-Zorn additions also have
+independent source review. The scoped GitHub workflow is a separate check from
+the repository's existing integration gates.
 
 ## Local retry of the prior Klein closure
 
@@ -179,6 +180,77 @@ Artifact `14928872917` has SHA-256
 `54d34ce36ffc0983cecaeddea95a2de15041b17e71437b1792090d965ccc08d7`.
 The exact source identity, both suite receipts, successful light audit output,
 and determinant diagnostic are preserved in `ci-45410082037/`.
+
+## Third scoped CI result and primal/dual repair
+
+Run `45413662613`, job `138513918858`, tested merge revision
+`298b64789e099dbeb457e8862cdd4d31413388e1` for PR head
+`0db6e19eadcfffbfc468138a25d88ff7bef326fb`. The recorded tree was
+`4c995f372ac7f775188f66dd42bc2a7a2b8d924e`, exactly the published cleanup tree.
+Pinned dependency preparation and the 17-declaration counterexample audit
+passed again. The light receipt run ID is `6ef41b82b0924986ae380dbb4b1c77ac`.
+
+The full suite compiled nine modules, including `ZornLeftDeterminant` with
+warnings as errors. It then failed in `ZornPrimalDual`: `encode.map_smul'`
+left an identity-ring-hom scalar normalization goal, and the mixed-product
+helper left projections of native carrier subtraction unreduced. The
+downstream `norm_encode` declaration was consequently marked as depending on
+the failed definition's generated placeholder; no source `sorry` was inserted.
+Two square proofs also had an unused `Fin.sum_univ_three` argument. The full
+receipt run ID is `8b0e3c0135d84076b86bb0015b70fc6a`; status is `failed`, and
+the full declaration audit remains `not-run`.
+
+The source repair adds `RingHom.id_apply` to the exact scalar-normalization
+step, removes the two reported unused sum arguments, and rewrites the intended
+native carrier difference with `_root_.sub_eq_add_neg` before coordinate
+extensionality. It uses the carrier's existing native negation projection
+lemmas, removing the unrelated explicit `sub` and `neg` definitions from that
+simp list. Statements and mathematical conventions are unchanged. See
+`CI_PRIMAL_REPAIR_REVIEW.md` for the source review.
+
+Artifact `14931587245` has SHA-256
+`e0f6d4303538e6f4dd0144477ef5ff929ffd1ca1c464113071d30482d5976fa2`.
+Its exact source identity, both receipts, light audit output, and primal/dual
+diagnostic are preserved in `ci-45413662613/`.
+
+## Isolated diagnostics after strict failure
+
+The repeated early source failures justify collecting later diagnostics in
+the same CI run. `verification/witt-born-null-exactness/diagnose.py` is a
+separate, explicitly nonaccepting runner. It requires a matching failed strict
+full-suite compile receipt, uses a fresh UUID output library, and checks the
+same pinned compiler, sources, and dependencies. It retains ordinary warnings,
+records actual Lean errors, and skips descendants of failed modules while
+checking independent branches. It neither consumes nor updates the strict
+compilation caches and does not run the acceptance audit.
+
+Every diagnostic result has `acceptance: false`; the runner always exits
+nonzero. CI invokes it only after the strict full-scope step fails. The strict
+checker, its warnings-as-errors policy, axiom audit, and receipt-acceptance
+conditions are unchanged. A failed strict check therefore remains failed.
+`DIAGNOSTIC_DESIGN.md` preserves the authored design snapshot, and
+`DIAGNOSTIC_REVIEW.md` records independent source review. Those reviews alone
+do not establish that the new runner has executed successfully.
+
+Diagnostic runner SHA-256:
+`46464783b6c273365688fd38bf19dd3dcd544cfbf9e60efe165922712f516ce7`.
+Integrated workflow SHA-256:
+`91717dc7c280174c91f55a4c23c9925c5c5254861ba1e1da6ac01f3e3449a9b2`.
+Repaired primal/dual owner SHA-256:
+`e2705577751f0759455f8caecb1ba9481a109b39c409ca0a52ebd93615eab128`.
+
+The exact updated workflow passed YAML parsing and `bash -n` for all eight
+shell blocks; its embedded Python and the diagnostic runner passed AST parsing.
+The maintained exclusive build lock covered these checks. The first staged
+gate invocation used an unsupported CLI flag and was rejected before scanning;
+after correcting that invocation, the current staged primal/dual source passed
+`python3 tools/quality/proof_proxy_staged_gate.py --strict
+lean/InfoGeometry/Algebra/ZornPrimalDual.lean`. The exact invocations and results
+are in `primal-diagnostic-source-check.json`. This is a source-gate result for
+that staged owner, not native elaboration, a push-gate result, or validation of
+every earlier PR owner. The final staged whitespace check also passed; the
+verbatim compiler output is preserved inside `primal-dual-diagnostic.json` to
+retain its whitespace without introducing whitespace errors in the Git patch.
 
 ## Results to record before acceptance
 

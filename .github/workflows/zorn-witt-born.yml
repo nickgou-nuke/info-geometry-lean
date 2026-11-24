@@ -63,6 +63,7 @@ on:
       - 'verification/klein-operator-hierarchy/Audit.lean'
       - 'verification/supplied-zorn-counterexample/Audit.lean'
       - 'verification/witt-born-null-exactness/Audit.lean'
+      - 'verification/witt-born-null-exactness/diagnose.py'
       - 'verification/zorn-primal-dual/Audit.lean'
       - 'verification/zorn-primal-dual/check.py'
   workflow_dispatch:
@@ -239,6 +240,7 @@ jobs:
             --no-wait-for-build-lock 2>&1 | tee ../native-evidence/counterexample.log
 
       - name: Compile the full selected PR closure and audit its declarations
+        id: strict_scope
         working-directory: project
         shell: bash
         run: |
@@ -247,6 +249,16 @@ jobs:
             --suite witt-born-null-exactness \
             --lean "$ZORN_LEAN_BIN" --packages "$ZORN_PACKAGES_PATH" \
             --no-wait-for-build-lock 2>&1 | tee ../native-evidence/full-scope.log
+
+      - name: Collect isolated nonaccepting source diagnostics after strict failure
+        if: failure() && steps.strict_scope.outcome == 'failure'
+        working-directory: project
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/witt-born-null-exactness/diagnose.py \
+            --lean "$ZORN_LEAN_BIN" --packages "$ZORN_PACKAGES_PATH" \
+            2>&1 | tee ../native-evidence/diagnostics.log
 
       - name: Confirm both selected suites completed their axiom audits
         working-directory: project
@@ -287,6 +299,15 @@ jobs:
           checker = repo / 'verification/zorn-primal-dual/check.py'
           if checker.is_file():
               shutil.copy2(checker, evidence / 'check.py')
+          diagnostic = repo / 'verification/witt-born-null-exactness/diagnose.py'
+          if diagnostic.is_file():
+              shutil.copy2(diagnostic, evidence / 'diagnose.py')
+          diagnostic_root = repo / '.lake/witt-born-diagnostics'
+          for source in diagnostic_root.rglob('*'):
+              if source.is_file() and source.suffix in {'.json', '.log'}:
+                  destination = evidence / 'diagnostics' / source.relative_to(diagnostic_root)
+                  destination.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy2(source, destination)
           PY_EVIDENCE
 
       - name: Preserve scoped validation evidence

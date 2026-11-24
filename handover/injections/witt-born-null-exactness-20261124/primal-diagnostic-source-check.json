@@ -1,0 +1,111 @@
+{
+  "scope": "syntax and staged source gate only; no Lean compilation",
+  "started_at": "2026-11-24T14:38:53.615673+00:00",
+  "commands": [
+    {
+      "command": [
+        "bash",
+        "-n"
+      ],
+      "run_block": 0,
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "bash",
+        "-n"
+      ],
+      "run_block": 1,
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "bash",
+        "-n"
+      ],
+      "run_block": 2,
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "bash",
+        "-n"
+      ],
+      "run_block": 3,
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "bash",
+        "-n"
+      ],
+      "run_block": 4,
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "bash",
+        "-n"
+      ],
+      "run_block": 5,
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "bash",
+        "-n"
+      ],
+      "run_block": 6,
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "bash",
+        "-n"
+      ],
+      "run_block": 7,
+      "returncode": 0,
+      "output": ""
+    },
+    {
+      "command": [
+        "python3",
+        "tools/quality/proof_proxy_staged_gate.py",
+        "--repo-root",
+        "/tmp/info-geometry-zorn-primal-dual-20261124",
+        "lean/InfoGeometry/Algebra/ZornPrimalDual.lean"
+      ],
+      "returncode": 2,
+      "output": "usage: proof_proxy_staged_gate.py [-h] [--strict] [paths ...]\nproof_proxy_staged_gate.py: error: unrecognized arguments: --repo-root\n"
+    }
+  ],
+  "status": "passed-after-correcting-gate-invocation",
+  "source_hashes": {
+    ".github/workflows/zorn-witt-born.yml": "91717dc7c280174c91f55a4c23c9925c5c5254861ba1e1da6ac01f3e3449a9b2",
+    "verification/witt-born-null-exactness/diagnose.py": "46464783b6c273365688fd38bf19dd3dcd544cfbf9e60efe165922712f516ce7",
+    "lean/InfoGeometry/Algebra/ZornPrimalDual.lean": "e2705577751f0759455f8caecb1ba9481a109b39c409ca0a52ebd93615eab128"
+  },
+  "workflow_run_blocks": 8,
+  "finished_at": "2026-11-24T14:38:53.679974+00:00",
+  "syntax_status": "passed",
+  "syntax_scope": "YAML BaseLoader parse, eight shell run blocks, embedded Python ASTs and diagnostic runner AST; no Lean compilation",
+  "corrected_gate_attempt": {
+    "started_at": "2026-11-24T14:39:28.006831+00:00",
+    "command": [
+      "python3",
+      "tools/quality/proof_proxy_staged_gate.py",
+      "--strict",
+      "lean/InfoGeometry/Algebra/ZornPrimalDual.lean"
+    ],
+    "returncode": 0,
+    "output": "proof_proxy_staged_gate: ok\n",
+    "finished_at": "2026-11-24T14:39:28.497612+00:00"
+  }
+}

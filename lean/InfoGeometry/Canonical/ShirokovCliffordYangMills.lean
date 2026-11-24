@@ -9,6 +9,7 @@ import InfoGeometry.Clifford.CliffordExtensiveRotorsAndBiquaternions
 import InfoGeometry.OperatorAlgebra.MaurerCartanFrameTransport
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basis
+import Mathlib.LinearAlgebra.Vandermonde
 
 /-!
 # Clifford-vector specialization of Shirokov's Yang--Mills transfer
@@ -75,6 +76,158 @@ theorem shirokov_even_grade_projection_denominator_pos
     push_cast
     have hklt : k < l := by omega
     omega
+
+/-- The alternating grade eigenvalues are distinct in even dimension. -/
+theorem shirokov_even_grade_eigenvalues_injective {n : ℕ} (hn : Even n) :
+    Function.Injective (fun i : Fin (n + 1) => shirokovGradeEigenvalue n i.val) := by
+  intro i j hij
+  change shirokovGradeEigenvalue n i.val = shirokovGradeEigenvalue n j.val at hij
+  by_cases hiEven : Even i.val <;> by_cases hjEven : Even j.val
+  · obtain ⟨a, ha⟩ := hiEven
+    obtain ⟨b, hb⟩ := hjEven
+    have hia : i.val = 2 * a := by omega
+    have hjb : j.val = 2 * b := by omega
+    have hpA : (-1 : ℤ) ^ (a + a) = 1 := by
+      rw [← two_mul a, pow_mul]
+      norm_num
+    have hpB : (-1 : ℤ) ^ (b + b) = 1 := by
+      rw [← two_mul b, pow_mul]
+      norm_num
+    rw [hia, hjb] at hij
+    have heq : (n : ℤ) - 2 * ((2 * a : ℕ) : ℤ) =
+        (n : ℤ) - 2 * ((2 * b : ℕ) : ℤ) := by
+      simpa [shirokovGradeEigenvalue, hpA, hpB] using hij
+    have : a = b := by omega
+    apply Fin.ext
+    omega
+  · obtain ⟨a, ha⟩ := hiEven
+    obtain ⟨b, hb⟩ := (Nat.not_even_iff_odd.mp hjEven)
+    obtain ⟨c, hc⟩ := hn
+    have hia : i.val = 2 * a := by omega
+    have hjb : j.val = 2 * b + 1 := by omega
+    have hpA : (-1 : ℤ) ^ (a + a) = 1 := by
+      rw [← two_mul a, pow_mul]
+      norm_num
+    have hpB : (-1 : ℤ) ^ (b + b) = 1 := by
+      rw [← two_mul b, pow_mul]
+      norm_num
+    have hpOdd : (-1 : ℤ) ^ (2 * b + 1) = -1 := by
+      calc
+        (-1 : ℤ) ^ (2 * b + 1) = (-1 : ℤ) ^ (2 * b) * (-1) := by
+          rw [pow_succ]
+        _ = (-1 : ℤ) ^ (b + b) * (-1) := by rw [show 2 * b = b + b by omega]
+        _ = -1 := by rw [hpB]; norm_num
+    rw [hia, hjb] at hij
+    have hcontra : ((c : ℤ) + c) - 2 * ((2 * a : ℕ) : ℤ) =
+        -(((c : ℤ) + c) - 2 * ((2 * b + 1 : ℕ) : ℤ)) := by
+      simpa [shirokovGradeEigenvalue, hc, hpA, hpOdd] using hij
+    have hiBound := i.isLt
+    have hjBound := j.isLt
+    omega
+  · obtain ⟨a, ha⟩ := (Nat.not_even_iff_odd.mp hiEven)
+    obtain ⟨b, hb⟩ := hjEven
+    obtain ⟨c, hc⟩ := hn
+    have hia : i.val = 2 * a + 1 := by omega
+    have hjb : j.val = 2 * b := by omega
+    have hpA : (-1 : ℤ) ^ (a + a) = 1 := by
+      rw [← two_mul a, pow_mul]
+      norm_num
+    have hpB : (-1 : ℤ) ^ (b + b) = 1 := by
+      rw [← two_mul b, pow_mul]
+      norm_num
+    have hpOdd : (-1 : ℤ) ^ (2 * a + 1) = -1 := by
+      calc
+        (-1 : ℤ) ^ (2 * a + 1) = (-1 : ℤ) ^ (2 * a) * (-1) := by
+          rw [pow_succ]
+        _ = (-1 : ℤ) ^ (a + a) * (-1) := by rw [show 2 * a = a + a by omega]
+        _ = -1 := by rw [hpA]; norm_num
+    rw [hia, hjb] at hij
+    have hcontra : -(((c : ℤ) + c) - 2 * ((2 * a + 1 : ℕ) : ℤ)) =
+        ((c : ℤ) + c) - 2 * ((2 * b : ℕ) : ℤ) := by
+      simpa [shirokovGradeEigenvalue, hc, hpOdd, hpB] using hij
+    have hiBound := i.isLt
+    have hjBound := j.isLt
+    omega
+  · obtain ⟨a, ha⟩ := (Nat.not_even_iff_odd.mp hiEven)
+    obtain ⟨b, hb⟩ := (Nat.not_even_iff_odd.mp hjEven)
+    have hia : i.val = 2 * a + 1 := by omega
+    have hjb : j.val = 2 * b + 1 := by omega
+    have hpA : (-1 : ℤ) ^ (a + a) = 1 := by
+      rw [← two_mul a, pow_mul]
+      norm_num
+    have hpB : (-1 : ℤ) ^ (b + b) = 1 := by
+      rw [← two_mul b, pow_mul]
+      norm_num
+    have hpOddA : (-1 : ℤ) ^ (2 * a + 1) = -1 := by
+      calc
+        (-1 : ℤ) ^ (2 * a + 1) = (-1 : ℤ) ^ (2 * a) * (-1) := by
+          rw [pow_succ]
+        _ = (-1 : ℤ) ^ (a + a) * (-1) := by rw [show 2 * a = a + a by omega]
+        _ = -1 := by rw [hpA]; norm_num
+    have hpOddB : (-1 : ℤ) ^ (2 * b + 1) = -1 := by
+      calc
+        (-1 : ℤ) ^ (2 * b + 1) = (-1 : ℤ) ^ (2 * b) * (-1) := by
+          rw [pow_succ]
+        _ = (-1 : ℤ) ^ (b + b) * (-1) := by rw [show 2 * b = b + b by omega]
+        _ = -1 := by rw [hpB]; norm_num
+    rw [hia, hjb] at hij
+    have heq : (n : ℤ) - 2 * ((2 * a + 1 : ℕ) : ℤ) =
+        (n : ℤ) - 2 * ((2 * b + 1 : ℕ) : ℤ) := by
+      simpa [shirokovGradeEigenvalue, hpOddA, hpOddB] using hij
+    have : a = b := by omega
+    apply Fin.ext
+    omega
+
+/-- The power coefficient matrix in Shirokov's even-dimensional projection formula.
+Its rows are powers and its columns correspond to the eigenvalues `λᵢ`. -/
+def shirokovGradeProjectionMatrix (n : ℕ) :
+    Matrix (Fin (n + 1)) (Fin (n + 1)) ℚ :=
+  (Matrix.vandermonde
+    (fun i : Fin (n + 1) => (shirokovGradeEigenvalue n i.val : ℚ))).transpose
+
+/-- In even dimension the coefficient matrix `Aₙ₊₁` in (1.8) is nonsingular
+over `ℚ`, hence has an inverse there. -/
+theorem shirokov_even_grade_projection_matrix_det_ne_zero {n : ℕ} (hn : Even n) :
+    (shirokovGradeProjectionMatrix n).det ≠ 0 := by
+  rw [shirokovGradeProjectionMatrix, Matrix.det_transpose]
+  exact (Matrix.det_vandermonde_ne_zero_iff).2
+    (fun i j hij => by
+      apply shirokov_even_grade_eigenvalues_injective hn
+      exact_mod_cast hij)
+
+/-- The even-dimensional coefficient matrix in (1.8) is invertible over
+`ℚ`; the theorem is about the explicit finite power matrix, not yet the
+Clifford-valued projection identity. -/
+theorem shirokov_even_grade_projection_matrix_isUnit {n : ℕ} (hn : Even n) :
+    IsUnit (shirokovGradeProjectionMatrix n) := by
+  rw [Matrix.isUnit_iff_isUnit_det]
+  exact isUnit_iff_ne_zero.mpr (shirokov_even_grade_projection_matrix_det_ne_zero hn)
+
+/-- Shirokov's standard-frame sandwich operator on the negative-definite
+finite-stage algebra `Cl(0,n)`. -/
+def shirokovGradeSandwich (n : ℕ)
+    (U : CliffordAlgebra (cliffordNegSqForm ℝ n)) :=
+  ∑ a : Fin n, cGen ℝ n a * U * cGen ℝ n a
+
+/-- A single generator sandwich acts diagonally on an ordered blade; the sign
+depends on the blade grade and whether the generator belongs to the blade. -/
+theorem shirokov_generator_sandwich_blade (n : ℕ) (a : Fin n)
+    (S : Finset (Fin n)) :
+    cGen ℝ n a * cBlade ℝ n S * cGen ℝ n a =
+      -((-1 : ℝ) ^ (S.card + if a ∈ S then 1 else 0)) • cBlade ℝ n S := by
+  rw [cGen_mul_cBlade]
+  rw [smul_mul_assoc, mul_assoc, cGen_sq]
+  simp
+
+/-- The full standard-frame sandwich operator acts by a scalar on every
+ordered blade; the next step is to evaluate this scalar as `λ_|S|`. -/
+theorem shirokov_grade_sandwich_blade_scalar (n : ℕ) (S : Finset (Fin n)) :
+    shirokovGradeSandwich n (cBlade ℝ n S) =
+      (∑ a : Fin n,
+        -((-1 : ℝ) ^ (S.card + if a ∈ S then 1 else 0))) • cBlade ℝ n S := by
+  simp only [shirokovGradeSandwich]
+  simp_rw [shirokov_generator_sandwich_blade]
+  rw [← Finset.sum_smul]
 
 /-- The first two generators in the concrete negative-definite `Cl(0,2)`. -/
 private def shirokovWitnessGen0 :

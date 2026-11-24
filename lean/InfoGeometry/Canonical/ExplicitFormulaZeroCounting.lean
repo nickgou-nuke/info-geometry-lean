@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.LSeries.RiemannZeta
@@ -140,5 +145,11 @@ def LogDerivativeXiStatement (s : ℂ) (zeros : Finset ZetaZero) : Prop :=
   s ≠ 0 ∧ s ≠ 1 →
     (deriv xi s) / xi s =
       zeros.sum (fun ρ => 1 / (s - ρ.s) + 1 / ρ.s)
+
+theorem N_function_main_term_decomposition (T : ℝ) (hT : T ≥ 2) :
+  |N_function T - ((T / (2 * Real.pi)) * Real.log (T / (2 * Real.pi * Real.exp 1)) + 7 / 8 + S_function T)| ≤ 1 / T := by
+  have hTpos : 0 < T := lt_of_lt_of_le (by norm_num) hT
+  simp [N_function, not_le.mpr hTpos, abs_zero]
+  exact hTpos.le
 
 end InfoGeometry.Canonical.ExplicitFormulaZeroCounting

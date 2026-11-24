@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.FilteredQCCRCompatiblePointColimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzTowerUpperTailActionColimit
@@ -321,5 +326,30 @@ theorem upperTailQCCRParameterToFullColimitMap_unique
     (upperTailQCCRParameterToFullCocone Stage T m) f
   intro j
   exact hstage j
+
+
+theorem upperTailCuntzPointFamily_compatible
+    (m : ℕ) (i : Fin m) :
+    ∀ {j k : UpperNatIndex m} (hjk : j ≤ k),
+      qCcrParameterZeroFiberTransitionMap
+          (UpperTailStage Stage m) (upperTailContinuousStarSystem Stage T m) hjk
+          ((upperTailCuntzPointFamily Stage T m i).point j) =
+        (upperTailCuntzPointFamily Stage T m i).point k := by
+    intro j k hjk
+    apply Subtype.ext
+    apply Prod.ext
+    · simp [upperTailCuntzPointFamily,
+        qCcrParameterZeroFiberTransitionMap,
+        qCcrParameterTransitionMap, upperTailCuntzQCCRPoint,
+        upperTailContinuousStarSystem, T.map_generator, map_star]
+    · apply Prod.ext
+      · simp [upperTailCuntzPointFamily,
+          qCcrParameterZeroFiberTransitionMap,
+          qCcrParameterTransitionMap, upperTailCuntzQCCRPoint,
+          upperTailContinuousStarSystem, T.map_generator]
+      · simp [upperTailCuntzPointFamily,
+          qCcrParameterZeroFiberTransitionMap,
+          qCcrParameterTransitionMap, upperTailCuntzQCCRPoint,
+          upperTailContinuousStarSystem]
 
 end InfoGeometry.Canonical.CuntzUpperTailQCCRColimitReadout

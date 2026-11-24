@@ -564,4 +564,10 @@ theorem chargedFockSpace_currentSugawaraMorphism_readout
 def quantumRicciScalar {A : Type*} [Ring A] (C : RawCARModeAlgebra A) : A :=
   completedCentral C
 
+/-- The Heisenberg central term is exposed as the quantum Ricci scalar. -/
+theorem heisenberg_central_term_is_quantumRicciScalar
+    {A : Type*} [Ring A] (C : RawCARModeAlgebra A) :
+    completedCentral C = quantumRicciScalar C := by
+  rfl
+
 end InfoGeometry.Canonical.CurrentSugawaraBridge

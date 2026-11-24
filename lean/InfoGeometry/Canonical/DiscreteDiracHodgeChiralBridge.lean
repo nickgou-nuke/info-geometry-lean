@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import DAG.HodgeTheorems
@@ -124,5 +129,9 @@ theorem exact_readout :
   triangle_betti1_zero.2 P.ω P.closed
 
 end K3HodgeModePacket
+
+def K3HarmonicMode (ω : Fin 3 → ℝ) : Prop :=
+  triangleBoundary2.mulVec ω = 0 ∧
+  triangleBoundary1.transpose.mulVec ω = 0
 
 end InfoGeometry.Canonical.DiscreteDiracHodgeChiralBridge

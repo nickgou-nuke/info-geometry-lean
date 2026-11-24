@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.CuntzCantorSpectralTriple
@@ -130,5 +135,25 @@ theorem chiral_anomaly_vanishes_at_flat_boundary
     finiteIndexPairing tilt proj = 0 :=
   finiteChiralTrace_vanishes_of_commuting_invertible
     tilt D proj.e D_inv hAnti hComm hDleft hDright
+
+
+theorem finiteChiralCocycle0_conjugation_invariant
+    (tilt D e D_inv : Matrix (Fin 2) (Fin 2) ℂ)
+    (hComm : D * e = e * D)
+    (hDleft : D * D_inv = 1) :
+    finiteChiralCocycle0 (D_inv * tilt * D) e =
+      finiteChiralCocycle0 tilt e := by
+  unfold finiteChiralCocycle0
+  calc
+    Matrix.trace ((D_inv * tilt * D) * e) =
+        Matrix.trace ((D_inv * tilt * e) * D) := by
+      rw [show (D_inv * tilt * D) * e = D_inv * (tilt * D) * e by
+        simp [Matrix.mul_assoc]]
+      exact congrArg Matrix.trace
+        (matrix_trace_comm_lemma1 tilt D e D_inv hComm)
+    _ = Matrix.trace (D * (D_inv * tilt * e)) := by
+      rw [Matrix.trace_mul_comm]
+    _ = Matrix.trace (tilt * e) := by
+      rw [matrix_trace_comm_lemma2 tilt D e D_inv hDleft]
 
 end CyclicCocycleCantor

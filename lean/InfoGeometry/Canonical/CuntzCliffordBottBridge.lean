@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CuntzMapKreinBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
@@ -150,5 +155,22 @@ theorem cuntz_clock_involution_in_cl11_limit
     (F := clockStageSequence M encode seed)
     (hF := clockStageSequence_succ M encode seed hcompat)
     (h0 := h0)
+
+/-! General finite-potency transport for a compatible Cuntz-clock sequence. -/
+theorem cuntz_clock_nPotent_in_cl11_limit
+    (M : DiscreteCuntzModularStep Op)
+    (encode : ∀ n : ℕ, Op → Stage n)
+    (seed : Op)
+    (hcompat : ∀ n : ℕ,
+      stageEmbed n (encode n (Nat.iterate M.sigma n seed)) =
+        encode (n + 1) (Nat.iterate M.sigma (n + 1) seed))
+    (N : ℕ)
+    (h0 : (encode 0 seed) ^ N = encode 0 seed) :
+    ∀ n : ℕ,
+      (ofStage n (encode n (Nat.iterate M.sigma n seed))) ^ N =
+        ofStage n (encode n (Nat.iterate M.sigma n seed)) := by
+  intro n
+  rw [cuntz_clock_constant_in_cl11_limit M encode seed hcompat n]
+  rw [← ofStage_pow, h0]
 
 end InfoGeometry.Canonical.CuntzCliffordBottBridge

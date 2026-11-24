@@ -70,7 +70,8 @@ theorem cotangentCycle_pow_three :
   simp only [pow_succ, pow_zero, Module.End.mul_apply, Module.End.one_apply]
   apply Prod.ext
   · exact cycleEquiv_three_apply p.1
-  · ext x
+  · apply LinearMap.ext
+    intro x
     change p.2 (cycleEquiv.symm (cycleEquiv.symm (cycleEquiv.symm x))) = p.2 x
     rw [cycleEquiv_symm_three_apply]
 

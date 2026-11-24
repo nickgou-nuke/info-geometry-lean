@@ -28,7 +28,7 @@ def planeShear : (ℝ × ℝ) ≃ₗ[ℝ] (ℝ × ℝ) where
   left_inv x := by ext <;> simp
   right_inv x := by ext <;> simp
   map_add' x y := by ext <;> simp [add_add_add_comm]
-  map_smul' r x := by ext <;> simp [smul_add]
+  map_smul' r x := by ext <;> simp [mul_add]
 
 /-- The fixed vectors are the kernel of the lift minus the identity. -/
 def fixedCotangentSubmodule : Submodule ℝ (Carrier (ℝ × ℝ)) :=
@@ -46,7 +46,7 @@ theorem fixed_covector_annihilates_horizontal (p : Carrier (ℝ × ℝ))
   have h := congrArg (fun q : Carrier (ℝ × ℝ) => q.2 (0, 1)) hp
   change p.2 ((0 : ℝ) - 1, 1) = p.2 (0, 1) at h
   rw [zero_sub] at h
-  have hdecomp : (-1, 1) = -(1, 0) + (0, 1 : ℝ × ℝ) := by
+  have hdecomp : ((-1, 1) : ℝ × ℝ) = -(1, 0) + (0, 1) := by
     ext <;> norm_num
   rw [hdecomp, map_add, map_neg] at h
   have hz : -p.2 (1, 0) = 0 :=
@@ -71,9 +71,10 @@ theorem fixedCotangentForm_not_nondegenerate :
   have hu : u ∈ fixedCotangentSubmodule := by
     rw [mem_fixedCotangentSubmodule_iff]
     apply Prod.ext
-    · change (1 + 0, 0 : ℝ × ℝ) = (1, 0)
+    · change ((1 + 0, 0) : ℝ × ℝ) = (1, 0)
       simp
-    · ext x
+    · apply LinearMap.ext
+      intro x
       rfl
   let uFixed : fixedCotangentSubmodule := ⟨u, hu⟩
   have hne : uFixed ≠ 0 := by

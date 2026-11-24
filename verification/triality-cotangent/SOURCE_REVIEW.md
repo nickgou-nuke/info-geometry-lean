@@ -189,3 +189,29 @@ hosted transaction remains required.
 | `Algebraic/CoadjointActionGroupoid.lean` | `402f537cfa4029ad6c42ff9886539e3b86eed171bac61028a9ca7da8a471f953` |
 | `Algebraic/CotangentFormTransport.lean` | `19f14810562b5628032767fb71ed4850cfa1401c4fd2715b1ec4be04204345df` |
 | `Lie/CartanTrialityFirstCoordinate.lean` | `8b0b7712d6a1d286734c4df08c1dd67f96b7b851378f39e69eeb843d6885e9c2` |
+
+
+## Downstream compiler follow-up (2026-11-24)
+
+[Run 45405150156](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45405150156)
+at `380241c1e0337b318f8c7f5abcf4c34591a6c35e` compiled all three previously
+repaired modules. It then reached two downstream owners and failed on tuple
+ascription, scalar distribution, and recursive extensionality. The complete
+artifact ZIP has SHA-256
+`a3543f6151d53fd5789ffec96aeacc499d906c500ebd121e9176a3829dba8373`.
+
+The shear now uses real multiplication distribution and whole-pair type
+ascriptions. The dual equalities in both downstream owners use explicit
+linear-map extensionality so the complete vector argument is preserved.
+Statements, hypotheses, and concrete operators are unchanged. These repairs
+were independently generated and reviewed against the actual diagnostics.
+They require a new native transaction; the prior successful module build
+entries alone do not establish whole-transaction or axiom acceptance.
+
+The repaired Zorn dependency and its literature-map addition are integrated
+from PR #442. No source gate or native acceptance requirement was relaxed.
+
+| Repaired downstream owner | SHA-256 |
+|---|---|
+| `Algebraic/CotangentFixedPointObstruction.lean` | `dda6c253d698006fe2fc7ea5376eba5d402048bc404bb433123daf301ae3129b` |
+| `Lie/CartanTrialityCotangentFixedForm.lean` | `e99a082a13d683a187df364aa52b6f773c16c8d729d22e7afda72f37532a9038` |

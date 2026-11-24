@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Module.Submodule.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -81,5 +86,25 @@ theorem submodule_bracket_closure_iff_mul_closure
       exact (mul_closure_implies_bracket_closure U hmul hx hy).2
   · rintro ⟨hcomm, hanti⟩
     exact bracket_closure_eq_mul_closure U hcomm hanti
+
+
+def commutator (x y : A) : A := x * y - y * x
+
+
+def anticommutator (x y : A) : A := x * y + y * x
+
+
+theorem mul_eq_half_add_commutator (x y : A) :
+    (2 : R)⁻¹ • (anticommutator x y + commutator x y) = x * y := by
+  change (2 : R)⁻¹ • ((x * y + y * x) + (x * y - y * x)) = x * y
+  rw [smul_add, smul_add, smul_sub]
+  calc
+    ((2 : R)⁻¹ • (x * y) + (2 : R)⁻¹ • (y * x)) +
+          ((2 : R)⁻¹ • (x * y) - (2 : R)⁻¹ • (y * x)) =
+        (2 : R)⁻¹ • (x * y) + (2 : R)⁻¹ • (x * y) := by abel
+    _ = ((2 : R)⁻¹ + (2 : R)⁻¹) • (x * y) := by
+      rw [add_smul]
+    _ = x * y := by
+      rw [← mul_two, inv_mul_cancel₀ (NeZero.ne (2 : R)), one_smul]
 
 end InfoGeometry.Canonical

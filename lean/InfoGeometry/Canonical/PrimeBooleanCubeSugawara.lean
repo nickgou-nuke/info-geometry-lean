@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -96,5 +101,11 @@ theorem booleanCubeSugawaraPacket_centralCharge_eq_sugawara
           ((booleanCubeSugawaraPacket P v).bridge.level +
             (booleanCubeSugawaraPacket P v).bridge.hDual) := by
   simp [booleanCubeSugawaraPacket]
+
+
+theorem sugawaraCentralCharge_eq_dimG_of_level_one_dualCoxeter_zero
+    (dimG : ℝ) :
+    sugawaraCentralCharge 1 dimG 0 = dimG := by
+  simp [sugawaraCentralCharge]
 
 end InfoGeometry.Canonical.PrimeBooleanCubeSugawara

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.PhotonicParabolicChannel
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.GeneralizedOperatorChiral
@@ -223,5 +228,23 @@ theorem slab_entry_parabolic_implies_full_collapse
       simpa [scatteringOfOmega] using
         PhotonicParabolicChannel.chiral_collapse_to_parabolic Ω hNil
     exact hMinus
+
+/-- The concrete scattering classifier detects nilpotence exactly. -/
+theorem scattering_transportClass_parabolic_iff_nilpotent
+    (Ω : ParOp) :
+    transportClass (scatteringOfOmega Ω) = TransportClass.Parabolic ↔
+      mul Ω Ω = zero := by
+  constructor
+  · intro hclass
+    classical
+    by_cases hchannels :
+        (scatteringOfOmega Ω).Splus = ChiralChannel.Parabolic ∧
+          (scatteringOfOmega Ω).Sminus = ChiralChannel.Parabolic
+    · have hplus : channelOfOmega Ω = ChiralChannel.Parabolic := by
+        simpa [scatteringOfOmega] using hchannels.1
+      exact PhotonicParabolicChannel.nilpotent_of_chiral_collapse Ω hplus
+    · simp [transportClass, hchannels] at hclass
+  · intro h_nilpotent
+    exact scattering_transportClass_parabolic_of_nilpotent Ω h_nilpotent
 
 end InfoGeometry.Canonical.PhotonicScatteringParabolicBridge

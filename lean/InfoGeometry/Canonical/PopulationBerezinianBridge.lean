@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Artanh
@@ -170,5 +175,7 @@ theorem modularPotentialEqArtanh (N_e N_g : ℝ) (hN_e : 0 < N_e) (hN_g : 0 < N_
     field_simp
   rw [h_div, Real.artanh_tanh]
   ring
+
+def populationRay : Unit := ()
 
 end InfoGeometry.Canonical.PopulationBerezinianBridge

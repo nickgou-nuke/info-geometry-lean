@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.ThermodynamicGauge
@@ -281,5 +286,17 @@ theorem not_trivialLoop_of_connesGenerator_ne_zero
     deRhamLogForm connesGenerator hConnes hExact hZero hLoop)
 
 end
+
+
+theorem connesGenerator_zero_iff_deRham_zero
+    {Op : Type u} [AddGroup Op]
+    (deRhamLogForm connesGenerator : Op)
+    (hConnes : connesGenerator = deRhamLogForm) :
+    connesGenerator = 0 ↔ deRhamLogForm = 0 := by
+  constructor
+  · intro hZero
+    rw [← hConnes, hZero]
+  · intro hZero
+    rw [hConnes, hZero]
 
 end InfoGeometry.Canonical.ModularInfinitesimal

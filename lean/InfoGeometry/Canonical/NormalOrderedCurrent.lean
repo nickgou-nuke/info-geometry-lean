@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basis
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -132,5 +137,15 @@ def integerWindow (N : ℕ) : Finset ℤ :=
   (Finset.range (2 * N + 1)).image fun k : ℕ => (k : ℤ) - (N : ℤ)
 
 end CanonicalMatrixUnits
+
+
+theorem integerWindow_card (N : ℕ) :
+    (integerWindow N).card = 2 * N + 1 := by
+  unfold integerWindow
+  rw [Finset.card_image_of_injective]
+  · simp
+  · intro a b hab
+    have hcast : (a : ℤ) = b := by linarith
+    exact_mod_cast hcast
 
 end InfoGeometry.Canonical.NormalOrderedCurrent

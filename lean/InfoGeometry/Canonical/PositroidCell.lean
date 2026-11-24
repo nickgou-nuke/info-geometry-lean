@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Order.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Basic
@@ -57,5 +62,8 @@ theorem cell_dimension_boundary {k n : ℕ} (A B : PositroidCell k n)
   have h_le : dim A ≤ dim B := h_dim_mono A B h_face
   -- 2. Transitively combine with the supplied bound.
   exact h_le.trans h_bound
+
+/-- A Plücker coordinate is indexed by a `k`-element subset of `Fin n`. -/
+abbrev PluckerIndex (k n : ℕ) := {I : Finset (Fin n) // I.card = k}
 
 end InfoGeometry.Topology

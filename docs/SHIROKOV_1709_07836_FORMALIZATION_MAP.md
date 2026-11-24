@@ -395,13 +395,24 @@ the generators, so this argument does not eliminate its scalar coordinate;
 the paper's additional hypothesis that the scalar projection of the full
 volume product is zero handles this case. Once these equations are proved,
 `shirokov_linearIndependent_of_dual_scalar_readouts` yields
-independence of the ordered products. The existing `shirokovInverseBladeUnit`
-and scalar blade-coordinate API provide candidate Lean carriers, but the
-next reusable lemma is scalar-coordinate cyclicity,
-`scalarCoord (x * y) = scalarCoord (y * x)`. It gives conjugation invariance
-`scalarCoord (u⁻¹ * x * u) = scalarCoord x` for units `u`. The bounded owner
-search found no such lemma in this Shirokov module; proving it from the
-ordered-blade expansion is the next concrete Lean step before the arbitrary
-frame readouts. In particular, this route is currently scoped to an
-orthogonal frame with nonzero scalar squares; it does not silently extend the
-result to non-diagonal frame metrics.
+independence of the ordered products. The owner now proves
+`shirokov_scalar_coordinate_blade_mul_comm` from the signed symmetric-
+difference product formula, extends it by the finite ordered-blade expansion
+to `shirokov_scalar_coordinate_mul_comm`, and derives
+`shirokov_scalar_coordinate_unit_conjugation`. These establish cyclicity and
+unit-conjugation invariance of the scalar coordinate on the fixed
+negative-definite `Cl(0,n)` carrier. They do not yet construct the `L_S(h_T)`
+equations for arbitrary Clifford frames or resolve the odd-volume case from
+the paper's trace condition. The bounded owner audit continues to scope this
+route to orthogonal frames with nonzero scalar squares; it does not silently
+extend the result to non-diagonal frame metrics.
+
+The current continuation passed the locked owner file check, the scoped
+source debt audit (1 file, 0 gaps), and the strict OpenGauss screen (0 traps).
+The targeted Lake build was attempted but stopped in the transitive dependency
+`InfoGeometry.Canonical.GrassmannPfaffianSyzygyAndNormalForms` on unavailable
+`LinearMap.BilinForm.orthogonal` declarations; the Shirokov source was not the
+reported failure. Consequently the owner `.olean` is absent and the compiled
+axiom checker could not run for this continuation. This is not a Lake-build or
+axiom-check pass. The dependency source is outside this task's owned paths and
+has not been changed.

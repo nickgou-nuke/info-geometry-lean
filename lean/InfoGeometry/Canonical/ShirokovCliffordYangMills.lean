@@ -1523,6 +1523,97 @@ theorem shirokov_blade_expansion (n : ℕ)
   change bladeRepr ℝ n x T = _
   simp [Pi.single_apply]
 
+/-- The scalar coordinate of a product of two ordered blades is symmetric in
+the factors: it vanishes unless their index sets agree. -/
+theorem shirokov_scalar_coordinate_blade_mul_comm (n : ℕ)
+    (S T : Finset (Fin n)) :
+    bladeRepr ℝ n (cBlade ℝ n S * cBlade ℝ n T) ∅ =
+      bladeRepr ℝ n (cBlade ℝ n T * cBlade ℝ n S) ∅ := by
+  by_cases hST : S = T
+  · subst T
+    rfl
+  · have hdiff : symmDiff S T ≠ ∅ := by
+      intro h
+      exact hST (Finset.symmDiff_eq_empty.mp h)
+    have hdiff' : symmDiff T S ≠ ∅ := by
+      rw [symmDiff_comm]
+      exact hdiff
+    obtain ⟨s, hs⟩ := InfoGeometry.Clifford.CliffordQuaternionFactorizationAndMasterAtlas.cBlade_mul_cBlade_eq_signed_symmDiff ℝ n S T
+    obtain ⟨t, ht⟩ := InfoGeometry.Clifford.CliffordQuaternionFactorizationAndMasterAtlas.cBlade_mul_cBlade_eq_signed_symmDiff ℝ n T S
+    rw [hs, ht]
+    have hs0 : bladeRepr ℝ n
+        (((s : ℤ) : ℝ) • cBlade ℝ n (symmDiff S T)) ∅ =
+          ((s : ℤ) : ℝ) * bladeRepr ℝ n
+            (cBlade ℝ n (symmDiff S T)) ∅ := by
+      simp [bladeRepr]
+    have ht0 : bladeRepr ℝ n
+        (((t : ℤ) : ℝ) • cBlade ℝ n (symmDiff T S)) ∅ =
+          ((t : ℤ) : ℝ) * bladeRepr ℝ n
+            (cBlade ℝ n (symmDiff T S)) ∅ := by
+      simp [bladeRepr]
+    rw [hs0, ht0, bladeRepr_cBlade, bladeRepr_cBlade]
+    simp [hdiff, hdiff']
+
+/-- Scalar-coordinate cyclicity on `Cl(0,n)`, proved directly from the
+canonical ordered-blade expansion. -/
+theorem shirokov_scalar_coordinate_mul_comm (n : ℕ)
+    (x y : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    bladeRepr ℝ n (x * y) ∅ = bladeRepr ℝ n (y * x) ∅ := by
+  let P := (Finset.univ : Finset (Fin n)).powerset
+  let c : Finset (Fin n) → ℝ := fun S => bladeRepr ℝ n x S
+  let d : Finset (Fin n) → ℝ := fun T => bladeRepr ℝ n y T
+  let scalarCoord : CliffordAlgebra (cliffordNegSqForm ℝ n) →ₗ[ℝ] ℝ :=
+    { toFun := fun z => bladeRepr ℝ n z ∅
+      map_add' := by simp [bladeRepr]
+      map_smul' := by simp [bladeRepr] }
+  have hx : x = ∑ S ∈ P, c S • cBlade ℝ n S := by
+    simpa [P, c] using shirokov_blade_expansion n x
+  have hy : y = ∑ T ∈ P, d T • cBlade ℝ n T := by
+    simpa [P, d] using shirokov_blade_expansion n y
+  have hxy : scalarCoord (x * y) =
+      ∑ T ∈ P, d T • ∑ S ∈ P,
+        c S • scalarCoord (cBlade ℝ n S * cBlade ℝ n T) := by
+    rw [hx, hy]
+    simp only [Finset.sum_mul, Finset.mul_sum, map_sum, map_smul,
+      smul_mul_assoc, mul_smul_comm, smul_smul]
+  have hyx : scalarCoord (y * x) =
+      ∑ S ∈ P, c S • ∑ T ∈ P,
+        d T • scalarCoord (cBlade ℝ n T * cBlade ℝ n S) := by
+    rw [hy, hx]
+    simp only [Finset.sum_mul, Finset.mul_sum, map_sum, map_smul,
+      smul_mul_assoc, mul_smul_comm, smul_smul]
+  change scalarCoord (x * y) = scalarCoord (y * x)
+  rw [hxy, hyx]
+  simp_rw [smul_eq_mul, Finset.mul_sum]
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl fun S _ => Finset.sum_congr rfl fun T _ => ?_
+  change d T * (c S * bladeRepr ℝ n
+      (cBlade ℝ n S * cBlade ℝ n T) ∅) =
+    c S * (d T * bladeRepr ℝ n
+      (cBlade ℝ n T * cBlade ℝ n S) ∅)
+  rw [shirokov_scalar_coordinate_blade_mul_comm]
+  ac_rfl
+
+/-- The scalar coordinate is invariant under conjugation by any unit. -/
+theorem shirokov_scalar_coordinate_unit_conjugation (n : ℕ)
+    (u : (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    bladeRepr ℝ n (((u⁻¹ : (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) : _)
+      * x * u) ∅ = bladeRepr ℝ n x ∅ := by
+  calc bladeRepr ℝ n
+        ((((u⁻¹ : (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) : _)
+          * x) * u) ∅ =
+        bladeRepr ℝ n
+          (((u : (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) : _)
+            * (((u⁻¹ : (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) : _) * x)) ∅ :=
+          shirokov_scalar_coordinate_mul_comm n _ _
+    _ = bladeRepr ℝ n x ∅ := by
+      congr 1
+      have hu : (u : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+          ((u⁻¹ : (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) : _) = 1 :=
+        Units.val_inv u
+      rw [← mul_assoc, hu, one_mul]
+
 /-- On an arbitrary element, the polynomial in the frame-sandwich endomorphism
 is the canonical grade-`k` projection in ordered-blade coordinates. -/
 theorem shirokov_even_grade_projector_apply {n : ℕ} (hn : Even n)

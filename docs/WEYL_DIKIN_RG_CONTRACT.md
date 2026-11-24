@@ -145,5 +145,63 @@ foundational axioms. Also run the staged proof gate, scope/semantic checks, and
 the applicable post-build gate, reporting each result at its actual scope.
 No proof holes, custom axioms, or unsafe proof shortcuts are accepted.
 
-Implementation and validation results will be recorded after the checks. The
-contracts above do not themselves assert that compilation has succeeded.
+## Implemented and locally checked results
+
+The five new owners compiled together with their complete ten-module repository
+import closure at local commit `ed85b573863e0ee5197708216f74bc552ee4ca27`, using
+Lean `v4.34.1` and the unchanged Mathlib pin. Every module reported zero warnings.
+All repository modules were rebuilt from copied, hashed source; existing
+repository oleans were not reused. The existing pinned Mathlib and dependency
+artifacts were read without copying their caches into the full workspace.
+
+| Selected owner | Native declarations audited |
+| --- | ---: |
+| `Analysis.PositiveMatrixDikinCongruence` | 9 |
+| `Analysis.RelativeOperatorNeumann` | 12 |
+| `OperatorAlgebra.CoarseGrainingRelativeStability` | 11 |
+| `Canonical.RelativeDikinCoarseGraining` | 4 |
+| `Canonical.WeylDikinRGTests` | 32 |
+| **Total** | **68** |
+
+The audit enumerated every declaration owned by those modules, including private
+and generated declarations, rejected unsafe/partial declarations, and collected
+axiom dependencies natively. The only dependencies were `propext`,
+`Classical.choice`, and `Quot.sound`. The
+[validation record](verification/weyl_dikin_rg_20261124.json) includes the exact
+source hashes and dependency revisions. The count is a declaration count, not a
+claim of 68 independent mathematical theorems.
+
+The example computes the actual inverse quadratic of
+`P = !![2,1;1,2]` and `H = (1/4) • !![1,1;1,-1]` as `1/9`, proves
+`P*H ≠ H*P`, and uses the invertible nonunitary shear `!![1,1;0,1]`.
+It consumes both the normalized inverse estimate and the rectangular coarse
+sandwich with `Q = !![1,1]`, observation precision `1`, and zero observation
+perturbation.
+
+## Reproduction and integration status
+
+The maintained scoped verifier uses the same source-closure and native
+declaration-audit helpers as the existing operator-geometry checks:
+
+```bash
+python3 tools/quality/check_weyl_dikin_rg.py \
+  --mathlib-root /path/to/pinned-mathlib \
+  --output /new/path/to/weyl-dikin-verification --fetch-cache
+```
+
+The Mathlib checkout and active compiler must match the pins; the verifier
+rejects mismatches. The output directory must be new. The dedicated
+`weyl-dikin-rg.yml` workflow provisions those exact dependencies and runs this
+command in GitHub Actions.
+
+The actual pre-commit proof gates passed during the implementation. Selected
+source debt, semantic-content, authoritative-source, and semantic-vacuity
+checks passed. The ordinary root pre-push gate was also attempted: its Lake
+step failed while cloning Mathlib with `No space left on device`; its selected
+source checks passed. That result is an infrastructure failure, not a successful
+root-package build. No root gate or dependency pin was changed.
+
+The local result certifies the stated source closure and selected declarations.
+Hosted CI remains a separate check, and an upstream build against the Wilson
+project's different pins remains separate work. The PR stays a draft while
+those integration checks are outstanding.

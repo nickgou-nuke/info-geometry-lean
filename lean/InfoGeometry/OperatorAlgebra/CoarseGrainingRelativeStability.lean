@@ -132,6 +132,7 @@ theorem coarsePrecision_smul (hA : A.PosDef) (hR : R.PosDef)
   · exact Matrix.le_iff.mpr
       (coarsePrecision_scaled_lower_bound Q hA hR hA' hR' hc.le hzeroA hzeroR)
 
+omit [DecidableEq m] in
 /-- Positive simultaneous scaling preserves the unique harmonic extension. -/
 theorem harmonicExtension_smul (hA : A.PosDef) (hR : R.PosDef)
     {c : ℝ} (hc : 0 < c) :

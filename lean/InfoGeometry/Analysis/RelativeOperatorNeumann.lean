@@ -125,7 +125,7 @@ end NormedRing
 
 section Matrix
 
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped ComplexOrder MatrixOrder Matrix.Norms.L2Operator
 
 variable {𝕜 n : Type*} [RCLike 𝕜] [Fintype n] [DecidableEq n]
 variable {P E : Matrix n n 𝕜}

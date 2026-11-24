@@ -163,7 +163,7 @@ theorem rectangular_coarse_sandwich :
   have h := coarsePrecision_relative_sandwich_of_dikin
     (A := baseMatrix) (DA := directionMatrix) (R := (1 : CoarseMatrix))
     (DR := 0) observationMatrix baseMatrix_posDef Matrix.PosDef.one
-    directionMatrix_isSelfAdjoint IsSelfAdjoint.zero
+    directionMatrix_isSelfAdjoint (IsSelfAdjoint.zero CoarseMatrix)
     (by norm_num : (0 : ℝ) ≤ 1 / 2) (by norm_num : (1 / 2 : ℝ) < 1)
     dikin_radius_le_half hzero
   refine ⟨h.1, ?_, ?_⟩

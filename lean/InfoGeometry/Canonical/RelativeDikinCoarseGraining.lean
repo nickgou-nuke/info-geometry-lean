@@ -28,7 +28,7 @@ open Matrix
 open InfoGeometry.Analysis.PositiveMatrixDikin
 open InfoGeometry.Analysis.RelativeOperatorNeumann
 open InfoGeometry.OperatorAlgebra.PositiveCoarseGraining
-open scoped MatrixOrder Matrix.Norms.L2Operator
+open scoped ComplexOrder MatrixOrder Matrix.Norms.L2Operator
 
 variable {n m : Type*} [Fintype n] [Fintype m] [DecidableEq n] [DecidableEq m]
 
@@ -47,7 +47,7 @@ private theorem positive_and_order_bounds_of_dikin_radius
       (sub_nonneg.mpr hab)
   obtain ⟨hlower, hupper⟩ := dikin_order_bounds hP hH
   exact ⟨hpert, (hscale (sub_le_sub_left hbound 1)).trans hlower,
-    hupper.trans (hscale (add_le_add_left hbound 1))⟩
+    hupper.trans (hscale (add_le_add le_rfl hbound))⟩
 
 /-- Dikin control of both input perturbations constructs positive perturbed
 inputs and preserves the corresponding relative Loewner bounds under exact

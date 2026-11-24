@@ -157,6 +157,22 @@ carrier. This remains a
 finite algebra identity; it does not by itself identify the average with the
 paper's center projection or supply the varying-frame transport and
 odd-dimensional reduced-sum identity.
+The current extension also proves
+`shirokov_reynolds_noncentral_coordinate_zero`: every coordinate other than
+the scalar coordinate and (in odd dimension) the top-blade coordinate
+vanishes. This is a support theorem in the ordered-blade basis; it does not
+yet identify the Reynolds average with the algebraic center projection. The
+owner now also proves `shirokov_odd_top_blade_mem_center` for odd `n` by
+commuting the volume blade with the Clifford generators and extending over
+their generated algebra, then composes this with the support formula in
+`shirokov_reynolds_mem_center`. This proves that the standard finite-frame
+average lands in the algebraic center of `Cl(0,n)`. It does not yet prove
+that this average is the identity on every central element, classify the
+whole center in the chosen coordinates, or transport the result to the
+paper's varying dual frame. Its targeted locked build of
+`InfoGeometry.Canonical.ShirokovCliffordYangMills` passed (9,091 jobs, exit
+code 0), the owner axiom audit passed (1 module, 0 failures), and the strict
+OpenGauss source screen passed (0 traps).
 The earlier strict screen of the new Shirokov bridge reported zero traps. The
 automated GATE_4 review was rejected before
 kernel verification because the repository-wide staged Lean set fails its QMS

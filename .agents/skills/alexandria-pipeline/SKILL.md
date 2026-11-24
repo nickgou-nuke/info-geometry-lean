@@ -46,9 +46,10 @@ docker ps --format "table {{.Names}}\t{{.Ports}}\t{{.Status}}"
     --format text
   ```
 
-- **Cross-document Personalized PageRank (`graph_context_rank.py`):**
+- **Cross-document Personalized PageRank (`graph_context_rank.py`, requires `networkx`):**
+  Use `.venv/bin/python3` or `/home/goutev/miniforge3/envs/sage/bin/python` (bare `python3` in `PATH` may lack `networkx`):
   ```bash
-  python3 tools/alexandria/graph_context_rank.py \
+  .venv/bin/python3 tools/alexandria/graph_context_rank.py \
     --arango \
     --endpoint http://127.0.0.1:8538 \
     --database alexandria_dag_brain \
@@ -59,18 +60,26 @@ docker ps --format "table {{.Names}}\t{{.Ports}}\t{{.Status}}"
     --format text
   ```
 
+- **Unified Repo Explorer (`ask_repo.py` / `graph_rag_query.py`, opt-in `--scope alexandria`, excluded from `--scope all`):**
+  ```bash
+  python3 tools/infra/ask_repo.py "<query>" \
+    --scope alexandria \
+    --alexandria-endpoint http://127.0.0.1:8538 \
+    --alexandria-database alexandria_dag_brain \
+    --top-k 5 --brief
+  ```
+
 For offline JSONL queries without ArangoDB, swap `--arango --endpoint ... --database ...` for `--input-dir artifacts/alexandria_dag_brain`.
 
 ## 3. Start Dedicated Container & Ingest PDF Corpus
 
-Start an isolated PDF DAG-brain instance on a dedicated port via `configs/alexandria/docker-compose.pdf.yml`:
+Start an isolated PDF DAG-brain instance on a dedicated port via `configs/alexandria/docker-compose.pdf.yml` (set `ALEXANDRIA_ARANGO_PASSWORD` via local `.env` or shell environment without echoing secrets):
 ```bash
 ALEXANDRIA_ARANGO_CONTAINER=arango_alexandria_dag \
 ALEXANDRIA_ARANGO_PORT=8538 \
-ALEXANDRIA_ARANGO_PASSWORD=alexandria_root \
-ALEXANDRIA_ARANGO_DATA_VOLUME=alexandria_dag_data \
-ALEXANDRIA_ARANGO_APPS_VOLUME=alexandria_dag_apps \
-docker compose -f configs/alexandria/docker-compose.pdf.yml up -d
+ALEXANDRIA_ARANGO_DATA_VOLUME=alexandria_dag_brain_data \
+ALEXANDRIA_ARANGO_APPS_VOLUME=alexandria_dag_brain_apps \
+docker compose -p alexandria_dag_brain -f configs/alexandria/docker-compose.pdf.yml up -d
 ```
 
 Run resilient SHA-256 deduplicated ingestion, noise exclusion, acyclic DAG pruning, and ArangoDB upload:
@@ -96,7 +105,7 @@ To enable OpenAI-compatible `/v1` semantic enrichment (e.g. Qwen3.8 27B NVFP4 on
   --enrich-ollama-max-tokens 1024 \
   --enrich-ollama-max-chunks 200
 ```
-Pass `--allow-thinking` only if you want reasoning tokens enabled (`chat_template_kwargs: {"enable_thinking": false}` is sent by default on `/v1`).
+Pass `--allow-thinking` only if you want reasoning tokens enabled (`chat_template_kwargs: {"enable_thinking": false}` is sent by default on `/v1`). Bearer auth uses `--enrich-ollama-api-key` or `ALEXANDRIA_LLM_API_KEY` / `OPENAI_API_KEY`.
 
 ## 4. Blueprint Bridge & Tests
 
@@ -104,7 +113,7 @@ Pass `--allow-thinking` only if you want reasoning tokens enabled (`chat_templat
   ```bash
   python3 tools/infra/blueprint_alexandria_bridge.py \
     --input-dir artifacts/alexandria_dag_brain \
-    --output artifacts/alexandria_dag_brain/blueprint_nodes.jsonl
+    --out artifacts/alexandria_dag_brain/blueprint_nodes.jsonl
   ```
 - Run the offline Alexandria + env-isolation test suite:
   ```bash

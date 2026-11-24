@@ -28,8 +28,8 @@ This directory contains the maintained script surface around the Lean codebase.
 - `tools/leantrail/`
   LeanTrail conformance, export, ingest, and path/failure tooling
 - `tools/alexandria/`
-  external-corpus ingest and GraphRAG retrieval (BM25 + PageRank navigation);
-  see [docs/DAGToolchainAndAlexandriaTrace.md](../docs/DAGToolchainAndAlexandriaTrace.md)
+  PDF-to-DAG-brain ingestion, arXiv/AutoMathText/txt2kg digestion, and GraphRAG retrieval (`retrieve_context.py` BM25 + DAG traversal, `graph_context_rank.py` Personalized PageRank);
+  see [alexandria/README.md](alexandria/README.md), [docs/alexandria/README.md](../docs/alexandria/README.md), and [docs/DAGToolchainAndAlexandriaTrace.md](../docs/DAGToolchainAndAlexandriaTrace.md)
 
 There is also a real Python package under `src/igf/` that now owns a growing
 part of the artifact pipeline and CLI surface.
@@ -57,7 +57,7 @@ Python CLIs:
 - `igf`
 - `infogeometry`
 
-Alexandria GraphRAG smoke checks (repo venv has `networkx` and `python-arango`):
+Alexandria GraphRAG smoke checks (`.venv/bin/python3` has `networkx` and `python-arango`):
 
 ```bash
 .venv/bin/python3 tools/alexandria/retrieve_context.py \
@@ -76,6 +76,8 @@ Alexandria GraphRAG smoke checks (repo venv has `networkx` and `python-arango`):
 These are `retrieval_context_only` navigation results, not Lean proof evidence.
 The default Alexandria target is `:8532` / `alexandria`; `:8530` and `:8540`
 are forbidden by `guard_alexandria_target`. See
+[alexandria/README.md](alexandria/README.md),
+[docs/alexandria/README.md](../docs/alexandria/README.md), and
 [docs/DAGToolchainAndAlexandriaTrace.md](../docs/DAGToolchainAndAlexandriaTrace.md).
 
 ## Wrapper Rule
@@ -87,6 +89,7 @@ its owning subdirectory or under `src/igf/`.
 ## Start Here
 
 - [infra/README.md](infra/README.md)
+- [alexandria/README.md](alexandria/README.md)
 - [docs/README.md](docs/README.md)
 - [../docs/OperatorQuickstart.md](../docs/OperatorQuickstart.md)
 - [../docs/DAGTroubleshooting.md](../docs/DAGTroubleshooting.md)

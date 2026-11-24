@@ -1,8 +1,8 @@
 # DAG Toolchain and Alexandria Trace
 
 > Status: `maintained operations trace`
-> Audited: 2026-05-14 against the current scripts.
-> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+> Audited: 2026-05-14 against the current scripts (Alexandria PDF-to-DAG-brain retrieval and lane-isolation trace refreshed 2026-11-24 against commit `9bbab55c38`).
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md), [tools/alexandria/README.md](../tools/alexandria/README.md)
 
 This document records the analysis chain and toolchain usage map for the managed DAG lane, `tools/infra`, and `tools/alexandria`.
 
@@ -21,9 +21,9 @@ Primary scope:
 - Lean-side references under `lean/DAG/` and `lean/InfoGeometry/Meta/`
 - Lake script bindings in `lakefile.lean`
 
-Inventory snapshot used during analysis:
-- `tools/infra/`: 156 python files (recursive listing)
-- `tools/alexandria/`: 8 python files
+Inventory snapshot:
+- `tools/infra/`: 156 python files (historical 2026-05-14 snapshot)
+- `tools/alexandria/`: 23 non-`__init__` python scripts/modules plus `__init__.py` and `README.md` (refreshed 2026-11-24)
 
 ## Analysis Chain (Reasoning Trace)
 
@@ -105,7 +105,9 @@ Inspected:
   - `tools/infra/arango_dag_algorithms.py`
   - `tools/infra/hydrate_arango_topology.py`
 - Alexandria ingest and retrieval:
+  - `tools/alexandria/pdf_corpus_ingest.py`
   - `tools/alexandria/arango_ingest.py`
+  - `tools/alexandria/retrieve_context.py`
   - `tools/alexandria/semantic_ingest.py`
   - `tools/alexandria/graph_context_rank.py`
   - `tools/alexandria/alexandria_algorithms.py`
@@ -114,9 +116,9 @@ Reason:
 - Prevent conflating distinct graph domains sharing Arango transport.
 
 Findings:
-- Core lane uses Arango for theorem/dependency/overlay graph analytics and raw infotree projections.
-- Alexandria lane uses Arango for document/chunk/entity/relation retrieval graph persistence.
-- The two lanes are conceptually separate and should remain namespace-separated.
+- Core lane uses Arango for theorem/dependency/overlay graph analytics and raw infotree projections (`:8530` / `infogeometry`).
+- Alexandria lane uses isolated Arango instances (`:8532` default `alexandria` or dedicated isolated brains like `:8538` `alexandria_dag_brain`) for document/section/chunk/entity/DAG retrieval graph persistence (`retrieval_context_only`).
+- `guard_alexandria_target()` prevents Alexandria tools from writing to `:8530` or `:8540`.
 
 ### 6) Trace elan/lake references
 
@@ -201,9 +203,13 @@ identify open sockets and empty owners in source text, especially when
 
 ### Alexandria retrieval lane
 
-- `semantic_ingest.py` builds chunks/entities/relations JSONL.
-- `graph_context_rank.py` computes retrieval ranking over local graph structure.
-- Optional `alexandria/arango_ingest.py` persists to Alexandria DB/collections.
+See [`tools/alexandria/README.md`](../tools/alexandria/README.md) and [`docs/alexandria/README.md`](alexandria/README.md) for full details:
+
+- `pdf_corpus_ingest.py` walks PDF corpora read-only, deduplicates by SHA-256, extracts sections/chunks/10 mathematical archetypes/`canonicalKey` concepts, builds strictly acyclic `alexandria_dag_edges` verified via Kahn topological sort, and optionally enriches chunks via Ollama or OpenAI-compatible `/v1` endpoints.
+- `semantic_ingest.py` and `math_paper_graphrag_ingest.py` build chunks/entities/relations JSONL from repo docs, Markdown, and LaTeX papers.
+- `retrieve_context.py` retrieves BM25 + `searchTerms` + 1-hop adjacent + 1..3-hop `alexandria_dag_edges` BFS context (`--arango` or `--input-dir`).
+- `graph_context_rank.py` computes Personalized PageRank over local or Arango-expanded subgraphs (adjacent, DAG, entity-relation, `canonicalKey`, and optional De Bruijn edges; requires `networkx`).
+- `arango_ingest.py` (or `pdf_corpus_ingest.py --ingest-arango`) persists to isolated Alexandria ArangoDB collections and maintains `alexandria_chunks_search` (`:8530`/`:8540` blocked by `guard_alexandria_target`).
 
 ### Live GraphRAG verification (:8538 / `alexandria_dag_brain`)
 

@@ -207,8 +207,9 @@ rejects the core DAG port `:8530`, Hive port `:8540`, and the `infogeometry`,
 `darwin_commits`, `hive_live`, `aiclaw_auto_rag` databases. Do not redirect
 Alexandria retrieval into those lanes. Both packets declare
 `authority = retrieval_context_only`; never promote a retrieved paper passage
-to a Lean theorem without owner inspection and kernel checking. Details are in
-`docs/DAGToolchainAndAlexandriaTrace.md`.
+to a Lean theorem without owner inspection and kernel checking. See also
+`skills/alexandria-pipeline/SKILL.md`, `tools/alexandria/README.md`,
+`docs/alexandria/README.md`, and `docs/DAGToolchainAndAlexandriaTrace.md`.
 
 ## Causal Snapshot Schema
 

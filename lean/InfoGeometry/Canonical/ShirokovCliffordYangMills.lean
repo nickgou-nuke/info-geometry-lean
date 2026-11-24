@@ -229,6 +229,41 @@ theorem shirokov_grade_sandwich_blade_scalar (n : ℕ) (S : Finset (Fin n)) :
   simp_rw [shirokov_generator_sandwich_blade]
   rw [← Finset.sum_smul]
 
+/-- The scalar of the frame sandwich on a grade-`k` blade is the negative
+of Shirokov's eigenvalue `λₖ = (-1)^k (n - 2k)`. -/
+theorem shirokov_grade_sandwich_blade_eigenvalue (n : ℕ)
+    (S : Finset (Fin n)) :
+    (∑ a : Fin n,
+      -((-1 : ℝ) ^ (S.card + if a ∈ S then 1 else 0))) =
+        -(shirokovGradeEigenvalue n S.card : ℝ) := by
+  have hterm : ∀ a : Fin n,
+      -((-1 : ℝ) ^ (S.card + if a ∈ S then 1 else 0)) =
+        (-1 : ℝ) ^ S.card * (2 * (if a ∈ S then 1 else 0) - 1) := by
+    intro a
+    by_cases ha : a ∈ S <;> simp [ha, pow_succ] <;> ring
+  simp_rw [hterm]
+  rw [← Finset.mul_sum]
+  rw [Finset.sum_sub_distrib]
+  have hmem : (∑ a : Fin n, (if a ∈ S then (1 : ℝ) else 0)) = S.card := by
+    rw [Finset.sum_boole]
+    simp
+  have hconst : (∑ a : Fin n, (1 : ℝ)) = n := by simp
+  have htwice : (∑ a : Fin n, 2 * (if a ∈ S then (1 : ℝ) else 0)) =
+      2 * S.card := by rw [← Finset.mul_sum, hmem]
+  rw [htwice, hconst]
+  unfold shirokovGradeEigenvalue
+  push_cast
+  ring
+
+/-- The standard-frame sandwich has the paper's grade eigenvalue on each
+ordered blade, with a minus sign from the negative Clifford generator square. -/
+theorem shirokov_grade_sandwich_blade_eigenvalue_action (n : ℕ)
+    (S : Finset (Fin n)) :
+    shirokovGradeSandwich n (cBlade ℝ n S) =
+      (-(shirokovGradeEigenvalue n S.card : ℝ)) • cBlade ℝ n S := by
+  rw [shirokov_grade_sandwich_blade_scalar,
+    shirokov_grade_sandwich_blade_eigenvalue]
+
 /-- The first two generators in the concrete negative-definite `Cl(0,2)`. -/
 private def shirokovWitnessGen0 :
     CliffordAlgebra (cliffordNegSqForm ℝ 2) := cGen ℝ 2 0

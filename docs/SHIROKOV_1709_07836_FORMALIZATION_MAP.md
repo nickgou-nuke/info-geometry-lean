@@ -40,6 +40,16 @@ positive-definite orthonormal-frame results are special cases only.
 | Thm. 5.2 | For Clifford vectors, the contracted expression `Σ_μ [h_μ,[h^μ,h^ν]]` reduces to `4(n-1)h^ν`; scaling by `σ` gives current `εh^ν`, `ε=4(n-1)σ³`, and hence the Thm. 5.1 solution. | `Canonical.KahlerAtiyahSpinConnection` supplies positive and diagonal pseudo-Euclidean frame contractions. `Canonical.ShirokovCliffordYangMills` now composes these with the finite-coordinate transfer, proving both curvature and current formulas under explicit flat-background and scaled-frame parallelness hypotheses. Those hypotheses are not yet derived from the paper's Clifford-frame equations. |
 | Thm. 5.3 | For a pure grade-one frame, the spin connection is `C_μ=(1/4)(∂_μh_ν)h^ν`; then `B_μ=σh_μ+C_μ` has the same cubic current. | `frameDerivativeMap` extends the supplied frame-direction values linearly; `frameDerivativeMap_metricSkew` derives metric-skewness from the differentiated frame-pairing identity. `spinConnectionFromFrameDerivative_eq_quarter_product` proves the pointwise frame formula. `shirokov_pseudo_frame_derivative_yang_mills` composes this spin lift with the Yang–Mills transfer: it derives parallelness from the derivative action and proves the field-strength/current claims, conditional on flatness of the spin connection. These are finite-frame/first-jet statements; no base manifold, smooth frame field, or proof of spin-connection flatness from the paper's global compatibility equations is supplied yet. |
 
+### Theorem 1.3 follow-up
+
+`shirokov_grade_sandwich_blade_eigenvalue_action` evaluates the standard-frame
+sandwich operator on every ordered blade as the negative of the paper's grade
+eigenvalue. The sign is due to the negative generator square in this fixed
+`Cl(0,n)` carrier. Together with the even-dimensional Vandermonde result above,
+this closes the scalar action calculation, but not the Clifford-valued
+grade-projection identity or existence under the paper's moving-frame
+hypotheses.
+
 ## Implementation order
 
 1. Compatibility on Clifford generators now propagates to the generated

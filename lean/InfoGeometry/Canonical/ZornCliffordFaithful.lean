@@ -56,10 +56,14 @@ theorem zornToNeutral_norm (Z : ZornMatrix ℝ) :
     InfoGeometry.Clifford.Qsplit (Fin 4 → ℝ) (zornToNeutral Z) =
       zornNorm Z := by
   obtain ⟨⟨x, p⟩, rfl⟩ := wittZornEquiv.surjective Z
-  simpa only [zornToNeutral_wittZornEquiv,
-    chevelleyQsplit_eq_neutralForm, canonicalNeutralFormUnscaled_apply,
-    wittDualityEquiv, toDualPlus_apply, zornNorm_apply] using
-    (zornNormFun_wittZornEquiv x p).symm
+  calc
+    InfoGeometry.Clifford.Qsplit (Fin 4 → ℝ)
+        (zornToNeutral (wittZornEquiv (x, p))) = (wittDualityEquiv p) x := by
+      rw [zornToNeutral_wittZornEquiv,
+        chevelleyQsplit_eq_neutralForm, canonicalNeutralFormUnscaled_apply]
+    _ = wittPairing x p := toDualPlus_apply p x
+    _ = zornNorm (wittZornEquiv (x, p)) :=
+      (zornNormFun_wittZornEquiv x p).symm
 
 /-- Native quadratic isometry from canonical real Zorn matrices to the
 existing neutral Chevalley space of rank four. -/

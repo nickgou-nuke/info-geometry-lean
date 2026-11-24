@@ -104,7 +104,7 @@ private theorem lower_mul_upper (Z : ZornMatrix ℝ) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [lowerBlock, upperBlock, Matrix.mul_apply, Fin.sum_univ_four,
-      ZornMatrix.dot, Matrix.one_apply] <;> ring
+      ZornMatrix.dot] <;> ring
 
 private theorem cartesianMatrix_blocks (Z : ZornMatrix ℝ) :
     (cartesianMatrix Z).submatrix
@@ -114,7 +114,7 @@ private theorem cartesianMatrix_blocks (Z : ZornMatrix ℝ) :
   rcases i with i | i <;> rcases j with j | j <;>
     fin_cases i <;> fin_cases j <;>
     simp [cartesianMatrix, upperBlock, lowerBlock, Matrix.submatrix_apply,
-      Matrix.fromBlocks, Matrix.one_apply, finSumFinEquiv]
+      Matrix.fromBlocks, finSumFinEquiv]
 
 /-- Two actual chiral upper blocks retain noncommutativity on the real
 four-dimensional block carrier used in the determinant argument. -/
@@ -133,11 +133,19 @@ theorem cartesian_upper_blocks_noncommuting :
   · norm_num [upperBlock, ZornMatrix.chiralUpperBasis, Pi.single_apply]
 
 private theorem det_signed_exchange :
-    Matrix.det (Matrix.fromBlocks (0 : Matrix (Fin 4) (Fin 4) ℝ) (-1) 1 0) = 1 := by
+    Matrix.det (Matrix.fromBlocks
+      (0 : Matrix (Fin 4) (Fin 4) ℝ) (-1 : Matrix (Fin 4) (Fin 4) ℝ)
+      (1 : Matrix (Fin 4) (Fin 4) ℝ) (0 : Matrix (Fin 4) (Fin 4) ℝ)) = 1 := by
   have hfactor :
-      Matrix.fromBlocks (0 : Matrix (Fin 4) (Fin 4) ℝ) (-1) 1 0 =
-        Matrix.fromBlocks (1 : Matrix (Fin 4) (Fin 4) ℝ) (-1) 1 0 *
-          Matrix.fromBlocks (1 : Matrix (Fin 4) (Fin 4) ℝ) 0 1 1 := by
+      Matrix.fromBlocks
+          (0 : Matrix (Fin 4) (Fin 4) ℝ) (-1 : Matrix (Fin 4) (Fin 4) ℝ)
+          (1 : Matrix (Fin 4) (Fin 4) ℝ) (0 : Matrix (Fin 4) (Fin 4) ℝ) =
+        Matrix.fromBlocks
+            (1 : Matrix (Fin 4) (Fin 4) ℝ) (-1 : Matrix (Fin 4) (Fin 4) ℝ)
+            (1 : Matrix (Fin 4) (Fin 4) ℝ) (0 : Matrix (Fin 4) (Fin 4) ℝ) *
+          Matrix.fromBlocks
+            (1 : Matrix (Fin 4) (Fin 4) ℝ) (0 : Matrix (Fin 4) (Fin 4) ℝ)
+            (1 : Matrix (Fin 4) (Fin 4) ℝ) (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
     simp [Matrix.fromBlocks_multiply]
   rw [hfactor, Matrix.det_mul, Matrix.det_fromBlocks_one₁₁,
     Matrix.det_fromBlocks_zero₁₂]
@@ -162,9 +170,9 @@ private theorem det_scalar_blocks (a b s : ℝ)
             Matrix.fromBlocks (1 : Matrix (Fin 4) (Fin 4) ℝ) (-B) 0 (a • 1) =
           Matrix.fromBlocks (a • 1) 0 C ((a * b - s) • 1) := by
       simp only [Matrix.fromBlocks_multiply, Matrix.mul_one, Matrix.one_mul,
-        Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add, Matrix.mul_neg,
+        Matrix.mul_zero, add_zero, Matrix.mul_neg,
         Matrix.smul_mul, Matrix.mul_smul, smul_smul, hCB]
-      rw [neg_add_cancel, mul_comm b a, ← sub_eq_neg_add, ← sub_smul]
+      rw [neg_add_cancel, ← sub_eq_neg_add, ← sub_smul]
     have hdet := congrArg Matrix.det hproduct
     rw [Matrix.det_mul, Matrix.det_fromBlocks_zero₂₁,
       Matrix.det_fromBlocks_zero₁₂] at hdet

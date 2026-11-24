@@ -181,3 +181,30 @@ Report SHA-256:
 This is a static PASS with kernel acceptance pending. No compiler ran in
 this lane. The selected proof bodies still require fresh Lean elaboration
 and the complete axiom audit before mathematical acceptance is recorded.
+
+
+## Dependency compiler repairs incorporated after publication
+
+This update incorporates child PR #447 at
+`44b14b28a17a93161d8b112867bb5e0dc393207a`, tree
+`7f277211609e3ff8daf38f962b53374920f7ac2f`, including parent PR #441 at
+`a2571e4494c0d1598a881491fe7b734f6b896f1d`. The ordinary merge preserves
+all published histories. The three new null/Born/volume owners, the raw
+intake, the verifier, and its workflow are byte-identical to this PR's
+initial reviewed publication.
+
+The completed parent CI built the norm, Witt, and full-Cl(4,3) noninjectivity
+owners. Its remaining determinant typing/rewrite diagnostics were repaired
+in the parent. The completed child CI built infinitesimal triality, then
+reported concrete coordinate-normalization goals in the derivation and
+faithfulness owners. The child now contains independently reviewed repairs
+for those exact goals, with all six scoped static gates and its actual
+pre-commit hook passing. All public statements and declaration counts are
+unchanged. Exact compiler logs, source hashes, and receipts are preserved
+in the respective parent and child contracts.
+
+These build results concern their recorded revisions. Fresh compiler and
+axiom acceptance of the repaired dependencies and this null/Born/volume
+packet remain pending. This packet still selects 80 expected axiom records;
+zero complete-packet axiom records have been observed. The new owners'
+previously recorded source/static reviews are unchanged by this merge.

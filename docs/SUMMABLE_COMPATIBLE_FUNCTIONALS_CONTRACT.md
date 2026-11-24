@@ -180,12 +180,29 @@ checks the resolved Lean/Lake runtime identity, and records source hashes and
 native declaration axiom evidence in an isolated project. Its result does
 not certify the root package or publication gate.
 
-At documentation preparation on 2026-11-24, independent mathematical/source
-review and the strict staged proof gate passed. The native focused build,
-fresh owner elaboration, and declaration axiom audit are pending. These are
-separate validation surfaces; source review and static screening are not
-compiler evidence. Record the final run identifier, source hashes, and actual
-outcome before promoting a kernel-verification claim.
+The focused final run `run-1795535048762604770-5` completed successfully on
+2026-11-24. It built the owner, freshly elaborated it with warnings as errors,
+and audited all **10 owned declarations** (eight theorems and two definitions).
+The only collected axioms were `propext`, `Classical.choice`, and `Quot.sound`.
+Source, configuration, pinned dependency, runtime, and generated audit-source
+stability checks passed. The verified mathematical source SHA256 is:
+
+```text
+a5dc1f44a43ffa2c9d850dd776e4f21ce5f7db6d46561314e3a97e58a48be935
+```
+
+The two finite pullbacks use explicit native `Nat.rec`. Their zero/successor
+equations remain definitionally true; this avoids the generated unsafe
+recursion helper that the strict audit rejected in the earlier equation-based
+implementation. No declaration-audit exception or linter suppression was added.
+
+Independent source review, the strict staged proof gate, installed pre-commit
+hook, whitespace validation, and strict OpenGauss screening also passed.
+The maintained publication gate separately failed because its root Lake
+configuration requires the unavailable package
+`external_refs/homotopy-hypothesis-lean4`; its scoped source-only scans passed.
+The focused receipt does not claim whole-root or publication-gate acceptance.
+Hosted CI is reported separately on the PR.
 
 [external-effective]: https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/EffectiveForm.lean
 [external-convolution]: https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Convolution.lean

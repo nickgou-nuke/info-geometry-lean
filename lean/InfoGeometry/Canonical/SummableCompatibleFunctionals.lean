@@ -34,10 +34,12 @@ variable {A : ℕ → Type*}
 
 /-- Pull a later readout back through a finite number of successor maps.
 Recursing on the horizon avoids casts between the stage types. -/
-def refinedReadout (ι : ∀ n, A n → A (n + 1)) (ω : ∀ n, A n → ℝ) :
-    (n : ℕ) → A n → ℕ → ℝ
-  | n, a, 0 => ω n a
-  | n, a, m + 1 => refinedReadout ι ω (n + 1) (ι n a) m
+def refinedReadout (ι : ∀ n, A n → A (n + 1)) (ω : ∀ n, A n → ℝ)
+    (n : ℕ) (a : A n) (m : ℕ) : ℝ :=
+  (Nat.rec (motive := fun _ : ℕ => ∀ n, A n → ℝ)
+    ω
+    (fun _ ih n a => ih (n + 1) (ι n a))
+    m) n a
 
 @[simp] theorem refinedReadout_zero
     (ι : ∀ n, A n → A (n + 1)) (ω : ∀ n, A n → ℝ) (n : ℕ) (a : A n) :
@@ -147,9 +149,11 @@ variable [∀ n, AddCommMonoid (A n)] [∀ n, PartialOrder (A n)] [∀ n, Module
 /-- The same finite pullback, retaining Mathlib's native positivity and
 linearity rather than forgetting them to arbitrary scalar functions. -/
 def refinedPositiveReadout (ι : ∀ n, A n →ₚ[ℝ] A (n + 1))
-    (ω : ∀ n, A n →ₚ[ℝ] ℝ) : (n m : ℕ) → A n →ₚ[ℝ] ℝ
-  | n, 0 => ω n
-  | n, m + 1 => (refinedPositiveReadout ι ω (n + 1) m).comp (ι n)
+    (ω : ∀ n, A n →ₚ[ℝ] ℝ) (n m : ℕ) : A n →ₚ[ℝ] ℝ :=
+  (Nat.rec (motive := fun _ : ℕ => ∀ n, A n →ₚ[ℝ] ℝ)
+    ω
+    (fun _ ih n => (ih (n + 1)).comp (ι n))
+    m) n
 
 @[simp] theorem refinedPositiveReadout_apply
     (ι : ∀ n, A n →ₚ[ℝ] A (n + 1)) (ω : ∀ n, A n →ₚ[ℝ] ℝ)

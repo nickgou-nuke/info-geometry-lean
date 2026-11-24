@@ -112,16 +112,25 @@ python3 tools/infra/opengauss_screener.py --strict lean/InfoGeometry/Canonical/S
 
 ## Observed validation status
 
-At documentation preparation on 2026-11-24:
+The final focused run `run-1795535048762604770-5` passed on 2026-11-24.
+Its verified mathematical source SHA256 is
+`a5dc1f44a43ffa2c9d850dd776e4f21ce5f7db6d46561314e3a97e58a48be935`.
 
 | Surface | Observed result |
 | --- | --- |
 | Independent mathematical/source review | PASS |
-| Strict staged proof gate | PASS |
-| Native focused build | Pending |
-| Fresh owner elaboration and declaration axiom audit | Pending |
+| Strict staged proof gate and installed pre-commit hook | PASS |
+| Whitespace and strict OpenGauss screening | PASS |
+| Native focused build | PASS |
+| Fresh owner elaboration with warnings as errors | PASS |
+| Complete native declaration audit | PASS: 10 declarations; only `propext`, `Classical.choice`, `Quot.sound` |
+| Source/configuration/dependency/runtime/audit-source stability | PASS |
+| Maintained publication gate | Blocked by unavailable `external_refs/homotopy-hypothesis-lean4` in the root package |
 
-Update this record from the final exact-source receipt before publication.
-The stated scope is real pointwise and positive-linear compatibility; no
-complex C-star state, GNS/KMS construction, colimit completion, or whole-root
-build is certified by this profile.
+The pullbacks use explicit `Nat.rec`; no unsafe generated recursion helper or
+audit exception is needed. The successful receipt is `status.json` in the
+selected isolated work directory, with logs under this run identifier.
+Hosted CI is reported separately on the PR. The stated scope is real
+pointwise and positive-linear compatibility; no complex C-star state,
+GNS/KMS construction, colimit completion, or whole-root build is certified
+by this profile.

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Int.Basic
@@ -240,6 +245,115 @@ theorem algebraic_winding_matches_analytic (n : ℕ) :
 | J^n = [[1, 2πn]; [0, 1]]                   | PROVED ✓   | monodromyJordanBlock_pow          |
 | I+N where N²=0 ⇒ exp(N)=1+N               | PROVED ✓   | CliffBott has nilpotent lift      |
 | SplitCliffordInfinity ≅ universal cover    | DOCUMENTED | algebraic = discrete, continuous = analytic |
+-/
+
+abbrev LogBranchLift : Type := ℂ × ℤ
+
+/- Compatibility name retained for existing finite readout consumers. -/
+
+
+theorem coveringProjection_eq_base (z : ℂ) (n : ℤ) :
+    coveringProjection (z, n) = z := by
+  dsimp [coveringProjection]
+  have harg :
+      2 * π * Complex.I * (n : ℂ) =
+        (n : ℂ) * (2 * π * Complex.I) := by
+    ring
+  rw [harg, Complex.exp_int_mul_two_pi_mul_I]
+  simp
+
+
+theorem monodromy_eq_id : monodromy = id := by
+  funext p
+  rcases p with ⟨z, n⟩
+  simp [monodromy, Complex.exp_int_mul_two_pi_mul_I]
+
+
+theorem coveringProjection_deckUp (z : ℂ) (n : ℤ) :
+    coveringProjection (deckUp (z, n)) = coveringProjection (z, n) := by
+  change coveringProjection (z, n + 1) = coveringProjection (z, n)
+  rw [coveringProjection_eq_base, coveringProjection_eq_base]
+
+
+theorem coveringProjection_deckDown (z : ℂ) (n : ℤ) :
+    coveringProjection (deckDown (z, n)) = coveringProjection (z, n) := by
+  change coveringProjection (z, n - 1) = coveringProjection (z, n)
+  rw [coveringProjection_eq_base, coveringProjection_eq_base]
+
+
+theorem coveringProjection_sheet_add (z : ℂ) (n k : ℤ) :
+    coveringProjection (z, n + k) = coveringProjection (z, n) := by
+  rw [coveringProjection_eq_base, coveringProjection_eq_base]
+
+/-! ## The algebraic exponential cover -/
+
+abbrev ExponentialCover : Type := ℂ
+
+
+noncomputable def expCoverProjection (w : ExponentialCover) : ℂˣ :=
+  Units.mk0 (Complex.exp w) (Complex.exp_ne_zero w)
+
+@[simp] theorem expCoverProjection_val (w : ExponentialCover) :
+    ((expCoverProjection w : ℂˣ) : ℂ) = Complex.exp w :=
+  rfl
+
+
+noncomputable def expDeck (n : ℤ) (w : ExponentialCover) : ExponentialCover :=
+  w + (2 * π * Complex.I) * (n : ℂ)
+
+
+theorem expCoverProjection_expDeck (n : ℤ) (w : ExponentialCover) :
+    ((expCoverProjection (expDeck n w) : ℂˣ) : ℂ) =
+      ((expCoverProjection w : ℂˣ) : ℂ) := by
+  change Complex.exp (w + (2 * π * Complex.I) * (n : ℂ)) = Complex.exp w
+  rw [Complex.exp_add]
+  have harg :
+      (2 * π * Complex.I) * (n : ℂ) =
+        (n : ℂ) * (2 * π * Complex.I) := by
+    ring
+  rw [harg, Complex.exp_int_mul_two_pi_mul_I]
+  simp
+
+
+def expCoverLog (w : ExponentialCover) : ℂ := w
+
+
+theorem expCoverLog_expDeck (n : ℤ) (w : ExponentialCover) :
+    expCoverLog (expDeck n w) =
+      expCoverLog w + (2 * π * Complex.I) * (n : ℂ) := by
+  rfl
+
+
+theorem expCoverLog_expCoverProjection (w : ExponentialCover) :
+    Complex.exp (expCoverLog w) =
+      ((expCoverProjection w : ℂˣ) : ℂ) := by
+  rfl
+
+
+theorem uLog_sheet_add (z : ℂ) (n k : ℤ) :
+    uLog (z, n + k) =
+      uLog (z, n) + (2 * π * Complex.I) * (k : ℂ) := by
+  unfold uLog
+  push_cast
+  ring
+
+theorem monodromyJordanBlock_succ (n : ℕ) :
+    let J : Matrix (Fin 2) (Fin 2) ℂ := !![1, 2 * π; 0, 1]
+    J ^ (n+1) = J ^ n * J := by
+  intro J
+  rw [pow_succ]
+
+/-
+## Structural Summary
+
+| Statement                                  | Status     | File                              |
+|--------------------------------------------|------------|-----------------------------------|
+| log(z·e^{2πi}) = log(z) + 2πi (principal) | FALSE      | mathlib's Complex.log             |
+| uLog(z·e^{2πi}, n) = uLog(z,n) + 2πi?      | AMBIGUOUS  | depends on principal branch       |
+| uLog(z, n+1) = uLog(z, n) + 2πi           | PROVED ✓   | uLog_deck_up (definitional)       |
+| J^n = [[1, 2πn]; [0, 1]]                   | PROVED ✓   | monodromyJordanBlock_pow          |
+| I+N where N²=0 ⇒ exp(N)=1+N               | PROVED ✓   | CliffBott has nilpotent lift      |
+| SplitCliffordInfinity ≅ universal cover    | NOT CLAIMED | algebraic and analytic carriers remain distinct |
 -/
 
 end InfoGeometry.Clifford.UniversalCoverLog

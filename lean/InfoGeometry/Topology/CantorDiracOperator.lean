@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -359,5 +364,271 @@ theorem modularThermalState_kms_boundary
       (InfoGeometry.Dynamics.ModularAutomorphismFamily.sigma thermalState.kms.modular
         (t + thermalState.kms.beta) b) a :=
   thermalState.kms.kms_boundary t a b
+
+
+noncomputable def finiteCantorDiracResolvent
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ) : Module.End ℂ ((Fin n → Bool) → ℂ) :=
+  (((weight n : ℝ) : ℂ) - z)⁻¹ •
+    (1 : Module.End ℂ ((Fin n → Bool) → ℂ))
+
+
+theorem finiteCantorDiracResolvent_apply
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ)
+    (ψ : (Fin n → Bool) → ℂ)
+    (w : (Fin n → Bool)) :
+    finiteCantorDiracResolvent weight n z ψ w =
+      (((weight n : ℝ) : ℂ) - z)⁻¹ * ψ w := by
+  simp [finiteCantorDiracResolvent, Algebra.smul_def]
+
+
+theorem finiteCantorDiracResolvent_eigenvector
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ)
+    (ψ : (Fin n → Bool) → ℂ) :
+    finiteCantorDiracResolvent weight n z ψ =
+      (((weight n : ℝ) : ℂ) - z)⁻¹ • ψ := by
+  ext w
+  simp [finiteCantorDiracResolvent, Algebra.smul_def]
+
+
+theorem finiteCantorDirac_shift_mul_resolvent
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ)
+    (hz : ((weight n : ℝ) : ℂ) - z ≠ 0) :
+    (finiteCantorDirac weight n -
+        z • (1 : Module.End ℂ ((Fin n → Bool) → ℂ))) *
+        finiteCantorDiracResolvent weight n z =
+      1 := by
+  rw [finiteCantorDirac_eq_smul_id]
+  ext ψ w
+  simp [finiteCantorDiracResolvent, Algebra.smul_def]
+  field_simp [hz]
+
+
+theorem finiteCantorDirac_resolvent_mul_shift
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ)
+    (hz : ((weight n : ℝ) : ℂ) - z ≠ 0) :
+    finiteCantorDiracResolvent weight n z *
+        (finiteCantorDirac weight n -
+          z • (1 : Module.End ℂ ((Fin n → Bool) → ℂ))) =
+      1 := by
+  rw [finiteCantorDirac_eq_smul_id]
+  ext ψ w
+  simp [finiteCantorDiracResolvent, Algebra.smul_def]
+  field_simp [hz]
+
+
+theorem finiteCantorDirac_resolvent_unique
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ)
+    (hz : ((weight n : ℝ) : ℂ) - z ≠ 0)
+    (R : Module.End ℂ ((Fin n → Bool) → ℂ))
+    (hleft :
+      (finiteCantorDirac weight n -
+          z • (1 : Module.End ℂ ((Fin n → Bool) → ℂ))) * R = 1) :
+    R = finiteCantorDiracResolvent weight n z := by
+  calc
+    R = (1 : Module.End ℂ ((Fin n → Bool) → ℂ)) * R := by simp
+    _ = (finiteCantorDiracResolvent weight n z *
+          (finiteCantorDirac weight n -
+            z • (1 : Module.End ℂ ((Fin n → Bool) → ℂ)))) * R := by
+      rw [finiteCantorDirac_resolvent_mul_shift weight n z hz]
+    _ = finiteCantorDiracResolvent weight n z *
+          ((finiteCantorDirac weight n -
+            z • (1 : Module.End ℂ ((Fin n → Bool) → ℂ))) * R) := by
+      rw [mul_assoc]
+    _ = finiteCantorDiracResolvent weight n z * 1 := by rw [hleft]
+    _ = finiteCantorDiracResolvent weight n z := by simp
+
+
+theorem finiteCantorDirac_resolvent_unique_right
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ)
+    (hz : ((weight n : ℝ) : ℂ) - z ≠ 0)
+    (R : Module.End ℂ ((Fin n → Bool) → ℂ))
+    (hright : R *
+        (finiteCantorDirac weight n -
+          z • (1 : Module.End ℂ ((Fin n → Bool) → ℂ))) = 1) :
+    R = finiteCantorDiracResolvent weight n z := by
+  calc
+    R = R * (1 : Module.End ℂ ((Fin n → Bool) → ℂ)) := by simp
+    _ = R * ((finiteCantorDirac weight n -
+          z • (1 : Module.End ℂ ((Fin n → Bool) → ℂ))) *
+          finiteCantorDiracResolvent weight n z) := by
+      rw [finiteCantorDirac_shift_mul_resolvent weight n z hz]
+    _ = (R * (finiteCantorDirac weight n -
+          z • (1 : Module.End ℂ ((Fin n → Bool) → ℂ)))) *
+          finiteCantorDiracResolvent weight n z := by
+      rw [mul_assoc]
+    _ = finiteCantorDiracResolvent weight n z := by rw [hright, one_mul]
+
+
+theorem finiteCantorDirac_resolvent_identity
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z w : ℂ)
+    (hz : ((weight n : ℝ) : ℂ) - z ≠ 0)
+    (hw : ((weight n : ℝ) : ℂ) - w ≠ 0) :
+    finiteCantorDiracResolvent weight n z -
+          finiteCantorDiracResolvent weight n w =
+      (z - w) •
+        (finiteCantorDiracResolvent weight n z *
+          finiteCantorDiracResolvent weight n w) := by
+  ext ψ u
+  simp [finiteCantorDiracResolvent, Algebra.smul_def]
+  field_simp [hz, hw]
+  ring
+
+
+theorem finiteCantorDiracResolvent_commutes
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ)
+    (T : Module.End ℂ ((Fin n → Bool) → ℂ)) :
+    finiteCantorDiracResolvent weight n z * T =
+      T * finiteCantorDiracResolvent weight n z := by
+  ext ψ w
+  simp [finiteCantorDiracResolvent, Algebra.smul_def]
+  change (((weight n : ℝ) : ℂ) - z)⁻¹ *
+      T (Pi.single ψ (1 : ℂ)) w =
+      T ((((weight n : ℝ) : ℂ) - z)⁻¹ •
+      (Pi.single ψ (1 : ℂ) : (Fin n → Bool) → ℂ)) w
+  rw [map_smul]
+  simp [smul_eq_mul]
+
+
+theorem finiteCantorDiracResolvent_ne_zero
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ)
+    (hz : ((weight n : ℝ) : ℂ) - z ≠ 0) :
+    finiteCantorDiracResolvent weight n z ≠ 0 := by
+  intro h
+  have hleft := finiteCantorDirac_shift_mul_resolvent weight n z hz
+  rw [h, mul_zero] at hleft
+  exact zero_ne_one hleft
+
+
+theorem finiteCantorDirac_resolvent_commutes
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ) :
+    finiteCantorDirac weight n * finiteCantorDiracResolvent weight n z =
+      finiteCantorDiracResolvent weight n z * finiteCantorDirac weight n := by
+  rw [finiteCantorDirac_eq_smul_id]
+  ext ψ w
+  simp [finiteCantorDiracResolvent, Algebra.smul_def]
+  ring
+
+
+theorem finiteCantorDiracResolvent_isCompactOperator
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (z : ℂ) :
+    IsCompactOperator
+      (finiteCantorDiracResolvent weight n z :
+        ((Fin n → Bool) → ℂ) → ((Fin n → Bool) → ℂ)) := by
+  let H := (Fin n → Bool) → ℂ
+  letI : FiniteDimensional ℂ H := by
+    dsimp [H]
+    infer_instance
+  letI : ProperSpace H := FiniteDimensional.proper ℂ H
+  let T : H →L[ℂ] H := {
+    toLinearMap := finiteCantorDiracResolvent weight n z
+    cont := LinearMap.continuous_of_finiteDimensional _
+  }
+  change IsCompactOperator (T : H → H)
+  refine ⟨Metric.closedBall (0 : H) 1,
+    ProperSpace.isCompact_closedBall 0 1, ?_⟩
+  apply ContinuousAt.preimage_mem_nhds T.continuous.continuousAt
+  simpa using (Metric.closedBall_mem_nhds (0 : H) (by norm_num))
+
+
+theorem finiteCantorDirac_commutes
+    (weight : ℕ → ℝ)
+    (n : ℕ)
+    (T : Module.End ℂ ((Fin n → Bool) → ℂ)) :
+    finiteCantorDirac weight n * T = T * finiteCantorDirac weight n := by
+  ext ψ w
+  simp [finiteCantorDirac]
+
+
+theorem finiteCantorDirac_mul_self
+    (weight : ℕ → ℝ)
+    (n : ℕ) :
+    finiteCantorDirac weight n * finiteCantorDirac weight n =
+      (((weight n : ℝ) : ℂ) ^ 2) •
+        (1 : Module.End ℂ ((Fin n → Bool) → ℂ)) := by
+  ext ψ w
+  simp [finiteCantorDirac, Algebra.smul_def, pow_two]
+
+
+theorem finiteCantorDirac_pow_apply
+    (weight : ℕ → ℝ)
+    (n k : ℕ)
+    (ψ : (Fin n → Bool) → ℂ)
+    (w : (Fin n → Bool)) :
+    ((finiteCantorDirac weight n) ^ k) ψ w =
+      (((weight n : ℝ) : ℂ) ^ k) * ψ w := by
+  induction k generalizing ψ with
+  | zero => simp
+  | succ k ih =>
+      rw [pow_succ, Module.End.mul_apply, ih]
+      simp [finiteCantorDirac_apply]
+      ring
+
+
+theorem finiteCantorDirac_commutes_pow
+    (weight : ℕ → ℝ)
+    (n k : ℕ)
+    (T : Module.End ℂ ((Fin n → Bool) → ℂ)) :
+    (finiteCantorDirac weight n) ^ k * T =
+      T * (finiteCantorDirac weight n) ^ k := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+      rw [pow_succ]
+      calc
+        (finiteCantorDirac weight n) ^ k *
+              (finiteCantorDirac weight n * T) =
+            (finiteCantorDirac weight n) ^ k *
+              (T * finiteCantorDirac weight n) := by
+                rw [finiteCantorDirac_commutes weight n T]
+        _ = ((finiteCantorDirac weight n) ^ k * T) *
+              finiteCantorDirac weight n := by
+                rw [mul_assoc]
+        _ = (T * (finiteCantorDirac weight n) ^ k) *
+              finiteCantorDirac weight n := by rw [ih]
+        _ = T * ((finiteCantorDirac weight n) ^ k *
+              finiteCantorDirac weight n) := by rw [mul_assoc]
+
+
+theorem middleThirdsScale_succ (n : ℕ) :
+    middleThirdsScale (n + 1) = 3 * middleThirdsScale n := by
+  simp [middleThirdsScale, pow_succ, mul_comm]
+
+
+theorem middleThirdsScale_pos (n : ℕ) :
+    0 < middleThirdsScale n := by
+  exact pow_pos (by norm_num) _
+
+
+theorem middleThirdsScale_one_le (n : ℕ) :
+    1 ≤ middleThirdsScale n := by
+  induction n with
+  | zero => simp [middleThirdsScale]
+  | succ n ih =>
+      rw [middleThirdsScale_succ]
+      nlinarith
 
 end InfoGeometry.Topology.CantorDiracOperator

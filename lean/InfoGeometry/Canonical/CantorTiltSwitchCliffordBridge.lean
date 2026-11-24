@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.HodgeDrazinEnvelope
@@ -750,6 +755,122 @@ theorem localParityFromCAR_eq_zero [Invertible (2 : OpC)] (j : ℕ) :
 
 end CommCARReconstruction
 
+
+theorem localMajoranaC_conjugate_tilt (j : ℕ) :
+    TS.localMajoranaC j * TS.T j * TS.localMajoranaC j = -TS.T j := by
+  unfold localMajoranaC
+  calc
+    TS.S j * TS.T j * TS.S j = TS.S j * (TS.T j * TS.S j) := by
+      noncomm_ring
+    _ = TS.S j * (-(TS.S j * TS.T j)) := by
+      rw [TS.T_S_anticomm j]
+    _ = -(TS.S j * TS.S j) * TS.T j := by
+      noncomm_ring
+    _ = -TS.T j := by rw [TS.S_sq j]; simp
+
+
+theorem localMajoranaC_conjugate_D (j : ℕ) :
+    TS.localMajoranaC j * TS.localMajoranaD j * TS.localMajoranaC j =
+      -TS.localMajoranaD j := by
+  unfold localMajoranaC localMajoranaD
+  calc
+    TS.S j * (TS.S j * TS.T j) * TS.S j =
+        (TS.S j * TS.S j) * TS.T j * TS.S j := by noncomm_ring
+    _ = TS.T j * TS.S j := by rw [TS.S_sq j]; simp
+    _ = -(TS.S j * TS.T j) := by exact TS.T_S_anticomm j
+
+
+theorem localMajoranaD_conjugate_C (j : ℕ) :
+    TS.localMajoranaD j * TS.localMajoranaC j * TS.localMajoranaD j =
+      TS.localMajoranaC j := by
+  have hDC :
+      TS.localMajoranaD j * TS.localMajoranaC j =
+        -(TS.localMajoranaC j * TS.localMajoranaD j) :=
+    eq_neg_of_add_eq_zero_right (TS.localMajoranaC_D_anticomm j)
+  calc
+    TS.localMajoranaD j * TS.localMajoranaC j * TS.localMajoranaD j =
+        -(TS.localMajoranaC j * TS.localMajoranaD j) *
+          TS.localMajoranaD j := by rw [hDC]
+    _ = -(TS.localMajoranaC j *
+          (TS.localMajoranaD j * TS.localMajoranaD j)) := by
+          noncomm_ring
+    _ = TS.localMajoranaC j := by
+          rw [TS.localMajoranaD_sq]
+          simp
+
+
+theorem localMajoranaC_C_comm (i j : ℕ) :
+    TS.localMajoranaC i * TS.localMajoranaC j =
+      TS.localMajoranaC j * TS.localMajoranaC i := by
+  unfold localMajoranaC
+  exact TS.S_comm i j
+
+
+theorem localMajoranaD_D_comm_of_ne
+    {i j : ℕ} (hij : i ≠ j) :
+    TS.localMajoranaD i * TS.localMajoranaD j =
+      TS.localMajoranaD j * TS.localMajoranaD i := by
+  unfold localMajoranaD
+  have hTiSj : TS.T i * TS.S j = TS.S j * TS.T i :=
+    TS.T_S_comm_ne i j hij
+  have hTjSi : TS.T j * TS.S i = TS.S i * TS.T j :=
+    TS.T_S_comm_ne j i (Ne.symm hij)
+  have hTiTj : TS.T i * TS.T j = TS.T j * TS.T i :=
+    TS.T_comm i j
+  have hSiSj : TS.S i * TS.S j = TS.S j * TS.S i :=
+    TS.S_comm i j
+  calc
+    (TS.S i * TS.T i) * (TS.S j * TS.T j) =
+        TS.S i * TS.S j * TS.T i * TS.T j := by
+      calc
+        (TS.S i * TS.T i) * (TS.S j * TS.T j) =
+            TS.S i * (TS.T i * TS.S j) * TS.T j := by noncomm_ring
+        _ = TS.S i * (TS.S j * TS.T i) * TS.T j := by rw [hTiSj]
+        _ = TS.S i * TS.S j * TS.T i * TS.T j := by noncomm_ring
+    _ = (TS.S i * TS.S j) * (TS.T i * TS.T j) := by noncomm_ring
+    _ = (TS.S j * TS.S i) * (TS.T j * TS.T i) := by
+      rw [hSiSj, hTiTj]
+    _ = TS.S j * TS.S i * TS.T j * TS.T i := by noncomm_ring
+    _ = TS.S j * (TS.S i * TS.T j) * TS.T i := by noncomm_ring
+    _ = TS.S j * (TS.T j * TS.S i) * TS.T i := by
+      rw [← hTjSi]
+    _ = (TS.S j * TS.T j) * (TS.S i * TS.T i) := by noncomm_ring
+
+
+theorem localMajoranaC_D_comm_of_ne
+    {i j : ℕ} (hij : i ≠ j) :
+    TS.localMajoranaC i * TS.localMajoranaD j =
+      TS.localMajoranaD j * TS.localMajoranaC i := by
+  unfold localMajoranaC localMajoranaD
+  have hSiTj : TS.S i * TS.T j = TS.T j * TS.S i :=
+    (TS.T_S_comm_ne j i (Ne.symm hij)).symm
+  have hSiSj : TS.S i * TS.S j = TS.S j * TS.S i :=
+    TS.S_comm i j
+  calc
+    TS.S i * (TS.S j * TS.T j) =
+        TS.S i * TS.S j * TS.T j := by noncomm_ring
+    _ = TS.S j * TS.S i * TS.T j := by rw [hSiSj]
+    _ = TS.S j * (TS.S i * TS.T j) := by noncomm_ring
+    _ = TS.S j * (TS.T j * TS.S i) := by rw [← hSiTj]
+    _ = (TS.S j * TS.T j) * TS.S i := by noncomm_ring
+
+
+theorem localMajoranaD_C_comm_of_ne
+    {i j : ℕ} (hij : i ≠ j) :
+    TS.localMajoranaD i * TS.localMajoranaC j =
+      TS.localMajoranaC j * TS.localMajoranaD i := by
+  exact (TS.localMajoranaC_D_comm_of_ne (Ne.symm hij)).symm
+
+
+theorem localCreationUnscaled_eq_localExteriorCreateRaw (j : ℕ) :
+    TS.localCreationUnscaled j = TS.localExteriorCreateRaw j := by
+  rfl
+
+
+theorem localAnnihilationUnscaled_eq_localExteriorContractRaw (j : ℕ) :
+    TS.localAnnihilationUnscaled j = TS.localExteriorContractRaw j := by
+  rfl
+
 end TiltSwitchSystem
 
 /--
@@ -920,4 +1041,66 @@ theorem constructCantorTiltSwitchCliffordBridgeTarget
 (R : CantorCliffordRepresentation Op) :
 CantorTiltSwitchCliffordBridgeTarget := by
   exact ⟨{ Op := Op, instRing := inferInstance, representation := R }⟩
+def IsFiniteCantorPauliRepresentation
+    (n : ℕ)
+    (Mat : Type*) [Ring Mat]
+    (psiGamma : Fin (2 * n) → Mat) : Prop :=
+  (∀ i, psiGamma i * psiGamma i = 1) ∧
+    (∀ i j, i ≠ j → psiGamma i * psiGamma j =
+      - (psiGamma j * psiGamma i))
+
+
+theorem finiteCantorPauli_generator_sq
+    {n : ℕ} {Mat : Type*} [Ring Mat]
+    {psiGamma : Fin (2 * n) → Mat}
+    (h : IsFiniteCantorPauliRepresentation n Mat psiGamma)
+    (i : Fin (2 * n)) :
+    psiGamma i * psiGamma i = 1 :=
+  h.1 i
+
+
+theorem finiteCantorPauli_generator_anticomm
+    {n : ℕ} {Mat : Type*} [Ring Mat]
+    {psiGamma : Fin (2 * n) → Mat}
+    (h : IsFiniteCantorPauliRepresentation n Mat psiGamma)
+    {i j : Fin (2 * n)} (hij : i ≠ j) :
+    psiGamma i * psiGamma j = -(psiGamma j * psiGamma i) :=
+  h.2 i j hij
+
+
+theorem cantorCliffordMatterEnvelope_zero
+    {Op : Type*} [Ring Op] [Star Op]
+    (D : DrazinHorizon Op)
+    (G : DrazinGreenHarmonic Op) :
+    cantorCliffordMatterEnvelope D G 0 = 0 := by
+  simp [cantorCliffordMatterEnvelope]
+
+
+theorem cantorCliffordMatterEnvelope_add
+    {Op : Type*} [Ring Op] [Star Op]
+    (D : DrazinHorizon Op)
+    (G : DrazinGreenHarmonic Op)
+    (x y : Op) :
+    cantorCliffordMatterEnvelope D G (x + y) =
+      cantorCliffordMatterEnvelope D G x +
+        cantorCliffordMatterEnvelope D G y := by
+  simp [cantorCliffordMatterEnvelope, mul_add, add_mul]
+
+
+theorem two_generator_sum_sq
+    {Op : Type*} [Ring Op]
+    (R : CantorCliffordRepresentation Op)
+    {i j : ℕ} (hij : i ≠ j) :
+    (R.gamma i + R.gamma j) * (R.gamma i + R.gamma j) = 2 := by
+  calc
+    (R.gamma i + R.gamma j) * (R.gamma i + R.gamma j) =
+        R.gamma i * R.gamma i +
+          (R.gamma i * R.gamma j + R.gamma j * R.gamma i) +
+            R.gamma j * R.gamma j := by
+              noncomm_ring
+    _ = 2 := by
+      rw [R.gamma_sq i, R.gamma_sq j, R.gamma_anticomm i j hij]
+      simp
+      exact one_add_one_eq_two
+
 end InfoGeometry.Canonical.CantorTiltSwitchCliffordBridge

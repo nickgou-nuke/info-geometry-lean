@@ -98,9 +98,9 @@ The resulting $\omega^\infty_n:A_n\to_p[\mathbb R]\mathbb R$ has the same
 pointwise convergence and tail bound, and additionally satisfies:
 
 ```lean
-(ω∞ (n + 1)).comp (ι n) = ω∞ n
-refinedPositiveReadout ι ω∞ n m = ω∞ n
-ω∞ n 1 = 1
+(ωLimit (n + 1)).comp (ι n) = ωLimit n
+refinedPositiveReadout ι ωLimit n m = ωLimit n
+ωLimit n 1 = 1
 ```
 
 The second identity holds for every stage and finite horizon. It concerns

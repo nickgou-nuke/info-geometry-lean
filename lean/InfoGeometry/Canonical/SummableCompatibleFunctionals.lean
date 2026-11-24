@@ -98,10 +98,10 @@ theorem exists_compatible_limit_of_summable
     (hε : ∀ n, 0 ≤ ε n) (hSum : Summable ε)
     (hι : ∀ n (a : A n), ‖ι n a‖ ≤ ‖a‖)
     (hω : ∀ n (a : A n), |ω (n + 1) (ι n a) - ω n a| ≤ ε n * ‖a‖) :
-    ∃ ω∞ : ∀ n, A n → ℝ,
-      (∀ n (a : A n), Tendsto (refinedReadout ι ω n a) atTop (𝓝 (ω∞ n a))) ∧
-      (∀ n (a : A n), ω∞ (n + 1) (ι n a) = ω∞ n a) ∧
-      (∀ n (a : A n), |ω∞ n a - ω n a| ≤ (∑' k : ℕ, ε (n + k)) * ‖a‖) := by
+    ∃ ωLimit : ∀ n, A n → ℝ,
+      (∀ n (a : A n), Tendsto (refinedReadout ι ω n a) atTop (𝓝 (ωLimit n a))) ∧
+      (∀ n (a : A n), ωLimit (n + 1) (ι n a) = ωLimit n a) ∧
+      (∀ n (a : A n), |ωLimit n a - ω n a| ≤ (∑' k : ℕ, ε (n + k)) * ‖a‖) := by
   have hShift : ∀ n, Summable (fun m : ℕ => ε (n + m)) := by
     intro n
     simpa only [Nat.add_comm n] using (summable_nat_add_iff n).2 hSum
@@ -118,19 +118,19 @@ theorem exists_compatible_limit_of_summable
   have hExists : ∀ n (a : A n),
       ∃ l : ℝ, Tendsto (refinedReadout ι ω n a) atTop (𝓝 l) :=
     fun n a => cauchySeq_tendsto_of_complete (hCauchy n a)
-  let ω∞ : ∀ n, A n → ℝ := fun n a => Classical.choose (hExists n a)
+  let ωLimit : ∀ n, A n → ℝ := fun n a => Classical.choose (hExists n a)
   have hLimit : ∀ n (a : A n),
-      Tendsto (refinedReadout ι ω n a) atTop (𝓝 (ω∞ n a)) :=
+      Tendsto (refinedReadout ι ω n a) atTop (𝓝 (ωLimit n a)) :=
     fun n a => Classical.choose_spec (hExists n a)
-  refine ⟨ω∞, hLimit, ?_, ?_⟩
+  refine ⟨ωLimit, hLimit, ?_, ?_⟩
   · intro n a
     have hTail : Tendsto (fun m => refinedReadout ι ω n a (m + 1))
-        atTop (𝓝 (ω∞ n a)) :=
+        atTop (𝓝 (ωLimit n a)) :=
       (tendsto_add_atTop_iff_nat 1).2 (hLimit n a)
     exact tendsto_nhds_unique (hLimit (n + 1) (ι n a)) hTail
   · intro n a
     calc
-      |ω∞ n a - ω n a| = dist (refinedReadout ι ω n a 0) (ω∞ n a) := by
+      |ωLimit n a - ω n a| = dist (refinedReadout ι ω n a 0) (ωLimit n a) := by
         rw [refinedReadout_zero, Real.dist_eq, abs_sub_comm]
       _ ≤ ∑' m : ℕ, ε (n + m) * ‖a‖ :=
         dist_le_tsum_of_dist_le_of_tendsto₀
@@ -191,14 +191,14 @@ theorem exists_normalized_positive_compatible_limit
     (hι : ∀ n (a : A n), ‖ι n a‖ ≤ ‖a‖)
     (hι_one : ∀ n, ι n 1 = 1) (hω_one : ∀ n, ω n 1 = 1)
     (hω : ∀ n (a : A n), |ω (n + 1) (ι n a) - ω n a| ≤ ε n * ‖a‖) :
-    ∃ ω∞ : ∀ n, A n →ₚ[ℝ] ℝ,
+    ∃ ωLimit : ∀ n, A n →ₚ[ℝ] ℝ,
       (∀ n (a : A n),
         Tendsto (refinedReadout (fun k => ι k) (fun k => ω k) n a)
-          atTop (𝓝 (ω∞ n a))) ∧
-      (∀ n, (ω∞ (n + 1)).comp (ι n) = ω∞ n) ∧
-      (∀ n m, refinedPositiveReadout ι ω∞ n m = ω∞ n) ∧
-      (∀ n, ω∞ n 1 = 1) ∧
-      (∀ n (a : A n), |ω∞ n a - ω n a| ≤ (∑' k : ℕ, ε (n + k)) * ‖a‖) := by
+          atTop (𝓝 (ωLimit n a))) ∧
+      (∀ n, (ωLimit (n + 1)).comp (ι n) = ωLimit n) ∧
+      (∀ n m, refinedPositiveReadout ι ωLimit n m = ωLimit n) ∧
+      (∀ n, ωLimit n 1 = 1) ∧
+      (∀ n (a : A n), |ωLimit n a - ω n a| ≤ (∑' k : ℕ, ε (n + k)) * ‖a‖) := by
   obtain ⟨f, hLimit, hCompatible, hBound⟩ :=
     exists_compatible_limit_of_summable
       (fun n => ι n) (fun n => ω n) ε hε hSum hι hω
@@ -210,21 +210,21 @@ theorem exists_normalized_positive_compatible_limit
     linearMapOfTendsto (f n)
       (fun m => (refinedPositiveReadout ι ω n m).toLinearMap)
       (tendsto_pi_nhds.mpr (hPositiveLimit n))
-  let ω∞ : ∀ n, A n →ₚ[ℝ] ℝ := fun n =>
+  let ωLimit : ∀ n, A n →ₚ[ℝ] ℝ := fun n =>
     PositiveLinearMap.mk (fLinear n) (by
       intro a b hab
       change f n a ≤ f n b
       exact le_of_tendsto_of_tendsto (hPositiveLimit n a) (hPositiveLimit n b)
         (Eventually.of_forall fun m => (refinedPositiveReadout ι ω n m).monotone hab))
-  have hCorrected : ∀ n (a : A n), ω∞ (n + 1) (ι n a) = ω∞ n a := hCompatible
-  refine ⟨ω∞, hLimit, ?_, ?_, ?_, hBound⟩
+  have hCorrected : ∀ n (a : A n), ωLimit (n + 1) (ι n a) = ωLimit n a := hCompatible
+  refine ⟨ωLimit, hLimit, ?_, ?_, ?_, hBound⟩
   · intro n
     ext a
     exact hCorrected n a
   · intro n m
     ext a
     rw [refinedPositiveReadout_apply]
-    exact refinedReadout_eq_of_compatible (fun k => ι k) (fun k => ω∞ k)
+    exact refinedReadout_eq_of_compatible (fun k => ι k) (fun k => ωLimit k)
       hCorrected n a m
   · intro n
     change f n (1 : A n) = 1

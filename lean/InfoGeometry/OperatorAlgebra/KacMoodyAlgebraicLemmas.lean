@@ -76,4 +76,7 @@ theorem sugawara_bilinear_current_bracket
   unfold kacMoodyCentralElement
   rw [mul_algebraMap_eq_smul, algebraMap_mul_eq_smul]
 
+def kacMoodyCurrentBracket (J : ℤ → Op) (k : ℝ) (m n : ℤ) : Prop :=
+  comm (J m) (J n) = algebraMap ℝ Op (kacMoodyCentralCoeff k m n)
+
 end InfoGeometry.OperatorAlgebra.KacMoodyAlgebraicLemmas

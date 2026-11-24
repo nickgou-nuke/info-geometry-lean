@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/ModularChiralMirror.lean
 
 Modular mirroring of chiral charge.
@@ -912,6 +917,21 @@ theorem realLinearModularChiralMirrorOwnerTarget :
     (M.J.comp M.Pleft).comp M.J = M.Pright ∧
     (M.J.comp M.Pright).comp M.J = M.Pleft :=
   modularChiralMirrorOwnerTarget
+
+theorem modularChiralMirror_projectors :
+  ∀ (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H],
+  ∀ M : ModularChiralMirrorDatum H,
+    M.J.comp M.Pleft = M.Pright.comp M.J ∧
+    M.J.comp M.Pright = M.Pleft.comp M.J ∧
+    (M.J.comp M.Pleft).comp M.J = M.Pright ∧
+    (M.J.comp M.Pright).comp M.J = M.Pleft := by
+  intro H _ _ M
+  exact ⟨
+    M.J_comp_Pleft,
+    M.J_comp_Pright,
+    M.J_conj_Pleft,
+    M.J_conj_Pright
+  ⟩
 
 end RealLinear
 

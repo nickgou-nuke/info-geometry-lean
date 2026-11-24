@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/JUnitaryTopologicalCharge.lean
 
 J-unitary operators and determinant Z2 charge.
@@ -673,5 +678,17 @@ theorem jUnitaryTopologicalCharge_packet
     (U : JUnitary Adj J) :
     Det.det U.op ^ 2 = 1 :=
   jUnitaryTopologicalChargeOwnerTarget Op Adj Det J hJ U
+
+/-- The determinant obstruction follows algebraically from the adjoint determinant datum. -/
+theorem jUnitaryTopologicalCharge_det_sq :
+  ∀ (Op : Type*) [Monoid Op],
+  ∀ Adj : AdjointDatum Op,
+  ∀ Det : AdjointDeterminantDatum Op Adj,
+  ∀ J : Op,
+  Det.det J ≠ 0 →
+  ∀ U : JUnitary Adj J,
+    Det.det U.op ^ 2 = 1 := by
+  intro Op _ Adj Det J hJ U
+  exact JUnitary.det_sq_eq_one Det hJ U
 
 end InfoGeometry.OperatorAlgebra.TopologicalCharge

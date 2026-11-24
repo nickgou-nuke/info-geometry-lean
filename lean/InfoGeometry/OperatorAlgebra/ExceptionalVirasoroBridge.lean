@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/ExceptionalVirasoroBridge.lean
 
 Exceptional affine/Virasoro bridge for horizon memory ledgers.
@@ -636,5 +641,26 @@ theorem current_mode_eq_zero_iff_hidden_memory_eq_zero
     rw [h, map_zero]
 
 end HorizonExceptionalVirasoroBridge
+
+theorem exceptionalVirasoroBridge_readout :
+  ∀ (J L Obs Memory Finite AffineAlg : Type*)
+    [AddCommGroup J] [Module ℝ J]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup Obs] [Module ℝ Obs]
+    [AddCommGroup Memory] [Module ℝ Memory]
+    [AddCommGroup Finite] [Module ℝ Finite] [LieRing Finite] [LieAlgebra ℝ Finite]
+    [AddCommGroup AffineAlg] [Module ℝ AffineAlg]
+    [LieRing AffineAlg] [LieAlgebra ℝ AffineAlg],
+  ∀ G : FiveGrading L,
+  ∀ A : FiveGradeProjectedAccounting J L Obs G,
+  ∀ B : HorizonExceptionalVirasoroBridge J L Obs Memory Finite AffineAlg A,
+    ∀ x y : J,
+      B.currentCalibration.memoryToAffine
+          (hiddenMemoryReadout B.horizon.ledger x y) =
+        B.currentCalibration.affineVirasoro.affine.Current
+          (B.currentCalibration.modeOf x y)
+          (B.currentCalibration.finiteChargeOf x y) := by
+  intro J L Obs Memory Finite AffineAlg _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ G A B
+  exact fun x y => B.hidden_memory_eq_current_mode x y
 
 end InfoGeometry.OperatorAlgebra.ExceptionalVirasoroBridge

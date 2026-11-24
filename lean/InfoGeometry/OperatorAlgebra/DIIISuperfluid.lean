@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/DIIISuperfluid.lean
 
 Class DIII superfluid/BdG symmetry sockets.
@@ -380,6 +385,26 @@ proves is not mere inhabitation; it exposes the kernel-checked sign,
 phase-reversal, chiral, and BdG covariance laws carried by that datum.
 -/
 theorem dIIISuperfluidOwnerTarget :
+  ∀ (H : Type uH) [NormedAddCommGroup H] [NormedSpace ℝ H],
+    ∀ D : DIIISuperfluidDatum H,
+      D.K.comp D.K = -(ContinuousLinearMap.id ℝ H) ∧
+      D.Theta.comp D.K = -(D.K.comp D.Theta) ∧
+      D.Xi.comp D.K = -(D.K.comp D.Xi) ∧
+      D.Theta.comp D.Theta = -(ContinuousLinearMap.id ℝ H) ∧
+      D.Xi.comp D.Xi = ContinuousLinearMap.id ℝ H ∧
+      D.Theta.comp D.Xi = -(D.Xi.comp D.Theta) ∧
+      D.chi = D.Theta.comp D.Xi ∧
+      D.chi.comp D.chi = ContinuousLinearMap.id ℝ H ∧
+      D.chi.comp D.K = D.K.comp D.chi ∧
+      D.Xi.comp D.BdG = -(D.BdG.comp D.Xi) ∧
+      D.Theta.comp D.BdG = D.BdG.comp D.Theta ∧
+      D.chi.comp D.BdG = -(D.BdG.comp D.chi) := by
+  intro H _ _ D
+  exact ⟨D.K_sq, D.Theta_reverses_phase, D.Xi_reverses_phase,
+    D.Theta_sq, D.Xi_sq, D.Theta_Xi_anticomm, D.chi_eq, D.chi_sq,
+    D.chi_phase_linear, D.Xi_BdG, D.Theta_BdG, D.chi_BdG⟩
+
+theorem dIIISuperfluid_properties :
   ∀ (H : Type uH) [NormedAddCommGroup H] [NormedSpace ℝ H],
     ∀ D : DIIISuperfluidDatum H,
       D.K.comp D.K = -(ContinuousLinearMap.id ℝ H) ∧

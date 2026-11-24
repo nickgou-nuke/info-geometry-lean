@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/ConstructiveCasimir.lean
 
 Constructive individuation of quadratic Casimir invariants.
@@ -332,6 +337,15 @@ The owner target is constructively discharged.
 theorem constructiveCasimirOwnerTarget
     (A ι : Type*) [Ring A] [Fintype ι] :
     ConstructiveCasimirOwnerTarget A ι := by
+  intro C
+  exact ⟨C.isCentral, C.unitConjugationInvariant⟩
+
+/-! ## 7. Native quadratic Casimir theorem -/
+
+theorem constructiveCasimir
+    (A ι : Type*) [Ring A] [Fintype ι] :
+    ∀ C : VerifiedQuadraticCasimir A ι,
+      IsCentral C.element ∧ IsUnitConjugationInvariant C.element := by
   intro C
   exact ⟨C.isCentral, C.unitConjugationInvariant⟩
 

@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/ModularMirrorBoundary.lean
 
 Closure/mirror boundary algebra.
@@ -392,5 +397,15 @@ theorem modularMirrorBoundary_packet
     M.IsTransparent M.diagonal ∧
       M.closure.theta M.imbalance = -M.imbalance :=
   modularMirrorBoundaryOwnerTarget V M
+
+theorem modularMirrorBoundary_properties :
+  ∀ (V : Type*) [AddCommGroup V] [Module ℝ V],
+  ∀ M : ClosureMirrorBoundary V,
+    M.IsTransparent M.diagonal ∧
+    M.closure.theta M.imbalance = -M.imbalance := by
+  intro V _ _ M
+  exact
+    ⟨M.diagonal_transparent,
+      M.imbalance_anti_fixed⟩
 
 end InfoGeometry.OperatorAlgebra.ModularMirrorBoundary

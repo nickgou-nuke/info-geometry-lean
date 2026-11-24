@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/ConformalLedgerBridge.lean
 
 Bridge between Stinespring/Tomita heat accounting and TKK Ricci-flux accounting.
@@ -497,5 +502,24 @@ theorem conformalLedgerBridge_packet
         (Λ.heatRicciBridge.generatorOf x)
         (Λ.heatRicciBridge.stateOf x) :=
   conformalLedgerBridgeOwnerTarget Sys Comm L State Geometry Λ x
+
+theorem conformalLedgerBridge_readout :
+  ∀ (Sys Comm L State Geometry : Type*)
+    [NormedAddCommGroup Sys] [NormedSpace ℝ Sys]
+    [NormedAddCommGroup Comm] [NormedSpace ℝ Comm]
+    [AddCommGroup L] [Module ℝ L] [LieRing L] [LieAlgebra ℝ L]
+    [AddCommGroup State] [Module ℝ State]
+    [AddCommGroup Geometry] [Module ℝ Geometry],
+  ∀ Λ : ConformalThermodynamicLedger
+      Sys Comm L State Geometry,
+  ∀ x : Sys,
+    heatLoss Λ.bregman Λ.channel x =
+      scalarTKKRicciFlux
+        Λ.closure
+        Λ.heatRicciBridge.scalarReadout
+        (Λ.heatRicciBridge.generatorOf x)
+        (Λ.heatRicciBridge.stateOf x) := by
+  intro Sys Comm L State Geometry _ _ _ _ _ _ _ _ _ _ _ _ Λ x
+  exact Λ.heat_eq_tkk_ricci_flux x
 
 end InfoGeometry.OperatorAlgebra.ConformalLedgerBridge

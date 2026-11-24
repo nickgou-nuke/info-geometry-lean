@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/FiniteJonesErlangerBridge.lean
 
 Finite Jones optics and Erlanger phase invariance.
@@ -263,6 +268,20 @@ def FiniteJonesErlangerBridgeOwnerTarget : Prop :=
 /-- The owner target follows from the diagonal-gauge invariance theorems. -/
 theorem finiteJonesErlangerBridgeOwnerTarget :
     FiniteJonesErlangerBridgeOwnerTarget := by
+  constructor
+  · intro G
+    exact diagonalGauge_preserves_brewsterCoreProjector G
+  · intro G rs hrs
+    exact diagonalGauge_brewster_det_zero G rs hrs
+
+theorem finiteJonesErlangerBridge :
+  (∀ G : DiagonalJonesGauge,
+    G.conjugate brewsterCoreProjector = brewsterCoreProjector)
+  ∧
+  (∀ G : DiagonalJonesGauge,
+   ∀ rs : ℂ,
+   ∀ hrs : rs ≠ 0,
+    det2 (G.conjugate (brewsterEvent rs hrs).jones) = 0) := by
   constructor
   · intro G
     exact diagonalGauge_preserves_brewsterCoreProjector G

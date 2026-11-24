@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/IndividuatedCasimir.lean
 
 The individuation of the Casimir.
@@ -97,6 +102,23 @@ theorem fixed_by_conjugation
     _ = C.element * 1 := by
             rw [U.val_inv]
     _ = C.element := by
+            simp
+
+theorem central_fixed_by_conjugation
+    (C : Op)
+    (central : ∀ X : Op, C * X = X * C)
+    (U : InvertibleTransport Op) :
+    U.conjugate C = C := by
+  dsimp [InvertibleTransport.conjugate]
+  calc
+    U.val * C * U.inv
+        = C * U.val * U.inv := by
+            rw [← central U.val]
+    _ = C * (U.val * U.inv) := by
+            rw [mul_assoc]
+    _ = C * 1 := by
+            rw [U.val_inv]
+    _ = C := by
             simp
 
 end VerifiedCasimir

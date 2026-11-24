@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/DrazinRepresentedSplit.lean
 
 Represented split algebras and Drazin projectors.
@@ -400,6 +405,18 @@ A compatible represented split carries an extracted represented split,
 circular-polarization, and Drazin core/null projector package.
 -/
 theorem drazinRepresentedSplitOwnerTarget
+    (Core Split Op : Type*)
+    [Ring Op] [Module ℝ Op]
+    (C : DrazinRepresentedSplitCompatibility Core Split Op) :
+    let W := C.toDrazinRepresentedSplit
+    W.coreRep = C.coreRep ∧
+      W.splitRep = C.splitRep ∧
+      W.circular = C.circular ∧
+      W.projectors = C.projectors ∧
+      W.defectLocus = C.defectLocus := by
+  exact ⟨rfl, rfl, rfl, rfl, rfl⟩
+
+theorem drazinRepresentedSplit_properties
     (Core Split Op : Type*)
     [Ring Op] [Module ℝ Op]
     (C : DrazinRepresentedSplitCompatibility Core Split Op) :

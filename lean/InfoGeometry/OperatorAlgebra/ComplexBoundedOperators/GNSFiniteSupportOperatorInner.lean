@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -63,5 +68,13 @@ theorem liftOp_positive_square_state (a : Alg n) :
     innerGNS p (omegaVec p) (liftOp p (fun i => involution a i * a i) (omegaVec p)) =
       omega p (fun i => involution a i * a i) := by
   exact liftOp_vector_state_recovers_omega p (fun i => involution a i * a i)
+
+/-- Cyclicity for the bounded-operator orbit of `omegaVec`. -/
+theorem liftOp_cyclic_property (x : GNS p) :
+    ∃ a : Alg n, liftOp p a (omegaVec p) = x := by
+  rcases cyclic_property p x with ⟨a, ha⟩
+  refine ⟨a, ?_⟩
+  rw [liftOp_omegaVec_eq_restrict]
+  exact ha
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupportOperatorInner

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Basic
@@ -101,5 +106,12 @@ theorem adjoint_relation (a x y : Two) :
     inner2 (mulVec a x) y = inner2 x (mulVec (involution a) y) := by
   simp [inner2, mulVec, involution]
   ring
+
+/-- Cyclicity: every vector is `a Ω` for `a = x`. -/
+theorem cyclic_property (x : Two) :
+    ∃ a : Two, mulVec a omegaVec = x := by
+  refine ⟨x, ?_⟩
+  funext i
+  simp [mulVec, omegaVec]
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteTwoPoint

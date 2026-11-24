@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Basic
@@ -109,5 +114,12 @@ theorem omega_eq_sum {n : ℕ} (a : FinAlg n) :
   apply Finset.sum_congr rfl
   intro i _
   simp
+
+/-- Cyclicity: every vector is `a Ω` for `a = x`. -/
+theorem cyclic_property {n : ℕ} (x : FinAlg n) :
+    ∃ a : FinAlg n, mulVec a (omegaVec n) = x := by
+  refine ⟨x, ?_⟩
+  funext i
+  simp [mulVec, omegaVec]
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFinite

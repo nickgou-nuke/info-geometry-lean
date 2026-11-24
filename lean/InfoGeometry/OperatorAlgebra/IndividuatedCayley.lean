@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/IndividuatedCayley.lean
 
 Individuated Cayley transform.
@@ -729,5 +734,36 @@ attribute [rep_depth operator]
   VerifiedCayleyResolvent.cayley_parity_inversion
   VerifiedCayleyResolvent.one_add_cayley_eq_two_mul_operator_resolvent
   VerifiedCayleyResolvent.one_sub_cayley_eq_two_mul_phase_resolvent
+
+theorem cayley_unity_properties :
+  ∀ (A : Type*) [Ring A] [StarRing A],
+  ∀ R : VerifiedCayleyResolvent A,
+    star R.cayley * R.cayley = 1 ∧
+      R.cayley * star R.cayley = 1 := by
+  intro A _ _ R
+  exact R.cayley_unitary
+
+attribute [rep_depth operator]
+  PhaseLinear
+  inverse_commutes_of_commutes
+  inverse_phaseLinear
+  VerifiedPhaseResolvent
+  VerifiedPhaseResolvent.denomInv_phase_linear
+  operator_cayley_right_sub_relation
+  operator_cayley_right_add_relation
+  boundedCayley
+  D_add_K_commutes_D_sub_K
+  cayley_factors_commute
+  boundedCayley_is_phase_linear
+  VerifiedUnitaryResolvent
+  VerifiedUnitaryResolvent.star_denomInv_mul_num_eq_one
+  VerifiedUnitaryResolvent.num_mul_star_denomInv_eq_one
+  VerifiedUnitaryResolvent.boundedCayley_star_mul_self
+  VerifiedUnitaryResolvent.boundedCayley_mul_star_self
+  VerifiedUnitaryResolvent.boundedCayley_is_unitary
+  VerifiedCayleyResolvent
+  VerifiedCayleyResolvent.cayley_star_mul_cayley
+  VerifiedCayleyResolvent.cayley_mul_star_cayley
+  VerifiedCayleyResolvent.cayley_unitary
 
 end InfoGeometry.OperatorAlgebra.IndividuatedCayley

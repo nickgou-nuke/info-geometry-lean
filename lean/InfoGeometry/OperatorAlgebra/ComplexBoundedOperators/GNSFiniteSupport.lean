@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
@@ -147,5 +152,13 @@ theorem null_iff_norm_inner_zero (a : Alg n) :
       have hsqrt : ‖restrict p a i‖ = 0 := sq_eq_zero_iff.mp hterm
       simpa [restrict] using hsqrt
     exact norm_eq_zero.mp hnorm
+
+/-- Cyclicity: every GNS vector is the restriction of an ambient algebra element. -/
+theorem cyclic_property (x : GNS p) :
+    ∃ a : Alg n, restrict p a = x := by
+  let a : Alg n := fun i => if h : p i then x ⟨i, h⟩ else 0
+  refine ⟨a, ?_⟩
+  funext i
+  simp [restrict, a, i.2]
 
 end InfoGeometry.OperatorAlgebra.ComplexBoundedOperators.GNSFiniteSupport

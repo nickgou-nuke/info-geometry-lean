@@ -232,3 +232,69 @@ equality. GitHub metadata confirms the repository is public. This requires no
 token or persistent credentials and preserves every gitlink, dependency pin,
 source file, and proof gate. It also preserves validation of GitHub's PR merge
 revision. No missing submodule URL was guessed or installed.
+
+### Actual compiler result and conjugation-zero proof repair
+
+The replacement workflow run `45372272026` checked merge commit
+`0677beb96a6caeb25a73b8c7de94b055687ba186`, whose tree
+`eabd89fec8438ef8e8fe6b99d579230444c60930` exactly matches the repaired parent
+head. Public checkout, Lean 4.34.1 installation, artifact hydration, and
+package-source/pin validation passed. The focused build ran from 10:17:55
+to 10:27:10 UTC on 2026-11-24 and exited 1.
+
+There was one concrete elaboration error:
+`CanonicalZornRegularNorm.lean:122:6`. Simplifying the double-conjugation
+equality produced a conjunction of four coordinate equalities, while the
+goal remained the structure equality `Z = 0`. The owner also emitted the
+`unnecessarySimpa` diagnostic at line 129, which would matter to its later
+fresh warning-as-error check. The fresh checks and axiom audit did not run:
+37 expected records, zero observed records. The other two new owners could
+not be accepted through their failed dependency. All recorded source and
+control hashes remained unchanged during this actual run.
+
+The uploaded artifact `14911375401` has SHA-256
+`57b8cc4b3afe82eedd28c631214b29c39d563047f03fbea8daf3e62dbe6db398`.
+Its build log has SHA-256
+`deae7d268573fecb3916a7491b146e93e72cd549145bbec3b468feef11f1f840`.
+These are compiler-failure evidence, not acceptance receipts.
+
+`audit_math` produced an isolated two-site source repair and `source_scout`
+independently reviewed it: PASS. Root inspected and integrated the exact
+candidate. The repaired norm owner has SHA-256
+`c8828faadc1a5a83c44a5c88a3cbad26887b403798da5e93cb8ac807e1f0aac5`.
+It derives `Z = 0` by the native `ZornMatrix.ext` rule, projecting the two
+swapped scalar coordinates and cancelling negation on the spatial coordinates.
+The scalar contradiction now uses the compiler-recommended `simp at hscalar`.
+All nine theorem statements, hypotheses, imports, and declaration counts are
+unchanged. No gate, pin, package source, or cache is changed by this repair.
+Fresh validation of the repaired source remains pending.
+
+
+### Independent static receipt for the two-site CI repair
+
+All six maintained static gates scoped to the changed norm owner returned
+exit 0, with zero vacuity, semantic-content, or OpenGauss findings. The final
+comparison at 10:32:18 UTC confirmed the repaired source hash, all nine
+unchanged theorem statements/imports, required headers, absence of forbidden
+constructs, exactly two staged paths, no unstaged differences, and unchanged
+captured control/source/index hashes throughout the check. Existing owners
+and workflow controls were not modified or unnecessarily rechecked.
+
+Exact commands ran serially from the repository root:
+
+```bash
+python3 tools/quality/proof_proxy_staged_gate.py --strict lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean
+python3 tools/quality/semantic_vacuity_gate.py lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean --fail-on error --json-out /tmp/real-dirac-publication-recovery/triality-intake/qa/parent-repair-run-001/semantic-vacuity.json
+python3 tools/quality/semantic_content_audit.py --file-prefix lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean --gate --json-out /tmp/real-dirac-publication-recovery/triality-intake/qa/parent-repair-run-001/semantic-content.json --md-out /tmp/real-dirac-publication-recovery/triality-intake/qa/parent-repair-run-001/semantic-content.md
+python3 tools/infra/opengauss_screener.py lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean --strict --json
+python3 tools/infra/opengauss_cli.py refute lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean --strict --json
+python3 tools/infra/opengauss_cli.py review lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean --gate GATE_4 --json
+```
+
+- `static-gate-receipts.json` SHA-256: `c7f09b54143c8f4d4681c02b103dff167a0521fe11f5158cd45c26791b52e309`.
+- `final-inspection.json` SHA-256: `00fb7de6df8502ea94ccb8c74259d845ea73044253814d987c860fdd57a993ae`.
+
+This receipt is a source/static PASS for the exact repair. No local compiler,
+new lock probe, workflow rerun, or axiom audit occurred in this static lane.
+A new published CI run must establish whether the repaired proof elaborates
+and whether dependent owners and all 37 axiom records pass.

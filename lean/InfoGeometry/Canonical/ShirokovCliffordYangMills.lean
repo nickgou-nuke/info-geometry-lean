@@ -841,6 +841,24 @@ theorem shirokovCenterProjection_idempotent (n : ℕ)
   shirokovCenterProjection_fixes_center n _
     (shirokovCenterProjection_mem_center n x)
 
+/-- Central elements of the finite-stage `Cl(0,n)` have no blade coordinates
+outside the scalar and odd-dimensional top grades. -/
+theorem shirokov_center_coordinate_support (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hx : x ∈ Subalgebra.center ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)))
+    (T : Finset (Fin n)) (hEmpty : T ≠ ∅)
+    (hTop : ¬ (Odd n ∧ T = (Finset.univ : Finset (Fin n)))) :
+    bladeRepr ℝ n x T = 0 := by
+  have hfix := shirokovCenterProjection_fixes_center n x hx
+  have hzero := shirokov_reynolds_noncentral_coordinate_zero n x T hEmpty hTop
+  change (shirokovBladeCoordinates n (shirokovReynolds n x)) T = 0 at hzero
+  change (shirokovBladeCoordinates n x) T = 0
+  rw [← hfix]
+  change (shirokovBladeCoordinates n
+      (((2 ^ n : ℝ)⁻¹) • shirokovReynolds n x)) T = 0
+  rw [map_smul, Pi.smul_apply, hzero]
+  simp
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

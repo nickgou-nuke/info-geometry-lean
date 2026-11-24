@@ -172,7 +172,13 @@ as multiplication by `2^n` on every central element. After normalization,
 central element, and is idempotent. Thus the standard-frame finite-stage
 operator is a genuine projection onto the center of `Cl(0,n)`. This does not
 yet transport the result to the paper's varying dual frame or prove the
-odd-dimensional reduced-sum identity. Its targeted locked build of
+odd-dimensional reduced-sum identity. The new
+`shirokov_center_coordinate_support` theorem also shows that a central
+element has zero ordered-blade coordinates outside the scalar coordinate and,
+in odd dimension, the top-blade coordinate. Its proof composes the center
+projection fixed-point theorem with the Reynolds coordinate-support theorem.
+This remains a statement about the repository's standard negative-definite
+finite-stage carrier, not a varying-frame classification theorem. Its targeted locked build of
 `InfoGeometry.Canonical.ShirokovCliffordYangMills` passed (9,091 jobs, exit
 code 0); the owner axiom audit passed (1 module, 0 failures), the strict
 OpenGauss source screen passed (0 traps), and the staged proof proxy gate

@@ -45,10 +45,13 @@ positive-definite orthonormal-frame results are special cases only.
 `shirokov_grade_sandwich_blade_eigenvalue_action` evaluates the standard-frame
 sandwich operator on every ordered blade as the negative of the paper's grade
 eigenvalue. The sign is due to the negative generator square in this fixed
-`Cl(0,n)` carrier. Together with the even-dimensional Vandermonde result above,
-this closes the scalar action calculation, but not the Clifford-valued
-grade-projection identity or existence under the paper's moving-frame
-hypotheses.
+`Cl(0,n)` carrier. The even-dimensional Vandermonde interpolation is lifted by
+`shirokov_even_grade_projector_blade` to ordered blades and by
+`shirokov_even_grade_projector_apply` to arbitrary elements, where it agrees
+with the ordered-blade-coordinate grade projection. The follow-up
+`shirokov_even_grade_projector_compose_blade` proves the composition law on
+individual blades. Operator-level idempotence/composition and existence under
+the paper's moving-frame hypotheses remain open.
 
 ## Implementation order
 

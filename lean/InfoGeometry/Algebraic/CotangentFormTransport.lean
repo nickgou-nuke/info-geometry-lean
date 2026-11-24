@@ -45,8 +45,8 @@ theorem cotangentForm_pullback_frameAction
     (hBC : ∀ x y, C (e x) (e y) = B x y) :
     (cotangentForm C).compl₁₂ (frameAction e).toLinearMap
       (frameAction e).toLinearMap = cotangentForm B := by
-  ext v w
-  exact cotangentForm_frameAction e B C hBC v w
+  exact LinearMap.ext fun v => LinearMap.ext fun w =>
+    cotangentForm_frameAction e B C hBC v w
 
 /-- Adding a bilinear term in the primal arguments preserves nondegeneracy
 on the full vector/dual product. Alternation is a separate property of `B`. -/
@@ -61,6 +61,7 @@ theorem cotangentForm_nondegenerate (B : LinearMap.BilinForm ℝ V) :
         sub_zero, add_zero] using hv (0, φ)
     apply Prod.ext hx
     ext x
+    change v.2 x = 0
     simpa only [cotangentForm_apply, hx, map_zero, LinearMap.zero_apply,
       zero_sub, zero_add, add_zero, neg_eq_zero] using hv (x, 0)
   · intro v hv
@@ -71,10 +72,13 @@ theorem cotangentForm_nondegenerate (B : LinearMap.BilinForm ℝ V) :
         zero_sub, zero_add, add_zero, neg_eq_zero] using hv (0, φ)
     apply Prod.ext hx
     ext x
+    change v.2 x = 0
     simpa only [cotangentForm_apply, hx, map_zero, LinearMap.zero_apply,
       sub_zero, add_zero] using hv (x, 0)
 
 section LieAlgebra
+
+attribute [local instance 100] LieRing.ofAssociativeRing
 
 variable {L : Type*} [LieRing L] [LieAlgebra ℝ L]
 

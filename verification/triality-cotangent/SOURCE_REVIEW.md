@@ -154,3 +154,38 @@ Native acceptance of this new seven-owner change is pending. The focused
 hosted workflow supplies the compiler, fresh-source, and native axiom route,
 followed by the separate synthesis compatibility build. Draft publication
 does not discharge any of those requirements.
+
+
+## Hosted compiler follow-up (2026-11-24)
+
+The first hosted transaction at published commit
+`91a9661ddfb797c53ebe677e8d4b1d9055d96158` failed during the target build:
+[run 45375039311](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45375039311).
+The artifact ZIP has SHA-256
+`3e4b3cf7860a527b5ffa776ec6de2e0e50517355d58616095cc13361f7fd5b7e`.
+The fresh-source and native axiom steps did not run, and the synthesis-consumer
+step was skipped. This supersedes the earlier pending-run observation.
+
+Three proof-only repairs were independently generated and reviewed against the
+complete artifact log and the pinned Mathlib source:
+
+- Finish identity/composition application goals in the fixed coadjoint action
+  by definitional reduction after the representation's `map_one`/`map_mul`.
+- Use explicit linear-map extensionality for the bilinear pullback; expose the
+  zero dual evaluation goals; enable the native associative Lie-ring instance
+  locally for the existing `LieAlgebra.ad` construction.
+- Reduce the vector heads/tails exposed by the finite-coordinate simp lemmas
+  in the common fixed-plane characterization.
+
+All declaration statements and hypotheses are unchanged. Source checks on the
+three repaired modules passed: staged proof gate, source debt/axiom scan,
+scope scan, semantic gate (zero findings), and placeholder audit (zero hard
+findings, one previously reviewed native bracket-alternation soft flag).
+These checks do not establish native compilation. A replacement exact-head
+hosted transaction remains required.
+
+| Repaired owner | SHA-256 |
+|---|---|
+| `Algebraic/CoadjointActionGroupoid.lean` | `402f537cfa4029ad6c42ff9886539e3b86eed171bac61028a9ca7da8a471f953` |
+| `Algebraic/CotangentFormTransport.lean` | `19f14810562b5628032767fb71ed4850cfa1401c4fd2715b1ec4be04204345df` |
+| `Lie/CartanTrialityFirstCoordinate.lean` | `8b0b7712d6a1d286734c4df08c1dd67f96b7b851378f39e69eeb843d6885e9c2` |

@@ -218,12 +218,14 @@ the existing contragredient action. -/
     apply Subtype.ext
     change coadjointRepresentation Ad (1 : G) (μ : Module.Dual ℝ V) = μ
     rw [map_one]
+    rfl
   mul_smul g h μ := by
     apply Subtype.ext
     change coadjointRepresentation Ad ((g : G) * (h : G)) (μ : Module.Dual ℝ V) =
       coadjointRepresentation Ad (g : G)
         (coadjointRepresentation Ad (h : G) (μ : Module.Dual ℝ V))
     rw [map_mul]
+    rfl
 
 /-- Its native action category carries Mathlib's groupoid instance. -/
 abbrev FixedCoadjointGroupoid (Ad : G →* (V ≃ₗ[ℝ] V)) (τ : G ≃* G)

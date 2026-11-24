@@ -248,7 +248,7 @@ theorem firstFixedCartanSubmodule_iff (v : Fin 4 → ℝ) :
   simp only [Matrix.mulVec_mulVec, conventionChange_sq, Matrix.one_mulVec] at h
   rw [h, cartan_s3_fixed_subspace_iff]
   simp only [conventionChange_mulVec, Matrix.cons_val_zero, Matrix.cons_val_one,
-    Matrix.cons_val_two, Matrix.cons_val_three, neg_eq_zero]
+    Matrix.cons_val_two, Matrix.cons_val_three, Matrix.head_cons, Matrix.tail_cons, neg_eq_zero]
   constructor
   · rintro ⟨h0, hsum⟩
     exact ⟨h0, by linarith⟩

@@ -1,0 +1,147 @@
+name: Native real Zorn triality
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Canonical/ZornInfinitesimalTriality.lean'
+      - 'lean/InfoGeometry/Canonical/ZornTrialityMatrixDerivations.lean'
+      - 'lean/InfoGeometry/Canonical/ZornCliffordFaithful.lean'
+      - 'lean/InfoGeometry/Canonical/ZornCliffordRepresentation.lean'
+      - 'lean/InfoGeometry/Canonical/ZornSpinor.lean'
+      - 'lean/InfoGeometry/Lie/CanonicalZornRegularOperators.lean'
+      - 'lean/InfoGeometry/Lie/CanonicalZornRegularNorm.lean'
+      - 'lean/InfoGeometry/Lie/CanonicalZornWittRegularBridge.lean'
+      - 'lean/InfoGeometry/Lie/CanonicalZornDerivation.lean'
+      - 'lean/InfoGeometry/Lie/SplitOctonionCliffordNoninjective.lean'
+      - 'lean/InfoGeometry/Lie/SplitOctonionCliffordAction.lean'
+      - 'lean/InfoGeometry/Lie/SplitOctonionWittVectorCovectorBridge.lean'
+      - 'lean/InfoGeometry/Lie/SplitOctonionWittPairingTransportBridge.lean'
+      - 'lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean'
+      - 'lean/InfoGeometry/Algebra/ZornVectorMatrix.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/MatrixDerivation.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/CanonicalVectorMatrixBridge.lean'
+      - 'lean/InfoGeometry/Exceptional/CompositionTriality.lean'
+      - 'lean/InfoGeometry/Clifford/ClNNNeutralChevalleyBridge.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11SplitTowerMatrixEquiv.lean'
+      - 'verification/zorn-triality/**'
+      - 'verification/real-dirac-spin-nambu/check.py'
+      - 'verification/real-matrix-split/**'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/pathing.py'
+      - 'tools/infra/assert_v428_toolchain_freeze.py'
+      - 'scripts/infra/enforce-v428-local-manifests.sh'
+      - 'lean-toolchain'
+      - 'lakefile.lean'
+      - 'lake-manifest.json'
+      - '.github/workflows/zorn-triality.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zorn-triality-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      LEAN_NUM_THREADS: '2'
+    steps:
+      - name: Check out the exact public revision
+        shell: bash
+        env:
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git -c protocol.version=2 fetch --no-tags --depth=1 --no-recurse-submodules origin "$GITHUB_SHA"
+          git -c submodule.recurse=false checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$GITHUB_SHA"
+      - name: Record the checked revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          git rev-parse HEAD > zorn-triality-revision.log
+          git rev-parse 'HEAD^{tree}' >> zorn-triality-revision.log
+          git status --short >> zorn-triality-revision.log
+      - name: Restore pinned dependency artifacts
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ runner.os }}-lean4341-lake-${{ hashFiles('lean-toolchain', 'lakefile.lean', 'lake-manifest.json') }}-zorn-witt
+      - name: Install the exact repository toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          python3 - <<'PY'
+          from pathlib import Path
+          import subprocess
+          subprocess.run([str(Path.home() / '.elan/bin/elan'), 'toolchain', 'install',
+                          Path('lean-toolchain').read_text().strip()], check=True)
+          PY
+      - name: Hydrate artifacts at the focused package pins
+        run: python3 verification/real-matrix-split/check.py exe cache get
+      - name: Verify package sources and unchanged pins
+        id: pins
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+          import tomllib
+          focused = Path('verification/real-matrix-split')
+          config = tomllib.loads((focused / 'lakefile.toml').read_text())
+          packages = (focused / config['packagesDir']).resolve()
+          manifest = json.loads((focused / 'lake-manifest.json').read_text())
+          for spec in manifest['packages']:
+              package = packages / spec['name']
+              def git(*args):
+                  return subprocess.check_output(['git', '-C', str(package), *args], text=True).strip()
+              if package.is_symlink() or not (package / '.git').is_dir():
+                  raise SystemExit(f"Not an ordinary package checkout: {spec['name']}")
+              if git('rev-parse', 'HEAD') != spec['rev']:
+                  raise SystemExit(f"Package revision mismatch: {spec['name']}")
+              if git('remote', 'get-url', 'origin') != spec['url']:
+                  raise SystemExit(f"Package URL mismatch: {spec['name']}")
+              if git('status', '--porcelain'):
+                  raise SystemExit(f"Dirty package source: {spec['name']}")
+              print(f"Pinned clean package: {spec['name']} {spec['rev']}")
+          PY
+          bash scripts/infra/enforce-v428-local-manifests.sh
+          git diff --exit-code -- lean-toolchain lake-manifest.json verification/real-matrix-split/lean-toolchain verification/real-matrix-split/lake-manifest.json verification/real-matrix-split/lakefile.toml
+      - name: Build exact owners and inspect every selected axiom record
+        run: >-
+          python3 verification/zorn-triality/check.py
+          --repo "$GITHUB_WORKSPACE"
+          --output "$RUNNER_TEMP/zorn-triality-verification"
+      - name: Preserve the exact validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zorn-triality-verification
+          path: |
+            zorn-triality-revision.log
+            ${{ runner.temp }}/zorn-triality-verification
+      - name: Save pinned dependency artifacts
+        if: always() && github.event_name == 'workflow_dispatch' && steps.pins.outcome == 'success' && steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}

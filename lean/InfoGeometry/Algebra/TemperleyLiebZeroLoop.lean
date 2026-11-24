@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.GL11LocalGenerators
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.LogarithmicJordanPair
+import InfoGeometry.Algebra.MatrixNoncommutativity
 
 /-!
 # A concrete zero-loop Temperley--Lieb representation
@@ -15,6 +21,17 @@ namespace InfoGeometry.Algebra.TemperleyLiebZeroLoop
 
 open Matrix
 open scoped Matrix ComplexConjugate
+
+/-- Closed non-commutativity witnesses for the `4 × 4` complex matrix carrier (T16). -/
+theorem mat4_complex_noncomm_witness :
+    ∃ A B : Matrix (Fin 4) (Fin 4) ℂ, A * B ≠ B * A := by
+  let E01 : Matrix (Fin 4) (Fin 4) ℂ := fun i j => if i = 0 ∧ j = 1 then 1 else 0
+  let E10 : Matrix (Fin 4) (Fin 4) ℂ := fun i j => if i = 1 ∧ j = 0 then 1 else 0
+  refine ⟨E01, E10, ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℂ => M 0 0) h
+  change (∑ k : Fin 4, E01 0 k * E10 k 0) = (∑ k : Fin 4, E10 0 k * E01 k 0) at h00
+  norm_num [E01, E10, Fin.sum_univ_four] at h00
 
 /-- The standard two-site Temperley--Lieb generator at `q = I`, in basis
 `(00,01,10,11)`. -/
@@ -164,5 +181,19 @@ theorem right_left_right :
     fin_cases d <;> fin_cases e <;> fin_cases f <;>
     simp [leftGenerator, rightGenerator, pairEntry, Matrix.mul_apply,
       Fintype.sum_prod_type, Fin.sum_univ_two, Complex.I_mul_I]
+
+/-- The open three-site zero-loop TL Hamiltonian on the existing carrier. -/
+def chainHamiltonian : Matrix Triple Triple ℂ :=
+  -(leftGenerator + rightGenerator)
+
+theorem chainHamiltonian_sq :
+    chainHamiltonian * chainHamiltonian =
+      leftGenerator * rightGenerator + rightGenerator * leftGenerator := by
+  unfold chainHamiltonian
+  rw [neg_mul, mul_neg, neg_neg]
+  simp only [add_mul, mul_add]
+  rw [leftGenerator_sq_zero, rightGenerator_sq_zero]
+  simp only [zero_add, add_zero]
+  rw [add_comm]
 
 end InfoGeometry.Algebra.TemperleyLiebZeroLoop

@@ -88,6 +88,14 @@ def ellipticKleinMap (I x₁ x₂ x₃ x₄ x₅ x₆ : B) : Plucker6 B where
 def senaryDefect (x₁ x₂ x₃ x₄ x₅ x₆ : B) : B :=
   (x₁ * x₂ - x₂ * x₁) + (x₃ * x₄ - x₄ * x₃) + (x₅ * x₆ - x₆ * x₅)
 
+/-- Expansion of one split Klein pair, with its order-sensitive commutator term. -/
+theorem splitKleinPair_expansion (a b : B) :
+    (a + b) * (a - b) = a * a - b * b - (a * b - b * a) := by
+  calc
+    (a + b) * (a - b) = a * (a - b) + b * (a - b) := by rw [add_mul]
+    _ = a * a - a * b + (b * a - b * b) := by rw [mul_sub, mul_sub]
+    _ = a * a - b * b - (a * b - b * a) := by noncomm_ring
+
 /-- **Split Klein form over `[Ring B]`.**  The Klein quadric of the split
 substitution is the `SO(3,3)` form minus the commutator defect. -/
 theorem kleinQ_splitKleinMap (x₁ x₂ x₃ x₄ x₅ x₆ : B) :
@@ -241,6 +249,40 @@ theorem isKlein_compound (A : Matrix (Fin 4) (Fin 4) R) {P : Plucker6 R}
 
 end Compound
 
+/-! ## 2b. The determinant-zero locus is not an additive ideal -/
+
+section DeterminantZeroLocus
+
+variable {K : Type*} [CommRing K]
+
+/-- The determinant-zero locus in `M₄(K)` is not closed under addition.
+The two diagonal projections `E₀₀` and `1 - E₀₀` are singular, but their sum
+is the identity.  This rules out treating all singular matrices as an ideal;
+it does not by itself prove the separate simplicity theorem for `M₄(K)`. -/
+theorem determinant_zero_locus_not_additive :
+    let f : Matrix (Fin 4) (Fin 4) K := Matrix.single 0 0 1
+    Matrix.det f = 0 ∧
+    Matrix.det (1 - f) = 0 ∧
+    f + (1 - f) = 1 ∧
+    Matrix.det (f + (1 - f)) = 1 := by
+  let f : Matrix (Fin 4) (Fin 4) K := Matrix.single 0 0 1
+  have hf : Matrix.det f = 0 :=
+    Matrix.det_eq_zero_of_row_eq_zero 1 (by
+      intro j
+      simp [f])
+  have hcomp : Matrix.det (1 - f) = 0 :=
+    Matrix.det_eq_zero_of_row_eq_zero 0 (by
+      intro j
+      fin_cases j <;> simp [f, Matrix.sub_apply])
+  have hsum : f + (1 - f) = 1 := by
+    ext i j
+    simp [Matrix.add_apply, Matrix.sub_apply]
+  refine ⟨hf, hcomp, hsum, ?_⟩
+  rw [hsum]
+  simp
+
+end DeterminantZeroLocus
+
 /-! ## 3. Lorentz boost as a collineation (Dahm, Eq. 4 and Sec. III.B) -/
 
 section Boost
@@ -328,5 +370,43 @@ theorem polar_add_null (A : Matrix n n B) : (A + Aᵀ) + (A - Aᵀ) = A + A := b
   abel
 
 end PolarNull
+
+/-! ## 6. Genuine polar / null decomposition when two is invertible -/
+
+section NormalizedPolarNull
+
+variable {K : Type*} [Field K] [CharZero K] {n : Type*}
+
+/-- The normalized symmetric polar component `(A + Aᵀ) / 2`. -/
+def symmetricComponent (A : Matrix n n K) : Matrix n n K :=
+  (2 : K)⁻¹ • (A + Aᵀ)
+
+/-- The normalized skew component `(A - Aᵀ) / 2`. -/
+def skewComponent (A : Matrix n n K) : Matrix n n K :=
+  (2 : K)⁻¹ • (A - Aᵀ)
+
+/-- The normalized polar component is symmetric. -/
+theorem symmetricComponent_transpose (A : Matrix n n K) :
+    (symmetricComponent A)ᵀ = symmetricComponent A := by
+  ext i j
+  simp [symmetricComponent, Matrix.transpose_apply]
+  ring
+
+/-- The normalized null-system component is skew-symmetric. -/
+theorem skewComponent_transpose (A : Matrix n n K) :
+    (skewComponent A)ᵀ = -skewComponent A := by
+  ext i j
+  simp [skewComponent, Matrix.transpose_apply]
+  ring
+
+/-- Every matrix is the sum of its normalized symmetric and skew components. -/
+theorem polarNull_decomposition (A : Matrix n n K) :
+    symmetricComponent A + skewComponent A = A := by
+  ext i j
+  simp [symmetricComponent, skewComponent, Matrix.transpose_apply]
+  field_simp
+  ring
+
+end NormalizedPolarNull
 
 end InfoGeometry.Projective.DahmPluckerKleinCollineation

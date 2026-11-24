@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.OperatorZornRealModule
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.OperatorZornFourPotentialGauge
@@ -28,6 +33,15 @@ theorem leftCoupling_square_apply (gap X : Z) :
     leftCoupling gap (leftCoupling gap X) =
       (gap * gap) * X - OperatorZornFourPotentialGauge.associator gap gap X :=
   leftCoupling_comp_apply gap gap X
+
+/-- The failure of repeated left coupling to agree with coupling by the square is exactly the
+associator. This identifies the operator-level defect before applying any state or readout. -/
+theorem leftCoupling_square_defect (gap X : Z) :
+    leftCoupling (gap * gap) X - leftCoupling gap (leftCoupling gap X) =
+      OperatorZornFourPotentialGauge.associator gap gap X := by
+  rw [leftCoupling_comp_apply]
+  dsimp [leftCoupling]
+  abel
 
 def gapCommutator (D : Z →ₗ[ℝ] Z) (gap : Z) : Z →ₗ[ℝ] Z :=
   D.comp (leftCoupling gap) - (leftCoupling gap).comp D

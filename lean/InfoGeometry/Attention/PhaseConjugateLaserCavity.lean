@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Fintype.Basic
@@ -39,6 +44,15 @@ def pcmMat : Mat2 := fun i j =>
   | 0, 1 => 0
   | 1, 0 => 0
   | 1, 1 => -1
+
+/-- The exact round trip is a scalar multiple of the identity, even without a
+unit-norm assumption on the rotation parameters. -/
+theorem pcm_aberration_composition_eq_scaled_identity (c s : ℝ) :
+    matMul2 pcmMat (matMul2 (rotMat c s) (matMul2 pcmMat (rotMat c s))) =
+      fun i j => if i = j then c^2 + s^2 else 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [matMul2, pcmMat, rotMat] <;> ring
 
 /-- Master Theorem 1 (Aberration Self-Healing Theorem):
     A wave passing forward through an aberrating medium (rotMat c s),
@@ -163,6 +177,16 @@ theorem threshold_iff_null_cone (U V : Fin d_k → Fin d → ℝ) (x : TokenVec 
   constructor
   · rintro ⟨h_gain, _⟩; linarith
   · intro h_cone; exact ⟨by linarith, hx⟩
+
+omit [NeZero d] [NeZero d_k] in
+/-- The net gain vanishes exactly when the amplified and idler squared
+Euclidean gains agree, without an extra nonzero-vector assumption. -/
+theorem netGain_eq_zero_iff_equal_squared_gains
+    (U V : Fin d_k → Fin d → ℝ) (x : TokenVec d) :
+    netGain U V x = 0 ↔
+      dotH (projW U x) (projW U x) = dotH (projW V x) (projW V x) := by
+  dsimp [netGain]
+  exact sub_eq_zero
 
 omit [NeZero d] [NeZero d_k] in
 /-- Master Theorem 7 (Symmetric Attention Has No Below-Threshold Loss Modes):

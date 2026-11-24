@@ -104,4 +104,79 @@ theorem modularToLieVermaMap_enveloping_smul
         modularToLieVermaMap (𝕜 := 𝕜) (M := M) (c := c) (h := h) map v := by
   simp [modularToLieVermaMap]
 
+/-- A linear map between left modules preserves the action of a commutator as
+the corresponding difference of iterated actions. -/
+theorem ring_modular_intertwining_commutator_action
+    {B V M : Type*} [Ring B] [AddCommGroup V] [Module B V] [AddCommGroup M] [Module B M]
+    (f : V →ₗ[B] M) (X Y : B) (v : V) :
+    f (X • (Y • v) - Y • (X • v)) =
+      X • (Y • f v) - Y • (X • f v) := by
+  rw [map_sub]
+  simp only [f.map_smul]
+
+/-- Construct the universal Virasoro Verma-module map from a target vector
+satisfying the central, Cartan, and positive-mode highest-weight equations. -/
+def constructedModularToLieVermaMap
+    {M : Type*} [AddCommGroup M] [Module 𝕜 M] [Module (𝓤 𝕜 (VirasoroAlgebra 𝕜)) M]
+    {c h : 𝕜}
+    (omega : M)
+    (omega_c : ιUEA 𝕜 (VirasoroAlgebra.cgen 𝕜) • omega =
+      algebraMap 𝕜 (𝓤 𝕜 (VirasoroAlgebra 𝕜)) c • omega)
+    (omega_lzero : ιUEA 𝕜 (VirasoroAlgebra.lgen 𝕜 0) • omega =
+      algebraMap 𝕜 (𝓤 𝕜 (VirasoroAlgebra 𝕜)) h • omega)
+    (omega_lpos : ∀ n > 0, ιUEA 𝕜 (VirasoroAlgebra.lgen 𝕜 n) • omega = 0) :
+    VirasoroVerma 𝕜 c h →ₗ[𝓤 𝕜 (VirasoroAlgebra 𝕜)] M :=
+  VirasoroVerma.universalMap 𝕜 M omega_c omega_lzero omega_lpos
+
+/-- A module map out of the Virasoro Verma module is uniquely determined by
+the image of its cyclic highest-weight vector. -/
+theorem constructedModularToLieVermaMap_unique
+    {M : Type*} [AddCommGroup M] [Module 𝕜 M] [Module (𝓤 𝕜 (VirasoroAlgebra 𝕜)) M]
+    {c h : 𝕜} (omega : M)
+    (omega_c : ιUEA 𝕜 (VirasoroAlgebra.cgen 𝕜) • omega =
+      algebraMap 𝕜 (𝓤 𝕜 (VirasoroAlgebra 𝕜)) c • omega)
+    (omega_lzero : ιUEA 𝕜 (VirasoroAlgebra.lgen 𝕜 0) • omega =
+      algebraMap 𝕜 (𝓤 𝕜 (VirasoroAlgebra 𝕜)) h • omega)
+    (omega_lpos : ∀ n > 0, ιUEA 𝕜 (VirasoroAlgebra.lgen 𝕜 n) • omega = 0)
+    (map : VirasoroVerma 𝕜 c h →ₗ[𝓤 𝕜 (VirasoroAlgebra 𝕜)] M)
+    (hmap : map (VirasoroVerma.hwVec 𝕜 c h) = omega) :
+    map = constructedModularToLieVermaMap (𝕜 := 𝕜) omega omega_c omega_lzero omega_lpos := by
+  apply LinearMap.ext
+  intro v
+  have hv : v ∈ Submodule.span (𝓤 𝕜 (VirasoroAlgebra 𝕜))
+      {VirasoroVerma.hwVec 𝕜 c h} := by
+    rw [VirasoroVerma.hwVec_cyclic 𝕜 c h]
+    exact Submodule.mem_top
+  refine Submodule.span_induction ?_ ?_ ?_ ?_ hv
+  · intro x hx
+    rw [Set.mem_singleton_iff] at hx
+    subst x
+    rw [hmap]
+    exact (VirasoroVerma.universalMap_hwVec 𝕜 c h M omega_c
+      omega_lzero omega_lpos).symm
+  · simp
+  · intro x y _ _ hx hy
+    simp [hx, hy]
+  · intro a x _ hx
+    simp [hx]
+
+/-- The target highest-weight equations give exactly one Virasoro Verma map
+whose value on the cyclic highest-weight vector is `omega`. -/
+theorem constructedModularToLieVermaMap_exists_unique
+    {M : Type*} [AddCommGroup M] [Module 𝕜 M] [Module (𝓤 𝕜 (VirasoroAlgebra 𝕜)) M]
+    {c h : 𝕜} (omega : M)
+    (omega_c : ιUEA 𝕜 (VirasoroAlgebra.cgen 𝕜) • omega =
+      algebraMap 𝕜 (𝓤 𝕜 (VirasoroAlgebra 𝕜)) c • omega)
+    (omega_lzero : ιUEA 𝕜 (VirasoroAlgebra.lgen 𝕜 0) • omega =
+      algebraMap 𝕜 (𝓤 𝕜 (VirasoroAlgebra 𝕜)) h • omega)
+    (omega_lpos : ∀ n > 0, ιUEA 𝕜 (VirasoroAlgebra.lgen 𝕜 n) • omega = 0) :
+    ∃! map : VirasoroVerma 𝕜 c h →ₗ[𝓤 𝕜 (VirasoroAlgebra 𝕜)] M,
+      map (VirasoroVerma.hwVec 𝕜 c h) = omega := by
+  refine ⟨constructedModularToLieVermaMap (𝕜 := 𝕜) omega omega_c omega_lzero omega_lpos,
+    ?_, ?_⟩
+  · exact VirasoroVerma.universalMap_hwVec 𝕜 c h M omega_c omega_lzero omega_lpos
+  · intro map hmap
+    exact constructedModularToLieVermaMap_unique (𝕜 := 𝕜) omega omega_c omega_lzero
+      omega_lpos map hmap
+
 end InfoGeometry.Bridge.ModularVirasoro

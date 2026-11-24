@@ -71,6 +71,30 @@ theorem jordanTriple_fundamental_identity (x y z w : B) :
   dsimp [jordanTriple]
   noncomm_ring
 
+theorem jordanTriple_left_identity (x y z w u : B) :
+    jordanTriple x y (jordanTriple z w u) -
+      jordanTriple z w (jordanTriple x y u) =
+    jordanTriple (jordanTriple x y z) w u -
+      jordanTriple z (jordanTriple y x w) u := by
+  dsimp [jordanTriple]
+  noncomm_ring
+
+/-- Kantor operator of the associative Jordan triple, at parameter `δ = 1`.
+This is an ordered expression in the noncommutative coefficient ring. -/
+def jordanTripleK (x y z : B) : B :=
+  jordanTriple x z y - jordanTriple y z x
+
+/-- The second Freudenthal--Kantor identity for the associative Jordan triple
+holds in every ring. This proves the K identity on an actual associative
+noncommutative carrier rather than inhabiting the abstract structure with a
+zero product. -/
+theorem jordanTriple_K_identity (x y z w u : B) :
+    jordanTripleK (jordanTriple x y z) w u +
+      jordanTripleK z (jordanTriple x y w) u +
+      jordanTripleK x (jordanTripleK z w y) u = 0 := by
+  dsimp [jordanTripleK, jordanTriple]
+  noncomm_ring
+
 end NonCommRingTripleSystem
 
 variable {R U : Type*} [CommRing R] [AddCommGroup U] [Module R U]
@@ -138,5 +162,79 @@ def intZeroFKTS : FreudenthalKantorTripleSystem (R := ℤ) (U := ℤ) where
   triple := 0
   left_identity _ _ _ _ _ := by simp
   k_identity _ _ _ _ _ := by simp [fktsK]
+
+section ConcreteMatrixFKTS
+
+/-- The associative Jordan triple, curried as an actual complex-linear map on
+the finite noncommutative spin matrix algebra. -/
+def matrixJordanTriple : Mat2C →ₗ[ℂ] Mat2C →ₗ[ℂ] Mat2C →ₗ[ℂ] Mat2C where
+  toFun x :=
+    { toFun := fun y =>
+        { toFun := fun z => jordanTriple x y z
+          map_add' := by
+            intro z₁ z₂
+            simp only [jordanTriple, mul_add, add_mul]
+            abel_nf
+          map_smul' := by
+            intro c z
+            simp [jordanTriple, mul_assoc] }
+      map_add' := by
+        intro y₁ y₂
+        apply LinearMap.ext
+        intro z
+        change jordanTriple x (y₁ + y₂) z = jordanTriple x y₁ z + jordanTriple x y₂ z
+        simp only [jordanTriple, add_mul, mul_add]
+        abel
+      map_smul' := by
+        intro c y
+        apply LinearMap.ext
+        intro z
+        simp [jordanTriple, mul_assoc] }
+  map_add' := by
+    intro x₁ x₂
+    apply LinearMap.ext
+    intro y
+    apply LinearMap.ext
+    intro z
+    change jordanTriple (x₁ + x₂) y z = jordanTriple x₁ y z + jordanTriple x₂ y z
+    simp only [jordanTriple, add_mul, mul_add]
+    abel
+  map_smul' := by
+    intro c x
+    apply LinearMap.ext
+    intro y
+    apply LinearMap.ext
+    intro z
+    simp [jordanTriple, mul_assoc]
+
+@[simp] theorem matrixJordanTriple_apply (x y z : Mat2C) :
+    matrixJordanTriple x y z = jordanTriple x y z := rfl
+
+/-- Concrete noncommutative FKTS on `Mat₂(ℂ)`, with the associative Jordan
+triple `xyz + zyx`, `ε = -1`, and `δ = 1`. -/
+def matrixJordanFKTS : FreudenthalKantorTripleSystem (R := ℂ) (U := Mat2C) where
+  epsilon := -1
+  delta := 1
+  triple := matrixJordanTriple
+  left_identity x y z w u := by
+    simpa [sub_eq_add_neg] using
+      jordanTriple_left_identity x y z w u
+  k_identity x y z w u := by
+    simpa only [fktsK, jordanTripleK, matrixJordanTriple_apply, one_smul] using
+      jordanTriple_K_identity x y z w u
+
+/-- This concrete matrix triple is nonzero, witnessed by the repository's
+raising and lowering matrices; hence the bundled example is not the zero
+triple-system inhabitant. -/
+theorem matrixJordanFKTS_nonzero :
+    matrixJordanFKTS.triple J_plus J_minus J_plus ≠ 0 := by
+  change jordanTriple J_plus J_minus J_plus ≠ 0
+  dsimp [jordanTriple]
+  intro h
+  have hmul : J_plus * J_minus * J_plus + J_plus * J_minus * J_plus = 0 := h
+  have hentry := congr_fun (congr_fun hmul 0) 1
+  norm_num [J_plus, J_minus, Matrix.mul_apply, Fin.sum_univ_two] at hentry
+
+end ConcreteMatrixFKTS
 
 end InfoGeometry.Algebra

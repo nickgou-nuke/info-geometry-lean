@@ -124,11 +124,11 @@ theorem traceQuadratic_smul {P : Mat} (hP : IsUnit P) (H : Mat)
   have hinv : (c • P)⁻¹ = c⁻¹ • P⁻¹ := by
     apply Matrix.inv_eq_left_inv
     simp only [smul_mul_assoc, mul_smul_comm, smul_smul,
-      inv_mul_cancel₀ hc, one_smul, Matrix.nonsing_inv_mul P hPdet]
+      mul_inv_cancel₀ hc, one_smul, Matrix.nonsing_inv_mul P hPdet]
   have hvariation : (c • P)⁻¹ * (c • H) = P⁻¹ * H := by
     rw [hinv]
     simp only [smul_mul_assoc, mul_smul_comm, smul_smul,
-      inv_mul_cancel₀ hc, one_smul]
+      mul_inv_cancel₀ hc, one_smul]
   unfold traceQuadratic
   rw [hvariation]
 

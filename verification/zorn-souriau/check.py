@@ -33,6 +33,7 @@ from tools.infra.build import (  # noqa: E402
 from tools.quality.reviewed_audit_source import (  # noqa: E402
     audit_source,
     parse_audit_output,
+    validate_targets,
 )
 
 TARGETS = [
@@ -77,17 +78,22 @@ def git(*args: str, cwd: Path = ROOT) -> str:
     return subprocess.check_output(["git", *args], cwd=cwd, text=True).strip()
 
 
-def source_snapshot() -> dict[str, str]:
+def source_snapshot(targets: list[str] | tuple[str, ...] = TARGETS,
+                    extra_sources: tuple[str, ...] = ()) -> dict[str, str]:
     selected = subprocess.check_output(
         ["git", "ls-files", "-z", "--", "lean", "lib/InfoGeometryCore",
          "lean-toolchain", "lakefile.lean", "lake-manifest.json",
          "verification/real-matrix-split", "verification/zorn-souriau",
          "docs/ZORN_SOURIAU_INTAKE_CONTRACT.md", "docs/intake/zorn-souriau-20261124",
          "tools/build_lock.py", "tools/infra/build.py",
-         "tools/quality/reviewed_audit_source.py"], cwd=ROOT,
+         "tools/quality/reviewed_audit_source.py", *extra_sources], cwd=ROOT,
     ).decode().split("\0")
     paths = {p for p in selected if p and (ROOT / p).is_file()}
-    paths.update("lean/" + target.replace(".", "/") + ".lean" for target in TARGETS)
+    for relative in extra_sources:
+        path = Path(relative)
+        if path.is_absolute() or ".." in path.parts or relative not in paths:
+            raise RuntimeError(f"Extra validation source must be an existing tracked file: {relative}")
+    paths.update("lean/" + target.replace(".", "/") + ".lean" for target in targets)
     paths.add(str(Path(__file__).relative_to(ROOT)))
     return {p: sha256(ROOT / p) for p in sorted(paths)}
 
@@ -135,11 +141,16 @@ def package_snapshot(overrides: Path | None) -> list[dict[str, str]]:
     return records
 
 
-def main() -> int:
+def main(*, targets: list[str] | tuple[str, ...] = TARGETS,
+         reused: list[str] | tuple[str, ...] = REUSED,
+         extra_sources: tuple[str, ...] = (),
+         task_name: str = "zorn-souriau") -> int:
+    targets = validate_targets(targets)
+    reused = validate_targets(reused)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--packages", type=Path)
     parser.add_argument("--output", type=Path,
-                        default=ROOT / "artifacts/zorn-souriau/native")
+                        default=ROOT / "artifacts" / task_name / "native")
     args = parser.parse_args()
     overrides = args.packages.resolve() if args.packages else None
     output = args.output.resolve()
@@ -155,7 +166,7 @@ def main() -> int:
         lake += ["--packages", str(overrides)]
     report = {
         "started_utc": datetime.now(timezone.utc).isoformat(),
-        "run_id": run_id, "targets": TARGETS, "commands": [], "status": "queued",
+        "run_id": run_id, "targets": list(targets), "commands": [], "status": "queued",
     }
     lock = None
 
@@ -165,7 +176,7 @@ def main() -> int:
         pending.replace(output / "result.json")
 
     def run(label: str, command: list[str]) -> str:
-        print(f"[zorn-souriau] {label}", flush=True)
+        print(f"[{task_name}] {label}", flush=True)
         assert lock is not None
         path = logs / f"{len(report['commands']):02d}-{label}.log"
         record = {"label": label, "argv": command, "returncode": None,
@@ -198,9 +209,9 @@ def main() -> int:
 
     previous_sigterm = signal.signal(signal.SIGTERM, interrupted)
     save_receipt()
-    print("[zorn-souriau] waiting for the shared build lock", flush=True)
+    print(f"[{task_name}] waiting for the shared build lock", flush=True)
     try:
-        lock = acquire_build_lock(None, f"zorn-souriau:{os.getpid()}", block=True)
+        lock = acquire_build_lock(None, f"{task_name}:{os.getpid()}", block=True)
         report["status"] = "running"
         save_receipt()
         for directory in (ROOT, PROJECT):
@@ -208,9 +219,9 @@ def main() -> int:
             if error:
                 raise RuntimeError(error)
         report["head"] = git("rev-parse", "HEAD")
-        report["source_sha256"] = source_snapshot()
+        report["source_sha256"] = source_snapshot(targets, extra_sources)
         report["explicit_public_declarations"] = {
-            target: PIN_AUDIT.owner_declarations(target) for target in TARGETS
+            target: PIN_AUDIT.owner_declarations(target) for target in targets
         }
         report["packages"] = package_snapshot(overrides)
         report["package_override_sha256"] = sha256(overrides) if overrides else None
@@ -222,13 +233,13 @@ def main() -> int:
             if not re.search(r"Lean \(version 4\.34\.1(?:,|\))", banner):
                 raise RuntimeError(f"Unexpected runtime: {banner}")
             report[label] = banner
-        run("target-build", lake + ["build", *TARGETS])
-        for i, target in enumerate(TARGETS):
+        run("target-build", lake + ["build", *targets])
+        for i, target in enumerate(targets):
             source = ROOT / "lean" / (target.replace(".", "/") + ".lean")
             run(f"fresh-source-{i}", lake + ["env", "lean", "-DwarningAsError=true", str(source)])
         audit = logs / "OwnerAudit.lean"
-        reused_names = ", ".join("`" + name for name in REUSED)
-        audit.write_text(audit_source(TARGETS) + f'''
+        reused_names = ", ".join("`" + name for name in reused)
+        audit.write_text(audit_source(list(targets)) + f'''
 run_cmd do
   let allowed : Array Lean.Name := #[`propext, `Classical.choice, `Quot.sound]
   let names : Array Lean.Name := #[{reused_names}]
@@ -244,20 +255,20 @@ run_cmd do
 ''')
         report["audit_source_sha256"] = sha256(audit)
         text = run("native-axiom-audit", lake + ["env", "lean", "-DwarningAsError=true", str(audit)])
-        report["declaration_counts"] = parse_audit_output(text, TARGETS)
+        report["declaration_counts"] = parse_audit_output(text, list(targets))
         records = re.findall(r"^AUDIT_DECL: (\S+): (\S+)$", text, re.MULTILINE)
         if len(records) != sum(report["declaration_counts"].values()) or len(set(records)) != len(records):
             raise RuntimeError("Native declaration inventory does not reconcile")
         if dict(Counter(owner for owner, _ in records)) != report["declaration_counts"]:
             raise RuntimeError("Native per-owner declaration inventory does not reconcile")
         report["owned_declarations"] = {
-            target: sorted(name for owner, name in records if owner == target) for target in TARGETS
+            target: sorted(name for owner, name in records if owner == target) for target in targets
         }
-        for target in TARGETS:
+        for target in targets:
             if not set(report["explicit_public_declarations"][target]) <= set(report["owned_declarations"][target]):
                 raise RuntimeError(f"Native audit omits explicit public declarations in {target}")
-        reused = re.findall(r"^AUDIT_REUSED: (\S+)$", text, re.MULTILINE)
-        if len(reused) != len(REUSED) or set(reused) != set(REUSED):
+        reused_records = re.findall(r"^AUDIT_REUSED: (\S+)$", text, re.MULTILINE)
+        if len(reused_records) != len(reused) or set(reused_records) != set(reused):
             raise RuntimeError("Reused declaration audit does not reconcile")
         axioms = re.findall(r"^AUDIT_AXIOMS: \[(.*)\]$", text, re.MULTILINE)
         if len(axioms) != 1:
@@ -265,10 +276,10 @@ run_cmd do
         report["axioms"] = sorted(a.strip() for a in axioms[0].split(",") if a.strip())
         if not set(report["axioms"]) <= ALLOWED_AXIOMS:
             raise RuntimeError("Axiom summary exceeds the allowed foundations")
-        report["reused_declarations"] = reused
+        report["reused_declarations"] = reused_records
         if sha256(audit) != report["audit_source_sha256"]:
             raise RuntimeError("Generated audit source changed during validation")
-        if source_snapshot() != report["source_sha256"] or git("rev-parse", "HEAD") != report["head"]:
+        if source_snapshot(targets, extra_sources) != report["source_sha256"] or git("rev-parse", "HEAD") != report["head"]:
             raise RuntimeError("Source snapshot changed during validation")
         if package_snapshot(overrides) != report["packages"]:
             raise RuntimeError("Package snapshot changed during validation")
@@ -282,7 +293,7 @@ run_cmd do
     except (Exception, SystemExit) as error:
         report["status"] = "failed"
         report["error"] = str(error)
-        print(f"[zorn-souriau] {error}", file=sys.stderr, flush=True)
+        print(f"[{task_name}] {error}", file=sys.stderr, flush=True)
         return 1
     finally:
         report["finished_utc"] = datetime.now(timezone.utc).isoformat()

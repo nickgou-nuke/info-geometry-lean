@@ -39,6 +39,9 @@ Declarations:
 - `isTraceless_smul`
 - `arnoldFinite_traceless_commutator`
 - `arnoldFiniteGroup_adjoint_traceless`
+- `arnoldFiniteLieModule`
+- `arnoldFiniteLieModule_bracket_mem`
+- `arnoldFiniteGroup_adjoint_mem`
 - `arnoldFiniteGroup_tracePairing_invariant`
 - `arnoldFiniteGroup_quadratic_trace_invariant`
 

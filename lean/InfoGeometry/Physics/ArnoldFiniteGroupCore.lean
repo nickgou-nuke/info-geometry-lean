@@ -87,6 +87,43 @@ theorem arnoldFiniteGroup_adjoint_traceless (n : ℕ) (g : ArnoldFiniteGroup n)
     _ = Matrix.trace X := by simp
     _ = 0 := hX
 
+/-- The finite incompressible generators form a real submodule of matrix space. -/
+def arnoldFiniteLieModule (n : ℕ) :
+    Submodule ℝ (Matrix (Fin n) (Fin n) ℝ) where
+  carrier := {X | IsTraceless n X}
+  zero_mem' := by
+    dsimp [IsTraceless]
+    simp
+  add_mem' := by
+    intro X Y hX hY
+    change IsTraceless n X at hX
+    change IsTraceless n Y at hY
+    change IsTraceless n (X + Y)
+    exact isTraceless_add n X Y hX hY
+  smul_mem' := by
+    intro c X hX
+    change IsTraceless n X at hX
+    change IsTraceless n (c • X)
+    exact isTraceless_smul n c X hX
+
+/-- The commutator of any two matrices lies in the finite incompressible module. -/
+theorem arnoldFiniteLieModule_bracket_mem (n : ℕ)
+    (X Y : Matrix (Fin n) (Fin n) ℝ) :
+    X * Y - Y * X ∈ arnoldFiniteLieModule n := by
+  change IsTraceless n (X * Y - Y * X)
+  exact arnoldFinite_traceless_commutator n X Y
+
+/-- The finite Arnold group acts on the incompressible module by conjugation. -/
+theorem arnoldFiniteGroup_adjoint_mem (n : ℕ) (g : ArnoldFiniteGroup n)
+    (X : Matrix (Fin n) (Fin n) ℝ) (hX : X ∈ arnoldFiniteLieModule n) :
+    (g : Matrix (Fin n) (Fin n) ℝ) * X *
+      ((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ) ∈
+        arnoldFiniteLieModule n := by
+  change IsTraceless n X at hX
+  change IsTraceless n ((g : Matrix (Fin n) (Fin n) ℝ) * X *
+    ((g⁻¹ : ArnoldFiniteGroup n) : Matrix (Fin n) (Fin n) ℝ))
+  exact arnoldFiniteGroup_adjoint_traceless n g X hX
+
 /-- Trace pairing is invariant under the finite Arnold adjoint action;
 this is the finite analogue of conservation of the helicity/Casimir pairing. -/
 theorem arnoldFiniteGroup_tracePairing_invariant (n : ℕ) (g : ArnoldFiniteGroup n)

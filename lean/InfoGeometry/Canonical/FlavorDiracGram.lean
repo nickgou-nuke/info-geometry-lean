@@ -136,12 +136,14 @@ theorem readout_diracBlock_basis_change {a b : Type*} [Fintype a] [Fintype b]
     Matrix.transpose_mul, Matrix.transpose_transpose, Matrix.mul_zero,
     Matrix.zero_mul, zero_add, add_zero, Matrix.mul_assoc]
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- The left Gram matrix is positive semidefinite over the real field. -/
 theorem leftGram_posSemidef (Y : Matrix m n ℝ) :
     (Y * Yᵀ).PosSemidef := by
   simpa only [Matrix.conjTranspose_eq_transpose_of_trivial] using
     Matrix.posSemidef_self_mul_conjTranspose Y
 
+omit [DecidableEq m] [DecidableEq n] in
 /-- The right Gram matrix is positive semidefinite over the real field. -/
 theorem rightGram_posSemidef (Y : Matrix m n ℝ) :
     (Yᵀ * Y).PosSemidef := by

@@ -51,3 +51,22 @@ external projects, a physical interpretation, or an octonion specialization.
 The root staged and publication gates remain separate checks. Mathematical
 scope and remaining obligations are recorded in
 [`REAL_FLAVOR_READOUT_CONTRACT.md`](../../docs/REAL_FLAVOR_READOUT_CONTRACT.md).
+
+## Observed focused acceptance
+
+The final run `run-1795535006720152153-5` passed on 2026-11-24 with the
+unchanged Lean `v4.34.1` and Mathlib `d13f23b7` pins. All three owners built
+and passed fresh warning-as-error elaboration. The complete native audit
+accepted 54 owned declarations:
+
+| Owner | Audited declarations |
+| --- | ---: |
+| `FlavorReadout` | 19 |
+| `FlavorDiracGram` | 14 |
+| `FlavorCompression` | 21 |
+
+Source/configuration/runtime stability also passed. The exact verified
+source hashes are recorded in the contract. The maintained root publication
+gate remains blocked by the unavailable configured
+`external_refs/homotopy-hypothesis-lean4` package; focused acceptance is not
+whole-repository acceptance. Hosted CI is reported separately on the PR.

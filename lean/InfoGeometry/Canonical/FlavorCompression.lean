@@ -228,6 +228,7 @@ theorem scaled_compression_saturation_iff
       mul_zero, add_zero] at h
     exact (sub_eq_zero.mp h).symm
 
+omit [Fintype k] in
 /-- Vanishing residuals force the full compressed Gram matrix to be scalar.
 This is a conditional matrix identity, not a classification of local minima. -/
 theorem compressed_gram_of_residuals_zero

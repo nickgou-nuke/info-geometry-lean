@@ -135,27 +135,38 @@ carriers and hypotheses from the existing double-sided Peirce constructions.
 
 ## Validation record
 
-Candidate generation, independent source review, and kernel/axiom acceptance
-are separate steps. The focused validation entry point and final receipt are
-recorded in `verification/real-flavor/README.md`. No compiler result is claimed
-until that invocation has completed on the final mathematical sources.
+On 2026-11-24, the focused final invocation completed successfully on the
+mathematical sources below using Lean `v4.34.1` and Mathlib
+`d13f23b723b8a846827a245b89c10fc7d3f11612`.
 
-Publication status on 2026-11-24: **source-reviewed draft; kernel acceptance
-pending**. The addition contains 49 theorem declarations and two definitions.
-Independent source reviews checked the matrix conventions, hypotheses,
-compression equality directions, and the zero-scale saturation case. The
-strict staged proof gate and whitespace check passed on the staged addition.
+The run built all three owners, freshly elaborated each with
+`-DwarningAsError=true`, and completed the native owned-declaration audit.
+It accepted **54 declarations**: 19 in `FlavorReadout`, 14 in
+`FlavorDiracGram`, and 21 in `FlavorCompression`. This includes generated
+and private declarations; only `propext`, `Classical.choice`, and `Quot.sound`
+were permitted as foundational axiom dependencies. Source, configuration,
+dependency, and runtime stability checks passed.
 
-The final focused invocation with `--final --no-wait` stopped at the occupied
-shared build lock before launching a compiler. Earlier development attempts
-terminated with `SIGKILL` while loading existing dependencies; an isolated
-`import Mathlib.Tactic` probe also terminated without Lean diagnostics. The
-cause was not established. Neither observation certifies or refutes the new
-proof terms.
+The receipt is `verification.json` in run
+`run-1795535006720152153-5` under `artifacts/verification/real-flavor`.
+The verified source SHA256 values are:
 
-Targeted compilation, fresh warning-as-error elaboration, and the complete
-owned-declaration axiom audit still require a successful final run. The new
-workflow runs that sequence and preserves its evidence. Root-package and
-publication-gate acceptance are separate and are not claimed here. Existing
-mathematical owners, toolchain pins, and repository gate implementations are
-unchanged.
+| Owner | SHA256 |
+| --- | --- |
+| `FlavorReadout` | `291083a41306a061fd19dbe9ea1398af19157f63d03d40dc5e551fde2dc38348` |
+| `FlavorDiracGram` | `5cb8c596855d302a0507572a70afb48c7337c7ec1248f49a4598e70ac1e8f891` |
+| `FlavorCompression` | `02135f1b13df9acd0e0940e73089104a1fc9c267eeccb5c160b28b164717f2ee` |
+
+The strict staged proof gate, installed pre-commit hook, whitespace check,
+and independent source reviews also passed. The addition retains 49 theorem
+declarations and two definitions. Compiler-driven repairs supplied native
+orthogonal-group parameters and the real star-order instance, completed the
+grading and zero-scale simplifications, and removed unused implicit
+instances without disabling linters.
+
+The maintained publication gate is separate. Its root Lake build failed
+because the configured package `external_refs/homotopy-hypothesis-lean4`
+is unavailable. Its scoped source-only audits passed. Focused acceptance
+does not certify that root package or assert successful hosted CI. Existing
+mathematical owners, toolchain pins, and repository gate implementations
+remain unchanged.

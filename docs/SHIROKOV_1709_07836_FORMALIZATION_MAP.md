@@ -182,6 +182,11 @@ explicit decomposition: every central element is its scalar blade component,
 plus its top-blade component when the dimension is odd. This is a center
 classification for the standard finite-stage `Cl(0,n)` carrier only; the
 paper's moving dual frame remains outside this theorem.
+The new `shirokov_center_grade_two_eq_zero` theorem proves the scalar/top
+center has zero intersection with elements whose ordered-blade coordinates
+are supported only in grade two. This is the finite-stage center/grade
+intersection needed for a curvature-defect argument, conditional on proving
+that the defect has grade-two support.
 This remains a statement about the repository's standard negative-definite
 finite-stage carrier, not a varying-frame classification theorem. The updated
 owner passed both the locked Lean file check and the targeted locked Lake

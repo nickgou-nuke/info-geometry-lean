@@ -907,6 +907,33 @@ theorem shirokov_center_two_coordinate_expansion (n : ℕ)
     · have hcoord := hsupport hEmpty (by simp [hOdd])
       simp [hOdd, hEmpty, hcoord]
 
+/-- A central element of `Cl(0,n)` supported only in blade grade two is zero.
+The scalar center coordinate and the odd-dimensional top coordinate cannot
+occur in grade two. -/
+theorem shirokov_center_grade_two_eq_zero (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hx : x ∈ Subalgebra.center ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)))
+    (hgrade : ∀ T : Finset (Fin n), bladeRepr ℝ n x T ≠ 0 → T.card = 2) :
+    x = 0 := by
+  apply shirokov_blade_coordinates_injective
+  ext T
+  rw [map_zero]
+  change bladeRepr ℝ n x T = 0
+  have hcoord : bladeRepr ℝ n x T = 0 := by
+    by_contra hne
+    have hcard := hgrade T hne
+    have hEmpty : T ≠ ∅ := by
+      intro h
+      subst T
+      simp at hcard
+    have hTop : ¬ (Odd n ∧ T = (Finset.univ : Finset (Fin n))) := by
+      rintro ⟨hn, rfl⟩
+      have hcard' : n = 2 := by simpa using hcard
+      subst n
+      norm_num at hn
+    exact hne (shirokov_center_coordinate_support n x hx T hEmpty hTop)
+  exact hcoord
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

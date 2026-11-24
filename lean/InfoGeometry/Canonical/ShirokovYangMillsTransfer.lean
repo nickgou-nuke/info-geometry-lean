@@ -98,6 +98,20 @@ theorem covariantDerivative_neg
   simp only [covariantDerivative, D.map_neg, commutator]
   noncomm_ring
 
+omit [Fintype ι] [DecidableEq ι] in
+theorem covariantDerivative_smul [Algebra ℝ A]
+    (D : DerivationFamily (ι := ι) (A := A)) (B : ι → A)
+    (hDsmul : ∀ (i : ι) (r : ℝ) (a : A),
+      D.apply i (r • a) = r • D.apply i a)
+    (i : ι) (r : ℝ) (a : A) :
+    covariantDerivative D B i (r • a) = r • covariantDerivative D B i a := by
+  simp only [covariantDerivative, hDsmul, commutator]
+  simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
+  calc
+    r • D.apply i a - (r • (B i * a) - r • (a * B i)) =
+        r • D.apply i a - r • (B i * a - a * B i) := by rw [smul_sub]
+    _ = r • (D.apply i a - (B i * a - a * B i)) := (smul_sub _ _ _).symm
+
 omit [Fintype ι] in
 theorem covariantDerivative_sum
     (D : DerivationFamily (ι := ι) (A := A)) (B : ι → A)
@@ -275,6 +289,85 @@ def pseudoYangMillsCurrent {R : Type*} [CommRing R] [Algebra R A]
     (D : DerivationFamily (ι := ι) (A := A)) (ε : ι → R)
     (B : ι → A) (F : ι → ι → A) (j : ι) : A :=
   ε j • ∑ i, ε i • (D.apply i (F i j) - commutator (B i) (F i j))
+
+omit [DecidableEq ι] in
+/-- The finite pseudo-Euclidean current is conserved when the diagonal metric
+weights are constant under the coordinate derivations. The theorem keeps the
+coefficient algebra noncommutative and assumes real-linearity of each
+derivation explicitly. -/
+theorem pseudo_current_conservation
+    [Algebra ℝ A]
+    (D : DerivationFamily (ι := ι) (A := A)) (B : ι → A) (ε : ι → ℝ)
+    (hDsmul : ∀ (i : ι) (r : ℝ) (a : A),
+      D.apply i (r • a) = r • D.apply i a)
+    (hcomm : ∀ i j a, D.apply i (D.apply j a) = D.apply j (D.apply i a)) :
+    ∑ j, covariantDerivative D B j
+      (pseudoYangMillsCurrent D ε B (fieldStrength D B) j) = 0 := by
+  classical
+  have hsmul := covariantDerivative_smul D B hDsmul
+  let S : A := ∑ j, ∑ i,
+    ε j • (ε i • covariantDerivative D B j
+      (covariantDerivative D B i (fieldStrength D B i j)))
+  let T : A := ∑ i, ∑ j,
+    ε i • (ε j • covariantDerivative D B i
+      (covariantDerivative D B j (fieldStrength D B i j)))
+  have hST : S = T := by
+    dsimp [S, T]
+    rw [Finset.sum_comm]
+    apply Finset.sum_congr rfl
+    intro i hi
+    apply Finset.sum_congr rfl
+    intro j hj
+    have hcurv := covariantDerivative_commutator D B hcomm j i
+      (fieldStrength D B i j)
+    rw [fieldStrength_antisymm D B i j] at hcurv
+    have hbracket : commutator (-fieldStrength D B i j)
+        (fieldStrength D B i j) = 0 := by simp [commutator]
+    rw [hbracket, neg_zero, sub_eq_zero] at hcurv
+    rw [smul_smul, smul_smul, mul_comm (ε j) (ε i), hcurv]
+  have hSnegT : S = -T := by
+    dsimp [S, T]
+    calc
+      (∑ j, ∑ i, ε j • (ε i • covariantDerivative D B j
+          (covariantDerivative D B i (fieldStrength D B i j)))) =
+        ∑ i, ∑ j, ε i • (ε j • covariantDerivative D B i
+          (covariantDerivative D B j (fieldStrength D B j i))) := by
+            rw [Finset.sum_comm]
+      _ = ∑ i, ∑ j, -(ε i • (ε j • covariantDerivative D B i
+          (covariantDerivative D B j (fieldStrength D B i j)))) := by
+            apply Finset.sum_congr rfl
+            intro i hi
+            apply Finset.sum_congr rfl
+            intro j hj
+            rw [fieldStrength_antisymm D B i j,
+              covariantDerivative_neg, covariantDerivative_neg]
+            simp only [smul_neg]
+      _ = -∑ i, ∑ j, ε i • (ε j • covariantDerivative D B i
+          (covariantDerivative D B j (fieldStrength D B i j))) := by
+            simp only [Finset.sum_neg_distrib]
+  have hSS : S + S = 0 := by
+    have hneg : S = -S := by rwa [← hST] at hSnegT
+    calc S + S = S + -S := congrArg (fun x : A => S + x) hneg
+      _ = 0 := add_neg_cancel _
+  have htwo : (2 : ℝ) • S = 0 := by simpa [two_smul] using hSS
+  have htwo_ne : (2 : ℝ) ≠ 0 := by norm_num
+  have hSzero : S = 0 := (smul_eq_zero.mp htwo).resolve_left htwo_ne
+  have hcurrent : ∀ j,
+      pseudoYangMillsCurrent D ε B (fieldStrength D B) j =
+        ε j • ∑ i, ε i • covariantDerivative D B i (fieldStrength D B i j) := by
+    intro j
+    simp [pseudoYangMillsCurrent, covariantDerivative, commutator]
+  calc
+    ∑ j, covariantDerivative D B j
+        (pseudoYangMillsCurrent D ε B (fieldStrength D B) j) = S := by
+          dsimp [S]
+          apply Finset.sum_congr rfl
+          intro j hj
+          rw [hcurrent j, hsmul, covariantDerivative_sum, Finset.smul_sum]
+          apply Finset.sum_congr rfl
+          intro i hi
+          rw [hsmul]
+    _ = 0 := hSzero
 
 omit [DecidableEq ι] in
 /-- Raising the pseudo-Euclidean indices in Shirokov's coordinate current

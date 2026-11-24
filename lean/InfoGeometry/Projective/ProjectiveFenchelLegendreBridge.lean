@@ -5,7 +5,6 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Projective.MobiusDual
-import InfoGeometry.Geometry.LegendreDuality
 
 /-!
 # Projective duality and Fenchel--Legendre potentials

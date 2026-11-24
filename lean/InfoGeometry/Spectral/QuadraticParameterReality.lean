@@ -1,9 +1,51 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.AmariZetaDuallyFlatGeometry
 import InfoGeometry.Physics.HarishChandraCasimirBridge
 
 namespace InfoGeometry.Spectral.QuadraticParameterReality
 
 open InfoGeometry.Physics.HarishChandraCasimir
+
+/-- Difference factorization for the existing quadratic spectral parameter. -/
+theorem difference_factor (s t : ℂ) :
+    casimirEigenvalue t - casimirEigenvalue s = (t - s) * (1 - t - s) := by
+  simp only [casimirEigenvalue]
+  ring
+
+/-- A quadratic spectral value has both the original and reflected parameter as roots. -/
+theorem eigenvalue_eq_iff (s t : ℂ) :
+    casimirEigenvalue t = casimirEigenvalue s ↔ t = s ∨ t = 1 - s := by
+  constructor
+  · intro h
+    have hzero : (t - s) * (1 - t - s) = 0 := by
+      rw [← difference_factor, h, sub_self]
+    rcases mul_eq_zero.mp hzero with hroot | hroot
+    · exact Or.inl (sub_eq_zero.mp hroot)
+    · right
+      linear_combination -hroot
+  · rintro (rfl | rfl)
+    · rfl
+    · exact casimirEigenvalue_reflection s
+
+/-- Conjugation commutes with the real-coefficient quadratic polynomial. -/
+theorem conjugation (s : ℂ) :
+    casimirEigenvalue (star s) = star (casimirEigenvalue s) := by
+  simp [casimirEigenvalue, mul_comm]
+
+/-- Conjugate reflection gives the conjugate value for every parameter. -/
+theorem reflected_conjugation (s : ℂ) :
+    casimirEigenvalue (1 - star s) = star (casimirEigenvalue s) := by
+  rw [casimirEigenvalue_reflection, conjugation]
+
+/-- Both branches must be retained when matching a conjugate spectral value. -/
+theorem eigenvalue_eq_conjugate_iff (s t : ℂ) :
+    casimirEigenvalue t = star (casimirEigenvalue s) ↔
+      t = star s ∨ t = 1 - star s := by
+  rw [← conjugation, eigenvalue_eq_iff]
 
 theorem casimir_eq_fisher_polynomial (parameter : ℂ) :
     casimirEigenvalue parameter =

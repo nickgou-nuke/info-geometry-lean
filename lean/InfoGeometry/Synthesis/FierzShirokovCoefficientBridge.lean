@@ -82,6 +82,20 @@ theorem shirokovC_eq_zero_of_one_le (φ : A →ₗ[R] R) (N : ℕ) (hN : (N : R)
         shirokovU_eq_zero_of_one_le φ N hN a s hφa ha2 (j + 1) (by omega)
       exact shirokovC_eq_zero_of_u_succ_eq_zero φ N a j hU
 
+/-- A normalized-trace-one idempotent is the projector specialization of the
+rank-one collapse: its first coefficient is one and all later coefficients vanish. -/
+theorem shirokovC_collapse_of_idempotent_rank_one (φ : A →ₗ[R] R) (N : ℕ)
+    (hN : (N : R) ≠ 0) (p : A) (hp : p * p = p)
+    (hφp : φ p = (N : R)⁻¹) :
+    shirokovC φ N p 0 = 1 ∧ ∀ k : ℕ, 1 ≤ k → shirokovC φ N p k = 0 := by
+  have hφp' : φ p = (1 : R) / (N : R) := by
+    simpa [div_eq_mul_inv] using hφp
+  have hp1 : p * p = algebraMap R A 1 * p := by
+    rw [hp]
+    simp
+  exact ⟨shirokovC_one_of_readout φ N hN p 1 hφp',
+    shirokovC_eq_zero_of_one_le φ N hN p 1 hφp' hp1⟩
+
 variable {ι : Type*} [Fintype ι] [DecidableEq ι]
 
 /-- The normalized trace used as Shirokov's rank-zero readout on square matrices. -/

@@ -669,6 +669,46 @@ theorem brown_gauss_matrix_power_identities :
       norm_num
   exact ⟨hY2, hU2, hU4, hU8⟩
 
+theorem hadamard_conjugation_four_channel_decomposition (a b c d : B) :
+    hadamard2 * mk2 a b c d * hadamard2 =
+      mk2 ((a + d) + (b + c)) ((a - d) - (b - c))
+        ((a - d) + (b - c)) ((a + d) - (b + c)) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [hadamard2, mk2, Matrix.mul_apply, Fin.sum_univ_two] <;>
+    first | noncomm_ring | abel
+
+theorem hadamard_conjugation_lossless_reconstruction (M : Block2 B) :
+    hadamard2 * (hadamard2 * M * hadamard2) * hadamard2 = 4 • M := by
+  have hH : hadamard2 * hadamard2 = 2 • (1 : Block2 B) := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [hadamard2, Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num
+  calc
+    hadamard2 * (hadamard2 * M * hadamard2) * hadamard2 =
+        (hadamard2 * hadamard2) * M * (hadamard2 * hadamard2) := by noncomm_ring
+    _ = (2 • (1 : Block2 B)) * M * (2 • (1 : Block2 B)) := by rw [hH]
+    _ = 4 • M := by
+      have hleft : (2 • (1 : Block2 B)) * M = 2 • M := by
+        calc
+          (2 • (1 : Block2 B)) * M = (1 + 1) * M := by norm_num [two_smul]
+          _ = M + M := by simp [add_mul]
+          _ = 2 • M := by norm_num [two_smul]
+      have hright : (2 • M) * (2 • (1 : Block2 B)) = 4 • M := by
+        calc
+          (2 • M) * (2 • (1 : Block2 B)) = (2 • M) * (1 + 1) := by norm_num [two_smul]
+          _ = (2 • M) + (2 • M) := by simp [mul_add]
+          _ = 4 • M := by abel
+      rw [hleft, hright]
+
+theorem hadamard_conjugation_bisymmetric_diagonalization (x y : B) :
+    hadamard2 * mk2 x y y x * hadamard2 =
+      mk2 (2 • (x + y)) 0 0 (2 • (x - y)) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [hadamard2, mk2, Matrix.mul_apply, Fin.sum_univ_two] <;>
+    first | noncomm_ring | abel
+
 end Block2
 
 -- ============================================================================

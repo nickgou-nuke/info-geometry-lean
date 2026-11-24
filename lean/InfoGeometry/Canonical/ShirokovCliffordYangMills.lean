@@ -78,6 +78,58 @@ theorem shirokov_frame_vectors_noncentral {B : Type*} [Ring B] [Algebra ℝ B]
   simp only [zero_mul] at hsqj
   exact (smul_ne_zero (hε j) one_ne_zero) hsqj.symm
 
+/-- The real-linear map underlying conjugation by a unit, used to transport a
+connection one-form without commuting its coefficient algebra. -/
+def shirokovFrameTransportLinear {A : Type*} [Ring A] [Algebra ℝ A]
+    (g : Aˣ) : A →ₗ[ℝ] A where
+  toFun := frameTransport g
+  map_add' a b := by simp [frameTransport, mul_add, add_mul]
+  map_smul' r a := by
+    simp [frameTransport, Algebra.smul_mul_assoc, Algebra.mul_smul_comm]
+
+/-- Shirokov's transformed connection in the covariant-derivative convention
+`D + [Γ, ·]`: it is `g⁻¹ Dg - g⁻¹ C g`, the negative of the paper's `C'`. -/
+def shirokovGaugeCovariantForm {A : Type*} [Ring A] [Algebra ℝ A]
+    (K : DerivationLieLane ℝ A) (g : Aˣ) (C : OneForm K) : OneForm K :=
+  gaugeForm K g - shirokovFrameTransportLinear g ∘ₗ C
+
+/-- Gauge covariance of the compatibility operator in Shirokov's Theorem 1.2.
+For arbitrary noncommutative coefficients, conjugating `a` and transforming
+`C` by the paper's rule transports the full residual `D a - [C,a]`. -/
+theorem shirokov_theorem_1_2_gauge_covariance
+    {A : Type*} [Ring A] [Algebra ℝ A]
+    (K : DerivationLieLane ℝ A) (g : Aˣ) (C : OneForm K)
+    (x : K.L) (a : A) :
+    covariantDerivative K (shirokovGaugeCovariantForm K g C) x
+        (frameTransport g a) =
+      frameTransport g
+        (K.operatorAction x a - (C x * a - a * C x)) := by
+  let a' := frameTransport g a
+  let θ := gaugeForm K g x
+  let c' := frameTransport g (C x)
+  have hframe : K.operatorAction x a' + θ * a' - a' * θ =
+      frameTransport g (K.operatorAction x a) := by
+    simpa [a', θ, covariantDerivative] using covariant_frameTransport K g x a
+  have hcomm : c' * a' - a' * c' =
+      frameTransport g (C x * a - a * C x) := by
+    calc
+      c' * a' - a' * c' = frameTransport g (C x * a) -
+          frameTransport g (a * C x) := by
+            rw [← frameTransport_mul, ← frameTransport_mul]
+      _ = frameTransport g (C x * a - a * C x) := by
+            exact (map_sub (shirokovFrameTransportLinear g)
+              (C x * a) (a * C x)).symm
+  change K.operatorAction x a' + (θ - c') * a' - a' * (θ - c') = _
+  calc
+    _ = (K.operatorAction x a' + θ * a' - a' * θ) - (c' * a' - a' * c') := by
+      noncomm_ring
+    _ = frameTransport g (K.operatorAction x a) -
+        frameTransport g (C x * a - a * C x) := by rw [hframe, hcomm]
+    _ = frameTransport g
+        (K.operatorAction x a - (C x * a - a * C x)) := by
+      exact (map_sub (shirokovFrameTransportLinear g)
+        (K.operatorAction x a) (C x * a - a * C x)).symm
+
 /-- A coordinate generator after an isometric change of frame in `Cl(0,n)`. -/
 def shirokovIsometryFrameVector (n : ℕ)
     (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))

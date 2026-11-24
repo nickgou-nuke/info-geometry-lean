@@ -184,4 +184,48 @@ theorem primitiveWeightSum_eq_inverted_temperature_integral
   rw [primitiveWeightSum_eq_integral_mellinKernel A]
   exact hC
 
+/-- Positive fixed points of temperature inversion are uniquely critical. -/
+theorem betaInvert_fixed_iff_of_pos {β : ℝ} (hβ : 0 < β) :
+    betaInvert β = β ↔ β = 1 := by
+  constructor
+  · intro hfix
+    have hne : β ≠ 0 := ne_of_gt hβ
+    have hsq : β ^ 2 = 1 := by
+      have hmul := congrArg (fun x : ℝ => x * β) hfix
+      simp [betaInvert, hne] at hmul
+      nlinarith
+    nlinarith [sq_nonneg (β - 1), sq_nonneg (β + 1)]
+  · intro h
+    subst β
+    exact betaInvert_one
+
+
+theorem stereographicTemperatureX_betaInvert {β : ℝ} (hβ : β ≠ 0) :
+    stereographicTemperatureX (betaInvert β) =
+      stereographicTemperatureX β := by
+  unfold stereographicTemperatureX betaInvert
+  field_simp [hβ]
+  ring
+
+
+theorem stereographicTemperatureY_betaInvert {β : ℝ} (hβ : β ≠ 0) :
+    stereographicTemperatureY (betaInvert β) =
+      -stereographicTemperatureY β := by
+  unfold stereographicTemperatureY betaInvert
+  field_simp [hβ]
+  ring
+
+
+theorem stereographicTemperature_betaInvert {β : ℝ} (hβ : β ≠ 0) :
+    stereographicTemperature (betaInvert β) =
+      (stereographicTemperatureX β, -stereographicTemperatureY β) := by
+  apply Prod.ext
+  · exact stereographicTemperatureX_betaInvert hβ
+  · exact stereographicTemperatureY_betaInvert hβ
+
+def PrimitiveTemperatureInversionCalibration (A : Finset ℕ) : Prop :=
+  (∫ β : ℝ in Set.Ioi 1, primitiveRestrictedPartition A β)
+    =
+  ∫ u : ℝ in Set.Ioo 0 1, primitiveInvertedPartitionDensity A u
+
 end InfoGeometry.Thermodynamics.ProjectiveTemperature

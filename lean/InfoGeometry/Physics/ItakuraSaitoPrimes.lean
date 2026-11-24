@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -59,5 +64,63 @@ theorem prime_regularized_free_energy_matched (P_gen : PrimeGeneratingPotential)
   dsimp [regularized_free_energy]
   rw [itakura_saito_self_eq_zero (P_gen.zeta β) (P_gen.zeta_pos β)]
   ring
+
+
+theorem itakura_saito_common_scale_invariant
+    (P Q c : ℝ) (hQ : Q ≠ 0) (hc : c ≠ 0) :
+    itakura_saito (c * P) (c * Q) = itakura_saito P Q := by
+  have hratio : (c * P) / (c * Q) = P / Q := by
+    field_simp
+  simp [itakura_saito, hratio]
+
+
+theorem itakura_saito_exp_log_difference (u v : ℝ) :
+    itakura_saito (Real.exp u) (Real.exp v) =
+      Real.exp (u - v) - (u - v) - 1 := by
+  have hratio : Real.exp u / Real.exp v = Real.exp (u - v) :=
+    (Real.exp_sub u v).symm
+  simp [itakura_saito, hratio]
+
+
+theorem itakura_saito_nonneg
+    (P Q : ℝ) (hP : 0 < P) (hQ : 0 < Q) :
+    0 ≤ itakura_saito P Q := by
+  let r : ℝ := P / Q
+  have hr : 0 < r := div_pos hP hQ
+  have h := Real.add_one_le_exp (Real.log r)
+  have hexp : Real.exp (Real.log r) = r := Real.exp_log hr
+  rw [itakura_saito]
+  change 0 ≤ r - Real.log r - 1
+  linarith
+
+
+theorem itakura_saito_eq_zero_iff
+    (P Q : ℝ) (hP : 0 < P) (hQ : 0 < Q) :
+    itakura_saito P Q = 0 ↔ P = Q := by
+  let r : ℝ := P / Q
+  have hr : 0 < r := div_pos hP hQ
+  constructor
+  · intro hzero
+    have hlog : Real.log r = r - 1 := by
+      rw [itakura_saito] at hzero
+      change r - Real.log r - 1 = 0 at hzero
+      linarith
+    have hlog_zero : Real.log r = 0 := by
+      by_contra hne
+      have hstrict := Real.add_one_lt_exp hne
+      have hexp : Real.exp (Real.log r) = r := Real.exp_log hr
+      linarith
+    have hr_one : r = 1 := Real.eq_one_of_pos_of_log_eq_zero hr hlog_zero
+    dsimp [r] at hr_one
+    field_simp at hr_one
+    exact hr_one
+  · intro hPQ
+    subst Q
+    simp [itakura_saito, ne_of_gt hP]
+
+
+abbrev zeta (P : PrimeGeneratingPotential) : ℝ → ℝ := P.1
+
+abbrev zeta_pos (P : PrimeGeneratingPotential) : ∀ β, 0 < P.zeta β := P.2
 
 end InfoGeometry

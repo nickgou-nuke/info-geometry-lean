@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Jordan.SPD
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Matrix.Order
@@ -102,5 +107,42 @@ lemma logDetBregman_self (X : SPD n) :
   simp
 
 end SPD
+
+noncomputable def logDetRatioSq (X Y : SPD n) : ℝ :=
+  (Real.log (Matrix.det (normalizedDistortion X Y))) ^ (2 : ℕ)
+
+
+lemma logDetRatioSq_eq_logdet_ratio_sq (X Y : SPD n) :
+    logDetRatioSq X Y
+      = (Real.log (Matrix.det X.mat) - Real.log (Matrix.det Y.mat)) ^ (2 : ℕ) := by
+  have hX : Matrix.det X.mat ≠ 0 := X.det_ne_zero
+  have hY : Matrix.det Y.mat ≠ 0 := Y.det_ne_zero
+  unfold logDetRatioSq
+  rw [normalizedDistortion_det, Real.log_div hX hY]
+
+/-- Nonnegativity of the determinant-relative divergence (commuting case). -/
+lemma logDetRatioSq_nonneg_of_commute
+    (X Y : SPD n)
+    (_hcomm : Commute X.mat Y.mat⁻¹) :
+    0 ≤ logDetRatioSq X Y := by
+  unfold logDetRatioSq
+  simpa [pow_two] using mul_self_nonneg (Real.log (Matrix.det (normalizedDistortion X Y)))
+
+/-- Unconditional nonnegativity of the determinant-relative divergence on SPD. -/
+lemma logDetRatioSq_nonneg
+    (X Y : SPD n) :
+    0 ≤ logDetRatioSq X Y := by
+  unfold logDetRatioSq
+  simpa [pow_two] using mul_self_nonneg (Real.log (Matrix.det (normalizedDistortion X Y)))
+
+@[simp]
+
+lemma logDetRatioSq_self (X : SPD n) :
+    logDetRatioSq X X = 0 := by
+  have hdet : Matrix.det X.mat ≠ 0 := X.det_ne_zero
+  unfold logDetRatioSq
+  rw [normalizedDistortion_det]
+  field_simp [hdet]
+  simp
 
 end InfoGeometry.Jordan

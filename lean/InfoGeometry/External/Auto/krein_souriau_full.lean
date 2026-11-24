@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import Mathlib.Analysis.InnerProductSpace.Dual
 import Mathlib.Analysis.Calculus.Deriv.Basic
@@ -253,5 +258,112 @@ structure NonequilibriumQuantumThermodynamicsData where
 #check fisherMetric
 #check fisherMetric_eq_one
 #check NonequilibriumQuantumThermodynamicsData
+
+/-- The fundamental symmetry J_fund = P₊ - P₋ = Jm (from T27). -/
+theorem fundamental_symmetry_sq_I : Jm * Jm = (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+  exact Jm_sq_I
+
+/-══════════════════════════════════════════════════════════════════════
+   BLOCK 2: SOURIAU LIE GROUP THERMODYNAMICS
+   ═════════════════════════════════════════════════════════════════════-/
+
+/-- The moment map J_M: M → 𝔤* for a symplectic G-action -/
+structure MomentMap (M 𝔤 : Type) where
+  μ : M → 𝔤  -- the moment map
+
+/-- A named zero cocycle for the degenerate finite toy model. -/
+def zeroSouriauCocycle (g : ℝ) (J_M x : ℝ) : ℝ := 0
+
+
+theorem souriauDualPairing_eq_inner {𝔤 : Type} [NormedAddCommGroup 𝔤]
+    [InnerProductSpace ℝ 𝔤] (β J : 𝔤) :
+    souriauDualPairing (𝔤 := 𝔤) β J = inner ℝ β J := by
+  simp [souriauDualPairing, innerSL_apply_apply]
+
+
+theorem souriau_pairing_energy_eq_inner {M 𝔤 : Type} [NormedAddCommGroup 𝔤]
+    [InnerProductSpace ℝ 𝔤] (J_M : M → 𝔤) (β : 𝔤) (x : M) :
+    souriauPairingEnergy (J_M := J_M) β x = inner ℝ β (J_M x) := by
+  rfl
+
+/-══════════════════════════════════════════════════════════════════════
+   BLOCK 3: INFORMATION GEOMETRY AND METRIPLECTIC DYNAMICS
+   ═════════════════════════════════════════════════════════════════════-/
+
+/-- Cramér-Rao bound: Var(θ̂) · I(θ) ≥ 1 -/
+def cramerRao (variance I : ℝ) : Prop := variance * I ≥ 1
+
+/-- Zero Poisson bracket for the degenerate finite toy model. -/
+def zeroPoissonBracket (F G : ℝ → ℝ) (x : ℝ) : ℝ := 0
+
+/-- Zero dissipative bracket for the degenerate finite toy model. -/
+def zeroDissipativeBracket (F S : ℝ → ℝ) (x : ℝ) : ℝ := 0
+
+/-- Metriplectic generator for explicitly supplied bracket operations. -/
+def metriplectic
+    (poissonBracket dissipativeBracket : (ℝ → ℝ) → (ℝ → ℝ) → ℝ → ℝ)
+    (H S F : ℝ → ℝ) (x : ℝ) : ℝ :=
+  poissonBracket F H x + dissipativeBracket F S x
+
+/-- Energy conservation from diagonal vanishing of the supplied bracket. -/
+theorem energy_conservation
+    (poissonBracket : (ℝ → ℝ) → (ℝ → ℝ) → ℝ → ℝ)
+    (hskew : ∀ F x, poissonBracket F F x = 0)
+    (H : ℝ → ℝ) (x : ℝ) : poissonBracket H H x = 0 :=
+  hskew H x
+
+/-- Entropy production from positivity of the supplied dissipative bracket. -/
+theorem entropy_production
+    (dissipativeBracket : (ℝ → ℝ) → (ℝ → ℝ) → ℝ → ℝ)
+    (hpositive : ∀ F x, 0 ≤ dissipativeBracket F F x)
+    (S : ℝ → ℝ) (x : ℝ) : 0 ≤ dissipativeBracket S S x :=
+  hpositive S x
+
+/-- Zero Onsager operator for the degenerate finite toy model. -/
+noncomputable def zeroOnsagerOperator : ℝ := 0
+
+/-══════════════════════════════════════════════════════════════════════
+   THE UNIFIED FORMULA
+   ═════════════════════════════════════════════════════════════════════-/
+
+structure NonequilibriumQuantumThermodynamics where
+  -- Block 1: Modular/Krein
+  A : Type                    -- 𝒜: visible algebra
+  J_op : A → A                -- J: complex structure
+  A' : Type                   -- 𝒜': commutant (ghost algebra)
+  K_mod : ℝ                   -- K: modular Hamiltonian
+  
+  -- Block 2: Souriau
+  G : Type                    -- G: Lie symmetry group
+  M : Type                    -- M: symplectic manifold
+  β_vec : ThermodynamicCovector ℝ  -- β: thermodynamic covector
+  
+  -- Block 3: Fisher-metriplectic
+  g_F : ℝ → ℝ                -- g_F: Fisher metric
+  ω_symp : Type               -- ω: symplectic form
+  poisson : (ℝ → ℝ) → (ℝ → ℝ) → ℝ → ℝ  -- {,}: Poisson bracket
+  metric : (ℝ → ℝ) → (ℝ → ℝ) → ℝ → ℝ   -- (,): metric bracket
+
+#check J_cpx_sq_neg_I
+#check η_kr_sq_I
+#check J_η_skew
+#check Jm_sq_I
+#check Jm_commutant
+#check commutant
+#check modularFlow
+#check MomentMap
+#check ThermodynamicCovector
+#check partitionFn
+#check log_partition_eq
+#check zeroSouriauCocycle
+#check gibbsState
+#check cramerRao
+#check zeroPoissonBracket
+#check zeroDissipativeBracket
+#check metriplectic
+#check energy_conservation
+#check entropy_production
+#check zeroOnsagerOperator
+#check NonequilibriumQuantumThermodynamics
 
 end KreinSouriauFull

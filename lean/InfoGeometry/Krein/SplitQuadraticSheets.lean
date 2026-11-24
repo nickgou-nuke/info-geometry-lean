@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.SplitQuadratic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -192,5 +197,53 @@ theorem divergence_nonpos_of_mem_minusSheet {q k : H₂}
   rw [eq_minusPoint_of_mem_minusSheet (E := E) hq, eq_minusPoint_of_mem_minusSheet (E := E) hk,
     divergence_minusPoint_eq_neg_half_sqdist]
   exact neg_nonpos.mpr (mul_nonneg (by norm_num) real_inner_self_nonneg)
+
+/-- The positive and negative eigensheets overlap only at the zero vector. -/
+theorem mem_plusSheet_and_minusSheet_iff_eq_zero (u : H₂) :
+    u ∈ plusSheet (E := E) ∧ u ∈ minusSheet (E := E) ↔ u = 0 := by
+  constructor
+  · rintro ⟨hp, hm⟩
+    apply DoubledSpace.ext
+    · simpa [mem_minusSheet_iff_fst_eq_zero (E := E) u |>.mp hm]
+    · simpa [mem_plusSheet_iff_snd_eq_zero (E := E) u |>.mp hp]
+  · intro hu
+    subst u
+    constructor <;> simp [plusSheet, minusSheet, spectral_epsilon]
+
+omit [CompleteSpace E] in
+
+theorem plusPoint_injective :
+    Function.Injective (plusPoint (E := E)) := by
+  intro x y h
+  have hfst := congrArg WithLp.fst h
+  simpa using hfst
+
+omit [InnerProductSpace ℝ E] [CompleteSpace E] in
+
+theorem minusPoint_injective :
+    Function.Injective (minusPoint (E := E)) := by
+  intro ξ η h
+  have hsnd := congrArg WithLp.snd h
+  simpa using hsnd
+
+omit [CompleteSpace E] in
+
+theorem mem_plusSheet_iff_exists_plusPoint (u : H₂) :
+    u ∈ plusSheet (E := E) ↔ ∃ x : E, u = plusPoint (E := E) x := by
+  constructor
+  · intro hu
+    exact ⟨WithLp.fst u, eq_plusPoint_of_mem_plusSheet (E := E) hu⟩
+  · rintro ⟨x, rfl⟩
+    exact plusPoint_mem_plusSheet (E := E) x
+
+omit [CompleteSpace E] in
+
+theorem mem_minusSheet_iff_exists_minusPoint (u : H₂) :
+    u ∈ minusSheet (E := E) ↔ ∃ ξ : E, u = minusPoint (E := E) ξ := by
+  constructor
+  · intro hu
+    exact ⟨WithLp.snd u, eq_minusPoint_of_mem_minusSheet (E := E) hu⟩
+  · rintro ⟨ξ, rfl⟩
+    exact minusPoint_mem_minusSheet (E := E) ξ
 
 end InfoGeometry.Krein.SplitQuadraticSheets

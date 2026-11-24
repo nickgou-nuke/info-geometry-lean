@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.LogCftMonodromy
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.SplitQuaternionFlowCoordinates
@@ -133,5 +138,43 @@ theorem splitQuaternionParabolicFlow_winding (T : ℝ) (n : ℕ) :
     _root_.InfoGeometry.Clifford.SplitQuaternionFlowCoordinates.parabolicFlow ((n : ℝ) * T) =
       splitQuaternionParabolicFlowStep ((n : ℝ) * T) := by
   rfl
+
+/-- Negative time is the inverse of the square-zero parabolic flow. -/
+theorem lcftParabolicFlow_neg_mul (t : ℂ) :
+    lcftParabolicFlowStep (-t) * lcftParabolicFlowStep t =
+      (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [lcftParabolicFlow_composition]
+  simp [lcftParabolicFlowStep]
+
+/-- The inverse identity also holds in the opposite multiplication order. -/
+theorem lcftParabolicFlow_mul_neg (t : ℂ) :
+    lcftParabolicFlowStep t * lcftParabolicFlowStep (-t) =
+      (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+  rw [lcftParabolicFlow_composition]
+  simp [lcftParabolicFlowStep]
+
+/-- The parabolic inverse is exactly the flow at the negated clock value. -/
+theorem lcftParabolicFlow_inverse (t : ℂ) :
+    (lcftParabolicFlowStep t)⁻¹ = lcftParabolicFlowStep (-t) := by
+  apply Matrix.inv_eq_right_inv
+  exact lcftParabolicFlow_mul_neg t
+
+/-- Negative real time cancels the split-quaternion parabolic flow. -/
+theorem splitQuaternionParabolicFlow_neg_mul (T : ℝ) :
+    splitQuaternionParabolicFlowStep (-T) * splitQuaternionParabolicFlowStep T =
+      (1 : SplitQuaternion) := by
+  rw [splitQuaternionParabolicFlow_composition]
+  simp [splitQuaternionParabolicFlowStep,
+    _root_.InfoGeometry.Clifford.SplitQuaternionFlowCoordinates.parabolicFlow,
+    _root_.InfoGeometry.Clifford.sqOne]
+
+/-- The opposite multiplication order gives the same exact cancellation. -/
+theorem splitQuaternionParabolicFlow_mul_neg (T : ℝ) :
+    splitQuaternionParabolicFlowStep T * splitQuaternionParabolicFlowStep (-T) =
+      (1 : SplitQuaternion) := by
+  rw [splitQuaternionParabolicFlow_composition]
+  simp [splitQuaternionParabolicFlowStep,
+    _root_.InfoGeometry.Clifford.SplitQuaternionFlowCoordinates.parabolicFlow,
+    _root_.InfoGeometry.Clifford.sqOne]
 
 end InfoGeometry.Clifford.MonodromyFlowAdapter

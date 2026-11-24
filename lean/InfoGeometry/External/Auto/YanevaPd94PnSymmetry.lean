@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -329,6 +334,31 @@ theorem edge_isoscalar_T0_competes_isovector_T1 :
 theorem edge_e2_constrains_gds :
     edgeHolds Concept.E2_Yrast_Transitions Edge.constrains Concept.GDS_LSSM_ModelSpace = true := by
   rfl
+
+
+theorem isospinState_dim_eq_irrepDim (s : IsospinState) :
+    s.dim = isospinIrrepDim s.T := by
+  exact s.is_su2_irrep
+
+
+theorem e2Allowed_iff (Ji Jf : ℕ) :
+    e2Allowed Ji Jf ↔ Ji = Jf + 2 := by
+  rfl
+
+
+theorem inClosedInterval_refl {x : Q} :
+    inClosedInterval x x x := by
+  exact ⟨le_rfl, le_rfl⟩
+
+
+theorem doubledTz_add_swap (N Z : ℤ) :
+    doubledTz N Z = -(doubledTz Z N) := by
+  simp [doubledTz]
+
+
+theorem isospinIrrepDim_nonzero (T : ℕ) :
+    0 < isospinIrrepDim T := by
+  simp [isospinIrrepDim]
 
 end YanevaPd94PnSymmetry
 

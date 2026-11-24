@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -104,5 +109,45 @@ theorem bKrein_xMinus_self
   unfold bKrein
   rw [J_xMinus half J hJ2 x]
   exact B_neg_right B hBcomm hBsmulLeft (xMinus half J x) (xMinus half J x)
+
+/-- The canonical half-sum and half-difference reconstruct the original vector. -/
+theorem xPlus_add_xMinus (J : V →ₗ[ℝ] V) (x : V) :
+    xPlus (1 / 2 : ℝ) J x + xMinus (1 / 2 : ℝ) J x = x := by
+  unfold xPlus xMinus
+  module
+
+/-- The `+1` half-projector is idempotent for an involution. -/
+theorem xPlus_idempotent (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id) (x : V) :
+    xPlus (1 / 2 : ℝ) J (xPlus (1 / 2 : ℝ) J x) =
+      xPlus (1 / 2 : ℝ) J x := by
+  unfold xPlus
+  rw [map_smul, map_add, J_J J hJ2 x]
+  module
+
+/-- The `-1` half-projector is idempotent for an involution. -/
+theorem xMinus_idempotent (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id) (x : V) :
+    xMinus (1 / 2 : ℝ) J (xMinus (1 / 2 : ℝ) J x) =
+      xMinus (1 / 2 : ℝ) J x := by
+  unfold xMinus
+  rw [map_smul, map_sub, J_J J hJ2 x]
+  module
+
+/-- The two finite eigenspace components annihilate each other. -/
+theorem xPlus_xMinus_zero (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id) (x : V) :
+    xPlus (1 / 2 : ℝ) J (xMinus (1 / 2 : ℝ) J x) = 0 := by
+  unfold xPlus
+  rw [J_xMinus (1 / 2 : ℝ) J hJ2 x]
+  module
+
+
+theorem xMinus_xPlus_zero (J : V →ₗ[ℝ] V)
+    (hJ2 : J.comp J = LinearMap.id) (x : V) :
+    xMinus (1 / 2 : ℝ) J (xPlus (1 / 2 : ℝ) J x) = 0 := by
+  unfold xMinus
+  rw [J_xPlus (1 / 2 : ℝ) J hJ2 x]
+  module
 
 end InfoGeometry.Krein.FiniteDecompositionAudit

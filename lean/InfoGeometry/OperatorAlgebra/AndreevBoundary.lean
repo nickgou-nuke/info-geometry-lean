@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/AndreevBoundary.lean
 
 Andreev boundary condition as a closure involution.
@@ -426,6 +431,20 @@ theorem charge_balance_zero_form :
   rw [L.boundary_charge_defect_eq_condensateTransfer]
   abel
 
+theorem charge_balance_valid_of_property
+    (w : L.chargeOf L.boundary.electron =
+      L.chargeOf L.boundary.hole + L.condensateTransfer) :
+    L.chargeOf L.boundary.electron =
+      L.chargeOf L.boundary.hole + L.condensateTransfer :=
+  w
+
+theorem diagonal_fixed_of_boundary_property
+    (W : AndreevBoundaryDatum V)
+    (hboundary : W = L.boundary) :
+    L.boundary.electron + L.boundary.hole ∈ L.boundary.closure.Fixed := by
+  rw [← hboundary]
+  exact W.electron_hole_diagonal_fixed
+
 end AndreevChargeLedger
 
 /-! ## 7. Owner theorems discharged constructively -/
@@ -451,5 +470,26 @@ theorem finiteAndreevBoundary_packet :
         =
           -(electronAmplitude - holeAmplitude) :=
   ⟨finiteAndreevDiagonalOwnerTarget, finiteAndreevImbalanceOwnerTarget⟩
+
+theorem electron_hole_diagonal_fixed_of_swap_property
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (closure : LinearClosureInvolution V)
+    (electron hole : V)
+    (w : closure.theta electron = hole ∧ closure.theta hole = electron) :
+    electron + hole ∈ closure.Fixed :=
+  closure.diagonal_fixed_of_swap w.1 w.2
+
+/-- Constructive proof of the finite Andreev diagonal owner target. -/
+theorem finiteAndreevDiagonal_fixed :
+    electronAmplitude + holeAmplitude ∈ finiteAndreevClosure.Fixed :=
+  finite_electron_hole_diagonal_fixed
+
+/-- Constructive proof of the finite Andreev imbalance owner target. -/
+theorem finiteAndreevImbalance_anti_fixed :
+    finiteAndreevClosure.theta
+        (electronAmplitude - holeAmplitude)
+      =
+        -(electronAmplitude - holeAmplitude) :=
+  finite_electron_hole_imbalance_anti_fixed
 
 end InfoGeometry.OperatorAlgebra.AndreevBoundary

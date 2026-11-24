@@ -627,6 +627,26 @@ theorem shirokov_blade_expansion (n : ℕ)
   change bladeRepr ℝ n x T = _
   simp [Pi.single_apply]
 
+/-- Reynolds average on every element of the finite-stage Clifford algebra, in
+ordered-blade coordinates. Its support is scalar, plus odd top grade. -/
+theorem shirokov_reynolds_all_elements (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    shirokovReynolds n x =
+      ∑ T ∈ (Finset.univ : Finset (Fin n)).powerset,
+        bladeRepr ℝ n x T • (if T = ∅ then (2 ^ n : ℝ) • cBlade ℝ n ∅ else
+          if Odd n ∧ T = Finset.univ then
+            (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) else 0) := by
+  calc
+    shirokovReynolds n x = shirokovReynolds n
+        (∑ T ∈ (Finset.univ : Finset (Fin n)).powerset,
+          bladeRepr ℝ n x T • cBlade ℝ n T) :=
+            congrArg (shirokovReynolds n) (shirokov_blade_expansion n x)
+    _ = ∑ T ∈ (Finset.univ : Finset (Fin n)).powerset,
+        bladeRepr ℝ n x T • (if T = ∅ then (2 ^ n : ℝ) • cBlade ℝ n ∅ else
+          if Odd n ∧ T = Finset.univ then
+            (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) else 0) :=
+              shirokov_reynolds_finite_blade_support n (bladeRepr ℝ n x)
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

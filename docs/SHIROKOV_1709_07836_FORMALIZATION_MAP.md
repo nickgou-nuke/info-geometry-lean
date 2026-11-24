@@ -81,8 +81,9 @@ positive-definite orthonormal-frame results are special cases only.
    proves `shirokov_blade_coordinates_injective` and
    `shirokov_blade_expansion`: every element of the negative-definite finite
    stage `Cl(0,n)` equals the finite powerset sum of its ordered-blade
-   coordinates. Consequently the Reynolds average formula now applies to
-   every element of this carrier. The identification of this average with the
+   coordinates. The composed theorem `shirokov_reynolds_all_elements`
+   consequently applies the Reynolds average formula to every element of this
+   carrier. The identification of this average with the
    paper's center projection, transport to a varying dual frame, and the
    odd-dimensional reduced-sum identity required by Theorem 2.2 remain open.
 2. Connect the finite-coordinate `C+K` transfer's derivation family to the
@@ -150,8 +151,9 @@ The later `shirokov_blade_reynolds_formula`,
 targeted owner build. The current extension also proves injectivity of the
 ordered-blade coordinate map by finite-dimensional rank equality and proves
 `shirokov_blade_expansion` by constructing the coordinate preimage from the
-finite powerset sum. Thus blade expansion and the stated Reynolds formula are
-available for arbitrary elements of this finite-stage carrier. This remains a
+finite powerset sum. The composed theorem `shirokov_reynolds_all_elements`
+therefore states the average formula for arbitrary elements of this finite-stage
+carrier. This remains a
 finite algebra identity; it does not by itself identify the average with the
 paper's center projection or supply the varying-frame transport and
 odd-dimensional reduced-sum identity.

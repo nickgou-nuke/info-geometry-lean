@@ -21,6 +21,10 @@ python3 verification/zorn-cl44-triality/check.py \
   --module InfoGeometry.Canonical.ZornCl44TrialityDerivation \
   --module InfoGeometry.Canonical.ZornCl44TrialityOrthogonal \
   --module InfoGeometry.Canonical.ZornCl44Faithfulness \
+  --module InfoGeometry.Canonical.ZornCl44PrimalDual \
+  --module InfoGeometry.Canonical.ZornCl44TrialityBoost \
+  --module InfoGeometry.Canonical.ZornCl44NullIncidence \
+  --module InfoGeometry.Canonical.ZornCl44DerivationInvariant \
   --phase final
 ```
 
@@ -55,5 +59,11 @@ checks must still match. A receipt with `focused_passed` covers this selected
 surface only. The receipt explicitly leaves the root build, publication gate,
 and independent semantic-review status outside its certification.
 
-The verbatim input is `intake.txt`. The mathematical contract and correction
-ledger are in `docs/ZORN_CL44_TRIALITY_CONTRACT_20261124.md`.
+Use the explicit nine-owner selection above for the complete current change.
+The runner's historical default selects only the original triality and
+derivation owners; a default run does not certify the extension.
+
+The verbatim first input is `intake.txt`; the second is
+`intake-primal-dual-20261124.txt`. Mathematical contracts and correction
+ledgers are in `docs/ZORN_CL44_TRIALITY_CONTRACT_20261124.md` and
+`docs/ZORN_PRIMAL_DUAL_GEOMETRY_CONTRACT_20261124.md`.

@@ -4,6 +4,12 @@
 are pending.** The implementation below describes the mathematical contract
 and its proof scripts, not a successful compiler result.
 
+The primal–dual, boost, null-incidence and general derivation-invariance
+extension has its own contract in
+`docs/ZORN_PRIMAL_DUAL_GEOMETRY_CONTRACT_20261124.md`. The complete focused
+selection now contains nine owners, explicitly listed in the verification
+README and workflow.
+
 ## Intake and source authority
 
 The verbatim attachment is preserved at
@@ -107,6 +113,16 @@ Exact rational coordinate checks are supporting evidence only.
 
 ## Observed verification status
 
+The initial focused GitHub Actions run
+`https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45371833733`
+installed the pinned environment and built five prerequisite owners, then
+failed elaborating `ZornSignedConvention` at fifteen locations. The other
+four new owners and the axiom audit were not reached. Subsequent source
+repairs address finite-vector projection simplification, additivity and
+the half-sum scalar cancellations; downstream coordinate proofs receive
+the same projection normalization. Fresh compiler acceptance remains
+required after these repairs.
+
 At 2026-11-24 09:53 UTC, the initial two-owner build had waited more than
 43 minutes for the maintained shared build lock. Its status was `queued`
 and its command count was zero. The lock was held by another
@@ -120,12 +136,12 @@ Clifford relations, triality basis triples, equality of the three selected
 derivation actions, and the Leibniz identity. These are supporting source
 and calculation results; they do not replace the Lean kernel check.
 
-The full five-owner command is recorded in
+The complete owner command is recorded in
 `verification/zorn-cl44-triality/README.md`. It must freshly elaborate all
-five owners and audit every owned declaration before compiler acceptance.
+selected owners and audit every owned declaration before compiler acceptance.
 The queued initial run selects only `ZornCl44Triality` and
 `ZornSignedConvention`, so success of that initial run alone would not
-establish the full five-owner acceptance contract.
+establish the full acceptance contract.
 
 Repository publication has separate unresolved prerequisites. The root
 package references local `HomotopyHypothesis` and `Atlas` packages whose

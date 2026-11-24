@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import Mathlib.Algebra.Jordan.Basic
 import InfoGeometry.Algebra.QuadraticJordanH3Zorn
 import InfoGeometry.Algebra.H3ZornCubicOperators
 import InfoGeometry.Algebra.H3ZornQuadraticCommutation
@@ -255,5 +256,37 @@ theorem candidateJordanMul_trace_formula (X Y : H3Zorn ℝ) :
   rw [H3Zorn.crossProduct_one]
   congr 1
   module
+
+theorem TJordanCommutation_holds : TJordanCommutation := by
+  intro a b
+  rw [T_symm_outer (T a 1 b) 1 (T a 1 a)]
+  rw [T_symm_outer b 1 (T a 1 a)]
+  have h₁ := four_U a (T a 1 b)
+  have h₂ := congrArg (fun W : H3Zorn ℝ => T a 1 W) (four_U a b)
+  simp only [sub_eq_add_neg, T_add_right, T_smul_right] at h₂
+  have hc := P_comm_U a b
+  rw [← hc] at h₁
+  have htneg (W : H3Zorn ℝ) : T a 1 (-W) = -T a 1 W := by
+    rw [show -W = (-1 : ℝ) • W by module, T_smul_right]
+    module
+  rw [htneg] at h₂
+  have h := h₁.symm.trans h₂
+  have h' := congrArg
+    (fun W : H3Zorn ℝ =>
+      (2 : ℝ) • T a 1 (T a 1 (T a 1 b)) - W)
+    h
+  convert h' using 1 <;> module
+
+/-- The installed product satisfies the Jordan identity. -/
+theorem H3ZornJordanProductLaw_holds : H3ZornJordanProductLaw :=
+  H3ZornJordanProductLaw_iff_TJordanCommutation.mpr TJordanCommutation_holds
+
+theorem isCommJordan_of_cubicJordanDatum [CommMagma (H3Zorn ℝ)]
+    (_D : CubicJordanDatum (H3Zorn ℝ))
+    (h_mul : ∀ x y : H3Zorn ℝ, x * y = candidateJordanMul x y := by intros; rfl) :
+    IsCommJordan (H3Zorn ℝ) where
+  lmul_comm_rmul_rmul x y := by
+    simp_rw [h_mul]
+    exact H3ZornJordanProductLaw_holds x y
 
 end InfoGeometry.Algebra

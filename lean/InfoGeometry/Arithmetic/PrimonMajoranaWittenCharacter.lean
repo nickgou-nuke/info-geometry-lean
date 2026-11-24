@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.LinearAlgebra.QuadraticForm.Basic
+import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.PrimitiveSetsAbove
@@ -385,6 +392,52 @@ def PrimonMajoranaWittenCharacterOwnerTarget : Prop :=
 
 /-- The finite two-state trace, spinor pairing, and signed Pfaffian products agree. -/
 theorem primonMajoranaWittenCharacterOwnerTarget :
+    ∀ (P : Finset ℕ) (s : ℝ),
+      finiteTwoStateWittenTrace P s = finiteWittenCharacter P s ∧
+      finiteSpinorPairing P s = finiteWittenCharacter P s ∧
+      finiteMajoranaPfaffian P s = finiteWittenCharacter P s := by
+  intro P s
+  exact ⟨finiteTwoStateWittenTrace_eq_wittenCharacter P s,
+    finiteSpinorPairing_eq_wittenCharacter P s,
+    finiteMajoranaPfaffian_eq_wittenCharacter P s⟩
+
+def splitMajoranaCAROfPolar
+    {Prime : Type*} [DecidableEq Prime]
+    {V : Type*} [AddCommGroup V] [Module ℝ V]
+    (Q : QuadraticForm ℝ V)
+    (basis_c : Prime → V)
+    (basis_d : Prime → V)
+    (hcc : ∀ p q, QuadraticMap.polar Q (basis_c p) (basis_c q) = if p = q then 2 else 0)
+    (hdd : ∀ p q, QuadraticMap.polar Q (basis_d p) (basis_d q) = if p = q then -2 else 0)
+    (hcd : ∀ p q, QuadraticMap.polar Q (basis_c p) (basis_d q) = 0) :
+    SplitMajoranaCAR Prime (CliffordAlgebra Q) where
+  c := fun p => CliffordAlgebra.ι Q (basis_c p)
+  d := fun p => CliffordAlgebra.ι Q (basis_d p)
+  c_c := by
+    intro p q
+    unfold anticommutator
+    rw [CliffordAlgebra.ι_mul_ι_add_swap]
+    rw [hcc p q]
+    split_ifs
+    · push_cast; rfl
+    · push_cast; rfl
+  d_d := by
+    intro p q
+    unfold anticommutator
+    rw [CliffordAlgebra.ι_mul_ι_add_swap]
+    rw [hdd p q]
+    split_ifs
+    · push_cast; rfl
+    · push_cast; rfl
+  c_d := by
+    intro p q
+    unfold anticommutator
+    rw [CliffordAlgebra.ι_mul_ι_add_swap]
+    rw [hcd p q]
+    push_cast; rfl
+
+/-- The finite two-state trace, spinor pairing, and signed Pfaffian products agree. -/
+theorem primonMajoranaWittenCharacter_properties :
     ∀ (P : Finset ℕ) (s : ℝ),
       finiteTwoStateWittenTrace P s = finiteWittenCharacter P s ∧
       finiteSpinorPairing P s = finiteWittenCharacter P s ∧

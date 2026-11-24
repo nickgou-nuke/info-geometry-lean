@@ -16,6 +16,7 @@ Drazin Dilation Gap:
                     or 2 i [P_D, G]       -- Hilbert self-adjoint version
 -/
 
+import Mathlib.Tactic
 import Mathlib
 import InfoGeometry.OperatorAlgebra.OperatorThermodynamics
 

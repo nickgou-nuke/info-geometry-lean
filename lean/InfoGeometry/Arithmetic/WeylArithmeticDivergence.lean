@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Arithmetic/WeylArithmeticDivergence.lean
 
 Gauge-invariant and gauge-covariant arithmetic divergence sockets over the
@@ -11,6 +16,7 @@ and covariance are supplied as witness fields and re-exported as theorem
 payload.
 -/
 
+import Mathlib.Tactic.Linarith
 import InfoGeometry.Arithmetic.ProjectiveWeylGauge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ProjectivePrimePartition
@@ -264,5 +270,74 @@ theorem totalDivergence_eq_shape_of_equal_mass
   ring
 
 end WeylGaugeDecompositionWitness
+
+theorem itakuraSaito_nonneg {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
+    0 ≤ itakuraSaito x y := by
+  unfold itakuraSaito
+  have hratio : 0 < x / y := div_pos hx hy
+  have hlog := Real.log_le_sub_one_of_pos hratio
+  linarith
+
+/-! Logarithmic coordinates make the common scale quotient explicit. -/
+
+theorem itakuraSaito_exp_exp_eq_log_difference (u v : ℝ) :
+    itakuraSaito (Real.exp u) (Real.exp v) =
+      Real.exp (u - v) - (u - v) - 1 := by
+  unfold itakuraSaito
+  have hratio : Real.exp u / Real.exp v = Real.exp (u - v) := by
+    rw [← Real.exp_sub]
+  rw [hratio, Real.log_exp]
+
+
+theorem itakuraSaito_exp_exp_common_shift (u v c : ℝ) :
+    itakuraSaito (Real.exp (u + c)) (Real.exp (v + c)) =
+      itakuraSaito (Real.exp u) (Real.exp v) := by
+  rw [itakuraSaito_exp_exp_eq_log_difference,
+    itakuraSaito_exp_exp_eq_log_difference]
+  have hshift : u + c - (v + c) = u - v := by ring
+  rw [hshift]
+
+
+theorem itakuraSaito_scale_invariant {x y c : ℝ} (hc : c ≠ 0) :
+    itakuraSaito (c * x) (c * y) = itakuraSaito x y := by
+  unfold itakuraSaito
+  have hratio : (c * x) / (c * y) = x / y := by
+    field_simp [hc]
+  rw [hratio]
+
+
+theorem itakuraSaito_self_eq_zero {x : ℝ} (hx : x ≠ 0) :
+    itakuraSaito x x = 0 := by
+  unfold itakuraSaito
+  rw [div_self hx, Real.log_one]
+  norm_num
+
+
+theorem itakuraSaito_eq_zero_iff {x y : ℝ} (hx : 0 < x) (hy : 0 < y) :
+    itakuraSaito x y = 0 ↔ x = y := by
+  constructor
+  · intro hzero
+    have hratio : 0 < x / y := div_pos hx hy
+    by_contra hxy
+    have hratio_ne : x / y ≠ 1 := by
+      intro hone
+      apply hxy
+      field_simp [ne_of_gt hy] at hone
+      exact hone
+    have hstrict := Real.log_lt_sub_one_of_pos hratio hratio_ne
+    unfold itakuraSaito at hzero
+    linarith
+  · intro hxy
+    subst y
+    exact itakuraSaito_self_eq_zero (ne_of_gt hx)
+
+theorem arithmeticShapeDivergence_nonneg
+    (A : Finset ℕ) (countsP countsQ : ℕ → ℝ)
+    (hP : ∀ n ∈ A, 0 < arithmeticBaseShape A countsP n)
+    (hQ : ∀ n ∈ A, 0 < arithmeticBaseShape A countsQ n) :
+    0 ≤ arithmeticShapeDivergence A countsP countsQ := by
+  unfold arithmeticShapeDivergence
+  exact Finset.sum_nonneg (fun n hn =>
+    itakuraSaito_nonneg (hP n hn) (hQ n hn))
 
 end InfoGeometry.Arithmetic.WeylArithmeticDivergence

@@ -63,6 +63,7 @@ def hyperplaneCovector (p : E →L[ℝ] ℝ) (c : ℝ) :
     (z : E × (ℝ × ℝ)) :
     hyperplaneCovector p c z = p z.1 - z.2.1 - c * z.2.2 := rfl
 
+omit [NormedSpace ℝ E] in
 theorem homogeneousPoint_ne_zero (f : E → ℝ) (x : E) :
     homogeneousPoint f x ≠ 0 := by
   intro h

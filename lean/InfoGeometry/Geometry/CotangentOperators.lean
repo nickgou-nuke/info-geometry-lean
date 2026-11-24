@@ -254,7 +254,7 @@ theorem hamiltonian_add_smul (A : Module.End ℝ V) (z w : Carrier V) (t : ℝ) 
     z.2 (A z.1) + t * (w.2 (A z.1) + z.2 (A w.1)) +
       t ^ 2 * w.2 (A w.1)
   simp only [LinearMap.add_apply, LinearMap.smul_apply, map_add, map_smul,
-    smul_eq_mul, pow_two, mul_add, add_mul, mul_assoc]
+    smul_eq_mul, pow_two, mul_add, mul_assoc]
   ac_rfl
 
 /-- With the Geometry sign, the cotangent lift contracts to the Hamiltonian tangent. -/

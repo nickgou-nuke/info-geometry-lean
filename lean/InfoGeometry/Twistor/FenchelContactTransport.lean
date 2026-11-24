@@ -109,7 +109,7 @@ def contactSuperDerivation (f : E → ℝ)
     unfold parityConj
     noncomm_ring
   map_smul' r A := by
-    simp only [parityConj, mul_smul_comm, smul_mul_assoc, smul_sub]
+    simp only [RingHom.id_apply, parityConj, mul_smul_comm, smul_mul_assoc, smul_sub]
 
 @[simp] theorem contactSuperDerivation_apply (f : E → ℝ)
     (fStar : (E →L[ℝ] ℝ) → ℝ) (x : E) (p : E →L[ℝ] ℝ)
@@ -238,7 +238,8 @@ def homogeneousFrame (e : E ≃ₗ[ℝ] F) :
 theorem homogeneousFrame_coordinate (e : E ≃ₗ[ℝ] F) :
     (homogeneousCoordinate (E := E)).comp (homogeneousFrame e).symm.toLinearMap =
       homogeneousCoordinate (E := F) := by
-  ext z
+  apply LinearMap.ext
+  intro z
   rfl
 
 /-- The same primal potential in the new frame. -/
@@ -285,7 +286,8 @@ theorem contactPair_frameAction (e : E ≃L[ℝ] F) (f : E → ℝ)
         (e x) (Convex.dualTransport e.symm p) := by
   apply Prod.ext
   · exact homogeneousFrame_point e f x
-  · ext z
+  · apply LinearMap.ext
+    intro z
     change p (e.symm z.1) - z.2.1 - fStar p * z.2.2 =
       p (e.symm z.1) - z.2.1 -
         fStar (Convex.dualTransport e (Convex.dualTransport e.symm p)) * z.2.2
@@ -365,7 +367,8 @@ theorem contactChartShear_point (f : E → ℝ) (x : E) :
 theorem contactChartShear_coordinate (f : E → ℝ) (x : E) :
     homogeneousCoordinate.comp (contactChartShear f x).symm.toLinearMap =
       homogeneousCoordinate := by
-  ext z
+  apply LinearMap.ext
+  intro z
   change ((contactChartShear f x).symm z).2.2 = z.2.2
   rw [contactChartShear_symm_apply]
 
@@ -391,7 +394,8 @@ theorem contactPair_shear_of_equality (f : E → ℝ)
       contactPair f fStar x p := by
   apply Prod.ext
   · exact contactChartShear_point f x
-  · ext z
+  · apply LinearMap.ext
+    intro z
     change hyperplaneCovector p 0 ((contactChartShear f x).symm z) =
       hyperplaneCovector p (fStar p) z
     rw [contactChartShear_symm_apply]

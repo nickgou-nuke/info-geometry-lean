@@ -150,6 +150,7 @@ section FiniteDimension
 
 variable [FiniteDimensional ℝ V]
 
+omit [FiniteDimensional ℝ V] in
 /-- The graph has the dimension of its source, by its actual source equivalence. -/
 theorem graph_finrank (H : V →ₗ[ℝ] Module.Dual ℝ V) :
     Module.finrank ℝ H.graph = Module.finrank ℝ V :=

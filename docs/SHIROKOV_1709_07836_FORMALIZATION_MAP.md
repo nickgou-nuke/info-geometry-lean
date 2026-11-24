@@ -186,7 +186,12 @@ The new `shirokov_center_grade_two_eq_zero` theorem proves the scalar/top
 center has zero intersection with elements whose ordered-blade coordinates
 are supported only in grade two. This is the finite-stage center/grade
 intersection needed for a curvature-defect argument, conditional on proving
-that the defect has grade-two support.
+that the defect has grade-two support. The new
+`shirokov_center_projection_eq_zero_of_grade_two` also shows that the
+standard-frame Reynolds center projection annihilates any grade-two-supported
+element. This can discharge the center-projection term in the conditional
+Theorem 2.2 reduction once a separate theorem identifies the paper's varying
+dual-frame sum with this standard average.
 This remains a statement about the repository's standard negative-definite
 finite-stage carrier, not a varying-frame classification theorem. The updated
 owner passed both the locked Lean file check and the targeted locked Lake

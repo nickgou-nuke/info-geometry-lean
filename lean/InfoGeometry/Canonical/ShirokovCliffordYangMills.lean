@@ -934,6 +934,32 @@ theorem shirokov_center_grade_two_eq_zero (n : ℕ)
     exact hne (shirokov_center_coordinate_support n x hx T hEmpty hTop)
   exact hcoord
 
+/-- The standard-frame center projection annihilates elements supported only
+in grade two, because the Reynolds average retains only scalar and odd-top
+coordinates. -/
+theorem shirokov_center_projection_eq_zero_of_grade_two (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hgrade : ∀ T : Finset (Fin n), bladeRepr ℝ n x T ≠ 0 → T.card = 2) :
+    shirokovCenterProjection n x = 0 := by
+  have hReynolds : shirokovReynolds n x = 0 := by
+    rw [shirokov_reynolds_all_elements]
+    apply Finset.sum_eq_zero
+    intro T hT
+    by_cases hzero : bladeRepr ℝ n x T = 0
+    · simp [hzero]
+    · have hcard := hgrade T hzero
+      have hEmpty : T ≠ ∅ := by
+        intro h
+        subst T
+        simp at hcard
+      have hTop : ¬ (Odd n ∧ T = (Finset.univ : Finset (Fin n))) := by
+        rintro ⟨hn, rfl⟩
+        have hcard' : n = 2 := by simpa using hcard
+        subst n
+        norm_num at hn
+      simp [hEmpty, hTop]
+  simp [shirokovCenterProjection, hReynolds]
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

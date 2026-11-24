@@ -34,6 +34,48 @@ open InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
 open InfoGeometry.OperatorAlgebra.MaurerCartanFrameTransport
 open InfoGeometry.Clifford.CliffordExtensiveRotorsAndBiquaternions
 
+/-- The integer eigenvalue appearing in Shirokov's grade-projection
+coefficient matrix. The paper's one-based index `i` is represented by
+`i - 1` here. -/
+def shirokovGradeEigenvalue (n i : ℕ) : ℤ :=
+  (-1 : ℤ) ^ i * ((n : ℤ) - 2 * (i : ℤ))
+
+/-- In even dimension, every denominator `n - λ_i` used by the full
+grade-projection formula (for `1 ≤ i ≤ n`) is strictly positive. This
+establishes that the displayed scalar coefficients are defined; it does not
+establish invertibility of the separate Vandermonde coefficient matrix. -/
+theorem shirokov_even_grade_projection_denominator_pos
+    {n i : ℕ} (hn : Even n) (hi : 0 < i) (hin : i ≤ n) :
+    0 < (n : ℤ) - shirokovGradeEigenvalue n i := by
+  have hiBound : 0 < i := hi
+  have hinBound : i ≤ n := hin
+  by_cases hiEven : Even i
+  · obtain ⟨k, rfl⟩ := hiEven
+    have hp : (-1 : ℤ) ^ (k + k) = 1 := by
+      rw [← two_mul k, pow_mul]
+      norm_num
+    unfold shirokovGradeEigenvalue
+    rw [hp]
+    push_cast
+    have hkpos : 0 < k := by omega
+    omega
+  · obtain ⟨k, rfl⟩ := (Nat.not_even_iff_odd.mp hiEven)
+    obtain ⟨l, rfl⟩ := hn
+    have hpEven : (-1 : ℤ) ^ (k + k) = 1 := by
+      rw [← two_mul k, pow_mul]
+      norm_num
+    have hp : (-1 : ℤ) ^ (2 * k + 1) = -1 := by
+      calc
+        (-1 : ℤ) ^ (2 * k + 1) = (-1 : ℤ) ^ (2 * k) * (-1) := by
+          rw [pow_succ]
+        _ = (-1 : ℤ) ^ (k + k) * (-1) := by rw [show 2 * k = k + k by omega]
+        _ = -1 := by rw [hpEven]; norm_num
+    unfold shirokovGradeEigenvalue
+    rw [hp]
+    push_cast
+    have hklt : k < l := by omega
+    omega
+
 /-- The first two generators in the concrete negative-definite `Cl(0,2)`. -/
 private def shirokovWitnessGen0 :
     CliffordAlgebra (cliffordNegSqForm ℝ 2) := cGen ℝ 2 0

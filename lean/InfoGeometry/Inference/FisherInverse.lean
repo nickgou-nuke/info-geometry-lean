@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
@@ -7,6 +12,7 @@ Authors: Nikolay Goutev, Dimitar Tonev
 -/
 
 import Mathlib.LinearAlgebra.Matrix.NonsingularInverse
+import InfoGeometry.Algebra.MatrixNoncommutativity
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.PosDef
 import InfoGeometry.Inference.FisherPositivity
@@ -18,6 +24,13 @@ Positive semidefiniteness is not enough to define a covariance matrix. This
 module makes the missing nonsingularity condition explicit and records the
 inverse identities used by local sensitivity reporting.
 -/
+
+/-- Closed T16 non-commutativity witness for the `2 × 2` real matrix carrier. -/
+theorem fisherMatrix2_noncomm_witness :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A :=
+  ⟨InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix,
+    InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix,
+    InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix_mul_tiltedMatrix_ne⟩
 
 namespace InfoGeometry.Inference
 
@@ -54,5 +67,25 @@ theorem fisher_inverse_contract_requires_nonsingularity
     (hI : FisherInverseContract I) :
     IsUnit I.det :=
   hI.determinant_isUnit
+
+
+theorem positiveDefinite
+    {I : Matrix (Fin 2) (Fin 2) ℝ}
+    (hI : FisherInverseContract I) : I.PosDef :=
+  hI.1
+
+
+theorem determinant_isUnit
+    {I : Matrix (Fin 2) (Fin 2) ℝ}
+    (hI : FisherInverseContract I) : IsUnit I.det :=
+  hI.2
+
+
+theorem mk
+    {I : Matrix (Fin 2) (Fin 2) ℝ}
+    (positiveDefinite : I.PosDef)
+    (determinant_isUnit : IsUnit I.det) :
+    FisherInverseContract I :=
+  ⟨positiveDefinite, determinant_isUnit⟩
 
 end InfoGeometry.Inference

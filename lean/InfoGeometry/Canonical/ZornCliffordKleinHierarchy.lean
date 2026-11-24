@@ -43,30 +43,30 @@ theorem realZorn_finrank : Module.finrank ℝ (ZornMatrix ℝ) = 8 := by
 /-- The full real spinor module has two eight-dimensional summands. -/
 theorem realDiracSpinor_finrank :
     Module.finrank ℝ (DiracSpinor16 (R := ℝ)) = 16 := by
-  letI : FiniteDimensional ℝ (ZornMatrix ℝ) :=
+  let : FiniteDimensional ℝ (ZornMatrix ℝ) :=
     (coordLinearEquiv (R := ℝ)).symm.finiteDimensional
   rw [Module.finrank_prod, realZorn_finrank]
 
 /-- Endomorphisms of one Zorn matrix have dimension sixty-four. -/
 theorem realZornEnd_finrank :
     Module.finrank ℝ (Module.End ℝ (ZornMatrix ℝ)) = 64 := by
-  letI : FiniteDimensional ℝ (ZornMatrix ℝ) :=
+  let : FiniteDimensional ℝ (ZornMatrix ℝ) :=
     (coordLinearEquiv (R := ℝ)).symm.finiteDimensional
   rw [Module.finrank_linearMap, realZorn_finrank]
 
 /-- Endomorphisms of the real Dirac module have dimension two hundred fifty-six. -/
 theorem realDiracEnd_finrank :
     Module.finrank ℝ (Module.End ℝ (DiracSpinor16 (R := ℝ))) = 256 := by
-  letI : FiniteDimensional ℝ (ZornMatrix ℝ) :=
+  let : FiniteDimensional ℝ (ZornMatrix ℝ) :=
     (coordLinearEquiv (R := ℝ)).symm.finiteDimensional
   rw [Module.finrank_linearMap, realDiracSpinor_finrank]
 
 /-- The native full Clifford algebra has dimension `2^8 = 256`. -/
 theorem realZornClifford_finrank :
     Module.finrank ℝ (CliffordAlgebra (zornNorm (R := ℝ))) = 256 := by
-  letI : FiniteDimensional ℝ (ZornMatrix ℝ) :=
+  let : FiniteDimensional ℝ (ZornMatrix ℝ) :=
     (coordLinearEquiv (R := ℝ)).symm.finiteDimensional
-  letI : Invertible (2 : ℝ) := invertibleOfNonzero (by norm_num)
+  let : Invertible (2 : ℝ) := invertibleOfNonzero (by norm_num)
   let b : Module.Basis (Fin 8) ℝ (ZornMatrix ℝ) :=
     Module.finBasisOfFinrankEq ℝ (ZornMatrix ℝ) realZorn_finrank
   rw [(CliffordAlgebra.equivExterior (zornNorm (R := ℝ))).finrank_eq,
@@ -108,8 +108,8 @@ theorem diracGamma_vectorReadback (x s t : ZornMatrix ℝ) :
       InfoGeometry.Algebra.ZornVectorMatrix.mul
         (InfoGeometry.Algebra.ZornVectorMatrix.conj (canonicalVectorEquiv x))
         (canonicalVectorEquiv s)) := by
-  simp only [diracGamma, cliffordMinus, cliffordPlus,
-    canonicalVectorEquiv_mul, canonicalVectorEquiv_zornConj]
+  change (canonicalVectorEquiv (x * t), canonicalVectorEquiv (zornConj x * s)) = _
+  simp only [canonicalVectorEquiv_mul, canonicalVectorEquiv_zornConj]
 
 /-! ## Chirality is a grading of the sixteen-dimensional module -/
 
@@ -121,7 +121,11 @@ def diracChirality :
   left_inv Ψ := by simp
   right_inv Ψ := by simp
   map_add' Ψ Φ := by apply Prod.ext <;> simp [add_comm]
-  map_smul' r Ψ := by apply Prod.ext <;> simp
+  map_smul' r Ψ := by
+    apply Prod.ext
+    · rfl
+    · change -(r • Ψ.2) = r • (-Ψ.2)
+      exact (smul_neg r Ψ.2).symm
 
 @[simp] theorem diracChirality_apply (s t : ZornMatrix ℝ) :
     diracChirality (s, t) = (s, -t) := rfl
@@ -273,9 +277,9 @@ theorem realDiracBivector_commutator_gamma (x y z : ZornMatrix ℝ) :
             diracGammaLinear z * diracGammaLinear x * diracGammaLinear y) -
           (diracGammaLinear y * diracGammaLinear x * diracGammaLinear z -
             diracGammaLinear z * diracGammaLinear y * diracGammaLinear x)) := by
-      simp only [smul_mul_assoc, mul_smul_comm, ← smul_sub]
-      congr 1
-      noncomm_ring
+      simp only [smul_mul_assoc, mul_smul_comm, _root_.sub_mul,
+        _root_.mul_sub, smul_sub, _root_.mul_assoc]
+      abel
     _ = diracGammaLinear
         (QuadraticMap.polar zornNorm y z • x -
           QuadraticMap.polar zornNorm x z • y) := by
@@ -314,9 +318,9 @@ theorem realDiracBivector_commutator_bivector
             diracGammaLinear v * realDiracBivector x y) * diracGammaLinear u -
           diracGammaLinear v * (realDiracBivector x y * diracGammaLinear u -
             diracGammaLinear u * realDiracBivector x y)) := by
-      simp only [smul_mul_assoc, mul_smul_comm, ← smul_sub]
-      congr 1
-      noncomm_ring
+      simp only [smul_mul_assoc, mul_smul_comm, _root_.sub_mul,
+        _root_.mul_sub, smul_add, smul_sub, _root_.mul_assoc]
+      abel
     _ = _ := by
       rw [hu, hv]
       unfold TetractysCliffordLorentzAction.bivectorAction

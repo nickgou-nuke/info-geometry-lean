@@ -1,0 +1,3 @@
+AUDIT_MODULE_COUNT: InfoGeometry.Verification.SuppliedTableCounterexample: 17
+AUDIT_AXIOMS: [propext, Classical.choice, Quot.sound]
+AUDIT_COUNT: 17

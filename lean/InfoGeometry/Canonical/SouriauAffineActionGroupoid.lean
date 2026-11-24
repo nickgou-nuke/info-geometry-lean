@@ -30,6 +30,7 @@ variable [LinearGroupAction G V]
 
 /-- The existing affine coadjoint action, bundled as a native group action.
 This is a definition rather than a global instance because its cocycle is a parameter. -/
+@[instance_reducible]
 def affineMulAction (Θ : AffineCoadjointCocycle G V) : MulAction G (LieDual V) where
   smul := affineCoadjointAction G V Θ
   one_smul := affineCoadjointAction_one G V Θ
@@ -103,7 +104,7 @@ theorem affine_pairing_add_massieu (g : G) (μ : LieDual V) (β : V) :
       μ β + twistedMassieu Θ J β := by
   have h := twistedMassieu_additive_cocycle Θ J g (Ad V g β)
   simp only [ContinuousLinearEquiv.symm_apply_apply] at h
-  simp only [affineCoadjointAction, ContinuousLinearMap.add_apply, coadjoint,
+  simp only [affineCoadjointAction, _root_.add_apply, coadjoint,
     ContinuousLinearMap.comp_apply, ContinuousLinearEquiv.coe_coe,
     ContinuousLinearEquiv.symm_apply_apply]
   linarith

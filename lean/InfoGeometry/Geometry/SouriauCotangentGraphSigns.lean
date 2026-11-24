@@ -49,13 +49,17 @@ theorem twistedPairing_graph_scaled (B : LinearMap.BilinForm ℝ V)
 theorem twistedPairing_positive_graph (B : LinearMap.BilinForm ℝ V)
     (hB : ∀ u v, B u v = -B v u) (u v : V) :
     twistedPairing B (graphLift B u) (graphLift B v) = -B u v := by
-  simpa using twistedPairing_graph_scaled B hB 1 u v
+  have h := twistedPairing_graph_scaled B hB 1 u v
+  norm_num at h
+  exact h
 
 /-- The negative graph in the supplied draft gives `3 B`, not `-B`. -/
 theorem twistedPairing_negative_graph (B : LinearMap.BilinForm ℝ V)
     (hB : ∀ u v, B u v = -B v u) (u v : V) :
     twistedPairing B (graphLift (-B) u) (graphLift (-B) v) = 3 * B u v := by
-  simpa using twistedPairing_graph_scaled B hB (-1) u v
+  have h := twistedPairing_graph_scaled B hB (-1) u v
+  norm_num [neg_one_smul] at h
+  exact h
 
 /-- At a nonzero coefficient the two proposed graph reductions cannot be identified. -/
 theorem negative_graph_ne_negative_pairing (B : LinearMap.BilinForm ℝ V)

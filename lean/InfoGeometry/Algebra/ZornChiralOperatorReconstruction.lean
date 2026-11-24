@@ -114,18 +114,19 @@ theorem leftMajorana_source_ordered_volume :
   ext i <;> (try fin_cases i) <;>
     simp [Module.End.mul_apply, leftMajoranaMinus, leftMajoranaPlus,
       L_map, mul, offDiagonal, diagonal, ZornVec3.basis, ZornVec3.dot,
-      ZornVec3.cross, Fin.sum_univ_three, neg]
+      ZornVec3.cross, neg]
 
 /-- Evaluation of the actual operator-composition defect on the third split
 direction gives `2 (E11-E22)`, equivalently `-2 qCut7` in the supplied convention. -/
 theorem leftMajoranaPlus_associator_witness :
-    (leftMajoranaPlus (ZornVec3.basis (R := ℝ) 0) *
+    ((leftMajoranaPlus (ZornVec3.basis (R := ℝ) 0) *
         leftMajoranaPlus (ZornVec3.basis 1) -
       L_map (R := ℝ)
         (mul (offDiagonal (ZornVec3.basis 0) (ZornVec3.basis 0))
-          (offDiagonal (ZornVec3.basis 1) (ZornVec3.basis 1))))
+          (offDiagonal (ZornVec3.basis 1) (ZornVec3.basis 1)))) :
+        Module.End ℝ (ZornVectorMatrix ℝ))
       (offDiagonal (ZornVec3.basis 2) (ZornVec3.basis 2)) =
-        (2 : ℝ) • diagonal 1 (-1) := by
+        (2 : ℝ) • diagonal (R := ℝ) 1 (-1) := by
   change sub
       (mul (offDiagonal (ZornVec3.basis 0) (ZornVec3.basis 0))
         (mul (offDiagonal (ZornVec3.basis 1) (ZornVec3.basis 1))

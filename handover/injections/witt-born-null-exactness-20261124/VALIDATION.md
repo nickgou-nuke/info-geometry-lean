@@ -3,12 +3,13 @@
 ## Status
 
 The supplied-table counterexample owner has compiled with warnings as errors
-and passed its declaration audit in scoped CI. The latest full suite compiled
-nine repository modules, including the repaired determinant owner, and stopped
-at scalar-hom and native-subtraction proof obligations in the primal/dual owner.
-Full-suite acceptance remains pending. The genuine-Zorn additions also have
-independent source review. The scoped GitHub workflow is a separate check from
-the repository's existing integration gates.
+and passed its declaration audit in three consecutive scoped CI runs. The
+latest strict full suite compiled nine repository modules and stopped in the
+primal/dual owner. The isolated diagnostic continuation then visited all 50
+modules: 42 elaborated in diagnostic mode, five had errors, and three were
+skipped because an import failed. Diagnostic results do not establish proof
+acceptance. Repairs for the observed errors and owned warnings have source
+review; the full strict build and declaration audit remain pending.
 
 ## Local retry of the prior Klein closure
 
@@ -251,6 +252,73 @@ that staged owner, not native elaboration, a push-gate result, or validation of
 every earlier PR owner. The final staged whitespace check also passed; the
 verbatim compiler output is preserved inside `primal-dual-diagnostic.json` to
 retain its whitespace without introducing whitespace errors in the Git patch.
+
+## Fourth scoped CI result and batched native repairs
+
+Run `45416776463`, job `138525022894`, tested merge revision
+`4fdd01ba6f8923482423b4a7838fe1f037b955c9` for PR head
+`c97caca572514f128e846212ca30f050414dabac`. Its recorded tree
+`8b16b335faf643bedb2eb3884d13cb73a04a6c28` matched the published tree.
+Pinned preparation and the 17-declaration light-suite audit passed again.
+
+The strict checker accepted the same nine-module prefix, then stopped in
+`ZornPrimalDual`. The identity-hom repair succeeded. Its mixed helper now
+exposed explicit Zorn negation projections, which require unfolding the
+explicit negation function after the native-subtraction rewrite. The previous
+source-only judgment that native negation projection lemmas alone would
+suffice was incorrect for this intermediate expression. `norm_encode` also
+reported an unnecessary `<;>` tactic sequence.
+
+The isolated runner completed its intended diagnostic pass. It recorded
+`status: diagnostic-complete`, `acceptance: false`, and exited with code 2.
+It did not run an axiom audit or modify the strict result. Its run ID is
+`c73ae23678dd44f398d46c2a8ef7184f`. The complete 50-module result comprised
+42 ordinary-mode elaborations, five error owners, and three skipped owners.
+
+The six affected owned files are repaired as follows:
+
+| Owner | Actual diagnostic and focused repair |
+| --- | --- |
+| `ZornPrimalDual` | Restore explicit negation unfolding after the root subtraction rewrite; use ordinary sequencing for the norm proof. |
+| `ZornChiralOperatorReconstruction` | Fix the intended real carrier on the applied operator difference and witness value; remove the reported redundant finite-sum argument. |
+| `SouriauAffineActionGroupoid` | Use the recommended instance-reducibility attribute and the current root `add_apply` declaration. Its diagnostic elaboration otherwise succeeded. |
+| `SouriauCotangentGraphSigns` | Normalize the coefficients at `c=1` and `c=-1`, and normalize `(-1) • B` to `-B`; the exact coefficients stay `-1` and `3`. |
+| `ZornNullIncidence` | Expose the explicit zero expected by contraction/conjugation lemmas, give rank arithmetic common typed dimensions, and use the recommended local `let` bindings. |
+| `ZornCliffordKleinHierarchy` | Reduce the gamma application before readback, prove the chirality scalar law abstractly, distribute scalar actions/products before additive rearrangement, and use the recommended local `let` bindings. |
+
+The real carriers, nonzero/null hypotheses, nonassociative witness, polar
+normalization, and theorem contracts are preserved. In particular the
+bivector proofs continue to use the actual noncommutative endomorphism ring;
+`abel` rearranges sums only after multiplication order has been fixed by
+associativity and distribution. No linter or acceptance check is disabled.
+The five `CI_*_NATIVE_*REVIEW.md` records preserve the authored and independent
+source reviews, including exact source hashes.
+
+`ZornCliffordSourceVolume`, `SplitOctonionNullPlaneCovariance`, and
+`ZornCliffordWittBorn` were skipped because imports failed. Their unchanged
+source therefore still requires native elaboration and audit; the diagnostic
+pass gives no acceptance result for them.
+
+Artifact `14933636941` has SHA-256
+`f4ce652d5505c553567b12428c33417f070615e102eccb26b6d4ae4a23545df2`.
+`ci-45416776463/` preserves the exact source identity, light/strict receipts,
+light audit output, and exact affected-owner diagnostic strings. Its compact
+diagnostic receipt is explicitly marked as derived and includes the original
+full-report hash plus every module outcome. The original complete diagnostic
+report and logs remain in the referenced artifact.
+
+The transient `/tmp` checkout became unavailable after this run. All tracked
+work had already been published and the worktree was clean. An independent
+sparse checkout was restored under the workspace at the exact same `c97caca`
+head, preserving the 50-module source closure and tooling. No dependency pin,
+cache, or existing source was deleted as a repair.
+
+The exact six-owner batch passed staged whitespace review. Its strict staged
+source-gate attempts were blocked before scanning by another task holding the
+maintained build lock. `batch-native-source-check.json` records both attempts
+and every staged owner hash. The earlier passing single-owner source gate
+does not certify this changed batch. No local native retry or passing push
+gate is claimed for it; the existing PR remains a draft pending validation.
 
 ## Results to record before acceptance
 

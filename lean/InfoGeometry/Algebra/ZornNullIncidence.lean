@@ -90,7 +90,7 @@ theorem nullSubmodule_finrank_le_four (W : Submodule ℝ Z)
 theorem norm_eq_zero_of_mem_leftKernel {x y : Z} (hx : x ≠ 0)
     (hy : y ∈ LinearMap.ker (leftMultiplication x)) :
     ZornVectorMatrix.norm y = 0 := by
-  change ZornVectorMatrix.mul x y = 0 at hy
+  change ZornVectorMatrix.mul x y = ZornVectorMatrix.zero at hy
   have hk := ZornVectorMatrix.kirmse_right y x
   rw [hy, ZornVectorMatrix.zero_mul] at hk
   have hsmul : ZornVectorMatrix.norm y • x = 0 := hk.symm
@@ -127,21 +127,26 @@ dimension four; no trace-zero or nonzero-coordinate hypothesis is needed. -/
 theorem leftKernel_finrank {x : Z} (hx : x ≠ 0)
     (hn : ZornVectorMatrix.norm x = 0) :
     Module.finrank ℝ (LinearMap.ker (leftMultiplication x)) = 4 := by
-  letI : FiniteDimensional ℝ Z :=
+  let : FiniteDimensional ℝ Z :=
     FiniteDimensional.of_finrank_eq_succ zorn_finrank
-  have hk := nullSubmodule_finrank_le_four (LinearMap.ker (leftMultiplication x))
-    (fun y hy => norm_eq_zero_of_mem_leftKernel hx hy)
-  have hr := nullSubmodule_finrank_le_four (LinearMap.range (leftMultiplication x))
-    (fun y hy => norm_eq_zero_of_mem_leftRange hn hy)
-  have hdim := LinearMap.finrank_range_add_finrank_ker (leftMultiplication x)
-  rw [zorn_finrank] at hdim
+  let kernelDim : ℕ := Module.finrank ℝ (LinearMap.ker (leftMultiplication x))
+  let rangeDim : ℕ := Module.finrank ℝ (LinearMap.range (leftMultiplication x))
+  change kernelDim = 4
+  have hk : kernelDim ≤ 4 :=
+    nullSubmodule_finrank_le_four (LinearMap.ker (leftMultiplication x))
+      (fun y hy => norm_eq_zero_of_mem_leftKernel hx hy)
+  have hr : rangeDim ≤ 4 :=
+    nullSubmodule_finrank_le_four (LinearMap.range (leftMultiplication x))
+      (fun y hy => norm_eq_zero_of_mem_leftRange hn hy)
+  have hdim : rangeDim + kernelDim = 8 :=
+    (LinearMap.finrank_range_add_finrank_ker (leftMultiplication x)).trans zorn_finrank
   omega
 
 /-- The full range of a nonzero null left action also has dimension four. -/
 theorem leftRange_finrank {x : Z} (hx : x ≠ 0)
     (hn : ZornVectorMatrix.norm x = 0) :
     Module.finrank ℝ (LinearMap.range (leftMultiplication x)) = 4 := by
-  letI : FiniteDimensional ℝ Z :=
+  let : FiniteDimensional ℝ Z :=
     FiniteDimensional.of_finrank_eq_succ zorn_finrank
   have hdim := LinearMap.finrank_range_add_finrank_ker (leftMultiplication x)
   rw [leftKernel_finrank hx hn, zorn_finrank] at hdim
@@ -164,11 +169,13 @@ theorem conjugate_leftRange_eq_leftKernel {x : Z} (hx : x ≠ 0)
     (hn : ZornVectorMatrix.norm x = 0) :
     LinearMap.range (leftMultiplication (ZornVectorMatrix.conj x)) =
       LinearMap.ker (leftMultiplication x) := by
-  letI : FiniteDimensional ℝ Z :=
+  let : FiniteDimensional ℝ Z :=
     FiniteDimensional.of_finrank_eq_succ zorn_finrank
   have hc : ZornVectorMatrix.conj x ≠ 0 := by
     intro h
+    change ZornVectorMatrix.conj x = ZornVectorMatrix.zero at h
     apply hx
+    change x = ZornVectorMatrix.zero
     simpa only [ZornVectorMatrix.conj_conj, ZornVectorMatrix.conj_zero] using
       congrArg ZornVectorMatrix.conj h
   have hnconj : ZornVectorMatrix.norm (ZornVectorMatrix.conj x) = 0 := by
@@ -182,7 +189,7 @@ theorem leftKernel_maximal_null {x : Z} (hx : x ≠ 0)
     (hW : ∀ z ∈ W, ZornVectorMatrix.norm z = 0)
     (hle : LinearMap.ker (leftMultiplication x) ≤ W) :
     W = LinearMap.ker (leftMultiplication x) := by
-  letI : FiniteDimensional ℝ Z :=
+  let : FiniteDimensional ℝ Z :=
     FiniteDimensional.of_finrank_eq_succ zorn_finrank
   apply (Submodule.eq_of_le_of_finrank_le hle ?_).symm
   rw [leftKernel_finrank hx hn]

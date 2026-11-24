@@ -84,7 +84,8 @@ theorem hyperplane_ker_finrank (p : Fin 4 → ℝ) (hp : p ≠ 0) :
 theorem norm_encode (x p : Fin 4 → ℝ) :
     ZornVectorMatrix.norm (encode (x, p)) = hyperplane p x := by
   simp [encode, primal, dual, ZornVectorMatrix.norm,
-    ZornVec3.dot, Fin.sum_univ_three, hyperplane] <;> ring
+    ZornVec3.dot, Fin.sum_univ_three, hyperplane]
+  ring
 
 theorem primal_square (x : Fin 4 → ℝ) :
     ZornVectorMatrix.mul (primal x) (primal x) = x 0 • primal x := by
@@ -122,8 +123,8 @@ theorem mixed_operator_anticommutator (x p : Fin 4 → ℝ) :
       (hyperplane p x • ZornVectorMatrix.one)]
     ext i <;> (try fin_cases i) <;>
       simp [primal, dual, hyperplane, ZornVectorMatrix.mul, ZornVectorMatrix.add,
-        ZornVectorMatrix.smul, ZornVectorMatrix.one, ZornVec3.dot, ZornVec3.cross,
-        Fin.sum_univ_three] <;> ring
+        ZornVectorMatrix.neg, ZornVectorMatrix.smul, ZornVectorMatrix.one,
+        ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three] <;> ring
   rw [leftMultiplication_anticommutator, h, map_sub, map_add, map_smul,
     map_smul, map_smul, leftMultiplication_one]
 

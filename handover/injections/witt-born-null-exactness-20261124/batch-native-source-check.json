@@ -1,0 +1,34 @@
+{
+  "scope": "strict staged-source gate for six repaired owners; no Lean compilation",
+  "started_at": "2026-11-24T15:10:08.825508+00:00",
+  "status": "blocked-before-check",
+  "sources": {
+    "lean/InfoGeometry/Algebra/ZornChiralOperatorReconstruction.lean": "48de76a90c85a09cd1b2b6515760ff1412d90a874408d7dd3fa06262e8a91500",
+    "lean/InfoGeometry/Algebra/ZornNullIncidence.lean": "6696706bfb2db944fd8f8899fc729c17bd417f983b99d6bb7e0884018bf26a37",
+    "lean/InfoGeometry/Algebra/ZornPrimalDual.lean": "8da3339b0dfcccc3a1f58525ec6ec8e3309b05a6fadd346cfccade2895891a6c",
+    "lean/InfoGeometry/Canonical/SouriauAffineActionGroupoid.lean": "b987decf4e7f5031b41c18724b39d3e03bdfcde418ed1c9c08e61c4d9bbd78ba",
+    "lean/InfoGeometry/Canonical/ZornCliffordKleinHierarchy.lean": "d316d756b9c856903a7ff9859a94b587fcdcd35a56b55b5c925d6ced8840a05f",
+    "lean/InfoGeometry/Geometry/SouriauCotangentGraphSigns.lean": "cb0bdc1353577fde2931d905d7f3309b5d0deb1cdafc565ea6e53929a81df9cf"
+  },
+  "build_lock": {
+    "owner": "wilson-preliminary-gaussian",
+    "pid": 2,
+    "acquiredAt": 1795532665.5858696
+  },
+  "error": "build lock busy: /tmp/info-geometry-build.lock (owner=wilson-preliminary-gaussian, pid=2)",
+  "finished_at": "2026-11-24T15:10:08.826317+00:00",
+  "later_attempts": [
+    {
+      "started_at": "2026-11-24T15:11:52.625670+00:00",
+      "status": "blocked-before-check",
+      "build_lock": {
+        "owner": "wilson-preliminary-gaussian",
+        "pid": 2,
+        "acquiredAt": 1795532665.5858696
+      },
+      "error": "build lock busy: /tmp/info-geometry-build.lock (owner=wilson-preliminary-gaussian, pid=2)",
+      "finished_at": "2026-11-24T15:11:52.625776+00:00"
+    }
+  ],
+  "latest_status": "blocked-before-check"
+}

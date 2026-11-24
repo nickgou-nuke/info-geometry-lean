@@ -199,6 +199,65 @@ theorem shirokov_odd_grade_eigenvalue_top_collision {n : ℕ} (hn : Odd n) :
   push_cast
   ring
 
+/-- In odd dimension, complementary grades have the same sandwich eigenvalue.
+This strengthens the scalar/top-grade collision to every pair `k`, `n-k`. -/
+theorem shirokov_odd_grade_eigenvalue_complement {n k : ℕ}
+    (hn : Odd n) (hk : k ≤ n) :
+    shirokovGradeEigenvalue n (n - k) = shirokovGradeEigenvalue n k := by
+  obtain ⟨m, rfl⟩ := hn
+  by_cases hkEven : Even k
+  · obtain ⟨a, ha⟩ := hkEven
+    have hka : k = 2 * a := by omega
+    have hk' : 2 * a ≤ 2 * m + 1 := by simpa [hka] using hk
+    have hbound : a ≤ m := by omega
+    have hpowEven : (-1 : ℤ) ^ (2 * a) = 1 := by
+      rw [show 2 * a = a + a by omega, pow_add]
+      calc
+        (-1 : ℤ) ^ a * (-1) ^ a = ((-1 : ℤ) * (-1)) ^ a :=
+          (mul_pow _ _ _).symm
+        _ = 1 := by norm_num
+    have hpowOdd : (-1 : ℤ) ^ (2 * (m - a) + 1) = -1 := by
+      rw [pow_succ]
+      have heven : (-1 : ℤ) ^ (2 * (m - a)) = 1 := by
+        rw [show 2 * (m - a) = (m - a) + (m - a) by omega, pow_add]
+        calc
+          (-1 : ℤ) ^ (m - a) * (-1) ^ (m - a) =
+              ((-1 : ℤ) * (-1)) ^ (m - a) := (mul_pow _ _ _).symm
+          _ = 1 := by norm_num
+      rw [heven]
+      norm_num
+    have hcomp : 2 * m + 1 - k = 2 * (m - a) + 1 := by omega
+    unfold shirokovGradeEigenvalue
+    rw [hcomp, hka, hpowEven, hpowOdd]
+    push_cast
+    omega
+  · have hkOdd : Odd k := (Nat.not_even_iff_odd.mp hkEven)
+    obtain ⟨a, ha⟩ := hkOdd
+    have hka : k = 2 * a + 1 := by omega
+    have hk' : 2 * a + 1 ≤ 2 * m + 1 := by simpa [hka] using hk
+    have hbound : a ≤ m := by omega
+    have hpowEven : (-1 : ℤ) ^ (2 * (m - a)) = 1 := by
+      rw [show 2 * (m - a) = (m - a) + (m - a) by omega, pow_add]
+      calc
+        (-1 : ℤ) ^ (m - a) * (-1) ^ (m - a) =
+            ((-1 : ℤ) * (-1)) ^ (m - a) := (mul_pow _ _ _).symm
+        _ = 1 := by norm_num
+    have hpowOdd : (-1 : ℤ) ^ (2 * a + 1) = -1 := by
+      rw [pow_succ]
+      have heven : (-1 : ℤ) ^ (2 * a) = 1 := by
+        rw [show 2 * a = a + a by omega, pow_add]
+        calc
+          (-1 : ℤ) ^ a * (-1) ^ a = ((-1 : ℤ) * (-1)) ^ a :=
+            (mul_pow _ _ _).symm
+          _ = 1 := by norm_num
+      rw [heven]
+      norm_num
+    have hcomp : 2 * m + 1 - k = 2 * (m - a) := by omega
+    unfold shirokovGradeEigenvalue
+    rw [hcomp, hka, hpowEven, hpowOdd]
+    push_cast
+    omega
+
 /-- The alternating grade eigenvalues are not injective in odd dimension. -/
 theorem shirokov_odd_grade_eigenvalues_not_injective {n : ℕ} (hn : Odd n) :
     ¬ Function.Injective (fun i : Fin (n + 1) => shirokovGradeEigenvalue n i.val) := by

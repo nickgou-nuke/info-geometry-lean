@@ -56,9 +56,11 @@ orthogonality and idempotence to arbitrary elements of the fixed carrier.
 grade projectors recovers every element. `shirokov_even_grade_projector_range`
 identifies the range of each projector exactly with the span of ordered blades
 of that grade. `shirokov_odd_grade_eigenvalue_top_collision` and
-`shirokov_odd_grade_eigenvalues_not_injective` establish why this sandwich
-interpolation cannot separate all grades in odd dimension: scalar and
-top-grade modes already share an eigenvalue. Existence under the paper's
+`shirokov_odd_grade_eigenvalue_complement` establish why this sandwich
+interpolation cannot separate all grades in odd dimension: every pair of
+complementary grades `k` and `n-k` shares an eigenvalue, including scalar and
+top-grade modes. `shirokov_odd_grade_eigenvalues_not_injective` records the
+resulting failure of injectivity. Existence under the paper's
 moving-frame hypotheses remains open. `shirokov_odd_grade_projection_matrix_det_eq_zero`
 and `shirokov_odd_grade_projection_matrix_not_isUnit` carry this obstruction
 through to the actual coefficient matrix: it is singular in odd dimension.

@@ -251,4 +251,60 @@ theorem chargedFockSpace_current_commutator_central_of_add_eq_zero
       (m : 𝕜) • 1 := by
   simpa [h] using (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm m n
 
+structure SplitCARCurrentProperty
+    (𝕜 A V : Type*) [Field 𝕜] [CharZero 𝕜]
+    [Ring A] [AddCommGroup V] [Module 𝕜 V] where
+  /-- A raw CAR packet carried by the property. -/
+  source : RawCARModeCompletion A
+  /-- The current modes on the carrier. -/
+  J : Int → V →ₗ[𝕜] V
+  /-- Local truncation for the current family. -/
+  trunc : ∀ v, ∀ᶠ l : Int in atTop, J l v = 0
+  /-- Heisenberg commutator law. -/
+  comm :
+    ∀ m n, (J m).commutator (J n) =
+      if m + n = 0 then (m : 𝕜) • (1 : V →ₗ[𝕜] V) else 0
+
+
+noncomputable def chargedFockSpaceSplitCARCurrentProperty
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    SplitCARCurrentProperty 𝕜
+      (InfoGeometry.Canonical.CanonicalNormalOrdering.EndFock
+        (R := 𝕜) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace 𝕜))
+      (VirasoroProject.ChargedFockSpace 𝕜 α) where
+  source :=
+    exteriorFockRawCAR
+      (R := 𝕜) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace 𝕜)
+      (InfoGeometry.Canonical.CanonicalNormalOrdering.intModeBasis 𝕜)
+  J := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J
+  trunc := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc
+  comm := (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm
+
+@[simp] theorem chargedFockSpaceSplitCARCurrentProperty_J
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) (n : Int) :
+    (chargedFockSpaceSplitCARCurrentProperty 𝕜 α).J n =
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).J n :=
+  rfl
+
+@[simp] theorem chargedFockSpaceSplitCARCurrentProperty_trunc
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (chargedFockSpaceSplitCARCurrentProperty 𝕜 α).trunc =
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).trunc :=
+  rfl
+
+@[simp] theorem chargedFockSpaceSplitCARCurrentProperty_comm
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    (chargedFockSpaceSplitCARCurrentProperty 𝕜 α).comm =
+      (chargedFockSpaceCurrentHeisenbergRep 𝕜 α).comm :=
+  rfl
+
+/-- The concrete charged-Fock CAR property is nonempty. -/
+theorem chargedFockSpaceSplitCARCurrentProperty_nonempty
+    (𝕜 : Type*) [Field 𝕜] [CharZero 𝕜] (α : 𝕜) :
+    Nonempty (SplitCARCurrentProperty 𝕜
+      (InfoGeometry.Canonical.CanonicalNormalOrdering.EndFock
+        (R := 𝕜) (M := InfoGeometry.Canonical.CanonicalNormalOrdering.IntModeSpace 𝕜))
+      (VirasoroProject.ChargedFockSpace 𝕜 α)) :=
+  ⟨chargedFockSpaceSplitCARCurrentProperty 𝕜 α⟩
+
 end InfoGeometry.Canonical.SplitCARCurrentSource

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Trigonometric
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.MeasureTheory.Integral.Bochner.ContinuousLinearMap
@@ -445,5 +450,20 @@ theorem centeredXiTwinIntegral_eq_cosh_iff
     simpa only [twin_cosh] using h z
   · intro h z
     simpa only [twin_cosh] using h z
+
+
+theorem twinPlus_neg (z : ℂ) (u : ℝ) :
+    twinPlus (-z) u = twinMinus z u := by
+  simp [twinPlus, twinMinus]
+
+
+theorem twinMinus_neg (z : ℂ) (u : ℝ) :
+    twinMinus (-z) u = twinPlus z u := by
+  simp [twinPlus, twinMinus]
+
+theorem hestenesAncestor_normSq (Phi : ℝ → ℝ) (t : ℝ) :
+    (hestenesAncestor Phi t).normSq =
+      cosineQuadrature Phi t ^ 2 + sineQuadrature Phi t ^ 2 := by
+  rfl
 
 end InfoGeometry.Arithmetic.CenteredXiTwinKernel

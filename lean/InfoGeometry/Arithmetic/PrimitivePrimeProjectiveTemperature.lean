@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Arithmetic/PrimitivePrimeProjectiveTemperature.lean
 
 Finite von Mangoldt / prime-weighted projective-temperature sidecar.
@@ -137,5 +142,31 @@ theorem ArithmeticPrimeTemperatureInversionCalibration.primePartitionIntegral_eq
       =
     ∫ u : ℝ in Set.Ioo 0 1, arithmeticPrimeInvertedPartitionDensity A u :=
   hC
+
+theorem arithmeticPrimeInvertedPartitionDensity_ne_zero_of_mem_positive_weight
+    {A : Finset ℕ} {u : ℝ} (hu : u ∈ Set.Ioo (0 : ℝ) 1) {n : ℕ}
+    (hnA : n ∈ A) (hΛ : 0 < realVonMangoldt n) (hn : 1 < n) :
+    arithmeticPrimeInvertedPartitionDensity A u ≠ 0 := by
+  exact ne_of_gt
+    (arithmeticPrimeInvertedPartitionDensity_pos_of_mem_positive_weight
+      hu hnA hΛ hn)
+
+theorem arithmeticPrimeInvertedPartitionDensity_eq_zero_iff
+    {A : Finset ℕ} {u : ℝ} (hu : u ≠ 0) :
+    arithmeticPrimeInvertedPartitionDensity A u = 0 ↔
+      arithmeticPrimeRestrictedPartition A (betaInvert u) = 0 := by
+  unfold arithmeticPrimeInvertedPartitionDensity
+  have hu2 : u ^ 2 ≠ 0 := pow_ne_zero 2 hu
+  have hinv : (u ^ 2)⁻¹ ≠ 0 := inv_ne_zero hu2
+  rw [mul_eq_zero]
+  exact or_iff_right hinv
+
+theorem arithmeticPrimeInvertedPartitionDensity_pos_iff
+    {A : Finset ℕ} {u : ℝ} (hu : u ≠ 0) :
+    0 < arithmeticPrimeInvertedPartitionDensity A u ↔
+      0 < arithmeticPrimeRestrictedPartition A (betaInvert u) := by
+  unfold arithmeticPrimeInvertedPartitionDensity
+  have hinv : 0 < (u ^ 2)⁻¹ := inv_pos.mpr (sq_pos_of_ne_zero hu)
+  exact (mul_pos_iff_of_pos_left hinv)
 
 end InfoGeometry.Arithmetic.PrimitivePrimeProjectiveTemperature

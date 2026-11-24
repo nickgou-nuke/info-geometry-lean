@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorCylinderTopology
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -70,5 +75,34 @@ theorem iUnion_prefixCylinder_eq_univ (n : ℕ) :
     trivial
   · intro
     exact Set.mem_iUnion.2 ⟨boundaryPrefix n x, by rfl⟩
+
+
+theorem isClopen_prefixCylinder_native (n : ℕ) (w : BitWord n) :
+    IsClopen (prefixCylinder n w) := by
+  exact ⟨isClosed_prefixCylinder n w, isOpen_prefixCylinder n w⟩
+
+
+theorem prefixCylinder_pairwise_disjoint (n : ℕ) :
+    Pairwise (fun w v : BitWord n =>
+      Disjoint (prefixCylinder n w) (prefixCylinder n v)) := by
+  intro w v hwv
+  exact prefixCylinder_disjoint_of_ne n hwv
+
+
+theorem prefixCylinder_inter
+    (n : ℕ) (w v : BitWord n) :
+    prefixCylinder n w ∩ prefixCylinder n v =
+      if w = v then prefixCylinder n w else ∅ := by
+  by_cases h : w = v
+  · subst v
+    simp
+  · ext x
+    rw [if_neg h]
+    constructor
+    · intro hx
+      exact False.elim
+        ((Set.disjoint_left.mp (prefixCylinder_disjoint_of_ne n h)) hx.1 hx.2)
+    · intro hx
+      exact False.elim (by simpa using hx)
 
 end InfoGeometry.Canonical.CantorCylinderTopology

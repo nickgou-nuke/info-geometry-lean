@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.ExponentialBounds
@@ -92,5 +97,26 @@ theorem tomita_channel11_eq_scalar_bregman :
     TomitaBregmanOp 1 1 = bregmanPrimal 1 0 := by
   rw [tomita_bregman_channel11, bregmanPrimal_closed]
   norm_num
+
+
+theorem tomita_bregman_channel01 :
+    TomitaBregmanOp 0 1 = 0 := by
+  rw [tomita_bregman_diagonal]
+  norm_num
+
+
+theorem tomita_bregman_channel10 :
+    TomitaBregmanOp 1 0 = 0 := by
+  rw [tomita_bregman_diagonal]
+  norm_num
+
+
+theorem tomita_bregman_commutes_modularBoost :
+    TomitaBregmanOp * InfoGeometry.Canonical.ModularLorentzBoost.K =
+      InfoGeometry.Canonical.ModularLorentzBoost.K * TomitaBregmanOp := by
+  rw [tomita_bregman_diagonal]
+  rw [InfoGeometry.Canonical.ModularLorentzBoost.K_eval]
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    norm_num [Matrix.mul_apply, Fin.sum_univ_two] <;> ring
 
 end InfoGeometry.Canonical.TomitaBregmanDuality

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -182,6 +187,24 @@ theorem norm_mul_right_of_norm_one (x y : SplitComplex) (hx : norm x = 1) :
     norm (mul y x) = norm y := by
   rw [norm_mul, hx, mul_one]
 
+/-- Split conjugation reverses the hyperbolic coordinate. -/
+def reverse (x : SplitComplex) : SplitComplex :=
+  reconstruct (rightPart x) (leftPart x)
+
+
+theorem mul_reverse_eq_norm_smul_one (x : SplitComplex) :
+    mul x (reverse x) = smul (norm x) one := by
+  cases x <;>
+    simp [reverse, norm, leftPart, rightPart, reconstruct, mul, smul, one] <;>
+    constructor <;> ring
+
+
+theorem mul_reverse_eq_one_of_norm_one
+    (x : SplitComplex) (hx : norm x = 1) :
+    mul x (reverse x) = one := by
+  rw [mul_reverse_eq_norm_smul_one, hx]
+  simp [smul, one]
+
 end SplitComplex
 
 open SplitComplex
@@ -273,5 +296,16 @@ theorem normalizedPrimeHolonomySplit_norm_eq_one_of_critical
   have hsum : (-(t * period) + t * period) = 0 := by
     ring
   rw [hsum, Real.exp_zero]
+
+/-- The critical normalized holonomy has the explicit split inverse `reverse`. -/
+theorem normalizedPrimeHolonomySplit_mul_reverse_eq_one_of_critical
+    (sigma t period : ℝ) (hσ : sigma = (1 / 2 : ℝ)) :
+    SplitComplex.mul
+        (normalizedPrimeHolonomySplit sigma t period)
+        (SplitComplex.reverse
+          (normalizedPrimeHolonomySplit sigma t period)) =
+      SplitComplex.one := by
+  apply SplitComplex.mul_reverse_eq_one_of_norm_one
+  exact normalizedPrimeHolonomySplit_norm_eq_one_of_critical sigma t period hσ
 
 end InfoGeometry.Arithmetic.HestenesKreinPrimeThermodynamics

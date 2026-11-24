@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -79,5 +84,29 @@ theorem rotation2_symplectic {a b : ℝ} (h : a * a + b * b = 1) :
   fin_cases i <;> fin_cases j <;>
     simp [rotation2, symplecticJ, Matrix.mul_apply, Fin.sum_univ_two] <;>
     nlinarith [h]
+
+/-- Composition law for the finite real rotation atoms. -/
+theorem rotation2_mul (a b c d : ℝ) :
+    rotation2 a b * rotation2 c d =
+      rotation2 (a * c - b * d) (a * d + b * c) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [rotation2, Matrix.mul_apply, Fin.sum_univ_two]
+  all_goals ring
+
+/-- Explicit coordinate form of the transpose rotation. -/
+theorem rotation2_transpose (a b : ℝ) :
+    (rotation2 a b)ᵀ = rotation2 a (-b) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [rotation2]
+
+/-- The transpose is the inverse rotation on the unit circle. -/
+theorem rotation2_mul_transpose {a b : ℝ} (h : a * a + b * b = 1) :
+    rotation2 a b * (rotation2 a b)ᵀ = (1 : M2R) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [rotation2, Matrix.mul_apply, Fin.sum_univ_two]
+  all_goals nlinarith [h]
 
 end InfoGeometry.Canonical.KatzSarnakFiniteSymmetryBridge

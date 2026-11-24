@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InverseKernelAlgebra
@@ -429,6 +434,23 @@ theorem modularLieHessian_gaugeShift
     (A := ⁅Kambient c + τ • (1 : EndH), A⁆)]
   rw [modularLieDerivation_gaugeShift (c := c) (τ := τ) (A := A)]
   simp [modularLieHessian_eq_nested_commutator]
+
+theorem Kambient_commutes_Preg :
+    Commute (Preg c) (Kambient c) := by
+  change Preg c * Kambient c = Kambient c * Preg c
+  rw [(Kambient_supported_on_Preg (c := c)).1,
+    (Kambient_supported_on_Preg (c := c)).2]
+
+theorem Pzero_Kambient_eq_zero :
+    Pzero c * Kambient c = 0 :=
+  (Kambient_kills_Pzero (c := c)).1
+
+/- The regular generator has no matrix element into the defect lane. -/
+@[rep_depth operator]
+
+theorem Kambient_Pzero_eq_zero :
+    Kambient c * Pzero c = 0 :=
+  (Kambient_kills_Pzero (c := c)).2
 
 end CertifiedModularReduction
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.FilteredQCCRParameterTopologicalColimit
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CARCCRParameterFiberSeparation
@@ -378,5 +383,29 @@ noncomputable def negOneQParameterColimitMap :
       (negOneQParameter Stage sys) ⟶
       qCcrParameterTopologicalColimit Stage sys :=
   qCcrZeroLocusParameterColimitMap Stage sys (negOneQParameter Stage sys)
+
+
+theorem zeroQParameter_compatible :
+    ∀ {i j : I} (hij : i ≤ j), sys.map hij ((zeroQParameter Stage sys).q i) =
+      (zeroQParameter Stage sys).q j := by
+  intro i j hij
+  change sys.map hij 0 = 0
+  exact map_zero (sys.map hij)
+
+
+theorem oneQParameter_compatible :
+    ∀ {i j : I} (hij : i ≤ j), sys.map hij ((oneQParameter Stage sys).q i) =
+      (oneQParameter Stage sys).q j := by
+  intro i j hij
+  change sys.map hij 1 = 1
+  exact map_one (sys.map hij)
+
+
+theorem negOneQParameter_compatible :
+    ∀ {i j : I} (hij : i ≤ j), sys.map hij ((negOneQParameter Stage sys).q i) =
+      (negOneQParameter Stage sys).q j := by
+  intro i j hij
+  change sys.map hij (-1) = -1
+  rw [map_neg, map_one]
 
 end InfoGeometry.Canonical.FilteredQCCRFixedParameterColimit

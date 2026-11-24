@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SplitCliffordSourceSuperVirasoroFiniteWindow
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -99,5 +104,40 @@ theorem mixedBracket_m1_r0_witness_of_mul_zero
   exact mixedBracket_m1_r0_of_boundary_zero N
     (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B)
     (boundaryDefect_m1_r0_witness_eq_zero_of_mul_zero N A B hN hAB)
+
+theorem boundaryDefect_m1_r0_property_eq
+    (N : ℤ) (A B : EndV) (hN : 0 ≤ N) :
+    boundaryDefect_m1_r0 (𝕜 := 𝕜) N
+        (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B)
+      =
+    -((1 : 𝕜) / 2) • (A * B) := by
+  have hG0 :
+      G_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B) = 0 :=
+    G_trunc_r0_mode01_eq_zero (𝕜 := 𝕜) N A B
+  have hG1 :
+      G_trunc N 1 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B) = A * B :=
+    G_trunc_r1_mode01_eq (𝕜 := 𝕜) N A B hN
+  simp [boundaryDefect_m1_r0, boundaryDefect_LG, hG0, hG1, LG_coeff]
+
+theorem boundaryDefect_m1_r0_property_eq_zero_of_mul_zero
+    (N : ℤ) (A B : EndV) (hN : 0 ≤ N) (hAB : A * B = 0) :
+    boundaryDefect_m1_r0 (𝕜 := 𝕜) N
+        (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B)
+      =
+    0 := by
+  rw [boundaryDefect_m1_r0_property_eq N A B hN, hAB]
+  simp
+
+theorem mixedBracket_m1_r0_property_of_mul_zero
+    (N : ℤ) (A B : EndV) (hN : 0 ≤ N) (hAB : A * B = 0) :
+    (L_trunc N 1 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+        * (G_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+      - (G_trunc N 0 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+        * (L_trunc N 1 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B))
+    = ((1 : 𝕜) / 2) •
+        (G_trunc N 1 (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B)) := by
+  exact mixedBracket_m1_r0_of_boundary_zero N
+    (J_mode0 (𝕜 := 𝕜) A) (psi_mode1 (𝕜 := 𝕜) B)
+    (boundaryDefect_m1_r0_property_eq_zero_of_mul_zero N A B hN hAB)
 
 end InfoGeometry.Canonical.SplitCliffordMultiModeSuperVirasoro

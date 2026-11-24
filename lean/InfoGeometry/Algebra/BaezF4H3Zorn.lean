@@ -365,4 +365,17 @@ def f4Basis (i : Fin 52) : ↥H3ZornF4Derivations.toSubmodule :=
   | 51 => ⟨h3ZornJordanInnerDerivation (h3_off₁₂ 6) (h3_off₁₂ 7), h3ZornJordanInnerDerivation_mem_F4 _ _⟩
   | _ => 0
 
+/-- Baez/Chevalley--Schafer-style automorphism carrier for this real split model. -/
+abbrev H3ZornF4Aut := H3ZornJordanAut
+
+/-- Membership in the F₄-derivation carrier is exactly the Leibniz rule. -/
+theorem mem_H3ZornF4Derivations_iff (D : Module.End ℝ (H3Zorn ℝ)) :
+    D ∈ H3ZornF4Derivations ↔ H3ZornJordanDerivation D := by
+  rfl
+
+theorem H3ZornF4Derivations_eq_native :
+    H3ZornF4Derivations =
+      NonAssocDerivation.derivations ℝ (H3Zorn ℝ) := by
+  rfl
+
 end InfoGeometry.Algebra

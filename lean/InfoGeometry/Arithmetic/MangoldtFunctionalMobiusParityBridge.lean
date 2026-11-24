@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
@@ -79,5 +84,37 @@ theorem mangoldt_moebius_master_duality
   mangoldt_functional_zero_of_not_isPrimePow h_not_pp,
   moebius_parity_zero_of_not_squarefree h_not_sq
 ⟩
+
+theorem mangoldt_functional_eq_log_moebius_divisors (n : ℕ) :
+    ∑ x ∈ n.divisorsAntidiagonal,
+      Real.log (x.1 : ℝ) * (ArithmeticFunction.moebius x.2 : ℝ) =
+      mangoldtFunctional n := by
+  change (∑ x ∈ n.divisorsAntidiagonal,
+      ArithmeticFunction.log x.1 *
+        ((ArithmeticFunction.moebius : ArithmeticFunction ℝ) x.2)) =
+    ArithmeticFunction.vonMangoldt n
+  rw [← ArithmeticFunction.mul_apply]
+  rw [ArithmeticFunction.log_mul_moebius_eq_vonMangoldt]
+
+/- The complementary native divisor-sum readout: summing the von Mangoldt
+function over the divisors of `n` recovers the logarithmic arithmetic weight.
+This is a finite identity and makes no Dirichlet-series or asymptotic claim. -/
+
+theorem mangoldt_functional_divisor_sum_eq_log (n : ℕ) :
+    ∑ d ∈ n.divisors, mangoldtFunctional d = Real.log (n : ℝ) := by
+  change ∑ d ∈ n.divisors, ArithmeticFunction.vonMangoldt d = Real.log (n : ℝ)
+  exact ArithmeticFunction.vonMangoldt_sum
+
+theorem mangoldt_functional_zeta_convolution_eq_log (n : ℕ) :
+    ∑ x ∈ n.divisorsAntidiagonal,
+      mangoldtFunctional x.1 * (ArithmeticFunction.zeta x.2 : ℝ) =
+        Real.log (n : ℝ) := by
+  change (∑ x ∈ n.divisorsAntidiagonal,
+      ArithmeticFunction.vonMangoldt x.1 *
+        ((ArithmeticFunction.zeta : ArithmeticFunction ℝ) x.2)) =
+    Real.log (n : ℝ)
+  rw [← ArithmeticFunction.mul_apply]
+  rw [ArithmeticFunction.vonMangoldt_mul_zeta]
+  exact ArithmeticFunction.log_apply
 
 end InfoGeometry.Arithmetic.MangoldtFunctionalMobiusParityBridge

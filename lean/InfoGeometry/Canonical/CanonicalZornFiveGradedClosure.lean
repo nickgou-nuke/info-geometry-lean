@@ -533,6 +533,26 @@ theorem canonical_triality_five_grade_projective_closure
     zorn_mixed_bracket_mem_grade_zero _ _, ?_⟩
   rw [conformalTriality_zornPositive, coreToCanonical_triality]
 
+theorem zorn_positive_positive_bracket_mem_grade_two (X Y : Zorn) :
+    ⁅zornPositive X, zornPositiveSource Y⁆ ∈ conformalGrade p2 := by
+  exact bracket_grade_closed canonicalFiveGradedLieAlgebra
+    (show gradeAdd p1 p1 = some p2 by rfl)
+    (zornPositive_mem X) (zornPositiveSource_mem Y)
+
+theorem zorn_negative_negative_bracket_mem_grade_minus_two (X Y : Zorn) :
+    ⁅zornNegativeTarget X, zornNegative Y⁆ ∈ conformalGrade m2 := by
+  exact bracket_grade_closed canonicalFiveGradedLieAlgebra
+    (show gradeAdd m1 m1 = some m2 by rfl)
+    (zornNegativeTarget_mem X) (zornNegative_mem Y)
+
+theorem zorn_grade_channel_membership (X Y : Zorn) :
+    ⁅zornPositive X, zornPositiveSource Y⁆ ∈ conformalGrade p2 ∧
+    ⁅zornNegativeTarget X, zornNegative Y⁆ ∈ conformalGrade m2 ∧
+    ⁅zornNegative X, zornPositive Y⁆ ∈ conformalGrade z0 := by
+  exact ⟨zorn_positive_positive_bracket_mem_grade_two X Y,
+    zorn_negative_negative_bracket_mem_grade_minus_two X Y,
+    zorn_mixed_bracket_mem_grade_zero X Y⟩
+
 end CanonicalZornFiveGradedClosure
 
 end noncomputable section

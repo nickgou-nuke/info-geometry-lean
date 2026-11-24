@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -344,5 +349,24 @@ theorem arxiv230901382_finite_symmetry_packet :
   exact ⟨rfl, rfl, rfl, comm_Jplus_Jminus, comm_J0_Jplus,
     comm_J0_Jminus, spinHalfCasimir_eq_three_quarters, Jplus_ketDown,
     Jminus_ketUp, by norm_num [finiteWittenTrace_eq], parityP_sq⟩
+
+
+theorem oneMinus_involutive (s : ZetaCoordinate) :
+    oneMinus (oneMinus s) = s := by
+  cases s
+  simp [oneMinus]
+
+
+theorem conjCoord_involutive (s : ZetaCoordinate) :
+    conjCoord (conjCoord s) = s := by
+  cases s
+  simp [conjCoord]
+
+
+theorem oneMinus_eq_conj_iff_onCriticalLine (s : ZetaCoordinate) :
+    oneMinus s = conjCoord s ↔ OnCriticalLine s := by
+  cases s
+  simp [oneMinus, conjCoord, OnCriticalLine]
+  constructor <;> intro h <;> linarith
 
 end InfoGeometry.Arithmetic.Arxiv230901382RiemannZerosSymmetry

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Finset.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
@@ -95,5 +100,45 @@ theorem mobius_stateNat_eq_Gamma
     (S : SquareFreeState P) :
     ArithmeticFunction.moebius (stateNat S) = SquareFreePrimeState.Gamma S := by
   simp [SquareFreePrimeState.Gamma, mobius_stateNat_eq_fermionParitySign]
+
+
+theorem stateNat_squarefree
+    {P : PrimeCutoff}
+    (S : SquareFreeState P) :
+    Squarefree (stateNat S) := by
+  unfold stateNat
+  refine Finset.squarefree_prod_of_pairwise_isCoprime ?_ ?_
+  · intro x hx y hy hxy
+    have hx' : Nat.Prime x := natSetOfState_prime_mem S x hx
+    have hy' : Nat.Prime y := natSetOfState_prime_mem S y hy
+    simpa [Nat.coprime_iff_isRelPrime] using
+      ((Nat.coprime_primes hx' hy').2 hxy)
+  · intro x hx
+    exact (natSetOfState_prime_mem S x hx).squarefree
+
+
+theorem stateNat_pos
+    {P : PrimeCutoff}
+    (S : SquareFreeState P) :
+    0 < stateNat S := by
+  unfold stateNat
+  exact Finset.prod_pos (fun n hn => (natSetOfState_prime_mem S n hn).pos)
+
+theorem stateNat_log_eq_squareFreeEnergy
+    {P : PrimeCutoff}
+    (S : SquareFreeState P) :
+    Real.log (stateNat S : ℝ) =
+      SquareFreePrimeState.squareFreeEnergy
+        (fun p : PrimeMode P => Real.log (p.1 : ℝ)) S := by
+  have h_ne_zero : ∀ n ∈ natSetOfState S, (n : ℝ) ≠ 0 := by
+    intro n hn
+    exact_mod_cast (natSetOfState_prime_mem S n hn).ne_zero
+  unfold stateNat SquareFreePrimeState.squareFreeEnergy
+  rw [Nat.cast_prod, Real.log_prod h_ne_zero]
+  unfold natSetOfState
+  rw [Finset.sum_map]
+  apply Finset.sum_congr rfl
+  intro p hp
+  rfl
 
 end InfoGeometry.Arithmetic.PrimeExteriorMobiusBridge

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.Zorn.BasisTable
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -246,6 +251,22 @@ theorem commutator_jacobi_akivis_obstruction_packet :
       commutator_jacobi_v1_v2_v3_ne_zero,
       akivis_u1_u2_u3,
       akivis_v1_v2_v3⟩
+
+/-- The obstruction property is exactly the lower off-diagonal basis direction `V3`. -/
+theorem associator_obstruction_property_packet :
+    associatorZ (cell e11) (cell u1) (cell u2) = cell v3 ∧
+      associatorZ (cell e11) (cell u1) (cell u2) ≠ SignedBasis.cell zero := by
+  exact ⟨associator_e11_u1_u2_eq_v3, associator_e11_u1_u2_ne_zero⟩
+
+/-- The left-associated product in the property is `V3`. -/
+theorem associator_property_left_product :
+    (cell e11 * cell u1) * cell u2 = cell v3 := by
+  decide
+
+/-- The right-associated product in the property is zero. -/
+theorem associator_property_right_product :
+    cell e11 * (cell u1 * cell u2) = SignedBasis.cell zero := by
+  decide
 
 end Basis8
 end ZornCell

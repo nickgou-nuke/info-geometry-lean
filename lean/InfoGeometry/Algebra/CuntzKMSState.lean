@@ -210,4 +210,26 @@ def truncatedPartitionSum (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (N : ℕ
           → Concrete instantiation on O_n remains as documented debt
 -/
 
+
+theorem primonPartition_eq_sum (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) :
+    primonPartition n primes β =
+      ∑ i : Fin n, (primes i : ℂ) ^ (-β) := by
+  rfl
+
+
+theorem kmsWeight_eq_boltzmann_div_partition
+    (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (i : Fin n) :
+    kmsWeight n primes β i =
+      (primes i : ℂ) ^ (-β) / primonPartition n primes β := by
+  rfl
+
+
+theorem kmsWeight_mul_partition
+    (n : ℕ) (primes : Fin n → ℕ) (β : ℂ) (i : Fin n)
+    (hZ : primonPartition n primes β ≠ 0) :
+    kmsWeight n primes β i * primonPartition n primes β =
+      boltzmannFactor (primes i) β := by
+  unfold kmsWeight
+  exact div_mul_cancel₀ _ hZ
+
 end InfoGeometry.Algebra.CuntzKMSState

@@ -79,4 +79,23 @@ theorem hodge_chiral_dirac_anticommutation {n0 n1 n2 : ℕ}
       0 := by
   exact DAG.ChiralDiracAnticommutation.dirac_anticommutes_gamma B1 B2
 
+def FredholmHalfPlaneProperty (determinant : ℂ → ℂ) : Prop :=
+  ∀ s : ℂ, (1 / 2 : ℝ) < s.re → determinant s ≠ 0
+
+
+theorem fredholmHalfPlaneProperty_ne_zero
+    {determinant : ℂ → ℂ}
+    (hdet : FredholmHalfPlaneProperty determinant)
+    (s : ℂ)
+    (hs : (1 / 2 : ℝ) < s.re) :
+    determinant s ≠ 0 :=
+  hdet s hs
+
+theorem fredholm_determinant_nonzero_on_critical_halfplane
+    {determinant : ℂ → ℂ}
+    (hdet : FredholmHalfPlaneProperty determinant)
+    {s : ℂ} (hs : (1 / 2 : ℝ) < s.re) :
+    determinant s ≠ 0 :=
+  fredholmHalfPlaneProperty_ne_zero hdet s hs
+
 end InfoGeometry.Arithmetic.RiemannHypothesis

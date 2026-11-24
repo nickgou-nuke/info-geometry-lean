@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -38,6 +43,18 @@ theorem scaled_K_N_is_nilpotent (ε : ℂ) :
 
 /-- Consolidated finite KAN-nilpotent certificate. -/
 theorem kan_nilpotent_synthesis :
+    K_N * K_N = 0 ∧ (∀ ε : ℂ, (ε • K_N) * (ε • K_N) = 0) := by
+  exact ⟨K_N_is_nilpotent, scaled_K_N_is_nilpotent⟩
+
+
+theorem K_N_sq : K_N * K_N = 0 := K_N_is_nilpotent
+
+
+theorem scalar_K_N_sq (ε : ℂ) :
+    (ε • K_N) * (ε • K_N) = 0 := scaled_K_N_is_nilpotent ε
+
+
+theorem kan_nilpotent_identities :
     K_N * K_N = 0 ∧ (∀ ε : ℂ, (ε • K_N) * (ε • K_N) = 0) := by
   exact ⟨K_N_is_nilpotent, scaled_K_N_is_nilpotent⟩
 

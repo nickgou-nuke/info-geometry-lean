@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.NumberTheory.ArithmeticFunction.VonMangoldt
@@ -60,5 +65,22 @@ Proves natively that the von Mangoldt function $\Lambda(n) \ge 0$ for all $n \in
 theorem von_mangoldt_nonneg_law (n : ℕ) :
     0 ≤ ArithmeticFunction.vonMangoldt n :=
   ArithmeticFunction.vonMangoldt_nonneg
+
+/-- Signed fermionic Euler factor for the inverse-zeta normalization. -/
+def SignedFermionicPrimonFactor (X : ℂ) : ℂ :=
+  1 - X
+
+
+theorem bosonic_mul_signedFermionic_eq_one {X : ℂ} (hX : X ≠ 1) :
+    BosonicPrimonFactor X * SignedFermionicPrimonFactor X = 1 := by
+  unfold BosonicPrimonFactor SignedFermionicPrimonFactor
+  rw [inv_mul_cancel₀]
+  exact sub_ne_zero.mpr hX.symm
+
+
+theorem signedFermionic_mul_bosonic_eq_one {X : ℂ} (hX : X ≠ 1) :
+    SignedFermionicPrimonFactor X * BosonicPrimonFactor X = 1 := by
+  rw [mul_comm]
+  exact bosonic_mul_signedFermionic_eq_one hX
 
 end InfoGeometry.Canonical.PrimonFermionBosonVonMangoldtMasterBridge

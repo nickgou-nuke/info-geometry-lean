@@ -617,6 +617,88 @@ theorem shirokov_odd_complement_sum_reduction {A : Type*} [AddCommMonoid A]
     _ = (∑ S ∈ L, f S) + ∑ S ∈ L, f S := by rw [← hsum]
     _ = 2 • ∑ S ∈ L, f S := by simp [two_nsmul]
 
+/-- In odd dimension, conjugation sign characters for a blade and its
+complement agree. This supplies complement invariance for each standard-frame
+blade summand of the Reynolds operator. -/
+theorem shirokov_odd_blade_character_complement_invariant (n : ℕ)
+    (hn : Odd n) (S T : Finset (Fin n)) :
+    (-1 : ℝ) ^ (S.card * T.card - (S ∩ T).card ^ 2) =
+      (-1 : ℝ) ^ ((Finset.univ \ S).card * T.card -
+        ((Finset.univ : Finset (Fin n)) \ S ∩ T).card ^ 2) := by
+  classical
+  let g : Fin n → ℤ := fun i =>
+    (-1 : ℤ) ^ (T.card + if i ∈ T then 1 else 0)
+  have htotal : (∏ i : Fin n, g i) = 1 := by
+    rcases hn with ⟨k, hk⟩
+    have hkN : n = 2 * k + 1 := by omega
+    have hchar := shirokov_blade_character_product n
+      (Finset.univ : Finset (Fin n)) T
+    have hcard : ((Finset.univ : Finset (Fin n)) ∩ T).card = T.card := by simp
+    rw [hcard, Finset.card_univ, Fintype.card_fin] at hchar
+    rw [hchar]
+    have hexp : n * T.card + T.card = 2 * ((k + 1) * T.card) := by
+      calc
+        n * T.card + T.card = (2 * k + 1) * T.card + T.card :=
+          congrArg (fun m : ℕ => m * T.card + T.card) hkN
+        _ = 2 * ((k + 1) * T.card) := by ring
+    rw [hexp, pow_mul]
+    norm_num
+  have hprodS : (∏ i ∈ S, g i) ^ 2 = 1 := by
+    rw [← Finset.prod_pow]
+    apply Finset.prod_eq_one
+    intro i hi
+    dsimp [g]
+    rw [← pow_mul]
+    norm_num
+  have hsplit : (∏ i ∈ Finset.univ \ S, g i) * ∏ i ∈ S, g i = 1 := by
+    rw [Finset.prod_sdiff (Finset.subset_univ S), htotal]
+  have hprodEq : (∏ i ∈ Finset.univ \ S, g i) = ∏ i ∈ S, g i := by
+    calc
+      ∏ i ∈ Finset.univ \ S, g i =
+          (∏ i ∈ Finset.univ \ S, g i) * (∏ i ∈ S, g i) ^ 2 := by
+            rw [hprodS, mul_one]
+      _ = ((∏ i ∈ Finset.univ \ S, g i) * ∏ i ∈ S, g i) *
+          ∏ i ∈ S, g i := by ring
+      _ = ∏ i ∈ S, g i := by rw [hsplit, one_mul]
+  have hcharS := shirokov_blade_swap_sign_character n S T
+  have hcharComp := shirokov_blade_swap_sign_character n (Finset.univ \ S) T
+  have hsign : (-1 : ℤ) ^
+      ((Finset.univ \ S).card * T.card - ((Finset.univ \ S) ∩ T).card ^ 2) =
+      (-1 : ℤ) ^ (S.card * T.card - (S ∩ T).card ^ 2) := by
+    calc
+      (-1 : ℤ) ^
+          ((Finset.univ \ S).card * T.card - ((Finset.univ \ S) ∩ T).card ^ 2) =
+        ∏ i ∈ Finset.univ \ S, g i := by simpa [g] using hcharComp
+      _ = ∏ i ∈ S, g i := hprodEq
+      _ = (-1 : ℤ) ^ (S.card * T.card - (S ∩ T).card ^ 2) := by
+        simpa [g] using hcharS.symm
+  exact_mod_cast hsign.symm
+
+/-- In odd dimension, the standard inverse-blade Reynolds sum of a basis blade
+reduces to twice its lower-half subset sum. This is the fixed standard frame;
+it does not yet transport equation (2.3) to a moving dual frame. -/
+theorem shirokov_odd_blade_reynolds_reduced_sum (n : ℕ) (hn : Odd n)
+    (T : Finset (Fin n)) :
+    (∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+        cBlade ℝ n T * cBlade ℝ n S) =
+      2 • ∑ S ∈ ((Finset.univ : Finset (Fin n)).powerset).filter
+        (fun S => 2 * S.card < n),
+        ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+          cBlade ℝ n T * cBlade ℝ n S := by
+  let f : Finset (Fin n) → CliffordAlgebra (cliffordNegSqForm ℝ n) := fun S =>
+    ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
+      cBlade ℝ n T * cBlade ℝ n S
+  have hcomp : ∀ S : Finset (Fin n),
+      f S = f ((Finset.univ : Finset (Fin n)) \ S) := by
+    intro S
+    dsimp [f]
+    rw [shirokov_inverse_blade_conjugation_sign,
+      shirokov_inverse_blade_conjugation_sign,
+      shirokov_odd_blade_character_complement_invariant n hn S T]
+  simpa [f] using
+    shirokov_odd_complement_sum_reduction n hn f hcomp
+
 /-- In odd dimension, the standard inverse-blade Reynolds average fixes the
 top-grade pseudoscalar as well as the scalar blade. -/
 theorem shirokov_odd_pseudoscalar_reynolds_average (n : ℕ) (hn : Odd n) :

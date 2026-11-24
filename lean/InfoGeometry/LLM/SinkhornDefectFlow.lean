@@ -1315,6 +1315,74 @@ noncomputable def SinkhornRNBarrierProfileLift.ofColStepMassNormalized
     (colCountMassNormalizedWitness_of_col_step T k hk)
 
 /--
+Phase-agnostic successor-step RN-barrier profile lift: every stage `k + 1` along
+any admissible Sinkhorn trajectory automatically carries its `count (L0) -> projective (L1)`
+profile lift with carrier scale `n`, discharging external mass-normalization certificates
+for all `k + 1 ≥ 1`.
+-/
+noncomputable def SinkhornRNBarrierProfileLift.ofTrajectorySucc
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (T : SinkhornTrajectory n) (k : Nat) :
+    SinkhornRNBarrierProfileLift n T (k + 1) :=
+  match hk : phaseAt k with
+  | SinkhornPhase.row =>
+      SinkhornRNBarrierProfileLift.ofRowStepMassNormalized (n := n) T k hk
+  | SinkhornPhase.col =>
+      SinkhornRNBarrierProfileLift.ofColStepMassNormalized (n := n) T k hk
+
+/-- Every successor-step trajectory profile lift has carrier scale `n`. -/
+@[simp]
+theorem SinkhornRNBarrierProfileLift.ofTrajectorySucc_scale
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (T : SinkhornTrajectory n) (k : Nat) :
+    (SinkhornRNBarrierProfileLift.ofTrajectorySucc (n := n) T k).scale = n := by
+  have htr : ∀ {ph₁ ph₂ : SinkhornPhase} {M : SinkhornMatrix n}
+      (h : ph₁ = ph₂) (L : PhaseRNBarrierProfileLift n ph₁ M),
+      (h ▸ L).scale = L.scale := by
+    intro ph₁ ph₂ M h L
+    cases h
+    rfl
+  unfold SinkhornRNBarrierProfileLift.ofTrajectorySucc
+  split
+  · unfold SinkhornRNBarrierProfileLift.ofRowStepMassNormalized
+      SinkhornRNBarrierProfileLift.ofRowCountMassNormalizedWitness
+      SinkhornRNBarrierProfileLift.ofPhase
+    dsimp only
+    rw [htr _ _]
+    rfl
+  · unfold SinkhornRNBarrierProfileLift.ofColStepMassNormalized
+      SinkhornRNBarrierProfileLift.ofColCountMassNormalizedWitness
+      SinkhornRNBarrierProfileLift.ofPhase
+    dsimp only
+    rw [htr _ _]
+    rfl
+
+/--
+Phase-agnostic RN-barrier profile lift at any positive trajectory index `0 < k`.
+-/
+noncomputable def SinkhornRNBarrierProfileLift.ofTrajectoryPos
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (T : SinkhornTrajectory n) {k : Nat} (hk : 0 < k) :
+    SinkhornRNBarrierProfileLift n T k :=
+  match k, hk with
+  | m + 1, _ => SinkhornRNBarrierProfileLift.ofTrajectorySucc (n := n) T m
+
+/-- Every positive-step trajectory profile lift has carrier scale `n`. -/
+@[simp]
+theorem SinkhornRNBarrierProfileLift.ofTrajectoryPos_scale
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (T : SinkhornTrajectory n) {k : Nat} (hk : 0 < k) :
+    (SinkhornRNBarrierProfileLift.ofTrajectoryPos (n := n) T hk).scale = n := by
+  cases k with
+  | zero => cases hk
+  | succ m =>
+      simp [SinkhornRNBarrierProfileLift.ofTrajectoryPos]
+
+/--
 If the remaining profile lift is supplied, the RN-barrier budget becomes a
 repo-native projective modular-potential budget on the `L¹` readout lane.
 -/
@@ -1489,6 +1557,56 @@ theorem operatorInformationNormReadout_le_of_massNormalizedColCounts
       (E := E)
       (WeylThermodynamicProfileComparison.ofMassNormalizedColCounts
         (E := E) C hk hcol hMass)
+
+/--
+At any positive trajectory step `0 < C.k`, the Sinkhorn trajectory itself supplies
+the mass-normalized count profile lift, giving the Weyl/thermodynamic comparison
+packet without an external mass witness.
+-/
+noncomputable def WeylThermodynamicProfileComparison.ofTrajectoryPos
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (hk : 0 < C.k) :
+    WeylThermodynamicProfileComparison (E := E)
+      C.B.routerResidual
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) :=
+  WeylThermodynamicProfileComparison.ofSinkhornRNBarrier (E := E) C
+    (SinkhornRNBarrierProfileLift.ofTrajectoryPos (n := n) C.T hk)
+
+/--
+At any positive trajectory step `0 < C.k`, the scaled projective `informationGeometricRelativeNorm`
+readout is bounded by `δ_ZD_thermo C.B` without supplying external mass witnesses.
+-/
+theorem scaled_informationGeometricRelativeNorm_le_ZD_of_trajectoryPos
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (hk : 0 < C.k) :
+    let L := SinkhornRNBarrierProfileLift.ofTrajectoryPos (n := n) C.T hk
+    L.scale *
+        @InfoGeometry.Canonical.RelativePotentialCore.informationGeometricRelativeNorm
+          L.α L.fintype L.nonempty L.defectRay L.referenceRay
+      ≤ δ_ZD_thermo C.B :=
+  scaled_informationGeometricRelativeNorm_le_ZD_of_rnBarrierProfileLift (E := E) C
+    (SinkhornRNBarrierProfileLift.ofTrajectoryPos (n := n) C.T hk)
+
+/--
+At any positive trajectory step `0 < C.k`, the Sinkhorn RN barrier comparison
+routes unconditionally to the operator information-norm readout inequality.
+-/
+theorem operatorInformationNormReadout_le_of_trajectoryPos
+    {n : Nat}
+    [Nonempty (Fin n)]
+    (C : SinkhornRNBarrierThermodynamicComparison (E := E) n)
+    (hk : 0 < C.k) :
+    C.B.comparison.operatorInformationNormReadout C.B.routerResidual
+      ≤
+    C.B.comparison.operatorInformationNormReadout
+      (InfoGeometry.Canonical.KKTClosure.ZD (E := H₂) C.B.CIK) :=
+  RouterDefectBoundBridge.operatorInformationNormReadout_le_of_weylThermodynamicProfileComparison
+    (E := E)
+    (WeylThermodynamicProfileComparison.ofTrajectoryPos (E := E) C hk)
 
 /--
 Volume anomaly monotonicity forces one-step odd-defect monotonicity.

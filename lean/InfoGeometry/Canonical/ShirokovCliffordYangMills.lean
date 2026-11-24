@@ -2451,6 +2451,35 @@ theorem shirokov_theorem_2_2_automorphism_frame_grade_two
   rw [hzero] at hresult
   simpa using hresult
 
+/-- Theorem 2.2 for a frame induced by an isometry of the fixed quadratic
+space. This exposes the moving blade units directly; the grade-two condition
+is read after transport back to the standard frame. -/
+theorem shirokov_theorem_2_2_isometry_frame_grade_two
+    (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    (D : CliffordAlgebra (cliffordNegSqForm ℝ n) →
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (C : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hcompat : ∀ S : Finset (Fin n),
+      D (shirokovIsometryInverseBladeUnit n e S :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+        C * (shirokovIsometryInverseBladeUnit n e S :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) -
+          (shirokovIsometryInverseBladeUnit n e S :
+            CliffordAlgebra (cliffordNegSqForm ℝ n)) * C)
+    (hgrade : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n ((CliffordAlgebra.equivOfIsometry e).symm C) T ≠ 0 →
+        T.card = 2) :
+    (∑ S : Finset (Fin n),
+      D (shirokovIsometryInverseBladeUnit n e S :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        (↑((shirokovIsometryInverseBladeUnit n e S)⁻¹) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      Fintype.card (Finset (Fin n)) • C := by
+  simpa [shirokovIsometryInverseBladeUnit] using
+    shirokov_theorem_2_2_automorphism_frame_grade_two n
+      (CliffordAlgebra.equivOfIsometry e) D C hcompat hgrade
+
 /-- Theorem 2.2 for the standard inverse-blade frame: compatibility and
 grade-two support remove the center-projection term from the average formula.
 Transport to the paper's varying dual frame is a separate result. -/

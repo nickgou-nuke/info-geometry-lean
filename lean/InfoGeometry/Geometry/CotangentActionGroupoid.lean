@@ -313,7 +313,8 @@ instance liftFunctor_essSurj (Ad : G →* (V ≃ₗ[R] V))
   refine ⟨object Ad (contragredient dτ.symm α.val), ?_⟩
   change object Ad (contragredient dτ (contragredient dτ.symm α.val)) = α
   exact (congrArg (object Ad) (contragredient_symm_right dτ α.val)).trans
-    (ActionCategory.back_coe α)
+    ((@ActionCategory.objEquiv G inferInstance (Module.Dual R V)
+      (coadjointAction Ad)).apply_symm_apply α)
 
 instance liftFunctor_isEquivalence (Ad : G →* (V ≃ₗ[R] V))
     (τ : G ≃* G) (dτ : V ≃ₗ[R] V)
@@ -405,8 +406,8 @@ def fixedInclusion (Ad : G →* (V ≃ₗ[R] V))
     FixedGroupoid Ad τ dτ hAd ⥤ CotangentGroupoid Ad :=
     { obj := fun α => object Ad α.val.1
       map := fun f => Functor.Elements.homMk f.hom.1 (congrArg Subtype.val f.map_val)
-      map_id := fun α => rfl
-      map_comp := fun f h => rfl }
+      map_id := fun _ => rfl
+      map_comp := fun _ _ => rfl }
 
 /-- The fixed groupoid embeds its objects as the actual fixed covectors. -/
 theorem fixedInclusion_obj_injective (Ad : G →* (V ≃ₗ[R] V))

@@ -47,15 +47,18 @@ theorem shear_fixed_iff (v : ℝ × ℝ) : shear v = v ↔ v.2 = 0 := by
 theorem dual_coordinates (α : Module.Dual ℝ (ℝ × ℝ)) (v : ℝ × ℝ) :
     α v = v.1 * α (1, 0) + v.2 * α (0, 1) := by
   have hv : v = v.1 • (1, 0) + v.2 • (0, 1) := by ext <;> simp
-  conv_lhs => rw [hv]
-  simp
+  calc
+    α v = α (v.1 • (1, 0) + v.2 • (0, 1)) := congrArg α hv
+    _ = v.1 * α (1, 0) + v.2 * α (0, 1) := by
+      simp only [map_add, map_smul, smul_eq_mul]
 
 theorem shear_dual_fixed_iff (α : Module.Dual ℝ (ℝ × ℝ)) :
     contragredient shear α = α ↔ α (1, 0) = 0 := by
   constructor
   · intro h
     have h2 := congrArg (fun f : Module.Dual ℝ (ℝ × ℝ) => f (0, 1)) h
-    change α (-1, 1) = α (0, 1) at h2
+    change α (0 - 1, 1) = α (0, 1) at h2
+    rw [zero_sub] at h2
     rw [dual_coordinates α (-1, 1)] at h2
     norm_num at h2
     linarith
@@ -88,8 +91,18 @@ def fixedPrimalEquiv : ℝ ≃ₗ[ℝ] fixedPrimal where
     intro x
     apply Subtype.ext
     exact Prod.ext rfl ((shear_fixed_iff x.1).mp x.property).symm
-  map_add' := by intros; rfl
-  map_smul' := by intros; rfl
+  map_add' := by
+    intro a b
+    apply Subtype.ext
+    apply Prod.ext
+    · rfl
+    · simp
+  map_smul' := by
+    intro r a
+    apply Subtype.ext
+    apply Prod.ext
+    · rfl
+    · simp
 
 /-- The fixed covectors are exactly multiples of the second coordinate covector. -/
 def fixedDualEquiv : ℝ ≃ₗ[ℝ] fixedDual where
@@ -122,7 +135,10 @@ def fixedOmega : LinearMap.BilinForm ℝ (fixedPrimal × fixedDual) :=
 
 /-- The entire restricted form vanishes, not merely one pairing. -/
 theorem fixedOmega_eq_zero : fixedOmega = 0 := by
-  ext z w
+  apply LinearMap.ext
+  intro z
+  apply LinearMap.ext
+  intro w
   change neutralOmega (fixedPhaseInclusion z) (fixedPhaseInclusion w) = 0
   rw [neutralOmega_apply]
   change w.2.1 z.1.1 - z.2.1 w.1.1 = 0

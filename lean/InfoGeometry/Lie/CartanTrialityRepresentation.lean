@@ -43,28 +43,32 @@ theorem dihedralMatrix_mul (a b : DihedralGroup 3) :
     | r j =>
       rw [DihedralGroup.r_mul_r]
       fin_cases i <;> fin_cases j <;>
+        norm_num [dihedralMatrix, ZMod.val, Fin.val_add] <;>
         ext k l <;> fin_cases k <;> fin_cases l <;>
-        norm_num [dihedralMatrix, cyclicTriality, conjugationReflection, trialitySwapVS,
+        norm_num [cyclicTriality, conjugationReflection, trialitySwapVS,
           pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
     | sr j =>
       rw [DihedralGroup.r_mul_sr]
       fin_cases i <;> fin_cases j <;>
+        norm_num [dihedralMatrix, ZMod.val, Fin.val_sub] <;>
         ext k l <;> fin_cases k <;> fin_cases l <;>
-        norm_num [dihedralMatrix, cyclicTriality, conjugationReflection, trialitySwapVS,
+        norm_num [cyclicTriality, conjugationReflection, trialitySwapVS,
           pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
   | sr i =>
     cases b with
     | r j =>
       rw [DihedralGroup.sr_mul_r]
       fin_cases i <;> fin_cases j <;>
+        norm_num [dihedralMatrix, ZMod.val, Fin.val_add] <;>
         ext k l <;> fin_cases k <;> fin_cases l <;>
-        norm_num [dihedralMatrix, cyclicTriality, conjugationReflection, trialitySwapVS,
+        norm_num [cyclicTriality, conjugationReflection, trialitySwapVS,
           pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
     | sr j =>
       rw [DihedralGroup.sr_mul_sr]
       fin_cases i <;> fin_cases j <;>
+        norm_num [dihedralMatrix, ZMod.val, Fin.val_sub] <;>
         ext k l <;> fin_cases k <;> fin_cases l <;>
-        norm_num [dihedralMatrix, cyclicTriality, conjugationReflection, trialitySwapVS,
+        norm_num [cyclicTriality, conjugationReflection, trialitySwapVS,
           pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
 
 /-- The full matrix representation, bundled as a native monoid homomorphism. -/
@@ -82,10 +86,10 @@ theorem dihedralMatrixHom_injective : Function.Injective dihedralMatrixHom := by
     first
     | rfl
     | exfalso
+      norm_num [dihedralMatrixHom, dihedralMatrix, ZMod.val] at h
       have h0 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℝ => M 0 0) h
       have h1 := congrArg (fun M : Matrix (Fin 4) (Fin 4) ℝ => M 0 1) h
-      norm_num [dihedralMatrixHom, dihedralMatrix, cyclicTriality,
-        conjugationReflection, trialitySwapVS, pow_succ,
+      norm_num [cyclicTriality, conjugationReflection, trialitySwapVS, pow_succ,
         Matrix.mul_apply, Fin.sum_univ_four] at h0 h1
 
 /-- Conversion through native matrix units and the general linear group. -/
@@ -161,17 +165,19 @@ theorem s3LinearAction_injective : Function.Injective s3LinearAction :=
 
 @[simp] theorem dihedralMatrix_rotation :
     dihedralMatrixHom (.r 1) = cyclicTriality := by
-  simp [dihedralMatrixHom, dihedralMatrix]
+  change cyclicTriality ^ 1 = cyclicTriality
+  exact pow_one _
 
 @[simp] theorem dihedralMatrix_reflection :
     dihedralMatrixHom (.sr 0) = conjugationReflection := by
   simp [dihedralMatrixHom, dihedralMatrix]
 
 theorem dihedralMatrix_hadamard : dihedralMatrixHom (.sr 2) = trialitySwapVS := by
+  change conjugationReflection * cyclicTriality ^ 2 = trialitySwapVS
   ext i j
   fin_cases i <;> fin_cases j <;>
-    norm_num [dihedralMatrixHom, dihedralMatrix, cyclicTriality, conjugationReflection,
-      trialitySwapVS, pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
+    norm_num [cyclicTriality, conjugationReflection, trialitySwapVS,
+      pow_succ, Matrix.mul_apply, Fin.sum_univ_four]
 
 /-- The generator-fixed plane is the fixed space of the entire faithful representation. -/
 theorem fixed_by_dihedral_iff (v : Fin 4 → ℝ) :
@@ -189,11 +195,11 @@ theorem fixed_by_dihedral_iff (v : Fin 4 → ℝ) :
     cases g with
     | r i =>
       fin_cases i <;>
-        simp [dihedralLinearAction_apply, dihedralMatrixHom, dihedralMatrix, pow_two,
+        simp [dihedralLinearAction_apply, dihedralMatrixHom, dihedralMatrix, ZMod.val, pow_two,
           ← Matrix.mulVec_mulVec, hC]
     | sr i =>
       fin_cases i <;>
-        simp [dihedralLinearAction_apply, dihedralMatrixHom, dihedralMatrix, pow_two,
+        simp [dihedralLinearAction_apply, dihedralMatrixHom, dihedralMatrix, ZMod.val, pow_two,
           ← Matrix.mulVec_mulVec, hC, hS]
 
 /-- The fixed space is unchanged after expressing the action as native S₃. -/

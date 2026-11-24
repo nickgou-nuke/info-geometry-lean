@@ -163,11 +163,19 @@ active-index inspection, semantic-vacuity screen at error severity, and
 strict OpenGauss screen. The semantic screen reported 21 reviewed findings in
 existing declarations and none in the eleven new declarations.
 
-Kernel acceptance is pending. The local prerequisite build is waiting for
-another job's shared build lock; no local compiler success is claimed for
-this continuation. The draft PR enables the isolated pinned workflow to
-check the exact published source independently. Its result must be inspected
-before promoting these statements as kernel verified.
+Kernel acceptance is pending. The first hosted run, `45357274534`, compiled
+the four operator equivalences and existing dependencies but found two
+symmetry-predicate elaboration errors in the new consumer. Its six symmetry
+hypotheses now explicitly select `LinearMap.IsSymm`, matching `form_isSymm`.
+The alternative imported bilinear-form predicate is equivalent by native
+`LinearMap.BilinForm.isSymm_iff`; no mathematical hypothesis is strengthened.
+The repaired consumer still requires a fresh compiler and axiom result.
+
+Local validation could not acquire another job's shared build lock. The
+queued prerequisite and unchanged pre-push invocation were stopped before
+any local Lake process started, so the repair does not race those checks.
+No local compiler or publication-gate success is claimed. The draft PR's
+isolated pinned workflow checks the exact published source independently.
 
 The focused runner retains the exact root Lean and Mathlib pins and
 serializes local compiler work under the shared build lock. Root path

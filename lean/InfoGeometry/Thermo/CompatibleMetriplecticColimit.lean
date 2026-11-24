@@ -51,7 +51,7 @@ theorem velocity_of (i : I) (e s : V i) :
 /-- The algebraic energy rate vanishes for the constructed limit operators.
 Only the energy degeneracy condition is needed for this law. -/
 theorem energy_rate
-    (hSymm : ∀ i, (B i).IsSymm)
+    (hSymm : ∀ i, LinearMap.IsSymm (B i))
     (hSkew : ∀ i, (B i).IsSkewAdjoint (L i))
     (hSelf : ∀ i, (B i).IsSelfAdjoint (M i))
     (e s : _root_.DirectLimit V f) (he : liftEnd f M hM e = 0) :
@@ -69,7 +69,7 @@ theorem energy_rate
 
 /-- Entropy degeneracy removes the reversible contribution on the colimit. -/
 theorem entropy_rate_eq_dissipative
-    (hSymm : ∀ i, (B i).IsSymm)
+    (hSymm : ∀ i, LinearMap.IsSymm (B i))
     (hSkew : ∀ i, (B i).IsSkewAdjoint (L i))
     (e s : _root_.DirectLimit V f) (hs : liftEnd f L hL s = 0) :
     form f B hB s (liftEnd f L hL e + liftEnd f M hM s) =
@@ -87,7 +87,7 @@ theorem entropy_rate_eq_dissipative
 /-- Nonnegative stage Onsager quadratics give a nonnegative limit entropy rate.
 Positivity of the pairing itself is not assumed or substituted for this law. -/
 theorem entropy_rate_nonneg
-    (hSymm : ∀ i, (B i).IsSymm)
+    (hSymm : ∀ i, LinearMap.IsSymm (B i))
     (hSkew : ∀ i, (B i).IsSkewAdjoint (L i))
     (hNonneg : ∀ i x, 0 ≤ B i x (M i x))
     (e s : _root_.DirectLimit V f) (hs : liftEnd f L hL s = 0) :
@@ -98,7 +98,7 @@ theorem entropy_rate_nonneg
 /-- A stage energy degeneracy equation suffices for conservation at its image. -/
 -- theorem-class: transport
 theorem energy_rate_of
-    (hSymm : ∀ i, (B i).IsSymm)
+    (hSymm : ∀ i, LinearMap.IsSymm (B i))
     (hSkew : ∀ i, (B i).IsSkewAdjoint (L i))
     (hSelf : ∀ i, (B i).IsSelfAdjoint (M i))
     (i : I) (e s : V i) (he : M i e = 0) :
@@ -112,7 +112,7 @@ theorem energy_rate_of
 at the corresponding limit vectors. -/
 -- theorem-class: transport
 theorem entropy_rate_of_eq
-    (hSymm : ∀ i, (B i).IsSymm)
+    (hSymm : ∀ i, LinearMap.IsSymm (B i))
     (hSkew : ∀ i, (B i).IsSkewAdjoint (L i))
     (i : I) (e s : V i) (hs : L i s = 0) :
     form f B hB (DirectLimit.Module.of ℝ I V f i s)
@@ -128,7 +128,7 @@ theorem entropy_rate_of_eq
 for this particular pair of stage images. -/
 -- theorem-class: transport
 theorem entropy_rate_of_nonneg
-    (hSymm : ∀ i, (B i).IsSymm)
+    (hSymm : ∀ i, LinearMap.IsSymm (B i))
     (hSkew : ∀ i, (B i).IsSkewAdjoint (L i))
     (i : I) (e s : V i) (hs : L i s = 0) (hNonneg : 0 ≤ B i s (M i s)) :
     0 ≤ form f B hB (DirectLimit.Module.of ℝ I V f i s)

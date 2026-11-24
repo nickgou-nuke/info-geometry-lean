@@ -1,8 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Algebra.BigOperators.Fin
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
+import InfoGeometry.Algebra.MatrixNoncommutativity
 
 set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
@@ -38,6 +44,23 @@ namespace InfoGeometry.SuperGrassmannian.WeylBerezinian
 open Matrix
 
 variable {R : Type*} [Ring R]
+
+/-- Closed non-commutativity witnesses for the two matrix carriers used below (T16). -/
+theorem realMat2_noncomm_witness :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A :=
+  ⟨InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix, InfoGeometry.Algebra.MatrixNoncommutativity.tiltedMatrix,
+    InfoGeometry.Algebra.MatrixNoncommutativity.swapMatrix_mul_tiltedMatrix_ne⟩
+
+private def mat2Unit12 : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+private def mat2Unit21 : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+
+theorem nestedMat2_noncomm_witness :
+    ∃ A B : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) ℝ), A * B ≠ B * A := by
+  refine ⟨!![0, mat2Unit12; 0, 0], !![0, 0; mat2Unit21, 0], ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) (Matrix (Fin 2) (Fin 2) ℝ) => M 0 0) h
+  have h0000 := congrArg (fun N : Matrix (Fin 2) (Fin 2) ℝ => N 0 0) h00
+  norm_num [Matrix.mul_apply, Fin.sum_univ_two, mat2Unit12, mat2Unit21] at h0000
 
 /-! ### 1. Graded Supertrace and Parity Projections on Matrix Operators -/
 
@@ -199,21 +222,20 @@ structure WeylBerezinianDeformationCertificate : Prop where
     superTrace (scaleOperator p q σ + chiralOperator k₁ k₂ + volumeOperator a) = (p - q) * σ
 
 /-- Master Compilation Theorem for the Noncommutative Operator Deformation Triad. -/
-theorem compile_weyl_berezinian_deformation : WeylBerezinianDeformationCertificate := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro M N; exact superTrace_add M N
-  · intro M; exact even_add_odd M
-  · intro b1 c1 b2 c2; exact odd_anticommutator_superTrace b1 c1 b2 c2
-  · intro p q σ k₁ k₂
-    rw [scale_chiral_commutator]
-    ext i j
-    fin_cases i <;> fin_cases j <;> simp <;> ring
-  · intro p σ k₁ k₂; exact scale_chiral_commutator_balanced p σ k₁ k₂
-  · intro k₁ k₂; exact superTrace_chiral_square k₁ k₂
-  · intro p q σ; exact superTrace_scaleOperator p q σ
-  · intro p σ; exact superTrace_scale_balanced p σ
-  · intro k₁ k₂; exact superTrace_chiralOperator k₁ k₂
-  · intro a; exact superTrace_volumeOperator a
-  · intro p q σ k₁ k₂ a; exact total_deformation_superTrace p q σ k₁ k₂ a
+theorem odd_anticommutator_operator_coefficients_nonzero :
+    let E₁₂ : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+    let E₂₁ : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+    superTrace (R := Matrix (Fin 2) (Fin 2) ℝ)
+      ((!![0, E₁₂; 0, 0] : Matrix (Fin 2) (Fin 2)
+          (Matrix (Fin 2) (Fin 2) ℝ)) *
+        !![0, 0; E₂₁, 0] +
+        (!![0, 0; E₂₁, 0] : Matrix (Fin 2) (Fin 2)
+          (Matrix (Fin 2) (Fin 2) ℝ)) *
+        !![0, E₁₂; 0, 0]) ≠ 0 := by
+  dsimp
+  norm_num [superTrace, Matrix.mul_apply, Fin.sum_univ_two]
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+  norm_num at h00
 
 end InfoGeometry.SuperGrassmannian.WeylBerezinian

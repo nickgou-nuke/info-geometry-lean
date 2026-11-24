@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/OperatorThermodynamics.lean
 
 KMS thermodynamics from modular restriction.
@@ -556,6 +561,20 @@ def modularThermalState :
 @[simp] theorem modularThermalState_eq_kms :
     E.modularThermalState = E.modularKMS.kms :=
   rfl
+
+
+theorem modular_flow_eq_calibrated_physical_flow
+    (t : ℝ) (x : Op) :
+    E.modularKMS.modularFlow.flow t x =
+      E.horizonCalibration.physicalFlow.flow
+        (E.horizonCalibration.time_rescaling * t) x :=
+  E.horizonCalibration.modular_eq_physical_after_rescaling t x
+
+
+theorem physicalBeta_eq_rescaled_modularBeta :
+    E.physicalBeta =
+      E.horizonCalibration.time_rescaling * E.modularKMS.beta :=
+  E.beta_calibration
 
 end EmergentThermalRadiation
 

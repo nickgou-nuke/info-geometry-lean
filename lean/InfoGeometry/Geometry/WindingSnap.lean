@@ -229,6 +229,22 @@ theorem nonzero_region_winding_cannot_flow_to_flat
       rw [← R.winding_eq_regionWinding x]
       exact hFx)
 
+/-- Recover the nonzero residue property from the property packet. -/
+theorem boundaryIntegral_ne_zero_of_property
+    {x : State}
+    (Wz : I.boundaryIntegral (R.stateRegion x) ω ≠ 0) :
+    I.boundaryIntegral (R.stateRegion x) ω ≠ 0 :=
+  Wz
+
+/-- Witness-routed residue obstruction theorem. -/
+theorem nonzero_boundaryIntegral_cannot_flow_to_flat_of_property
+    {x : State}
+    (Wz : I.boundaryIntegral (R.stateRegion x) ω ≠ 0)
+    (t : ℝ) :
+  F.flow t x ∉ F.Flat :=
+  R.nonzero_boundaryIntegral_cannot_flow_to_flat
+    (R.boundaryIntegral_ne_zero_of_property Wz) t
+
 end StateResidueReadout
 
 /-! ## 3. Index readout for states -/

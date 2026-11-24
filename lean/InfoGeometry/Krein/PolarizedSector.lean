@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.SplitQuadraticSheets
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.Grading
@@ -213,5 +218,20 @@ theorem neg_projectedMinusDivergence_eq_minusSheet_interaction (q k : H2) :
   rw [spectralMinusProj_apply_eq_minusPoint, spectralMinusProj_apply_eq_minusPoint]
   exact neg_divergence_minusPoint_eq_neg_dot_plus_half_norms (E := E)
     (WithLp.snd q) (WithLp.snd k)
+
+/-! The two spectral projectors annihilate each other. -/
+theorem spectralPlusProj_apply_minusProj_zero (u : H2) :
+    Pplus (Pminus u) = 0 := by
+  rw [spectralPlusProj_apply_eq_plusPoint,
+    spectralMinusProj_apply_eq_minusPoint]
+  simp [plusPoint, minusPoint]
+
+omit [CompleteSpace E] in
+
+theorem spectralMinusProj_apply_plusProj_zero (u : H2) :
+    Pminus (Pplus u) = 0 := by
+  rw [spectralMinusProj_apply_eq_minusPoint,
+    spectralPlusProj_apply_eq_plusPoint]
+  simp [plusPoint, minusPoint]
 
 end InfoGeometry.Krein.PolarizedSector

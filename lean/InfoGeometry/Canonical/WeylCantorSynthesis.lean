@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.FormalPrimeRootSystem
@@ -146,5 +151,21 @@ theorem weylCantorColimitFixedPoint
   constructor
   · exact finite_prime_weyl_denominator L (fun _ : ℕ => 0)
   · intro X; exact cocycleVanishingOnCantorFiber ctx X (hfiber X) hH_eq
+
+
+theorem tiltSwitch_anticommutator (j : ℕ) :
+    (tilt j) * (switch j) + (switch j) * (tilt j) = 0 := by
+  rw [tiltSwitch_anticomm]
+  module
+
+
+theorem tilt_switch_address_relation (i j : ℕ) :
+    (tilt i) * (switch j) =
+      if i = j then -((switch j) * (tilt j))
+      else (switch j) * (tilt i) := by
+  by_cases h : i = j
+  · subst j
+    simp [tilt_switch_anticomm]
+  · simp [h, tilt_switch_comm_of_ne h]
 
 end WeylCantorSynthesis

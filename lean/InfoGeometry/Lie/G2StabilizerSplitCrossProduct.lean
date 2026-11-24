@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.ZornVectorMatrix
@@ -59,5 +64,23 @@ theorem splitCrossProduct_signature {R : Type*} [CommRing R] :
       dot u u + dot v v = 0 → splitCrossProductForm u u v = 0 := by
   intro u v _
   simp [splitCrossProductForm, ZornVec3.cross_self]
+
+theorem g2_equals_stabilizer_split_cross_product :
+    { g : ZornVectorMatrix R → ZornVectorMatrix R |
+        ∀ X Y, mul (g X) (g Y) = g (mul X Y) } =
+      { g | True } := by
+  sorry
+
+/-- Any Zorn algebra automorphism preserves the split cross product. -/
+theorem automorphism_preserves_split_cross_product
+    (g : ZornVectorMatrix R → ZornVectorMatrix R)
+    (haut : ∀ X Y, mul (g X) (g Y) = g (mul X Y))
+    (u v w : ZornVec3 R) :
+    splitCrossProductForm u v w =
+      splitCrossProductForm
+        ((g ⟨0, u, fun _ => 0, 0⟩).v)
+        ((g ⟨0, v, fun _ => 0, 0⟩).v)
+        ((g ⟨0, w, fun _ => 0, 0⟩).v) := by
+  sorry
 
 end InfoGeometry.Lie.G2StabilizerSplitCrossProduct

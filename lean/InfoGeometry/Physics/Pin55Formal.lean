@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.LinearAlgebra.CliffordAlgebra.SpinGroup
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
@@ -96,5 +101,50 @@ theorem r₀r₅_projective_involutive : ProjectiveSignEq ((r₀ * r₅) * (r₀
 claimed to be a literal subgroup: `r₅² = -1`, so closure holds only after a
 separate projective-sign quotient construction. -/
 def v4Set : Set (CliffordAlgebra q55) := {1, r₀, r₅, r₀ * r₅}
+
+/-- Projective sign equivalence is reflexive. -/
+theorem projectiveSignEq_refl (x : CliffordAlgebra q55) : ProjectiveSignEq x x := by
+  left
+  rfl
+
+/-- Projective sign equivalence is symmetric. -/
+theorem projectiveSignEq_symm {x y : CliffordAlgebra q55} (h : ProjectiveSignEq x y) :
+    ProjectiveSignEq y x := by
+  rcases h with h | h
+  · left
+    simpa [h]
+  · right
+    simpa [h] using (neg_neg y).symm
+
+/-- Projective sign equivalence is transitive. -/
+theorem projectiveSignEq_trans {x y z : CliffordAlgebra q55} :
+    ProjectiveSignEq x y → ProjectiveSignEq y z → ProjectiveSignEq x z := by
+  intro hxy hyz
+  rcases hxy with hxy | hxy
+  · cases hyz with
+    | inl hyz => left; exact hxy.trans hyz
+    | inr hyz => right; exact hxy.trans (by simpa [hyz] )
+  · cases hyz with
+    | inl hyz => right; exact hxy.trans (by simpa [hyz] )
+    | inr hyz =>
+        left
+        calc
+          x = -y := hxy
+          _ = -(-z) := by rw [hyz]
+          _ = z := by simp
+
+/-- Projective sign is respected by left multiplication by a common factor. -/
+theorem projectiveSignEq_mul_left {x y z : CliffordAlgebra q55}
+    (h : ProjectiveSignEq x y) : ProjectiveSignEq (z * x) (z * y) := by
+  rcases h with h | h
+  · left; simpa [h]
+  · right; simpa [h, neg_mul]
+
+/-- Projective sign is respected by right multiplication by a common factor. -/
+theorem projectiveSignEq_mul_right {x y z : CliffordAlgebra q55}
+    (h : ProjectiveSignEq x y) : ProjectiveSignEq (x * z) (y * z) := by
+  rcases h with h | h
+  · left; simpa [h]
+  · right; simpa [h, mul_neg]
 
 end InfoGeometry.Physics.Pin55Formal

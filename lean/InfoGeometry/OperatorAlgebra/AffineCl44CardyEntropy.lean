@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.AffineVirasoroBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -94,6 +99,45 @@ theorem entropy_nonneg :
     0 ≤ C.entropy := by
   rw [C.entropy_eq]
   positivity
+
+
+theorem entropy_eq_zero_iff :
+    C.entropy = 0 ↔ C.shiftedEnergy = 0 := by
+  rw [C.entropy_eq]
+  have hc : 0 < C.centralCharge / 6 :=
+    div_pos C.centralCharge_pos (by norm_num)
+  have harg : 0 ≤ (C.centralCharge / 6) * C.shiftedEnergy :=
+    mul_nonneg (le_of_lt hc) C.shiftedEnergy_nonneg
+  constructor
+  · intro h
+    have hs : Real.sqrt ((C.centralCharge / 6) * C.shiftedEnergy) = 0 := by
+      nlinarith [Real.pi_pos]
+    have hsquare := Real.sq_sqrt harg
+    have hproduct : (C.centralCharge / 6) * C.shiftedEnergy = 0 := by
+      nlinarith
+    nlinarith
+  · intro h
+    simp [h]
+
+
+theorem entropy_pos_iff :
+    0 < C.entropy ↔ 0 < C.shiftedEnergy := by
+  rw [C.entropy_eq]
+  have hc : 0 < C.centralCharge / 6 :=
+    div_pos C.centralCharge_pos (by norm_num)
+  constructor
+  · intro h
+    have hs : 0 < Real.sqrt ((C.centralCharge / 6) * C.shiftedEnergy) := by
+      nlinarith [Real.pi_pos]
+    have harg : 0 < (C.centralCharge / 6) * C.shiftedEnergy :=
+      (Real.sqrt_pos).mp hs
+    nlinarith
+  · intro h
+    have harg : 0 < (C.centralCharge / 6) * C.shiftedEnergy :=
+      mul_pos hc h
+    have hs : 0 < Real.sqrt ((C.centralCharge / 6) * C.shiftedEnergy) :=
+      Real.sqrt_pos.mpr harg
+    nlinarith [Real.pi_pos]
 
 end CardyEntropyCalibration
 

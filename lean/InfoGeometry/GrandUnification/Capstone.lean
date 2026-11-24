@@ -828,6 +828,24 @@ theorem dewitt_supermetric_yang_mills_mass_gap_reflexive_electron_and_wheeler_ho
     ⟨h13_3.1.1.2.2.2, h13_3.1.2.2.2.1, h13_3.1.2.2.2.2.2.2,
      h13_3.2.1.2, h13_3.2.2.2.1, h13_3.2.2.2.2⟩⟩
 
+theorem translation_exists
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    InfoGeometry.Krein.modular_j (E := E) *
+        InfoGeometry.Krein.complex_i (E := E) *
+        InfoGeometry.Krein.modular_j (E := E) =
+      -InfoGeometry.Krein.complex_i (E := E) := by
+  simpa using
+    (InfoGeometry.Canonical.HestenesComplexTranslation.modular_j_conjugates_complex_i
+      (E := E))
+
+theorem hestenes_krein_conjugation_readout
+    (E : Type) [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] :
+    InfoGeometry.Krein.modular_j (E := E) *
+        InfoGeometry.Krein.complex_i (E := E) *
+        InfoGeometry.Krein.modular_j (E := E) =
+      -InfoGeometry.Krein.complex_i (E := E) :=
+  translation_exists E
+
 end InfoGeometry.GrandUnification.Capstone
 
 end

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ConnesSpatialDerivative
@@ -330,5 +335,38 @@ theorem bridge_typeIII_coreTraceOfBase_eq_coreTrace_traceOfEmbedded
   P.modularCore.typeIII_coreTraceOfBase_eq_coreTrace_traceOfEmbedded x
 
 end NoncommutativeModularToBogoliubovKANPacket
+
+structure BogoliubovKANShadowData
+    (E : Type*)
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E]
+    (Bog Korth Asplit Nshear CartanDiag : Type*) where
+  /-- Real Bogoliubov implementer property. -/
+  bogoliubovTransform : Bog
+
+  /-- `K`/compact sector of a KAN decomposition. -/
+  compactSector : Korth
+
+  /-- `A`/Cartan sector of a KAN decomposition. -/
+  cartanSector : Asplit
+
+  /-- `N`/shear sector of a KAN decomposition. -/
+  nilpotentSector : Nshear
+
+  /-- Diagonal readout from the Cartan sector. -/
+  diagonalShadow : CartanDiag
+
+structure NoncommutativeModularToBogoliubovKANData
+    (A Weight Deriv Ham Phase Core E Bog Korth Asplit Nshear CartanDiag : Type*)
+    [Ring A]
+    [Mul Core]
+    [One Deriv] [Mul Deriv]
+    [Zero Ham]
+    [One Phase] [Mul Phase]
+    [NormedAddCommGroup E] [InnerProductSpace ℝ E] [CompleteSpace E] where
+  /-- Primary noncommutative modular object. -/
+  modularCore : NoncommutativeModularOperatorLift A Weight Deriv Ham Phase Core
+
+  /-- Derived Bogoliubov representation shadow. -/
+  bogoliubovShadow : BogoliubovKANShadowData E Bog Korth Asplit Nshear CartanDiag
 
 end InfoGeometry.OperatorAlgebra.NoncommutativeBogoliubovKANLift

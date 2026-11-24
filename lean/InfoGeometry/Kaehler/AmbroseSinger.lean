@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Lie.Subalgebra
@@ -52,6 +57,36 @@ structure AmbroseSingerContext (B : PrincipalBundle M G) [Connection B] (p : B.P
 def CurvatureSpan (B : PrincipalBundle M G) [Connection B] [CurvatureForm (R := R) B g] :
     Submodule R g :=
   Submodule.span R (Set.range (CurvatureForm.Omega (R := R) (B := B) (g := g)))
+
+/-
+7. The Ambrose-Singer Theorem:
+For a principal bundle with a connection, the Lie algebra of the holonomy group
+(restricted to loops contracting to an internal point) is spanned by the curvature.
+
+Open geometric owner obligation: this file only records the finite interface and
+`CurvatureSpan`.  A separate geometric/Hestenes--Krein owner must supply a
+context and prove any Ambrose--Singer equality relating the supplied holonomy Lie
+algebra to `CurvatureSpan`.
+-/
+
+
+theorem curvatureForm_mem_curvatureSpan
+    (B : PrincipalBundle M G) [Connection B]
+    [CurvatureForm (R := R) B g] (p : B.P) :
+    CurvatureForm.Omega (R := R) (B := B) (g := g) p ∈
+      CurvatureSpan (R := R) (g := g) B := by
+  exact Submodule.subset_span ⟨p, rfl⟩
+
+
+theorem curvatureSpan_le_of_curvature_mem
+    (B : PrincipalBundle M G) [Connection B]
+    [CurvatureForm (R := R) B g] (S : Submodule R g)
+    (hS : ∀ p : B.P,
+      CurvatureForm.Omega (R := R) (B := B) (g := g) p ∈ S) :
+    CurvatureSpan (R := R) (g := g) B ≤ S := by
+  exact Submodule.span_le.2 (fun x hx => by
+    rcases hx with ⟨p, rfl⟩
+    exact hS p)
 
 /-
 7. The Ambrose-Singer Theorem:

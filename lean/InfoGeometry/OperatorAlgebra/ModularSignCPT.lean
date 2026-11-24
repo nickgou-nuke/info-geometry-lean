@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/OperatorAlgebra/ModularSignCPT.lean
 
 Modular sign, CPT reflection, and emergent Hestenes complex structure.
@@ -830,5 +835,31 @@ def PartialModularSignCPTDatumOwnerTarget :=
 
 @[rep_depth transport]
 def PartialModularSignCPTOwnerTarget := partialModularSignCPTOwnerTarget
+
+theorem modularSignCPT_properties
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (R : ModularSignCPTRelations H) :
+    R.eps.comp R.eps = 1 ∧
+      R.J.comp R.J = 1 ∧
+      R.J.comp R.eps = -(R.eps.comp R.J) ∧
+      R.Kmod = R.J.comp R.eps ∧
+      R.Kmod.comp R.Kmod = -(1 : EndR H) :=
+  ⟨R.eps_square, R.J_square, R.J_eps_anticomm, R.Kmod_eq, R.Kmod_square⟩
+
+/-- The partial datum is constructed from primitive zero-mode-aware relations. -/
+theorem partialModularSignCPT_properties
+    {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℝ H]
+    (R : PartialModularSignCPTRelations H) :
+    R.support.comp R.support = R.support ∧
+      R.eps.comp R.eps = R.support ∧
+      R.J.comp R.J = 1 ∧
+      R.J.comp R.eps = -(R.eps.comp R.J) ∧
+      R.Kmod = R.J.comp R.eps ∧
+      R.Kmod.comp R.Kmod = -R.support ∧
+      R.support.comp R.Kmod = R.Kmod ∧
+      R.Kmod.comp R.support = R.Kmod :=
+  ⟨R.support_idempotent, R.eps_square, R.J_square,
+    R.J_eps_anticomm, R.Kmod_eq, R.Kmod_square, R.support_Kmod,
+    R.Kmod_support⟩
 
 end InfoGeometry.OperatorAlgebra.ModularSignCPT

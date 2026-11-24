@@ -1,0 +1,380 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.LinearAlgebra.Matrix.Kronecker
+import Mathlib.Tactic
+
+noncomputable section
+
+open scoped BigOperators
+open scoped Kronecker
+open Matrix
+
+namespace ParaKahlerTwistorLipschitzNoetherBridge
+
+/-! ### Part 1: Legendre–Fenchel Duality, Bregman Defect, & Para-Kähler Base on N₊ ⊕ N₋ -/
+
+abbrev ParaTangent (n : ℕ) := (Fin n → ℝ) × (Fin n → ℝ)
+
+/-- Para-complex cut `K(θ, η) = (θ, -η)` (`K² = id`, splitting `N₊` and `N₋`). -/
+def paraK {n : ℕ} (v : ParaTangent n) : ParaTangent n := (v.1, -v.2)
+
+/-- Indefinite para-Hermitian / Krein metric `η_para(u, v) = ⟨u₊, v₋⟩ + ⟨u₋, v₊⟩`. -/
+def paraMetric {n : ℕ} (u v : ParaTangent n) : ℝ :=
+  dotProduct u.1 v.2 + dotProduct u.2 v.1
+
+/-- Canonical cotangent symplectic 2-form `ω_para(u, v) = η_para(K u, v) = ⟨u₊, v₋⟩ - ⟨u₋, v₊⟩`. -/
+def paraSymplectic {n : ℕ} (u v : ParaTangent n) : ℝ :=
+  paraMetric (paraK u) v
+
+/-- Fenchel–Young / Bregman duality defect `D_ψ(θ ‖ η) = ψ(θ) + ψ*(η) - ⟨θ, η⟩`. -/
+def fenchelYoungDefect {n : ℕ} (psi psiStar : (Fin n → ℝ) → ℝ) (θ η : Fin n → ℝ) : ℝ :=
+  psi θ + psiStar η - dotProduct θ η
+
+/-- **Theorem 1 (Para-Kähler Geometry & Quadratic Legendre–Fenchel Equilibrium)**:
+1. `(paraK, paraMetric, paraSymplectic)` forms an exact **para-Kähler** structure on `N₊ ⊕ N₋`:
+   `K² = id`, `ω(u, v) = -ω(v, u)`, `ω(K u, K v) = -ω(u, v)`, and both `N₊` and `N₋` are
+   simultaneously isotropic for `η_para` and Lagrangian for `ω_para`.
+2. **Legendre–Fenchel Duality & Bregman Defect**: For any symmetric metric `G` (`Gᵀ = G`) with
+   inverse `G⁻¹` (`G * G⁻¹ = 1`) and positive-semidefinite inverse (`0 ≤ ⟨z, G⁻¹ z⟩`), the dual
+   quadratic potentials `ψ(θ) = ½⟨θ, G θ⟩` and `ψ*(η) = ½⟨η, G⁻¹ η⟩` satisfy
+   `D_ψ(θ ‖ η) = ½ ⟨G θ - η, G⁻¹ (G θ - η)⟩ ≥ 0`, vanishing at the Legendre locus `η = G θ`. -/
+theorem paraKahler_and_legendre_fenchel_defect {n : ℕ}
+    (u v : ParaTangent n) (a b : Fin n → ℝ)
+    (G GInv : Matrix (Fin n) (Fin n) ℝ)
+    (hSym : Gᵀ = G) (hSymInv : GInvᵀ = GInv) (hInv : G * GInv = 1)
+    (hPSD : ∀ z : Fin n → ℝ, 0 ≤ dotProduct z (GInv.mulVec z)) (θ η : Fin n → ℝ) :
+    (paraK (paraK u) = u) ∧
+    (paraSymplectic u v = -paraSymplectic v u) ∧
+    (paraSymplectic (paraK u) (paraK v) = -paraSymplectic u v) ∧
+    (paraSymplectic (a, 0) (b, 0) = 0 ∧ paraSymplectic (0, a) (0, b) = 0) ∧
+    (let psi := fun x : Fin n → ℝ => (1 / 2 : ℝ) * dotProduct x (G.mulVec x)
+     let psiStar := fun y : Fin n → ℝ => (1 / 2 : ℝ) * dotProduct y (GInv.mulVec y)
+     fenchelYoungDefect psi psiStar θ η =
+       (1 / 2 : ℝ) * dotProduct (G.mulVec θ - η) (GInv.mulVec (G.mulVec θ - η)) ∧
+     0 ≤ fenchelYoungDefect psi psiStar θ η ∧
+     (η = G.mulVec θ → fenchelYoungDefect psi psiStar θ η = 0)) := by
+  have hInvL : GInv * G = 1 := by
+    have hT := congrArg Matrix.transpose hInv
+    rw [Matrix.transpose_mul, hSym, hSymInv, Matrix.transpose_one] at hT
+    exact hT
+  have hAdj : ∀ (A : Matrix (Fin n) (Fin n) ℝ) (hA : Aᵀ = A) (x y : Fin n → ℝ),
+      dotProduct x (A.mulVec y) = dotProduct y (A.mulVec x) := by
+    intro A hA x y
+    calc dotProduct x (A.mulVec y)
+        = dotProduct (A.vecMul x) y := Matrix.dotProduct_mulVec x A y
+      _ = dotProduct (Aᵀ.mulVec x) y := by rw [Matrix.vecMul_transpose]
+      _ = dotProduct (A.mulVec x) y := by rw [hA]
+      _ = dotProduct y (A.mulVec x) := dotProduct_comm _ _
+  refine ⟨?_, ?_, ?_, ⟨?_, ?_⟩, ?_, ?_, ?_⟩
+  · ext i <;> simp [paraK]
+  · simp [paraSymplectic, paraMetric, paraK, dotProduct_comm]; ring
+  · simp [paraSymplectic, paraMetric, paraK]; ring
+  · simp [paraSymplectic, paraMetric, paraK]
+  · simp [paraSymplectic, paraMetric, paraK]
+  · dsimp [fenchelYoungDefect]
+    have hDiff : dotProduct (G.mulVec θ - η) (GInv.mulVec (G.mulVec θ - η)) =
+        dotProduct θ (G.mulVec θ) - 2 * dotProduct θ η + dotProduct η (GInv.mulVec η) := by
+      rw [Matrix.mulVec_sub, dotProduct_sub, sub_dotProduct, sub_dotProduct]
+      have h1 : dotProduct (G.mulVec θ) (GInv.mulVec (G.mulVec θ)) = dotProduct θ (G.mulVec θ) := by
+        rw [Matrix.mulVec_mulVec, hInvL, Matrix.one_mulVec, dotProduct_comm]
+      have h2 : dotProduct (G.mulVec θ) (GInv.mulVec η) = dotProduct θ η := by
+        rw [hAdj GInv hSymInv (G.mulVec θ) η, Matrix.mulVec_mulVec, hInvL, Matrix.one_mulVec,
+          dotProduct_comm]
+      have h3 : dotProduct η (GInv.mulVec (G.mulVec θ)) = dotProduct θ η := by
+        rw [Matrix.mulVec_mulVec, hInvL, Matrix.one_mulVec, dotProduct_comm]
+      rw [h1, h2, h3]
+      ring
+    rw [hDiff]
+    ring
+  · dsimp [fenchelYoungDefect]
+    have hEq : (1 / 2 : ℝ) * dotProduct θ (G.mulVec θ) +
+        (1 / 2 : ℝ) * dotProduct η (GInv.mulVec η) - dotProduct θ η =
+        (1 / 2 : ℝ) * dotProduct (G.mulVec θ - η) (GInv.mulVec (G.mulVec θ - η)) := by
+      rw [Matrix.mulVec_sub, dotProduct_sub, sub_dotProduct, sub_dotProduct]
+      have h1 : dotProduct (G.mulVec θ) (GInv.mulVec (G.mulVec θ)) = dotProduct θ (G.mulVec θ) := by
+        rw [Matrix.mulVec_mulVec, hInvL, Matrix.one_mulVec, dotProduct_comm]
+      have h2 : dotProduct (G.mulVec θ) (GInv.mulVec η) = dotProduct θ η := by
+        rw [hAdj GInv hSymInv (G.mulVec θ) η, Matrix.mulVec_mulVec, hInvL, Matrix.one_mulVec,
+          dotProduct_comm]
+      have h3 : dotProduct η (GInv.mulVec (G.mulVec θ)) = dotProduct θ η := by
+        rw [Matrix.mulVec_mulVec, hInvL, Matrix.one_mulVec, dotProduct_comm]
+      rw [h1, h2, h3]; ring
+    rw [hEq]
+    exact mul_nonneg (by norm_num) (hPSD _)
+  · intro hLeg
+    dsimp [fenchelYoungDefect]
+    have h1 : dotProduct (G.mulVec θ) (GInv.mulVec (G.mulVec θ)) = dotProduct θ (G.mulVec θ) := by
+      rw [Matrix.mulVec_mulVec, hInvL, Matrix.one_mulVec, dotProduct_comm]
+    rw [hLeg, h1]
+    ring
+
+/-! ### Part 2: Plücker Geometry, Klein Quadric, & Twistor Lightcone Incidence -/
+
+/-- Plücker 2-plane coordinates `p_{ij}(u, v) = u_i v_j - u_j v_i` of a 2-plane in `ℝ⁴`. -/
+def plucker (u v : Fin 4 → ℝ) (i j : Fin 4) : ℝ := u i * v j - u j * v i
+
+/-- **Plücker Klein Quadric & 2-Plane Intersection Determinant**:
+1. Every 2-plane `(u, v)` in `ℝ⁴` satisfies the quadratic Klein relation:
+   `p₀₁ p₂₃ - p₀₂ p₁₃ + p₀₃ p₁₂ = 0`.
+2. Two 2-planes `(u₁, v₁)` and `(u₂, v₂)` in `ℝ⁴` intersect nontrivially iff the `4 × 4`
+   determinant `det [u₁, v₁, u₂, v₂]` vanishes, which equals their Plücker pairing! -/
+theorem plucker_klein_quadric_and_incidence (u₁ v₁ u₂ v₂ : Fin 4 → ℝ) :
+    (plucker u₁ v₁ 0 1 * plucker u₁ v₁ 2 3 -
+     plucker u₁ v₁ 0 2 * plucker u₁ v₁ 1 3 +
+     plucker u₁ v₁ 0 3 * plucker u₁ v₁ 1 2 = 0) ∧
+    ((Matrix.of (fun r c : Fin 4 =>
+      match c with
+      | 0 => u₁ r | 1 => v₁ r | 2 => u₂ r | 3 => v₂ r)).det =
+     plucker u₁ v₁ 0 1 * plucker u₂ v₂ 2 3 -
+     plucker u₁ v₁ 0 2 * plucker u₂ v₂ 1 3 +
+     plucker u₁ v₁ 0 3 * plucker u₂ v₂ 1 2 +
+     plucker u₁ v₁ 1 2 * plucker u₂ v₂ 0 3 -
+     plucker u₁ v₁ 1 3 * plucker u₂ v₂ 0 2 +
+     plucker u₁ v₁ 2 3 * plucker u₂ v₂ 0 1) := by
+  constructor
+  · simp [plucker]; ring
+  · simp only [Matrix.det_succ_row_zero, Fin.sum_univ_succ, Matrix.det_fin_three,
+      Matrix.of_apply, Matrix.submatrix_apply]
+    simp [Fin.succAbove, plucker]
+    ring
+
+def realSoldering4 (x₀ x₁ x₂ x₃ : ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
+  !![x₀ + x₃, 0,       x₁,      x₂;
+     0,       x₀ + x₃, -x₂,     x₁;
+     x₁,      -x₂,     x₀ - x₃, 0;
+     x₂,      x₁,      0,       x₀ - x₃]
+
+def realSolderingAdj4 (x₀ x₁ x₂ x₃ : ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
+  !![x₀ - x₃, 0,       -x₁,     -x₂;
+     0,       x₀ - x₃, x₂,      -x₁;
+     -x₁,     x₂,      x₀ + x₃, 0;
+     -x₂,     -x₁,     0,       x₀ + x₃]
+
+/-- Penrose twistor incidence relation for a realified twistor `(ω, π) ∈ ℝ⁴ × ℝ⁴` and spacetime
+point `x = (x₀, x₁, x₂, x₃)`: `ω = M₄(x) π`. -/
+def TwistorIncident (x : Fin 4 → ℝ) (ω π : Fin 4 → ℝ) : Prop :=
+  ω = (realSoldering4 (x 0) (x 1) (x 2) (x 3)).mulVec π
+
+/-- **Theorem 2 (Twistor Grassmannian Graph Incidence & Lightcone Equivalence)**:
+Two spacetime points `x, y ∈ ℝ^{1,3}` share a nonzero incident twistor `(ω, π)` (`π ≠ 0`,
+`TwistorIncident x ω π ∧ TwistorIncident y ω π`) **if and only if** `x` and `y` are
+null-separated: `(x₀ - y₀)² - (x₁ - y₁)² - (x₂ - y₂)² - (x₃ - y₃)² = 0`. -/
+theorem twistor_incidence_iff_null_separated (x y : Fin 4 → ℝ) :
+    (∃ ω π : Fin 4 → ℝ, π ≠ 0 ∧ TwistorIncident x ω π ∧ TwistorIncident y ω π) ↔
+      (x 0 - y 0) ^ 2 - (x 1 - y 1) ^ 2 - (x 2 - y 2) ^ 2 - (x 3 - y 3) ^ 2 = 0 := by
+  let d₀ := x 0 - y 0
+  let d₁ := x 1 - y 1
+  let d₂ := x 2 - y 2
+  let d₃ := x 3 - y 3
+  have hDiff : realSoldering4 (x 0) (x 1) (x 2) (x 3) -
+      realSoldering4 (y 0) (y 1) (y 2) (y 3) = realSoldering4 d₀ d₁ d₂ d₃ := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [realSoldering4, d₀, d₁, d₂, d₃] <;> ring
+  have hMul : realSolderingAdj4 d₀ d₁ d₂ d₃ * realSoldering4 d₀ d₁ d₂ d₃ =
+      (d₀ ^ 2 - d₁ ^ 2 - d₂ ^ 2 - d₃ ^ 2) • (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [realSolderingAdj4, realSoldering4, Matrix.mul_apply, Fin.sum_univ_four] <;> ring
+  have hMulR : realSoldering4 d₀ d₁ d₂ d₃ * realSolderingAdj4 d₀ d₁ d₂ d₃ =
+      (d₀ ^ 2 - d₁ ^ 2 - d₂ ^ 2 - d₃ ^ 2) • (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [realSolderingAdj4, realSoldering4, Matrix.mul_apply, Fin.sum_univ_four] <;> ring
+  constructor
+  · rintro ⟨ω, π, hπ, hx, hy⟩
+    have hKer : (realSoldering4 d₀ d₁ d₂ d₃).mulVec π = 0 := by
+      rw [← hDiff, Matrix.sub_mulVec, ← hx, ← hy, sub_self]
+    have hZero : (d₀ ^ 2 - d₁ ^ 2 - d₂ ^ 2 - d₃ ^ 2) • π = 0 := by
+      calc (d₀ ^ 2 - d₁ ^ 2 - d₂ ^ 2 - d₃ ^ 2) • π
+          = ((d₀ ^ 2 - d₁ ^ 2 - d₂ ^ 2 - d₃ ^ 2) • (1 : Matrix (Fin 4) (Fin 4) ℝ)).mulVec π := by
+              rw [Matrix.smul_mulVec, Matrix.one_mulVec]
+        _ = (realSolderingAdj4 d₀ d₁ d₂ d₃ * realSoldering4 d₀ d₁ d₂ d₃).mulVec π := by
+              rw [hMul]
+        _ = (realSolderingAdj4 d₀ d₁ d₂ d₃).mulVec ((realSoldering4 d₀ d₁ d₂ d₃).mulVec π) :=
+              (Matrix.mulVec_mulVec _ _ _).symm
+        _ = 0 := by rw [hKer, Matrix.mulVec_zero]
+    exact (smul_eq_zero.mp hZero).resolve_right hπ
+  · intro hNull
+    have hNull' : d₀ ^ 2 - d₁ ^ 2 - d₂ ^ 2 - d₃ ^ 2 = 0 := hNull
+    rw [hNull', zero_smul] at hMulR
+    by_cases hAdj0 : realSolderingAdj4 d₀ d₁ d₂ d₃ = 0
+    · let π : Fin 4 → ℝ := ![1, 0, 0, 0]
+      have hπ : π ≠ 0 := by intro h; have h0 := congrFun h 0; simp [π] at h0
+      have h00 := congrFun (congrFun hAdj0 0) 0
+      have h22 := congrFun (congrFun hAdj0 2) 2
+      have h02 := congrFun (congrFun hAdj0 0) 2
+      have h03 := congrFun (congrFun hAdj0 0) 3
+      simp [realSolderingAdj4] at h00 h22 h02 h03
+      have hd0 : d₀ = 0 := by linarith
+      have hd3 : d₃ = 0 := by linarith
+      have hd1 : d₁ = 0 := by linarith
+      have hd2 : d₂ = 0 := by linarith
+      have hEqMat : realSoldering4 (x 0) (x 1) (x 2) (x 3) =
+          realSoldering4 (y 0) (y 1) (y 2) (y 3) := by
+        rw [← sub_eq_zero, hDiff, hd0, hd1, hd2, hd3]
+        ext i j; fin_cases i <;> fin_cases j <;> simp [realSoldering4]
+      refine ⟨(realSoldering4 (x 0) (x 1) (x 2) (x 3)).mulVec π, π, hπ, rfl, ?_⟩
+      simp [TwistorIncident, hEqMat]
+    · have hCol : ∃ k : Fin 4, (realSolderingAdj4 d₀ d₁ d₂ d₃).mulVec (fun j => if j = k then 1 else 0) ≠ 0 := by
+        by_contra hall
+        push_neg at hall
+        apply hAdj0
+        ext i k
+        have hi := congrFun (hall k) i
+        simpa [Matrix.mulVec, dotProduct] using hi
+      obtain ⟨k, hk⟩ := hCol
+      let π := (realSolderingAdj4 d₀ d₁ d₂ d₃).mulVec (fun j => if j = k then (1 : ℝ) else 0)
+      have hKer : (realSoldering4 d₀ d₁ d₂ d₃).mulVec π = 0 := by
+        dsimp [π]
+        rw [Matrix.mulVec_mulVec, hMulR, Matrix.zero_mulVec]
+      refine ⟨(realSoldering4 (x 0) (x 1) (x 2) (x 3)).mulVec π, π, hk, rfl, ?_⟩
+      unfold TwistorIncident
+      have hSub0 : (realSoldering4 (x 0) (x 1) (x 2) (x 3)).mulVec π -
+          (realSoldering4 (y 0) (y 1) (y 2) (y 3)).mulVec π = 0 := by
+        rw [← Matrix.sub_mulVec, hDiff, hKer]
+      exact (sub_eq_zero.mp hSub0).symm
+
+/-! ### Part 3: Kantor Triple Product on Supergrassmannian Corners & Dual Operator Connections -/
+
+/-- Symmetric Kantor triple product `{X₁, Y, X₂}_K = X₁ Y X₂ + X₂ Y X₁` on Peirce/Supergrassmannian
+off-diagonal corners. -/
+def kantorTriple {B : Type*} [Ring B] (X₁ Y X₂ : B) : B :=
+  X₁ * Y * X₂ + X₂ * Y * X₁
+
+/-- **Theorem 3 (Kantor Triple Closure on Peirce Supergrassmannian Corners)**:
+For any idempotent cut `P² = P` (`Q = 1 - P`), odd corner generators `X₁, X₂ ∈ P B Q` and
+`Y ∈ Q B P` satisfy:
+1. Binary products in the same corner vanish (`X₁ * X₂ = 0`), whereas the Kantor triple product
+   `{X₁, Y, X₂}_K` closes strictly inside the upper corner `P B Q`.
+2. On the diagonal `X₁ = X₂ = X`, `{X, Y, X}_K = 2 X Y X` equals the Kantor–Jordan corner
+   associator `(Y • X) • X - Y • (X • X)`. -/
+theorem kantor_triple_supergrassmannian_corner {B : Type*} [Ring B]
+    (P A₁ A₂ C : B) (hP : P * P = P) :
+    let Q := 1 - P
+    let X₁ := P * A₁ * Q
+    let X₂ := P * A₂ * Q
+    let Y := Q * C * P
+    X₁ * X₂ = 0 ∧
+    P * kantorTriple X₁ Y X₂ * Q = kantorTriple X₁ Y X₂ ∧
+    (let jMul := fun u v : B => u * v + v * u
+     jMul (jMul Y X₁) X₁ - jMul Y (jMul X₁ X₁) = kantorTriple X₁ Y X₁) := by
+  dsimp
+  have hQP : (1 - P) * P = 0 := by rw [sub_mul, one_mul, hP, sub_self]
+  have hQ2 : (1 - P) * (1 - P) = 1 - P := by
+    calc (1 - P) * (1 - P) = 1 - 2 * P + P * P := by noncomm_ring
+      _ = 1 - P := by rw [hP]; noncomm_ring
+  set Q := 1 - P
+  set X₁ := P * A₁ * Q
+  set X₂ := P * A₂ * Q
+  set Y := Q * C * P
+  have hXX : ∀ U V : B, (P * U * Q) * (P * V * Q) = 0 := fun U V => by
+    calc (P * U * Q) * (P * V * Q) = P * U * (Q * P) * V * Q := by noncomm_ring
+      _ = 0 := by rw [hQP]; noncomm_ring
+  have hPX1 : P * X₁ = X₁ := by
+    calc P * (P * A₁ * Q) = (P * P) * A₁ * Q := by noncomm_ring
+      _ = X₁ := by rw [hP]
+  have hPX2 : P * X₂ = X₂ := by
+    calc P * (P * A₂ * Q) = (P * P) * A₂ * Q := by noncomm_ring
+      _ = X₂ := by rw [hP]
+  have hX1Q : X₁ * Q = X₁ := by
+    calc (P * A₁ * Q) * Q = P * A₁ * (Q * Q) := by noncomm_ring
+      _ = X₁ := by rw [hQ2]
+  have hX2Q : X₂ * Q = X₂ := by
+    calc (P * A₂ * Q) * Q = P * A₂ * (Q * Q) := by noncomm_ring
+      _ = X₂ := by rw [hQ2]
+  refine ⟨hXX A₁ A₂, ?_, ?_⟩
+  · unfold kantorTriple
+    calc P * (X₁ * Y * X₂ + X₂ * Y * X₁) * Q
+        = (P * X₁) * Y * (X₂ * Q) + (P * X₂) * Y * (X₁ * Q) := by noncomm_ring
+      _ = X₁ * Y * X₂ + X₂ * Y * X₁ := by rw [hPX1, hPX2, hX1Q, hX2Q]
+  · unfold kantorTriple
+    have hX1sq : X₁ * X₁ = 0 := hXX A₁ A₁
+    calc (Y * X₁ + X₁ * Y) * X₁ + X₁ * (Y * X₁ + X₁ * Y) -
+          (Y * (X₁ * X₁ + X₁ * X₁) + (X₁ * X₁ + X₁ * X₁) * Y)
+        = Y * (X₁ * X₁) + 2 * (X₁ * Y * X₁) + (X₁ * X₁) * Y -
+          (Y * (2 * (X₁ * X₁)) + 2 * (X₁ * X₁) * Y) := by noncomm_ring
+      _ = 2 * (X₁ * Y * X₁) := by rw [hX1sq]; noncomm_ring
+      _ = X₁ * Y * X₁ + X₁ * Y * X₁ := by noncomm_ring
+
+/-! ### Part 4: Lipschitz Group (Clifford Group), Killing Vector Fields, & Souriau–Noether Conservation -/
+
+/-- **Theorem 4 (Lipschitz Group Isometries, Killing Bivector Fields, & Souriau–Noether Conservation)**:
+In any associative `ℝ`-algebra `B` equipped with a faithful vector lift `ι : V →ₗ[ℝ] B` obeying
+`ι(u) * ι(v) + ι(v) * ι(u) = c * η(u, v) • 1` (`c ≠ 0`):
+1. **Lipschitz / Spin Group Law**: Any invertible `g ∈ Bˣ` normalizing `ι(V)` (`g ι(u) g⁻¹ = ι(Λ_g u)`)
+   preserves the quadratic form `η`: `η(Λ_g u, Λ_g v) = η(u, v)`.
+2. **Killing Field Derivation Law**: Any operator `K ∈ B` normalizing `ι(V)` infinitesimally
+   (`[K, ι(u)] = ι(ξ_K u)`) satisfies the **exact Killing equation**:
+   `η(ξ_K u, v) + η(u, ξ_K v) = 0`.
+3. **Souriau–Noether Momentum Conservation**: For any Hamiltonian/generator `H`, momentum `μ`, and
+   Killing symmetry `K` (`[H, K] = 0`) in a matrix trace pairing, the Noether charge
+   `Q_K = Tr(μ * K)` is conserved (`Tr([H, μ] * K) = 0`). -/
+theorem lipschitz_group_killing_and_souriau_noether
+    {V B : Type*} [AddCommGroup V] [Module ℝ V] [Ring B] [Algebra ℝ B] [Nontrivial B]
+    (ι : V →ₗ[ℝ] B) (η : V → V → ℝ) (c : ℝ) (hc : c ≠ 0)
+    (hCl : ∀ u v : V, ι u * ι v + ι v * ι u = (c * η u v) • (1 : B)) :
+    (∀ (g : Bˣ) (Λ : V → V),
+      (∀ u : V, ((g : B) * ι u * ((g⁻¹ : Bˣ) : B)) = ι (Λ u)) →
+      ∀ u v : V, η (Λ u) (Λ v) = η u v) ∧
+    (∀ (K : B) (ξ : V → V),
+      (∀ u : V, K * ι u - ι u * K = ι (ξ u)) →
+      ∀ u v : V, η (ξ u) v + η u (ξ v) = 0) ∧
+    (∀ {n : ℕ} (H μ K : Matrix (Fin n) (Fin n) ℝ),
+      H * K = K * H → Matrix.trace ((H * μ - μ * H) * K) = 0) := by
+  have hScalEq : ∀ r₁ r₂ : ℝ, r₁ • (1 : B) = r₂ • (1 : B) → r₁ = r₂ := by
+    intro r₁ r₂ hEq
+    have h0 : (r₁ - r₂) • (1 : B) = 0 := by rw [sub_smul, hEq, sub_self]
+    exact sub_eq_zero.mp ((smul_eq_zero.mp h0).resolve_right one_ne_zero)
+  refine ⟨?_, ?_, ?_⟩
+  · intro g Λ hg u v
+    have hConj : (c * η (Λ u) (Λ v)) • (1 : B) = (c * η u v) • (1 : B) := by
+      calc (c * η (Λ u) (Λ v)) • (1 : B)
+          = ι (Λ u) * ι (Λ v) + ι (Λ v) * ι (Λ u) := (hCl (Λ u) (Λ v)).symm
+        _ = ((g : B) * ι u * ((g⁻¹ : Bˣ) : B)) * ((g : B) * ι v * ((g⁻¹ : Bˣ) : B)) +
+            ((g : B) * ι v * ((g⁻¹ : Bˣ) : B)) * ((g : B) * ι u * ((g⁻¹ : Bˣ) : B)) := by
+              rw [hg u, hg v]
+        _ = (g : B) * (ι u * ι v + ι v * ι u) * ((g⁻¹ : Bˣ) : B) := by
+              have hgg : ((g⁻¹ : Bˣ) : B) * (g : B) = 1 := by simp
+              calc ((g : B) * ι u * ((g⁻¹ : Bˣ) : B)) * ((g : B) * ι v * ((g⁻¹ : Bˣ) : B)) +
+                    ((g : B) * ι v * ((g⁻¹ : Bˣ) : B)) * ((g : B) * ι u * ((g⁻¹ : Bˣ) : B))
+                  = (g : B) * ι u * (((g⁻¹ : Bˣ) : B) * (g : B)) * ι v * ((g⁻¹ : Bˣ) : B) +
+                    (g : B) * ι v * (((g⁻¹ : Bˣ) : B) * (g : B)) * ι u * ((g⁻¹ : Bˣ) : B) := by
+                      noncomm_ring
+                _ = (g : B) * (ι u * ι v + ι v * ι u) * ((g⁻¹ : Bˣ) : B) := by
+                      rw [hgg]; noncomm_ring
+        _ = (g : B) * ((c * η u v) • (1 : B)) * ((g⁻¹ : Bˣ) : B) := by rw [hCl u v]
+        _ = (c * η u v) • ((g : B) * (1 : B) * ((g⁻¹ : Bˣ) : B)) := by
+              rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc]
+        _ = (c * η u v) • (1 : B) := by rw [mul_one]; simp
+    exact mul_left_cancel₀ hc (hScalEq _ _ hConj)
+  · intro K ξ hK u v
+    have hKill : (c * (η (ξ u) v + η u (ξ v))) • (1 : B) = 0 := by
+      calc (c * (η (ξ u) v + η u (ξ v))) • (1 : B)
+          = (c * η (ξ u) v) • (1 : B) + (c * η u (ξ v)) • (1 : B) := by
+              rw [mul_add, add_smul]
+        _ = (ι (ξ u) * ι v + ι v * ι (ξ u)) + (ι u * ι (ξ v) + ι (ξ v) * ι u) := by
+              rw [hCl (ξ u) v, hCl u (ξ v)]
+        _ = ((K * ι u - ι u * K) * ι v + ι v * (K * ι u - ι u * K)) +
+            (ι u * (K * ι v - ι v * K) + (K * ι v - ι v * K) * ι u) := by
+              rw [hK u, hK v]
+        _ = K * (ι u * ι v + ι v * ι u) - (ι u * ι v + ι v * ι u) * K := by noncomm_ring
+        _ = K * ((c * η u v) • (1 : B)) - ((c * η u v) • (1 : B)) * K := by rw [hCl u v]
+        _ = 0 := by rw [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, mul_one, one_mul, sub_self]
+    have hScal : c * (η (ξ u) v + η u (ξ v)) = 0 := by
+      apply hScalEq _ 0
+      rw [zero_smul]
+      exact hKill
+    exact (mul_eq_zero.mp hScal).resolve_left hc
+  · intro n H μ K hHK
+    calc Matrix.trace ((H * μ - μ * H) * K)
+        = Matrix.trace (H * (μ * K) - μ * (H * K)) := by
+            rw [sub_mul, Matrix.mul_assoc, Matrix.mul_assoc]
+      _ = Matrix.trace (H * (μ * K)) - Matrix.trace (μ * (K * H)) := by
+            rw [Matrix.trace_sub, hHK]
+      _ = Matrix.trace ((μ * K) * H) - Matrix.trace (μ * (K * H)) := by
+            rw [Matrix.trace_mul_comm H (μ * K)]
+      _ = 0 := by rw [Matrix.mul_assoc, sub_self]
+
+end ParaKahlerTwistorLipschitzNoetherBridge

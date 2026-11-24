@@ -119,7 +119,19 @@ theorem isUnit_leftRegular_iff (Z : CanonicalZorn) :
     have hconjZ : zornConj Z = 0 :=
       leftRegularRepresentation_injective (hconj.trans (map_zero leftRegularRepresentation).symm)
     have hZ : Z = 0 := by
-      simpa only [zornConj, neg_neg, neg_zero] using congrArg zornConj hconjZ
+      apply InfoGeometry.Canonical.ZornMatrix.ext
+      · change Z.a = 0
+        exact congrArg (fun W : CanonicalZorn => W.b) hconjZ
+      · change Z.b = 0
+        exact congrArg (fun W : CanonicalZorn => W.a) hconjZ
+      · change Z.x = 0
+        have hx := congrArg (fun W : CanonicalZorn => W.x) hconjZ
+        change -Z.x = 0 at hx
+        exact neg_eq_zero.mp hx
+      · change Z.y = 0
+        have hy := congrArg (fun W : CanonicalZorn => W.y) hconjZ
+        change -Z.y = 0 at hy
+        exact neg_eq_zero.mp hy
     have hzero : leftRegularRepresentation Z = 0 := by
       rw [hZ, map_zero]
     have h10 : (1 : Module.End ℝ CanonicalZorn) = 0 :=

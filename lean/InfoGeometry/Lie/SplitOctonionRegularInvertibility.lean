@@ -101,7 +101,7 @@ theorem rightMultiplication_surjective_iff (X : CanonicalZorn) :
     obtain ⟨Y, hY⟩ := h (1 : CanonicalZorn)
     have hnorm := congrArg (fun Z : CanonicalZorn => N Z) hY
     change N (Y * X) = N (1 : CanonicalZorn) at hnorm
-    rw [determinant_mul, determinant_one, hX, _root_.mul_zero] at hnorm
+    rw [determinant_mul, determinant_one, hX, MulZeroClass.mul_zero] at hnorm
     exact zero_ne_one hnorm
   · intro hX
     exact (rightMultiplication_bijective_of_det_ne_zero X hX).2

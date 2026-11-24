@@ -1,0 +1,81 @@
+name: Real matrix Gaussian kernels
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/OperatorAlgebra/MatrixGaussian*.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/GaussianNoiseComposition.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PositiveCoarseGraining.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/CoarseGraining*.lean'
+      - 'verification/matrix-gaussian-kernels/**'
+      - 'verification/real-matrix-split/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/pathing.py'
+      - 'tools/__init__.py'
+      - 'tools/infra/__init__.py'
+      - 'tools/quality/__init__.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - '.github/workflows/matrix-gaussian-kernels.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: matrix-gaussian-kernels-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore exact pinned dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: matrix-gaussian-deps-lean4341-d13f23b7-${{ runner.os }}-v1
+          restore-keys: |
+            zorn-cl44-deps-lean4341-d13f23b7-${{ runner.os }}-
+            real-matrix-split-deps-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Hydrate the maintained pinned Mathlib package
+        run: python3 verification/real-matrix-split/check.py exe cache get
+      - name: Compile exact sources and audit every owned declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/matrix-gaussian-kernels/check.py \
+            --work "$RUNNER_TEMP/matrix-gaussian-build" \
+            --phase final 2>&1 | tee matrix-gaussian-kernels.log
+      - name: Screen the changed mathematics
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/OperatorAlgebra/GaussianNoiseComposition.lean
+          lean/InfoGeometry/OperatorAlgebra/MatrixGaussianKernel.lean
+          lean/InfoGeometry/OperatorAlgebra/MatrixGaussianComposition.lean
+          lean/InfoGeometry/OperatorAlgebra/MatrixGaussianExamples.lean
+      - name: Preserve compiler and axiom evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: matrix-gaussian-kernels-evidence
+          path: |
+            matrix-gaussian-kernels.log
+            ${{ runner.temp }}/matrix-gaussian-build/status.json
+            ${{ runner.temp }}/matrix-gaussian-build/logs

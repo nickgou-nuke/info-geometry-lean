@@ -1,0 +1,310 @@
+**Да — имаме код, с който можем да им помогнем конкретно. Най-прекият принос е нашата формализация на положителни Schur допълнения, точно квадратично минимизиране и композиция на coarse-graining стъпки.** По-голямата възможност е да свържем техните RG оценки с нашите конструкции на съвместими състояния, GNS пространства и \(C^*\)-алгебри.
+
+Прегледах техния код при commit [`9a4492c`](https://github.com/MathePhysics/4D_Wilson_Loop_RG/tree/9a4492cc6bdf3338379123a085af59dfd8018a9c) и съответните модули в нашето хранилище. Има съществено съвпадение, но и няколко места, където трябва внимателно да уточним какво точно пренасяме.
+
+## 1. Какво вече имат и къде можем да добавим стойност
+
+Техният проект цели ренормализирани Wilson-loop корелации в **фиксиран краен четиримерен обем**, чрез RG анализ от типа на Bałaban. В README разграничават тази цел от безкрайнообемния предел и задачата за mass gap. Lean разработката е в процес на изграждане; заявеният резултат в ръкописа и завършена формална проверка на целия резултат са различни етапи. [GitHub](https://github.com/MathePhysics/4D_Wilson_Loop_RG?utm_source=chatgpt.com)
+
+В кода им вече има сериозна Gaussian инфраструктура:
+
+- Гаусови интеграли за **произволен симетричен положително определен оператор**.
+- Нормализирани гаусови вероятностни мерки.
+- Block-spin плътност с доказана нормировка.
+- Gaussian square completion и интегриране на фините променливи.
+- Композиция на определен клас block-spin ядра.
+
+Това се вижда непосредствено в [`GaussianIntegral.lean`](https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/GaussianIntegral.lean), [`GaussianGraphs.lean`](https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/GaussianGraphs.lean) и [`EffectiveForm.lean`](https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/EffectiveForm.lean).
+
+Следователно приносът ни трябва да надгради тези интерфейси:
+
+| Област | Какво можем да използваме от нашия код | Конкретна полза |
+|---|---|---|
+| Квадратична RG стъпка | `PositiveCoarseGraining` | Положителност, обратимост и covariance формула при обща матрична coarse precision \(R\). |
+| Минимизатор на ефективното действие | `CoarseGrainingVariational` | Изрично конструиран единствен минимизатор и точен остатъчен квадратичен член. |
+| Няколко RG стъпки | `CoarseGrainingComposition` | Точно натрупване на ковариациите със запазен ред на операторите. |
+| Вероятностен интерфейс | Тяхната Gaussian плътност + native Mathlib `Kernel` | Достъп до общите теореми за Markov ядра, включително KL data-processing. |
+| Състояния и операторен предел | Нашите native GNS и \(C^*\)-completion модули | Завършено Hilbert пространство, представяне и положително състояние след доказване на съвместимостта между мащабите. |
+
+**Най-добрият първи принос е в първите три реда.** Там връзката с конкретния им код е най-къса и математическите задължения са най-ясни.
+
+## 2. Най-силният готов принос: общата операторна Gaussian RG стъпка
+
+Нашият [`PositiveCoarseGraining.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/fe24e350b08fdea04f74c0748ef9fd9417c47529/lean/InfoGeometry/OperatorAlgebra/PositiveCoarseGraining.lean) работи с native Mathlib матрици над \(\mathbb R\) или \(\mathbb C\), произволна правоъгълна матрица \(Q\) и положително определени матрици \(A,R\).
+
+Точните обекти са:
+
+\[
+H=A+Q^*RQ,\qquad
+E=H^{-1}Q^*R,
+\]
+
+\[
+S=R-RQH^{-1}Q^*R.
+\]
+
+Тук:
+
+- \(A\) е precision операторът на фините променливи;
+- \(R\) е precision операторът на coarse Gaussian шума;
+- \(Q\) пренася фините променливи към coarse пространството;
+- \(E\) възстановява минимизиращото фино поле;
+- \(S\) е ефективният coarse precision оператор.
+
+Кодът доказва:
+
+\[
+H>0,\qquad S>0,
+\]
+
+и точната формула
+
+\[
+\boxed{S^{-1}=R^{-1}+QA^{-1}Q^*.}
+\]
+
+Това е съществуващата теорема `coarsePrecision_inv`. Обратимостта се извежда от положителната определеност. **Не се предполага, че операторите комутират**, и \(Q\) няма ограничение за ранг в тази регуляризирана формула.
+
+### Как това надгражда техния резултат
+
+Техният `EffectiveForm.integral_blockKernel_mul_gaussian` вече допуска общ precision оператор \(H\) за финото поле. Конкретният `blockKernel` обаче използва **скаларна coarse precision** \(\alpha I\).
+
+Полезното разширение е този block-spin интерфейс да приема общ \(R>0\), като използва тяхната вече налична теория на общите Gaussian интеграли. Това е конкретна генерализация и интеграция на API. Не е необходимо да изграждаме отначало тяхната Gaussian теория.
+
+### Имаме и точния минимизатор
+
+В [`CoarseGrainingVariational.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/fe24e350b08fdea04f74c0748ef9fd9417c47529/lean/InfoGeometry/OperatorAlgebra/CoarseGrainingVariational.lean) е доказано:
+
+\[
+\mathcal E_y(x)
+=
+\operatorname{Re}\!\left(x^*Ax+(y-Qx)^*R(y-Qx)\right)
+\]
+
+\[
+=
+\operatorname{Re}(y^*Sy)
++
+\operatorname{Re}\!\left((x-Ey)^*H(x-Ey)\right).
+\]
+
+Оттук следва:
+
+\[
+\boxed{\operatorname*{argmin}_x\mathcal E_y(x)=Ey.}
+\]
+
+Lean теоремата `is_minimizer_iff` характеризира **единствения** минимизатор. Този резултат може да служи като обща основа за техните квадратични минимизационни стъпки, след идентифициране на действителните им оператори.
+
+### Имаме точната композиция на две стъпки
+
+В [`CoarseGrainingComposition.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/fe24e350b08fdea04f74c0748ef9fd9417c47529/lean/InfoGeometry/OperatorAlgebra/CoarseGrainingComposition.lean) е доказано:
+
+\[
+\boxed{
+S_2^{-1}
+=
+R_2^{-1}
++
+Q_2R_1^{-1}Q_2^*
++
+(Q_2Q_1)A^{-1}(Q_2Q_1)^*.
+}
+\]
+
+Трите събираеми имат непосредствен смисъл: шумът от втората стъпка, пренесеният шум от първата и пренесената начална ковариация.
+
+Това подсказва следния общ Gaussian kernel интерфейс:
+
+\[
+k_{R,Q}(y\mid x)=
+\frac{\sqrt{\det R}}{(2\pi)^{m/2}}
+\exp\!\left(-\frac12(y-Qx)^TR(y-Qx)\right),
+\]
+
+с композиционен закон
+
+\[
+Q_{\mathrm{eff}}=Q_2Q_1,\qquad
+R_{\mathrm{eff}}
+=
+\left(R_2^{-1}+Q_2R_1^{-1}Q_2^T\right)^{-1}.
+\]
+
+**Тази интегрална теорема за общия kernel е предложеното надграждане:** нашият код предоставя операторната алгебра, а техният предоставя Gaussian интегрирането и нормировките.
+
+При
+
+\[
+R_1=\beta I,\qquad R_2=\alpha I,\qquad Q_2Q_2^T=sI
+\]
+
+формулата се свежда до
+
+\[
+R_{\mathrm{eff}}
+=
+\frac{\alpha\beta}{\beta+s\alpha}I,
+\]
+
+което е точно коефициентът в тяхната [`integral_blockKernel_mul_blockKernel`](https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Convolution.lean).
+
+Това дава много добър критерий за приемане на бъдещ PR: **съществуващата им скаларна формула трябва да се получава като специализация.**
+
+### Същественото условие при пренасянето
+
+Трябва да запазим техните претеглени решетъчни скаларни произведения. Самите те отбелязват, че решетъчният adjoint има мащабен множител спрямо обикновеното транспониране. Затова идентификацията между нашето \(Q^*\) и техния решетъчен оператор трябва да бъде доказана в подходящи ортонормални координати. [`EffectiveForm.lean`](https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/EffectiveForm.lean)
+
+Също така `A.PosDef` трябва да се установи за действителния оператор върху правилното пространство след отчитане на gauge ограниченията. Наличието на gauge нулеви моди не позволява автоматично прилагане на тази теорема.
+
+## 3. Малък допълващ принос: Gaussian ядрата като native Markov ядра
+
+В проверения им block-spin интерфейс
+
+```lean
+blockKernel ... ψ φ : ℝ
+```
+
+е плътност. Имат доказателство, че интегралът по \(\psi\) е \(1\). Това е добра отправна точка за конструкция
+
+```lean
+ProbabilityTheory.Kernel E F
+```
+
+с доказан `IsMarkovKernel`. [`Kernel.lean`](https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Kernel.lean)
+
+Точната работа тук е:
+
+1. Съвместната измеримост на плътността.
+2. Конструкцията на условната вероятностна мярка.
+3. Нормировката като `IsMarkovKernel`.
+4. Съвместимостта между kernel композицията и съществуващата им интегрална формула.
+
+След това **Mathlib вече предоставя**
+
+\[
+D_{\mathrm{KL}}(K_*\mu\Vert K_*\nu)
+\le
+D_{\mathrm{KL}}(\mu\Vert\nu).
+\]
+
+Проверих наличието на `InformationTheory.klDiv_comp_right_le` **в точно фиксираната от тях Mathlib версия**, за общи Markov ядра и крайни мерки. [`DataProcessing.lean`](https://github.com/leanprover-community/mathlib4/blob/8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a/Mathlib/InformationTheory/KullbackLeibler/DataProcessing.lean)
+
+Тук най-доброто използване на native Mathlib е директното прилагане на тази теорема. Нашата специализирана finite-channel реализация не е необходима за непрекъснатите Gaussian пространства.
+
+Те вече имат такъв Markov интерфейс за **топлинното ядро** в отделната библиотека `CompactLieHeatKernel`. Следователно Gaussian адаптерът би уеднаквил два съществуващи клона на проекта. [`HeatKernelData.lean`](https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/CompactLieHeatKernel/CompactLieHeatKernel/HeatKernelData.lean)
+
+Полученото неравенство е монотонност. За RG сходимост ще са нужни допълнителни оценки — например строго свиване в подходящ клас или сумируем контрол на грешките. Обикновеното KL data-processing не осигурява автоматично тези свойства.
+
+## 4. По-дълбоката връзка: от RG състояния към GNS и операторен предел
+
+Тук нашето хранилище има съществена конструктивна инфраструктура.
+
+В [`CStarAlgebraStateColimit.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/fe24e350b08fdea04f74c0748ef9fd9417c47529/lean/InfoGeometry/Canonical/CStarAlgebraStateColimit.lean) състоянието е нормализиран **положителен линеен функционал**, а преходите са истински унитални \(*\)-хомоморфизми:
+
+\[
+\iota_n:\mathcal A_n\longrightarrow\mathcal A_{n+1}.
+\]
+
+Основното входно условие е
+
+\[
+\boxed{\omega_{n+1}(\iota_n a)=\omega_n(a).}
+\]
+
+След като то е доказано, нашите модули конструират:
+
+- Завършено GNS Hilbert пространство с плътно обединение на образите на отделните мащаби — [`FilteredGNSHilbertColimit.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/fe24e350b08fdea04f74c0748ef9fd9417c47529/lean/InfoGeometry/Canonical/FilteredGNSHilbertColimit.lean).
+- \(C^*\)-completion на представения операторен образ — [`FilteredGNSRepresentedCStarCompletion.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/fe24e350b08fdea04f74c0748ef9fd9417c47529/lean/InfoGeometry/Canonical/FilteredGNSRepresentedCStarCompletion.lean).
+- Положително нормализирано състояние върху това completion, което възстановява всички зададени stage състояния — [`FilteredGNSVacuumState.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/fe24e350b08fdea04f74c0748ef9fd9417c47529/lean/InfoGeometry/Canonical/FilteredGNSVacuumState.lean).
+
+### Какво трябва да се докаже за конкретния Wilson модел
+
+При детерминистична coarse карта \(p_n\) естественият договор е:
+
+\[
+(p_n)_*\mu_{n+1}=\mu_n,\qquad
+\iota_n(a)=a\circ p_n.
+\]
+
+Тогава съвместимостта на състоянията следва от формулата за интегриране по pushforward мярка.
+
+При стохастично coarse-graining картината изисква повече внимание: Markov операторът върху наблюдаемите обикновено не запазва произведението. Следователно не може автоматично да бъде използван като `StarAlgHom` в нашата GNS система. Трябва да определим отделно наблюдаемите, refinement хомоморфизмите и RG преобразуването на състоянията.
+
+И още едно разграничение: скаларните Wilson наблюдаеми са функции върху конфигурационното пространство и образуват комутативна алгебра. Некомутативността на gauge групата сама по себе си не превръща тази алгебра в некомутативна. Нашата конструкция допуска и двата случая; приложението трябва да използва действителната избрана алгебра.
+
+### Полезна нова теорема: приблизителна съвместимост със сумируема грешка
+
+Това е най-интересният следващ мост към аналитичния RG.
+
+Да предположим, че са доказани
+
+\[
+\left|
+\omega_{n+1}(\iota_n a)-\omega_n(a)
+\right|
+\le \varepsilon_n\|a\|,
+\qquad
+\varepsilon_n\ge0,
+\qquad
+\sum_n\varepsilon_n<\infty.
+\]
+
+За контрактилни унитални \(*\)-хомоморфизми телескопичната оценка позволява да се конструира
+
+\[
+\omega_n^\infty(a)
+=
+\lim_{m\to\infty}
+\omega_m(\iota_{n,m}a).
+\]
+
+Получените състояния са точно съвместими:
+
+\[
+\omega_{n+1}^\infty(\iota_n a)=\omega_n^\infty(a).
+\]
+
+Така сумируемите аналитични грешки биха дали входа за съществуващата ни GNS конструкция.
+
+**Това е предложен нов формален договор, а не вече проверен резултат от настоящото сравнение.** Полезността му за тях зависи от това дали реалните им RG оценки дават подобен контрол. Ако оценките важат само за избрани loop наблюдаеми, ще трябва и аргумент за разширяване към подходящата алгебра.
+
+## 5. Кои оставащи задачи нашият наличен код не приключва
+
+Има три съществени граници на приложението.
+
+**Първо, общото топлинно ядро върху компактна Lie група.** Техният собствен `ANALYTIC_GAP.md` посочва оставащи задачи: идентификация на генератора с груповия лапласиан, регуляризация до гладка строго положителна плътност и групова инвариантност. Нашите крайномерни Schur теореми не доказват тези аналитични резултати. В библиотеката им има и отделен, изрично избираем път чрез литературни аксиоми; той трябва да се различава от доказателствата в основната библиотека. [`ANALYTIC_GAP.md`](https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/CompactLieHeatKernel/ANALYTIC_GAP.md)
+
+**Второ, равномерността по UV мащаба.** Положителност и обратимост на всяка крайномерна матрица не осигуряват равномерна оценка. Например
+
+\[
+A_\epsilon=\epsilon I>0,
+\qquad
+\|A_\epsilon^{-1}\|=\epsilon^{-1}\to\infty.
+\]
+
+Нашият [`FilteredCompatibleOperatorNorm.lean`](https://github.com/nickgou-nuke/info-geometry-lean/blob/fe24e350b08fdea04f74c0748ef9fd9417c47529/lean/InfoGeometry/Canonical/FilteredCompatibleOperatorNorm.lean) пренася **вече доказана обща граница** към завършения предел. Именно такава обща граница трябва да дойде от анализа на модела.
+
+**Трето, пълният Wilson-loop предел.** Gaussian елиминирането е част от работата. Остават контролът на взаимодействията, ренормализационните множители и оценките, които доказват сходимостта на конкретните корелации. Положително GNS състояние също не установява само по себе си Osterwalder–Schrader reflection positivity за четиримерното поле.
+
+## 6. Как бих оформил първия принос
+
+Препоръчвам първият PR към тях да има тесен предмет:
+
+### `Matrix-weighted Gaussian block-spin elimination and composition`
+
+Съдържанието му да бъде:
+
+1. **Общ матричен coarse precision \(R\)** върху техните съществуващи Gaussian пространства.
+2. **Положителност и covariance identity**, пренесени от нашия `PositiveCoarseGraining`.
+3. **Точно минимизиране**, свързано с техния `EffectiveForm`.
+4. **Двустъпкова композиция**, която възстановява сегашната им скаларна формула.
+5. **Пример с некомутиращи матрици**, за да се проверят редът на множителите и реалната общност на твърдението.
+
+Следващ малък PR може да добави native Markov адаптера и непосредствените приложения на Mathlib KL data-processing. GNS интеграцията е подходяща за следващ етап, след като бъде установен точният договор за състоянията между мащабите.
+
+Има реална задача по съвместимостта на версиите: нашият код използва Lean **4.34.1**, техният `GaussianBlockSpin` — **4.34.0-rc2**, а `CoreLean` — **4.36.0**. Затова пренасянето трябва да се компилира върху избрания техен пакет и фиксираните му зависимости. [Нашият toolchain](https://github.com/nickgou-nuke/info-geometry-lean/blob/fe24e350b08fdea04f74c0748ef9fd9417c47529/lean-toolchain), [GaussianBlockSpin toolchain](https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/Libraries/GaussianBlockSpin/lean-toolchain), [CoreLean toolchain](https://github.com/MathePhysics/4D_Wilson_Loop_RG/blob/9a4492cc6bdf3338379123a085af59dfd8018a9c/LEAN/CoreLean/lean-toolchain).
+
+Настоящата проверка е сравнение на изходния код и точните предпоставки на теоремите. Нашата документация отчита предходна kernel проверка и axiom audit на 62 декларации в Bałaban операторния пакет; това е полезна отправна точка, а портът към тяхната версия ще изисква собствена проверка. [`BALABAN_OPERATOR_COARSE_GRAINING.md`](https://github.com/nickgou-nuke/info-geometry-lean/blob/fe24e350b08fdea04f74c0748ef9fd9417c47529/docs/BALABAN_OPERATOR_COARSE_GRAINING.md)
+
+**Моята препоръка е да започнем с този ограничен Gaussian/RG принос. Той използва реално наличните ни доказателства, надгражда конкретни техни теореми и дава проверим първи резултат, върху който по-късно да стъпят състоянията и операторният предел.**

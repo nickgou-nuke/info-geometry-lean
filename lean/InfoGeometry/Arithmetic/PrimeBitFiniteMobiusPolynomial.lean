@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Nat.Squarefree
@@ -113,14 +108,5 @@ theorem primeCutoffMobiusPolynomial_one_eq_mertensFunction (B : ℕ) :
       Nat.lt_succ_iff]
     omega
   rw [← hset, ← herase]
-
-
-theorem primeCutoffMobiusPolynomial_boltzmann_eq_wittenIndexSum
-    (B : ℕ) (β : ℝ) :
-    primeCutoffMobiusPolynomial B
-        (fun n => (boltzmannWeight β n : ℂ)) =
-      ∑ n ∈ Finset.Icc 1 B, (moebiusWeightedTerm β n : ℂ) := by
-  rw [primeCutoffMobiusPolynomial_eq_integerCutoff]
-  simp [integerCutoffMobiusPolynomial, moebiusWeightedTerm]
 
 end InfoGeometry.Arithmetic.PrimeBitFiniteMobiusPolynomial

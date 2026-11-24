@@ -1,9 +1,4 @@
 /-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
-/-
 InfoGeometry/Application/STUOperatorBridge.lean
 
 Operator-first STU / black-hole / qubit bridge.
@@ -374,9 +369,5 @@ structure OperatorCoordinateChart
       I.quartic ρ = coordInvariant (toCoord ρ)
 
 end Hilbert
-
-def operatorSurgery
-    (singularOperator drazinInverse : EndH) : Prop :=
-  IsDrazinInverse singularOperator drazinInverse
 
 end InfoGeometry.Application.STUOperator

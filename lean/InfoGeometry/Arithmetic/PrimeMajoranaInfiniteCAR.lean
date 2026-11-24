@@ -1,9 +1,4 @@
 /-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
-/-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
@@ -291,15 +286,5 @@ theorem exteriorCARPair_limit_image_majorana_laws
       by simpa using congrArg (ι n) ((P n).dMajorana_sq),
       by simpa using congrArg (ι n) ((P n).cMajorana_dMajorana_anticomm_zero),
       by simpa using congrArg (ι n) ((P n).parityOp_sq)⟩
-
-
-theorem exteriorCARPair_limit_image_complementary_idem
-    (P : ∀ n : ℕ, ExteriorCARPair (A n)) :
-    ∀ n : ℕ,
-      ι n ((P n).iota * (P n).eps) *
-          ι n ((P n).iota * (P n).eps) =
-        ι n ((P n).iota * (P n).eps) := by
-  intro n
-  simpa using congrArg (ι n) ((P n).iota_mul_eps_idem)
 
 end InfoGeometry.Arithmetic.PrimeMajoranaInfiniteCAR

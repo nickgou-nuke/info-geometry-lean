@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -263,35 +258,6 @@ theorem negLogDet_mul {R : Type*} [CommRing R]
   unfold negLogDet
   rw [detZ_mul, hlog_mul]
   abel
-
-
-def oneZ : ZornCell R where
-  r := 1
-  s := 1
-  x1 := 0
-  x2 := 0
-  x3 := 0
-  y1 := 0
-  y2 := 0
-  y3 := 0
-
-
-theorem detZ_oneZ :
-    detZ (oneZ : ZornCell R) = 1 := by
-  unfold detZ oneZ
-  ring
-
-
-theorem mulZ_one (X : ZornCell R) :
-    mulZ X oneZ = X := by
-  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
-  congr <;> simp [mulZ, oneZ]
-
-
-theorem one_mulZ (X : ZornCell R) :
-    mulZ oneZ X = X := by
-  rcases X with ⟨r, s, x1, x2, x3, y1, y2, y3⟩
-  congr <;> simp [mulZ, oneZ]
 
 end ZornCell
 

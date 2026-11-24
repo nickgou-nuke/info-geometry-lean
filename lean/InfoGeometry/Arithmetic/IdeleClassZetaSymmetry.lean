@@ -496,19 +496,6 @@ theorem tracePartition_eq_zetaReadout
     tracePartition s = zetaReadout (temperature s) :=
   h s
 
-
-abbrev layer {G : Type*} (A : ThreeLayerIdeleSymmetry G) : IdeleClassLayer G := A.1
-
-
-abbrev parity {G : Type*} (A : ThreeLayerIdeleSymmetry G) : FourierParity := A.2
-
-
-variable {G : Type*}
-
-@[ext] theorem ext {A B : ThreeLayerIdeleSymmetry G}
-    (hlayer : A.layer = B.layer) (hparity : A.parity = B.parity) : A = B := by
-  exact Prod.ext hlayer hparity
-
 end ThreeLayerIdeleSymmetry
 
 /-! ## Proof-carrying adelic quotient socket -/
@@ -561,8 +548,5 @@ def unitRationalIdeleClassDecomposition :
   fromLayers := id
   left_inv _ := rfl
   right_inv _ := rfl
-
-def RationalIdeleClassEquiv (ClassGroup G : Type*) : Type _ :=
-  ClassGroup ≃ IdeleClassLayer G
 
 end InfoGeometry.Arithmetic.IdeleClassZetaSymmetry

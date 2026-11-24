@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import InfoGeometry.Canonical.SinkhornFoundation
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.DoubledSpace
@@ -546,9 +541,5 @@ attribute [rep_depth operator]
   exists_modewiseClifford_rep_of_bistochastic
 
 end CliffordLabel
-
-
-abbrev label {n : Nat} (S : SplitCliffordSuperData n) :
-    PermMode n → CliffordLabel := S
 
 end InfoGeometry.Canonical.MoE

@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -621,10 +616,5 @@ theorem centralCharge_eq_card_of_level_one_dualCoxeter_zero
     P.affineVirasoro.centralCharge = (S.card : ℝ) := by
   rw [P.centralCharge_calibrated hcc, hlevel, hdim, hdual]
   norm_num
-
-theorem virasoro_project_owner_property :
-    ∃ V : VirasoroDatum (VirasoroProject.VirasoroAlgebra ℝ),
-      InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.VirasoroProjectRealizes V :=
-  InfoGeometry.OperatorAlgebra.VirasoroProjectBridge.virasoro_project_is_property
 
 end InfoGeometry.Canonical.PrimeVirasoroSugawara

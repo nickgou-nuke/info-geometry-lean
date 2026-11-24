@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import InfoGeometry.Canonical.SouriauRelativeEntropyPersistenceLimitColimitComparison
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -164,31 +159,5 @@ theorem relativeEntropyBifiltrationLimitToCutoffLimitAt_eq_canonical
   exact
     relativeEntropyBifiltrationLimit_stage_independent
       n ε t 0 x
-
-
-theorem relativeEntropyBifiltrationLimitCutoffFamilyAt_compatible
-    (n : ℕ) (t : ℝ) :
-    ∀ {ε₁ ε₂ : ℝ} (hε : ε₁ ≤ ε₂)
-      (x : RelativeEntropyBifiltrationLimit n),
-      relativeEntropyPersistenceCutoffColimitMap hε
-          ((relativeEntropyBifiltrationLimitCutoffFamilyAt n t).map ε₂ x) =
-        (relativeEntropyBifiltrationLimitCutoffFamilyAt n t).map ε₁ x := by
-  intro ε₁ ε₂ hε x
-  let h :
-      (Opposite.op ε₂, t) ⟶
-        (Opposite.op ε₁, t) :=
-    ⟨(homOfLE hε).op, homOfLE (le_refl t)⟩
-  change
-    relativeEntropyPersistenceCutoffColimitMap hε
-        (relativeEntropyPersistenceColimitStage ε₂ t
-          (relativeEntropyBifiltrationLimitProjection n
-            (Opposite.op ε₂, t) x)) =
-      relativeEntropyPersistenceColimitStage ε₁ t
-        (relativeEntropyBifiltrationLimitProjection n
-          (Opposite.op ε₁, t) x)
-  rw [relativeEntropyCutoffTime_to_colimit hε (le_refl t)]
-  exact congrArg
-    (relativeEntropyPersistenceColimitStage ε₁ t)
-    (relativeEntropyBifiltrationLimitProjection_compat n h x)
 
 end SouriauRelativeEntropyPersistenceComparisonIndependence

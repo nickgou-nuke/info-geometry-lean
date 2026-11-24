@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import InfoGeometry.Algebra.Zorn.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -64,24 +59,5 @@ theorem right_mul_preserves_null
   rw [cp.detZ_mul X U, hX, zero_mul]
 
 end ZornCompositionDatum
-
-def mulZ (X Y : ZornMatrix R) : ZornMatrix R :=
-  { a := X.a * Y.a + InfoGeometry.Canonical.ZornMatrix.dot X.x Y.y
-    b := X.b * Y.b + InfoGeometry.Canonical.ZornMatrix.dot X.y Y.x
-    x := X.a • Y.x + Y.b • X.x - InfoGeometry.Canonical.ZornMatrix.cross X.y Y.y
-    y := X.b • Y.y + Y.a • X.y + InfoGeometry.Canonical.ZornMatrix.cross X.x Y.x }
-
-omit [CommRing R] in
-
-lemma expand_fin3 (v : Fin 3 → R) : v = ![v 0, v 1, v 2] := by
-  ext i
-  fin_cases i <;> rfl
-
-/-- The Zorn determinant is multiplicative over Zorn matrix multiplication. -/
-theorem detZ_mul (X Y : ZornMatrix R) : detZ (mulZ X Y) = detZ X * detZ Y := by
-  dsimp [detZ, mulZ]
-  rw [expand_fin3 X.x, expand_fin3 X.y, expand_fin3 Y.x, expand_fin3 Y.y]
-  simp [InfoGeometry.Canonical.ZornMatrix.dot, InfoGeometry.Canonical.ZornMatrix.cross]
-  ring
 
 end InfoGeometry.Algebra.Zorn

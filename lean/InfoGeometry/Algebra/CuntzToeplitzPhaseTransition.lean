@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -101,13 +96,5 @@ theorem toeplitz_unbroken_vacuum_state (g : CuntzToeplitzO2Generators R) (E : R 
     rw [toeplitz_susy_hamiltonian_identity g hS2star_S2 hS1star_S1 hcompleteness]
   rw [h_lin, h_zero_energy, zero_add, h_one] at h_exp
   exact h_exp
-
-
-abbrev NativeToeplitzTwo := CuntzToeplitzAlg 2
-
-
-def vacuumDefect : NativeToeplitzTwo :=
-  1 - (toeplitzS 2 0 * toeplitzSdag 2 0 +
-    toeplitzS 2 1 * toeplitzSdag 2 1)
 
 end InfoGeometry.Algebra.CuntzToeplitzPhaseTransition

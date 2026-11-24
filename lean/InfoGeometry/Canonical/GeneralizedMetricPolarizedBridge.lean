@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import InfoGeometry.Canonical.GeneralizedMetricCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RelativeModularPolarizedBridge
@@ -55,49 +50,5 @@ variable {betaMinus : Type*} [Fintype betaMinus] [Nonempty betaMinus]
     (H := H) (u := R.minus.lift b) (R.minus.lift_mem b)
 
 end PolarizedProjectors
-
-structure GeneralizedMetricPolarizedData
-    (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] [CompleteSpace H]
-    (α : Type*) [Fintype α] [Nonempty α]
-    (betaPlus : Type*) [Fintype betaPlus] [Nonempty betaPlus]
-    (betaMinus : Type*) [Fintype betaMinus] [Nonempty betaMinus] where
-  polarized : PolarizedRelativeModularPair H α betaPlus betaMinus
-  plus_fixed :
-    ∀ b : betaPlus,
-      GeneralizedMetricSeed.plusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-        (polarized.plus.lift b) = polarized.plus.lift b
-  minus_fixed :
-    ∀ b : betaMinus,
-      GeneralizedMetricSeed.minusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-        (polarized.minus.lift b) = polarized.minus.lift b
-
-@[rep_depth krein]
-
-noncomputable def PolarizedRelativeModularPair.toGeneralizedMetricData
-    (R : PolarizedRelativeModularPair H α betaPlus betaMinus) :
-    GeneralizedMetricPolarizedData H α betaPlus betaMinus where
-  polarized := R
-  plus_fixed := fun b =>
-    tomitaGeneralizedMetricSeed_plusProjector_eq_self_of_mem_plusSheet
-      (H := H) (u := R.plus.lift b) (R.plus.lift_mem b)
-  minus_fixed := fun b =>
-    tomitaGeneralizedMetricSeed_minusProjector_eq_self_of_mem_minusSheet
-      (H := H) (u := R.minus.lift b) (R.minus.lift_mem b)
-
-@[rep_depth krein, simp] theorem
-    PolarizedRelativeModularPair.plus_lift_fixed_by_tomitaGeneralizedMetric
-    (R : PolarizedRelativeModularPair H α betaPlus betaMinus) (b : betaPlus) :
-    GeneralizedMetricSeed.plusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-      (R.plus.lift b) = R.plus.lift b := by
-  simpa using
-    (PolarizedRelativeModularPair.toGeneralizedMetricData (R := R)).plus_fixed b
-
-@[rep_depth krein, simp] theorem
-    PolarizedRelativeModularPair.minus_lift_fixed_by_tomitaGeneralizedMetric
-    (R : PolarizedRelativeModularPair H α betaPlus betaMinus) (b : betaMinus) :
-    GeneralizedMetricSeed.minusProjector (tomitaGeneralizedMetricSeed : GeneralizedMetricSeed H)
-      (R.minus.lift b) = R.minus.lift b := by
-  simpa using
-    (PolarizedRelativeModularPair.toGeneralizedMetricData (R := R)).minus_fixed b
 
 end InfoGeometry.Canonical.GeneralizedMetricPolarizedBridge

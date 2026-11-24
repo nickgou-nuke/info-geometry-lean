@@ -24,6 +24,8 @@ namespace InfoGeometry.Canonical.ZornCl44Triality
 
 open ZornMatrix ZornClifford
 
+attribute [local simp] Matrix.vecHead Matrix.vecTail
+
 /-- The vector bivector is infinitesimally orthogonal for the native split form. -/
 theorem vectorBivector_skew (a b v w : ZornMatrix ℝ) :
     zornBilin (vectorBivector a b v) w =

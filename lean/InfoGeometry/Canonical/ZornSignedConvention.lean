@@ -5,7 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.ZornCliffordRepresentation
 import InfoGeometry.Canonical.ZornMultiplicationOperators
-import Mathlib.Tactic.Module
+import Mathlib.Algebra.GroupWithZero.Action.Units
 
 /-!
 # Transport of the opposite cross-product convention
@@ -22,6 +22,9 @@ namespace InfoGeometry.Canonical.ZornSignedConvention
 
 open ZornMatrix ZornClifford
 
+-- Normalize finite-vector projections introduced by Zorn multiplication.
+attribute [local simp] Matrix.vecHead Matrix.vecTail
+
 /-- Coordinates for the input cross orientation, transported to the canonical
 Zorn carrier. This is a linear equivalence, not an algebra automorphism of
 the canonical multiplication. -/
@@ -34,7 +37,7 @@ def signedCoordinates : ZornMatrix.Coord ℝ ≃ₗ[ℝ] ZornMatrix ℝ where
   right_inv z := by
     apply ZornMatrix.ext <;> simp
   map_add' z w := by
-    apply ZornMatrix.ext <;> simp
+    apply ZornMatrix.ext <;> simp [add_comm]
   map_smul' r z := by
     apply ZornMatrix.ext <;> simp
 
@@ -72,7 +75,8 @@ theorem primal_mul_dual (x p : Fin 4 → ℝ) :
         (x 1 * p 1 + x 2 * p 2 + x 3 * p 3, 0,
           p 0 • ![x 1, x 2, x 3], 0) := by
   rw [primal, dual, signedCoordinates_mul]
-  congr 1 <;> simp [dot, cross]
+  congr 1
+  simp [dot, cross]
 
 /-- Reversing the factors changes both the diagonal and vector channels. -/
 theorem dual_mul_primal (x p : Fin 4 → ℝ) :
@@ -81,7 +85,8 @@ theorem dual_mul_primal (x p : Fin 4 → ℝ) :
         (0, x 1 * p 1 + x 2 * p 2 + x 3 * p 3,
           0, x 0 • ![p 1, p 2, p 3]) := by
   rw [dual, primal, signedCoordinates_mul]
-  congr 1 <;> simp [dot, cross]
+  congr 1
+  simp [dot, cross]
 
 /-- The primal-dual contraction is the norm of their sum. -/
 theorem primal_add_dual_norm (x p : Fin 4 → ℝ) :
@@ -193,29 +198,41 @@ theorem quaternionAxis_mul_splitUnit (i : Fin 3) :
 theorem signed_upper_eq_half_axes (i : Fin 3) :
     -chiralUpperBasis (R := ℝ) i =
       (1 / 2 : ℝ) • (quaternionAxis i + splitAxis i) := by
-  dsimp [quaternionAxis, splitAxis]
-  module
+  have hsum : quaternionAxis i + splitAxis i =
+      (2 : ℝ) • (-chiralUpperBasis (R := ℝ) i) := by
+    simp only [quaternionAxis, splitAxis, two_smul]
+    abel
+  rw [hsum, one_div, inv_smul_smul₀ (two_ne_zero : (2 : ℝ) ≠ 0)]
 
 /-- Recover the signed lower ladder from the quaternion and split axes. -/
 theorem signed_lower_eq_half_axes (i : Fin 3) :
     chiralLowerBasis (R := ℝ) i =
       (1 / 2 : ℝ) • (quaternionAxis i - splitAxis i) := by
-  dsimp [quaternionAxis, splitAxis]
-  module
+  have hdiff : quaternionAxis i - splitAxis i =
+      (2 : ℝ) • chiralLowerBasis (R := ℝ) i := by
+    simp only [quaternionAxis, splitAxis, two_smul]
+    abel
+  rw [hdiff, one_div, inv_smul_smul₀ (two_ne_zero : (2 : ℝ) ≠ 0)]
 
 /-- Recover the upper temporal idempotent from the unit and split unit. -/
 theorem zornPlus_eq_half_one_add_splitUnit :
     zornPlus (R := ℝ) = (1 / 2 : ℝ) • (1 + splitUnit) := by
-  rw [← zornPlus_add_zornMinus (R := ℝ)]
-  dsimp [splitUnit]
-  module
+  have hsum : (1 : ZornMatrix ℝ) + splitUnit =
+      (2 : ℝ) • zornPlus (R := ℝ) := by
+    rw [← zornPlus_add_zornMinus (R := ℝ)]
+    simp only [splitUnit, two_smul]
+    abel
+  rw [hsum, one_div, inv_smul_smul₀ (two_ne_zero : (2 : ℝ) ≠ 0)]
 
 /-- Recover the lower temporal idempotent from the unit and split unit. -/
 theorem zornMinus_eq_half_one_sub_splitUnit :
     zornMinus (R := ℝ) = (1 / 2 : ℝ) • (1 - splitUnit) := by
-  rw [← zornPlus_add_zornMinus (R := ℝ)]
-  dsimp [splitUnit]
-  module
+  have hdiff : (1 : ZornMatrix ℝ) - splitUnit =
+      (2 : ℝ) • zornMinus (R := ℝ) := by
+    rw [← zornPlus_add_zornMinus (R := ℝ)]
+    simp only [splitUnit, two_smul]
+    abel
+  rw [hdiff, one_div, inv_smul_smul₀ (two_ne_zero : (2 : ℝ) ≠ 0)]
 
 
 theorem norm_one : zornNorm (1 : ZornMatrix ℝ) = 1 := by

@@ -172,6 +172,32 @@ theorem diracEnd_finrank :
     (DiracSpinor16 (R := ℝ) →ₗ[ℝ] DiracSpinor16 (R := ℝ)) = 256
   norm_num [Module.finrank_linearMap, diracSpinor_finrank]
 
+/-- Endomorphisms of the vector carrier have dimension 64, not 256. -/
+theorem zornEnd_finrank :
+    Module.finrank ℝ (Module.End ℝ (ZornMatrix ℝ)) = 64 := by
+  letI : FiniteDimensional ℝ (ZornMatrix ℝ) :=
+    (ZornMatrix.coordLinearEquiv (R := ℝ)).symm.finiteDimensional
+  change Module.finrank ℝ (ZornMatrix ℝ →ₗ[ℝ] ZornMatrix ℝ) = 64
+  norm_num [Module.finrank_linearMap, zorn_finrank]
+
+/-- The full Clifford algebra cannot act unitally on the eight-dimensional
+vector carrier. Simplicity would make such an action injective, contradicting
+the dimensions 256 and 64. -/
+theorem no_eight_dimensional_clifford_action
+    (f : CliffordAlgebra (zornNorm (R := ℝ)) →ₐ[ℝ]
+      Module.End ℝ (ZornMatrix ℝ)) : False := by
+  letI : Nontrivial (ZornMatrix ℝ) :=
+    Function.Injective.nontrivial
+      (ZornMatrix.coordLinearEquiv (R := ℝ)).symm.injective
+  letI : FiniteDimensional ℝ (ZornMatrix ℝ) :=
+    (ZornMatrix.coordLinearEquiv (R := ℝ)).symm.finiteDimensional
+  letI : IsSimpleRing (CliffordAlgebra (zornNorm (R := ℝ))) :=
+    IsSimpleRing.of_ringEquiv zornCliffordMatrixEquiv.toRingEquiv.symm inferInstance
+  have hinj : Function.Injective f.toLinearMap := f.toRingHom.injective
+  have hdim := LinearMap.finrank_le_finrank_of_injective hinj
+  rw [zornClifford_finrank, zornEnd_finrank] at hdim
+  norm_num at hdim
+
 /-- Equal finite dimensions upgrade the faithful representation to surjectivity. -/
 theorem zornCliffordRepresentation_surjective :
     Function.Surjective (zornCliffordRepresentation (R := ℝ)) := by

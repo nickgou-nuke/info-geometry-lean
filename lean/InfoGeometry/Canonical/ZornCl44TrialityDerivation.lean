@@ -26,6 +26,8 @@ namespace InfoGeometry.Canonical.ZornCl44TrialityDerivation
 open ZornMatrix ZornClifford ZornCl44Triality ZornSignedConvention
 open InfoGeometry.Lie.CanonicalZornDerivation
 
+attribute [local simp] Matrix.vecHead Matrix.vecTail
+
 /-- The normalized `12`-plane vector action from the two opposite norm sectors. -/
 def rotation12 : Module.End ℝ (ZornMatrix ℝ) :=
   vectorBivector (quaternionAxis 0) (quaternionAxis 1) -

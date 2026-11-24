@@ -2514,6 +2514,73 @@ theorem shirokov_clifford_compatibility_curvature_eq_zero_of_component_grade_two
     simp [bladeRepr]
   exact hT (by rw [hcoord, h₂T, hbrT]; simp)
 
+/-- Spin-type inner derivation actions preserve grade-two connection values.
+The extra hypothesis identifies each direction's action with commutation by
+a grade-two Clifford element. Preservation is derived from the owner's
+grade-two commutator closure, rather than assumed as a submodule invariant.
+This is still a finite-stage `Cl(0,n)` result; identifying the paper's
+spacetime derivatives with these inner actions is a separate bridge. -/
+theorem shirokov_clifford_compatibility_curvature_eq_zero_of_grade_two_inner_action
+    (n : ℕ)
+    (K : DerivationLieLane ℝ
+      (CliffordAlgebra (cliffordNegSqForm ℝ n)))
+    (C : OneForm K) (A : K.L → CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (x y : K.L) (hxy : ⁅x, y⁆ = 0)
+    (hgen₁ : ∀ v : Fin n → ℝ,
+      covariantDerivative K (-C) x
+        (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
+    (hgen₂ : ∀ v : Fin n → ℝ,
+      covariantDerivative K (-C) y
+        (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
+    (hCx : ∀ T : Finset (Fin n), bladeRepr ℝ n (C x) T ≠ 0 → T.card = 2)
+    (hCy : ∀ T : Finset (Fin n), bladeRepr ℝ n (C y) T ≠ 0 → T.card = 2)
+    (hAx : ∀ T : Finset (Fin n), bladeRepr ℝ n (A x) T ≠ 0 → T.card = 2)
+    (hAy : ∀ T : Finset (Fin n), bladeRepr ℝ n (A y) T ≠ 0 → T.card = 2)
+    (hInnerX : ∀ z, K.operatorAction x z = algebraCommutator (A x) z)
+    (hInnerY : ∀ z, K.operatorAction y z = algebraCommutator (A y) z) :
+    K.operatorAction x (C y) - K.operatorAction y (C x) -
+      algebraCommutator (C x) (C y) = 0 := by
+  apply shirokov_clifford_compatibility_curvature_eq_zero_of_component_grade_two
+    n K C x y hxy hgen₁ hgen₂ hCx hCy
+  · intro z hz
+    have hzgrade : ∀ S : Finset (Fin n),
+        bladeRepr ℝ n z S ≠ 0 → S.card = 2 := by
+      intro S hS
+      by_contra hS2
+      exact hS (shirokov_grade_two_span_coordinate_eq_zero n z hz S
+        (by simpa using hS2))
+    have hcomm := shirokov_grade_two_commutator_mem_span n (A x) z
+      (shirokov_grade_two_supported_mem_span n (A x) hAx)
+      (shirokov_grade_two_supported_mem_span n z hzgrade)
+    have hcommGrade : ∀ T : Finset (Fin n),
+        bladeRepr ℝ n (algebraCommutator (A x) z) T ≠ 0 → T.card = 2 := by
+      intro T hT
+      by_contra hT2
+      exact hT (shirokov_grade_two_span_coordinate_eq_zero n
+        (algebraCommutator (A x) z) hcomm T (by simpa using hT2))
+    rw [hInnerX z]
+    exact shirokov_grade_two_supported_mem_span n
+      (algebraCommutator (A x) z) hcommGrade
+  · intro z hz
+    have hzgrade : ∀ S : Finset (Fin n),
+        bladeRepr ℝ n z S ≠ 0 → S.card = 2 := by
+      intro S hS
+      by_contra hS2
+      exact hS (shirokov_grade_two_span_coordinate_eq_zero n z hz S
+        (by simpa using hS2))
+    have hcomm := shirokov_grade_two_commutator_mem_span n (A y) z
+      (shirokov_grade_two_supported_mem_span n (A y) hAy)
+      (shirokov_grade_two_supported_mem_span n z hzgrade)
+    have hcommGrade : ∀ T : Finset (Fin n),
+        bladeRepr ℝ n (algebraCommutator (A y) z) T ≠ 0 → T.card = 2 := by
+      intro T hT
+      by_contra hT2
+      exact hT (shirokov_grade_two_span_coordinate_eq_zero n
+        (algebraCommutator (A y) z) hcomm T (by simpa using hT2))
+    rw [hInnerY z]
+    exact shirokov_grade_two_supported_mem_span n
+      (algebraCommutator (A y) z) hcommGrade
+
 /-- A grade-two Clifford coefficient is uniquely determined by its commutator
 action on all Clifford vectors. The difference centralizes the generators,
 hence the generated algebra, and the center/grade-two intersection is zero.

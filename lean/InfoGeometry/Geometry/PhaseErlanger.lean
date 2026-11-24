@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Geometry/PhaseErlanger.lean
 
 Erlanger phase geometry for Hestenes/Krein structures.
@@ -499,5 +504,13 @@ def phaseCentralizer_id
     (K : EndR H) :
     (phaseCentralizer_id H K).op = ContinuousLinearMap.id ℝ H :=
   rfl
+
+/-! ## 6. Native Erlanger phase theorem -/
+
+theorem phaseErlanger_id
+    (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H]
+    (K : EndR H) :
+    PhaseLinear K (ContinuousLinearMap.id ℝ H) := by
+  exact PhaseLinear.id
 
 end InfoGeometry.Geometry.PhaseErlanger

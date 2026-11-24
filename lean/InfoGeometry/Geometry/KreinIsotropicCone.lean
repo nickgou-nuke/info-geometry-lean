@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Geometry/KreinIsotropicCone.lean
 
 Krein isotropic cones.
@@ -242,6 +247,21 @@ theorem defectToIsotropicOwnerTarget
     (Split H : Type*) [AddCommGroup H] [Module ℝ H]
     (Q : KreinQuadraticDatum H) :
     DefectToIsotropicOwnerTarget Split H Q := by
+  intro W
+  exact ⟨
+    (fun a ha => W.defect_mem_isotropic ha),
+    (fun a ha => W.defect_q_zero ha)⟩
+
+/-! ## Native defect-to-isotropic theorem -/
+
+theorem defect_to_isotropic
+    (Split H : Type*) [AddCommGroup H] [Module ℝ H]
+    (Q : KreinQuadraticDatum H) :
+    ∀ W : DefectMapsToIsotropic Split H Q,
+      (∀ a : Split, a ∈ W.defectLocus →
+        W.carrierReadout a ∈ IsotropicCone Q) ∧
+      (∀ a : Split, a ∈ W.defectLocus →
+        Q.q (W.carrierReadout a) = 0) := by
   intro W
   exact ⟨
     (fun a ha => W.defect_mem_isotropic ha),

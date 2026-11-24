@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Fin.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -47,5 +52,11 @@ theorem vacuum_normalized :
     tagNumber (normalize vacuumNode).tag = ⟨2, by decide⟩ ∧
       (normalize vacuumNode).code = zeroCode := by
   simp [vacuumNode, normalize, tagNumber, zeroCode, codeOfNat]
+
+
+abbrev tag (n : NormalForm) : NodeTag := n.1
+
+
+abbrev code (n : NormalForm) : Fin 16 := n.2
 
 end AutonomousHypothesisEngine

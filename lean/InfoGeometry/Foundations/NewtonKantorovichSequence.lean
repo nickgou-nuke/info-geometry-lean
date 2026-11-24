@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Sqrt
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Ring
@@ -217,7 +222,7 @@ theorem majorantSeq_two_nonneg_of_kantorovich
 
 /-- First monotonic step: `t₁ ≤ t₂` under strict Kantorovich threshold. -/
 theorem majorantSeq_one_le_two_of_kantorovich_strict
-    (L η : ℝ) (hL : 0 ≤ L) (_hη : 0 ≤ η) (hcond : L * η < 1 / 2) :
+    (L η : ℝ) (hL : 0 ≤ L) (hcond : L * η < 1 / 2) :
     majorantSeq L η 1 ≤ majorantSeq L η 2 := by
   rw [majorantSeq_one, majorantSeq_two_formula]
   have hden : 0 < 1 - L * η := one_sub_L_mul_eta_pos_of_kantorovich_strict L η hcond
@@ -623,4 +628,20 @@ theorem majorantSeq_shifted_exists_lub_in_Icc_of_kantorovich_strict
   exact ⟨ℓ, hℓ, hbounds.1, hbounds.2⟩
 
 end
+theorem majorantSeq_mem_and_monotone_of_step_properties
+    (L η : ℝ)
+    (hη_mem : η ∈ Set.Icc 0 (tMinus L η))
+    (hInv : ∀ t, t ∈ Set.Icc 0 (tMinus L η) →
+      majorantStep L η t ∈ Set.Icc 0 (tMinus L η))
+    (hStepGe : ∀ t, t ∈ Set.Icc 0 (tMinus L η) → t ≤ majorantStep L η t) :
+    (∀ n, majorantSeq L η (n + 1) ∈ Set.Icc 0 (tMinus L η)) ∧
+    (∀ n, majorantSeq L η (n + 1) ≤ majorantSeq L η (n + 2)) := by
+  constructor
+  · exact majorantSeq_mem_Icc_of_step_invariant L η hη_mem hInv
+  ·
+    intro n
+    have hmem_all : ∀ k, majorantSeq L η (k + 1) ∈ Set.Icc 0 (tMinus L η) :=
+      majorantSeq_mem_Icc_of_step_invariant L η hη_mem hInv
+    exact majorantSeq_monotone_of_step_ge L η hmem_all hStepGe n
+
 end InfoGeometry.Foundations.NewtonKantorovichSequence

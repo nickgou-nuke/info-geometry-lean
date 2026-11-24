@@ -264,3 +264,67 @@ The independent inventory remains 60 owner heads plus 20 reused declarations:
 80 expected axiom records, zero observed. This static run launched no Lean
 compiler and does not certify kernel acceptance. Report SHA-256:
 `8721927059ef27a8a0c74d1383a52a65de6c67aed97c205729b94e9607c5aa18`.
+
+
+## First complete focused-build diagnostics and exact source repairs
+
+Run `45413943417`, job `138514926118`, compiled the original published
+head `52a54c812eea3f4fb754b2470c0fd21f07d376fa`. Its checked event revision
+`0bcd010b838150ced07199baf6ccc3a518500ebf` has tree
+`b347029187ec3b1b54d6bfef81f9113c20a60432`, exactly the original reviewed
+tree. Setup and pinned-source checks succeeded. The selected build exited
+1 after reporting two null-kernel errors, ten Born errors, five Born
+unused-simplification warnings, and the already-repaired older faithfulness
+error. The volume owner was not reached because its Born dependency failed.
+
+Both null-kernel errors occur in `finrank_ker_leftRegular_eq_four`.
+The projection idempotence proof now supplies the explicit associativity
+equality with its intended operator arguments. The trace proof invokes the
+actual native `LinearMap.IsIdempotentElem.isProj_range` alias with its explicit
+operator, followed by `LinearMap.IsProj.trace`. This avoids field lookup on
+the reducible equality type. `audit_math` authored this two-line repair and
+root independently reviewed it against the compiler goals and pinned APIs.
+
+The Born repairs evaluate the six finite-vector literal coordinates before
+scalar normalization, explicitly close the observed isometry-coercion goal,
+qualify the native annihilation definition, eliminate the final empty-list
+membership alternative, and normalize the four negative signs. Two actually
+unused list lemmas are removed; three reported arguments remain necessary
+once the failed annihilation unfolding is repaired. `source_scout` authored
+the candidate and root independently reviewed every changed site against
+its actual diagnostics. All public statements, hypotheses, imports, and
+declaration counts in both owners are unchanged.
+
+| Repaired owner | SHA-256 |
+| --- | --- |
+| `Lie.CanonicalZornNullKernel` | `1664c1854d363f438e6fc336d5dd05b5211c0458c69c292e0c6a48bd4f4a73f4` |
+| `Canonical.ZornWittBorn` | `94e1e1871f508683c0e90b3d260450e0d167a309a06316aea49d18103d480d08` |
+
+Artifact `14932744988` was downloaded and verified against SHA-256
+`996ffe38faa16e090d347c376f9fc69a15fa45c60eccf7755be637025892f038`.
+The build-log SHA-256 is `1ea8c35b9c6775a2dff5edad6a9dd7c1cb56ee6ec4f4c37d13f68d3f65bd262a`.
+The diagnostic-summary SHA-256 is
+`2f04963d9b56c2c4e849475a03c7659fef3d0e6c89353175faa163fcbbd84e52`.
+Selected source and control hashes stayed unchanged during that CI run.
+Fresh warning-as-error elaboration and the axiom probe did not execute:
+**80 expected axiom records, zero observed**. The repaired source still
+requires fresh compilation and axiom acceptance.
+
+
+### Static receipt for the first compiler-directed packet repair
+
+All six maintained gates scoped to the repaired null-kernel and Born owners
+returned exit 0. Semantic-content findings and OpenGauss traps are zero.
+Two nonblocking lexical warnings concern unchanged map/definition readouts:
+`cl44Representation_adag` and `bornElement_ordered_product`. All 45 explicit
+public/private declaration signatures and imports are preserved. Source,
+control, index, and worktree snapshots remained stable throughout the run;
+exactly the two owners and this contract were staged. The previously checked
+volume repair stayed unchanged at its recorded `649612bc` source hash.
+
+The full inventory remains 60 owner heads plus 20 reused declarations,
+80 expected and zero observed axiom records. No local compiler or lock
+probe ran. Report SHA-256:
+`0986f7b46f89d92b20cc5d048dbdc78aa1227f44cb4223e2b02454bfd78909dc`.
+Fresh compilation, warnings-as-errors elaboration, and axiom acceptance of
+the repaired packet remain pending.

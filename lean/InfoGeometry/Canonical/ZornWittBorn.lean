@@ -73,7 +73,11 @@ def splitZornIsometry : splitQ44.IsometryEquiv (zornNorm (R := ℝ)) where
       InfoGeometry.Algebra.Zorn.KingdonCanonicalBridge.realCrossProduct3
       (cartesianZornLinearEquiv (splitCoordinateEquiv v)) = splitQ44 v
     rw [detZ_cartesianZornLinearEquiv, splitCoordinateEquiv_apply, splitQ44_apply]
-    simp only [quaternionNorm, dot]
+    change
+      (v 0) ^ 2 + (v 1 * v 1 + v 2 * v 2 + v 3 * v 3) -
+          ((v 4) ^ 2 + (v 5 * v 5 + v 6 * v 6 + v 7 * v 7)) =
+        v 0 * v 0 + v 1 * v 1 + v 2 * v 2 + v 3 * v 3 -
+          (v 4 * v 4 + v 5 * v 5 + v 6 * v 6 + v 7 * v 7)
     ring
 
 /-- Explicit oriented coordinate readout of the proved quadratic isometry. -/
@@ -144,6 +148,7 @@ def cl44Representation : Cl44 →ₐ[ℝ] Module.End ℝ (DiracSpinor16 (R := �
     (CliffordAlgebra.map splitZornIsometry.toIsometry
       (CliffordAlgebra.ι splitQ44 v)) = _
   rw [CliffordAlgebra.map_apply_ι, zornCliffordRepresentation_ι]
+  rfl
 
 /-- The existing annihilation generator retains its factor `1/2` under the
 native Zorn representation. -/
@@ -151,7 +156,8 @@ theorem cl44Representation_a (i : Fin 4) :
     cl44Representation (a i) = (1 / 2 : ℝ) •
       (diracGammaLinear (splitZornIsometry (eVec i)) +
         diracGammaLinear (splitZornIsometry (fVec i))) := by
-  simp only [a, aVec, map_smul, map_add, cl44Representation_ι]
+  simp only [InfoGeometry.Clifford.Cl44Witt.a, aVec, map_smul, map_add,
+    cl44Representation_ι]
 
 /-- The existing creation generator uses the same factor `1/2` on the
 difference of the signed Clifford generators. -/
@@ -231,26 +237,26 @@ theorem bornElement_mul_e (i : Fin 4) : bornElement * e i = e i * bornElement :=
   have horth : ∀ w ∈ [fVec 0, fVec 1, fVec 2, fVec 3],
       QuadraticMap.IsOrtho splitQ44 (eVec i) w := by
     intro w hw
-    simp only [List.mem_cons, List.mem_singleton] at hw
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hw
     rcases hw with rfl | rfl | rfl | rfl
     all_goals fin_cases i <;>
       norm_num [QuadraticMap.IsOrtho, eVec, fVec, splitQ44_apply]
   have h := clifford_anticommute_listProduct (Q := splitQ44)
     (eVec i) [fVec 0, fVec 1, fVec 2, fVec 3] horth
-  simpa [bornElement, cliffordVolumeElement, e] using h.symm
+  simpa [bornElement, cliffordVolumeElement, e, pow_succ] using h.symm
 
 private theorem positiveElement_mul_f (i : Fin 4) :
     positiveElement * f i = f i * positiveElement := by
   have horth : ∀ w ∈ [eVec 0, eVec 1, eVec 2, eVec 3],
       QuadraticMap.IsOrtho splitQ44 (fVec i) w := by
     intro w hw
-    simp only [List.mem_cons, List.mem_singleton] at hw
+    simp only [List.mem_cons, List.not_mem_nil, or_false] at hw
     rcases hw with rfl | rfl | rfl | rfl
     all_goals fin_cases i <;>
       norm_num [QuadraticMap.IsOrtho, eVec, fVec, splitQ44_apply]
   have h := clifford_anticommute_listProduct (Q := splitQ44)
     (fVec i) [eVec 0, eVec 1, eVec 2, eVec 3] horth
-  simpa [positiveElement, cliffordVolumeElement, f] using h.symm
+  simpa [positiveElement, cliffordVolumeElement, f, pow_succ] using h.symm
 
 /-- Anticommutation with the negative generators follows from the existing
 oriented volume theorem and cancellation by its positive four-factor part. -/
@@ -279,7 +285,7 @@ theorem bornElement_f_born (i : Fin 4) : bornElement * f i * bornElement = -f i 
 existing normalized Witt families, without an additional sign. -/
 theorem bornElement_a_born (i : Fin 4) : bornElement * a i * bornElement = adag i := by
   have ha : a i = (1 / 2 : ℝ) • (e i + f i) := by
-    simp only [a, aVec, e, f, map_smul, map_add]
+    simp only [InfoGeometry.Clifford.Cl44Witt.a, aVec, e, f, map_smul, map_add]
   have hadag : adag i = (1 / 2 : ℝ) • (e i - f i) := by
     simp only [adag, adagVec, e, f, map_smul, map_sub]
   rw [ha, hadag, mul_smul_comm, smul_mul_assoc, mul_add, add_mul,

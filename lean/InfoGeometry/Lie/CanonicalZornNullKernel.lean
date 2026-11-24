@@ -169,7 +169,7 @@ theorem finrank_ker_leftRegular_eq_four (X : ZornMatrix ℝ)
     calc
       T * T = (T * L X) * L (zornConj Y) := by
         change T * (L X * L (zornConj Y)) = (T * L X) * L (zornConj Y)
-        rw [mul_assoc]
+        exact (mul_assoc T (L X) (L (zornConj Y))).symm
       _ = L X * L (zornConj Y) := by rw [hTL]
       _ = T := rfl
   have hrange : LinearMap.range T = LinearMap.range (L X) := by
@@ -183,7 +183,7 @@ theorem finrank_ker_leftRegular_eq_four (X : ZornMatrix ℝ)
     change tr (L X * L (zornConj Y)) = 4
     rw [trace_leftRegular_mul_conj, hY, mul_one]
   have hdimT : Module.finrank ℝ (LinearMap.range T) = 4 := by
-    have hp := hT.isProj_range.trace
+    have hp := LinearMap.IsProj.trace (LinearMap.IsIdempotentElem.isProj_range T hT)
     rw [htr] at hp
     exact_mod_cast hp.symm
   have hrank : Module.finrank ℝ (LinearMap.range (L X)) = 4 := by

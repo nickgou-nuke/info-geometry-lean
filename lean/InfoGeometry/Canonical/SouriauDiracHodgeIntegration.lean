@@ -1,8 +1,3 @@
-/-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
 import InfoGeometry.Canonical.BostConnesKMS
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.BostConnesGalois
@@ -207,16 +202,6 @@ theorem galois_transport_on_cyclotomic_generator
       T.ρ (T.ι (e_rep.e (GaloisActionData.actOnQ g r))) * T.U g := by
   rw [← galoisAut.galoisAut_on_generator g r]
   exact T.intertwines g (e_rep.e r)
-
-
-theorem galois_transport_intertwines
-    (hintertwines : ∀ (g : G) (A : C_comm),
-      T.U g * T.ρ (T.ι A) =
-        T.ρ (T.ι (galoisAut.galoisAut g A)) * T.U g)
-    (g : G) (A : C_comm) :
-    T.U g * T.ρ (T.ι A) =
-      T.ρ (T.ι (galoisAut.galoisAut g A)) * T.U g :=
-  hintertwines g A
 
 end GaloisKMSKreinTransport
 

@@ -1,9 +1,4 @@
 /-
-Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
-Released under Apache 2.0 license as described in the file LICENSE.
-Authors: InfoGeometry Engine Contributors
--/
-/-
 Copyright (c) 2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
@@ -101,10 +96,5 @@ theorem connes_cocycle_to_souriau_realification
 (G : RealEnd E) (t : ℝ) :
 NormedSpace.exp (t • G) = NormedSpace.exp (t • G) :=
 rfl
-
-structure ConnesCocycleSouriauRealificationDatum where
-  connesCocycle : ℝ → RealEnd E
-  souriauFlow : ℝ → RealEnd E
-  realification : ∀ t : ℝ, connesCocycle t = souriauFlow t
 
 end InfoGeometry.Canonical.TomitaTakesakiRealification

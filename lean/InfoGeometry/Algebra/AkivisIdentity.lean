@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Associator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Module.Basic
@@ -20,6 +25,15 @@ def akivisJacobiator (x y z : A) : A :=
   akivisBracket (akivisBracket x y) z +
     akivisBracket (akivisBracket y z) x +
       akivisBracket (akivisBracket z x) y
+
+/-- The universal product-rule defect of a left commutator, with no
+associativity or characteristic assumption. -/
+theorem akivisBracket_leibniz_defect_eq_associators (x y z : A) :
+    akivisBracket z (x * y) - x * akivisBracket z y - akivisBracket z x * y =
+      _root_.associator x z y - _root_.associator z x y -
+        _root_.associator x y z := by
+  simp only [akivisBracket, _root_.associator_apply, mul_sub, sub_mul]
+  abel
 
 lemma akivisBracket_akivisBracket (x y z : A) :
     akivisBracket (akivisBracket x y) z =

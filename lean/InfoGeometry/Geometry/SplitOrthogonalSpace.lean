@@ -1,10 +1,16 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Geometry/SplitOrthogonalSpace.lean
 
 Explicit split-orthogonal base-space carrier for the Narain / O(n,n) tower.
 No complex imports.
 -/
 
+import Mathlib.Topology.Category.TopCat.Basic
 import Mathlib.Topology.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebraic.SplitQuadraticForm

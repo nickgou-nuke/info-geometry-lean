@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Twistor.Incidence
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Twistor.NullProjective
@@ -222,5 +227,55 @@ theorem tomita_mirror_swaps_concrete_lightcone :
     tomitaConj_annihilation_eq_creation (E := E)⟩
 
 end ConcreteAtom
+
+/-- The phase operator obtained by composing two linear operators. -/
+def phaseAxis (J eps : V →ₗ[ℝ] V) : V →ₗ[ℝ] V := J.comp eps
+
+/-- The product of two anticommuting involutions squares to minus the identity. -/
+theorem phase_axis_sq (J eps : V →ₗ[ℝ] V)
+    (hJ : J.comp J = LinearMap.id)
+    (hE : eps.comp eps = LinearMap.id)
+    (hAnti : J.comp eps = -(eps.comp J)) :
+    (phaseAxis J eps).comp (phaseAxis J eps) = -LinearMap.id := by
+  have hJ' (x : V) : J (J x) = x := by
+    exact congrArg (fun f : V →ₗ[ℝ] V => f x) hJ
+  have hE' (x : V) : eps (eps x) = x := by
+    exact congrArg (fun f : V →ₗ[ℝ] V => f x) hE
+  have hAnti' (x : V) : eps (J x) = -J (eps x) := by
+    have h := congrArg (fun f : V →ₗ[ℝ] V => f x) hAnti
+    simpa using (congrArg Neg.neg h).symm
+  ext x
+  change J (eps (J (eps x))) = -x
+  calc
+    J (eps (J (eps x))) = J (-J (eps (eps x))) := by rw [hAnti']
+    _ = -(J (J (eps (eps x)))) := by simp
+    _ = -(eps (eps x)) := by rw [hJ']
+    _ = -x := by rw [hE']
+
+/-- The derived phase anticommutes with the first involution. -/
+theorem J_phase_axis_anticomm (J eps : V →ₗ[ℝ] V)
+    (hJ : J.comp J = LinearMap.id)
+    (hAnti : J.comp eps = -(eps.comp J)) :
+    J.comp (phaseAxis J eps) = -((phaseAxis J eps).comp J) := by
+  have hJ' (x : V) : J (J x) = x :=
+    congrArg (fun f : V →ₗ[ℝ] V => f x) hJ
+  have hAnti' (x : V) : J (eps x) = -eps (J x) :=
+    congrArg (fun f : V →ₗ[ℝ] V => f x) hAnti
+  ext x
+  change J (J (eps x)) = -J (eps (J x))
+  calc
+    J (J (eps x)) = eps x := hJ' (eps x)
+    _ = -J (eps (J x)) := by rw [hAnti' (J x), hJ' x]; simp
+
+/-- The derived phase anticommutes with the second involution. -/
+theorem eps_phase_axis_anticomm (J eps : V →ₗ[ℝ] V)
+    (hAnti : J.comp eps = -(eps.comp J)) :
+    eps.comp (phaseAxis J eps) = -((phaseAxis J eps).comp eps) := by
+  have hAnti' (x : V) : eps (J x) = -J (eps x) := by
+    have h := congrArg (fun f : V →ₗ[ℝ] V => f x) hAnti
+    simpa using (congrArg Neg.neg h).symm
+  ext x
+  change eps (J (eps x)) = -J (eps (eps x))
+  exact hAnti' (eps x)
 
 end InfoGeometry.Twistor.FiveGradedIncidence

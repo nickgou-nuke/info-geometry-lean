@@ -160,6 +160,54 @@ theorem raw_isometry_block_not_involution [Nontrivial A] :
   have hentry := congrArg (fun M : Matrix (Fin 2) (Fin 2) A => M 0 0) h
   exact P.matrixUnit_zero_zero_ne_one (by simpa using hentry)
 
+theorem matrixTwo_source_noncommutative [Nontrivial R] :
+    ∃ M K : Matrix (Fin 2) (Fin 2) R, M * K ≠ K * M := by
+  let M : Matrix (Fin 2) (Fin 2) R := Matrix.single 0 1 1
+  let K : Matrix (Fin 2) (Fin 2) R := Matrix.single 1 0 1
+  refine ⟨M, K, ?_⟩
+  have hMK : M * K = Matrix.single 0 0 (1 : R) := by
+    simp [M, K, Matrix.single_mul_single_same]
+  have hKM : K * M = Matrix.single 1 1 (1 : R) := by
+    simp [M, K, Matrix.single_mul_single_same]
+  rw [hMK, hKM]
+  intro h
+  have h00 := congrFun (congrFun h 0) 0
+  have hone : (1 : R) = 0 := by
+    simp at h00
+  exact one_ne_zero hone
+
+
+theorem matrixTwo_explicit_noncommutative_witness [Nontrivial R] :
+    (Matrix.single 0 1 1 : Matrix (Fin 2) (Fin 2) R) * (Matrix.single 1 0 1 : Matrix (Fin 2) (Fin 2) R) ≠
+    (Matrix.single 1 0 1 : Matrix (Fin 2) (Fin 2) R) * (Matrix.single 0 1 1 : Matrix (Fin 2) (Fin 2) R) := by
+  intro h
+  have hMK : (Matrix.single 0 1 1 : Matrix (Fin 2) (Fin 2) R) * (Matrix.single 1 0 1 : Matrix (Fin 2) (Fin 2) R) = Matrix.single 0 0 (1 : R) := by
+    simp [Matrix.single_mul_single_same]
+  have hKM : (Matrix.single 1 0 1 : Matrix (Fin 2) (Fin 2) R) * (Matrix.single 0 1 1 : Matrix (Fin 2) (Fin 2) R) = Matrix.single 1 1 (1 : R) := by
+    simp [Matrix.single_mul_single_same]
+  rw [hMK, hKM] at h
+  have h00 := congrFun (congrFun h 0) 0
+  have hone : (1 : R) = 0 := by
+    simp at h00
+  exact one_ne_zero hone
+
 end AlgebraicCuntzNPresentation
+
+
+
+def _cuntz_witness_a : Matrix (Fin 2) (Fin 2) ℝ := Matrix.single 0 1 1
+
+def _cuntz_witness_b : Matrix (Fin 2) (Fin 2) ℝ := Matrix.single 1 0 1
+
+
+theorem _cuntz_witness_noncommute : _cuntz_witness_a * _cuntz_witness_b ≠ _cuntz_witness_b * _cuntz_witness_a := by
+  intro h
+  have h₁ : _cuntz_witness_a * _cuntz_witness_b = Matrix.single 0 0 (1 : ℝ) := by
+    simp [_cuntz_witness_a, _cuntz_witness_b, Matrix.single_mul_single_same]
+  have h₂ : _cuntz_witness_b * _cuntz_witness_a = Matrix.single 1 1 (1 : ℝ) := by
+    simp [_cuntz_witness_a, _cuntz_witness_b, Matrix.single_mul_single_same]
+  rw [h₁, h₂] at h
+  have h₃ := congrFun (congrFun h 0) 0
+  norm_num at h₃
 
 end InfoGeometry.Algebra.Cuntz

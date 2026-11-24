@@ -1830,6 +1830,66 @@ theorem shirokov_theorem_2_2_standard_frame_odd_grade_two
   exact (smul_right_injective (R := ℝ) (M := CliffordAlgebra (cliffordNegSqForm ℝ n))
     (by norm_num : (2 : ℝ) ≠ 0)) hmul
 
+/-- Odd-dimensional lower-half formula for an algebra-automorphism-transported
+frame. The derivative and grade condition are pulled back to the standard
+negative-definite frame and then transported forward. -/
+theorem shirokov_theorem_2_2_automorphism_frame_odd_grade_two
+    (n : ℕ) (hn : Odd n)
+    (φ : CliffordAlgebra (cliffordNegSqForm ℝ n) ≃ₐ[ℝ]
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (D : CliffordAlgebra (cliffordNegSqForm ℝ n) →
+      CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (C : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (hcompat : ∀ S : Finset (Fin n),
+      D (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+        C * (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) -
+          (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n)) * C)
+    (hgrade : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (φ.symm C) T ≠ 0 → T.card = 2) :
+    (∑ S ∈ ((Finset.univ : Finset (Fin n)).powerset).filter
+      (fun S => 2 * S.card < n),
+      D (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        (↑((Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S))⁻¹) :
+          CliffordAlgebra (cliffordNegSqForm ℝ n))) =
+      (2 ^ (n - 1) : ℝ) • C := by
+  let D' : CliffordAlgebra (cliffordNegSqForm ℝ n) →
+      CliffordAlgebra (cliffordNegSqForm ℝ n) := fun x => φ.symm (D (φ x))
+  let C' : CliffordAlgebra (cliffordNegSqForm ℝ n) := φ.symm C
+  have hcompat' : ∀ S : Finset (Fin n),
+      D' (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+        C' * (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) -
+          (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) * C' := by
+    intro S
+    apply φ.injective
+    simpa [D', C', map_sub, map_mul] using hcompat S
+  have hstd := shirokov_theorem_2_2_standard_frame_odd_grade_two
+    n hn D' C' hcompat' hgrade
+  have hmap : φ ((∑ S ∈ ((Finset.univ : Finset (Fin n)).powerset).filter
+      (fun S => 2 * S.card < n),
+      D' (shirokovInverseBladeUnit n S : CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        (((shirokovInverseBladeUnit n S)⁻¹ :
+          (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n)))) =
+      (∑ S ∈ ((Finset.univ : Finset (Fin n)).powerset).filter
+        (fun S => 2 * S.card < n),
+        D (Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+          (↑((Units.map φ.toMonoidHom (shirokovInverseBladeUnit n S))⁻¹) :
+            CliffordAlgebra (cliffordNegSqForm ℝ n))) := by
+    rw [map_sum]
+    apply Finset.sum_congr rfl
+    intro S hS
+    simp only [D', map_mul, AlgEquiv.apply_symm_apply, Units.coe_map,
+      Units.coe_map_inv, shirokovInverseBladeUnit_inv_val]
+    rfl
+  have hresult := congrArg φ hstd
+  rw [hmap] at hresult
+  simpa [C'] using hresult
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

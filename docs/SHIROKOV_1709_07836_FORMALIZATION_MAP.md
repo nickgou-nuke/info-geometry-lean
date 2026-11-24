@@ -111,7 +111,12 @@ positive-definite orthonormal-frame results are special cases only.
    derivative sum is `(2^(n-1) : ℝ) • C`. This remains a fixed-frame,
    negative-definite `Cl(0,n)` result; it does not establish the moving dual
    frame formula or derive either hypothesis from the paper's geometric
-   setup.
+   setup. The owner also has `shirokov_theorem_2_2_automorphism_frame_odd_grade_two`,
+   which transports the odd lower-half formula along a real algebra
+   automorphism when the pulled-back coefficient is grade two. This covers
+   isometry-induced frames through the existing Clifford algebra equivalence;
+   it does not cover arbitrary non-orthonormal moving frames or construct a
+   field of such frames over a base manifold.
 2. Connect the finite-coordinate `C+K` transfer's derivation family to the
    repository's CE/exterior-form carrier; derive its flatness and parallelness
    hypotheses from the Clifford-frame compatibility equations.
@@ -141,10 +146,14 @@ The two added frame-derivative declarations also report only
 `shirokov_pseudo_frame_derivative_yang_mills`.
 The new `shirokov_theorem_2_2_standard_frame_odd_grade_two` extension passed
 the locked owner build (9,091 jobs, exit code 0), the owner axiom checker
-(1 module passed), and the strict OpenGauss screen (0 traps). The owner build
-and direct file check report existing linter warnings in this enlarged file
-and its dependencies; no warning-free claim is made here. A staged proof-proxy
-gate passed for the two task-owned files.
+(1 module passed), and the strict OpenGauss screen (0 traps). The follow-up
+`shirokov_theorem_2_2_automorphism_frame_odd_grade_two` passed the locked
+direct file check and targeted owner build (9,091 jobs, exit code 0), the
+owner axiom checker (1 module passed), and the strict OpenGauss screen (0
+traps). The owner build and direct file checks report existing linter warnings
+in this enlarged file and its dependencies; no warning-free claim is made
+here. A staged proof-proxy gate passed for the first extension's two
+task-owned files; it will be rerun for this follow-up checkpoint.
 The compatibility-to-centrality theorem and its final cleaned proof passed a
 9,029-job targeted build of `InfoGeometry.Canonical.ShirokovCliffordYangMills`
 (exit code 0). Replayed dependencies emitted pre-existing warnings. The native

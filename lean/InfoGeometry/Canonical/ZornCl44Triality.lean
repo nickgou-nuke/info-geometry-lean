@@ -35,13 +35,23 @@ open InfoGeometry.Canonical.ZornClifford
 abbrev zornBilin : LinearMap.BilinForm ℝ (ZornMatrix ℝ) :=
   (zornNorm (R := ℝ)).associated
 
+/-- Coordinate formula for the associated form, fixing its factor of one half. -/
+theorem zornBilin_apply (a b : ZornMatrix ℝ) :
+    zornBilin a b = (1 / 2 : ℝ) *
+      (a.a * b.b + b.a * a.b - dot a.x b.y - dot b.x a.y) := by
+  simp [zornBilin, QuadraticMap.associated_apply, zornNorm_apply,
+    zornNormFun, dot]
+  ring
+
 theorem zornBilin_symm (a b : ZornMatrix ℝ) :
-    zornBilin a b = zornBilin b a :=
-  QuadraticMap.associated_isSymm ℝ zornNorm a b
+    zornBilin a b = zornBilin b a := by
+  simp only [zornBilin_apply]
+  ring
 
 @[simp] theorem zornBilin_self (a : ZornMatrix ℝ) :
-    zornBilin a a = zornNorm a :=
-  QuadraticMap.associated_eq_self_apply ℝ zornNorm a
+    zornBilin a a = zornNorm a := by
+  simp only [zornBilin_apply, zornNorm_apply, zornNormFun]
+  ring
 
 /-- The scalar polarization convention used in the Clifford anticommutator. -/
 theorem polar_eq_two_zornBilin (a b : ZornMatrix ℝ) :
@@ -55,24 +65,18 @@ theorem polar_eq_two_zornBilin (a b : ZornMatrix ℝ) :
       QuadraticMap.polarBilin_apply_apply] using h
   rw [← h', two_mul]
 
-/-- Coordinate formula for the associated form, fixing its factor of one half. -/
-theorem zornBilin_apply (a b : ZornMatrix ℝ) :
-    zornBilin a b = (1 / 2 : ℝ) *
-      (a.a * b.b + b.a * a.b - dot a.x b.y - dot b.x a.y) := by
-  simp [zornBilin, QuadraticMap.associated_apply, zornNorm_apply,
-    zornNormFun, dot, ZornClifford.add_a, ZornClifford.add_b,
-    ZornClifford.add_x, ZornClifford.add_y]
-  ring
-
 @[simp] theorem diracGamma_apply (a : ZornMatrix ℝ)
     (s : DiracSpinor16 (R := ℝ)) :
     diracGamma a s = (a * s.2, zornConj a * s.1) := rfl
+
+@[simp] theorem diracGammaLinear_apply (a : ZornMatrix ℝ) :
+    diracGammaLinear (R := ℝ) a = diracGamma a := rfl
 
 /-- The already constructed Clifford representation satisfies the quadratic relation. -/
 theorem diracGamma_square (a : ZornMatrix ℝ) :
     diracGamma a * diracGamma a =
       zornNorm a • (1 : Module.End ℝ (DiracSpinor16 (R := ℝ))) := by
-  simpa only [Algebra.algebraMap_eq_smul_one] using
+  simpa only [diracGammaLinear_apply, Algebra.algebraMap_eq_smul_one] using
     (diracGamma_sq (R := ℝ) a)
 
 /-- The Clifford anticommutator follows from native quadratic polarization. -/
@@ -83,7 +87,7 @@ theorem diracGamma_anticommutator (a b : ZornMatrix ℝ) :
     (Q := zornNorm (R := ℝ)) (diracGammaLinear (R := ℝ))
     (diracGamma_sq (R := ℝ)) a b
   rw [polar_eq_two_zornBilin, Algebra.algebraMap_eq_smul_one] at h
-  exact h
+  simpa only [diracGammaLinear_apply] using h
 
 /-- The vector representation of the orthogonal bivector associated with `a,b`. -/
 def vectorBivector (a b : ZornMatrix ℝ) : Module.End ℝ (ZornMatrix ℝ) :=
@@ -183,8 +187,10 @@ theorem spinBivector_comm_diracGamma (a b v : ZornMatrix ℝ) :
 theorem diracGamma_vectorBivector (a b v : ZornMatrix ℝ) :
     diracGamma (vectorBivector a b v) =
       zornBilin b v • diracGamma a - zornBilin a v • diracGamma b := by
-  change diracGammaLinear (zornBilin b v • a - zornBilin a v • b) = _
+  change diracGammaLinear (R := ℝ)
+    (zornBilin b v • a - zornBilin a v • b) = _
   simp only [map_sub, map_smul]
+  simp only [diracGammaLinear_apply]
 
 theorem spinBivector_comm_diracGamma_eq (a b v : ZornMatrix ℝ) :
     spinBivector a b * diracGamma v - diracGamma v * spinBivector a b =

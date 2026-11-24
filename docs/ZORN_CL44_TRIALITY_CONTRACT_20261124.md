@@ -113,6 +113,22 @@ Exact rational coordinate checks are supporting evidence only.
 
 ## Observed verification status
 
+The full nine-owner CI run
+`https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45377567142`
+completed with failure at `ZornCl44Triality`. It reported two deterministic
+definitional-equality timeouts in the associated-form symmetry/self proofs,
+two unresolved conversions between `diracGammaLinear a` and `diracGamma a`,
+and four unused coordinate-projection simp arguments. The current repair
+derives symmetry/self from the existing coordinate formula, supplies the
+explicit gamma-application equality, and removes the unused simp arguments.
+It changes no carrier, normalization, hypothesis, or heartbeat limit.
+
+A fresh local final-phase attempt selecting `ZornCl44Triality` used the
+maintained runner with `--no-wait` and was rejected by the busy shared build
+lock before any compiler command. The old queued session was no longer
+available. No other build was interrupted and no lock was bypassed. This
+repair still requires fresh compiler and declaration-axiom acceptance.
+
 The initial focused GitHub Actions run
 `https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45371833733`
 installed the pinned environment and built five prerequisite owners, then
@@ -139,7 +155,7 @@ and calculation results; they do not replace the Lean kernel check.
 The complete owner command is recorded in
 `verification/zorn-cl44-triality/README.md`. It must freshly elaborate all
 selected owners and audit every owned declaration before compiler acceptance.
-The queued initial run selects only `ZornCl44Triality` and
+The historical initial run selected only `ZornCl44Triality` and
 `ZornSignedConvention`, so success of that initial run alone would not
 establish the full acceptance contract.
 

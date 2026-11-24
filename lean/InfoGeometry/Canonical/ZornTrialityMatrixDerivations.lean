@@ -61,7 +61,7 @@ theorem quaternionAxis_transport (i : Fin 3) :
     simp [canonicalVectorEquiv, InfoGeometry.Algebra.ZornPinorReconstruction.gamma,
       InfoGeometry.Algebra.ZornVectorMatrix.offDiagonal,
       InfoGeometry.Algebra.ZornVec3.basis,
-      ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis, Pi.single_apply]
+      ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis]
 
 /-- The transported hyperbolic directions use the same two native chiral slots. -/
 theorem hyperbolicAxis_transport (i : Fin 3) :
@@ -72,7 +72,7 @@ theorem hyperbolicAxis_transport (i : Fin 3) :
     simp [canonicalVectorEquiv, InfoGeometry.Algebra.ZornPinorReconstruction.kappa,
       InfoGeometry.Algebra.ZornVectorMatrix.offDiagonal,
       InfoGeometry.Algebra.ZornVec3.basis,
-      ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis, Pi.single_apply]
+      ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis]
 
 /-- The compact rotation as the stated difference of vector bivectors. -/
 def rotationBivector : Module.End ℝ (ZornMatrix ℝ) :=
@@ -87,9 +87,10 @@ theorem rotationBivector_apply (z : ZornMatrix ℝ) :
     rotationBivector z =
       { a := 0, b := 0, x := ![z.x 1, -z.x 0, 0],
         y := ![z.y 1, -z.y 0, 0] } := by
+  simp only [rotationBivector, LinearMap.sub_apply, vectorBivector_apply,
+    zornNorm_polarBilin_apply]
   ext i <;> (try fin_cases i) <;>
-    norm_num [rotationBivector, vectorBivector_apply, zornNorm_polarBilin_apply,
-      ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis,
+    norm_num [ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis,
       ZornMatrix.dot, Pi.single_apply] <;> ring
 
 /-- The boost acts by opposite transpose matrices on the two spatial slots. -/
@@ -97,9 +98,10 @@ theorem boostBivector_apply (z : ZornMatrix ℝ) :
     boostBivector z =
       { a := 0, b := 0, x := ![-z.x 1, -z.x 0, 0],
         y := ![z.y 1, z.y 0, 0] } := by
+  simp only [boostBivector, LinearMap.sub_apply, vectorBivector_apply,
+    zornNorm_polarBilin_apply]
   ext i <;> (try fin_cases i) <;>
-    norm_num [boostBivector, vectorBivector_apply, zornNorm_polarBilin_apply,
-      ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis,
+    norm_num [ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis,
       ZornMatrix.dot, Pi.single_apply] <;> ring
 
 /-- Identification with a constructed native derivation, not an assumed Leibniz law. -/
@@ -154,7 +156,8 @@ theorem rotation_spinPlus_diagonal :
   ext i <;> (try fin_cases i) <;>
     norm_num [spinPlusBivector_apply, zornConj,
       ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis,
-      ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross, Pi.single_apply] <;> ring
+      ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
+      Matrix.vecHead, Matrix.vecTail, Pi.single_apply] <;> ring
 
 /-- The negative chiral rotation has the same full-module action. -/
 theorem rotation_spinMinus_diagonal :
@@ -166,7 +169,8 @@ theorem rotation_spinMinus_diagonal :
   ext i <;> (try fin_cases i) <;>
     norm_num [spinMinusBivector_apply, zornConj,
       ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis,
-      ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross, Pi.single_apply] <;> ring
+      ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
+      Matrix.vecHead, Matrix.vecTail, Pi.single_apply] <;> ring
 
 /-- The corrected mixed spin combination equals the native boost. -/
 theorem boost_spinPlus_diagonal :
@@ -178,7 +182,8 @@ theorem boost_spinPlus_diagonal :
   ext i <;> (try fin_cases i) <;>
     norm_num [spinPlusBivector_apply, zornConj,
       ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis,
-      ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross, Pi.single_apply] <;> ring
+      ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
+      Matrix.vecHead, Matrix.vecTail, Pi.single_apply] <;> ring
 
 /-- Both chiral boost actions coincide with the vector action. -/
 theorem boost_spinMinus_diagonal :
@@ -190,7 +195,8 @@ theorem boost_spinMinus_diagonal :
   ext i <;> (try fin_cases i) <;>
     norm_num [spinMinusBivector_apply, zornConj,
       ZornMatrix.chiralUpperBasis, ZornMatrix.chiralLowerBasis,
-      ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross, Pi.single_apply] <;> ring
+      ZornMatrix.mul, ZornMatrix.dot, ZornMatrix.cross,
+      Matrix.vecHead, Matrix.vecTail, Pi.single_apply] <;> ring
 
 @[simp] theorem rotationBivector_one : rotationBivector 1 = 0 := by
   rw [rotationBivector_apply]

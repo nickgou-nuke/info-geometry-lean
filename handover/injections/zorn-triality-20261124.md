@@ -375,3 +375,64 @@ parent `98d294795ee7356b2b98c827bc739bc04e01b298`. The unrelated new intake
 contract was preserved. Report SHA-256:
 `e712e945429ed526744ca46cd6f8c8284281d7b7ff7239608669238489edf08c`.
 No compiler ran in this static lane; fresh kernel/axiom acceptance is pending.
+
+
+## Second compiler follow-up: ordered coordinate reduction
+
+Run `45412837118`, job `138510979321`, checked event commit
+`99ed68f3e90420696c1a44df42d2630f434fa9a8`, whose tree
+`536c3bfab3e7f06c9d1932092299225f2b6fd824` exactly matches published head
+`22b2ec6072f8872b5e5fd15df9de4d425afa35c8`. The selected build completed
+with failure after 778.7 seconds. The repaired infinitesimal-triality owner
+built in 10 seconds and the separate noninjectivity owner built in 4.4 seconds.
+Their build results do not establish acceptance of the complete packet.
+
+The derivation owner left six concrete proof goals: two vector-action proofs
+retained an opaque norm polar form, and four spin-action proofs retained
+`Matrix.vecHead`/`vecTail` applied to scaled coordinate vectors. Two basis
+transport proofs also reported unused `Pi.single_apply` arguments. The
+faithfulness owner's norm transport retained an unevaluated linear-equivalence
+record application. No new mathematical counterexample was reported.
+
+The isolated repairs preserve every public statement, hypothesis, import,
+and declaration count. The vector proofs now apply the native polar readout
+before default coordinate simplification; the spin proofs expose the head/tail
+coordinate applications; the two reported unused arguments are removed.
+The norm-transport proof uses an ordered three-link calculation through the
+existing covector evaluation and existing norm theorem. `audit_math` authored
+the derivation repair and root independently reviewed it; root authored the
+faithfulness repair and `source_scout` independently reviewed it. Both source
+reviews passed. Source review is distinct from fresh Lean acceptance.
+
+| Repaired owner | SHA-256 |
+| --- | --- |
+| `Canonical.ZornTrialityMatrixDerivations` | `f42010e9cf3c8dfb7ddd47f47543aa07aa63d1aa2e352c85df38df1545b181bc` |
+| `Canonical.ZornCliffordFaithful` | `3f079b1bf42587392d18b37d36d4946607a481bd1081bc39bb1097b8ed903514` |
+
+The CI artifact is `14930034658`, ZIP SHA-256
+`0190cc67779af4dc8f6104cd7fd22f12fe60fb8c467d02d8af083a8fb7067b28`.
+The actual build log SHA-256 is
+`d507b95ed18d685e95e89c5c07b381d53cfb153887eb514a00146496357a3501`.
+Selected source and control hashes stayed unchanged throughout that run.
+Fresh warning-as-error checks and the axiom probe did not execute:
+**74 expected axiom records, zero observed**.
+
+This update also incorporates parent
+`a2571e4494c0d1598a881491fe7b734f6b896f1d` through an ordinary merge. That
+parent repair explicitly types four-by-four determinant blocks and removes
+compiler-reported redundant rewrites. No child owner changes in that merge;
+both published histories are retained. Pins and shared gate criteria are
+unchanged. The present proof repairs require fresh compiler and axiom checks.
+
+
+### Static receipt for the second compiler repair
+
+All six maintained gates scoped to the two changed owners returned exit 0.
+Semantic-content findings and screener traps are zero. One existing,
+nonblocking lexical warning concerns `zornCliffordEndEquiv_apply`'s definitional
+readout. Independent comparison confirmed all 31 public theorem statements,
+imports, declaration counts, source/control hashes, and the three staged
+paths. The full inventory remains 56 owner heads plus 18 reused declarations,
+74 expected and zero observed axiom records. No compiler or lock probe ran
+in this static lane. Report SHA-256:
+`f6d9139bca68157a6f5e140d7b5ce7362a3bcde2259a429530c5b01821162abd`.

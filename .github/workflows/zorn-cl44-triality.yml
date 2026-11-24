@@ -1,0 +1,84 @@
+name: Zorn Cl44 triality
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Canonical/Zorn*.lean'
+      - 'lean/InfoGeometry/Lie/CanonicalZornDerivation.lean'
+      - 'lean/InfoGeometry/Algebra/ZornVectorMatrix.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/CanonicalVectorMatrixBridge.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11SplitTowerMatrixEquiv.lean'
+      - 'verification/zorn-cl44-triality/**'
+      - 'verification/real-matrix-split/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - '.github/workflows/zorn-cl44-triality.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zorn-cl44-triality-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore exact pinned dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: zorn-cl44-deps-lean4341-d13f23b7-${{ runner.os }}-v1
+          restore-keys: |
+            real-matrix-split-deps-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Hydrate the maintained pinned Mathlib package
+        run: python3 verification/real-matrix-split/check.py exe cache get
+      - name: Compile exact sources and audit every owned declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/zorn-cl44-triality/check.py \
+            --work "$RUNNER_TEMP/zorn-cl44-triality-build" \
+            --module InfoGeometry.Canonical.ZornSignedConvention \
+            --module InfoGeometry.Canonical.ZornCl44Triality \
+            --module InfoGeometry.Canonical.ZornCl44TrialityDerivation \
+            --module InfoGeometry.Canonical.ZornCl44TrialityOrthogonal \
+            --module InfoGeometry.Canonical.ZornCl44Faithfulness \
+            --phase final 2>&1 | tee zorn-cl44-triality.log
+      - name: Screen the changed mathematics
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/Canonical/ZornSignedConvention.lean
+          lean/InfoGeometry/Canonical/ZornCl44Triality.lean
+          lean/InfoGeometry/Canonical/ZornCl44TrialityDerivation.lean
+          lean/InfoGeometry/Canonical/ZornCl44TrialityOrthogonal.lean
+          lean/InfoGeometry/Canonical/ZornCl44Faithfulness.lean
+      - name: Preserve compiler and axiom evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zorn-cl44-triality-evidence
+          path: |
+            zorn-cl44-triality.log
+            ${{ runner.temp }}/zorn-cl44-triality-build/status.json
+            ${{ runner.temp }}/zorn-cl44-triality-build/logs

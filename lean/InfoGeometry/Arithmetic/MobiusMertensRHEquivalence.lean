@@ -3,6 +3,10 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Meta.Architecture
+import InfoGeometry.Arithmetic.RiemannHypothesis
+import InfoGeometry.Arithmetic.PrimeBitMobiusParityBridge
+import InfoGeometry.Arithmetic.PrimeBitLattice
 import Mathlib.NumberTheory.ArithmeticFunction.Moebius
 import Mathlib.Analysis.Asymptotics.Defs
 import Mathlib.Analysis.SpecificLimits.Normed
@@ -461,5 +465,45 @@ theorem mobius_ordered_series_tendsto_of_square_root_cancellation
     ring
   refine ⟨l, ?_⟩
   simpa only [hseq] using hNested
+
+structure MertensRHEquivalenceBridge where
+  /-- The forward implication: Mertens cancellation implies the Fredholm/RH nonvanishing claim. -/
+  impliesRH : MertensSquareRootCancellation →
+    ∃ determinant : ℂ → ℂ,
+      InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneProperty determinant
+  /-- The reverse implication: RH property implies Mertens cancellation. -/
+  impliesMertens :
+    (∃ determinant : ℂ → ℂ,
+      InfoGeometry.Arithmetic.RiemannHypothesis.FredholmHalfPlaneProperty determinant) →
+      MertensSquareRootCancellation
+
+open InfoGeometry.Arithmetic.PrimeBitLattice
+
+structure PrimonMobiusBridge (L : PrimeBitLattice) where
+  /-- Every finite prime bit state's product is squarefree. -/
+  state_squarefree : ∀ ε : PrimeBitState L, Squarefree (primeBitInteger L ε)
+  /-- The sign of the state exactly matches the Möbius function of its integer product. -/
+  state_moebius_eq : ∀ ε : PrimeBitState L,
+    (μ (primeBitInteger L ε) : ℤ) = (-1 : ℤ) ^ (PrimeBitState.support L ε).card
+
+/-- The finite prime-bit lattice realizes the representation edge directly. -/
+theorem primeBitLattice_primonMobiusBridge (L : PrimeBitLattice) :
+    PrimonMobiusBridge L := by
+  refine
+    { state_squarefree := ?_
+      state_moebius_eq := ?_ }
+  · intro ε
+    exact PrimeBitMobiusParityBridge.primeBitInteger_squarefree ε
+  · intro ε
+    exact PrimeBitMobiusParityBridge.mobius_primeBitInteger_eq_parity_sign ε
+
+structure PrimonMertensRHTopologicalPath (L : PrimeBitLattice) where
+  /-- Distance 2 Edge: Graded Primon to Möbius -/
+  primonToMobius : PrimonMobiusBridge L
+  /-- Distance 1 Edge: Möbius to Mertens sum -/
+  mertensSum : ℕ → ℤ
+  mertensSum_eq : ∀ N, mertensSum N = mertensFunction N
+  /-- Distance 0 Edge: Mertens square-root cancellation to RH Equivalence -/
+  mertensToRH : MertensRHEquivalenceBridge
 
 end InfoGeometry.Arithmetic.MobiusMertensRHEquivalence

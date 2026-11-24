@@ -19,6 +19,7 @@ The file is intentionally conservative:
 * no theorem tries to infer an exact zero from an informal divergence argument.
 -/
 
+import InfoGeometry.Arithmetic.ZetaPotentialSign
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.SplitJordanPotential

@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 InfoGeometry/Arithmetic/ProjectiveWeylGauge.lean
 
 Weyl-gauge decomposition sockets for projective arithmetic KL readouts.
@@ -12,6 +17,7 @@ Jensen inequality, or zeta estimate.  The Weyl factorization laws are supplied
 as explicit witness data.
 -/
 
+import InfoGeometry.Canonical.SelfDualNormalConeBridge
 import InfoGeometry.Arithmetic.PrimitiveProjectiveRays
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.ProjectiveRelativeEntropy

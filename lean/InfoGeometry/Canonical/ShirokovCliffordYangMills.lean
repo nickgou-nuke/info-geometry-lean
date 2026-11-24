@@ -1554,6 +1554,31 @@ theorem shirokov_scalar_coordinate_blade_mul_comm (n : ℕ)
     rw [hs0, ht0, bladeRepr_cBlade, bladeRepr_cBlade]
     simp [hdiff, hdiff']
 
+/-- The ordered-blade coordinate map is linear in scalar multiples. -/
+theorem shirokov_bladeRepr_smul (n : ℕ)
+    (r : ℝ) (x : CliffordAlgebra (cliffordNegSqForm ℝ n))
+    (S : Finset (Fin n)) :
+    bladeRepr ℝ n (r • x) S = r * bladeRepr ℝ n x S := by
+  simp [bladeRepr]
+
+/-- The scalar coordinate of a product of canonical blades is supported on
+equal index sets, where it is the standard blade-square sign. -/
+theorem shirokov_scalar_coordinate_blade_mul (n : ℕ)
+    (S T : Finset (Fin n)) :
+    bladeRepr ℝ n (cBlade ℝ n S * cBlade ℝ n T) ∅ =
+      if S = T then (-1 : ℝ) ^ (S.card * (S.card + 1) / 2) else 0 := by
+  by_cases hST : S = T
+  · subst T
+    rw [cBlade_sq]
+    rw [shirokov_bladeRepr_smul, ← cBlade_empty ℝ n, bladeRepr_cBlade]
+    simp
+  · have hdiff : symmDiff S T ≠ ∅ := by
+      intro h
+      exact hST (Finset.symmDiff_eq_empty.mp h)
+    obtain ⟨s, hs⟩ := InfoGeometry.Clifford.CliffordQuaternionFactorizationAndMasterAtlas.cBlade_mul_cBlade_eq_signed_symmDiff ℝ n S T
+    rw [hs, shirokov_bladeRepr_smul, bladeRepr_cBlade]
+    simp [hdiff, hST]
+
 /-- Scalar-coordinate cyclicity on `Cl(0,n)`, proved directly from the
 canonical ordered-blade expansion. -/
 theorem shirokov_scalar_coordinate_mul_comm (n : ℕ)
@@ -2840,6 +2865,29 @@ noncomputable def shirokovInverseBladeUnit (n : ℕ) (S : Finset (Fin n)) :
     (((shirokovInverseBladeUnit n S)⁻¹ :
       (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
         CliffordAlgebra (cliffordNegSqForm ℝ n)) = cBlade ℝ n S := rfl
+
+/-- The inverse standard blade frame has Kronecker-delta scalar readout on
+ordered blades in the fixed negative-definite Clifford model. -/
+theorem shirokov_inverse_blade_scalar_readout (n : ℕ)
+    (S T : Finset (Fin n)) :
+    bladeRepr ℝ n
+      ((shirokovInverseBladeUnit n S :
+        CliffordAlgebra (cliffordNegSqForm ℝ n)) * cBlade ℝ n T) ∅ =
+      if S = T then 1 else 0 := by
+  by_cases hST : S = T
+  · subst T
+    have hone : bladeRepr ℝ n
+        (1 : CliffordAlgebra (cliffordNegSqForm ℝ n)) ∅ = 1 := by
+      rw [← cBlade_empty ℝ n, bladeRepr_cBlade]
+      simp
+    have hinv := (shirokov_blade_inverse_formula n S).1
+    have hcoord := congrArg (fun x => bladeRepr ℝ n x ∅) hinv
+    rw [hone] at hcoord
+    simpa [shirokovInverseBladeUnit_val] using hcoord
+  · rw [shirokovInverseBladeUnit_val, smul_mul_assoc,
+      shirokov_bladeRepr_smul,
+      shirokov_scalar_coordinate_blade_mul]
+    simp [hST]
 
 /-- The unit-conjugation average over the standard inverse-blade frame is the
 normalized center projection, with the expected frame cardinality. -/

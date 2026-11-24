@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Projective.GrassmannPluckerMeetAndCircleSpace
 import InfoGeometry.Canonical.GrassmannPfaffianDarbouxAlgebra
+import Mathlib.LinearAlgebra.BilinearForm.Orthogonal
 
 /-!
 # Grassmann–Pfaffian Syzygies, Lie's No. 503 Symplectic Assemblies, & Darboux Normal-Form Classes

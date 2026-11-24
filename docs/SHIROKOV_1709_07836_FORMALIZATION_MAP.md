@@ -416,3 +416,30 @@ reported failure. Consequently the owner `.olean` is absent and the compiled
 axiom checker could not run for this continuation. This is not a Lake-build or
 axiom-check pass. The dependency source is outside this task's owned paths and
 has not been changed.
+
+The current source extension adds `shirokov_bladeRepr_smul` and the scalar
+coordinate formula for a product of two canonical ordered blades. It also
+proves `shirokov_inverse_blade_scalar_readout`, the Kronecker-delta readout
+for the inverse canonical blade frame on this same `Cl(0,n)` carrier. These
+instantiate the previously recorded finite readout contract for the
+canonical frame; they do not handle arbitrary orthogonal frames or the
+odd-volume trace hypothesis. The first check stopped because the
+transitive `GrassmannPfaffianSyzygyAndNormalForms.olean` was absent; the
+following targeted Lake attempt then exposed another downstream dependency
+error. Both dependency issues were repaired minimally and the validations
+below were rerun against the resolved dependency graph.
+
+The dependency repair was minimal: the symplectic isotropic-bound owner now
+imports Mathlib's defining `BilinearForm.Orthogonal` module, and its finite
+ancestor-bitmask partial order uses Lean 4.34's `Nat.and_assoc` and
+`Nat.and_comm` names. With those changes, the canonical inverse-blade
+readout and both ordered-blade coordinate lemmas passed the locked owner
+file check and the targeted Lake build of
+`InfoGeometry.Canonical.ShirokovCliffordYangMills` (9,099 jobs, exit code 0).
+The compiled axiom checker passed this one module; the source debt audit
+reported zero gaps; the strict OpenGauss screen reported zero traps; and
+`git diff --check` passed. The owner check emits existing linter warnings.
+This is still the canonical `Cl(0,n)` frame readout only: it does not prove
+the paper's arbitrary-frame basis criterion or its odd-dimensional
+volume-trace hypothesis. It is also a targeted module result, not a
+whole-repository build certificate.

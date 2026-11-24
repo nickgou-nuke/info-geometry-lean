@@ -1250,11 +1250,11 @@ instance : PartialOrder GrassmannCompleteArchetype where
     exact Nat.and_self (gaCompleteAncMask a)
   le_trans a b c hab hbc := by
     dsimp [gaCompleteLe] at hab hbc ⊢
-    rw [← hab, Nat.land_assoc, hbc]
+    rw [← hab, Nat.and_assoc, hbc]
   le_antisymm a b hab hba := by
     dsimp [gaCompleteLe] at hab hba
     have hmask : gaCompleteAncMask a = gaCompleteAncMask b := by
-      rw [← hab, Nat.land_comm, hba]
+      rw [← hab, Nat.and_comm, hba]
     exact gaCompleteAncMask_injective hmask
 
 instance : DecidableLE GrassmannCompleteArchetype := fun a b =>

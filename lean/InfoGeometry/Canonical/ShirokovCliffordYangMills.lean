@@ -2391,10 +2391,15 @@ theorem shirokov_curvature_flat_of_grade_two_connection_commutator
     (hgen₂ : ∀ v : Fin n → ℝ,
       covariantDerivative K (-C) y
         (CliffordAlgebra.ι (cliffordNegSqForm ℝ n) v) = 0)
-    (hbracket : ∀ T : Finset (Fin n),
-      bladeRepr ℝ n (algebraCommutator (C x) (C y)) T ≠ 0 → T.card = 2) :
+    (hCx : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (C x) T ≠ 0 → T.card = 2)
+    (hCy : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (C y) T ≠ 0 → T.card = 2) :
     K.operatorAction x (C y) - K.operatorAction y (C x) -
       algebraCommutator (C x) (C y) = 0 := by
+  have hbracket : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (algebraCommutator (C x) (C y)) T ≠ 0 → T.card = 2 :=
+    shirokov_grade_two_commutator_closed n (C x) (C y) hCx hCy
   have hcentral := shirokov_clifford_compatibility_curvature_central
     (Q := cliffordNegSqForm ℝ n) (K := K) (C := C) x y hxy hgen₁ hgen₂
   have hdef := shirokov_curvature_defect_eq_connection_commutator
@@ -2454,12 +2459,17 @@ theorem shirokov_clifford_compatibility_curvature_eq_zero_of_component_grade_two
       bladeRepr ℝ n (K.operatorAction x (C y)) T ≠ 0 → T.card = 2)
     (h₂ : ∀ T : Finset (Fin n),
       bladeRepr ℝ n (K.operatorAction y (C x)) T ≠ 0 → T.card = 2)
-    (hbracket : ∀ T : Finset (Fin n),
-      bladeRepr ℝ n (algebraCommutator (C x) (C y)) T ≠ 0 → T.card = 2) :
+    (hCx : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (C x) T ≠ 0 → T.card = 2)
+    (hCy : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (C y) T ≠ 0 → T.card = 2) :
     K.operatorAction x (C y) - K.operatorAction y (C x) -
       algebraCommutator (C x) (C y) = 0 := by
   apply shirokov_clifford_compatibility_curvature_eq_zero_of_grade_two
     n K C x y hxy hgen₁ hgen₂
+  have hbracket : ∀ T : Finset (Fin n),
+      bladeRepr ℝ n (algebraCommutator (C x) (C y)) T ≠ 0 → T.card = 2 :=
+    shirokov_grade_two_commutator_closed n (C x) (C y) hCx hCy
   have hsplit : K.operatorAction x (C y) - K.operatorAction y (C x) -
       algebraCommutator (C x) (C y) = K.operatorAction x (C y) -
         (K.operatorAction y (C x) + algebraCommutator (C x) (C y)) := by

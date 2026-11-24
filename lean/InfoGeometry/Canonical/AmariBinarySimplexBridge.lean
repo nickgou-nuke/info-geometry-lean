@@ -366,4 +366,9 @@ theorem fisherExp_complexification (θ : ℝ) :
       InfoGeometry.Arithmetic.AmariZeta.fisherRaoMetric (logistic θ) := by
   simp [fisherExp, InfoGeometry.Arithmetic.AmariZeta.fisherRaoMetric]
 
+
+theorem midpointBregman_is_not_fenchelGap (s : ℝ) :
+    midpointBregman s =
+      negativeEntropy s - negativeEntropy midpoint := rfl
+
 end InfoGeometry.Canonical.AmariBinarySimplexBridge

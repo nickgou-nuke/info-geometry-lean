@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- 
 InfoGeometry/Arithmetic/ZetaTraceVielbeinSpecialization.lean
 
@@ -168,5 +173,14 @@ theorem canonicalPrimeVielbein_traceLog_eq_eulerSupervolume
     canonicalPrimeVielbein.traceLogSupervolume s =
       canonicalPrimeVielbein.eulerSupervolume s := by
   simpa using zetaTraceSupervolume_eq_eulerSupervolume (s := s) hs
+
+structure PrimeVielbeinData where
+  convergenceDomain : ℂ → Prop
+  localJacobian : Nat.Primes → ℂ → ℂ
+  localVolumeFactor : Nat.Primes → ℂ → ℂ
+  localEffectiveAction : Nat.Primes → ℂ → ℂ
+  effectiveAction : ℂ → ℂ
+  traceLogSupervolume : ℂ → ℂ
+  eulerSupervolume : ℂ → ℂ
 
 end InfoGeometry.Arithmetic

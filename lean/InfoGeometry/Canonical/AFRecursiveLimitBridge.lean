@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CategoricalRecursiveClosureBridge
 import InfoGeometry.Algebra.DirectLimitSuperClosureLemmas
 
@@ -52,5 +57,11 @@ theorem readback_squareZero
   rw [← map_mul, hq, map_zero]
 
 end AFRecursiveLimitPacket
+
+/-- One-step bonds and a compatible cone into a direct-limit target. -/
+structure AFRecursiveLimitData where
+  bond : ∀ n : Nat, Stage n →+* Stage (n + 1)
+  toLimit : ∀ n : Nat, Stage n →+* Limit
+  hcone : ConeCompatible bond toLimit
 
 end InfoGeometry.Canonical.AFRecursiveLimitBridge

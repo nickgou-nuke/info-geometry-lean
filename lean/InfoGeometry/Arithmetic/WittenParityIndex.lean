@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.RamanujanDefectTower
@@ -103,5 +108,19 @@ theorem ramanujan_defect_layers_follow_witten_sequence :
       DefectParityTarget 4 (ramanujanBernoulliSide zetaNineBernoulliReadout 4) := by
   exact ⟨zeta3_defect_parity, zeta5_defect_parity,
     zeta7_defect_parity, zeta9_defect_parity⟩
+
+/-- The finite parity readout is `+1` on odd stages and `-1` on even stages. -/
+theorem witten_parity_factor_eq_neg_neg_one_pow (n : ℕ) :
+    witten_parity_factor n = -((-1 : ℝ) ^ n) := by
+  unfold witten_parity_factor
+  by_cases h : n % 2 = 0
+  · have h1 : n % 2 ≠ 1 := by omega
+    rw [if_neg h1]
+    rw [Even.neg_one_pow (Nat.even_iff.mpr h)]
+  · have h1 : n % 2 = 1 := by omega
+    rw [if_pos h1]
+    rw [Odd.neg_one_pow
+      (Nat.not_even_iff_odd.mp (fun he => h (Nat.even_iff.mp he)))]
+    norm_num
 
 end InfoGeometry.Arithmetic.WittenParityIndex

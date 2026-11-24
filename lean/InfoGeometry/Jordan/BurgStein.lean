@@ -320,4 +320,19 @@ theorem steinLoss_eq_trace_sub_dim_of_det_eq_one (X Y : SPD n)
 
 end SPD
 
+noncomputable def burgDivergence (X Y : SPD n) : ℝ :=
+  Matrix.trace (normalizedDistortion X Y)
+    - Real.log (Matrix.det (normalizedDistortion X Y))
+    - (n : ℝ)
+
+lemma burgDivergence_eq_trace_add_barrier_diff_sub_dim (X Y : SPD n) :
+    burgDivergence X Y
+      = Matrix.trace (normalizedDistortion X Y)
+          + logDetBarrier X - logDetBarrier Y - (n : ℝ) := by
+  have hX : Matrix.det X.mat ≠ 0 := X.det_ne_zero
+  have hY : Matrix.det Y.mat ≠ 0 := Y.det_ne_zero
+  unfold burgDivergence logDetBarrier
+  rw [normalizedDistortion_det, Real.log_div hX hY]
+  ring
+
 end InfoGeometry.Jordan

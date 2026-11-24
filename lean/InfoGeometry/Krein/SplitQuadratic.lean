@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.DoubledSpace
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.Representation
@@ -223,5 +228,13 @@ theorem neg_divergence_eq_krein_minus_half_diagonals (q k : H₂) :
           - (1 / 2 : ℝ) * KreinSpace.kreinInner (H := H₂) k k := by
   rw [divergence_eq_half_signed_krein_sq, kreinInner_sub_sq]
   ring
+
+/-- The Hilbertized Krein form is nonnegative on the doubled carrier. -/
+theorem jForm_nonneg (u : SplitKreinSpace (E := E)) :
+    0 ≤ jForm (E := E) u := by
+  unfold jForm
+  rw [krein_inner_prod_l2 (E := E)]
+  simp [spectral_epsilon, WithLp.prod_inner_apply]
+  positivity
 
 end InfoGeometry.Krein.SplitQuadratic

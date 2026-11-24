@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.BigOperators.Field
@@ -520,6 +525,19 @@ def ofLogLikelihood (prior : ProbabilityDist α) (ℓ : α → ℝ) :
     (prior : ProbabilityDist α) (ℓ : α → ℝ) (t : Unit → ℝ) (x : α) :
     (ofLogLikelihood (α := α) prior ℓ).energy t x = t () * ℓ x := by
   simp [ofLogLikelihood, energy]
+
+
+lemma log_gibbsProb_eq_log_prior_add_energy_sub_logPartition
+    (J : FiniteJaynesProblem α ι)
+    (hprior : J.FullSupportPrior)
+    (lam : ι → ℝ)
+    (hZ : J.partition lam ≠ 0)
+    (x : α) :
+    Real.log (J.gibbsProb lam hZ x) =
+      Real.log ((J.prior x).toReal) + J.energy lam x - J.logPartition lam := by
+  rw [J.gibbsProb_eq_prior_mul_exp_tilt lam hZ x]
+  rw [Real.log_mul (hprior x).ne' (Real.exp_ne_zero _), Real.log_exp]
+  ring
 
 end FiniteJaynesProblem
 end

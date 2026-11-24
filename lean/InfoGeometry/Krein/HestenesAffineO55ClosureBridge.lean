@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.HestenesCPTONNDualityBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.Architecture
@@ -214,6 +219,12 @@ theorem affineNullRootMinus_same_arrow_nilpotent (A C : EndH) :
     B.duality.arithmetic.affineNullRootMinus A *
         B.duality.arithmetic.affineNullRootMinus C = 0 :=
   B.duality.arithmetic.affineNullRootMinus_mul_affineNullRootMinus_eq_zero A C
+
+theorem o55VectorAction_kreinAdjoint_comp_self :
+    (KreinSpace.kreinAdjoint (H := H₂) B.o55VectorAction).comp
+        B.o55VectorAction = ContinuousLinearMap.id ℝ H₂ :=
+  (KreinSpace.isKreinIsometry_iff_star_comp_self
+    (H := H₂) B.o55VectorAction).mp B.o55VectorAction_krein_isometry
 
 end Bridge
 

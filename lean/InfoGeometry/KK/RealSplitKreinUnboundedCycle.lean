@@ -356,6 +356,14 @@ noncomputable def toUnboundedCycle
 
 end SpectralTripleBridge
 
+
+lemma D_odd_on_gradeOnDomain
+    (X : RealSplitKreinUnboundedCycle A B H)
+    (x : {x // x ∈ X.domain}) :
+    X.D (X.gradeOnDomain x) =
+      -(KreinGradedModule.gradeCLM (H := H) (X.D x)) := by
+  exact X.D_odd x
+
 end RealSplitKreinUnboundedCycle
 
 end InfoGeometry.KK

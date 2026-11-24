@@ -1,4 +1,9 @@
 /-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
 Copyright (c) 2024-2026 Nikolay Goutev and Dimitar Tonev.
 Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
 Bulgarian Academy of Sciences.
@@ -38,5 +43,12 @@ theorem poissonBregman_nonneg
     simp only [poissonBregman, if_neg hypos.ne']
     rw [hlog2, mul_neg, mul_sub] at hlog
     linarith
+
+
+theorem poissonBregman_self (x : ℝ) :
+    poissonBregman x x = 0 := by
+  by_cases hx : x = 0
+  · simp [hx, poissonBregman]
+  · simp [poissonBregman, hx]
 
 end InfoGeometry.Inference

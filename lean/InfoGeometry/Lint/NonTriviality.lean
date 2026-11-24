@@ -171,6 +171,10 @@ def toMetric (a : AuditResult) : MathfulnessMetric :=
     hitUnfoldLimit := hitUnfoldLimit a
     containsSorry := containsSorry a }
 
+
+def containsVacuousDebt : AuditResult → Bool
+  | (_, _, b, _, _, _, _) => b
+
 end AuditResult
 
 private def suspiciousExactComponents : List String :=

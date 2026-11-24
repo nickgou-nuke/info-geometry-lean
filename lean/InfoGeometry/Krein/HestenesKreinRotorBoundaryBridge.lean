@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Krein.HestenesModularKMSBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.HestenesKreinVacuumBridge
@@ -100,6 +105,13 @@ theorem rotor_preserves_krein_null
     KreinSpace.kreinInner (H := E)
       (B.packet.rotor t ξ) (B.packet.rotor t ξ) = 0 :=
   B.packet.modular_rotor_preserves_null_cone t hξ
+
+theorem rotor_boundary_at_zero
+    (hperiod : B.period = 0)
+    (X Y : EndH) :
+    B.realState (X * Y) = B.realState (Y * X) := by
+  simpa [hperiod, B.packet.modularFlow.flow_zero] using
+    B.rotor_boundary_holds X Y
 
 end Bridge
 

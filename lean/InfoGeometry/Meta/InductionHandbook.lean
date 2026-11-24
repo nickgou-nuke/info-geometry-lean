@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.EssenceOfInductiveProof
@@ -1140,5 +1145,10 @@ theorem stageTrajectory_image_constant
     bond toLimit hcone x0
 
 end Categorical
+
+/-- Extracting a canonical property from `Nonempty` via classical choice. -/
+theorem choose_property_exists {α : Type} (h : Nonempty α) : ∃ a : α, a = Classical.choice h := by
+  classical
+  exact ⟨Classical.choice h, rfl⟩
 
 end InfoGeometry.Meta.InductionHandbook

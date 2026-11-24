@@ -647,6 +647,63 @@ theorem shirokov_reynolds_all_elements (n : ℕ)
             (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) else 0) :=
               shirokov_reynolds_finite_blade_support n (bladeRepr ℝ n x)
 
+/-- Non-scalar, non-top blade coordinates of the Reynolds average vanish. This
+is the support statement supplied by the finite-frame average; identifying
+its range with the algebraic center still requires centrality of the odd top
+blade. -/
+theorem shirokov_reynolds_noncentral_coordinate_zero (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) (T : Finset (Fin n))
+    (hEmpty : T ≠ ∅)
+    (hTop : ¬ (Odd n ∧ T = (Finset.univ : Finset (Fin n)))) :
+    bladeRepr ℝ n (shirokovReynolds n x) T = 0 := by
+  change (shirokovBladeCoordinates n (shirokovReynolds n x)) T = 0
+  rw [shirokov_reynolds_all_elements]
+  simp only [map_sum, map_smul]
+  rw [Finset.sum_apply]
+  apply Finset.sum_eq_zero
+  intro S hS
+  have hcoord : (shirokovBladeCoordinates n
+      (if S = ∅ then (2 ^ n : ℝ) • cBlade ℝ n ∅ else
+        if Odd n ∧ S = (Finset.univ : Finset (Fin n)) then
+          (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) else 0)) T = 0 := by
+    by_cases hSempty : S = ∅
+    · subst S
+      have hscalar : (shirokovBladeCoordinates n (cBlade ℝ n ∅)) T = 0 := by
+        rw [shirokovBladeCoordinates_cBlade]
+        simp [Pi.single_apply, hEmpty]
+      have hscaled :
+          (shirokovBladeCoordinates n ((2 ^ n : ℝ) • cBlade ℝ n ∅)) T = 0 := by
+        rw [map_smul, Pi.smul_apply, hscalar]
+        simp
+      change (shirokovBladeCoordinates n ((2 ^ n : ℝ) • cBlade ℝ n ∅)) T = 0
+      exact hscaled
+    · by_cases hStop : Odd n ∧ S = (Finset.univ : Finset (Fin n))
+      · rcases hStop with ⟨hn, hSall⟩
+        subst S
+        have htopcond : Odd n ∧ (Finset.univ : Finset (Fin n)) = Finset.univ :=
+          ⟨hn, rfl⟩
+        have hT : T ≠ (Finset.univ : Finset (Fin n)) := by
+          intro hT
+          exact hTop ⟨hn, hT⟩
+        have htopcoord :
+            (shirokovBladeCoordinates n (cBlade ℝ n (Finset.univ : Finset (Fin n)))) T = 0 := by
+          simp [shirokovBladeCoordinates_cBlade, Pi.single_apply, hT]
+        have hscaled :
+            (shirokovBladeCoordinates n
+              ((2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)))) T = 0 := by
+          rw [map_smul, Pi.smul_apply, htopcoord]
+          simp
+        rw [if_neg hSempty, if_pos htopcond]
+        exact hscaled
+      · simp [hSempty, hStop]
+  change bladeRepr ℝ n x S *
+    (shirokovBladeCoordinates n
+      (if S = ∅ then (2 ^ n : ℝ) • cBlade ℝ n ∅ else
+        if Odd n ∧ S = (Finset.univ : Finset (Fin n)) then
+          (2 ^ n : ℝ) • cBlade ℝ n (Finset.univ : Finset (Fin n)) else 0)) T = 0
+  rw [hcoord]
+  simp
+
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =
       s • (r • endCommutator A (endCommutator A B)) := by

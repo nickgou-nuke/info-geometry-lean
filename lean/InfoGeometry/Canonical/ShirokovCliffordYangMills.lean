@@ -8,6 +8,7 @@ import InfoGeometry.Canonical.ShirokovYangMillsTransfer
 import InfoGeometry.Clifford.CliffordExtensiveRotorsAndBiquaternions
 import InfoGeometry.OperatorAlgebra.MaurerCartanFrameTransport
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
+import Mathlib.LinearAlgebra.ExteriorAlgebra.Basis
 
 /-!
 # Clifford-vector specialization of Shirokov's Yang--Mills transfer
@@ -576,6 +577,55 @@ theorem shirokov_reynolds_finite_blade_support (n : ℕ)
       ((-1 : ℝ) ^ (S.card * (S.card + 1) / 2) • cBlade ℝ n S) *
         cBlade ℝ n T * cBlade ℝ n S) = _
   rw [shirokov_blade_reynolds_formula]
+
+/-- Coordinate readout of `Cl(0,n)` in the ordered blade family. -/
+def shirokovBladeCoordinates (n : ℕ) :
+    CliffordAlgebra (cliffordNegSqForm ℝ n) →ₗ[ℝ] Finset (Fin n) → ℝ where
+  toFun := bladeRepr ℝ n
+  map_add' x y := by simp [bladeRepr]
+  map_smul' r x := by simp [bladeRepr]
+
+@[simp]
+theorem shirokovBladeCoordinates_cBlade (n : ℕ) (S : Finset (Fin n)) :
+    shirokovBladeCoordinates n (cBlade ℝ n S) = Pi.single S 1 :=
+  bladeRepr_cBlade ℝ n S
+
+/-- The ordered blades span the full `Cl(0,n)` carrier: the coordinate readout
+is onto, and the source and coordinate space have the same finite dimension. -/
+theorem shirokov_blade_coordinates_injective (n : ℕ) :
+    Function.Injective (shirokovBladeCoordinates n) := by
+  let eBasis := (Pi.basisFun ℝ (Fin n)).ExteriorAlgebra
+  letI : FiniteDimensional ℝ (ExteriorAlgebra ℝ (Fin n → ℝ)) :=
+    eBasis.finiteDimensional_of_finite
+  letI : FiniteDimensional ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)) :=
+    (cliffordToExterior n).symm.finiteDimensional
+  have hdim : Module.finrank ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+      Module.finrank ℝ (Finset (Fin n) → ℝ) := by
+    calc
+      Module.finrank ℝ (CliffordAlgebra (cliffordNegSqForm ℝ n)) =
+          Module.finrank ℝ (ExteriorAlgebra ℝ (Fin n → ℝ)) :=
+        LinearEquiv.finrank_eq (cliffordToExterior n)
+      _ = Fintype.card (Finset (Fin n)) := Module.finrank_eq_card_basis eBasis
+      _ = Module.finrank ℝ (Finset (Fin n) → ℝ) :=
+        (Module.finrank_eq_card_basis (Pi.basisFun ℝ (Finset (Fin n)))).symm
+  have hsurj : Function.Surjective (shirokovBladeCoordinates n) := by
+    intro f
+    refine ⟨∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      f S • cBlade ℝ n S, ?_⟩
+    ext T
+    simp [Pi.single_apply]
+  exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hdim).2 hsurj
+
+/-- Every element of `Cl(0,n)` has its canonical finite ordered-blade expansion. -/
+theorem shirokov_blade_expansion (n : ℕ)
+    (x : CliffordAlgebra (cliffordNegSqForm ℝ n)) :
+    x = ∑ S ∈ (Finset.univ : Finset (Fin n)).powerset,
+      bladeRepr ℝ n x S • cBlade ℝ n S := by
+  apply shirokov_blade_coordinates_injective n
+  simp only [map_sum, map_smul, shirokovBladeCoordinates_cBlade]
+  ext T
+  change bladeRepr ℝ n x T = _
+  simp [Pi.single_apply]
 
 private theorem endCommutator_double_scaled (A B : FormEnd V) (r s : ℝ) :
     endCommutator A (endCommutator (r • A) (s • B)) =

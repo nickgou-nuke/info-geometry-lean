@@ -77,9 +77,14 @@ positive-definite orthonormal-frame results are special cases only.
    odd-dimensional reduced-sum transport required by Theorem 2.2. The new
    `shirokov_blade_reynolds_formula` packages the scalar/top/noncentral cases,
    and `shirokov_reynolds_finite_blade_support` extends that computation by
-   linearity to any explicitly supplied finite blade expansion. A theorem
-   expressing every Clifford element as that expansion, and hence the
-   all-elements projection statement, remains open.
+   linearity to any explicitly supplied finite blade expansion. The owner now
+   proves `shirokov_blade_coordinates_injective` and
+   `shirokov_blade_expansion`: every element of the negative-definite finite
+   stage `Cl(0,n)` equals the finite powerset sum of its ordered-blade
+   coordinates. Consequently the Reynolds average formula now applies to
+   every element of this carrier. The identification of this average with the
+   paper's center projection, transport to a varying dual frame, and the
+   odd-dimensional reduced-sum identity required by Theorem 2.2 remain open.
 2. Connect the finite-coordinate `C+K` transfer's derivation family to the
    repository's CE/exterior-form carrier; derive its flatness and parallelness
    hypotheses from the Clifford-frame compatibility equations.
@@ -142,11 +147,14 @@ varying-frame/odd-reduced-sum transport in Theorem 2.2.
 The later `shirokov_blade_reynolds_formula`,
 `shirokov_reynolds_blade_expansion`, and
 `shirokov_reynolds_finite_blade_support` extensions compile in the same
-targeted owner build. They give the average on each blade and on any explicit
-finite blade expansion, with only scalar and odd top-grade terms retained.
-They do not yet prove that every element is represented by the stated
-expansion inside this owner, so the all-multivector center projection remains
-unproved.
+targeted owner build. The current extension also proves injectivity of the
+ordered-blade coordinate map by finite-dimensional rank equality and proves
+`shirokov_blade_expansion` by constructing the coordinate preimage from the
+finite powerset sum. Thus blade expansion and the stated Reynolds formula are
+available for arbitrary elements of this finite-stage carrier. This remains a
+finite algebra identity; it does not by itself identify the average with the
+paper's center projection or supply the varying-frame transport and
+odd-dimensional reduced-sum identity.
 The earlier strict screen of the new Shirokov bridge reported zero traps. The
 automated GATE_4 review was rejected before
 kernel verification because the repository-wide staged Lean set fails its QMS

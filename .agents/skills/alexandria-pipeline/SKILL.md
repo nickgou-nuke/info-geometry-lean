@@ -1,0 +1,110 @@
+---
+name: alexandria-pipeline
+description: Digest PDF or LaTeX corpora into a dedicated Alexandria ArangoDB DAG-brain instance, run hybrid GraphRAG and Personalized PageRank retrieval across mathematical archetypes, or enrich chunks with Qwen3.8/vLLM or Ollama. Use when querying or ingesting literature in Alexandria (:8532 or :8538 alexandria_dag_brain) and mapping retrieved papers to Lean 4 owner modules.
+metadata:
+  short-description: Operate the Alexandria PDF/LaTeX GraphRAG pipeline
+---
+
+# Alexandria Pipeline Operations
+
+Follow [docs/alexandria/README.md](../../../docs/alexandria/README.md),
+[docs/alexandria/ALEXANDRIA_SKILL.md](../../../docs/alexandria/ALEXANDRIA_SKILL.md), and
+[docs/alexandria/HYBRID_GRAPHRAG.md](../../../docs/alexandria/HYBRID_GRAPHRAG.md) for the full
+schema, archetype taxonomy, and retrieval commands.
+
+> **Authority boundary:** Alexandria hits carry `sourceAuthority: "retrieval_context_only"`.
+> Never present retrieved PDF/LaTeX chunks as Lean proof evidence or mathematical truth.
+> Always inspect and kernel-verify actual `.lean` owner modules.
+
+## 1. Strict Lane & Port Isolation
+
+`guard_alexandria_target` (`src/igf/config/env_aliases.py`) blocks non-Alexandria targets:
+- **Forbidden ports:** `:8530` (Lean AST/AQL declaration DAG) and `:8540` (Hive).
+- **Forbidden databases:** `infogeometry`, `darwin_commits`, `hive_live`, `aiclaw_auto_rag`.
+- **Default Alexandria port/database:** `http://127.0.0.1:8532` / `alexandria`.
+- **Dedicated PDF DAG-Brain port/database (when active):** `http://127.0.0.1:8538` / `alexandria_dag_brain` (container `arango_alexandria_dag`).
+
+Check container state first:
+```bash
+docker ps --format "table {{.Names}}\t{{.Ports}}\t{{.Status}}"
+```
+
+## 2. Query Live PDF DAG-Brain (`:8538` / `alexandria_dag_brain`)
+
+- **BM25 + DAG neighborhood lookup (`retrieve_context.py`):**
+  ```bash
+  python3 tools/alexandria/retrieve_context.py \
+    --arango \
+    --endpoint http://127.0.0.1:8538 \
+    --database alexandria_dag_brain \
+    --query "<mathematical query>" \
+    --top-k 8 \
+    --hops 2 \
+    --format text
+  ```
+
+- **Cross-document Personalized PageRank (`graph_context_rank.py`):**
+  ```bash
+  python3 tools/alexandria/graph_context_rank.py \
+    --arango \
+    --endpoint http://127.0.0.1:8538 \
+    --database alexandria_dag_brain \
+    --query "<archetype or theorem query>" \
+    --seed-k 6 \
+    --top-k 10 \
+    --hops 2 \
+    --format text
+  ```
+
+For offline JSONL queries without ArangoDB, swap `--arango --endpoint ... --database ...` for `--input-dir artifacts/alexandria_dag_brain`.
+
+## 3. Start Dedicated Container & Ingest PDF Corpus
+
+Start an isolated PDF DAG-brain instance on a dedicated port via `configs/alexandria/docker-compose.pdf.yml`:
+```bash
+ALEXANDRIA_ARANGO_CONTAINER=arango_alexandria_dag \
+ALEXANDRIA_ARANGO_PORT=8538 \
+ALEXANDRIA_ARANGO_PASSWORD=alexandria_root \
+ALEXANDRIA_ARANGO_DATA_VOLUME=alexandria_dag_data \
+ALEXANDRIA_ARANGO_APPS_VOLUME=alexandria_dag_apps \
+docker compose -f configs/alexandria/docker-compose.pdf.yml up -d
+```
+
+Run resilient SHA-256 deduplicated ingestion, noise exclusion, acyclic DAG pruning, and ArangoDB upload:
+```bash
+python3 tools/alexandria/pdf_corpus_ingest.py \
+  --input-dir /home/goutev/Downloads/collection_for_formalization \
+  --output-dir artifacts/alexandria_dag_brain \
+  --exclude-default-noise \
+  --resume \
+  --workers 4 \
+  --ingest-arango \
+  --endpoint http://127.0.0.1:8538 \
+  --database alexandria_dag_brain \
+  --skip-unchanged
+```
+
+To enable OpenAI-compatible `/v1` semantic enrichment (e.g. Qwen3.8 27B NVFP4 on `eugr/spark-vllm:nightly-20261002`), add:
+```bash
+  --enrich-ollama \
+  --ollama-endpoint http://127.0.0.1:8000/v1 \
+  --ollama-model Qwen/Qwen3.8-27B-NVFP4 \
+  --enrich-ollama-workers 8 \
+  --enrich-ollama-max-tokens 1024 \
+  --enrich-ollama-max-chunks 200
+```
+Pass `--allow-thinking` only if you want reasoning tokens enabled (`chat_template_kwargs: {"enable_thinking": false}` is sent by default on `/v1`).
+
+## 4. Blueprint Bridge & Tests
+
+- Map Alexandria theorem/definition chunks to local Lean search hits:
+  ```bash
+  python3 tools/infra/blueprint_alexandria_bridge.py \
+    --input-dir artifacts/alexandria_dag_brain \
+    --output artifacts/alexandria_dag_brain/blueprint_nodes.jsonl
+  ```
+- Run the offline Alexandria + env-isolation test suite:
+  ```bash
+  PYTHONDONTWRITEBYTECODE=1 /home/goutev/miniforge3/envs/sage/bin/python -m pytest -p no:cacheprovider -v \
+    tests/alexandria tests/test_arango_env.py
+  ```

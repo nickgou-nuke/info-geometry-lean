@@ -50,8 +50,8 @@ eigenvalue. The sign is due to the negative generator square in this fixed
 `shirokov_even_grade_projector_apply` to arbitrary elements, where it agrees
 with the ordered-blade-coordinate grade projection. The follow-up
 `shirokov_even_grade_projector_compose_blade` proves the composition law on
-individual blades. Operator-level idempotence/composition and existence under
-the paper's moving-frame hypotheses remain open.
+individual blades. The corresponding operator-level composition law and
+existence under the paper's moving-frame hypotheses remain open.
 
 ## Implementation order
 

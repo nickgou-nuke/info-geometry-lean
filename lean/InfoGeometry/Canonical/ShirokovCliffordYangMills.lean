@@ -1374,20 +1374,34 @@ different degrees. -/
 theorem shirokov_even_grade_projector_compose_blade {n : ℕ} (hn : Even n)
     (i k : Fin (n + 1)) (S : Finset (Fin n)) :
     shirokovGradeProjector n i (shirokovGradeProjector n k (cBlade ℝ n S)) =
-      (if i = k then
-        (if (⟨S.card, Nat.lt_succ_of_le (by simpa using Finset.card_le_univ S)⟩ :
-            Fin (n + 1)) = k then (1 : ℝ) else 0) • cBlade ℝ n S
-       else 0) := by
+      (if i = k ∧ S.card = k.val then (1 : ℝ) • cBlade ℝ n S else 0) := by
+  let j : Fin (n + 1) :=
+    ⟨S.card, Nat.lt_succ_of_le (by simpa using Finset.card_le_univ S)⟩
+  have hjk : j = k ↔ S.card = k.val := by
+    constructor
+    · intro h
+      exact congrArg Fin.val h
+    · intro h
+      apply Fin.ext
+      exact h
   rw [shirokov_even_grade_projector_blade hn k S]
-  by_cases hik : i = k
-  · subst i
-    simp only [hik, if_true]
-    rw [shirokov_even_grade_projector_blade hn k S]
-    by_cases hS : (⟨S.card, Nat.lt_succ_of_le (by simpa using Finset.card_le_univ S)⟩ :
-        Fin (n + 1)) = k
-    · simp [hS]
-    · simp [hS]
-  · simp [hik]
+  by_cases hS : S.card = k.val
+  · have hj : j = k := hjk.mpr hS
+    rw [if_pos hj, one_smul, shirokov_even_grade_projector_blade hn i S]
+    by_cases hik : i = k
+    · subst i
+      simp [hS]
+    · have hji : j ≠ i := by
+        intro h
+        apply hik
+        exact h.symm.trans hj
+      have hki : k ≠ i := by
+        intro h
+        exact hji (hj.trans h)
+      simp [hik, hki, hS]
+  · have hj : j ≠ k := fun h => hS (hjk.mp h)
+    rw [if_neg hj, zero_smul, map_zero]
+    simp [hS]
 
 /-- Complementary inverse blades induce the same conjugation on every element
 of the fixed finite-stage `Cl(0,n)` algebra when `n` is odd. -/

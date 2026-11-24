@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.SplitOctonionMultiplication
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.SplitOctonions.ZornLogVolume
@@ -56,5 +61,13 @@ abbrev ProbabilityMeasureVariety (α : Type*) := PositiveMeasure α ℝ
         (InfoGeometry.RegularizedKL.regularizedPMF countQ ε hε x) := by
   simpa using
     (InfoGeometry.RegularizedKL.regularized_kl_is_safe countP countQ ε hε x)
+
+
+abbrev carrier (M : ZornStatisticalVariety) :
+    InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.SplitOct := M.1
+
+
+abbrev det_pos (M : ZornStatisticalVariety) :
+    0 < InfoGeometry.OperatorAlgebra.SplitOctonions.Multiplication.detZ M.carrier := M.2
 
 end InfoGeometry.Probability

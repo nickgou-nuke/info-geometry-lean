@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.CPTAtom
@@ -682,5 +687,12 @@ theorem chiral_causal_cone_synthesis :
 #check causal_cone_iff_solder_det_zero
 #check circular_polarization_closure
 #check chiral_causal_cone_synthesis
+
+/-- The chiral decomposition can be rewritten through the projector partition `P₊ + P₋ = 1`. -/
+theorem chiral_decomposition_via_projectors (A : M2C) :
+    A = coeffI A • (PPlus + PMinus) + coeffPlus A • σPlus +
+        coeffMinus A • σMinus + coeff3 A • σ3c := by
+  rw [PPlus_add_PMinus]
+  exact chiral_decomposition A
 
 end InfoGeometry.Physics.ChiralCausalCone

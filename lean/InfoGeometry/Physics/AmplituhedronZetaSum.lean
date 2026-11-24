@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 /- SPDX-License-Identifier: Apache-2.0 -/
 
 import Mathlib.Tactic
@@ -44,5 +49,16 @@ theorem amplituhedron_partition_sum_eq_zeta :
   have h_re : 1 < (β : ℂ).re := by
     simp [Complex.ofReal_re, hβ]
   exact amplituhedronVolume_zeta (β : ℂ) h_re
+
+theorem finite_amplituhedron_partition_sum_eq_kms_readout
+    (β : ℝ) (S : Finset ℕ) :
+    ∑ n ∈ S,
+        Complex.exp (- (β : ℂ) * Real.log (n + 1 : ℝ)) =
+      ∑ n ∈ S,
+        ((kmsProjectionReadout β 1
+          ⟨n + 1, Nat.succ_pos n⟩ ⟨n + 1, Nat.succ_pos n⟩) : ℂ) := by
+  apply Finset.sum_congr rfl
+  intro n hn
+  simpa using amplituhedron_volume_summand_eq_kms_readout β n
 
 end InfoGeometry.Physics.AmplituhedronZetaSum

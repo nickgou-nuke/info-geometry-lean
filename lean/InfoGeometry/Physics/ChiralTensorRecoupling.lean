@@ -581,4 +581,12 @@ end TwoQubitSchurCoefficients
 
 #check e_factors_through_cl11_atom
 
+theorem tl_parameter_two_nilpotent_eq_zero (x : SpinPair)
+    (h_tl : x * x = (2 : ℂ) • x)
+    (h_nil : x * x = 0) :
+    x = 0 := by
+  have hsmul : (2 : ℂ) • x = 0 := by
+    rw [← h_tl, h_nil]
+  exact (smul_eq_zero.mp hsmul).resolve_left (by norm_num)
+
 end ChiralTensorRecoupling

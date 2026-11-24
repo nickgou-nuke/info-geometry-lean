@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.AlbertCayleyDickson
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitAlbert
@@ -211,6 +216,14 @@ def canonicalSplitOctonionBoundaryPacket
 
 /-- The boundary packet exposes its explicit null ray witness. -/
 def projective_null_boundary_witness
+    {V : Type v} [AddCommGroup V] [Module ℝ V]
+    (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
+    (P : SplitOctonionBoundaryPacket V B) :
+    ZornProjectiveDatum.NullRay (concreteZornProjectiveDatum B) :=
+  SplitOctonionBoundaryPacket.projective_null_boundary P
+
+/-- The boundary packet exposes its explicit null ray property. -/
+def projective_null_boundary_property
     {V : Type v} [AddCommGroup V] [Module ℝ V]
     (B : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
     (P : SplitOctonionBoundaryPacket V B) :

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -90,5 +95,12 @@ theorem bogoliubov_preserves_krein (c s : ℝ) (h : c^2 - s^2 = 1) :
 #check solder_char
 #check inducedMetric_diag
 #check bogoliubov_preserves_krein
+
+
+theorem solder_trace (t x y z : ℂ) :
+    Matrix.trace (solder t x y z) = 2 * t := by
+  simp [solder, σ1, σ2, σ3, Matrix.trace_fin_two,
+    Matrix.smul_apply, Matrix.add_apply]
+  ring
 
 end InfoGeometry.Physics.SolderingSpinConnectionBogoliubov

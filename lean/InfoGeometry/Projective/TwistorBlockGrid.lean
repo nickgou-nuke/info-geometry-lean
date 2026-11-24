@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Complex.Basic
@@ -63,5 +68,20 @@ No claim here identifies this equation with a proved twistor incidence theorem.
 -/
 def TwistorIncidence (G : TwistorGrid) : Prop :=
   twistorPosition G = spacetimeCoord G * twistorMomentum G
+
+theorem twistorIncidence_iff_entrywise (G : TwistorGrid) :
+    TwistorIncidence G ↔
+      ∀ i j : Fin 2,
+        G 0 2 i j = ∑ k : Fin 2, G 0 1 i k * G 1 2 k j := by
+  constructor
+  · intro h i j
+    have h' := congrArg (fun B : TwistorBlock => B i j) h
+    simpa [TwistorIncidence, twistorPosition, spacetimeCoord, twistorMomentum,
+      Matrix.mul_apply] using h'
+  · intro h
+    apply Matrix.ext
+    intro i j
+    simpa [TwistorIncidence, twistorPosition, spacetimeCoord, twistorMomentum,
+      Matrix.mul_apply] using h i j
 
 end InfoGeometry.Projective

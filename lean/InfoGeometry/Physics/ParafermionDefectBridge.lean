@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Categorical.Z3Parafermion
@@ -62,5 +67,13 @@ theorem klein_lattice_is_parafermion_neutral
   have h_balance : F5 = F7 := klein_bottle_defects_balance V E F F5 F6 F7 h_euler h_reg h_faces h_edges
   rw [h_balance]
   ring
+
+
+abbrev op {A : Type*} [Ring A] [Algebra ℝ A]
+    (O : TopologicalDefectOperator A) : A := O.1
+
+
+lemma is_parafermionic {A : Type*} [Ring A] [Algebra ℝ A]
+    (O : TopologicalDefectOperator A) : O.op ^ 3 = O.op := O.2
 
 end InfoGeometry.Physics

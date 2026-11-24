@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.RingQuot
@@ -106,5 +111,11 @@ theorem arnold_mixed_relation_quotient_zero (i j k : ι) :
         w R ι k i * w R ι i j) = 0 := by
   simpa using
     (RingQuot.mkRingHom_rel (ArnoldRel.mixed (R := R) (ι := ι) i j k))
+
+
+theorem w_mul_w_add_swap (i j k l : ι) :
+    w R ι i j * w R ι k l +
+        w R ι k l * w R ι i j = 0 := by
+  exact ExteriorAlgebra.ι_add_mul_swap _ _
 
 end InfoGeometry.Projective.Amplituhedron

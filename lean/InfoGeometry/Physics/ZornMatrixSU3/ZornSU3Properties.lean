@@ -277,4 +277,9 @@ theorem mersenne_137_decomposition :
 /- The dimensions of `SU(3)` and `G₂` require separate Lie-algebra carriers;
    the arithmetic identities above do not assert those identifications. -/
 
+
+theorem mersenne_readout_137 :
+    mersenneDimension 2 + mersenneDimension 3 + mersenneDimension 7 = 137 := by
+  norm_num [mersenneDimension]
+
 end InfoGeometry.Physics.ZornMatrixSU3

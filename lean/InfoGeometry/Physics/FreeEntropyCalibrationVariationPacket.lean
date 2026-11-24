@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.FreeEntropySouriauBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic.Linarith
@@ -147,5 +152,45 @@ theorem calibratedStationary_iff (P : CalibrationVariationPacket) :
   rw [boundaryHawkingCalibrationResidual_eq_zero_iff_area_over_fourG]
 
 end
+
+structure CalibrationVariationData where
+  /-- Massieu-Planck contribution to `S_free`. -/
+  massieu : ℝ
+  /-- KL/Bregman informational deviation contribution. -/
+  kl : ℝ
+  /-- Incidence/null-flag friction contribution. -/
+  incidenceFriction : ℝ
+  /-- Free-probability energy contribution. -/
+  freeEnergy : ℝ
+  /-- Coupling for the incidence/null-flag contribution. -/
+  lambdaInc : ℝ
+  /-- Coupling for the free-probability contribution. -/
+  lambdaFree : ℝ
+  /-- First variation of the Massieu contribution. -/
+  dMassieu : ℝ
+  /-- First variation of the KL/Bregman contribution. -/
+  dKL : ℝ
+  /-- First variation of the incidence/null-flag friction contribution. -/
+  dIncidenceFriction : ℝ
+  /-- First variation of the free-probability energy contribution. -/
+  dFreeEnergy : ℝ
+  /-- Incidence/null-flag stress readout. -/
+  incidenceStress : ℝ
+  /-- Wick/Schwinger anomaly stress readout. -/
+  anomalyStress : ℝ
+  /-- Free-probability stress readout. -/
+  freeStress : ℝ
+  /-- Souriau/Massieu stress readout. -/
+  souriauStress : ℝ
+  /-- Scalar Einstein tensor readout. -/
+  einsteinTensor : ℝ
+  /-- Newton coupling readout. -/
+  newtonG : ℝ
+  /-- Boundary entropy readout. -/
+  boundaryEntropy : ℝ
+  /-- Boundary area readout. -/
+  boundaryArea : ℝ
+  /-- Boundary Newton coupling used for the area calibration. -/
+  boundaryNewtonG : ℝ
 
 end InfoGeometry.Physics.FreeEntropyCalibrationVariationPacket

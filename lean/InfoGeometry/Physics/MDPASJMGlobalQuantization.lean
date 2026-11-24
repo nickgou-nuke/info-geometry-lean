@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.MDPASJMSouriauDigest
@@ -199,5 +204,12 @@ theorem directLimitCarrier_lifts_finiteIdentities_readback
               (InfoGeometry.Topology.ThermodynamicGauge.thermodynamic_curvature
                 (T.tower.stage n).pathPacket.flow)) := by
   exact FiniteMDPASJMDirectSystem.inductiveLimitCarrier_lifts_finiteIdentities T
+
+
+abbrev e01 (A : TriangleOneForm) : ℚ := A.1
+
+abbrev e12 (A : TriangleOneForm) : ℚ := A.2.1
+
+abbrev e20 (A : TriangleOneForm) : ℚ := A.2.2
 
 end InfoGeometry.Physics.MDPASJMGlobalQuantization

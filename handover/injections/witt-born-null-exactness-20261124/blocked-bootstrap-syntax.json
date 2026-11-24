@@ -1,0 +1,8 @@
+{
+  "status": "blocked",
+  "at_utc": "2026-11-24T14:03:36.306248+00:00",
+  "scope": "Local syntax recheck of bootstrap repair",
+  "error": "BuildLockBusyError observed before any test began",
+  "observed_owner": "real-matrix-split:138",
+  "result": "No local test or build executed; independent source review completed; next scoped CI run is required."
+}

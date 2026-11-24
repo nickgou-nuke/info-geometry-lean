@@ -129,11 +129,13 @@ def environment(args: argparse.Namespace, lib: Path) -> tuple[dict, list[Path]]:
     return fingerprint, paths
 
 
-def execute(command: list[str], env: dict, logfile: Path, lock_fd: int) -> dict:
+def execute(command: list[str], env: dict, logfile: Path, lock_fd: int,
+            *, cwd: Path | None = None) -> dict:
+    execution_dir = (cwd or ROOT).resolve()
     started = time.monotonic()
     peak_rss_kib = 0
     with logfile.open("w") as output:
-        proc = subprocess.Popen(command, env=env, cwd=ROOT, text=True,
+        proc = subprocess.Popen(command, env=env, cwd=execution_dir, text=True,
                                 stdout=output, stderr=subprocess.STDOUT, pass_fds=(lock_fd,))
         try:
             while True:
@@ -169,7 +171,8 @@ def execute(command: list[str], env: dict, logfile: Path, lock_fd: int) -> dict:
             raise
     text = logfile.read_text()
     print(text, end="", flush=True)
-    return {"command": command, "returncode": returncode, "output": text,
+    return {"command": command, "cwd": str(execution_dir),
+            "returncode": returncode, "output": text,
             "elapsed_seconds": round(time.monotonic() - started, 3),
             "sampled_peak_rss_kib": peak_rss_kib}
 

@@ -178,13 +178,23 @@ jobs:
           cache_env = os.environ.copy()
           for key in ('LEAN_PATH', 'LEAN_SRC_PATH', 'LEAN_SYSROOT', 'LEAN_GITHASH', 'LAKE_PKG_URL_MAP'):
               cache_env.pop(key, None)
+          cache_env['LEAN_NUM_THREADS'] = '1'
           # Mathlib materializes only its own pinned dependency graph here.
           # No root Lake configuration, optional root package or submodule is loaded.
           with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'zorn-witt-native-cache', shared=False) as lock:
-              command = [str(lean.with_name('lake')), '-d', str(mathlib), 'exe', 'cache', 'get', *native_imports]
-              result = checker.execute(command, cache_env, evidence / 'mathlib-cache.log', lock.fileno())
+              command = [str(lean.with_name('lake')), 'exe', 'cache', 'get', *native_imports]
+              result = checker.execute(command, cache_env, evidence / 'mathlib-cache.log',
+                                       lock.fileno(), cwd=mathlib)
               if result['returncode']:
                   raise RuntimeError(f'Native Mathlib cache retrieval failed: {result["returncode"]}')
+              # Check the actual transitive build artifacts before flattening;
+              # a successful download count alone does not certify their presence.
+              build_command = [str(lean.with_name('lake')), 'build', *native_imports]
+              build_result = checker.execute(build_command, cache_env,
+                                             evidence / 'native-import-build.log',
+                                             lock.fileno(), cwd=mathlib)
+              if build_result['returncode']:
+                  raise RuntimeError(f'Pinned native import build failed: {build_result["returncode"]}')
               if checker.digest(native_manifest_path) != native_manifest_hash:
                   raise RuntimeError('Mathlib manifest changed during cache preparation')
               if checker.digest(manifest_path) != root_manifest_hash:
@@ -209,7 +219,9 @@ jobs:
               'native_imports': native_imports,
               'native_manifest_sha256': native_manifest_hash,
               'package_revisions': {'mathlib': pin['rev'], **{n: p['rev'] for n, p in native_pins.items()}},
-              'cache_command': result
+              'cache_command': result,
+              'native_build_command': build_result,
+              'lake_runtime_threads': 1
           }, indent=2) + '\n')
           with open(os.environ['GITHUB_ENV'], 'a') as env_file:
               env_file.write(f'ZORN_LEAN_BIN={lean}\n')

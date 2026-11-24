@@ -67,7 +67,7 @@ to contribute declarations, and allow only `propext`, `Classical.choice`, and
 `Quot.sound`. The integer counterexamples do not certify the genuine Zorn
 operators; each suite has its own result.
 
-The current checker hash is
+The first expanded checker hash was
 `801c1ccf518eb511a24896ec16853e00d9edfa323a5d3d30b4ac33ecfca44c2e`.
 It constructs `BuildLock` directly in the context manager. This repairs the
 previous double acquisition caused by entering an already-acquired helper
@@ -77,7 +77,7 @@ unchanged. Its changed hash invalidates earlier checker-cache fingerprints.
 
 ## CI boundary
 
-The final workflow is `.github/workflows/zorn-witt-born.yml`, SHA-256
+The first published workflow is `.github/workflows/zorn-witt-born.yml`, SHA-256
 `e746f31072307210f33b722d41b95ebbc77de51a6749c48cc5e4f551593c4d32`.
 Its independent review is in `CI_REVIEW.md`. The exact workflow bytes passed
 YAML parsing, syntax checks for all seven shell blocks, and AST parsing for
@@ -103,6 +103,44 @@ the baseline build. Other scoped jobs' statuses do not establish validation
 of these new owners. A dedicated scoped workflow prepares only the exact
 native dependency environment required by this check and preserves its
 receipts. It does not waive or replace any required repository gate.
+
+## First scoped CI result and bootstrap repair
+
+Run `45408330719`, job `138494989275`, tested merge revision
+`43c90beb66cadff1f78f1ca9f19ed2ad967ec988` for PR head
+`603faa37744b57392655dbd04f3aae58f027f74b`. Its recorded tree was
+`f4462451d67b742a0390f85a71bed39e3d12f217`, the reviewed publication tree.
+Checkout, pinned toolchain installation, cache download, and evidence upload
+succeeded. The first repository compile failed because
+`Batteries.Lean.Position.olean` was missing. No theorem elaboration completed,
+no declaration audit ran, and the full suite was skipped.
+
+The downloaded artifact's SHA-256 was
+`c8277fb1ee1ee3809473beb7de609ea902df3ab6d58e4b0226e859d4e79fa178`.
+Its exact source identity, failing receipt, and native diagnostic are preserved
+in `ci-45408330719/`. The artifact is also available from the GitHub run.
+
+Source investigation found that the cache child inherited the repository
+working directory: Lake's `-d` selects configuration but does not change the
+cache subprocess cwd. Pinned Mathlib cache extraction redirects Mathlib
+archives, while other package archives retain cwd-relative destinations.
+That explains the missing dependency artifact; the misplaced file itself was
+not captured, so its precise previous location remains an inference.
+
+The repair adds an optional working-directory argument to the existing child
+runner, retaining the repository default for every current compiler/audit
+call. CI now runs cache hydration and a Lake build of the selected native
+imports from the actual pinned Mathlib directory, under the maintained lock,
+before relocating the fresh dependency checkouts. All pin, manifest,
+cleanliness, source-hash, and audit requirements remain in place.
+
+Repaired checker SHA-256:
+`26c187c9fe392a441a17f198b9dc9eb90034fa7bdbd4154f8ca6c23f7461bb2b`.
+Repaired workflow SHA-256:
+`98a55483d5bb3de8043dc3f815c8ead20c785b47907077cdaf01a99b06f10c8d`.
+`CI_BOOTSTRAP_REPAIR.md` records the source evidence and exact change. These
+repaired bytes still require the next actual CI result; the earlier syntax
+receipt is explicitly for the earlier hashes.
 
 ## Results to record before acceptance
 

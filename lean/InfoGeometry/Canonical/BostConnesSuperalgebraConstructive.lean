@@ -193,15 +193,13 @@ theorem invariant_state_supertrace_carFromCuntz_eq_zero
 
 end ParityEquivariantCuntzCarrier
 
-end InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
-
 structure ParityEquivariantCuntzData
     (Op : Type*) [Ring Op] [StarRing Op] where
   parity : StarWittenParity Op
-  cuntz : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
-  left_even : ParityEven parity
-    (InfoGeometry.Topology.CuntzO2Carrier.S_left cuntz)
-  right_odd : ParityOdd parity
-    (InfoGeometry.Topology.CuntzO2Carrier.S_right cuntz)
+  cuntz : CuntzO2Carrier Op
+  left_even : ParityEven parity (CuntzO2Carrier.S_left cuntz)
+  right_odd : ParityOdd parity (CuntzO2Carrier.S_right cuntz)
+
+end InfoGeometry.Canonical.BostConnesSuperalgebraConstructive
 
 end noncomputable section

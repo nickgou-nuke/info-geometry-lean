@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Clifford.Cl33PhaseMatrixEquiv
 
+import InfoGeometry.Clifford.CliffordCentralizerTwistedCore
 import InfoGeometry.Clifford.RealDoubledChiralCl11Atom
 import InfoGeometry.Clifford.ShirokovBasisFreeCore
 import InfoGeometry.Clifford.BottPeriodicity

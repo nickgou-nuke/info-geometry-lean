@@ -120,6 +120,9 @@ The trace evidence is packaged separately below, so raw filtered maps do not
 carry an artificial state or order structure. -/
 abbrev Data := StepFamily
 
+/-- Backward-compatible alias for the concrete dyadic matrix step family. -/
+abbrev concreteData : Data := concreteStep
+
 structure TraceCompatibleData where
   step : StepFamily
   trace_compatible :

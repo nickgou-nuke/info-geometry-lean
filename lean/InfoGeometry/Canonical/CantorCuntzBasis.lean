@@ -18,6 +18,94 @@ open InfoGeometry.Topology
 
 namespace CantorCuntzBasis
 
+/-- Binary orbit words indexing the Cantor/Cuntz recursion. -/
+abbrev BinaryWord := List Bool
+
+/--
+The theorem-backed Cantor/Cuntz basis packet.
+
+This keeps the carrier minimal: an `O₂`-style Cuntz algebra carrier and a
+distinguished seed vector from which the orbit is recursively generated.
+-/
+@[rep_depth operator]
+structure CantorCuntzBasisPacket
+    (Op : Type*) [Ring Op] [StarRing Op] where
+  cuntz : CuntzO2Carrier Op
+  seed : Op
+
+namespace CantorCuntzBasisPacket
+
+variable {Op : Type*} [Ring Op] [StarRing Op]
+variable (B : CantorCuntzBasisPacket Op)
+
+/-- The recursively generated binary orbit. -/
+@[rep_depth operator]
+def orbit : BinaryWord → Op
+  | [] => B.seed
+  | false :: w => B.cuntz.S_left * orbit w
+  | true :: w => B.cuntz.S_right * orbit w
+
+/-- The orbit at the empty word is the seed. -/
+@[rep_depth operator]
+theorem orbit_root_eq_seed :
+    orbit B [] = B.seed := by
+  rfl
+
+/-- The seed is exactly the root orbit. -/
+@[rep_depth operator]
+theorem orbit_seed_eq :
+    B.seed = orbit B [] := by
+  rfl
+
+/-- Left branch action on a false child word. -/
+@[rep_depth operator]
+theorem orbit_cons_false_action (w : BinaryWord) :
+    orbit B (false :: w) = B.cuntz.S_left * orbit B w := by
+  rfl
+
+/-- Right branch action on a true child word. -/
+@[rep_depth operator]
+theorem orbit_cons_true_action (w : BinaryWord) :
+    orbit B (true :: w) = B.cuntz.S_right * orbit B w := by
+  rfl
+
+/--
+Unified recursive orbit law.
+
+This is the direct binary recursion behind the Cantor/Cuntz orbit.
+-/
+@[rep_depth operator]
+theorem orbit_branch_recursion (b : Bool) (w : BinaryWord) :
+    orbit B (b :: w) =
+      (if b then B.cuntz.S_right else B.cuntz.S_left) * orbit B w := by
+  cases b <;> simp [orbit]
+
+/--
+General induction principle for orbit words.
+
+This is a plain list induction principle specialized to binary orbit words so
+later orbit proofs can be structured without rewriting the recursion manually.
+-/
+@[rep_depth operator]
+theorem orbit_word_induction
+    {P : BinaryWord → Prop}
+    (h_nil : P [])
+    (h_false : ∀ w, P w → P (false :: w))
+    (h_true : ∀ w, P w → P (true :: w)) :
+    ∀ w, P w := by
+  intro w
+  induction w with
+  | nil =>
+      exact h_nil
+  | cons b w ih =>
+      cases b with
+      | false =>
+          simpa using h_false w ih
+      | true =>
+          simpa using h_true w ih
+
+end CantorCuntzBasisPacket
+
 variable {Op : Type*} [Ring Op] [StarRing Op]
 variable (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op) (seed : Op)
 

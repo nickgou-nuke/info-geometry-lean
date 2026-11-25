@@ -1,0 +1,333 @@
+This paper—**Corneliu Sochichiu, *"On Nambu-Lie 3-algebra representations"* (arXiv:0806.3520v2, 2008)**—gives the exact representation-theoretic explanation for why the Nambu-Casimir identity we derived earlier (`[J₁, J₂, J₃]_N = J₁² + J₂² + J₃²`) forces either **complex fourth-roots of $-1$** (breaking Hermiticity) or a **Lorentzian / Krein signature flip** (restoring Hermiticity via $\eta$).
+
+---
+
+### I. Core Theorems & Audit of arXiv:0806.3520v2
+
+1. **Sochichiu's 3-Algebra Schur's Lemma (`Lemma 1`, Eqs. 2.13–2.14)**:
+   - Unlike Lie algebras (where the identity $I$ is central), in an associative Nambu commutator $[A, B, C]_N = ABC + BCA + CAB - BAC - ACB - CBA$, the identity satisfies $[A, B, I]_N = [A, B]$.
+   - Consequently, on any eigenspace $T_D = t_D I$ ($t_D \neq 0$) carrying an irreducible non-abelian representation of the induced Lie algebra $[T_i, T_j]_{T_D} = [T_D, T_i, T_j]_N$, any operator $X$ Nambu-commuting with all pairs satisfies $[T_i, X] = 0 \implies X = \lambda I$, and then $0 = [T_i, T_j, \lambda I]_N = \lambda [T_i, T_j] \implies \lambda = 0 \implies X = 0$ (no non-trivial Nambu Casimir/central elements).
+
+2. **Euclidean $\mathcal{A}_4$ Hermitian No-Go Theorem (`Section 2.3`, Eqs. 2.15–2.20)**:
+   - Fixing $T_4 = t_4 I$ on an irreducible spin-$j$ representation of $\mathfrak{su}(2)$ sets $[T_i, T_j] = -i t_4^{-1} \varepsilon_{ijk} T_k$ and $T_1^2 + T_2^2 + T_3^2 = t_4^{-2} j(j+1) I$.
+   - The remaining bracket $[T_1, T_2, T_3]_N = i T_4$ becomes $-i t_4^{-3} j(j+1) I = i t_4 I$, forcing
+     $$t_4^4 = -j(j+1) < 0 \qquad (j > 0).$$
+   - Because any Hermitian matrix $T_4 = T_4^\dagger$ has real eigenvalues $t_4 \in \mathbb{R}$ (with $t_4^4 \ge 0$), **Euclidean $\mathcal{A}_4$ cannot be represented by Hermitian matrices alone**.
+
+3. **Nonconstant $T_4$ Rigidity on $M_2(\mathbb{C})$ (`Section 2.4`, Eqs. 2.21–2.29) — Plus Sign/Factor Audit**:
+   - Expanding `Eq. (2.21)` confirms the exact universal ring identity $[M, A, B]_N = M[A, B] + [A, B]M - A M B + B M A$.
+   - On $2 \times 2$ matrices with $T_4 = \mu_0 I + \sum_a \mu_a \sigma_a$ and $T_k = c \sigma_k$ ($c \neq 0$), direct Pauli algebra gives $[T_4, c \sigma_1, c \sigma_2]_N = c^2(2 i \mu_0 \sigma_3 + 6 i \mu_3 I_2)$ (note that Eqs. 2.24–2.25 in the PDF drop a factor of $i$ in $2i\mu_0$ and $6i\mu_3$). Matching $-i c \sigma_3$ forces $\mu_1 = \mu_2 = \mu_3 = 0$, $c = -(2\mu_0)^{-1}$, and $\mu_0^4 = -3/4$, recovering the central $T_4$ solution.
+
+4. **Lorentzian / Krein Sign-Flip Rescue (`Section 3`) & Realification (`M₄(ℝ)`)**:
+   - Flipping the sign of $[T_1, T_2, T_3]_N = -i T_4$ (signature $(3,1)$ instead of Euclidean $(4,0)$) changes $t_4^4 = -j(j+1)$ to $t_4^4 = +j(j+1) > 0$, allowing **strictly Hermitian** realizations $T_4 = (3/4)^{1/4} I_2$, $T_k = -\frac{1}{2}(3/4)^{-1/4} \sigma_k$.
+   - Even for Euclidean $\mathcal{A}_4$ ($t_4^4 = -3/4$), replacing $i$ with the real $\mathrm{Cl}(1,1)$ operator $\varepsilon = u^+ - v^-$ ($\varepsilon^2 = -I_2$) yields a **purely real** $2 \times 2$ matrix $R_8 = \frac{1}{\sqrt{2}}(I_2 + \varepsilon)$ satisfying $R_8^4 = -I_2$.
+
+---
+
+### II. Native Mathlib4 Formalization
+
+```lean
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Data.Matrix.Basic
+import Mathlib.Data.Complex.Basic
+import Mathlib.Data.Real.Sqrt
+import Mathlib.Tactic
+
+noncomputable section
+
+open Matrix
+
+namespace SochichiuNambu3AlgebraBridge
+
+/-! ### Part 1: Matrix Nambu 3-Bracket (Eq. 2.4), Non-Central Identity (Eq. 2.21), & Lemma 1 -/
+
+/-- Matrix Nambu commutator `[A, B, C]_N = A B C + B C A + C A B - B A C - A C B - C B A`
+(`Eq. 2.4`). -/
+def nambu3 {R : Type*} [Ring R] (A B C : R) : R :=
+  A * B * C + B * C * A + C * A * B - B * A * C - A * C * B - C * B * A
+
+/-- **Eq. (2.21) Identity**: When the first slot `M` does not commute with `A, B`,
+`[M, A, B]_N = M [A, B] + [A, B] M - A M B + B M A`. -/
+theorem nambu3_noncomm_first_slot {R : Type*} [Ring R] (M A B : R) :
+    nambu3 M A B =
+      M * (A * B - B * A) + (A * B - B * A) * M - A * M * B + B * M * A := by
+  unfold nambu3
+  noncomm_ring
+
+/-- **Sochichiu's Lemma 1 (3-Algebra Schur's Lemma, Eqs. 2.13–2.14)**:
+1. On a nonzero scalar sector `T_D = tD • 1` (`tD ≠ 0`) over a field `K`, `[T_D, A, X]_N = 0`
+   reduces to the ordinary Lie commutator condition `[A, X] = 0`.
+2. Unlike Lie algebras, the identity `1` is **not** Nambu-central (`[A, B, λ • 1]_N = λ • [A, B]`);
+   hence if `[A, B] ≠ 0`, the only scalar multiple Nambu-commuting with `(A, B)` is `0`. -/
+theorem sochichiu_schur_lemma1 {K B : Type*} [Field K] [Ring B] [Algebra K B]
+    (tD lam : K) (htD : tD ≠ 0) (A B₁ X : B) :
+    (nambu3 (tD • (1 : B)) A X = 0 → A * X - X * A = 0) ∧
+    (A * B₁ - B₁ * A ≠ 0 → nambu3 A B₁ (lam • (1 : B)) = 0 → lam = 0) := by
+  constructor
+  · intro hN
+    have hEq : nambu3 (tD • (1 : B)) A X = tD • (A * X - X * A) := by
+      unfold nambu3
+      simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, one_mul, mul_one]
+      rw [← smul_sub, ← smul_add]
+      have h0 : A * X + (X * A + A * X) - (X * A + A * X) - X * A = A * X - X * A := by
+        noncomm_ring
+      calc tD • (A * X) + tD • (X * A) + tD • (A * X) - tD • (X * A) -
+            tD • (A * X) - tD • (X * A)
+          = tD • (A * X + X * A + A * X - X * A - A * X - X * A) := by
+              simp only [smul_add, smul_sub]; abel
+        _ = tD • (A * X - X * A) := by congr 1; noncomm_ring
+    rw [hEq] at hN
+    exact (smul_eq_zero.mp hN).resolve_left htD
+  · intro hComm hN
+    have hEq : nambu3 A B₁ (lam • (1 : B)) = lam • (A * B₁ - B₁ * A) := by
+      unfold nambu3
+      simp only [Algebra.smul_mul_assoc, Algebra.mul_smul_comm, one_mul, mul_one]
+      simp only [← smul_add, ← smul_sub]
+      congr 1
+      noncomm_ring
+    rw [hEq] at hN
+    exact (smul_eq_zero.mp hN).resolve_right hComm
+
+/-! ### Part 2: Euclidean A₄ Hermitian No-Go Theorem & M₂(ℂ) Representation (Section 2.3) -/
+
+/-- **General Euclidean $\mathcal{A}_4$ Constraint (`Eqs. 2.17–2.20`)**:
+For any operators `T₁, T₂, T₃` on a `ℂ`-algebra satisfying the spin-`j` induced `su(2)` relations
+`[Tᵢ, Tⱼ] = -i t₄⁻¹ ε_{ijk} T_k` (`t₄ ≠ 0`), Casimir `T₁² + T₂² + T₃² = t₄⁻² c • 1` (`c > 0`),
+and remaining Nambu bracket `[T₁, T₂, T₃]_N = i t₄ • 1`:
+1. `t₄^4 = -(c : ℂ)`.
+2. **Hermitian Impossibility**: no real eigenvalue `t₄ ∈ ℝ` (hence no Hermitian scalar `T₄`)
+   can satisfy `(t₄ : ℂ)^4 = -(c : ℂ)` when `0 < c`. -/
+theorem euclidean_A4_quartic_constraint_and_no_hermitian {B : Type*} [Ring B] [Algebra ℂ B]
+    [Nontrivial B] (T₁ T₂ T₃ : B) (t₄ : ℂ) (ht₄ : t₄ ≠ 0) (c : ℝ) (hc : 0 < c)
+    (h12 : T₂ * T₃ - T₃ * T₂ = (-Complex.I * t₄⁻¹) • T₁)
+    (h23 : T₃ * T₁ - T₁ * T₃ = (-Complex.I * t₄⁻¹) • T₂)
+    (h31 : T₁ * T₂ - T₂ * T₁ = (-Complex.I * t₄⁻¹) • T₃)
+    (hCas : T₁ * T₁ + T₂ * T₂ + T₃ * T₃ = (t₄⁻¹ ^ 2 * (c : ℂ)) • (1 : B))
+    (hN123 : nambu3 T₁ T₂ T₃ = (Complex.I * t₄) • (1 : B)) :
+    t₄ ^ 4 = -(c : ℂ) ∧ ¬ ∃ r : ℝ, t₄ = (r : ℂ) := by
+  have hLHS : nambu3 T₁ T₂ T₃ = (-Complex.I * t₄⁻¹ ^ 3 * (c : ℂ)) • (1 : B) := by
+    have hBracket : nambu3 T₁ T₂ T₃ =
+        T₁ * (T₂ * T₃ - T₃ * T₂) + T₂ * (T₃ * T₁ - T₁ * T₃) + T₃ * (T₁ * T₂ - T₂ * T₁) := by
+      unfold nambu3; noncomm_ring
+    rw [hBracket, h12, h23, h31]
+    simp only [Algebra.mul_smul_comm, ← smul_add, hCas, smul_smul]
+    congr 1
+    ring
+  rw [hLHS] at hN123
+  have hScal : -Complex.I * t₄⁻¹ ^ 3 * (c : ℂ) = Complex.I * t₄ := by
+    have hDiff : ((-Complex.I * t₄⁻¹ ^ 3 * (c : ℂ)) - (Complex.I * t₄)) • (1 : B) = 0 := by
+      rw [sub_smul, hN123, sub_self]
+    exact sub_eq_zero.mp ((smul_eq_zero.mp hDiff).resolve_right one_ne_zero)
+  have ht₄4 : t₄ ^ 4 = -(c : ℂ) := by
+    have hMul := congrArg (fun z => z * t₄ ^ 3 * (-Complex.I)) hScal
+    field_simp [ht₄] at hMul
+    have hI2 : Complex.I * Complex.I = -1 := Complex.I_mul_I
+    linear_combination -hMul - (c : ℂ) * hI2
+  refine ⟨ht₄4, ?_⟩
+  rintro ⟨r, rfl⟩
+  have hRe := congrArg Complex.re ht₄4
+  have hCast : ((r : ℂ) ^ 4).re = r ^ 4 := by
+    norm_cast
+  rw [hCast, Complex.neg_re, Complex.ofReal_re] at hRe
+  have hr4 : 0 ≤ r ^ 4 := by positivity
+  linarith
+
+/-! ### Part 3: Concrete M₂(ℂ) Representations, Nonconstant T₄ Rigidity (Sec. 2.4), & Lorentzian Rescue -/
+
+def pSigma1 : Matrix (Fin 2) (Fin 2) ℂ := !![0, 1; 1, 0]
+def pSigma2 : Matrix (Fin 2) (Fin 2) ℂ := !![0, -Complex.I; Complex.I, 0]
+def pSigma3 : Matrix (Fin 2) (Fin 2) ℂ := !![1, 0; 0, -1]
+
+/-- **Spin-1/2 Explicit Matrix Realizations & Nonconstant $T_4$ Rigidity (`Secs. 2.3, 2.4, & 3`)**:
+1. **Euclidean $\mathcal{A}_4$ (`t₄⁴ = -3/4`)**: For any complex `t₄` with `t₄⁴ = -3/4`,
+   `T_k = -(1 / (2 t₄)) • σ_k`, `T₄ = t₄ • I₂` satisfies all four $\mathcal{A}_4$ Nambu brackets
+   `[T₄, T_i, T_j]_N = -i ε_{ijk} T_k` and `[T₁, T₂, T₃]_N = +i T₄`.
+2. **Nonconstant $T_4$ Rigidity (`Eqs. 2.21–2.29`)**: If `T₄ = μ₀ I₂ + μ₁ σ₁ + μ₂ σ₂ + μ₃ σ₃` and
+   `T_k = c σ_k` (`c ≠ 0`) satisfy the $\mathcal{A}_4$ relations, then necessarily `μ₁ = μ₂ = μ₃ = 0`,
+   `c = -(2 μ₀)⁻¹`, and `μ₀⁴ = -3/4`.
+3. **Lorentzian 3-Algebra Hermitian Rescue (`Section 3`)**: Flipping the sign of `[T₁, T₂, T₃]_N`
+   to `-i T₄` yields `t₄⁴ = +3/4`, realized by **strictly Hermitian** matrices `T₄ = t₄ • I₂`
+   (`t₄ ∈ ℝ`) and `T_k = -(1 / (2 t₄)) • σ_k` (`T_kᴴ = T_k`). -/
+theorem sochichiu_spin_half_euclidean_rigidity_and_lorentzian_rescue :
+    (∀ t₄ : ℂ, t₄ ^ 4 = -(3 / 4 : ℂ) →
+      let T₁ := -(1 / (2 * t₄)) • pSigma1
+      let T₂ := -(1 / (2 * t₄)) • pSigma2
+      let T₃ := -(1 / (2 * t₄)) • pSigma3
+      let T₄ := t₄ • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+      nambu3 T₄ T₁ T₂ = -Complex.I • T₃ ∧
+      nambu3 T₁ T₂ T₃ = Complex.I • T₄) ∧
+    (∀ (μ₀ μ₁ μ₂ μ₃ c : ℂ), c ≠ 0 →
+      let T₁ := c • pSigma1
+      let T₂ := c • pSigma2
+      let T₃ := c • pSigma3
+      let T₄ := μ₀ • (1 : Matrix (Fin 2) (Fin 2) ℂ) + μ₁ • pSigma1 + μ₂ • pSigma2 + μ₃ • pSigma3
+      nambu3 T₄ T₁ T₂ = -Complex.I • T₃ →
+      nambu3 T₄ T₂ T₃ = -Complex.I • T₁ →
+      nambu3 T₄ T₃ T₁ = -Complex.I • T₂ →
+      nambu3 T₁ T₂ T₃ = Complex.I • T₄ →
+      μ₁ = 0 ∧ μ₂ = 0 ∧ μ₃ = 0 ∧ c = -(2 * μ₀)⁻¹ ∧ μ₀ ^ 4 = -(3 / 4 : ℂ)) ∧
+    (∀ t₄ : ℝ, t₄ ^ 4 = (3 / 4 : ℝ) →
+      let T₁ := -((1 / (2 * t₄) : ℝ) : ℂ) • pSigma1
+      let T₂ := -((1 / (2 * t₄) : ℝ) : ℂ) • pSigma2
+      let T₃ := -((1 / (2 * t₄) : ℝ) : ℂ) • pSigma3
+      let T₄ := (t₄ : ℂ) • (1 : Matrix (Fin 2) (Fin 2) ℂ)
+      T₁ᴴ = T₁ ∧ T₂ᴴ = T₂ ∧ T₃ᴴ = T₃ ∧ T₄ᴴ = T₄ ∧
+      nambu3 T₄ T₁ T₂ = -Complex.I • T₃ ∧
+      nambu3 T₁ T₂ T₃ = -Complex.I • T₄) := by
+  have hBase12 : nambu3 (1 : Matrix (Fin 2) (Fin 2) ℂ) pSigma1 pSigma2 =
+      (2 * Complex.I) • pSigma3 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [nambu3, pSigma1, pSigma2, pSigma3, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  have hBase123 : nambu3 pSigma1 pSigma2 pSigma3 =
+      (6 * Complex.I) • (1 : Matrix (Fin 2) (Fin 2) ℂ) := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [nambu3, pSigma1, pSigma2, pSigma3, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  have hGen12 : ∀ μ₀ μ₁ μ₂ μ₃ : ℂ,
+      nambu3 (μ₀ • (1 : Matrix (Fin 2) (Fin 2) ℂ) + μ₁ • pSigma1 + μ₂ • pSigma2 + μ₃ • pSigma3)
+        pSigma1 pSigma2 = (2 * Complex.I * μ₀) • pSigma3 + (6 * Complex.I * μ₃) • 1 := by
+    intro μ₀ μ₁ μ₂ μ₃
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [nambu3, pSigma1, pSigma2, pSigma3, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  have hGen23 : ∀ μ₀ μ₁ μ₂ μ₃ : ℂ,
+      nambu3 (μ₀ • (1 : Matrix (Fin 2) (Fin 2) ℂ) + μ₁ • pSigma1 + μ₂ • pSigma2 + μ₃ • pSigma3)
+        pSigma2 pSigma3 = (2 * Complex.I * μ₀) • pSigma1 + (6 * Complex.I * μ₁) • 1 := by
+    intro μ₀ μ₁ μ₂ μ₃
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [nambu3, pSigma1, pSigma2, pSigma3, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  have hGen31 : ∀ μ₀ μ₁ μ₂ μ₃ : ℂ,
+      nambu3 (μ₀ • (1 : Matrix (Fin 2) (Fin 2) ℂ) + μ₁ • pSigma1 + μ₂ • pSigma2 + μ₃ • pSigma3)
+        pSigma3 pSigma1 = (2 * Complex.I * μ₀) • pSigma2 + (6 * Complex.I * μ₂) • 1 := by
+    intro μ₀ μ₁ μ₂ μ₃
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [nambu3, pSigma1, pSigma2, pSigma3, Matrix.mul_apply, Fin.sum_univ_two] <;> ring
+  have hScale : ∀ (c : ℂ) (A B C : Matrix (Fin 2) (Fin 2) ℂ),
+      nambu3 A (c • B) (c • C) = (c ^ 2) • nambu3 A B C := by
+    intro c A B C
+    unfold nambu3
+    simp only [smul_mul_assoc, mul_smul_comm, smul_smul, ← smul_add, ← smul_sub, ← sq]
+  have hScale3 : ∀ (c : ℂ) (A B C : Matrix (Fin 2) (Fin 2) ℂ),
+      nambu3 (c • A) (c • B) (c • C) = (c ^ 3) • nambu3 A B C := by
+    intro c A B C
+    unfold nambu3
+    simp only [smul_mul_assoc, mul_smul_comm, smul_smul, ← smul_add, ← smul_sub]
+    congr 1; ring
+  refine ⟨?_, ?_, ?_⟩
+  · intro t₄ ht₄
+    have ht₄0 : t₄ ≠ 0 := by intro h; rw [h] at ht₄; norm_num at ht₄
+    dsimp
+    constructor
+    · rw [hScale, hGen12 t₄ 0 0 0, zero_mul, zero_smul, add_zero, smul_smul, smul_smul]
+      congr 1
+      field_simp [ht₄0]
+    · rw [hScale3, hBase123, smul_smul, smul_smul]
+      congr 1
+      calc (-(1 / (2 * t₄))) ^ 3 * (6 * Complex.I)
+          = -(3 * Complex.I * t₄) / (4 * t₄ ^ 4) := by field_simp [ht₄0]; ring
+        _ = -(3 * Complex.I * t₄) / (4 * (-(3 / 4 : ℂ))) := by rw [ht₄]
+        _ = Complex.I * t₄ := by ring
+  · intro μ₀ μ₁ μ₂ μ₃ c hc h12 h23 h31 h123
+    dsimp at h12 h23 h31 h123
+    rw [hScale, hGen12] at h12
+    rw [hScale, hGen23] at h23
+    rw [hScale, hGen31] at h31
+    rw [hScale3, hBase123] at h123
+    have h00_12 : (c ^ 2 * (6 * Complex.I * μ₃)) = 0 := by
+      have h := congrFun (congrFun h12 0) 0
+      have h' := congrFun (congrFun h12 1) 1
+      simp [pSigma3] at h h'
+      linear_combination (h + h') / 2
+    have h00_23 : (c ^ 2 * (6 * Complex.I * μ₁)) = 0 := by
+      have h := congrFun (congrFun h23 0) 0
+      simp [pSigma1] at h
+      exact h
+    have h00_31 : (c ^ 2 * (6 * Complex.I * μ₂)) = 0 := by
+      have h := congrFun (congrFun h31 0) 0
+      simp [pSigma2] at h
+      exact h
+    have h6c2 : c ^ 2 * (6 * Complex.I) ≠ 0 :=
+      mul_ne_zero (pow_ne_zero 2 hc) (mul_ne_zero (by norm_num) Complex.I_ne_zero)
+    have hμ₁ : μ₁ = 0 := by
+      have : c ^ 2 * (6 * Complex.I) * μ₁ = 0 := by linear_combination h00_23
+      exact (mul_eq_zero.mp this).resolve_left h6c2
+    have hμ₂ : μ₂ = 0 := by
+      have : c ^ 2 * (6 * Complex.I) * μ₂ = 0 := by linear_combination h00_31
+      exact (mul_eq_zero.mp this).resolve_left h6c2
+    have hμ₃ : μ₃ = 0 := by
+      have : c ^ 2 * (6 * Complex.I) * μ₃ = 0 := by linear_combination h00_12
+      exact (mul_eq_zero.mp this).resolve_left h6c2
+    have h12_00 := congrFun (congrFun h12 0) 0
+    simp [pSigma3, hμ₃] at h12_00
+    have hc_rel : 2 * c * μ₀ = -1 := by
+      have hSub : c * Complex.I * (2 * c * μ₀ + 1) = 0 := by linear_combination h12_00
+      have hcI : c * Complex.I ≠ 0 := mul_ne_zero hc Complex.I_ne_zero
+      exact eq_neg_of_add_eq_zero_left ((mul_eq_zero.mp hSub).resolve_left hcI)
+    have hμ₀ : μ₀ ≠ 0 := by
+      intro h0; rw [h0, mul_zero] at hc_rel; norm_num at hc_rel
+    have hc_eq : c = -(2 * μ₀)⁻¹ := by
+      field_simp [hμ₀]
+      linear_combination hc_rel
+    have h123_00 := congrFun (congrFun h123 0) 0
+    simp [pSigma1, pSigma2, pSigma3, hμ₁, hμ₂, hμ₃] at h123_00
+    have hμ0_4 : μ₀ ^ 4 = -(3 / 4 : ℂ) := by
+      rw [hc_eq] at h123_00
+      have hMul := congrArg (fun z => z * μ₀ ^ 3 * (-Complex.I)) h123_00
+      field_simp [hμ₀] at hMul
+      have hI2 : Complex.I * Complex.I = -1 := Complex.I_mul_I
+      linear_combination -hMul / 4 - (3 / 4 : ℂ) * hI2
+    exact ⟨hμ₁, hμ₂, hμ₃, hc_eq, hμ0_4⟩
+  · intro t₄ ht₄
+    have ht₄0 : t₄ ≠ 0 := by intro h; rw [h] at ht₄; norm_num at ht₄
+    have ht₄C0 : (t₄ : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr ht₄0
+    have hH1 : pSigma1ᴴ = pSigma1 := by
+      ext i j; fin_cases i <;> fin_cases j <;> simp [pSigma1]
+    have hH2 : pSigma2ᴴ = pSigma2 := by
+      ext i j; fin_cases i <;> fin_cases j <;> simp [pSigma2]
+    have hH3 : pSigma3ᴴ = pSigma3 := by
+      ext i j; fin_cases i <;> fin_cases j <;> simp [pSigma3]
+    dsimp
+    refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+    · rw [Matrix.conjTranspose_smul, Complex.star_def, Complex.conj_ofReal, hH1]
+    · rw [Matrix.conjTranspose_smul, Complex.star_def, Complex.conj_ofReal, hH2]
+    · rw [Matrix.conjTranspose_smul, Complex.star_def, Complex.conj_ofReal, hH3]
+    · rw [Matrix.conjTranspose_smul, Complex.star_def, Complex.conj_ofReal, Matrix.conjTranspose_one]
+    · have hcEq : -((1 / (2 * t₄) : ℝ) : ℂ) = -(1 / (2 * (t₄ : ℂ))) := by push_cast; ring
+      rw [hcEq, hScale, hGen12 (t₄ : ℂ) 0 0 0, zero_mul, zero_smul, add_zero, smul_smul, smul_smul]
+      congr 1
+      field_simp [ht₄C0]
+    · have hcEq : -((1 / (2 * t₄) : ℝ) : ℂ) = -(1 / (2 * (t₄ : ℂ))) := by push_cast; ring
+      rw [hcEq, hScale3, hBase123, smul_smul, smul_smul]
+      congr 1
+      have ht₄C4 : (t₄ : ℂ) ^ 4 = (3 / 4 : ℂ) := by exact_mod_cast ht₄
+      calc (-(1 / (2 * (t₄ : ℂ)))) ^ 3 * (6 * Complex.I)
+          = -(3 * Complex.I * (t₄ : ℂ)) / (4 * (t₄ : ℂ) ^ 4) := by field_simp [ht₄C0]; ring
+        _ = -(3 * Complex.I * (t₄ : ℂ)) / (4 * (3 / 4 : ℂ)) := by rw [ht₄C4]
+        _ = -Complex.I * (t₄ : ℂ) := by ring
+
+/-! ### Part 4: Realification of Fourth-Root-of-(-1) Without Complex `i` in Cl(1,1) ≅ M₂(ℝ) -/
+
+/-- Real eighth-root rotation `R₈ = (I₂ + ε) / √2` in `Cl(1,1) ≅ M₂(ℝ)` (`R₈⁴ = -I₂`, zero complex `i`). -/
+def realEighthRoot2 : Matrix (Fin 2) (Fin 2) ℝ :=
+  (1 / Real.sqrt 2) • !![1, 1; -1, 1]
+
+theorem realEighthRoot2_pow_four :
+    realEighthRoot2 * realEighthRoot2 * realEighthRoot2 * realEighthRoot2 =
+      -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+  have h2 : Real.sqrt 2 * Real.sqrt 2 = 2 := Real.mul_self_sqrt (by norm_num)
+  have hSq : realEighthRoot2 * realEighthRoot2 = !![0, 1; -1, 0] := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [realEighthRoot2, Matrix.mul_apply, Fin.sum_univ_two] <;>
+      field_simp [Real.sqrt_ne_zero'.mpr (by norm_num : (0 : ℝ) < 2)] <;>
+      nlinarith [h2]
+  calc realEighthRoot2 * realEighthRoot2 * realEighthRoot2 * realEighthRoot2
+      = (realEighthRoot2 * realEighthRoot2) * (realEighthRoot2 * realEighthRoot2) := by
+          simp only [Matrix.mul_assoc]
+    _ = !![0, (1 : ℝ); -1, 0] * !![0, 1; -1, 0] := by rw [hSq]
+    _ = -(1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+          ext i j; fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two]
+
+end SochichiuNambu3AlgebraBridge
+```

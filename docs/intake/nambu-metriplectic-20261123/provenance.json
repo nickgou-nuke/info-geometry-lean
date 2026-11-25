@@ -1,0 +1,20 @@
+{
+  "base": "fe24e350b08fdea04f74c0748ef9fd9417c47529",
+  "files": [
+    {
+      "uploaded_name": "Pasted text(20261123-111307)(1).txt",
+      "stored_name": "sochichiu-nambu.txt",
+      "sha256": "af534b6f64e03cb1feae2f8139238ed2d3e27eb5c2ca89c234603c37843a1605"
+    },
+    {
+      "uploaded_name": "Pasted text(20261123-112740)(1).txt",
+      "stored_name": "metriplectic-clifford-grh.txt",
+      "sha256": "9c5a86fd74bc32bbd81ae700475783a02202f142d158c90f241e74540c96cfa9"
+    },
+    {
+      "uploaded_name": "Pasted text (2)(20261123-113100)(1).txt",
+      "duplicate_of": "metriplectic-clifford-grh.txt",
+      "sha256": "9c5a86fd74bc32bbd81ae700475783a02202f142d158c90f241e74540c96cfa9"
+    }
+  ]
+}

@@ -79,7 +79,8 @@ theorem dualGraph_orthogonal_eq [Module.Projective ℝ E]
     intro ξ
     have h := hz (P ξ, ξ) (graph_vector_mem P ξ)
     rw [canonicalNeutralBilin_apply, hSkew z.2 ξ] at h
-    simpa only [map_sub, sub_eq_add_neg, map_add, map_neg] using h
+    rw [map_sub]
+    simpa only [sub_eq_add_neg] using h
   · intro hz w hw
     rw [mem_dualGraph] at hw
     rw [canonicalNeutralBilin_apply, hw, hz, hSkew w.2 z.2]
@@ -166,24 +167,25 @@ theorem dualGraph_sup_neg_eq_top_iff (P : Module.Dual ℝ E →ₗ[ℝ] E) :
     rw [mem_dualGraph] at hz hw
     refine ⟨z.2 - w.2, ?_⟩
     have hfst := congrArg Prod.fst hzw
-    simpa only [Prod.fst_add, hz, hw, LinearMap.neg_apply, map_sub,
-      sub_eq_add_neg, map_add, map_neg] using hfst
+    rw [map_sub]
+    simpa only [Prod.fst_add, hz, hw, LinearMap.neg_apply,
+      sub_eq_add_neg] using hfst
   · intro h
     apply top_unique
     intro z _
     obtain ⟨η, hη⟩ := h z.1
-    let ξPlus := (1 / 2 : ℝ) • (z.2 + η)
-    let ξMinus := (1 / 2 : ℝ) • (z.2 - η)
+    let ξplus := (1 / 2 : ℝ) • (z.2 + η)
+    let ξminus := (1 / 2 : ℝ) • (z.2 - η)
     apply Submodule.mem_sup.mpr
-    refine ⟨(P ξPlus, ξPlus), graph_vector_mem P ξPlus,
-      ((-P) ξMinus, ξMinus), graph_vector_mem (-P) ξMinus, ?_⟩
+    refine ⟨(P ξplus, ξplus), graph_vector_mem P ξplus,
+      ((-P) ξminus, ξminus), graph_vector_mem (-P) ξminus, ?_⟩
     apply Prod.ext
-    · change P ξPlus + (-P) ξMinus = z.1
-      simp only [ξPlus, ξMinus, LinearMap.neg_apply, map_smul, map_add, map_sub]
+    · change P ξplus + (-P) ξminus = z.1
+      simp only [ξplus, ξminus, LinearMap.neg_apply, map_smul, map_add, map_sub]
       rw [← hη]
       module
-    · change ξPlus + ξMinus = z.2
-      dsimp [ξPlus, ξMinus]
+    · change ξplus + ξminus = z.2
+      dsimp [ξplus, ξminus]
       module
 
 /-- Complementarity requires both injectivity and surjectivity in arbitrary dimension. -/

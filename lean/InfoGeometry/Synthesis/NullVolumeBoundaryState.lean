@@ -12,11 +12,12 @@ import InfoGeometry.Tomita.FiniteTomitaModularFlow
 # Null-volume boundary state
 
 This synthesis packages the repaired finite owners without adding an analytic
-or physical identification that they do not prove.  The state consists of the
-canonical doubled Witt boundary, the sewn `Cl(1,1)` boundary carrier, the
-finite phase complex structure, and the custodial involution.  The remaining
-boundary anomaly and null-quadric statements retain their explicit
-operator/matrix hypotheses.
+or physical identification that they do not prove.  The data consists of the
+canonical doubled Witt boundary, the sewn `Cl(1,1)` boundary carrier, and the
+canonical sewn state; the finite phase complex square, custodial involution,
+and sewn-state fixpoint are proved as theorems from their exact owner results.
+The remaining boundary anomaly and null-quadric statements retain their
+explicit operator/matrix hypotheses.
 -/
 
 noncomputable section
@@ -36,21 +37,28 @@ namespace InfoGeometry.Synthesis.NullVolumeBoundaryState
 structure Data where
   witt : WittDecomposition
   cl11 : FiniteCl11 ℝ
-  phaseComplexSquare :
-    (J_phase2 : Matrix (Fin 2) (Fin 2) ℝ) * J_phase2 = -I2_R
-  custodialInvolution : W_twin16 * W_twin16 = 1
   sewnState : H_lp ℝ
-  sewnStateFixed : J_lp_clm (E := ℝ) sewnState = sewnState
 
 /-- Canonical construction from the repaired owner modules. -/
 def canonical : Data where
   witt := canonicalWittDecomposition
   cl11 := canonicalCl11 (E := ℝ)
-  phaseComplexSquare := InfoGeometry.OperatorAlgebra.PeirceBiSandwich.J_phase2_sq
-  custodialInvolution :=
-    (InfoGeometry.OperatorAlgebra.PeirceBiSandwich.custodial_boost_comm_even_powers 0).1
   sewnState := canonicalCantorSewnState
-  sewnStateFixed := canonicalCantorSewnState_fixed
+
+/-- The canonical finite phase complex structure squares to minus the identity. -/
+theorem canonical_phase_complex_square :
+    (J_phase2 : Matrix (Fin 2) (Fin 2) ℝ) * J_phase2 = -I2_R := by
+  exact InfoGeometry.OperatorAlgebra.PeirceBiSandwich.J_phase2_sq
+
+/-- The canonical custodial twin operator is an involution. -/
+theorem canonical_custodial_involution :
+    W_twin16 * W_twin16 = 1 := by
+  exact (InfoGeometry.OperatorAlgebra.PeirceBiSandwich.custodial_boost_comm_even_powers 0).1
+
+/-- The canonical sewn boundary state is fixed by the modular swap. -/
+theorem canonical_sewn_state_fixed :
+    J_lp_clm (E := ℝ) canonical.sewnState = canonical.sewnState := by
+  exact canonicalCantorSewnState_fixed
 
 /-- The canonical package contains complementary isotropic Witt sectors. -/
 theorem canonical_witt_direct_sum :

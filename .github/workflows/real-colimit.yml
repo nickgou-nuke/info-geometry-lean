@@ -1,0 +1,67 @@
+name: Real direct-limit pairings and derivations
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'verification/real-colimit/**'
+      - 'verification/zeta-weil-krein/**'
+      - 'verification/real-matrix-split/audit.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/**'
+      - 'tools/quality/**'
+      - 'tools/pathing.py'
+      - '.github/workflows/real-colimit.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: real-colimit-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Record checked source
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p artifacts/verification/real-colimit
+          {
+            git rev-parse HEAD
+            git rev-parse 'HEAD^{tree}'
+            git status --short
+          } | tee artifacts/verification/real-colimit/revision.log
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          colimit_toolchain=$(cat lean-toolchain)
+          "$HOME/.elan/bin/elan" toolchain install "$colimit_toolchain"
+      - name: Restore the pinned Mathlib artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/zeta-weil-krein/check.py exe cache get 2>&1 | tee artifacts/verification/real-colimit/cache.log
+      - name: Check the source and serialized kernel batch
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/real-colimit/check.py --wait-for-build-lock 2>&1 | tee artifacts/verification/real-colimit/run.log
+      - name: Preserve verification evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: real-colimit-verification
+          path: artifacts/verification/real-colimit

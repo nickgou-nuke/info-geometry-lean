@@ -1,0 +1,235 @@
+Here is the exact **Gauss–Bonnet–Stokes Reformulation** in the **Hestenes–Krein** (`Cl(1,1)`, Cut $\Gamma$, Mirror $J$, Derivation $D$) framework—showing how differential geometry, discrete cohomology, complex/Weyl contour residues, and Lorentzian/Krein index theory collapse into one mechanism:
+
+---
+
+### I. The Four Pillars of the Hestenes–Krein Gauss–Bonnet–Stokes Reformulation
+
+1. **Why Hestenes Unifies Stokes, Cauchy, and Gauss–Bonnet (Zero Complex `i`)**:
+   In Hestenes' Geometric Calculus, the vector derivative $\mathcal{D} = \sum_\mu \gamma^\mu \partial_\mu$ is our lifted Dirac operator (`diracVectorLift`). Its grade decomposition $\mathcal{D} F = \mathcal{D} \wedge F + \mathcal{D} \cdot F$ combines exterior derivative $d$ and codifferential $\delta$ into a single operator obeying the **Clifford–Stokes law** $\int_M d^k X\,\dot{\mathcal{D}}\dot{F} = \oint_{\partial M} d^{k-1} X\,F$.
+   - In 2D, replacing complex $i$ with $\varepsilon = u^+ - v^-$ ($\varepsilon^2 = -I_2$) turns the Cauchy–Riemann operator into the real 2D Dirac operator $I_2 \partial_x + \varepsilon \partial_y$.
+   - The **frame rotor** $R(\phi) = \cos\phi\, I_2 + \sin\phi\, \varepsilon$ has **Axiom 4 logarithmic soldering form** $\theta_L(R) = R^{-1} D R = (D\phi)\,\varepsilon$, which IS the **2D Levi-Civita spin connection**; its interior curl is Gaussian curvature $K\,dA$ and its boundary integral is total geodesic winding ($2\pi\chi(M)$).
+
+2. **Why Krein Signature ($\Gamma$ vs. $J$) Separates Riemannian Compactness from Hyperbolic Boosts**:
+   - In Riemannian $(2,0)$ signature ($\varepsilon^2 = -I_2$), $R(\phi)$ is compact $SO(2)$ rotation with $\det R = \cos^2\phi + \sin^2\phi = 1$.
+   - In **Krein / Lorentzian $(1,1)$ signature** ($Z = P_+ - P_-$, $Z^2 = +I_2$), the spin rotor becomes the **hyperbolic boost** $B(\eta) = \cosh\eta\, I_2 + \sinh\eta\, Z$ with $\theta_L(B) = B^{-1} D B = (D\eta)\, Z$ and $\det B = \cosh^2\eta - \sinh^2\eta = 1$.
+   - Across lightcones ($\mathcal{N}_+$ vs. $\mathcal{N}_-$), ungraded traces cancel, whereas weighting by the **Cut** $\Gamma = P_{\mathrm{even}} - P_{\mathrm{odd}}$ yields the **Krein–McKean–Singer Gauss–Bonnet index**: $\operatorname{Str}_\Gamma(p(\mathcal{D}^2)) = \chi(M) = n_+ - n_-$.
+
+3. **Discrete Gauss–Bonnet–Stokes & Boundary Cancellation**:
+   - On any cellular 2-complex $(V, E, F)$ (and any 2D grid), Stokes' theorem is exact telescoping boundary cancellation: $\sum_{\text{cells}} (\mathrm{curl}\; F) = \oint_{\partial M} F$, and summing local combinatorial vertex curvature defects $\kappa_v = 1 - \frac{1}{2}\deg(v) + \sum_{f\ni v} \frac{1}{k_f}$ recovers $\sum_{v\in V} \kappa_v = |V| - |E| + |F| = \chi(M)$.
+
+4. **Non-Abelian 4D Cartan–Gauss–Bonnet–Chern Transgression**:
+   - When the Cartan connection $\theta = \varpi + e$ (`Axiom 4`) is non-abelian ($\Omega = d\theta + \theta \wedge \theta$), the 4D Gauss–Bonnet–Euler / Pontryagin density $\operatorname{Tr}(\Gamma_5\, \Omega \wedge \Omega)$ is exact modulo the boundary **Chern–Simons transgression** $\Omega_{\mathrm{CS}}$ (`Green–Schwarz` / `Bianchi`).
+
+---
+
+### II. Native Mathlib4 Formalization (`GaussBonnetStokesHestenesKrein.lean`)
+
+```lean
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.LinearAlgebra.Matrix.Trace
+import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Basic
+import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
+import Mathlib.Tactic
+
+noncomputable section
+
+open scoped BigOperators
+open Matrix
+
+namespace GaussBonnetStokesHestenesKrein
+
+/-! ### Part 1: Discrete Gauss–Bonnet & 2D Cell-Stokes Boundary Cancellation -/
+
+/-- **Discrete Combinatorial Gauss–Bonnet Theorem**:
+On any finite 2-complex `(V, E, F)` where each edge `e` has total vertex incidence `2` and each
+face `f` has `faceCard f ≠ 0` vertices, the sum of local vertex curvature defects
+`κ(v) = 1 - (1/2) * ∑_e edgeInc v e + ∑_f faceInc v f / faceCard f` equals the exact
+Euler characteristic `|V| - |E| + |F|`. -/
+theorem discrete_gauss_bonnet
+    {V E F : Type*} [Fintype V] [Fintype E] [Fintype F]
+    (edgeInc : V → E → ℝ) (faceInc : V → F → ℝ) (faceCard : F → ℝ)
+    (hFaceNe : ∀ f : F, faceCard f ≠ 0)
+    (hEdge : ∀ e : E, (∑ v : V, edgeInc v e) = 2)
+    (hFace : ∀ f : F, (∑ v : V, faceInc v f) = faceCard f) :
+    (∑ v : V, (1 - (1 / 2 : ℝ) * (∑ e : E, edgeInc v e) +
+      ∑ f : F, faceInc v f / faceCard f)) =
+      (Fintype.card V : ℝ) - (Fintype.card E : ℝ) + (Fintype.card F : ℝ) := by
+  simp only [Finset.sum_add_distrib, Finset.sum_sub_distrib, Finset.sum_const, Finset.card_univ,
+    nsmul_eq_mul, mul_one, ← Finset.mul_sum]
+  rw [Finset.sum_comm (s := Finset.univ) (t := Finset.univ) (f := edgeInc),
+      Finset.sum_comm (s := Finset.univ) (t := Finset.univ) (f := fun v f => faceInc v f / faceCard f)]
+  have hE : (∑ e : E, ∑ v : V, edgeInc v e) = 2 * (Fintype.card E : ℝ) := by
+    simp [hEdge, Finset.sum_const, nsmul_eq_mul, mul_comm]
+  have hF : (∑ f : F, ∑ v : V, faceInc v f / faceCard f) = (Fintype.card F : ℝ) := by
+    have hEach : ∀ f : F, (∑ v : V, faceInc v f / faceCard f) = 1 := fun f => by
+      rw [← Finset.sum_div, hFace f, div_self (hFaceNe f)]
+    simp [hEach]
+  rw [hE, hF]
+  ring
+
+/-- Discrete 2D cell circulation (discrete exterior derivative `dω` on cell `(i, j)`). -/
+def discreteCellCurl (vx vy : ℕ → ℕ → ℝ) (i j : ℕ) : ℝ :=
+  (vx i j - vx i (j + 1)) + (vy (i + 1) j - vy i j)
+
+/-- **Discrete 2D Stokes / Green Theorem**:
+Summing `discreteCellCurl` over an `M × N` rectangular cell grid cancels all interior edges
+telescopically and leaves strictly the boundary circulation around `∂([0, M] × [0, N])`. -/
+theorem discrete_2d_stokes_boundary_inflow (vx vy : ℕ → ℕ → ℝ) (M N : ℕ) :
+    (∑ i ∈ Finset.range M, ∑ j ∈ Finset.range N, discreteCellCurl vx vy i j) =
+      (∑ i ∈ Finset.range M, (vx i 0 - vx i N)) +
+      (∑ j ∈ Finset.range N, (vy M j - vy 0 j)) := by
+  unfold discreteCellCurl
+  simp_rw [Finset.sum_add_distrib]
+  rw [Finset.sum_add_distrib]
+  congr 1
+  · refine Finset.sum_congr rfl fun i _ => ?_
+    have h := Finset.sum_range_sub (fun j => -vx i j) N
+    simpa [sub_eq_add_neg] using h
+  · rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl fun j _ => Finset.sum_range_sub (fun i => vy i j) M
+
+/-! ### Part 2: Krein–McKean–Singer Gauss–Bonnet–Hodge Supertrace Theorem (Axioms 1–3) -/
+
+/-- Graded cochain cut `Γ = diag(+I_{nP}, -I_{nM})` on `C_even ⊕ C_odd`. -/
+def hodgeGamma (nP nM : ℕ) : Matrix (Fin nP ⊕ Fin nM) (Fin nP ⊕ Fin nM) ℝ :=
+  Matrix.diagonal (Sum.elim (fun _ => 1) (fun _ => -1))
+
+/-- Hestenes–Peirce Hodge–Dirac operator `D = [[0, dᵀ], [d, 0]]` on `C_even ⊕ C_odd`. -/
+def hodgeDirac {nP nM : ℕ} (d : Matrix (Fin nM) (Fin nP) ℝ) :
+    Matrix (Fin nP ⊕ Fin nM) (Fin nP ⊕ Fin nM) ℝ :=
+  Matrix.of fun i j =>
+    match i, j with
+    | .inl _, .inl _ => 0
+    | .inl a, .inr b => d b a
+    | .inr b, .inl a => d b a
+    | .inr _, .inr _ => 0
+
+/-- **Krein–McKean–Singer Gauss–Bonnet–Hodge Theorem**:
+1. `D` is `Γ`-odd (`Γ D + D Γ = 0`, while `Dᵀ = D` in the Hilbert mirror).
+2. `Tr(Γ) = nP - nM` (the exact Euler characteristic `χ`).
+3. Every positive even power of `D` has vanishing `Γ`-supertrace: `Tr(Γ D^{2(k+1)}) = 0`.
+4. **McKean–Singer Invariance**: For any heat-kernel / spectral polynomial `∑_{k=0}^N c_k D^{2k}`
+   with `c 0 = 1`, `Tr(Γ * ∑_{k=0}^N c_k D^{2k}) = (nP : ℝ) - (nM : ℝ) = χ`. -/
+theorem krein_mckean_singer_gauss_bonnet {nP nM : ℕ}
+    (d : Matrix (Fin nM) (Fin nP) ℝ) (N : ℕ) (c : ℕ → ℝ) (hc0 : c 0 = 1) :
+    let Γ := hodgeGamma nP nM
+    let D := hodgeDirac d
+    (Γ * D = -(D * Γ)) ∧
+    (Dᵀ = D) ∧
+    (Matrix.trace Γ = (nP : ℝ) - (nM : ℝ)) ∧
+    (∀ k : ℕ, Matrix.trace (Γ * D ^ (2 * (k + 1))) = 0) ∧
+    (Matrix.trace (Γ * ∑ k ∈ Finset.range (N + 1), c k • D ^ (2 * k)) =
+      (nP : ℝ) - (nM : ℝ)) := by
+  have hOdd : hodgeGamma nP nM * hodgeDirac d = -(hodgeDirac d * hodgeGamma nP nM) := by
+    ext i j
+    simp only [hodgeGamma, hodgeDirac, Matrix.diagonal_mul, Matrix.mul_diagonal,
+      Matrix.neg_apply, Matrix.of_apply]
+    cases i <;> cases j <;> simp
+  have hSym : (hodgeDirac d)ᵀ = hodgeDirac d := by
+    ext i j
+    cases i <;> cases j <;> simp [hodgeDirac]
+  have hTraceG : Matrix.trace (hodgeGamma nP nM) = (nP : ℝ) - (nM : ℝ) := by
+    simp [hodgeGamma, Matrix.trace, Matrix.diag]
+    ring
+  have hEvenZero : ∀ k : ℕ, Matrix.trace (hodgeGamma nP nM * hodgeDirac d ^ (2 * (k + 1))) = 0 := by
+    intro k
+    have hFlip : ∀ X : Matrix (Fin nP ⊕ Fin nM) (Fin nP ⊕ Fin nM) ℝ,
+        Matrix.trace (hodgeGamma nP nM * (X * hodgeDirac d)) =
+          -Matrix.trace (hodgeGamma nP nM * (hodgeDirac d * X)) := by
+      intro X
+      calc Matrix.trace (hodgeGamma nP nM * (X * hodgeDirac d))
+          = Matrix.trace ((hodgeGamma nP nM * X) * hodgeDirac d) := by rw [Matrix.mul_assoc]
+        _ = Matrix.trace (hodgeDirac d * (hodgeGamma nP nM * X)) := Matrix.trace_mul_comm _ _
+        _ = Matrix.trace ((hodgeDirac d * hodgeGamma nP nM) * X) := by rw [Matrix.mul_assoc]
+        _ = Matrix.trace (-(hodgeGamma nP nM * hodgeDirac d) * X) := by rw [hOdd, neg_neg]
+        _ = -Matrix.trace ((hodgeGamma nP nM * hodgeDirac d) * X) := by
+              rw [Matrix.neg_mul, Matrix.trace_neg]
+        _ = -Matrix.trace (hodgeGamma nP nM * (hodgeDirac d * X)) := by rw [Matrix.mul_assoc]
+    have heq : 2 * (k + 1) = 2 * k + 1 + 1 := by omega
+    have h1 : hodgeDirac d ^ (2 * (k + 1)) = hodgeDirac d * hodgeDirac d ^ (2 * k + 1) := by
+      rw [heq, pow_add, pow_one, mul_comm]
+    have h2 : hodgeDirac d ^ (2 * (k + 1)) = hodgeDirac d ^ (2 * k + 1) * hodgeDirac d := by
+      rw [heq, pow_add, pow_one]
+    have hDouble : 2 * Matrix.trace (hodgeGamma nP nM * hodgeDirac d ^ (2 * (k + 1))) = 0 := by
+      calc 2 * Matrix.trace (hodgeGamma nP nM * hodgeDirac d ^ (2 * (k + 1)))
+          = Matrix.trace (hodgeGamma nP nM * hodgeDirac d ^ (2 * (k + 1))) +
+            Matrix.trace (hodgeGamma nP nM * hodgeDirac d ^ (2 * (k + 1))) := two_mul _
+        _ = Matrix.trace (hodgeGamma nP nM * (hodgeDirac d * hodgeDirac d ^ (2 * k + 1))) +
+            Matrix.trace (hodgeGamma nP nM * (hodgeDirac d ^ (2 * k + 1) * hodgeDirac d)) := by
+              nth_rw 1 [h1]; nth_rw 2 [h2]
+        _ = 0 := by rw [hFlip (hodgeDirac d ^ (2 * k + 1)), add_neg_cancel]
+    linarith
+  refine ⟨hOdd, hSym, hTraceG, hEvenZero, ?_⟩
+  rw [Matrix.mul_sum, Matrix.trace_sum, Finset.sum_range_succ']
+  simp only [mul_zero, pow_zero, hc0, one_smul, mul_one, hTraceG]
+  have hRest : (∑ k ∈ Finset.range N,
+      Matrix.trace (hodgeGamma nP nM * c (k + 1) • hodgeDirac d ^ (2 * (k + 1)))) = 0 := by
+    refine Finset.sum_eq_zero fun k _ => ?_
+    rw [Matrix.mul_smul, Matrix.trace_smul, hEvenZero k, smul_zero]
+  rw [hRest, zero_add]
+
+/-! ### Part 3: Hestenes 2D Riemannian vs. Krein Rotors & Logarithmic Spin Connection (Axiom 4) -/
+
+def zCut2 : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
+def eps2 : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; -1, 0]
+
+/-- Hestenes Riemannian spin rotor `R(θ) = cos θ • I₂ + sin θ • ε` (`ε² = -I₂`, zero complex `i`). -/
+def riemRotor (θ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  Real.cos θ • (1 : Matrix (Fin 2) (Fin 2) ℝ) + Real.sin θ • eps2
+
+/-- Hestenes Krein/Lorentzian boost rotor `B(η) = cosh η • I₂ + sinh η • Z` (`Z² = +I₂`). -/
+def kreinRotor (η : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  Real.cosh η • (1 : Matrix (Fin 2) (Fin 2) ℝ) + Real.sinh η • zCut2
+
+/-- Directional derivative of `riemRotor (θ ·)` along tangent speed `dθ`. -/
+def riemRotorDeriv (θ dθ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  (-dθ * Real.sin θ) • (1 : Matrix (Fin 2) (Fin 2) ℝ) + (dθ * Real.cos θ) • eps2
+
+/-- Directional derivative of `kreinRotor (η ·)` along tangent rapidity `dη`. -/
+def kreinRotorDeriv (η dη : ℝ) : Matrix (Fin 2) (Fin 2) ℝ :=
+  (dη * Real.sinh η) • (1 : Matrix (Fin 2) (Fin 2) ℝ) + (dη * Real.cosh η) • zCut2
+
+/-- **Hestenes Riemannian vs. Krein Rotor & Spin-Connection Theorem (`Axioms 4–5`)**:
+1. Both `riemRotor` (`SO(2)`) and `kreinRotor` (`SO⁺(1,1)`) form exact 1-parameter matrix groups
+   with unit determinant (`det R(θ) = 1`, `det B(η) = 1`).
+2. **Logarithmic Soldering Spin Connection (`θ_L(g) = g⁻¹ D g`)**:
+   - Riemannian Gauss–Bonnet connection: `R(-θ) * D(R(θ)) = dθ • ε`;
+   - Krein–Lorentzian boost connection: `B(-η) * D(B(η)) = dη • Z`. -/
+theorem hestenes_riem_vs_krein_rotor_connections (θ₁ θ₂ η₁ η₂ dθ dη : ℝ) :
+    (riemRotor θ₁ * riemRotor θ₂ = riemRotor (θ₁ + θ₂)) ∧
+    ((riemRotor θ₁).det = 1) ∧
+    (riemRotor (-θ₁) * riemRotorDeriv θ₁ dθ = dθ • eps2) ∧
+    (kreinRotor η₁ * kreinRotor η₂ = kreinRotor (η₁ + η₂)) ∧
+    ((kreinRotor η₁).det = 1) ∧
+    (kreinRotor (-η₁) * kreinRotorDeriv η₁ dη = dη • zCut2) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [riemRotor, eps2, Real.cos_add, Real.sin_add, Matrix.mul_apply, Fin.sum_univ_two] <;>
+      ring
+  · simp [riemRotor, eps2, Matrix.det_fin_two]
+    calc Real.cos θ₁ * Real.cos θ₁ - Real.sin θ₁ * (-Real.sin θ₁)
+        = Real.cos θ₁ ^ 2 + Real.sin θ₁ ^ 2 := by ring
+      _ = 1 := Real.cos_sq_add_sin_sq θ₁
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [riemRotor, riemRotorDeriv, eps2, Real.cos_neg, Real.sin_neg,
+        Matrix.mul_apply, Fin.sum_univ_two] <;>
+      nlinarith [Real.cos_sq_add_sin_sq θ₁]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [kreinRotor, zCut2, Real.cosh_add, Real.sinh_add, Matrix.mul_apply, Fin.sum_univ_two] <;>
+      ring
+  · simp [kreinRotor, zCut2, Matrix.det_fin_two]
+    calc (Real.cosh η₁ + Real.sinh η₁) * (Real.cosh η₁ - Real.sinh η₁)
+        = Real.cosh η₁ ^ 2 - Real.sinh η₁ ^ 2 := by ring
+      _ = 1 := Real.cosh_sq_sub_sinh_sq η₁
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [kreinRotor, kreinRotorDeriv, zCut2, Real.cosh_neg, Real.sinh_neg,
+        Matrix.mul_apply, Fin.sum_univ_two] <;>
+      nlinarith [Real.cosh_sq_sub_sinh_sq η₁]
+
+end GaussBonnetStokesHestenesKrein
+```

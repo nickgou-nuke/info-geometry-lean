@@ -1,0 +1,76 @@
+name: Real summable compatibility limits
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Canonical/SummableCompatibleFunctionals.lean'
+      - 'verification/summable-compatible-functionals/**'
+      - 'verification/real-matrix-split/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'lakefile.lean'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/pathing.py'
+      - 'tools/__init__.py'
+      - 'tools/infra/__init__.py'
+      - 'tools/quality/__init__.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - '.github/workflows/summable-compatible-functionals.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: summable-compatible-functionals-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore exact pinned dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: summable-compatible-deps-lean4341-d13f23b7-${{ runner.os }}-v1
+          restore-keys: |
+            zorn-cl44-deps-lean4341-d13f23b7-${{ runner.os }}-
+            real-matrix-split-deps-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean runtime
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Hydrate the maintained pinned Mathlib package
+        run: python3 verification/real-matrix-split/check.py exe cache get
+      - name: Compile exact sources and audit every owned declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/summable-compatible-functionals/check.py \
+            --work "$RUNNER_TEMP/summable-compatible-build" \
+            --phase final 2>&1 | tee summable-compatible-functionals.log
+      - name: Screen the changed mathematics
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/Canonical/SummableCompatibleFunctionals.lean
+      - name: Preserve compiler and axiom evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: summable-compatible-functionals-evidence
+          path: |
+            summable-compatible-functionals.log
+            ${{ runner.temp }}/summable-compatible-build/status.json
+            ${{ runner.temp }}/summable-compatible-build/logs

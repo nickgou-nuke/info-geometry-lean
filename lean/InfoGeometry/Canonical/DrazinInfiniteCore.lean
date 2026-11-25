@@ -5,12 +5,15 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import Mathlib.Analysis.Normed.Operator.Basic
+import Mathlib.Algebra.Polynomial.AlgebraMap
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Algebra.Spectrum
 import InfoGeometry.Canonical.Drazin
 import InfoGeometry.Canonical.DrazinExistenceBridge
 import InfoGeometry.Algebraic.Fitting
 import InfoGeometry.Meta.Architecture
+import Mathlib.Analysis.Normed.Ring.Units
+import Mathlib.LinearAlgebra.FiniteDimensional.Lemmas
 
 /-!
 # InfoGeometry.Canonical.DrazinInfiniteCore
@@ -26,6 +29,140 @@ This file separates:
 namespace InfoGeometry.Canonical.DrazinInfiniteCore
 
 open InfoGeometry.Canonical
+
+section ResolventStability
+
+variable {𝕂 A : Type*}
+variable [NormedField 𝕂] [NormedRing A] [NormedAlgebra 𝕂 A]
+
+/-- Pointwise resolvent stability from the second resolvent identity. The
+estimate keeps the noncommutative operator order and requires both resolvents
+to exist at the parameter. -/
+@[rep_depth operator]
+theorem norm_resolvent_sub_resolvent_le
+    (a b : A) (z : 𝕂)
+    (ha : z ∈ resolventSet 𝕂 a) (hb : z ∈ resolventSet 𝕂 b) :
+    ‖resolvent a z - resolvent b z‖ ≤
+      ‖resolvent a z‖ * ‖a - b‖ * ‖resolvent b z‖ := by
+  rw [spectrum.resolvent_sub_resolvent ha hb]
+  calc
+    ‖resolvent a z * (a - b) * resolvent b z‖ ≤
+        ‖resolvent a z * (a - b)‖ * ‖resolvent b z‖ := norm_mul_le _ _
+    _ ≤ (‖resolvent a z‖ * ‖a - b‖) * ‖resolvent b z‖ :=
+      mul_le_mul_of_nonneg_right (norm_mul_le _ _) (norm_nonneg _)
+
+/-- A point remains in the resolvent set under a perturbation smaller than the
+inverse-resolvent radius. This is the local spectral-stability step supplied
+by the Neumann-series unit neighborhood; no spectral-separation conclusion is
+asserted for parameters outside this radius. -/
+@[rep_depth operator]
+theorem mem_resolventSet_of_norm_perturbation
+    [HasSummableGeomSeries A]
+    (a b : A) (z : 𝕂)
+    (ha : z ∈ resolventSet 𝕂 a)
+    (hsmall : ‖a - b‖ < ‖resolvent a z‖⁻¹) :
+    z ∈ resolventSet 𝕂 b := by
+  have haUnit : IsUnit (z • (1 : A) - a) := by
+    simpa [Algebra.algebraMap_eq_smul_one] using
+      (spectrum.mem_resolventSet_iff (R := 𝕂) (a := a) (r := z)).mp ha
+  have hres : resolvent a z = ((haUnit.unit⁻¹ : Aˣ) : A) := by
+    simpa [Algebra.algebraMap_eq_smul_one] using
+      (spectrum.resolvent_eq (R := 𝕂) (a := a) (r := z) ha)
+  have hnear :
+      ‖(z • (1 : A) - b) - (z • (1 : A) - a)‖ <
+        ‖((haUnit.unit⁻¹ : Aˣ) : A)‖⁻¹ := by
+    rw [show (z • (1 : A) - b) - (z • (1 : A) - a) = a - b by noncomm_ring,
+      ← hres]
+    exact hsmall
+  have hbUnit : IsUnit (z • (1 : A) - b) :=
+    (Units.ofNearby haUnit.unit (z • (1 : A) - b) hnear).isUnit
+  have hbUnit' : IsUnit ((algebraMap 𝕂 A) z - b) := by
+    convert hbUnit using 1
+    rw [Algebra.algebraMap_eq_smul_one]
+  exact (spectrum.mem_resolventSet_iff (R := 𝕂) (a := b) (r := z)).mpr hbUnit'
+
+/-- Uniform Neumann-radius control transports a resolvent bound across a
+perturbation. If the original resolvent is bounded by `M` on `K` and
+`‖a-b‖ * M < 1`, then every point of `K` remains in the perturbed resolvent
+set and the new resolvent norm is bounded by the geometric-series factor
+`M / (1 - ‖a-b‖ * M)`. -/
+@[rep_depth operator]
+theorem resolvent_norm_bound_of_uniform_perturbation
+    [HasSummableGeomSeries A] [Nontrivial A]
+    (a b : A) (K : Set 𝕂) (M : ℝ)
+    (ha : ∀ z ∈ K, z ∈ resolventSet 𝕂 a)
+    (hboundA : ∀ z ∈ K, ‖resolvent a z‖ ≤ M)
+    (hperturb : ‖a - b‖ * M < 1) :
+    ∀ z ∈ K, z ∈ resolventSet 𝕂 b ∧
+      ‖resolvent b z‖ ≤ M / (1 - ‖a - b‖ * M) := by
+  intro z hz
+  have hAz := ha z hz
+  have hRpositive : 0 < ‖resolvent a z‖ := by
+    have hunit : IsUnit (z • (1 : A) - a) := by
+      simpa [Algebra.algebraMap_eq_smul_one] using
+        (spectrum.mem_resolventSet_iff (R := 𝕂) (a := a) (r := z)).mp hAz
+    have hres : resolvent a z = ((hunit.unit⁻¹ : Aˣ) : A) := by
+      simpa [Algebra.algebraMap_eq_smul_one] using
+        (spectrum.resolvent_eq (R := 𝕂) (a := a) (r := z) hAz)
+    rw [hres]
+    exact Units.norm_pos _
+  have hmul : ‖a - b‖ * ‖resolvent a z‖ < 1 := by
+    calc
+      ‖a - b‖ * ‖resolvent a z‖ ≤ ‖a - b‖ * M :=
+        mul_le_mul_of_nonneg_left (hboundA z hz) (norm_nonneg _)
+      _ < 1 := by simpa [mul_comm] using hperturb
+  have hsmall : ‖a - b‖ < ‖resolvent a z‖⁻¹ := by
+    simpa [one_div] using (lt_div_iff₀ hRpositive).2 hmul
+  have hBz : z ∈ resolventSet 𝕂 b :=
+    mem_resolventSet_of_norm_perturbation a b z hAz hsmall
+  have hdiff := norm_resolvent_sub_resolvent_le a b z hAz hBz
+  have hnorm : ‖resolvent b z‖ ≤
+      M + (M * ‖a - b‖) * ‖resolvent b z‖ := by
+    calc
+      ‖resolvent b z‖ =
+          ‖resolvent a z - (resolvent a z - resolvent b z)‖ := by congr 1; abel
+      _ ≤ ‖resolvent a z‖ + ‖resolvent a z - resolvent b z‖ := norm_sub_le _ _
+      _ ≤ M + (‖resolvent a z‖ * ‖a - b‖) * ‖resolvent b z‖ := by
+        exact add_le_add (hboundA z hz) hdiff
+      _ ≤ M + (M * ‖a - b‖) * ‖resolvent b z‖ := by
+        simpa [add_comm] using add_le_add_left
+          (mul_le_mul_of_nonneg_right
+            (mul_le_mul_of_nonneg_right (hboundA z hz) (norm_nonneg (a - b)))
+            (norm_nonneg (resolvent b z))) M
+  have hden : 0 < 1 - ‖a - b‖ * M := by linarith
+  refine ⟨hBz, ?_⟩
+  rw [le_div_iff₀ hden]
+  nlinarith [hnorm]
+
+/-- Uniform resolvent bounds on a common parameter set give a uniform
+Lipschitz estimate for the resolvent map as the operator varies. This is the
+norm-control input needed before integrating along a separating contour. -/
+@[rep_depth operator]
+theorem norm_resolvent_sub_resolvent_le_of_uniform_bound
+    (a b : A) (K : Set 𝕂) (M : ℝ)
+    (ha : ∀ z ∈ K, z ∈ resolventSet 𝕂 a)
+    (hb : ∀ z ∈ K, z ∈ resolventSet 𝕂 b)
+    (hboundA : ∀ z ∈ K, ‖resolvent a z‖ ≤ M)
+    (hboundB : ∀ z ∈ K, ‖resolvent b z‖ ≤ M) :
+    ∀ z ∈ K, ‖resolvent a z - resolvent b z‖ ≤ M ^ 2 * ‖a - b‖ := by
+  intro z hz
+  have hM_nonneg : 0 ≤ M := le_trans (norm_nonneg _) (hboundB z hz)
+  calc
+    ‖resolvent a z - resolvent b z‖ ≤
+        ‖resolvent a z‖ * ‖a - b‖ * ‖resolvent b z‖ :=
+      norm_resolvent_sub_resolvent_le a b z (ha z hz) (hb z hz)
+    _ ≤ M * ‖a - b‖ * M := by
+      calc
+        ‖resolvent a z‖ * ‖a - b‖ * ‖resolvent b z‖ ≤
+            (M * ‖a - b‖) * ‖resolvent b z‖ := by
+          exact mul_le_mul_of_nonneg_right
+            (mul_le_mul_of_nonneg_right (hboundA z hz) (norm_nonneg _)) (norm_nonneg _)
+        _ ≤ (M * ‖a - b‖) * M :=
+          mul_le_mul_of_nonneg_left (hboundB z hz)
+            (mul_nonneg hM_nonneg (norm_nonneg _))
+    _ = M ^ 2 * ‖a - b‖ := by ring
+
+end ResolventStability
 
 section AscentDescent
 
@@ -351,6 +488,246 @@ theorem exists_drazinInverse_of_finiteAscentDescent_constructive
 
 end AscentDescent
 
+section PolynomialPrimaryProjection
+
+variable {𝕂 E : Type*}
+variable [NormedField 𝕂]
+variable [NormedAddCommGroup E] [NormedSpace 𝕂 E]
+
+/-- The polynomially constructed projector for the `p`-primary part, given a
+coprime factorization of an annihilating polynomial. -/
+@[rep_depth operator]
+noncomputable def primaryClusterProjector
+    (T : E →L[𝕂] E) (q v : Polynomial 𝕂) : E →L[𝕂] E :=
+  Polynomial.aeval T (v * q)
+
+/-- Bézout's identity constructs a commuting idempotent separating the two
+polynomially annihilated subspaces. No simplicity assumption on roots within
+either factor is required. -/
+@[rep_depth operator]
+theorem primaryClusterProjector_laws
+    (T : E →L[𝕂] E) (p q u v : Polynomial 𝕂)
+    (hBezout : u * p + v * q = 1)
+    (hAnnihilate : Polynomial.aeval T (p * q) = 0) :
+    (primaryClusterProjector T q v) * primaryClusterProjector T q v =
+        primaryClusterProjector T q v ∧
+      T * primaryClusterProjector T q v = primaryClusterProjector T q v * T ∧
+      Polynomial.aeval T p * primaryClusterProjector T q v = 0 ∧
+      Polynomial.aeval T q * (1 - primaryClusterProjector T q v) = 0 ∧
+      (∀ x : E, Polynomial.aeval T p x = 0 → primaryClusterProjector T q v x = x) ∧
+      (∀ x : E, Polynomial.aeval T q x = 0 → primaryClusterProjector T q v x = 0) := by
+  let f : E →L[𝕂] E := Polynomial.aeval T p
+  let g : E →L[𝕂] E := Polynomial.aeval T q
+  let a : E →L[𝕂] E := Polynomial.aeval T u
+  let b : E →L[𝕂] E := Polynomial.aeval T v
+  let P : E →L[𝕂] E := b * g
+  have hB : a * f + b * g = 1 := by
+    have h := congrArg (Polynomial.aeval T) hBezout
+    simpa [map_add, map_mul] using h
+  have hFG : f * g = 0 := by
+    simpa [map_mul, f, g] using hAnnihilate
+  have hComm (r s : Polynomial 𝕂) :
+      Polynomial.aeval T r * Polynomial.aeval T s =
+        Polynomial.aeval T s * Polynomial.aeval T r := by
+    rw [← map_mul, ← map_mul]
+    exact congrArg (Polynomial.aeval T) (mul_comm r s)
+  have hGF : g * f = 0 := by
+    calc
+      g * f = f * g := hComm q p
+      _ = 0 := hFG
+  have hPCommF : P * f = f * P := by
+    dsimp [P, f, b, g]
+    simpa [map_mul] using hComm (v * q) p
+  have hPCommG : P * g = g * P := by
+    dsimp [P, g, b]
+    simpa [map_mul] using hComm (v * q) q
+  have hfp : f * P = 0 := by
+    calc
+      f * P = f * (b * g) := rfl
+      _ = (f * b) * g := by noncomm_ring
+      _ = (b * f) * g := by rw [hComm p v]
+      _ = b * (f * g) := by noncomm_ring
+      _ = 0 := by rw [hFG]; simp
+  have hPexpr : P = 1 - a * f := by
+    dsimp [P]
+    rw [← hB]
+    noncomm_ring
+  have hafP : (a * f) * P = 0 := by
+    calc
+      (a * f) * P = a * (f * P) := by noncomm_ring
+      _ = 0 := by rw [hfp]; simp
+  have hIdem : P * P = P := by
+    calc
+      P * P = (1 - a * f) * P := by rw [hPexpr]
+      _ = P := by noncomm_ring [hafP]
+  have hTf : T * P = P * T := by
+    have h := hComm Polynomial.X (v * q)
+    simpa [P, Polynomial.aeval_X, map_mul] using h
+  have hgcomp : g * (1 - P) = 0 := by
+    calc
+      g * (1 - P) = g * (a * f) := by rw [hPexpr]; noncomm_ring
+      _ = 0 := by
+        calc
+          g * (a * f) = (g * a) * f := by noncomm_ring
+          _ = (a * g) * f := by rw [hComm q u]
+          _ = a * (g * f) := by noncomm_ring
+          _ = 0 := by rw [hGF]; simp
+  have hFix : ∀ x : E, f x = 0 → P x = x := by
+    intro x hx
+    rw [hPexpr]
+    simp [hx]
+  have hKill : ∀ x : E, g x = 0 → P x = 0 := by
+    intro x hx
+    have hBezoutX := congrArg (fun L : E →L[𝕂] E => L x) hB
+    have haxf : a (f x) = x := by simpa [hx] using hBezoutX
+    rw [hPexpr]
+    change x - a (f x) = 0
+    rw [haxf]
+    simp
+  simpa [P, primaryClusterProjector, f, g] using
+    (show P * P = P ∧ T * P = P * T ∧ f * P = 0 ∧ g * (1 - P) = 0 ∧
+      (∀ x : E, f x = 0 → P x = x) ∧ (∀ x : E, g x = 0 → P x = 0) from
+      ⟨hIdem, hTf, hfp, hgcomp, hFix, hKill⟩)
+
+/-- The polynomial primary projector has range exactly the `p(T)`-annihilated
+subspace. This identifies the primary component itself, including generalized
+eigenvectors when `p` has repeated roots. -/
+@[rep_depth operator]
+theorem primaryClusterProjector_range_eq_ker
+    (T : E →L[𝕂] E) (p q u v : Polynomial 𝕂)
+    (hBezout : u * p + v * q = 1)
+    (hAnnihilate : Polynomial.aeval T (p * q) = 0) :
+    LinearMap.range (primaryClusterProjector T q v).toLinearMap =
+      LinearMap.ker (Polynomial.aeval T p).toLinearMap := by
+  obtain ⟨_, _, hpP, _, hpFix, _⟩ :=
+    primaryClusterProjector_laws T p q u v hBezout hAnnihilate
+  apply le_antisymm
+  · intro x hx
+    rcases hx with ⟨y, rfl⟩
+    change (Polynomial.aeval T p) ((primaryClusterProjector T q v) y) = 0
+    exact congrArg (fun L : E →L[𝕂] E => L y) hpP
+  · intro x hx
+    change (Polynomial.aeval T p) x = 0 at hx
+    refine ⟨x, ?_⟩
+    change (primaryClusterProjector T q v) x = x
+    exact hpFix x hx
+
+/-- The complementary primary projector has range exactly the `q(T)`-annihilated
+subspace. No diagonalizability assumption is used. -/
+@[rep_depth operator]
+theorem primaryClusterComplement_range_eq_ker
+    (T : E →L[𝕂] E) (p q u v : Polynomial 𝕂)
+    (hBezout : u * p + v * q = 1)
+    (hAnnihilate : Polynomial.aeval T (p * q) = 0) :
+    LinearMap.range (1 - primaryClusterProjector T q v).toLinearMap =
+      LinearMap.ker (Polynomial.aeval T q).toLinearMap := by
+  obtain ⟨_, _, _, hqComp, _, hqKill⟩ :=
+    primaryClusterProjector_laws T p q u v hBezout hAnnihilate
+  apply le_antisymm
+  · intro x hx
+    rcases hx with ⟨y, rfl⟩
+    change (Polynomial.aeval T q) ((1 - primaryClusterProjector T q v) y) = 0
+    exact congrArg (fun L : E →L[𝕂] E => L y) hqComp
+  · intro x hx
+    change (Polynomial.aeval T q) x = 0 at hx
+    have hPx : (primaryClusterProjector T q v) x = 0 := hqKill x hx
+    refine ⟨x, ?_⟩
+    change x - (primaryClusterProjector T q v) x = x
+    rw [hPx, sub_zero]
+
+/-- In finite dimension, the two coprime polynomial primary components split
+the full dimension. Repeated roots and their generalized eigenvectors remain
+inside the corresponding kernel; no eigenbasis or semisimplicity hypothesis
+is used. -/
+@[rep_depth operator]
+theorem primaryCluster_finrank_add
+    [FiniteDimensional 𝕂 E]
+    (T : E →L[𝕂] E) (p q u v : Polynomial 𝕂)
+    (hBezout : u * p + v * q = 1)
+    (hAnnihilate : Polynomial.aeval T (p * q) = 0) :
+    Module.finrank 𝕂 (Polynomial.aeval T p).ker +
+      Module.finrank 𝕂 (Polynomial.aeval T q).ker = Module.finrank 𝕂 E := by
+  let P := primaryClusterProjector T q v
+  let Q : E →L[𝕂] E := 1 - P
+  let U : Submodule 𝕂 E := LinearMap.range P.toLinearMap
+  let W : Submodule 𝕂 E := LinearMap.range Q.toLinearMap
+  have hIdem : P * P = P :=
+    (primaryClusterProjector_laws T p q u v hBezout hAnnihilate).1
+  have hPQ : P * Q = 0 := by
+    dsimp [Q]
+    noncomm_ring [hIdem]
+  have hDisjoint : Disjoint U W := by
+    apply disjoint_iff_inf_le.mpr
+    intro x hx
+    rcases hx with ⟨hxU, hxW⟩
+    rcases hxU with ⟨y, rfl⟩
+    rcases hxW with ⟨z, hz⟩
+    have hPy : P (P y) = P y := by
+      have h := congrArg (fun L : E →L[𝕂] E => L y) hIdem
+      simpa using h
+    have hPzero : P (Q z) = 0 := by
+      have h := congrArg (fun L : E →L[𝕂] E => L z) hPQ
+      simpa using h
+    have hEq : P y = Q z := hz.symm
+    have : P y = 0 := by
+      calc
+        P y = P (P y) := hPy.symm
+        _ = P (Q z) := by rw [hEq]
+        _ = 0 := hPzero
+    simp [this]
+  have hsum : U ⊔ W = ⊤ := by
+    apply eq_top_iff.mpr
+    intro x _
+    rw [Submodule.mem_sup]
+    refine ⟨P x, ?_, Q x, ?_, ?_⟩
+    · exact ⟨x, rfl⟩
+    · exact ⟨x, rfl⟩
+    · simp [Q]
+  have hCompl : IsCompl U W := ⟨hDisjoint, codisjoint_iff.mpr hsum⟩
+  rw [← primaryClusterProjector_range_eq_ker T p q u v hBezout hAnnihilate,
+    ← primaryClusterComplement_range_eq_ker T p q u v hBezout hAnnihilate]
+  change Module.finrank 𝕂 U + Module.finrank 𝕂 W = Module.finrank 𝕂 E
+  exact Submodule.finrank_add_eq_of_isCompl hCompl
+
+/-- The Bézout projector gives the unique primary decomposition of every vector:
+the first component is killed by `p(T)`, and the second by `q(T)`. -/
+@[rep_depth operator]
+theorem primaryClusterProjector_unique_decomposition
+    (T : E →L[𝕂] E) (p q u v : Polynomial 𝕂)
+    (hBezout : u * p + v * q = 1)
+    (hAnnihilate : Polynomial.aeval T (p * q) = 0) (x : E) :
+    ∃! yz : E × E,
+      Polynomial.aeval T p yz.1 = 0 ∧
+      Polynomial.aeval T q yz.2 = 0 ∧
+      x = yz.1 + yz.2 := by
+  let P := primaryClusterProjector T q v
+  obtain ⟨_, _, hpP, hqComp, hpFix, hqKill⟩ :=
+    primaryClusterProjector_laws T p q u v hBezout hAnnihilate
+  refine ⟨(P x, (1 - P) x), ?_, ?_⟩
+  · constructor
+    · have h := congrArg (fun L : E →L[𝕂] E => L x) hpP
+      simpa [P, primaryClusterProjector] using h
+    · constructor
+      · have h := congrArg (fun L : E →L[𝕂] E => L x) hqComp
+        simpa [P, primaryClusterProjector] using h
+      · simp
+  · intro yz hyz
+    rcases yz with ⟨y, z⟩
+    rcases hyz with ⟨hy, hz, hsum⟩
+    have hPy : P y = y := hpFix y (by simpa [P, primaryClusterProjector] using hy)
+    have hPz : P z = 0 := hqKill z (by simpa [P, primaryClusterProjector] using hz)
+    have hPx : P x = y := by
+      rw [hsum]
+      simp [hPy, hPz]
+    have hCompX : (1 - P) x = z := by
+      rw [hsum]
+      simp [hPy, hPz]
+    apply Prod.ext
+    · exact hPx.symm
+    · exact hCompX.symm
+
+end PolynomialPrimaryProjection
+
 section SpectralInterfaces
 
 variable {𝕂 E : Type*}
@@ -383,16 +760,71 @@ structure HasClassicalRieszDecompositionAtZero (T : E →L[𝕂] E) where
 /--
 Generalized Riesz-style interface at `0` for a bounded operator.
 
-This is intentionally weaker than the classical finite-index Drazin lane:
-the defect side is tracked by an explicit nilpotence law on the complementary
-operator.  This is the algebraic statement owned by the constructive Riesz
-decomposition below; it is not silently identified with analytic
-quasinilpotence.
+This is the generalized Drazin-style lane: the regular part is invertible on
+`P`, while the complementary operator has spectral radius zero.  The separate
+`ConstructiveRieszDecompositionAtZero` below retains its finite-nilpotence
+condition, which is stronger and belongs to the classical finite-index lane.
 -/
+@[rep_depth operator]
+def QuasinilpotentOnDefect
+    (T P : E →L[𝕂] E) : Prop :=
+  spectralRadius 𝕂 (T * (1 - P)) = 0
+
+/-- Finite-index nilpotence of the complementary operator. -/
 @[rep_depth operator]
 def NilpotentOnDefect
     (T P : E →L[𝕂] E) : Prop :=
   ∃ k : ℕ, T ^ k * (1 - P) = 0
+
+/-- A finite-nilpotent defect has spectral radius zero when the projector commutes with `T`. -/
+@[rep_depth operator]
+theorem quasinilpotentOnDefect_of_nilpotentOnDefect
+    {T P : E →L[𝕂] E}
+    (hP : P * P = P) (hTP : T * P = P * T)
+    (hNil : NilpotentOnDefect T P) :
+    QuasinilpotentOnDefect T P := by
+  rcases hNil with ⟨k, hk⟩
+  let Q : E →L[𝕂] E := 1 - P
+  let A : E →L[𝕂] E := T * Q
+  have hQid : Q * Q = Q := by
+    dsimp [Q]
+    noncomm_ring [hP]
+  have hQT : Q * T = T * Q := by
+    dsimp [Q]
+    noncomm_ring [hTP]
+  have hpow (n : ℕ) : A ^ (n + 1) = T ^ (n + 1) * Q := by
+    induction n with
+    | zero => simp [A, Q]
+    | succ n ih =>
+        calc
+          A ^ (Nat.succ n + 1) = A ^ (n + 1) * A := by
+            rw [show Nat.succ n + 1 = (n + 1) + 1 by omega, pow_succ]
+          _ = (T ^ (n + 1) * Q) * A := by rw [ih]
+          _ = T ^ (n + 1) * (Q * T) * Q := by
+            dsimp [A]
+            noncomm_ring
+          _ = T ^ (n + 1) * (T * Q) * Q := by rw [hQT]
+          _ = (T ^ (n + 1) * T) * (Q * Q) := by noncomm_ring
+          _ = T ^ (n + 2) * Q := by
+            rw [hQid]
+            have hpowT : T ^ (n + 2) = T ^ (n + 1) * T := by
+              rw [show n + 2 = (n + 1) + 1 by omega, pow_succ]
+            rw [hpowT]
+  have hAzero : A ^ (k + 1) = 0 := by
+    rw [hpow k]
+    have hkQ : T ^ k * Q = 0 := by simpa [Q] using hk
+    calc
+      T ^ (k + 1) * Q = T * (T ^ k * Q) := by
+        rw [show k + 1 = Nat.succ k by omega, pow_succ']
+        noncomm_ring
+      _ = 0 := by rw [hkQ]; simp
+  have hRadius :
+      (spectralRadius 𝕂 A) ^ (k + 1) ≤ spectralRadius 𝕂 (A ^ (k + 1)) :=
+    spectrum.spectralRadius_pow_le A (k + 1) (by omega)
+  rw [hAzero, spectrum.spectralRadius_zero] at hRadius
+  have hRadiusPow : (spectralRadius 𝕂 A) ^ (k + 1) = 0 :=
+    le_antisymm hRadius bot_le
+  exact (pow_eq_zero_iff (by omega : k + 1 ≠ 0)).mp hRadiusPow
 
 @[rep_depth operator]
 structure HasGeneralizedRieszDecompositionAtZero (T : E →L[𝕂] E) where
@@ -404,7 +836,56 @@ structure HasGeneralizedRieszDecompositionAtZero (T : E →L[𝕂] E) where
     (T * P) * S = P
   right_inverse_on_regular :
     S * (T * P) = P
-  quasinilpotent_on_defect : NilpotentOnDefect T P
+  inverse_supported_on_regular_left : S * P = S
+  inverse_supported_on_regular_right : P * S = S
+  quasinilpotent_on_defect : QuasinilpotentOnDefect T P
+
+/-- A quasinilpotent operator is the pure-defect case of generalized Riesz
+decomposition: the regular projector and its supported inverse are zero. -/
+@[rep_depth operator]
+def generalizedRiesz_of_quasinilpotent
+    {T : E →L[𝕂] E} (hT : spectralRadius 𝕂 T = 0) :
+    HasGeneralizedRieszDecompositionAtZero (𝕂 := 𝕂) T where
+  P := 0
+  P_idempotent := by simp
+  PT_comm := by simp
+  S := 0
+  left_inverse_on_regular := by simp
+  right_inverse_on_regular := by simp
+  inverse_supported_on_regular_left := by simp
+  inverse_supported_on_regular_right := by simp
+  quasinilpotent_on_defect := by
+    simpa [QuasinilpotentOnDefect] using hT
+
+/-- The generalized Riesz data determine the usual generalized-Drazin laws:
+the regular inverse is two-sided on the regular corner, while the residual
+`T - T²S` is quasinilpotent on the whole operator space. -/
+@[rep_depth operator]
+theorem generalizedDrazin_relations_of_riesz
+    {T : E →L[𝕂] E} (h : HasGeneralizedRieszDecompositionAtZero (𝕂 := 𝕂) T) :
+    T * h.S = h.P ∧ h.S * T = h.P ∧ h.S * T * h.S = h.S ∧
+      spectralRadius 𝕂 (T - T * T * h.S) = 0 := by
+  have hTS : T * h.S = h.P := by
+    calc
+      T * h.S = T * (h.P * h.S) := by rw [h.inverse_supported_on_regular_right]
+      _ = (T * h.P) * h.S := by noncomm_ring
+      _ = h.P := h.left_inverse_on_regular
+  have hST : h.S * T = h.P := by
+    calc
+      h.S * T = (h.S * h.P) * T := by rw [h.inverse_supported_on_regular_left]
+      _ = h.S * (h.P * T) := by noncomm_ring
+      _ = h.S * (T * h.P) := by rw [h.PT_comm]
+      _ = h.P := h.right_inverse_on_regular
+  have hSTS : h.S * T * h.S = h.S := by
+    calc
+      h.S * T * h.S = h.P * h.S := by rw [hST]
+      _ = h.S := h.inverse_supported_on_regular_right
+  have hResidual : T - T * T * h.S = T * (1 - h.P) := by
+    calc
+      T - T * T * h.S = T - T * (T * h.S) := by noncomm_ring
+      _ = T - T * h.P := by rw [hTS]
+      _ = T * (1 - h.P) := by noncomm_ring
+  exact ⟨hTS, hST, hSTS, by rw [hResidual]; exact h.quasinilpotent_on_defect⟩
 
 /--
 Witness-free constructive Riesz decomposition surface at `0`.
@@ -424,6 +905,103 @@ structure ConstructiveRieszDecompositionAtZero (T : E →L[𝕂] E) where
   S_supported_on_regular_left : S * P = S
   S_supported_on_regular_right : P * S = S
   nilpotent_on_complement : T ^ k * (1 - P) = 0
+
+/-- A polynomial primary split with complementary factor `X^k` constructs a
+finite Drazin/Riesz decomposition. The inverse on the regular primary part is
+the polynomial `c(T)` supplied by `c * X + d * p = 1`; the complementary part
+is annihilated by `T^k`. -/
+@[rep_depth operator]
+noncomputable def constructiveRiesz_of_polynomial_primary
+    (T : E →L[𝕂] E) (k : ℕ) (p u v c d : Polynomial 𝕂)
+    (hSplit : u * p + v * (Polynomial.X : Polynomial 𝕂) ^ k = 1)
+    (hAnnihilate : Polynomial.aeval T (p * (Polynomial.X : Polynomial 𝕂) ^ k) = 0)
+    (hInverse : c * (Polynomial.X : Polynomial 𝕂) + d * p = 1) :
+    ConstructiveRieszDecompositionAtZero (𝕂 := 𝕂) T := by
+  let P := primaryClusterProjector T ((Polynomial.X : Polynomial 𝕂) ^ k) v
+  let C : E →L[𝕂] E := Polynomial.aeval T c
+  let F : E →L[𝕂] E := Polynomial.aeval T p
+  obtain ⟨hPid, hPT, hFP, hQComp, _, _⟩ :=
+    primaryClusterProjector_laws T p ((Polynomial.X : Polynomial 𝕂) ^ k) u v hSplit hAnnihilate
+  have hXpow : Polynomial.aeval T ((Polynomial.X : Polynomial 𝕂) ^ k) = T ^ k := by
+    simp [Polynomial.aeval_X_pow]
+  have hInverseEval : C * T + Polynomial.aeval T d * F = 1 := by
+    have h := congrArg (Polynomial.aeval T) hInverse
+    simpa [C, F, map_add, map_mul, Polynomial.aeval_X] using h
+  have hLocalInverse : (C * T) * P = P := by
+    have h := congrArg (fun L : E →L[𝕂] E => L * P) hInverseEval
+    have hCross : (Polynomial.aeval T d * F) * P = 0 := by
+      calc
+        (Polynomial.aeval T d * F) * P = Polynomial.aeval T d * (F * P) := by
+          noncomm_ring
+        _ = 0 := by rw [hFP]; simp
+    simpa [add_mul, hCross] using h
+  have hTC : T * C = C * T := by
+    have h := congrArg (Polynomial.aeval T)
+      (mul_comm (Polynomial.X : Polynomial 𝕂) c)
+    simpa [C, map_mul, Polynomial.aeval_X] using h
+  have hPC : P * C = C * P := by
+    have h := congrArg (Polynomial.aeval T)
+      (mul_comm (v * Polynomial.X ^ k) c)
+    simpa [P, C, primaryClusterProjector, map_mul] using h
+  have hPidem : P * P = P := by simpa [P] using hPid
+  refine
+    { k := k
+      P := P
+      P_idempotent := ?_
+      PT_comm := ?_
+      S := C * P
+      left_inverse_on_regular := ?_
+      right_inverse_on_regular := ?_
+      S_supported_on_regular_left := ?_
+      S_supported_on_regular_right := ?_
+      nilpotent_on_complement := ?_ }
+  · exact hPidem
+  · exact hPT
+  · calc
+      (C * P) * T = C * (P * T) := by noncomm_ring
+      _ = C * (T * P) := by rw [hPT]
+      _ = (C * T) * P := by noncomm_ring
+      _ = P := hLocalInverse
+  · calc
+      T * (C * P) = (T * C) * P := by noncomm_ring
+      _ = (C * T) * P := by rw [hTC]
+      _ = P := hLocalInverse
+  · calc
+      (C * P) * P = C * (P * P) := by noncomm_ring
+      _ = C * P := by rw [hPidem]
+  · calc
+      P * (C * P) = (P * C) * P := by noncomm_ring
+      _ = (C * P) * P := by rw [hPC]
+      _ = C * (P * P) := by noncomm_ring
+      _ = C * P := by rw [hPidem]
+  · simpa [hXpow] using hQComp
+
+/-- A finite-nilpotent constructive split is a special case of the generalized split. -/
+@[rep_depth operator]
+def generalizedRiesz_of_constructiveRiesz
+    {T : E →L[𝕂] E}
+    (hR : ConstructiveRieszDecompositionAtZero (𝕂 := 𝕂) T) :
+    HasGeneralizedRieszDecompositionAtZero (𝕂 := 𝕂) T where
+  P := hR.P
+  P_idempotent := hR.P_idempotent
+  PT_comm := hR.PT_comm
+  S := hR.S
+  left_inverse_on_regular := by
+    calc
+      (T * hR.P) * hR.S = T * (hR.P * hR.S) := by noncomm_ring
+      _ = T * hR.S := by rw [hR.S_supported_on_regular_right]
+      _ = hR.P := hR.right_inverse_on_regular
+  right_inverse_on_regular := by
+    calc
+      hR.S * (T * hR.P) = hR.S * (hR.P * T) := by rw [hR.PT_comm]
+      _ = (hR.S * hR.P) * T := by rw [← mul_assoc]
+      _ = hR.S * T := by rw [hR.S_supported_on_regular_left]
+      _ = hR.P := hR.left_inverse_on_regular
+  inverse_supported_on_regular_left := hR.S_supported_on_regular_left
+  inverse_supported_on_regular_right := hR.S_supported_on_regular_right
+  quasinilpotent_on_defect :=
+    quasinilpotentOnDefect_of_nilpotentOnDefect hR.P_idempotent hR.PT_comm
+      ⟨hR.k, hR.nilpotent_on_complement⟩
 /--
 Foundational Drazin data: the inverse is not primitive, but is carried together
 with the projector and defect-annihilation laws that define it.

@@ -43,6 +43,12 @@ finite-dimensional obstruction.
 
 open InfoGeometry.OperatorAlgebra.ErlangenNet
 
+/-- Binary Cantor boundary used by the operator-Erlangen net. -/
+abbrev BinaryCantorBoundary := SectorBoundary BinarySector
+
+/-- Finite binary cylinder word of depth `n`. -/
+abbrev BinaryCylinder (n : Nat) := FiniteSectorWord BinarySector n
+
 /-- Prefixing a binary symbol to an infinite Cantor code. -/
 @[rep_depth operator]
 def prefixBoundary (s : BinarySector) (x : (ℕ → BinarySector)) : (ℕ → BinarySector)
@@ -61,10 +67,14 @@ theorem prefixBoundary_succ
     prefixBoundary s x (n + 1) = x n :=
   rfl
 
+/-- The Cuntz `O₂` carrier is the `N := 2` instance of the generic owner. -/
+abbrev CuntzO2Carrier (Op : Type*) [Ring Op] [StarRing Op] :=
+  InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op
+
 namespace CuntzO2Carrier
 
 variable {Op : Type*} [Ring Op] [StarRing Op]
-variable (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
+variable (C : CuntzO2Carrier Op)
 
 /-- The left branch is the canonical zero-indexed Cuntz generator. -/
 @[rep_depth operator]
@@ -89,7 +99,7 @@ theorem orthogonal_ranges :
 theorem range_sum :
     (CuntzO2Carrier.S_left C) * star (CuntzO2Carrier.S_left C) + (CuntzO2Carrier.S_right C) * star (CuntzO2Carrier.S_right C) = 1 := by
   simpa [S_left, S_right] using
-    C.range_sum
+    InfoGeometry.Algebra.Cuntz.CuntzNAlgebra.range_sum C
 
 /-- Left range projection `S_1 S_1*`. -/
 @[rep_depth operator]

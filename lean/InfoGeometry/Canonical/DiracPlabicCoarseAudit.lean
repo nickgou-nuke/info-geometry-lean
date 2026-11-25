@@ -1,0 +1,94 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.DiracPlabicCoarseAll
+
+/-!
+# Dirac incidence and Schur declaration audit
+
+This target audits the explicitly named public declarations, including
+named instances, in the four mathematical owners. It does not
+enumerate Lean-generated declarations. Dependencies of private helpers
+are audited transitively through the listed heads.
+
+Regenerate with `python3 verification/dirac-plabic-coarse/audit.py --write`.
+Source inventory, kernel compilation, axiom checking, and semantic
+review are separate checks. This target is not an umbrella import.
+-/
+
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.diracMirror
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.diracMirror_apply
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.diracMirror_involutive
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.diracMirror_anti_isometry
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.diracMirror_incidenceMap
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.diracMirror_incidenceSpace
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.diracMirror_fixed_iff
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.diracMirror_incidence_fixed_iff
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.mem_opposite_incidence_iff
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.incidenceMap_mem_opposite_iff
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.incidence_fixed_iff_intersection
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.incidence_isotropic
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.incidence_cross_pairing
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.incidence_etaOrthogonal
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.incidence_orthogonal
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.incidence_maximal_isotropic
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.dual_congruence_skew
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.dual_congruence_kernel
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.matrixSharp
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.matrixSharp_apply
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.matrixSharp_neg
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.matrixSharp_add
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.matrixSharp_skew
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.matrix_incidence_cross_pairing
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.mulVecLin_dualMap_dotProduct
+#print axioms InfoGeometry.Clifford.NeutralSkewIncidence.matrixSharp_congruence
+
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_transpose
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_mulVec
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_mulVec_eq_zero_iff
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilonSharp_eq_zero_iff
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_cross_pairing
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_reverse_cross_pairing
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_cross_pairing_eq_minor
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_cross_pairing_plucker
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_incidence_fixed_iff
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_incidence_fixed_eq_zero
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_cross_pairing_basis
+#print axioms InfoGeometry.Twistor.DiracSpinorBrackets.epsilon_mirror_pairing_basis
+
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.diracPairingWeight
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.diracPairingWeight_of_skew
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.diracPairingWeight_add
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.diracPairingWeight_neg
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.diracPairingWeight_mirror
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.pairing_edgeSumMatrix_add
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.pairing_edgeSumMatrix_neg
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.pairing_edgeSumDirac_neg
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.pairing_edgeSumDirac_sq_neg
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.pairing_edgeProduct_neg
+#print axioms InfoGeometry.Canonical.DiracBipartitePairing.pairing_edgeProduct_neg_of_even
+
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.skew_add
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.skew_congruence
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.congruence_add
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.congruence_comp
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.congruence_kernel_transport
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.selfAdjointPart_congruence
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.skewAdjointPart_congruence
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.add_shared_kernel
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.selfAdjointPart_symmetric_add_skew
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.skewAdjointPart_symmetric_add_skew
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.schur_precision_transpose
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.schur_covariance_transpose
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.schur_response_split
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.schur_response_selfAdjointPart
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.schur_response_skewAdjointPart
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.schur_precision_normal_defect
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.harmonicExtension_transpose
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.harmonic_skew_transport
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.harmonic_transport_skew
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.schur_response_incidence_orthogonal
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.schur_response_incidence_cross_pairing
+#print axioms InfoGeometry.OperatorAlgebra.DiracCoarseGraining.schur_response_incidence_fixed_of_pullback_kernel

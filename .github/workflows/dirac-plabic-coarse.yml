@@ -1,0 +1,124 @@
+name: Dirac incidence and Schur transport
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Clifford/NeutralSkewIncidence.lean'
+      - 'lean/InfoGeometry/Twistor/DiracSpinorBrackets.lean'
+      - 'lean/InfoGeometry/Canonical/DiracBipartitePairing.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/DiracCoarseGraining.lean'
+      - 'lean/InfoGeometry/Canonical/DiracPlabicCoarse*.lean'
+      - 'lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean'
+      - 'lean/InfoGeometry/Canonical/NeutralDualPairSplitting.lean'
+      - 'lean/InfoGeometry/Twistor/RealTwistorIncidence.lean'
+      - 'lean/InfoGeometry/Clifford/Soldering.lean'
+      - 'lean/InfoGeometry/Topology/AmplituhedronGeneralTwistorExpansion.lean'
+      - 'lean/InfoGeometry/Canonical/FinitePlabicKasteleyn.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PositiveCoarseGraining.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/RealMatrixSplit.lean'
+      - 'verification/dirac-plabic-coarse/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/dirac-plabic-coarse.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dirac-plabic-coarse-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Record checked commit and tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          {
+            git rev-parse HEAD
+            git rev-parse 'HEAD^{tree}'
+            git status --short
+          } | tee dirac-plabic-coarse-revision.log
+      - name: Restore pinned dependencies
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: dirac-plabic-coarse-deps-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Restore checked source artifacts
+        id: source
+        uses: actions/cache/restore@v4
+        with:
+          path: verification/dirac-plabic-coarse/.lake/build
+          key: dirac-plabic-coarse-source-lean4341-d13f23b7-${{ runner.os }}-${{ hashFiles('lean/**/*.lean', 'verification/dirac-plabic-coarse/lakefile.toml', 'verification/dirac-plabic-coarse/lake-manifest.json') }}
+          restore-keys: |
+            dirac-plabic-coarse-source-lean4341-d13f23b7-${{ runner.os }}-
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+          "$HOME/.elan/bin/lean" --version
+          "$HOME/.elan/bin/lake" --version
+      - name: Restore the pinned Mathlib artifacts
+        run: python3 verification/dirac-plabic-coarse/check.py exe cache get
+      - name: Check explicit public source inventory
+        run: python3 verification/dirac-plabic-coarse/audit.py
+      - name: Build source owners and audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/dirac-plabic-coarse/check.py build 2>&1 | tee dirac-plabic-coarse-build.log
+      - name: Inspect transitive axiom dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/dirac-plabic-coarse/check.py --strict-sources 2>&1 | tee dirac-plabic-coarse-axioms.log
+          python3 verification/dirac-plabic-coarse/audit.py --log dirac-plabic-coarse-axioms.log
+      - name: Screen new mathematics
+        run: >-
+          python3 tools/infra/opengauss_screener.py --strict
+          lean/InfoGeometry/Clifford/NeutralSkewIncidence.lean
+          lean/InfoGeometry/Twistor/DiracSpinorBrackets.lean
+          lean/InfoGeometry/Canonical/DiracBipartitePairing.lean
+          lean/InfoGeometry/OperatorAlgebra/DiracCoarseGraining.lean
+          lean/InfoGeometry/Canonical/DiracPlabicCoarseAll.lean
+          lean/InfoGeometry/Canonical/DiracPlabicCoarseAudit.lean
+      - name: Save pinned dependency artifacts
+        if: always() && steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
+      - name: Save checked source artifacts
+        if: always() && steps.source.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: verification/dirac-plabic-coarse/.lake/build
+          key: ${{ steps.source.outputs.cache-primary-key }}
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: dirac-plabic-coarse-build
+          path: |
+            dirac-plabic-coarse-build.log
+            dirac-plabic-coarse-axioms.log
+            dirac-plabic-coarse-revision.log

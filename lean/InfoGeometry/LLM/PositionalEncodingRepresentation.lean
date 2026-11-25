@@ -10,6 +10,7 @@ import InfoGeometry.Clifford.Cl55RotorMonodromyBridge
 import InfoGeometry.External.Auto.JordanBlock2
 import InfoGeometry.LLM.TransformerArchitecture
 import InfoGeometry.Modular.SchrodingerFlow
+import InfoGeometry.Physics.LogCFTJordanShear
 import Mathlib.Tactic
 
 /-!
@@ -436,6 +437,16 @@ def alibiRelativeFlow : RealOneParameterFlow AlibiMat :=
 theorem alibiRelativeFlow_eval (t : ℝ) :
     alibiRelativeFlow.eval t = parabolicMat JordanBlock2.N2 t := rfl
 
+/-- The parabolic ALiBi flow is the genuine Banach-algebra exponential of its
+square-zero generator, not merely a separately defined polynomial path. -/
+theorem alibiRelativeFlow_eval_eq_exponential (t : ℝ) :
+    alibiRelativeFlow.eval t =
+      NormedSpace.exp ((t : ℂ) • (JordanBlock2.N2 : JordanBlock2.M2C)) := by
+  rw [alibiRelativeFlow_eval]
+  simpa [parabolicMat, JordanBlock2.N2,
+    InfoGeometry.Physics.LogCFTJordanShear.nilpotentN] using
+    (InfoGeometry.Physics.LogCFTJordanShear.exp_scaledNilpotent (t : ℂ)).symm
+
 /-- Fixed extra query lane carrying the ALiBi slope. -/
 def alibiPenaltyQuery (p : ℝ) : Fin 2 → ℂ :=
   ![-(p : ℂ), 0]
@@ -482,6 +493,74 @@ theorem alibiAugmentedScore_eq
   ring
 
 end ALiBi
+
+/-! ## 5. Scalar exponential decay flow -/
+
+section ScalarDecay
+
+/-- Units of scalar multiplication by `exp (c t)` on the real line. -/
+def scalarDecayUnit (c t : ℝ) : Units (ℝ →L[ℝ] ℝ) where
+  val := (Real.exp (c * t)) • (1 : ℝ →L[ℝ] ℝ)
+  inv := (Real.exp (-(c * t))) • (1 : ℝ →L[ℝ] ℝ)
+  val_inv := by
+    ext x
+    simp [ContinuousLinearMap.mul_apply]
+    rw [← Real.exp_add]
+    have h : -(c * t) + c * t = 0 := by ring
+    rw [h, Real.exp_zero]
+  inv_val := by
+    ext x
+    simp [ContinuousLinearMap.mul_apply]
+    rw [← Real.exp_add]
+    have h : c * t + -(c * t) = 0 := by ring
+    rw [h, Real.exp_zero]
+
+/-- The scalar exponential as a repository-native one-parameter flow. -/
+def scalarDecayFlow (c : ℝ) :
+    RealOneParameterFlow (ℝ →L[ℝ] ℝ) where
+  flowHom :=
+    { toFun := fun t => scalarDecayUnit c (toAdd t)
+      map_one' := by
+        ext x
+        simp [scalarDecayUnit]
+      map_mul' := by
+        intro s t
+        ext x
+        simp [scalarDecayUnit]
+        rw [← Real.exp_add]
+        congr 1
+        ring }
+
+/-- The scalar flow acts by multiplication by `exp (c t)`. -/
+theorem scalarDecayFlow_eval (c t x : ℝ) :
+    (scalarDecayFlow c).eval t x = Real.exp (c * t) * x := rfl
+
+/-- Its infinitesimal generator is multiplication by `c`. -/
+theorem scalarDecayFlow_hasDerivAt_zero (c : ℝ) :
+    HasDerivAt (fun t : ℝ => (scalarDecayFlow c).eval t)
+      (c • (1 : ℝ →L[ℝ] ℝ)) 0 := by
+  have hlin : HasDerivAt (fun u : ℝ => c * u) c 0 := by
+    simpa using
+      ((hasDerivAt_id 0).const_mul c :
+        HasDerivAt (fun u : ℝ => c * u) (c * 1) 0)
+  have hexp :
+      HasDerivAt (fun u : ℝ => Real.exp (c * u)) (Real.exp (c * 0) * c) 0 :=
+    (Real.hasDerivAt_exp (c * 0)).comp 0 hlin
+  have hsmul := hexp.smul_const (1 : ℝ →L[ℝ] ℝ)
+  change HasDerivAt (fun t : ℝ => (Real.exp (c * t)) • (1 : ℝ →L[ℝ] ℝ))
+    (c • (1 : ℝ →L[ℝ] ℝ)) 0
+  simpa using hsmul
+
+/-- The scalar flow is exactly the canonical Banach-algebra exponential flow
+of multiplication by `c`. -/
+theorem scalarDecayFlow_eq_exponential (c : ℝ) :
+    (scalarDecayFlow c).eval =
+      InfoGeometry.Modular.SchrodingerFlow.flow (c • (1 : ℝ →L[ℝ] ℝ)) := by
+  funext t
+  exact eval_eq_exponential_of_hasDerivAt_zero (scalarDecayFlow c)
+    (c • (1 : ℝ →L[ℝ] ℝ)) (scalarDecayFlow_hasDerivAt_zero c) t
+
+end ScalarDecay
 
 end InfoGeometry.LLM.PositionalEncodingRepresentation
 

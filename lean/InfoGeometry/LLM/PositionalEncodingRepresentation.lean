@@ -598,7 +598,7 @@ theorem exponentialDecayScore_translation_invariant {Q : Type*}
       exponentialDecayScore dot c q k t s := by
   unfold exponentialDecayScore
   congr 1
-  ring
+  ring_nf
 
 /-- At equal times the exponential relative kernel recovers the bare score. -/
 theorem exponentialDecayScore_same_time {Q : Type*}

@@ -123,6 +123,70 @@ def degenerateSignatureForm (p q r : ℕ) :
     QuadraticForm ℝ (Fin (p + q + r) → ℝ) :=
   QuadraticMap.weightedSumSquares ℝ (degenerateSignatureWeight p q r)
 
+/-- Exact coordinate formula for the diagonal `(p,q,r)` quadratic form. -/
+theorem degenerateSignatureForm_apply (p q r : ℕ)
+    (x : Fin (p + q + r) → ℝ) :
+    degenerateSignatureForm p q r x =
+      ∑ i : Fin (p + q + r), degenerateSignatureWeight p q r i • (x i * x i) := by
+  rw [degenerateSignatureForm, QuadraticMap.weightedSumSquares_apply]
+
+/-- The quadratic value depends only on the positive and negative coordinates;
+changing the radical coordinates does not change it. -/
+theorem degenerateSignatureForm_eq_of_nonradical_coords_eq (p q r : ℕ)
+    (x y : Fin (p + q + r) → ℝ)
+    (hxy : ∀ i, i.val < p + q → x i = y i) :
+    degenerateSignatureForm p q r x = degenerateSignatureForm p q r y := by
+  rw [degenerateSignatureForm_apply, degenerateSignatureForm_apply]
+  apply Finset.sum_congr rfl
+  intro i hi
+  by_cases h : i.val < p + q
+  · rw [hxy i h]
+  · have hweight : degenerateSignatureWeight p q r i = 0 := by
+      simp [degenerateSignatureWeight, Nat.not_lt.mpr (by omega : p ≤ i.val), h]
+    simp [hweight]
+
+/-- The signature `(0,0,r)` has identically zero quadratic form. -/
+theorem degenerateSignatureForm_radicalOnly_eq_zero (r : ℕ) :
+    degenerateSignatureForm 0 0 r = 0 := by
+  ext x
+  rw [degenerateSignatureForm_apply]
+  simp [degenerateSignatureWeight]
+
+/-- In the radical-only signature, every vector generator is square-zero. -/
+theorem radicalOnly_generator_sq_zero (r : ℕ) (v : Fin (0 + 0 + r) → ℝ) :
+    (CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) v) ^ 2 = 0 := by
+  rw [pow_two, CliffordAlgebra.ι_sq_scalar,
+    degenerateSignatureForm_radicalOnly_eq_zero]
+  simp
+
+/-- Generators in the radical-only Clifford algebra anticommute, as in the
+exterior algebra presentation. -/
+theorem radicalOnly_generators_anticommute (r : ℕ)
+    (v w : Fin (0 + 0 + r) → ℝ) :
+    CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) v *
+        CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) w +
+      CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) w *
+        CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) v = 0 := by
+  have hv := radicalOnly_generator_sq_zero r v
+  have hw := radicalOnly_generator_sq_zero r w
+  have hvw := radicalOnly_generator_sq_zero r (v + w)
+  rw [map_add] at hvw
+  rw [pow_two] at hvw hv hw
+  calc
+    CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) v *
+          CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) w +
+        CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) w *
+          CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) v =
+        (CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) v +
+          CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) w) *
+            (CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) v +
+              CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) w) -
+          CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) v *
+            CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) v -
+          CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) w *
+            CliffordAlgebra.ι (degenerateSignatureForm 0 0 r) w := by noncomm_ring
+    _ = 0 := by rw [hvw, hv, hw]; noncomm_ring
+
 /-- The corresponding degenerate Clifford carrier `Cl_{p,q,r}`. -/
 abbrev DegenerateClifford (p q r : ℕ) :=
   CliffordAlgebra (degenerateSignatureForm p q r)
@@ -622,6 +686,33 @@ def PaperQCheck12 : Set (GA Q)ˣ :=
 def PaperQCheck03 : Set (GA Q)ˣ :=
   {g | reversionNorm Q g ∈ fixedGradeTwistedCentralizer Q 3 ∧
     cliffordNorm Q g ∈ fixedGradeCentralizer Q 4}
+
+/-- The inclusion `A^{01} ⊆ A^{23}` from Theorem 4.1.  The grade-one
+centralizer is the center of the Clifford algebra, so its reversion norm
+centralizes both grade-two and grade-three carriers. -/
+theorem PaperA01_subset_PaperA23 : PaperA01 Q ⊆ PaperA23 Q := by
+  intro g hg
+  change reversionNorm Q g ∈ fixedGradeCentralizer Q 1 at hg
+  have hcenter : reversionNorm Q g ∈ centralizerSet Q Set.univ := by
+    rw [← fixedGradeCentralizer_one_eq_centralizer_univ Q]
+    exact hg
+  constructor
+  · intro x hx
+    exact hcenter x (Set.mem_univ x)
+  · intro x hx
+    exact hcenter x (Set.mem_univ x)
+
+/-- The inclusion `B^{12} ⊆ B^{03}` from Theorem 4.1.  A Clifford norm
+centralizing grade one is central, hence centralizes the paper's type-three
+joint sector. -/
+theorem PaperB12_subset_PaperB03 : PaperB12 Q ⊆ PaperB03 Q := by
+  intro g hg
+  change cliffordNorm Q g ∈ fixedGradeCentralizer Q 1 at hg
+  have hcenter : cliffordNorm Q g ∈ centralizerSet Q Set.univ := by
+    rw [← fixedGradeCentralizer_one_eq_centralizer_univ Q]
+    exact hg
+  intro x hx
+  exact hcenter x (Set.mem_univ x)
 
 /-- Ordinary adjoint action by a Clifford unit. -/
 def adjointAction (g : (GA Q)ˣ) (x : GA Q) : GA Q :=

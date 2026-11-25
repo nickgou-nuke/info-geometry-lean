@@ -1,0 +1,384 @@
+### I. The Exact Algebraic Structure: Two Dual 4-Vector Zorn Operators & Sum/Difference Recovery
+
+Inside Zorn’s $2 \times 2$ vector-matrix algebra of split octonions $\mathbb{O}_s$, **a single split octonion $Z(x, p)$ packages two dual 4-vectors**—a primal 4-vector point $x = (x_0, \vec{x})$ and a dual 4-vector hyperplane/momentum $p = (p_0, \vec{p})$—in the **chiral circular Peirce basis** $(U_+, \vec{\sigma}_+)$ and $(U_-, \vec{\sigma}_-)$:
+
+$$Z(x, p) \;=\; \underbrace{\bigl(x_0 U_+ + \vec{x}\cdot\vec{\sigma}_+\bigr)}_{\mathbf{X}_+(x) \;=\; \left(\begin{smallmatrix} x_0 & \vec{x} \\ 0 & 0 \end{smallmatrix}\right)} \;+\; \underbrace{\bigl(p_0 U_- + \vec{p}\cdot\vec{\sigma}_-\bigr)}_{\mathbf{P}_-(p) \;=\; \left(\begin{smallmatrix} 0 & 0 \\ \vec{p} & p_0 \end{smallmatrix}\right)} \;=\; \begin{pmatrix} x_0 & \vec{x} \\ \vec{p} & p_0 \end{pmatrix}.$$
+
+1. **Zorn Norm = Primal–Dual Lorentz Pairing & Hyperplane Incidence:**
+   $$\mathcal{N}_{\mathbb{O}_s}\bigl(Z(x, p)\bigr) = x_0 p_0 - x_1 p_1 - x_2 p_2 - x_3 p_3 = \eta_{\mathrm{Mink}}(x, p).$$
+   Thus $x$ lies on the dual hyperplane $p$ **if and only if** $\mathcal{N}_{\mathbb{O}_s}(Z(x, p)) = 0$ (and setting $p = x$ recovers the spacetime interval $\Delta s^2(x)$, while flipping $\vec{p} \mapsto -\vec{p}$ recovers the positive Euclidean inner product $x_0 p_0 + \vec{x}\cdot\vec{p}$).
+
+2. **Sum and Difference Recover the Split-Octonion Hypercomplex Operator Basis:**
+   Lifting $\mathbb{O}_s$ to its **associative left-multiplication Zorn operator ring** $L : \mathbb{O}_s \to \mathrm{End}_{\mathbb{R}}(\mathbb{O}_s) \cong M_8(\mathbb{R})$ (`L_z(w) = z ⋆ w`):
+   - **Pole Sum & Difference:**
+     $$I_8 = L_{U_+} + L_{U_-}, \qquad L_{q_7} = L_{U_-} - L_{U_+} \quad \bigl(L_{q_7}^2 = +I_8,\;\text{chiral cut}\bigr);$$
+   - **Circular Channel Sum & Difference ($a = 1, 2, 3$):**
+     $$L_{q_{a+3}} = L_{\sigma_{+,a}} + L_{\sigma_{-,a}} \quad \bigl(L_{q_{a+3}}^2 = +I_8,\;\text{3 split/boost structures}\bigr),$$
+     $$L_{q_a} = L_{\sigma_{-,a}} - L_{\sigma_{+,a}} \quad \bigl(L_{q_a}^2 = -I_8,\;\text{3 hypercomplex quaternion structures}\bigr);$$
+   - **Inverse Chiral Circular Reconstruction:**
+     $$L_{U_\pm} = \tfrac{1}{2}(I_8 \mp L_{q_7}), \qquad L_{\sigma_{+,a}} = \tfrac{1}{2}(L_{q_{a+3}} - L_{q_a}), \qquad L_{\sigma_{-,a}} = \tfrac{1}{2}(L_{q_{a+3}} + L_{q_a}).$$
+
+3. **Exact $\mathrm{Cl}(4, 3)$ Operator Algebra, Associator Memory, & Invertibility $\iff$ Non-Incidence:**
+   - By polarized left-alternativity of $\mathbb{O}_s$, $L_a L_b + L_b L_a = L_{a \star b + b \star a}$ holds universally in $\mathrm{End}_{\mathbb{R}}(\mathbb{O}_s)$.
+   - Consequently, the 7 imaginary Zorn operators $(L_{q_1}, L_{q_2}, L_{q_3};\; L_{q_4}, L_{q_5}, L_{q_6}, L_{q_7})$ satisfy **exact $\mathrm{Cl}(4, 3)$ Clifford anticommutation** inside $M_8(\mathbb{R})$ with zero complex $i$, while preserving nonassociativity visibly via $L_{q_4} L_{q_5} \neq L_{q_4 \star q_5}$ (`(L_{q_4} L_{q_5} - L_{q_4 ⋆ q_5})(q_6) = 2 q_7`).
+   - The primal and dual 4-vector operators satisfy $L_{\mathbf{X}_+(x)}^2 = x_0 L_{\mathbf{X}_+(x)}$ (nilpotent for $x_0 = 0$, oblique Grassmannian idempotent for $x_0 = 1$), $L_{\mathbf{P}_-(p)}^2 = p_0 L_{\mathbf{P}_-(p)}$, and the **exact contraction law**
+     $$L_{Z(x, p)} \, L_{\overline{Z(x, p)}} = L_{\overline{Z(x, p)}} \, L_{Z(x, p)} = \eta_{\mathrm{Mink}}(x, p) \cdot I_8,$$
+     so **$L_{Z(x, p)}$ is invertible in $\mathrm{End}_{\mathbb{R}}(\mathbb{O}_s)$ if and only if $\eta_{\mathrm{Mink}}(x, p) \neq 0$** (the point $x$ does not lie on the hyperplane $p$).
+
+---
+
+### II. Native Mathlib4 Formalization (`ZornChiralCircularFourVectorOperators.lean`)
+
+```lean
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Algebra.Module.LinearMap.End
+import Mathlib.Data.Fin.VecNotation
+import Mathlib.Tactic
+
+noncomputable section
+
+namespace ZornChiralCircularFourVectorOperators
+
+/-! ### Part 1: Zorn Split-Octonion Carrier & Chiral Circular 4-Vector Bases (U₊, σ⃗₊) and (U₋, σ⃗₋) -/
+
+/-- Zorn split-octonion vector-matrix `[[eP, uP], [vM, eM]]` packaging a primal 4-vector
+`(eP, uP)` and a dual 4-vector `(eM, vM)`. -/
+@[ext]
+structure ZornOct (R : Type*) where
+  eP : R
+  eM : R
+  uP : Fin 3 → R
+  vM : Fin 3 → R
+
+namespace ZornOct
+
+variable {R : Type*} [CommRing R]
+
+instance : Zero (ZornOct R) := ⟨⟨0, 0, fun _ => 0, fun _ => 0⟩⟩
+instance : Add (ZornOct R) :=
+  ⟨fun x y => ⟨x.eP + y.eP, x.eM + y.eM, fun i => x.uP i + y.uP i, fun i => x.vM i + y.vM i⟩⟩
+instance : Sub (ZornOct R) :=
+  ⟨fun x y => ⟨x.eP - y.eP, x.eM - y.eM, fun i => x.uP i - y.uP i, fun i => x.vM i - y.vM i⟩⟩
+instance : Neg (ZornOct R) :=
+  ⟨fun x => ⟨-x.eP, -x.eM, fun i => -x.uP i, fun i => -x.vM i⟩⟩
+instance : SMul R (ZornOct R) :=
+  ⟨fun c x => ⟨c * x.eP, c * x.eM, fun i => c * x.uP i, fun i => c * x.vM i⟩⟩
+
+instance : AddCommGroup (ZornOct R) where
+  add_assoc a b c := by ext <;> simp [HAdd.hAdd, Add.add] <;> ring
+  zero_add a := by ext <;> simp [HAdd.hAdd, Add.add, Zero.zero]
+  add_zero a := by ext <;> simp [HAdd.hAdd, Add.add, Zero.zero]
+  add_comm a b := by ext <;> simp [HAdd.hAdd, Add.add] <;> ring
+  neg_add_cancel a := by ext <;> simp [HAdd.hAdd, Add.add, Neg.neg, Zero.zero]
+  sub_eq_add_neg a b := by ext <;> simp [HAdd.hAdd, Add.add, HSub.hSub, Sub.sub, Neg.neg] <;> ring
+  nsmul n a := (n : R) • a
+  nsmul_zero a := by ext <;> simp [HSMul.hSMul, SMul.smul]
+  nsmul_succ n a := by
+    ext <;> simp [HSMul.hSMul, SMul.smul, HAdd.hAdd, Add.add] <;> push_cast <;> ring
+  zsmul n a := (n : R) • a
+  zsmul_zero' a := by ext <;> simp [HSMul.hSMul, SMul.smul]
+  zsmul_succ' n a := by
+    ext <;> simp [HSMul.hSMul, SMul.smul, HAdd.hAdd, Add.add] <;> push_cast <;> ring
+  zsmul_neg' n a := by
+    ext <;> simp [HSMul.hSMul, SMul.smul, Neg.neg] <;> push_cast <;> ring
+
+instance : Module R (ZornOct R) where
+  one_smul a := by ext <;> simp [HSMul.hSMul, SMul.smul]
+  mul_smul c d a := by ext <;> simp [HSMul.hSMul, SMul.smul, mul_assoc]
+  smul_zero c := by ext <;> simp [HSMul.hSMul, SMul.smul, Zero.zero]
+  smul_add c a b := by ext <;> simp [HSMul.hSMul, SMul.smul, HAdd.hAdd, Add.add, mul_add]
+  add_smul c d a := by ext <;> simp [HSMul.hSMul, SMul.smul, HAdd.hAdd, Add.add, add_mul]
+  zero_smul a := by ext <;> simp [HSMul.hSMul, SMul.smul, Zero.zero]
+
+def cross3 (u v : Fin 3 → R) : Fin 3 → R :=
+  ![u 1 * v 2 - u 2 * v 1, u 2 * v 0 - u 0 * v 2, u 0 * v 1 - u 1 * v 0]
+
+def dot3 (u v : Fin 3 → R) : R := u 0 * v 0 + u 1 * v 1 + u 2 * v 2
+
+/-- Zorn vector-matrix multiplication on `ZornOct R`. -/
+def zornMul (x y : ZornOct R) : ZornOct R where
+  eP := x.eP * y.eP + dot3 x.uP y.vM
+  eM := x.eM * y.eM + dot3 x.vM y.uP
+  uP := fun i => x.eP * y.uP i + y.eM * x.uP i - cross3 x.vM y.vM i
+  vM := fun i => x.eM * y.vM i + y.eP * x.vM i + cross3 x.uP y.uP i
+
+/-- Octonionic conjugate `Z̄ = [[eM, -uP], [-vM, eP]]`. -/
+def octConj (x : ZornOct R) : ZornOct R where
+  eP := x.eM
+  eM := x.eP
+  uP := fun i => -x.uP i
+  vM := fun i => -x.vM i
+
+/-- Zorn norm `N(Z) = eP * eM - uP · vM` (= Minkowski primal–dual pairing). -/
+def octNorm (x : ZornOct R) : R := x.eP * x.eM - dot3 x.uP x.vM
+
+/-- Chiral circular basis vectors `(U₊, σ⃗₊)` and `(U₋, σ⃗₋)`. -/
+def UPlus : ZornOct R := ⟨1, 0, fun _ => 0, fun _ => 0⟩
+def UMinus : ZornOct R := ⟨0, 1, fun _ => 0, fun _ => 0⟩
+def sigmaPlus (i : Fin 3) : ZornOct R := ⟨0, 0, fun j => if j = i then 1 else 0, fun _ => 0⟩
+def sigmaMinus (i : Fin 3) : ZornOct R := ⟨0, 0, fun _ => 0, fun j => if j = i then 1 else 0⟩
+
+/-- Split-octonion hypercomplex & split basis recovered by sum and difference of `(U±, σ⃗±)`. -/
+def unitOct : ZornOct R := UPlus + UMinus
+def qCut7 : ZornOct R := UMinus - UPlus
+def qHyper (i : Fin 3) : ZornOct R := sigmaMinus i - sigmaPlus i
+def qSplit (i : Fin 3) : ZornOct R := sigmaPlus i + sigmaMinus i
+
+/-- Primal 4-vector element `X₊(x) = x₀ U₊ + x₁ σ₊₁ + x₂ σ₊₂ + x₃ σ₊₃`. -/
+def primal4 (x : Fin 4 → R) : ZornOct R :=
+  x 0 • UPlus + x 1 • sigmaPlus 0 + x 2 • sigmaPlus 1 + x 3 • sigmaPlus 2
+
+/-- Dual 4-vector (hyperplane / momentum) element `P₋(p) = p₀ U₋ + p₁ σ₋₁ + p₂ σ₋₂ + p₃ σ₋₃`. -/
+def dual4 (p : Fin 4 → R) : ZornOct R :=
+  p 0 • UMinus + p 1 • sigmaMinus 0 + p 2 • sigmaMinus 1 + p 3 • sigmaMinus 2
+
+/-- Combined primal–dual Zorn element `Z(x, p) = X₊(x) + P₋(p)`. -/
+def primalDualZorn (x p : Fin 4 → R) : ZornOct R := primal4 x + dual4 p
+
+/-- Minkowski primal–dual pairing `η(x, p) = x₀ p₀ - x₁ p₁ - x₂ p₂ - x₃ p₃`. -/
+def minkPair (x p : Fin 4 → R) : R :=
+  x 0 * p 0 - x 1 * p 1 - x 2 * p 2 - x 3 * p 3
+
+/-! ### Part 2: Associative Left-Multiplication Zorn Operators in End_R(ZornOct R) ≅ M₈(R) -/
+
+/-- The associative left-multiplication Zorn operator `L_z ∈ End_R(ZornOct R)` (`w ↦ z ⋆ w`). -/
+def zornLeftOp (z : ZornOct R) : Module.End R (ZornOct R) where
+  toFun w := zornMul z w
+  map_add' w₁ w₂ := by
+    ext <;> simp [zornMul, dot3, cross3, HAdd.hAdd, Add.add] <;> try ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+  map_smul' c w := by
+    ext <;> simp [zornMul, dot3, cross3, HSMul.hSMul, SMul.smul] <;> try ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+
+/-- `R`-linear lift `L : ZornOct R →ₗ[R] End_R(ZornOct R)` turning Zorn elements into associative
+`8 × 8` operators. -/
+def zornLeftMap : ZornOct R →ₗ[R] Module.End R (ZornOct R) where
+  toFun := zornLeftOp
+  map_add' z₁ z₂ := by
+    ext w <;> simp [zornLeftOp, zornMul, dot3, cross3, HAdd.hAdd, Add.add] <;> try ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+  map_smul' c z := by
+    ext w <;> simp [zornLeftOp, zornMul, dot3, cross3, HSMul.hSMul, SMul.smul] <;> try ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+
+/-- **Polarized Left-Alternativity for Zorn Operators**:
+In the associative operator ring `End_R(ZornOct R)`, for all `a, b : ZornOct R`:
+`L_a L_b + L_b L_a = L_{a ⋆ b + b ⋆ a}` and `L_a L_a = L_{a ⋆ a}`. -/
+theorem zornLeftOp_polarized_alternative (a b : ZornOct R) :
+    (zornLeftOp a * zornLeftOp b + zornLeftOp b * zornLeftOp a =
+      zornLeftOp (zornMul a b + zornMul b a)) ∧
+    (zornLeftOp a * zornLeftOp a = zornLeftOp (zornMul a a)) := by
+  constructor
+  · ext w <;>
+      simp [Module.End.mul_apply, zornLeftOp, zornMul, dot3, cross3, HAdd.hAdd, Add.add] <;>
+      try ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+  · ext w <;>
+      simp [Module.End.mul_apply, zornLeftOp, zornMul, dot3, cross3] <;> try ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+    · intro i; fin_cases i <;> simp [cross3] <;> ring
+
+/-- **Theorem 1 (Sum & Difference Recovery of the `Cl(4,3)` Split-Octonion Operator Basis)**:
+From the two chiral circular 4-vector operator bases `(L_{U₊}, L_{σ₊})` and `(L_{U₋}, L_{σ₋})`:
+1. **Sum & Difference Equations**:
+   - `L_{U₊} + L_{U₋} = 1`, `L_{U₋} - L_{U₊} = L_{q₇}`;
+   - `L_{σ₊ᵢ} + L_{σ₋ᵢ} = L_{q_{i+3}}`, `L_{σ₋ᵢ} - L_{σ₊ᵢ} = L_{qᵢ}`.
+2. **Inverse Reconstruction (over `ℝ`)**:
+   - `L_{U₊} = ½(1 - L_{q₇})`, `L_{U₋} = ½(1 + L_{q₇})`;
+   - `L_{σ₊ᵢ} = ½(L_{q_{i+3}} - L_{qᵢ})`, `L_{σ₋ᵢ} = ½(L_{q_{i+3}} + L_{qᵢ})`.
+3. **Exact `Cl(4, 3)` Clifford Operator Algebra in `End_ℝ(ZornOct ℝ) ≅ M₈(ℝ)`**:
+   - 3 hypercomplex squares: `(L_{qᵢ})² = -1` (`i = 0, 1, 2`);
+   - 4 split squares: `(L_{q_{i+3}})² = +1`, `(L_{q₇})² = +1`;
+   - All 7 generators mutually anticommute (`L_a L_b + L_b L_a = 0` for `a ≠ b`).
+4. **Visible Nonassociativity Witness**: `L_{q₄} L_{q₅} ≠ L_{q₄ ⋆ q₅}` (their difference applied to
+   `q₆` equals `2 • q₇ ≠ 0`). -/
+theorem chiral_circular_sum_diff_recovers_cl43_zorn_operators (i : Fin 3) :
+    let L := zornLeftMap (R := ℝ)
+    -- 1. Sum and difference recovery
+    (L UPlus + L UMinus = 1) ∧
+    (L UMinus - L UPlus = L qCut7) ∧
+    (L (sigmaPlus i) + L (sigmaMinus i) = L (qSplit i)) ∧
+    (L (sigmaMinus i) - L (sigmaPlus i) = L (qHyper i)) ∧
+    -- 2. Inverse chiral reconstruction
+    (L UPlus = (1 / 2 : ℝ) • (1 - L qCut7)) ∧
+    (L UMinus = (1 / 2 : ℝ) • (1 + L qCut7)) ∧
+    (L (sigmaPlus i) = (1 / 2 : ℝ) • (L (qSplit i) - L (qHyper i))) ∧
+    (L (sigmaMinus i) = (1 / 2 : ℝ) • (L (qSplit i) + L (qHyper i))) ∧
+    -- 3. Exact Cl(4, 3) operator squares and pairwise anticommutation
+    (L (qHyper i) * L (qHyper i) = -1) ∧
+    (L (qSplit i) * L (qSplit i) = 1) ∧
+    (L qCut7 * L qCut7 = 1) ∧
+    (∀ a b : Fin 7, a ≠ b →
+      let g : Fin 7 → ZornOct ℝ := ![qHyper 0, qHyper 1, qHyper 2,
+        qSplit 0, qSplit 1, qSplit 2, qCut7]
+      L (g a) * L (g b) + L (g b) * L (g a) = 0) ∧
+    -- 4. Nonassociativity survives visibly on operators: L_{q₄} L_{q₅} ≠ L_{q₄ ⋆ q₅}
+    (L (qSplit 0) * L (qSplit 1) ≠ L (zornMul (qSplit 0) (qSplit 1))) := by
+  dsimp
+  have hL1 : zornLeftMap (R := ℝ) unitOct = 1 := by
+    ext w <;> simp [zornLeftMap, zornLeftOp, zornMul, unitOct, UPlus, UMinus, dot3, cross3,
+      HAdd.hAdd, Add.add] <;> (intro k; fin_cases k <;> simp [cross3])
+  have hSumU : zornLeftMap (R := ℝ) UPlus + zornLeftMap UMinus = 1 := by
+    rw [← map_add]; exact hL1
+  have hDiffU : zornLeftMap (R := ℝ) UMinus - zornLeftMap UPlus = zornLeftMap qCut7 :=
+    (map_sub _ _ _).symm
+  have hSumS : zornLeftMap (R := ℝ) (sigmaPlus i) + zornLeftMap (sigmaMinus i) =
+      zornLeftMap (qSplit i) := (map_add _ _ _).symm
+  have hDiffS : zornLeftMap (R := ℝ) (sigmaMinus i) - zornLeftMap (sigmaPlus i) =
+      zornLeftMap (qHyper i) := (map_sub _ _ _).symm
+  refine ⟨hSumU, hDiffU, hSumS, hDiffS, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [← hSumU, ← hDiffU]; module
+  · rw [← hSumU, ← hDiffU]; module
+  · rw [← hSumS, ← hDiffS]; module
+  · rw [← hSumS, ← hDiffS]; module
+  · change zornLeftOp (qHyper (R := ℝ) i) * zornLeftOp (qHyper i) = -1
+    rw [(zornLeftOp_polarized_alternative _ _).2]
+    have hq : zornMul (qHyper (R := ℝ) i) (qHyper i) = -unitOct := by
+      fin_cases i <;> ext <;>
+        simp [qHyper, sigmaPlus, sigmaMinus, unitOct, UPlus, UMinus, zornMul, dot3,
+          HAdd.hAdd, Add.add, HSub.hSub, Sub.sub, Neg.neg] <;>
+        (intro k; fin_cases k <;> simp [cross3])
+    rw [hq, show zornLeftOp (-unitOct) = -zornLeftMap (R := ℝ) unitOct from map_neg _ _, hL1]
+  · change zornLeftOp (qSplit (R := ℝ) i) * zornLeftOp (qSplit i) = 1
+    rw [(zornLeftOp_polarized_alternative _ _).2]
+    have hq : zornMul (qSplit (R := ℝ) i) (qSplit i) = unitOct := by
+      fin_cases i <;> ext <;>
+        simp [qSplit, sigmaPlus, sigmaMinus, unitOct, UPlus, UMinus, zornMul, dot3,
+          HAdd.hAdd, Add.add] <;>
+        (intro k; fin_cases k <;> simp [cross3])
+    rw [hq]; exact hL1
+  · change zornLeftOp (qCut7 (R := ℝ)) * zornLeftOp qCut7 = 1
+    rw [(zornLeftOp_polarized_alternative _ _).2]
+    have hq : zornMul (qCut7 (R := ℝ)) qCut7 = unitOct := by
+      ext <;> simp [qCut7, unitOct, UPlus, UMinus, zornMul, dot3, HAdd.hAdd, Add.add,
+        HSub.hSub, Sub.sub] <;> (intro k; fin_cases k <;> simp [cross3])
+    rw [hq]; exact hL1
+  · intro a b hab
+    change zornLeftOp _ * zornLeftOp _ + zornLeftOp _ * zornLeftOp _ = 0
+    rw [(zornLeftOp_polarized_alternative _ _).1]
+    have hAnti : zornMul (![qHyper (R := ℝ) 0, qHyper 1, qHyper 2,
+        qSplit 0, qSplit 1, qSplit 2, qCut7] a)
+      (![qHyper (R := ℝ) 0, qHyper 1, qHyper 2, qSplit 0, qSplit 1, qSplit 2, qCut7] b) +
+      zornMul (![qHyper (R := ℝ) 0, qHyper 1, qHyper 2,
+        qSplit 0, qSplit 1, qSplit 2, qCut7] b)
+      (![qHyper (R := ℝ) 0, qHyper 1, qHyper 2, qSplit 0, qSplit 1, qSplit 2, qCut7] a) = 0 := by
+      fin_cases a <;> fin_cases b <;> first | exact False.elim (hab rfl) |
+        (ext <;> simp [qHyper, qSplit, qCut7, UPlus, UMinus, sigmaPlus, sigmaMinus,
+          zornMul, dot3, HAdd.hAdd, Add.add, HSub.hSub, Sub.sub] <;>
+          (intro k; fin_cases k <;> simp [cross3]))
+    rw [hAnti]
+    exact map_zero zornLeftMap
+  · intro hEq
+    have hApp := congrArg (fun f : Module.End ℝ (ZornOct ℝ) => (f (qSplit 2)).eP) hEq
+    simp [zornLeftMap, zornLeftOp, Module.End.mul_apply, qSplit, sigmaPlus, sigmaMinus,
+      zornMul, dot3, cross3, HAdd.hAdd, Add.add] at hApp
+
+/-- **Theorem 2 (Primal Point & Dual Hyperplane 4-Vector Operators: Contraction & Incidence Law)**:
+For any primal 4-vector point `x : Fin 4 → ℝ` and dual 4-vector hyperplane/momentum `p : Fin 4 → ℝ`:
+1. **Zorn Norm = Minkowski Primal–Dual Pairing**: `octNorm (Z(x, p)) = x₀ p₀ - x₁ p₁ - x₂ p₂ - x₃ p₃`.
+2. **Idempotent / Nilpotent Chiral 4-Vector Operators**:
+   `(L_{X₊(x)})² = x₀ • L_{X₊(x)}` and `(L_{P₋(p)})² = p₀ • L_{P₋(p)}`.
+3. **Exact Operator Contraction in `End_ℝ(ZornOct ℝ)`**:
+   `L_{Z(x, p)} * L_{Z̄(x, p)} = L_{Z̄(x, p)} * L_{Z(x, p)} = η(x, p) • I`.
+4. **Hyperplane Incidence Equivalence**: `L_{Z(x, p)}` is invertible (`IsUnit`) **if and only if**
+   `x` does not lie on the hyperplane `p` (`η(x, p) ≠ 0`). -/
+theorem primal_dual_four_vector_zorn_operators (x p : Fin 4 → ℝ) :
+    let L := zornLeftMap (R := ℝ)
+    let Z := primalDualZorn x p
+    (octNorm Z = minkPair x p) ∧
+    (L (primal4 x) * L (primal4 x) = x 0 • L (primal4 x)) ∧
+    (L (dual4 p) * L (dual4 p) = p 0 • L (dual4 p)) ∧
+    (L Z * L (octConj Z) = minkPair x p • (1 : Module.End ℝ (ZornOct ℝ))) ∧
+    (L (octConj Z) * L Z = minkPair x p • (1 : Module.End ℝ (ZornOct ℝ))) ∧
+    (IsUnit (L Z) ↔ minkPair x p ≠ 0) := by
+  dsimp
+  have hL1 : zornLeftMap (R := ℝ) unitOct = 1 := by
+    ext w <;> simp [zornLeftMap, zornLeftOp, zornMul, unitOct, UPlus, UMinus, dot3, cross3,
+      HAdd.hAdd, Add.add] <;> (intro k; fin_cases k <;> simp [cross3])
+  have hNorm : octNorm (primalDualZorn x p) = minkPair x p := by
+    simp [octNorm, primalDualZorn, primal4, dual4, UPlus, UMinus, sigmaPlus, sigmaMinus,
+      dot3, minkPair, HAdd.hAdd, Add.add, HSMul.hSMul, SMul.smul]
+    ring
+  have hXsq : zornMul (primal4 x) (primal4 x) = x 0 • primal4 x := by
+    ext <;> simp [primal4, UPlus, sigmaPlus, zornMul, dot3, HAdd.hAdd, Add.add,
+      HSMul.hSMul, SMul.smul] <;> try ring
+    · intro k; fin_cases k <;> simp [cross3] <;> ring
+    · intro k; fin_cases k <;> simp [cross3] <;> ring
+  have hPsq : zornMul (dual4 p) (dual4 p) = p 0 • dual4 p := by
+    ext <;> simp [dual4, UMinus, sigmaMinus, zornMul, dot3, HAdd.hAdd, Add.add,
+      HSMul.hSMul, SMul.smul] <;> try ring
+    · intro k; fin_cases k <;> simp [cross3] <;> ring
+    · intro k; fin_cases k <;> simp [cross3] <;> ring
+  have hConL : ∀ z : ZornOct ℝ,
+      zornLeftMap z * zornLeftMap (octConj z) = octNorm z • (1 : Module.End ℝ (ZornOct ℝ)) := by
+    intro z
+    ext w <;>
+      simp [zornLeftMap, zornLeftOp, Module.End.mul_apply, zornMul, octConj, octNorm,
+        dot3, cross3, HSMul.hSMul, SMul.smul] <;> try ring
+    · intro k; fin_cases k <;> simp [cross3] <;> ring
+    · intro k; fin_cases k <;> simp [cross3] <;> ring
+  have hConR : ∀ z : ZornOct ℝ,
+      zornLeftMap (octConj z) * zornLeftMap z = octNorm z • (1 : Module.End ℝ (ZornOct ℝ)) := by
+    intro z
+    ext w <;>
+      simp [zornLeftMap, zornLeftOp, Module.End.mul_apply, zornMul, octConj, octNorm,
+        dot3, cross3, HSMul.hSMul, SMul.smul] <;> try ring
+    · intro k; fin_cases k <;> simp [cross3] <;> ring
+    · intro k; fin_cases k <;> simp [cross3] <;> ring
+  have hZL := hConL (primalDualZorn x p)
+  have hZR := hConR (primalDualZorn x p)
+  rw [hNorm] at hZL hZR
+  refine ⟨hNorm, ?_, ?_, hZL, hZR, ?_⟩
+  · change zornLeftOp (primal4 x) * zornLeftOp (primal4 x) = x 0 • zornLeftMap (primal4 x)
+    rw [(zornLeftOp_polarized_alternative _ _).2, hXsq]
+    exact map_smul zornLeftMap (x 0) (primal4 x)
+  · change zornLeftOp (dual4 p) * zornLeftOp (dual4 p) = p 0 • zornLeftMap (dual4 p)
+    rw [(zornLeftOp_polarized_alternative _ _).2, hPsq]
+    exact map_smul zornLeftMap (p 0) (dual4 p)
+  · constructor
+    · rintro ⟨u, hu⟩ hZero
+      rw [hZero, zero_smul] at hZL
+      have hInvZero : zornLeftMap (R := ℝ) (octConj (primalDualZorn x p)) = 0 := by
+        calc zornLeftMap (R := ℝ) (octConj (primalDualZorn x p))
+            = (u⁻¹ : Module.End ℝ (ZornOct ℝ)) *
+                ((u : Module.End ℝ (ZornOct ℝ)) * zornLeftMap (octConj (primalDualZorn x p))) := by
+                rw [← mul_assoc]; simp
+          _ = 0 := by rw [hu, hZL, mul_zero]
+      have hConjZero : octConj (primalDualZorn x p) = 0 := by
+        have hApp := congrArg (fun f : Module.End ℝ (ZornOct ℝ) => f unitOct) hInvZero
+        have hId : zornMul (octConj (primalDualZorn x p)) unitOct = octConj (primalDualZorn x p) := by
+          ext <;> simp [unitOct, UPlus, UMinus, zornMul, dot3, HAdd.hAdd, Add.add] <;>
+            (intro k; fin_cases k <;> simp [cross3])
+        simpa [zornLeftMap, zornLeftOp, hId] using hApp
+      have hZZero : primalDualZorn x p = 0 := by
+        have hCC : octConj (octConj (primalDualZorn x p)) = primalDualZorn x p := by
+          ext <;> simp [octConj]
+        rw [← hCC, hConjZero]
+        ext <;> simp [octConj, Zero.zero]
+      have hUZero : (u : Module.End ℝ (ZornOct ℝ)) = 0 := by
+        rw [hu, hZZero, map_zero]
+      have h10 : (1 : Module.End ℝ (ZornOct ℝ)) = 0 := by
+        calc (1 : Module.End ℝ (ZornOct ℝ)) = (u : Module.End ℝ (ZornOct ℝ)) * (u⁻¹ : _) := by simp
+          _ = 0 := by rw [hUZero, zero_mul]
+      have hUnit0 := congrArg (fun f : Module.End ℝ (ZornOct ℝ) => (f unitOct).eP) h10
+      simp [unitOct, UPlus, UMinus, HAdd.hAdd, Add.add] at hUnit0
+    · intro hNe
+      refine ⟨⟨zornLeftMap (primalDualZorn x p),
+        (minkPair x p)⁻¹ • zornLeftMap (octConj (primalDualZorn x p)), ?_, ?_⟩, rfl⟩
+      · rw [mul_smul_comm, hZL, smul_smul, inv_mul_cancel₀ hNe, one_smul]
+      · rw [smul_mul_assoc, hZR, smul_smul, inv_mul_cancel₀ hNe, one_smul]
+
+end ZornOct
+
+end ZornChiralCircularFourVectorOperators
+```

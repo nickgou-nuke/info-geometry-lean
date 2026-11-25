@@ -111,7 +111,10 @@ coverage distinct from an isolated exact-pin source-closure check. Record any
 pre-existing source/dependency failure without weakening the requested proofs.
 
 Independent semantic review and a separate verification review are required.
-The user requested publication as a pull request on 2026-11-25. Publish this
-source-reviewed implementation as a draft while compilation and declaration
-axiom checks remain pending. Publication does not assert verification or
-authorize a merge; the acceptance conditions above remain outstanding.
+The user requested formalization and publication as a pull request on
+2026-11-25. The three new owners now compile in their actual 12-module
+repository source closure, with warnings-as-errors on the new owners. The
+native audit covers all 76 owned declarations and accepts only the three
+foundational axioms above. Exact evidence and independent review outcomes are
+recorded in the README and evidence directory. Root/package integration gates
+remain a separate requirement; publication does not authorize a merge.

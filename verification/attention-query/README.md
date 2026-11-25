@@ -1,34 +1,31 @@
 # Query attention, neutral evaluation, and a prescribed spiral
 
-## Status
+## Verification status — 2026-11-25
 
-This is a source-reviewed implementation draft. The new Lean files have **not
-yet been compiled** and no declaration-axiom result has been obtained. Static
-source checks are not a kernel certificate.
+All three new owners and their actual 12-module repository import closure
+**compile successfully** with the unchanged Lean 4.34.1 / Mathlib pins below.
+The three new owners were compiled with warnings treated as errors and
+produced no diagnostics.
 
-Earlier locked owner-build attempts were queued behind other verification work
-holding `/tmp/info-geometry-build.lock`. Our waiting command was interrupted
-with exit 130 before it acquired the lock or started Lake; a subsequent
-nonblocking attempt exited with `BuildLockBusyError`.
+The native declaration audit passed for **76 owned declarations**, including
+the 41 public theorems, definitions, and generated declarations. Their
+transitive axiom dependencies are restricted to `propext`, `Classical.choice`,
+and `Quot.sound`. The independent log reconciler verified complete owner
+coverage and consistent declaration counts. The exact source/artifact hashes,
+commands, and native results are in [the local receipt](evidence/local-validation.json)
+and [the complete declaration audit](evidence/local-declaration-audit.jsonl).
 
-On a later attempt on 2026-11-25, the exact-pin source-closure checker acquired
-the lock, validated the environment, and successfully compiled the unchanged
-`InfoGeometry.Algebra.FiniteSpinAlgebra` dependency. Compilation then stopped
-in the unchanged `InfoGeometry.Convex.Bregman` dependency because the supplied
-Mathlib checkout lacked the compiled artifact for
-`Mathlib.Analysis.Calculus.Deriv.Basic`. None of the three new owners or the
-native declaration audit was reached. An alternative clean checkout at the
-same Mathlib revision contains more of the required calculus artifacts; its
-remaining dependency-provisioning attempt was blocked when
-`kerr-unruh:47` acquired the shared lock.
+Independent semantic review passed. The focused GitHub workflow
+`.github/workflows/attention-query-geometry.yml` repeats the exact-pin
+source-closure check and uploads its own receipts, source copies, and logs.
+It is separate from the root Lake package: the root/package publication gates
+have not passed, and this result is not a whole-repository build certificate.
 
-Independent semantic review and a separate source-level verification review
-completed. Strict source refutation, the static GATE_4 review, the staged proof
-gate, and whitespace checks passed. GATE_4 explicitly returned
-`STATIC_REVIEW_PASSED_KERNEL_UNVERIFIED`. The root Lake build and publication
-build gate have not passed. These results support publication as a reviewable
-draft, not acceptance as verified mathematics. Existing verification processes,
-lock rules, dependency pins, and caches were preserved.
+Earlier attempts were blocked by the shared build lock or incomplete Mathlib
+artifacts. A fresh independent checkout of the same pinned Mathlib and
+targeted cache retrieval resolved that environment limitation. Actual compiler
+diagnostics then guided syntax, API, and linter repairs. No dependency pin,
+imported repository owner, lock rule, or theorem conclusion was weakened.
 
 ## Source owners
 
@@ -38,10 +35,11 @@ lock rules, dependency pins, and caches were preserved.
 | `InfoGeometry.Canonical.AttentionQueryKeyReversal` | Existing neutral summand inclusions connected to rectangular matrix logits; transpose and rank bound; row/column normalization; a symmetric rank-at-most-one score matrix whose softmax has rank two. |
 | `InfoGeometry.Rotary.RotaryAttentionFlow` | Actual differential equation, composition and inverse of the existing prescribed spiral; normalization by a boosted null coordinate; an anisotropic counterexample. |
 
-There are 41 proposed public theorem declarations across these owners. That
-count is a source inventory, not a count of kernel-verified theorems.
+There are 41 compiled public theorem declarations across these owners:
+11 query-geometry, 21 query/key, and 9 flow results. The native audit covers
+23, 38, and 15 total declarations respectively, including generated helpers.
 
-## Exact mathematics represented by the draft
+## Verified mathematics
 
 For a real normed space `E`, nonempty finite keys `K_j : E →L[ℝ] ℝ`, and
 inverse temperature `β`, put
@@ -52,7 +50,7 @@ s_j(q)=\beta K_j(q),\qquad
 p_j(q)=\frac{e^{s_j(q)}}{\sum_l e^{s_l(q)}}.
 \]
 
-The target Fréchet derivative and line curvature are
+The Fréchet derivative and line curvature are
 
 \[
 D\Phi_\beta(q)=\beta\sum_j p_j(q)K_j,
@@ -89,7 +87,7 @@ Its determinant `(e−1)/(2(1+e))` is positive: row softmax neither preserves
 the latent rank bound nor generally commutes with transpose.
 
 The flow module uses the existing real matrix
-`F(t)=exp(κt) R(ωt)`, and targets
+`F(t)=exp(κt) R(ωt)`, and proves
 
 \[
 \frac{d}{dt}F(t)x_0=(\kappa I+\omega J)F(t)x_0,
@@ -129,7 +127,8 @@ For a source-closure check using an already provisioned clean checkout of the
 same pinned Mathlib, use the included checker. It shares the same build lock,
 compiles unchanged repository dependencies in full, applies warnings-as-errors
 to the new owners, and runs the native declaration audit. No dependency pins,
-imports, or lock rules are replaced by this checker.
+imports, or lock rules are replaced by this checker. Each run requires a new,
+empty output directory, preventing stale artifacts from shadowing imports.
 
 ```bash
 python3 verification/attention-query/verify.py \
@@ -146,5 +145,5 @@ dependencies. The only permitted foundational axioms are `propext`,
 `Classical.choice`, and `Quot.sound`. `review_audit.py` independently reconciles
 the resulting JSON log for completeness and consistency.
 
-An isolated source-closure pass, once actually obtained, must be reported
-separately from a root Lake build. No whole-repository build claim is intended.
+The isolated source-closure pass is reported separately from a root Lake
+build. No whole-repository build claim is intended.

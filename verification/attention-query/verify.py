@@ -52,6 +52,8 @@ def main() -> None:
     mathlib, work = args.mathlib.resolve(), args.work.resolve()
     if work == ROOT or work.is_relative_to(ROOT / "lean"):
         raise ValueError("Verification output must be separate from owner sources")
+    if work.exists() and any(work.iterdir()):
+        raise ValueError("Verification output must be a new, empty directory; preserve earlier run evidence")
     sources, build, logs = work / "sources", work / "build", work / "logs"
     for directory in (sources, build, logs):
         directory.mkdir(parents=True, exist_ok=True)

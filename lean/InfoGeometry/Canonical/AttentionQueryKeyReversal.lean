@@ -203,7 +203,7 @@ theorem rowSoftmax_symmetricRankOneScores_det :
     rowSoftmax_symmetricRankOneScores_zero_one,
     rowSoftmax_symmetricRankOneScores_one_zero]
   have hne : 1 + Real.exp (1 : ℝ) ≠ 0 := by positivity
-  field_simp [hne] <;> ring
+  field_simp [hne]
 
 theorem rowSoftmax_symmetricRankOneScores_det_pos :
     0 < (rowSoftmax symmetricRankOneScores).det := by

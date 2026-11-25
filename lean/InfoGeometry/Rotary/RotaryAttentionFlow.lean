@@ -35,26 +35,26 @@ def rotationGenerator : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
 def anisotropicDamping : Matrix (Fin 2) (Fin 2) ℝ := !![-6, 0; 0, -1]
 
 /-- The prescribed exponential-scale rotation has identity value at zero. -/
-theorem loxodromicSpiralMatrix_zero (λ ω : ℝ) :
-    loxodromicSpiralMatrix λ ω 0 = 1 := by
+theorem loxodromicSpiralMatrix_zero (rate ω : ℝ) :
+    loxodromicSpiralMatrix rate ω 0 = 1 := by
   simp [loxodromicSpiralMatrix, ropeRotor_zero_right]
 
 /-- Addition of real times composes the existing exponential-scale rotation. -/
-theorem loxodromicSpiralMatrix_add (λ ω s t : ℝ) :
-    loxodromicSpiralMatrix λ ω (s + t) =
-      loxodromicSpiralMatrix λ ω s * loxodromicSpiralMatrix λ ω t := by
+theorem loxodromicSpiralMatrix_add (rate ω s t : ℝ) :
+    loxodromicSpiralMatrix rate ω (s + t) =
+      loxodromicSpiralMatrix rate ω s * loxodromicSpiralMatrix rate ω t := by
   unfold loxodromicSpiralMatrix
   rw [mul_add, Real.exp_add, ropeRotor_add, smul_mul_smul_comm]
 
 /-- The inverse is the value at negative time, including in the contracting case. -/
-theorem loxodromicSpiralMatrix_mul_neg (λ ω t : ℝ) :
-    loxodromicSpiralMatrix λ ω t * loxodromicSpiralMatrix λ ω (-t) = 1 := by
+theorem loxodromicSpiralMatrix_mul_neg (rate ω t : ℝ) :
+    loxodromicSpiralMatrix rate ω t * loxodromicSpiralMatrix rate ω (-t) = 1 := by
   rw [← loxodromicSpiralMatrix_add, add_neg_cancel, loxodromicSpiralMatrix_zero]
 
 /-- Negative time reverses the action on every real vector exactly. -/
-theorem loxodromicSpiralMatrix_neg_apply (λ ω t : ℝ) (x : Fin 2 → ℝ) :
-    loxodromicSpiralMatrix λ ω (-t) *ᵥ
-        (loxodromicSpiralMatrix λ ω t *ᵥ x) = x := by
+theorem loxodromicSpiralMatrix_neg_apply (rate ω t : ℝ) (x : Fin 2 → ℝ) :
+    loxodromicSpiralMatrix rate ω (-t) *ᵥ
+        (loxodromicSpiralMatrix rate ω t *ᵥ x) = x := by
   rw [Matrix.mulVec_mulVec, ← loxodromicSpiralMatrix_add,
     neg_add_cancel, loxodromicSpiralMatrix_zero, Matrix.one_mulVec]
 
@@ -76,7 +76,7 @@ theorem boosted_null_chart_eq_loxodromicSpiralMatrix
   unfold loxodromicSpiralMatrix
   rw [Matrix.smul_mulVec, Matrix.mulVec_smul, smul_smul]
   congr 1
-  simp only [neg_mul, Real.exp_neg, mul_inv_rev, mul_comm]
+  rw [_root_.mul_inv_rev, neg_mul, Real.exp_neg, mul_comm]
 
 /-- The exact real vector ODE of `exp(κ t) R(ω t) x₀`.
 
@@ -96,25 +96,29 @@ theorem hasDerivAt_loxodromicSpiralMatrix_mulVec
     (Real.hasDerivAt_exp (κ * t)).comp t (hasDerivAt_const_mul κ)
   have hc : HasDerivAt (fun s : ℝ => Real.cos (s * ω))
       (-Real.sin (t * ω) * ω) t :=
-    (Real.hasDerivAt_cos (t * ω)).comp t (hasDerivAt_mul_const ω)
+    (hasDerivAt_mul_const (x := t) ω).cos
   have hs : HasDerivAt (fun s : ℝ => Real.sin (s * ω))
       (Real.cos (t * ω) * ω) t :=
-    (Real.hasDerivAt_sin (t * ω)).comp t (hasDerivAt_mul_const ω)
+    (hasDerivAt_mul_const (x := t) ω).sin
   apply hasDerivAt_pi.mpr
   intro i
   fin_cases i
   · convert he.mul ((hc.mul_const (x₀ 0)).sub (hs.mul_const (x₀ 1))) using 1
     · ext s
-      simp [loxodromicSpiralMatrix, ropeRotor, rotationGenerator, Matrix.mulVec, dotProduct,
-        Fin.sum_univ_two] <;> ring
-    · simp [loxodromicSpiralMatrix, ropeRotor, rotationGenerator, Matrix.mulVec, dotProduct,
-        Fin.sum_univ_two] <;> ring
+      simp [loxodromicSpiralMatrix, ropeRotor, Matrix.mulVec, dotProduct,
+        Fin.sum_univ_two]
+      ring
+    · simp [loxodromicSpiralMatrix, ropeRotor, rotationGenerator, dotProduct,
+        Fin.sum_univ_two]
+      ring
   · convert he.mul ((hs.mul_const (x₀ 0)).add (hc.mul_const (x₀ 1))) using 1
     · ext s
-      simp [loxodromicSpiralMatrix, ropeRotor, rotationGenerator, Matrix.mulVec, dotProduct,
-        Fin.sum_univ_two] <;> ring
-    · simp [loxodromicSpiralMatrix, ropeRotor, rotationGenerator, Matrix.mulVec, dotProduct,
-        Fin.sum_univ_two] <;> ring
+      simp [loxodromicSpiralMatrix, ropeRotor, Matrix.mulVec, dotProduct,
+        Fin.sum_univ_two]
+      ring
+    · simp [loxodromicSpiralMatrix, ropeRotor, rotationGenerator, dotProduct,
+        Fin.sum_univ_two]
+      ring
 
 /-- The corresponding ordinary derivative is the linear rotation-dilation field. -/
 theorem deriv_loxodromicSpiralMatrix_mulVec

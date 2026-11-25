@@ -1,0 +1,167 @@
+name: Attention query geometry (scoped)
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Canonical/AttentionQueryGeometry.lean'
+      - 'lean/InfoGeometry/Canonical/AttentionQueryKeyReversal.lean'
+      - 'lean/InfoGeometry/Rotary/RotaryAttentionFlow.lean'
+      - 'lean/InfoGeometry/Canonical/AttentionInformationGeometry.lean'
+      - 'lean/InfoGeometry/Canonical/NeutralDualPairSplitting.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Convex/Bregman.lean'
+      - 'lean/InfoGeometry/Analytic/LogSumExp.lean'
+      - 'lean/InfoGeometry/Analytic/LogSumExpVariancePositivity.lean'
+      - 'lean/InfoGeometry/Meta/Architecture.lean'
+      - 'lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean'
+      - 'lean/InfoGeometry/Rotary/RotarySpiralBridge.lean'
+      - 'verification/attention-query/**'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'lakefile.lean'
+      - '.github/workflows/attention-query-geometry.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: attention-query-geometry-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  exact-pin-closure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Fetch exact source and pinned Mathlib
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPO}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          import subprocess
+
+          root = Path('project')
+          manifest = json.loads((root / 'lake-manifest.json').read_text())
+          pin = next(package for package in manifest['packages'] if package['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+
+      - name: Install the unchanged pinned toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+
+      - name: Restore only the required pinned Mathlib artifacts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+
+          root = Path('project').resolve()
+          mathlib = Path('pinned-mathlib').resolve()
+          evidence = Path('hydration')
+          evidence.mkdir()
+          sys.path.insert(0, str(root / 'verification/attention-query'))
+          from verify import IMPORT, PIN, TARGETS, TOOLCHAIN, require
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+
+          def git(checkout, *args):
+              return subprocess.check_output(['git', *args], cwd=checkout, text=True).strip()
+
+          require(not os.environ.get('LAKE_PACKAGE_OVERRIDES'), 'Unexpected Lake package overrides')
+          manifest = json.loads((root / 'lake-manifest.json').read_text())
+          pin = next(package for package in manifest['packages'] if package['name'] == 'mathlib')
+          require(pin['rev'] == PIN == git(mathlib, 'rev-parse', 'HEAD'), 'Mathlib revision mismatch')
+          for checkout in (root, mathlib):
+              require((checkout / 'lean-toolchain').read_text().strip() == TOOLCHAIN, 'Toolchain mismatch')
+              require(not git(checkout, 'status', '--porcelain', '--untracked-files=all'), 'Dirty source checkout')
+
+          native_imports = set()
+          source_hashes = {}
+
+          def visit(module):
+              if module in source_hashes:
+                  return
+              source = root / 'lean' / (module.replace('.', '/') + '.lean')
+              data = source.read_bytes()
+              source_hashes[module] = hashlib.sha256(data).hexdigest()
+              for dependency in IMPORT.findall(data.decode('utf-8')):
+                  candidate = root / 'lean' / (dependency.replace('.', '/') + '.lean')
+                  if candidate.is_file():
+                      visit(dependency)
+                  elif dependency.startswith('Mathlib.'):
+                      native_imports.add(dependency)
+                  elif dependency.startswith('InfoGeometry.'):
+                      raise FileNotFoundError(f'Missing repository dependency: {dependency}')
+
+          for target in TARGETS:
+              visit(target)
+          require(bool(native_imports), 'No native Mathlib imports found')
+          command = ['lake', 'exe', 'cache', 'get', *sorted(native_imports)]
+          receipt = {
+              'scope': 'Targeted dependency artifact hydration; not a proof certificate',
+              'source_commit': git(root, 'rev-parse', 'HEAD'),
+              'mathlib': PIN,
+              'toolchain': TOOLCHAIN,
+              'source_hashes': source_hashes,
+              'native_imports': sorted(native_imports),
+              'command': command,
+          }
+          log = evidence / 'cache-get.log'
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'attention-query-cache', block=True) as lock:
+              with log.open('w') as stream:
+                  result = subprocess.run(command, cwd=mathlib, stdout=stream,
+                                          stderr=subprocess.STDOUT, pass_fds=(lock.fileno(),))
+          receipt['exit_code'] = result.returncode
+          receipt['log_sha256'] = hashlib.sha256(log.read_bytes()).hexdigest()
+          (evidence / 'receipt.json').write_text(json.dumps(receipt, indent=2) + '\n')
+          print(log.read_text()[-12000:])
+          print(json.dumps({'native_imports': len(native_imports), 'exit_code': result.returncode}))
+          raise SystemExit(result.returncode)
+          PY
+
+      - name: Compile the source closure and audit every owned declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/verification/attention-query/verify.py \
+            --mathlib pinned-mathlib \
+            --work "verification/run-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" \
+            --wait
+
+      - name: Upload scoped verification evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: attention-query-geometry-verification
+          if-no-files-found: warn
+          path: |
+            hydration/*.json
+            hydration/*.log
+            verification/**/validation.json
+            verification/**/logs/*.log
+            verification/**/sources/**

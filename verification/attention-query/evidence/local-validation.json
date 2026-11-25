@@ -1,0 +1,490 @@
+{
+  "status": "PASS",
+  "scope": "isolated exact-pin source closure",
+  "commands": [
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lake",
+        "env",
+        "python3",
+        "-c",
+        "import os,shutil,json; print(json.dumps({'lean':shutil.which('lean'),'path':os.environ.get('LEAN_PATH','')}))"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/mathlib",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/environment.log",
+      "log_sha256": "ed404443a135ca27575ca3c621e9eb42596f6a0b8aa3b1b2c889220667ccdfa2"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "--version"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/mathlib",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/lean-version.log",
+      "log_sha256": "355a9a028f81641782d75d6e6b58dec70f29d2f61238a9e271690259d9bf5680"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "InfoGeometry/Algebra/FiniteSpinAlgebra.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Algebra/FiniteSpinAlgebra.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Algebra.FiniteSpinAlgebra.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "InfoGeometry/Convex/Bregman.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Convex/Bregman.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Convex.Bregman.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "InfoGeometry/Analytic/LogSumExp.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Analytic/LogSumExp.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Analytic.LogSumExp.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "InfoGeometry/Analytic/LogSumExpVariancePositivity.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Analytic/LogSumExpVariancePositivity.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Analytic.LogSumExpVariancePositivity.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "InfoGeometry/Canonical/AttentionInformationGeometry.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/AttentionInformationGeometry.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Canonical.AttentionInformationGeometry.log",
+      "log_sha256": "bf16fdfee1209d001f1d23eb167dc939cf709e5a74d353f6b5b647f3aa5b0c5e"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "-DwarningAsError=true",
+        "InfoGeometry/Canonical/AttentionQueryGeometry.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/AttentionQueryGeometry.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Canonical.AttentionQueryGeometry.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "InfoGeometry/Meta/Architecture.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Meta/Architecture.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Meta.Architecture.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Clifford/NeutralPhaseSpaceCore.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Clifford.NeutralPhaseSpaceCore.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "InfoGeometry/Canonical/NeutralDualPairSplitting.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/NeutralDualPairSplitting.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Canonical.NeutralDualPairSplitting.log",
+      "log_sha256": "40af116ca911632ce3724b2ed2870261a2fe06359645c130ef200097a9396a50"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "-DwarningAsError=true",
+        "InfoGeometry/Canonical/AttentionQueryKeyReversal.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/AttentionQueryKeyReversal.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Canonical.AttentionQueryKeyReversal.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "InfoGeometry/Rotary/RotarySpiralBridge.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Rotary/RotarySpiralBridge.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Rotary.RotarySpiralBridge.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "-DwarningAsError=true",
+        "InfoGeometry/Rotary/RotaryAttentionFlow.lean",
+        "-o",
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Rotary/RotaryAttentionFlow.olean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/InfoGeometry.Rotary.RotaryAttentionFlow.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean",
+        "-DwarningAsError=true",
+        "AttentionDeclarationAudit.lean"
+      ],
+      "cwd": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/sources",
+      "exit_code": 0,
+      "log": "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/logs/declaration-audit.log",
+      "log_sha256": "19bfa4aa00a7351c953ec6f7d3e9341ffea3ca2208af2ff2ec6c968b5674e0ab"
+    }
+  ],
+  "root_head": "ce62626754d490d380524cd9e8cbcf0ba5455078",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "lean_binary_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "dependency_pins": {
+    "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+    "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+    "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+    "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+    "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+    "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+    "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+    "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204"
+  },
+  "configs": {
+    "/workspace/scratch/c0c88ae25849/info-geometry-lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "/workspace/scratch/c0c88ae25849/info-geometry-lean/lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+    "/workspace/scratch/c0c88ae25849/info-geometry-lean/lakefile.lean": "7f1682a266e65a251ff8adb0b3acc8146ff94004bc78c83850583145434fc5da",
+    "/workspace/scratch/c0c88ae25849/info-geometry-lean/tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45",
+    "/workspace/scratch/c0c88ae25849/info-geometry-lean/verification/attention-query/verify.py": "e3e651e745cad11deee0bcc5a291b9263ce4b6366f70315eda92a42185eba7be",
+    "/workspace/scratch/c0c88ae25849/info-geometry-lean/verification/attention-query/AttentionDeclarationAudit.lean": "0bfa42481fb532ef0e15c6e0e159e3af8b5ed1584d415256c512f7ad0471b304",
+    "/workspace/scratch/c0c88ae25849/info-geometry-lean/verification/attention-query/review_audit.py": "79dfad0736ea349543257f9cecf5d15cd859a6bdd8f883f837c7d116059a63a6",
+    "/workspace/scratch/c0c88ae25849/mathlib/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "/workspace/scratch/c0c88ae25849/mathlib/lake-manifest.json": "8f67b2cf24143ac091cdb425e886c2164b2fc2d6fbccd6db9454b697f9541a67",
+    "/workspace/scratch/c0c88ae25849/mathlib/lakefile.lean": "274e720ccc7dbabeb9fbf362290dc7e5ed2c5175fbade0ef20cc19b1331affaf",
+    "/workspace/scratch/c0c88ae25849/runtime/lean-4.34.1-linux/bin/lean": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550"
+  },
+  "source_hashes": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Convex.Bregman": "0bd59cec68cb9860657b08b925bf2ad9c80802dae584a10825690ab2e0dde5af",
+    "InfoGeometry.Analytic.LogSumExp": "5e4330dd7c77aa65d67bb807f5e70e9efb1c556d87ff204436341889bc98ce03",
+    "InfoGeometry.Analytic.LogSumExpVariancePositivity": "17520385d2a72e290c02a368e1c48beada7d85d902ac49626ad6e6fc6a09f7ec",
+    "InfoGeometry.Canonical.AttentionInformationGeometry": "5ba36f032f325b0a92a7c80bc2cc3e02ec0d8a0d737775c596d7fe2a5cf0b600",
+    "InfoGeometry.Canonical.AttentionQueryGeometry": "0c9260a03872fd69d9c279e6ab801d2e1407e18830fc16a1f52287e006fbce9e",
+    "InfoGeometry.Meta.Architecture": "0f74caea1284e1c0dfc8d00d46357e0310a24aa12fc36fa7c0d02ef5f97e0434",
+    "InfoGeometry.Clifford.NeutralPhaseSpaceCore": "1e9af32b34ffef78d0bc93a446abd1f90fb8d7b58583db10efc39aba46cf2093",
+    "InfoGeometry.Canonical.NeutralDualPairSplitting": "30cef224f2beeb2156a738acf6f13c5c526ea9cc7cafd2ce15fd744215e9faaf",
+    "InfoGeometry.Canonical.AttentionQueryKeyReversal": "a8f60e7f3bacd87ec213172140c46c713043ec6b76b3a8b7c91dd93d9565d390",
+    "InfoGeometry.Rotary.RotarySpiralBridge": "ad6c06dc84b84002ee6afbefc716ce74e31d56a7494647955a108e4d3460a90b",
+    "InfoGeometry.Rotary.RotaryAttentionFlow": "75e0a87bc7411b96c88852372b120459fb4caf4e0989a45f289dad3b85235235"
+  },
+  "source_order": [
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "InfoGeometry.Convex.Bregman",
+    "InfoGeometry.Analytic.LogSumExp",
+    "InfoGeometry.Analytic.LogSumExpVariancePositivity",
+    "InfoGeometry.Canonical.AttentionInformationGeometry",
+    "InfoGeometry.Canonical.AttentionQueryGeometry",
+    "InfoGeometry.Meta.Architecture",
+    "InfoGeometry.Clifford.NeutralPhaseSpaceCore",
+    "InfoGeometry.Canonical.NeutralDualPairSplitting",
+    "InfoGeometry.Canonical.AttentionQueryKeyReversal",
+    "InfoGeometry.Rotary.RotarySpiralBridge",
+    "InfoGeometry.Rotary.RotaryAttentionFlow"
+  ],
+  "audit_source_sha256": "0bfa42481fb532ef0e15c6e0e159e3af8b5ed1584d415256c512f7ad0471b304",
+  "native_audit": {
+    "status": "PASS",
+    "scope": "Independent reconciliation of completed native audit output",
+    "audit_log_sha256": "19bfa4aa00a7351c953ec6f7d3e9341ffea3ca2208af2ff2ec6c968b5674e0ab",
+    "declarations": 76,
+    "module_counts": {
+      "InfoGeometry.Rotary.RotaryAttentionFlow": 15,
+      "InfoGeometry.Canonical.AttentionQueryKeyReversal": 38,
+      "InfoGeometry.Canonical.AttentionQueryGeometry": 23
+    },
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "declaration_names": [
+      "InfoGeometry.RotaryAttentionFlow.anisotropicDamping",
+      "InfoGeometry.RotaryAttentionFlow.anisotropic_damping_rotation_noncommute",
+      "InfoGeometry.RotaryAttentionFlow.anisotropic_damping_rotation_radial_eigenvector",
+      "InfoGeometry.RotaryAttentionFlow.boosted_null_chart_eq_loxodromicSpiralMatrix",
+      "InfoGeometry.RotaryAttentionFlow.deriv_loxodromicSpiralMatrix_mulVec",
+      "InfoGeometry.RotaryAttentionFlow.hasDerivAt_loxodromicSpiralMatrix_mulVec",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_add",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_mul_neg",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_neg_apply",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_zero",
+      "InfoGeometry.RotaryAttentionFlow.rotationGenerator",
+      "InfoGeometry.Attention.QueryKeyReversal.columnSoftmax",
+      "InfoGeometry.Attention.QueryKeyReversal.negative_para_dualIncl",
+      "InfoGeometry.Attention.QueryKeyReversal.negative_para_primalIncl",
+      "InfoGeometry.Attention.QueryKeyReversal.negative_para_primalIncl_ne_dualIncl",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits_eq_neutral",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits_rank_le",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits_transpose",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_pos",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_sum_one",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det_pos",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_not_symmetric",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_one_one",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_one_zero",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_rank_two",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_zero_one",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_zero_zero",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_transpose",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_transpose_counterexample",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneFactor",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores_factorization",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores_rank_le_one",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores_transpose",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.fderiv_queryPotential_apply",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.hasFDerivAt_queryPotential",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.log_queryWeight_line_deriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.meanKey",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_eq_secondDeriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_eq_variance",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_eq_zero_iff",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_nonneg",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_pos_iff",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryLogits",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential_line_deriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential_line_eq",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential_line_secondDeriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryWeight",
+      "InfoGeometry.RotaryAttentionFlow.anisotropicDamping._proof_1",
+      "InfoGeometry.RotaryAttentionFlow.anisotropicDamping.eq_1",
+      "InfoGeometry.RotaryAttentionFlow.rotationGenerator.eq_1",
+      "InfoGeometry.RotarySpiralBridge.loxodromicSpiralMatrix.eq_1",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits.eq_1",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax.eq_1",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_1",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_2",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_3",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_4",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_5",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_6",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_7",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneFactor._proof_1",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneFactor.eq_1",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores.eq_1",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.meanKey._proof_1",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.meanKey._proof_2",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.meanKey._proof_3",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.meanKey.eq_1",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryLogits.eq_1",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential.eq_1",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryWeight.eq_1"
+    ]
+  },
+  "compiled_artifacts": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+      "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+      },
+      "imports": {},
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Convex.Bregman": {
+      "source_sha256": "0bd59cec68cb9860657b08b925bf2ad9c80802dae584a10825690ab2e0dde5af",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Convex/Bregman.olean": "10d5d8c281a6faac6add74b4fd680a9b5e7758530b89fe46f2e04dbd6a08f3ff"
+      },
+      "imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+        }
+      },
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Analytic.LogSumExp": {
+      "source_sha256": "5e4330dd7c77aa65d67bb807f5e70e9efb1c556d87ff204436341889bc98ce03",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Analytic/LogSumExp.olean": "ec6b7f1c19aacaa72794b61af104845bb35606c0b1b0f693e842c18f28247960"
+      },
+      "imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+        },
+        "InfoGeometry.Convex.Bregman": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Convex/Bregman.olean": "10d5d8c281a6faac6add74b4fd680a9b5e7758530b89fe46f2e04dbd6a08f3ff"
+        }
+      },
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Analytic.LogSumExpVariancePositivity": {
+      "source_sha256": "17520385d2a72e290c02a368e1c48beada7d85d902ac49626ad6e6fc6a09f7ec",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Analytic/LogSumExpVariancePositivity.olean": "219c1193b38b3219c8d40d6dbdf1906d0c01afc0fbf5448eb0ae39c3718b2a3b"
+      },
+      "imports": {
+        "InfoGeometry.Analytic.LogSumExp": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Analytic/LogSumExp.olean": "ec6b7f1c19aacaa72794b61af104845bb35606c0b1b0f693e842c18f28247960"
+        },
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+        }
+      },
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Canonical.AttentionInformationGeometry": {
+      "source_sha256": "5ba36f032f325b0a92a7c80bc2cc3e02ec0d8a0d737775c596d7fe2a5cf0b600",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/AttentionInformationGeometry.olean": "2700b135ded445cb5cf3fa7c1fbe28be95fc2ce07535baa61010c10aaa5d5700"
+      },
+      "imports": {
+        "InfoGeometry.Analytic.LogSumExp": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Analytic/LogSumExp.olean": "ec6b7f1c19aacaa72794b61af104845bb35606c0b1b0f693e842c18f28247960"
+        },
+        "InfoGeometry.Analytic.LogSumExpVariancePositivity": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Analytic/LogSumExpVariancePositivity.olean": "219c1193b38b3219c8d40d6dbdf1906d0c01afc0fbf5448eb0ae39c3718b2a3b"
+        }
+      },
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Canonical.AttentionQueryGeometry": {
+      "source_sha256": "0c9260a03872fd69d9c279e6ab801d2e1407e18830fc16a1f52287e006fbce9e",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/AttentionQueryGeometry.olean": "59c4ec74dd99fa60c930f190afb59fe10478a70c357d9bfcfd9ad5cd9bfdfdae"
+      },
+      "imports": {
+        "InfoGeometry.Canonical.AttentionInformationGeometry": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/AttentionInformationGeometry.olean": "2700b135ded445cb5cf3fa7c1fbe28be95fc2ce07535baa61010c10aaa5d5700"
+        }
+      },
+      "warnings_as_errors": true
+    },
+    "InfoGeometry.Meta.Architecture": {
+      "source_sha256": "0f74caea1284e1c0dfc8d00d46357e0310a24aa12fc36fa7c0d02ef5f97e0434",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Meta/Architecture.olean": "79243fb862b5e476f54dbba944fdb393a463fbde4529ed3f46b125e46be6bec9"
+      },
+      "imports": {},
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Clifford.NeutralPhaseSpaceCore": {
+      "source_sha256": "1e9af32b34ffef78d0bc93a446abd1f90fb8d7b58583db10efc39aba46cf2093",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Clifford/NeutralPhaseSpaceCore.olean": "a4769891f5057c0e2e560372a5d7b5280b084b7650022d9481b20ad55028bfba"
+      },
+      "imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+        },
+        "InfoGeometry.Meta.Architecture": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Meta/Architecture.olean": "79243fb862b5e476f54dbba944fdb393a463fbde4529ed3f46b125e46be6bec9"
+        }
+      },
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Canonical.NeutralDualPairSplitting": {
+      "source_sha256": "30cef224f2beeb2156a738acf6f13c5c526ea9cc7cafd2ce15fd744215e9faaf",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/NeutralDualPairSplitting.olean": "28dd6d99eb714d07d60990bc73ccd0ab8a2db94cf87cac4813159b7e99e41f16"
+      },
+      "imports": {
+        "InfoGeometry.Clifford.NeutralPhaseSpaceCore": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Clifford/NeutralPhaseSpaceCore.olean": "a4769891f5057c0e2e560372a5d7b5280b084b7650022d9481b20ad55028bfba"
+        },
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Algebra/FiniteSpinAlgebra.olean": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+        }
+      },
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Canonical.AttentionQueryKeyReversal": {
+      "source_sha256": "a8f60e7f3bacd87ec213172140c46c713043ec6b76b3a8b7c91dd93d9565d390",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/AttentionQueryKeyReversal.olean": "c80fdf87dbd3e622efa14c29075f25721ef2102c19078544fa3e9dd045a2a231"
+      },
+      "imports": {
+        "InfoGeometry.Canonical.NeutralDualPairSplitting": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/NeutralDualPairSplitting.olean": "28dd6d99eb714d07d60990bc73ccd0ab8a2db94cf87cac4813159b7e99e41f16"
+        },
+        "InfoGeometry.Canonical.AttentionInformationGeometry": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Canonical/AttentionInformationGeometry.olean": "2700b135ded445cb5cf3fa7c1fbe28be95fc2ce07535baa61010c10aaa5d5700"
+        }
+      },
+      "warnings_as_errors": true
+    },
+    "InfoGeometry.Rotary.RotarySpiralBridge": {
+      "source_sha256": "ad6c06dc84b84002ee6afbefc716ce74e31d56a7494647955a108e4d3460a90b",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Rotary/RotarySpiralBridge.olean": "2b3d388bd107880757928542c36d1733b923567ee2309542961d980d086f1550"
+      },
+      "imports": {},
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Rotary.RotaryAttentionFlow": {
+      "source_sha256": "75e0a87bc7411b96c88852372b120459fb4caf4e0989a45f289dad3b85235235",
+      "artifacts": {
+        "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Rotary/RotaryAttentionFlow.olean": "29378cac073f658f43c610d466b7870c91876fd7d1b1179b35a3d5d1e51bf1ea"
+      },
+      "imports": {
+        "InfoGeometry.Rotary.RotarySpiralBridge": {
+          "/workspace/scratch/c0c88ae25849/verification-runs/attempt06/build/InfoGeometry/Rotary/RotarySpiralBridge.olean": "2b3d388bd107880757928542c36d1733b923567ee2309542961d980d086f1550"
+        }
+      },
+      "warnings_as_errors": true
+    }
+  }
+}

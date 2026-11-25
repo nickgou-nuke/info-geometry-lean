@@ -47,6 +47,7 @@ def queryWeight (K : Fin M → E →L[ℝ] ℝ) (β : ℝ) (q : E) (j : Fin M) :
 def meanKey (K : Fin M → E →L[ℝ] ℝ) (β : ℝ) (q : E) : E →L[ℝ] ℝ :=
   ∑ j, queryWeight K β q j • K j
 
+omit [NeZero M] in
 /-- Pulling log-partition back along the actual query line gives the existing
 affine-logit analytic path. -/
 theorem queryPotential_line_eq (K : Fin M → E →L[ℝ] ℝ) (β : ℝ) (q u : E) :
@@ -75,7 +76,7 @@ theorem hasFDerivAt_queryPotential
       ∑ j, Real.exp (β * K j q) • (β • K j)) q at hlog
   convert hlog using 1
   ext u
-  simp only [meanKey, ContinuousLinearMap.smul_apply, ContinuousLinearMap.sum_apply,
+  simp only [meanKey, smul_apply, sum_apply,
     smul_eq_mul, Finset.mul_sum, queryWeight, softmaxProb, queryLogits]
   apply Finset.sum_congr rfl
   intro j _
@@ -87,7 +88,7 @@ theorem fderiv_queryPotential_apply
     fderiv ℝ (queryPotential K β) q u =
       β * ∑ j, queryWeight K β q j * K j u := by
   rw [(hasFDerivAt_queryPotential K β q).fderiv]
-  simp [meanKey, ContinuousLinearMap.sum_apply]
+  simp [meanKey]
 
 /-- The first derivative along a query line is the mean key evaluation. -/
 theorem queryPotential_line_deriv
@@ -128,7 +129,7 @@ theorem log_queryWeight_line_deriv
     exact (InfoGeometry.Analytic.hasDerivAt_logSumExp
       (fun l => Real.exp (queryLogits K β q l)) (fun l => β * K l u)
       (fun l => Real.exp_pos _) 0).differentiableAt
-  rw [hfun, deriv_sub hlin.differentiableAt hpath, hlin.deriv,
+  rw [hfun, deriv_fun_sub hlin.differentiableAt hpath, hlin.deriv,
     queryPotential_line_deriv]
   ring
 

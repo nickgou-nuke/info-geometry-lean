@@ -1,0 +1,259 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.Data.Real.Basic
+import Mathlib.Data.Fin.Basic
+import Mathlib.Tactic
+
+noncomputable section
+
+namespace ZornCl44TrialityAndG22
+
+/-! ### 1. 3D Euclidean Dot & Cross Product Algebra -/
+
+abbrev Vec3 := ℝ × ℝ × ℝ
+
+def dot3 (u v : Vec3) : ℝ :=
+  u.1 * v.1 + u.2.1 * v.2.1 + u.2.2 * v.2.2
+
+def cross3 (u v : Vec3) : Vec3 :=
+  (u.2.1 * v.2.2 - u.2.2 * v.2.1,
+   u.2.2 * v.1 - u.1 * v.2.2,
+   u.1 * v.2.1 - u.2.1 * v.1)
+
+/-! ### 2. Zorn Split-Octonion Algebra 𝕆_s & Chiral Basis Audit -/
+
+@[ext]
+structure ZornOct where
+  a : ℝ
+  v : Vec3
+  w : Vec3
+  b : ℝ
+
+namespace ZornOct
+
+def zero : ZornOct := ⟨0, (0, 0, 0), (0, 0, 0), 0⟩
+def one : ZornOct := ⟨1, (0, 0, 0), (0, 0, 0), 1⟩
+
+def add (x y : ZornOct) : ZornOct :=
+  ⟨x.a + y.a,
+   (x.v.1 + y.v.1, x.v.2.1 + y.v.2.1, x.v.2.2 + y.v.2.2),
+   (x.w.1 + y.w.1, x.w.2.1 + y.w.2.1, x.w.2.2 + y.w.2.2),
+   x.b + y.b⟩
+
+def neg (x : ZornOct) : ZornOct :=
+  ⟨-x.a, (-x.v.1, -x.v.2.1, -x.v.2.2), (-x.w.1, -x.w.2.1, -x.w.2.2), -x.b⟩
+
+def sub (x y : ZornOct) : ZornOct := add x (neg y)
+
+def smul (r : ℝ) (x : ZornOct) : ZornOct :=
+  ⟨r * x.a, (r * x.v.1, r * x.v.2.1, r * x.v.2.2), (r * x.w.1, r * x.w.2.1, r * x.w.2.2), r * x.b⟩
+
+/-- Zorn non-associative vector-matrix multiplication `x ⋆ y`. -/
+def mul (x y : ZornOct) : ZornOct :=
+  let c1 := cross3 x.w y.w
+  let c2 := cross3 x.v y.v
+  ⟨x.a * y.a + dot3 x.v y.w,
+   (x.a * y.v.1 + y.b * x.v.1 + c1.1,
+    x.a * y.v.2.1 + y.b * x.v.2.1 + c1.2.1,
+    x.a * y.v.2.2 + y.b * x.v.2.2 + c1.2.2),
+   (y.a * x.w.1 + x.b * y.w.1 - c2.1,
+    y.a * x.w.2.1 + x.b * y.w.2.1 - c2.2.1,
+    y.a * x.w.2.2 + x.b * y.w.2.2 - c2.2.2),
+   x.b * y.b + dot3 y.v x.w⟩
+
+/-- Split-octonion conjugation `z̄`. -/
+def conj (z : ZornOct) : ZornOct :=
+  ⟨z.b, (-z.v.1, -z.v.2.1, -z.v.2.2), (-z.w.1, -z.w.2.1, -z.w.2.2), z.a⟩
+
+/-- Split-signature `(4,4)` quadratic norm `𝒩(z) = a b - v · w`. -/
+def norm (z : ZornOct) : ℝ := z.a * z.b - dot3 z.v z.w
+
+/-- Polarized bilinear form `⟨x, y⟩_𝒩 = 𝒩(x + y) - 𝒩(x) - 𝒩(y)`. -/
+def polar (x y : ZornOct) : ℝ :=
+  x.a * y.b + x.b * y.a - dot3 x.v y.w - dot3 x.w y.v
+
+instance : Zero ZornOct := ⟨zero⟩
+instance : One ZornOct := ⟨one⟩
+instance : Add ZornOct := ⟨add⟩
+instance : Neg ZornOct := ⟨neg⟩
+instance : Sub ZornOct := ⟨sub⟩
+instance : Mul ZornOct := ⟨mul⟩
+instance : SMul ℝ ZornOct := ⟨smul⟩
+
+@[simp] lemma zero_def : (0 : ZornOct) = zero := rfl
+@[simp] lemma one_def : (1 : ZornOct) = one := rfl
+@[simp] lemma add_def (x y : ZornOct) : x + y = add x y := rfl
+@[simp] lemma neg_def (x : ZornOct) : -x = neg x := rfl
+@[simp] lemma sub_def (x y : ZornOct) : x - y = sub x y := rfl
+@[simp] lemma mul_def (x y : ZornOct) : x * y = mul x y := rfl
+@[simp] lemma smul_def (r : ℝ) (x : ZornOct) : r • x = smul r x := rfl
+
+lemma conj_conj (u : ZornOct) : conj (conj u) = u := by
+  ext <;> simp [conj]
+
+/-! #### Chiral / Circular Basis & Primal-Dual 4-Vector Operators -/
+
+def eHat : Fin 3 → Vec3
+  | 0 => (1, 0, 0)
+  | 1 => (0, 1, 0)
+  | 2 => (0, 0, 1)
+
+def u0Plus : ZornOct := ⟨1, (0, 0, 0), (0, 0, 0), 0⟩
+def u0Minus : ZornOct := ⟨0, (0, 0, 0), (0, 0, 0), 1⟩
+def uPlus (k : Fin 3) : ZornOct := ⟨0, eHat k, (0, 0, 0), 0⟩
+def uMinus (k : Fin 3) : ZornOct :=
+  ⟨0, (0, 0, 0), (-(eHat k).1, -(eHat k).2.1, -(eHat k).2.2), 0⟩
+
+/-- Standard hypercomplex basis `{1, e₁, e₂, e₃, ℓ, ℓe₁, ℓe₂, ℓe₃}` recovered by sum & difference. -/
+def e (k : Fin 3) : ZornOct := uPlus k + uMinus k
+def ell : ZornOct := u0Plus - u0Minus
+def ellE (k : Fin 3) : ZornOct := uPlus k - uMinus k
+
+def UPlus (x0 : ℝ) (x : Vec3) : ZornOct := ⟨x0, x, (0, 0, 0), 0⟩
+def UMinus (p0 : ℝ) (p : Vec3) : ZornOct := ⟨0, (0, 0, 0), p, p0⟩
+
+/-- **Theorem 1 (Repaired Chiral Basis Audit, Sum/Difference Recovery, & Primal-Dual Product)**:
+1. `u0⁺ + u0⁻ = 1`, `u0⁺ - u0⁻ = ℓ`, `ℓ ⋆ e_k = u_k⁺ - u_k⁻ = -(e_k ⋆ ℓ)`.
+2. Repaired chiral ladder signs: `u₁⁺ ⋆ u₂⁺ = +u₃⁻` and `u₁⁻ ⋆ u₂⁻ = +u₃⁺`.
+3. Repaired primal-dual product: `U⁺(x) ⋆ U⁻(p) = ⟨x · p, p₀ x, 0, 0⟩` and
+   `𝒩(U⁺(x) + U⁻(p)) = x₀ p₀ - x · p`. -/
+theorem chiral_basis_audit (x0 p0 : ℝ) (x p : Vec3) :
+    (u0Plus + u0Minus = (1 : ZornOct)) ∧
+    (u0Plus - u0Minus = ell) ∧
+    (∀ k : Fin 3, ell * e k = ellE k ∧ e k * ell = -ellE k) ∧
+    (uPlus 0 * uPlus 1 = uMinus 2) ∧
+    (uMinus 0 * uMinus 1 = uPlus 2) ∧
+    (e 0 * e 1 = e 2) ∧
+    (UPlus x0 x * UMinus p0 p = ⟨dot3 x p, (p0 * x.1, p0 * x.2.1, p0 * x.2.2), (0, 0, 0), 0⟩) ∧
+    (norm (UPlus x0 x + UMinus p0 p) = x0 * p0 - dot3 x p) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [u0Plus, u0Minus, add, one]
+  · ext <;> simp [u0Plus, u0Minus, ell, sub, add, neg]
+  · intro k
+    fin_cases k <;>
+      (constructor <;> ext <;>
+        simp [ell, e, ellE, u0Plus, u0Minus, uPlus, uMinus, eHat,
+              mul, add, sub, neg, dot3, cross3] <;> ring)
+  · ext <;> simp [uPlus, uMinus, eHat, mul, dot3, cross3]
+  · ext <;> simp [uPlus, uMinus, eHat, mul, dot3, cross3]
+  · ext <;> simp [e, uPlus, uMinus, eHat, mul, add, dot3, cross3]
+  · ext <;> simp [UPlus, UMinus, mul, dot3, cross3] <;> ring
+  · simp [UPlus, UMinus, norm, add, dot3]; ring
+
+/-! ### 3. Left & Right Zorn Operators (L_z, R_z) and Alternative Composition Identities -/
+
+def L (z w : ZornOct) : ZornOct := z * w
+def R (z w : ZornOct) : ZornOct := w * z
+
+/-- **Theorem 2 (Alternative & Composition Identities for `L_z` and `R_z`)** -/
+theorem left_right_alternative_and_clifford (z x y w : ZornOct) :
+    (L z (L z w) = (z * z) * w) ∧
+    (R z (R z w) = w * (z * z)) ∧
+    (L z (L (conj z) w) = norm z • w) ∧
+    (R z (R (conj z) w) = norm z • w) ∧
+    (L x (L (conj y) w) + L y (L (conj x) w) = polar x y • w) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [L, mul, dot3, cross3] <;> ring
+  · ext <;> simp [R, mul, dot3, cross3] <;> ring
+  · ext <;> simp [L, conj, norm, smul, mul, dot3, cross3] <;> ring
+  · ext <;> simp [R, conj, norm, smul, mul, dot3, cross3] <;> ring
+  · ext <;> simp [L, conj, polar, add, smul, mul, dot3, cross3] <;> ring
+
+/-! ### 4. 16D Cl(4,4) Spinor Representation & Cartan's Infinitesimal Triality Theorem -/
+
+abbrev Spinor16 := ZornOct × ZornOct
+
+/-- Chiral Dirac operator `γ(z) = [[0, L_z], [L_{z̄}, 0]]` generating `Cl(4,4) ≅ M₁₆(ℝ)`. -/
+def gamma (z : ZornOct) (ψ : Spinor16) : Spinor16 :=
+  (L z ψ.2, L (conj z) ψ.1)
+
+/-- **Theorem 3 (Faithful `16 × 16` `Cl(4,4)` Spinor Representation)** -/
+theorem cl44_dirac_clifford (x y z : ZornOct) (ψ : Spinor16) :
+    (gamma z (gamma z ψ) = (norm z • ψ.1, norm z • ψ.2)) ∧
+    (let gxy := gamma x (gamma y ψ)
+     let gyx := gamma y (gamma x ψ)
+     (gxy.1 + gyx.1, gxy.2 + gyx.2) = (polar x y • ψ.1, polar x y • ψ.2)) := by
+  refine ⟨?_, ?_⟩
+  · dsimp [gamma]
+    have hL1 := (left_right_alternative_and_clifford z z z ψ.1).2.2.1
+    have hL2 : L (conj z) (L z ψ.2) = norm (conj z) • ψ.2 := by
+      simpa [conj_conj z] using (left_right_alternative_and_clifford (conj z) z z ψ.2).2.2.1
+    have hNorm : norm (conj z) = norm z := by simp [conj, norm, dot3]; ring
+    rw [hL1, hL2, hNorm]
+  · dsimp [gamma]
+    have hPlus := (left_right_alternative_and_clifford z x y ψ.1).2.2.2.2
+    have hMinus : L (conj x) (L y ψ.2) + L (conj y) (L x ψ.2) =
+        polar (conj x) (conj y) • ψ.2 := by
+      simpa [conj_conj x, conj_conj y] using
+        (left_right_alternative_and_clifford z (conj x) (conj y) ψ.2).2.2.2.2
+    have hPol : polar (conj x) (conj y) = polar x y := by simp [conj, polar, dot3]; ring
+    rw [hPlus, hMinus, hPol]
+
+def TPlus (a b s : ZornOct) : ZornOct :=
+  (1 / 4 : ℝ) • (L a (L (conj b) s) - L b (L (conj a) s))
+
+def TMinus (a b s : ZornOct) : ZornOct :=
+  (1 / 4 : ℝ) • (L (conj a) (L b s) - L (conj b) (L a s))
+
+def TV (a b v : ZornOct) : ZornOct :=
+  (1 / 2 : ℝ) • (polar b v • a - polar a v • b)
+
+/-- **Theorem 4 (Cartan's Infinitesimal Triality Law & `so(4,4)` Skew-Symmetry)** -/
+theorem cartan_infinitesimal_triality (a b u v s : ZornOct) :
+    (TPlus a b (v * s) = (TV a b v) * s + v * (TMinus a b s)) ∧
+    (polar (TV a b u) v + polar u (TV a b v) = 0) := by
+  constructor
+  · ext <;>
+      simp [TPlus, TMinus, TV, L, conj, polar, smul, add, sub, neg, mul, dot3, cross3] <;>
+      ring
+  · simp [TV, polar, smul, add, sub, neg, dot3]
+    ring
+
+/-! ### 5. Compact Rotation `D₁₂` & Sign-Corrected Non-Compact Boost `B₁₂` in `g₂(₂) = Der(𝕆_s)` -/
+
+/-- Compact `su(2) ⊂ g₂(₂)` rotation derivation `D₁₂ = T_V(e₁, e₂) - T_V(ℓe₁, ℓe₂)`. -/
+def D12 (x : ZornOct) : ZornOct :=
+  TV (e 0) (e 1) x - TV (ellE 0) (ellE 1) x
+
+/-- Sign-corrected non-compact `g₂(₂)` boost derivation `B₁₂ = T_V(e₁, ℓe₂) - T_V(ℓe₁, e₂)`. -/
+def B12 (x : ZornOct) : ZornOct :=
+  TV (e 0) (ellE 1) x - TV (ellE 0) (e 1) x
+
+/-- **Theorem 5 (Compact & Non-Compact `G₂(₂)` Derivations, Exact Action, & Eigenvalue Squares)**:
+1. Compact rotation `D₁₂`: `D₁₂(1) = 0`, `D₁₂(x ⋆ y) = D₁₂(x) ⋆ y + x ⋆ D₁₂(y)`,
+   `D₁₂(e₁) = -e₂`, and `D₁₂(D₁₂(e₁)) = -e₁` (compact `so(2)` square `-1`).
+2. Non-compact boost `B₁₂`: `B₁₂(1) = 0`, `B₁₂(x ⋆ y) = B₁₂(x) ⋆ y + x ⋆ B₁₂(y)`,
+   `B₁₂(e₁) = -ℓe₂`, and `B₁₂(B₁₂(e₁)) = +e₁` (hyperbolic `so(1,1)` square `+1`). -/
+theorem g22_compact_and_boost_derivations (x y : ZornOct) :
+    (D12 1 = 0) ∧
+    (D12 (x * y) = D12 x * y + x * D12 y) ∧
+    (D12 (e 0) = -e 1) ∧
+    (D12 (D12 (e 0)) = -e 0) ∧
+    (B12 1 = 0) ∧
+    (B12 (x * y) = B12 x * y + x * B12 y) ∧
+    (B12 (e 0) = -ellE 1) ∧
+    (B12 (B12 (e 0)) = e 0) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext <;> simp [D12, TV, e, ellE, uPlus, uMinus, eHat, polar, one, zero,
+      smul, add, sub, neg, dot3] <;> ring
+  · ext <;> simp [D12, TV, e, ellE, uPlus, uMinus, eHat, polar,
+      smul, add, sub, neg, mul, dot3, cross3] <;> ring
+  · ext <;> simp [D12, TV, e, ellE, uPlus, uMinus, eHat, polar,
+      smul, add, sub, neg, dot3] <;> ring
+  · ext <;> simp [D12, TV, e, ellE, uPlus, uMinus, eHat, polar,
+      smul, add, sub, neg, dot3] <;> ring
+  · ext <;> simp [B12, TV, e, ellE, uPlus, uMinus, eHat, polar, one, zero,
+      smul, add, sub, neg, dot3] <;> ring
+  · ext <;> simp [B12, TV, e, ellE, uPlus, uMinus, eHat, polar,
+      smul, add, sub, neg, mul, dot3, cross3] <;> ring
+  · ext <;> simp [B12, TV, e, ellE, uPlus, uMinus, eHat, polar,
+      smul, add, sub, neg, dot3] <;> ring
+  · ext <;> simp [B12, TV, e, ellE, uPlus, uMinus, eHat, polar,
+      smul, add, sub, neg, dot3] <;> ring
+
+end ZornOct
+
+end ZornCl44TrialityAndG22

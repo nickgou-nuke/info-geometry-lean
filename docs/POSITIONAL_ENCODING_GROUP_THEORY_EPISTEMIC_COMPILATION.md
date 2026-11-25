@@ -105,7 +105,9 @@ general diagonalization classification remains open debt.
 | Clifford RoPE pairing | `lean/InfoGeometry/Clifford/Cl55RoPEAttentionPairing.lean:85` (`attentionScore`), `:92` (`attentionScore_eq_relative`), `:112` (`grand_rope_attention_pairing_synthesis`) | Cl(5,5) rotor pairing |
 | ALiBi score kernel | `lean/InfoGeometry/LLM/ALiBi.lean:13` (`alibiScore`), `:17` (`alibiScore_translation_invariant`), `:22` (`alibiScore_same_time`) | score-level relative bias |
 | ALiBi from a square-zero Jordan block | `lean/InfoGeometry/LLM/PositionalEncodingRepresentation.lean:419` (`alibiRelativeFlow`), `:445` (`alibi_parabolic_bias`), `:463` (`alibiAugmentedScore_eq`) | exact `-p t` penalty |
-| unified score-regime interface | `lean/InfoGeometry/Canonical/UnifiedPositionalRegime.lean:66` (`ScorePositionalRegime`), `:71` (`alibiScorePositionalRegime`) | translation-invariant score carrier |
+| score-level ALiBi regime | `lean/InfoGeometry/Canonical/UnifiedPositionalRegime.lean:66` (`ScorePositionalRegime`), `:71` (`alibiScorePositionalRegime`) | translation-invariant score carrier |
+| scalar exponential decay flow | `lean/InfoGeometry/LLM/PositionalEncodingRepresentation.lean:519` (`scalarDecayFlow`), `:535` (`scalarDecayFlow_eval`), `:575` (`scalarDecayFlow_eq_exponential`) | `ℝ` carrier, generator `c • id`, value `exp(c*t)`, identified with the canonical Banach exponential flow |
+| concrete exponential relative score | `lean/InfoGeometry/LLM/PositionalEncodingRepresentation.lean:590` (`exponentialDecayScore`), `:595` (`exponentialDecayScore_translation_invariant`), `:604` (`exponentialDecayScore_same_time`), `:611` (`exponentialDecayScore_eq_scalarDecayFlow`) | `exp(c*(t-s))*dot q k`, shift-invariant, equal-time normalization, exact scalar-flow readout |
 
 ## Claim ledger
 
@@ -122,13 +124,14 @@ general diagonalization classification remains open debt.
 | RoPE is a stack of planar rotations | Owner-backed continuous/discrete RoPE relative scores |
 | RoPE geometric frequency schedule | Engineering choice, not theorem |
 | ALiBi is recovered from a defective generator | Owner-backed exact `-p t` realization |
-| Linear attention exponentially suppresses old values | Model-level intent; generic exponential flow owner exists, but a specific linear-attention decay theorem is open debt |
+| Linear attention exponentially suppresses old values | Concrete exponential relative score and scalar flow owner-backed; identification with a named production linear-attention stack remains open debt |
 | Nonlinear modifiers and pairwise `n²` modifiers excluded | Explicit modeling assumptions; not refuted, not formalized |
 
 ## Formalization boundary
 
-The algebraic spine is already kernel-checked. Remaining debts are:
-a general diagonalizable-generator decomposition theorem; larger Jordan blocks;
-a concrete scalar negative-generator decay theorem tied to a named
-linear-attention carrier; frequency-schedule optimality; and any empirical or
+The algebraic spine is already kernel-checked, now including a scalar
+negative-generator exponential flow and a concrete exponential relative score.
+Remaining debts are: a general diagonalizable-generator decomposition theorem;
+larger Jordan blocks; identification with a named production linear-attention
+carrier; frequency-schedule optimality; and any empirical or
 practical-universality claim. None of these is closed by this epistemic note.

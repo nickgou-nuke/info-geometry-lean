@@ -581,6 +581,42 @@ theorem scalarDecayFlow_eq_exponential (c : ℝ) :
 
 end ScalarDecay
 
+/-! ## 6. Exponential relative decay scores -/
+
+noncomputable section ExponentialDecayScore
+
+/-- A concrete score-level exponential relative kernel. The generator `c`
+controls growth (`c > 0`), no time dependence (`c = 0`), or decay (`c < 0`). -/
+def exponentialDecayScore {Q : Type*} (dot : Q → Q → ℝ) (c : ℝ)
+    (q k : Q) (t s : ℝ) : ℝ :=
+  Real.exp (c * (t - s)) * dot q k
+
+/-- The exponential relative kernel is invariant under simultaneous shifts. -/
+theorem exponentialDecayScore_translation_invariant {Q : Type*}
+    (dot : Q → Q → ℝ) (c : ℝ) (q k : Q) (t s a : ℝ) :
+    exponentialDecayScore dot c q k (t + a) (s + a) =
+      exponentialDecayScore dot c q k t s := by
+  unfold exponentialDecayScore
+  congr 1
+  ring
+
+/-- At equal times the exponential relative kernel recovers the bare score. -/
+theorem exponentialDecayScore_same_time {Q : Type*}
+    (dot : Q → Q → ℝ) (c : ℝ) (q k : Q) (t : ℝ) :
+    exponentialDecayScore dot c q k t t = dot q k := by
+  simp [exponentialDecayScore]
+
+/-- The score kernel is exactly the scalar decay flow evaluated at the
+relative time. -/
+theorem exponentialDecayScore_eq_scalarDecayFlow {Q : Type*}
+    (dot : Q → Q → ℝ) (c : ℝ) (q k : Q) (t s : ℝ) :
+    exponentialDecayScore dot c q k t s =
+      (scalarDecayFlow c).eval (t - s) (dot q k) := by
+  rw [scalarDecayFlow_eval]
+  rfl
+
+end ExponentialDecayScore
+
 end InfoGeometry.LLM.PositionalEncodingRepresentation
 
 end noncomputable section

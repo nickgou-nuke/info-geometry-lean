@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.Cl55RoPESplitTorusBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CliffordRoPETorus
@@ -645,5 +650,80 @@ theorem splitRotor55_relative_position (i : Fin 5) (s t : ℝ) :
 theorem hyperbolicRotor_relative_position (θ s t : ℝ) :
     hyperbolicRotor θ (-s) * hyperbolicRotor θ t = hyperbolicRotor θ (t - s) := by
   exact hyperbolicRotor_add θ (-s) t ▸ by congr 1; ring
+
+/-- The 3×3 nilpotent Jordan block with ones on the first superdiagonal:
+`[[0,1,0],[0,0,1],[0,0,0]]`.  Unlike the 2×2 Jordan nilpotent `N` from
+`InfoGeometry.LogJordanKreinCore`, its square is nonzero while its cube
+vanishes, so its truncated exponential has a genuine quadratic term. -/
+def N3 : Matrix (Fin 3) (Fin 3) ℝ := !![0, 1, 0; 0, 0, 1; 0, 0, 0]
+
+/-- `N3² ≠ 0`: the `(0,2)` entry of `N3 * N3` is `1`, so this is a genuinely
+cubically (not square) nilpotent cell. -/
+theorem N3_sq_ne_zero : N3 * N3 ≠ 0 := by
+  intro h
+  have h02 := congrArg (fun A : Matrix (Fin 3) (Fin 3) ℝ => A 0 2) h
+  norm_num [N3, Matrix.mul_apply, Fin.sum_univ_three] at h02
+
+/-- `N3³ = 0`.  This is the truncation certificate that makes the exponential
+polynomial below finite and drives its multiplication law. -/
+theorem N3_cube : (N3 * N3) * N3 = 0 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [N3, Matrix.mul_apply, Fin.sum_univ_three]
+
+/-- The finite exponential polynomial `exp(t·N3) = I + t·N3 + (t²/2)·N3²`,
+which is exact because `N3³ = 0` (see `N3_cube`). -/
+def expJordanPoly3 (t : ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
+  1 + t • N3 + (t ^ 2 / 2) • (N3 * N3)
+
+/-- Zero law: the polynomial flow sends `0` to the identity. -/
+theorem expJordanPoly3_zero : expJordanPoly3 0 = 1 := by
+  simp [expJordanPoly3]
+
+/-- Multiplication law: `P(s)·P(t) = P(s+t)`.  The higher powers `N3³`
+and `N3⁴` that appear on expansion vanish by `N3_cube`, leaving exactly the
+quadratic truncation; the computation is verified entrywise. -/
+theorem expJordanPoly3_mul (s t : ℝ) :
+    expJordanPoly3 s * expJordanPoly3 t = expJordanPoly3 (s + t) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [expJordanPoly3, N3, Matrix.mul_apply, Fin.sum_univ_three] <;> ring
+
+/-- Inverse law (left): `P(-t)` inverts `P(t)` on the left. -/
+theorem expJordanPoly3_neg_mul (t : ℝ) : expJordanPoly3 (-t) * expJordanPoly3 t = 1 := by
+  rw [expJordanPoly3_mul, neg_add_cancel, expJordanPoly3_zero]
+
+/-- Inverse law (right): `P(-t)` inverts `P(t)` on the right. -/
+theorem expJordanPoly3_mul_neg (t : ℝ) : expJordanPoly3 t * expJordanPoly3 (-t) = 1 := by
+  rw [expJordanPoly3_mul, add_neg_cancel, expJordanPoly3_zero]
+
+/-- Explicit non-commutativity witness for the matrix carrier used by the
+Jordan cells in this module. -/
+abbrev jordanNoncommA : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+
+/-- The transpose raising operator paired with `jordanNoncommA`. -/
+abbrev jordanNoncommB : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+
+/-- The two Jordan raising/lowering matrices do not commute. -/
+theorem jordanNoncommWitness :
+    jordanNoncommA * jordanNoncommB ≠ jordanNoncommB * jordanNoncommA := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+  norm_num [jordanNoncommA, jordanNoncommB, Matrix.mul_apply, Fin.sum_univ_two] at h00
+
+/-- Explicit non-commutativity witness for the 3×3 Jordan carrier. -/
+abbrev jordanNoncommA3 : Matrix (Fin 3) (Fin 3) ℝ :=
+  !![0, 1, 0; 0, 0, 1; 0, 0, 0]
+
+/-- The transpose raising operator paired with `jordanNoncommA3`. -/
+abbrev jordanNoncommB3 : Matrix (Fin 3) (Fin 3) ℝ :=
+  !![0, 0, 0; 1, 0, 0; 0, 1, 0]
+
+/-- The 3×3 raising/lowering Jordan matrices do not commute. -/
+theorem jordanNoncommWitness3 :
+    jordanNoncommA3 * jordanNoncommB3 ≠ jordanNoncommB3 * jordanNoncommA3 := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℝ => M 0 0) h
+  norm_num [jordanNoncommA3, jordanNoncommB3, Matrix.mul_apply, Fin.sum_univ_three] at h00
 
 end InfoGeometry.Canonical.PositionalDynamicsRegimeBridge

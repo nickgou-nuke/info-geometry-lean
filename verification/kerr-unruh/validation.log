@@ -1,0 +1,500 @@
+[kerr-unruh] waiting for the shared build lock
+[kerr-unruh] lake -d /workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/kerr-unruh build
+✔ [3217/3218] Built InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge (138s)
+ℹ [3218/3218] Built InfoGeometry.Canonical.KerrUnruhFermionicHorizonAudit (128s)
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:20:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:21:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:22:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:23:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_lt_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:24:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_add_complement' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:25:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_crossRatio' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:26:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:27:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:28:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_eq_fermiSimplexCoordinate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:29:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.occupationOdds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:30:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.exp_add_one_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:31:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_add_complement' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:32:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.occupationOdds_eq_exp_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:33:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.occupationOdds_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:34:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:35:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_lt_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:36:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_one_eq_weight' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:37:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_one_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:38:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_one_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:39:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_one_eq_half_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:40:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_one_lt_half_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:41:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.half_lt_fermiOccupation_one_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:42:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiMassieu' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:43:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:44:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.hasDerivAt_fermiOccupation_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:45:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.deriv_fermiOccupation_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:46:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.hasDerivAt_fermiMassieu' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:47:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.deriv_fermiMassieu' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:48:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.hasDerivAt_deriv_fermiMassieu' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:49:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.deriv2_fermiMassieu' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:50:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:51:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility_defect' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:52:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility_le_quarter' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:53:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility_eq_quarter_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:54:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:55:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiEntropy_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:56:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiEntropy_le_log_two' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:57:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiEntropy_eq_log_two_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:58:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiEntropy_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:59:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiEntropy_eq_massieu_add' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:60:0: 'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.hasDerivAt_fermiEntropy' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:62:0: 'InfoGeometry.Lie.LorentzCartanKernel.lorentzPoissonMat' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:63:0: 'InfoGeometry.Lie.LorentzCartanKernel.loxodromicTempVec' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:64:0: 'InfoGeometry.Lie.LorentzCartanKernel.modeCharge' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:65:0: 'InfoGeometry.Lie.LorentzCartanKernel.rotatingTemperature' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:66:0: 'InfoGeometry.Lie.LorentzCartanKernel.lorentzPoissonMat_transpose' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:67:0: 'InfoGeometry.Lie.LorentzCartanKernel.longitudinal_temperature_mem_kernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:68:0: 'InfoGeometry.Lie.LorentzCartanKernel.rotatingTemperature_mem_kernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:69:0: 'InfoGeometry.Lie.LorentzCartanKernel.modeCharge_dot_rotatingTemperature' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:70:0: 'InfoGeometry.Lie.LorentzCartanKernel.kernel_pairing_counterexample' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:72:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsMatrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:73:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsDensity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:74:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrExponent' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:75:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:76:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_eq_dimensionless' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:77:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_eq_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:78:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.trace_fockGibbsMatrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:79:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.trace_fockGibbsMatrix_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:80:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fermiMassieu_eq_log_trace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:81:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.trace_number_mul_fockGibbsMatrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:82:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbs_expectation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:83:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsDensity_eq_weighted_projectors' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:84:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.thermalWeightPlus_fermi' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:85:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.thermalWeightMinus_fermi' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:86:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fermi_contrast_bounds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:87:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsDensity_eq_thermalPolarization' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:88:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.trace_fockGibbsDensity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:89:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsDensity_posSemidef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:90:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.trace_number_mul_fockGibbsDensity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:91:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsDensity_particle_hole' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:92:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerr_gibbs_expectation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:93:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_bounds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:94:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.calibrated_inverseTemperature_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:95:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrExponent_neg_beta' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:96:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrExponent_neg_charges' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:97:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_neg_beta' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:98:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_neg_charges' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:99:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrExponent_eq_zero_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:100:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_eq_half_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:101:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.calibrated_kerrFermiOcc_eq_half_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:102:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_lt_half_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:103:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.half_lt_kerrFermiOcc_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:104:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerr_susceptibility_entropy_peaks' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:105:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerr_pairing_and_cartan_kernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: ../../lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean:106:0: 'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.cartan_kernel_not_half_occupation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Build completed successfully (3218 jobs).
+[kerr-unruh] lake -d /workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/kerr-unruh env lean -DwarningAsError=true lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_lt_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_add_complement' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_crossRatio' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSimplexCoordinate_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_eq_fermiSimplexCoordinate' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.occupationOdds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.exp_add_one_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_add_complement' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.occupationOdds_eq_exp_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.occupationOdds_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_lt_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_one_eq_weight' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_one_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_one_zero' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_one_eq_half_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiOccupation_one_lt_half_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.half_lt_fermiOccupation_one_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiMassieu' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.hasDerivAt_fermiOccupation_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.deriv_fermiOccupation_one' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.hasDerivAt_fermiMassieu' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.deriv_fermiMassieu' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.hasDerivAt_deriv_fermiMassieu' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.deriv2_fermiMassieu' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility_defect' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility_le_quarter' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility_eq_quarter_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiSusceptibility_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiEntropy_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiEntropy_le_log_two' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiEntropy_eq_log_two_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiEntropy_neg' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.fermiEntropy_eq_massieu_add' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Clifford.ChiralGrandCanonicalThermalGeometry.hasDerivAt_fermiEntropy' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Lie.LorentzCartanKernel.lorentzPoissonMat' depends on axioms: [propext, Classical.choice, Quot.sound]
+'InfoGeometry.Lie.LorentzCartanKernel.loxodromicTempVec' depends on axioms: [propext, Classical.choice, Quot.sound]
+'InfoGeometry.Lie.LorentzCartanKernel.modeCharge' depends on axioms: [propext, Classical.choice, Quot.sound]
+'InfoGeometry.Lie.LorentzCartanKernel.rotatingTemperature' depends on axioms: [propext, Classical.choice, Quot.sound]
+'InfoGeometry.Lie.LorentzCartanKernel.lorentzPoissonMat_transpose' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Lie.LorentzCartanKernel.longitudinal_temperature_mem_kernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Lie.LorentzCartanKernel.rotatingTemperature_mem_kernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Lie.LorentzCartanKernel.modeCharge_dot_rotatingTemperature' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Lie.LorentzCartanKernel.kernel_pairing_counterexample' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsMatrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsDensity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrExponent' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_eq_dimensionless' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_eq_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.trace_fockGibbsMatrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.trace_fockGibbsMatrix_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fermiMassieu_eq_log_trace' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.trace_number_mul_fockGibbsMatrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbs_expectation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsDensity_eq_weighted_projectors' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.thermalWeightPlus_fermi' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.thermalWeightMinus_fermi' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fermi_contrast_bounds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsDensity_eq_thermalPolarization' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.trace_fockGibbsDensity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsDensity_posSemidef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.trace_number_mul_fockGibbsDensity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.fockGibbsDensity_particle_hole' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerr_gibbs_expectation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_bounds' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.calibrated_inverseTemperature_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrExponent_neg_beta' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrExponent_neg_charges' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_neg_beta' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_neg_charges' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrExponent_eq_zero_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_eq_half_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.calibrated_kerrFermiOcc_eq_half_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerrFermiOcc_lt_half_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.half_lt_kerrFermiOcc_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerr_susceptibility_entropy_peaks' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.kerr_pairing_and_cartan_kernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge.cartan_kernel_not_half_occupation' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

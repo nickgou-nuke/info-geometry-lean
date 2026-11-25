@@ -1,3 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
+import InfoGeometry.Clifford.FermiDiracAnalytic
 import InfoGeometry.Clifford.ChiralGrandCanonicalOperatorGeometry
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Thermodynamics.UnruhTemperature
@@ -136,105 +143,6 @@ def effectiveEnergy (E μ μχ σ : ℝ) : ℝ := E - μ - σ * μχ
     effectiveEnergy E μ μχ (-1) = E - μ + μχ := by
   unfold effectiveEnergy
   ring
-
-/-- The Fermi occupation readout of a native mode energy. -/
-def fermiOccupation (β ξ : ℝ) : ℝ :=
-  1 / (Real.exp (β * ξ) + 1)
-
-/-- The logistic coordinate on the open one-simplex. -/
-def fermiSimplexCoordinate (θ : ℝ) : ℝ :=
-  Real.exp θ / (Real.exp θ + 1)
-
-theorem fermiSimplexCoordinate_pos (θ : ℝ) :
-    0 < fermiSimplexCoordinate θ := by
-  unfold fermiSimplexCoordinate
-  exact div_pos (Real.exp_pos _) (by positivity)
-
-theorem fermiSimplexCoordinate_lt_one (θ : ℝ) :
-    fermiSimplexCoordinate θ < 1 := by
-  unfold fermiSimplexCoordinate
-  have hden : 0 < Real.exp θ + 1 := by positivity
-  apply (div_lt_iff₀ hden).2
-  linarith
-
-theorem fermiSimplexCoordinate_add_complement (θ : ℝ) :
-    fermiSimplexCoordinate θ + 1 / (Real.exp θ + 1) = 1 := by
-  unfold fermiSimplexCoordinate
-  have hden : Real.exp θ + 1 ≠ 0 :=
-    by positivity
-  field_simp [hden]
-
-theorem fermiSimplexCoordinate_crossRatio (θ : ℝ) :
-    fermiSimplexCoordinate θ /
-        (1 - fermiSimplexCoordinate θ) = Real.exp θ := by
-  unfold fermiSimplexCoordinate
-  have hden : Real.exp θ + 1 ≠ 0 :=
-    by positivity
-  have hcomp :
-      1 - Real.exp θ / (Real.exp θ + 1) =
-        1 / (Real.exp θ + 1) := by
-    field_simp [hden]
-    ring
-  rw [hcomp]
-  field_simp [hden]
-
-theorem fermiSimplexCoordinate_neg (θ : ℝ) :
-    fermiSimplexCoordinate (-θ) = 1 - fermiSimplexCoordinate θ := by
-  unfold fermiSimplexCoordinate
-  rw [Real.exp_neg]
-  have hexp : Real.exp θ ≠ 0 := Real.exp_ne_zero _
-  have hden : Real.exp θ + 1 ≠ 0 :=
-    by positivity
-  field_simp [hexp, hden]
-  ring
-
-@[simp] theorem fermiSimplexCoordinate_zero :
-    fermiSimplexCoordinate 0 = 1 / 2 := by
-  norm_num [fermiSimplexCoordinate]
-
-theorem fermiOccupation_eq_fermiSimplexCoordinate (β ξ : ℝ) :
-    fermiOccupation β ξ = fermiSimplexCoordinate (-(β * ξ)) := by
-  unfold fermiOccupation fermiSimplexCoordinate
-  rw [Real.exp_neg]
-  have hexp : Real.exp (β * ξ) ≠ 0 := Real.exp_ne_zero _
-  have hden : Real.exp (β * ξ) + 1 ≠ 0 :=
-    by positivity
-  field_simp [hexp, hden]
-  ring
-
-/-- Occupation odds, with no alteration of the underlying CAR algebra. -/
-def occupationOdds (β ξ : ℝ) : ℝ :=
-  fermiOccupation β ξ / (1 - fermiOccupation β ξ)
-
-lemma exp_add_one_pos (β ξ : ℝ) :
-    0 < Real.exp (β * ξ) + 1 := by
-  exact add_pos_of_nonneg_of_pos (le_of_lt (Real.exp_pos _)) zero_lt_one
-
-theorem fermiOccupation_add_complement (β ξ : ℝ) :
-    fermiOccupation β ξ +
-        Real.exp (β * ξ) / (Real.exp (β * ξ) + 1) = 1 := by
-  unfold fermiOccupation
-  have h := exp_add_one_pos β ξ
-  field_simp [ne_of_gt h]
-  ring
-
-theorem occupationOdds_eq_exp_neg (β ξ : ℝ) :
-    occupationOdds β ξ = Real.exp (-(β * ξ)) := by
-  unfold occupationOdds fermiOccupation
-  have h : Real.exp (β * ξ) + 1 ≠ 0 :=
-    ne_of_gt (exp_add_one_pos β ξ)
-  have hcomp : 1 - 1 / (Real.exp (β * ξ) + 1) =
-      Real.exp (β * ξ) / (Real.exp (β * ξ) + 1) := by
-    field_simp [h]
-    ring
-  rw [hcomp]
-  field_simp [h, Real.exp_ne_zero]
-  rw [Real.exp_neg, mul_inv_cancel₀ (Real.exp_ne_zero _)]
-
-theorem occupationOdds_pos (β ξ : ℝ) :
-    0 < occupationOdds β ξ := by
-  rw [occupationOdds_eq_exp_neg]
-  exact Real.exp_pos _
 
 theorem rindlerOccupationOdds_eq
     (obs : RindlerObserver) (E μ μχ σ : ℝ) :

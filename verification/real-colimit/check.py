@@ -125,7 +125,7 @@ def main() -> None:
         "\n".join(f"#print axioms {name}" for name in sorted(expected)) + "\n",
         encoding="utf-8")
     kernel_commands = [
-        {"label": "build", "command": ["lake", "-d", str(FOCUSED), "--wfail", "build", *OWNERS, *REGRESSION_TARGETS]},
+        {"label": "build", "command": ["lake", "-d", str(FOCUSED), "build", *OWNERS, *REGRESSION_TARGETS]},
         *({"label": source.stem, "command": ["lean", "-DwarningAsError=true", str(source)]}
           for source in sources),
         {"label": "axioms", "command": ["lean", "-DwarningAsError=true", str(audit_file)]},

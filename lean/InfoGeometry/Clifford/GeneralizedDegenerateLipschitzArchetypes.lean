@@ -1006,6 +1006,124 @@ theorem stabilizes_reverseFixed_iff_cliffordNorm_twistedCentralizes
     exact (gradeTwistedAdjoint_mem_reverseFixed_iff_norm_twistedCentralizes Q g x hx).mpr
       (hg x hx)
 
+/-- The grade-twisted geometric stabilizer of joint sectors `0,1` is exactly
+the Clifford-norm twisted centralizer of the reverse-fixed sector. This is an
+action-level classification; conversion to a grade-indexed table is separate. -/
+theorem twistedPairStabilizer_01_iff_cliffordNorm_twistedCentralizes_reverseFixed
+    (g : (GA Q)ˣ) :
+    g ∈ twistedPairStabilizer Q 0 1 ↔
+      cliffordNorm Q g ∈ twistedCentralizerSet Q
+        {x | CliffordAlgebra.reverse x = x} := by
+  change g ∈ stabilizes Q (gradeTwistedAdjointAction Q)
+    (jointPairSubmodule Q 0 1 : Set (GA Q)) ↔ _
+  rw [jointPair_01_eq_reverseFixed]
+  exact stabilizes_reverseFixed_iff_cliffordNorm_twistedCentralizes Q g
+
+/-- The grade-twisted adjoint action preserves reverse-anti-fixed elements
+exactly when the Clifford norm lies in their grade-twisted centralizer. -/
+theorem gradeTwistedAdjoint_mem_reverseAntiFixed_iff_norm_twistedCentralizes
+    (g : (GA Q)ˣ) (x : GA Q) (hx : CliffordAlgebra.reverse x = -x) :
+    CliffordAlgebra.reverse (gradeTwistedAdjointAction Q g x) =
+        -(gradeTwistedAdjointAction Q g x) ↔
+      CliffordAlgebra.involute (cliffordNorm Q g) * x =
+        x * cliffordNorm Q g := by
+  let a : GA Q := (g : GA Q)
+  let ai : GA Q := ((g⁻¹ : (GA Q)ˣ) : GA Q)
+  let r : GA Q := CliffordAlgebra.reverse a
+  let ri : GA Q := CliffordAlgebra.reverse ai
+  let hatA : GA Q := CliffordAlgebra.involute a
+  let hatR : GA Q := CliffordAlgebra.involute r
+  have hai : a * ai = 1 := by simp [a, ai]
+  have hia : ai * a = 1 := by simp [a, ai]
+  have hri_r : ri * r = 1 := by
+    change CliffordAlgebra.reverse ai * CliffordAlgebra.reverse a = 1
+    rw [← CliffordAlgebra.reverse.map_mul, hai]
+    simp
+  have hr_ri : r * ri = 1 := by
+    change CliffordAlgebra.reverse a * CliffordAlgebra.reverse ai = 1
+    rw [← CliffordAlgebra.reverse.map_mul]
+    rw [hia]
+    simp
+  have hrevAction : CliffordAlgebra.reverse (gradeTwistedAdjointAction Q g x) =
+      -(ri * x * hatR) := by
+    dsimp [gradeTwistedAdjointAction, a, ai, r, ri, hatR]
+    rw [CliffordAlgebra.reverse.map_mul, CliffordAlgebra.reverse.map_mul, hx,
+      CliffordAlgebra.reverse_involute]
+    noncomm_ring
+  have hchi : CliffordAlgebra.involute (cliffordNorm Q g) =
+      r * hatA ∧ cliffordNorm Q g = hatR * a := by
+    constructor
+    · change CliffordAlgebra.involute
+        (CliffordAlgebra.involute (CliffordAlgebra.reverse a) * a) = r * hatA
+      rw [map_mul, CliffordAlgebra.involute_involute]
+    · rfl
+  constructor
+  · intro h
+    have heq : ri * x * hatR = hatA * x * ai := by
+      apply neg_injective
+      calc
+        -(ri * x * hatR) = CliffordAlgebra.reverse (gradeTwistedAdjointAction Q g x) :=
+          hrevAction.symm
+        _ = -(gradeTwistedAdjointAction Q g x) := h
+        _ = -(hatA * x * ai) := by rfl
+    have hEq : x * hatR * a = r * hatA * x := by
+      calc
+        x * hatR * a = (r * ri) * x * hatR * a := by rw [hr_ri]; noncomm_ring
+        _ = r * (ri * x * hatR) * a := by noncomm_ring
+        _ = r * (hatA * x * ai) * a := by rw [heq]
+        _ = r * hatA * x := by noncomm_ring [hia]
+    rw [hchi.1, hchi.2]
+    calc
+      (r * hatA) * x = (x * hatR) * a := hEq.symm
+      _ = x * (hatR * a) := by noncomm_ring
+  · intro h
+    rw [hchi.1, hchi.2] at h
+    have h' : (r * hatA) * x = x * (hatR * a) := h
+    have h'Assoc : r * hatA * x = x * hatR * a := by
+      calc
+        r * hatA * x = (r * hatA) * x := rfl
+        _ = x * (hatR * a) := h'
+        _ = x * hatR * a := by noncomm_ring
+    have heq : ri * x * hatR = hatA * x * ai := by
+      calc
+        ri * x * hatR = ri * (x * hatR * a) * ai := by noncomm_ring [hai]
+        _ = ri * (r * hatA * x) * ai := by rw [h'Assoc]
+        _ = hatA * x * ai := by
+          calc
+            ri * (r * hatA * x) * ai = (ri * r) * hatA * x * ai := by noncomm_ring
+            _ = 1 * hatA * x * ai := by rw [hri_r]
+            _ = hatA * x * ai := by simp
+    rw [hrevAction, heq]
+    rfl
+
+/-- Setwise form of the reverse-anti-fixed Clifford-norm criterion for the
+grade-twisted adjoint action. -/
+theorem stabilizes_reverseAntiFixed_iff_cliffordNorm_twistedCentralizes
+    (g : (GA Q)ˣ) :
+    g ∈ stabilizes Q (gradeTwistedAdjointAction Q)
+      {x | CliffordAlgebra.reverse x = -x} ↔
+      cliffordNorm Q g ∈ twistedCentralizerSet Q
+        {x | CliffordAlgebra.reverse x = -x} := by
+  constructor
+  · intro hg x hx
+    exact (gradeTwistedAdjoint_mem_reverseAntiFixed_iff_norm_twistedCentralizes
+      Q g x hx).mp (hg x hx)
+  · intro hg x hx
+    exact (gradeTwistedAdjoint_mem_reverseAntiFixed_iff_norm_twistedCentralizes
+      Q g x hx).mpr (hg x hx)
+
+/-- The grade-twisted stabilizer of joint sectors `2,3` is classified by the
+Clifford-norm twisted centralizer of the reverse-anti-fixed sector. -/
+theorem twistedPairStabilizer_23_iff_cliffordNorm_twistedCentralizes_reverseAntiFixed
+    (g : (GA Q)ˣ) :
+    g ∈ twistedPairStabilizer Q 2 3 ↔
+      cliffordNorm Q g ∈ twistedCentralizerSet Q
+        {x | CliffordAlgebra.reverse x = -x} := by
+  change g ∈ stabilizes Q (gradeTwistedAdjointAction Q)
+    (jointPairSubmodule Q 2 3 : Set (GA Q)) ↔ _
+  rw [jointPair_23_eq_reverseAntiFixed]
+  exact stabilizes_reverseAntiFixed_iff_cliffordNorm_twistedCentralizes Q g
+
 /-- Setwise form of the reverse-anti-fixed norm-centralizer characterization. -/
 theorem stabilizes_reverseAntiFixed_iff_reversionNormCentralizes (g : (GA Q)ˣ) :
     g ∈ stabilizes Q (adjointAction Q)

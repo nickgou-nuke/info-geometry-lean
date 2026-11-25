@@ -217,7 +217,8 @@ def main() -> int:
             'name = "zorn_triality_validation"\nsrcDir = "src"\n'
             'packagesDir = ".lake/packages"\n\n[[require]]\nname = "mathlib"\n'
             'git = "https://github.com/leanprover-community/mathlib4.git"\n'
-            f'rev = "{pins["mathlib"]}"\n\n[[lean_lib]]\nname = "InfoGeometry"\n')
+            f'rev = "{pins["mathlib"]}"\n\n[[lean_lib]]\nname = "InfoGeometry"\n'
+            '\n[[lean_lib]]\nname = "DAG"\n')
         overrides = [{"type": "path", "scope": p.get("scope", ""), "name": p["name"],
                       "dir": str(package_root / p["name"]), "inherited": p.get("inherited", False),
                       "manifestFile": p["manifestFile"], "configFile": p["configFile"]} for p in packages]

@@ -85,7 +85,7 @@ def run(args: argparse.Namespace, out: Path, report: dict) -> int:
         states: dict[str, str] = {}
         for module in modules:
             dependencies = [d for d in checker.dependencies(module)
-                            if d.startswith("InfoGeometry.")]
+                            if d.startswith(checker.REPO_PREFIXES)]
             blocked = [d for d in dependencies if states.get(d) != "elaborated"]
             if blocked:
                 states[module] = "skipped"

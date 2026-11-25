@@ -17,3 +17,6 @@ name = "InfoGeometry"
 name = "InfoGeometryCore"
 srcDir = "../lib/InfoGeometryCore"
 globs = ["InfoGeometryCore.*"]
+
+[[lean_lib]]
+name = "DAG"

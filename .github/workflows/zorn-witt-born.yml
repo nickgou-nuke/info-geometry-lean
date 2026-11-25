@@ -6,6 +6,7 @@ on:
       - '.github/workflows/zorn-witt-born.yml'
       - 'lake-manifest.json'
       - 'lean-toolchain'
+      - 'lean/DAG/Basic.lean'
       - 'lean/InfoGeometry/Algebra/AlternativeDerivations.lean'
       - 'lean/InfoGeometry/Algebra/CartanSouriauAffineCocycle.lean'
       - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'

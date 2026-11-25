@@ -58,6 +58,11 @@ SUITES = {
     "supplied-zorn-counterexample": COUNTEREXAMPLE_TARGETS,
     "witt-born-null-exactness": WITT_TARGETS,
 }
+REPO_PREFIXES = ("InfoGeometry.", "DAG.")
+MATHLIB_RUNTIME_PACKAGES = (
+    "mathlib", "plausible", "LeanSearchClient", "importGraph",
+    "proofwidgets", "aesop", "Qq", "batteries", "Cli",
+)
 PIN = "d13f23b723b8a846827a245b89c10fc7d3f11612"
 
 
@@ -81,7 +86,7 @@ def closure(targets: list[str]) -> list[str]:
             return
         seen.add(module)
         for dependency in dependencies(module):
-            if dependency.startswith("InfoGeometry."):
+            if dependency.startswith(REPO_PREFIXES):
                 visit(dependency)
             elif dependency.split(".")[0] not in {"Mathlib", "Lean", "Batteries", "Std", "Qq", "Aesop"}:
                 raise RuntimeError(f"unexpected import in {module}: {dependency}")
@@ -106,20 +111,38 @@ def environment(args: argparse.Namespace, lib: Path) -> tuple[dict, list[Path]]:
         raise RuntimeError(f"wrong toolchain: {version}")
     manifest = json.loads((ROOT / "lake-manifest.json").read_text())
     expected = {p["name"]: p["rev"] for p in manifest["packages"] if p["type"] == "git"}
-    paths = [lib] + sorted(p for p in packages.glob("*/.lake/build/lib/lean") if p.is_dir())
-    if any((p / "InfoGeometry").exists() for p in paths[1:]):
-        raise RuntimeError("dependency cache shadows the repository namespace")
+    paths = [lib]
     resolved_packages = {}
-    for path in paths[1:]:
-        name = path.relative_to(packages).parts[0]
+    for name in sorted(MATHLIB_RUNTIME_PACKAGES):
+        if name not in expected:
+            raise RuntimeError(f"missing pinned dependency in lake-manifest.json: {name}")
         package = packages / name
-        revision = subprocess.check_output(["git", "-C", str(package), "rev-parse", "HEAD"],
-                                           text=True).strip()
-        dirty = subprocess.check_output(["git", "-C", str(package), "status", "--porcelain",
-                                         "--untracked-files=no"], text=True).strip()
-        if revision != expected.get(name) or dirty:
+        if not package.is_dir() or package.is_symlink():
+            raise RuntimeError(f"dependency checkout is missing or invalid: {name}")
+        top = subprocess.check_output(
+            ["git", "-C", str(package), "rev-parse", "--show-toplevel"], text=True
+        ).strip()
+        if Path(top).resolve() != package.resolve():
+            raise RuntimeError(f"dependency is not its own Git checkout: {name}")
+        revision = subprocess.check_output(
+            ["git", "-C", str(package), "rev-parse", "HEAD"], text=True
+        ).strip()
+        dirty = subprocess.check_output(
+            ["git", "-C", str(package), "status", "--porcelain", "--untracked-files=no"],
+            text=True,
+        ).strip()
+        if revision != expected[name] or dirty:
             raise RuntimeError(f"dependency does not match its pinned source: {name}")
-        resolved_packages[name] = {"revision": revision, "search_path": str(path)}
+        search_path = package / ".lake/build/lib/lean"
+        if search_path.is_dir():
+            if (search_path / "InfoGeometry").exists() or (search_path / "DAG").exists():
+                raise RuntimeError("dependency cache shadows the repository namespace")
+            paths.append(search_path)
+            resolved_packages[name] = {"revision": revision, "search_path": str(search_path)}
+        elif name == "mathlib":
+            raise RuntimeError("Mathlib build cache is absent")
+        else:
+            resolved_packages[name] = {"revision": revision, "search_path": None}
     if resolved_packages.get("mathlib", {}).get("revision") != PIN:
         raise RuntimeError("Mathlib is absent or at the wrong revision")
     fingerprint = {"lean": version, "lean_binary_sha256": digest(Path(args.lean).resolve()),
@@ -210,7 +233,7 @@ def run(args: argparse.Namespace, out: Path, report: dict) -> int:
         for module in modules:
             dest = lib / Path(module.replace(".", "/")).with_suffix(".olean")
             dep_outputs = [lib / Path(d.replace(".", "/")).with_suffix(".olean")
-                           for d in dependencies(module) if d.startswith("InfoGeometry.")]
+                           for d in dependencies(module) if d.startswith(REPO_PREFIXES)]
             fresh = (dest.exists() and compiled.get(module) == sources[module]
                      and all(d.exists() and d.stat().st_mtime <= dest.stat().st_mtime for d in dep_outputs))
             if fresh and not args.force:

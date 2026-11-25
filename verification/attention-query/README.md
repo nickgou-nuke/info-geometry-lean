@@ -6,12 +6,21 @@ This is a source-reviewed implementation draft. The new Lean files have **not
 yet been compiled** and no declaration-axiom result has been obtained. Static
 source checks are not a kernel certificate.
 
-The requested locked owner build was queued behind other verification work
+Earlier locked owner-build attempts were queued behind other verification work
 holding `/tmp/info-geometry-build.lock`. Our waiting command was interrupted
-with exit 130 before it acquired the lock or started Lake. A subsequent
-nonblocking source-closure verification attempt on 2026-11-25 exited with
-`BuildLockBusyError` while `dirac-plabic-coarse:2` held the lock. No compiler or
-native declaration audit ran in either attempt.
+with exit 130 before it acquired the lock or started Lake; a subsequent
+nonblocking attempt exited with `BuildLockBusyError`.
+
+On a later attempt on 2026-11-25, the exact-pin source-closure checker acquired
+the lock, validated the environment, and successfully compiled the unchanged
+`InfoGeometry.Algebra.FiniteSpinAlgebra` dependency. Compilation then stopped
+in the unchanged `InfoGeometry.Convex.Bregman` dependency because the supplied
+Mathlib checkout lacked the compiled artifact for
+`Mathlib.Analysis.Calculus.Deriv.Basic`. None of the three new owners or the
+native declaration audit was reached. An alternative clean checkout at the
+same Mathlib revision contains more of the required calculus artifacts; its
+remaining dependency-provisioning attempt was blocked when
+`kerr-unruh:47` acquired the shared lock.
 
 Independent semantic review and a separate source-level verification review
 completed. Strict source refutation, the static GATE_4 review, the staged proof

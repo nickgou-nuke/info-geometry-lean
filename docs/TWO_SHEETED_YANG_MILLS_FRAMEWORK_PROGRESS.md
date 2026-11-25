@@ -333,6 +333,7 @@ associative-ring idempotency defect (established: PeirceDefectBridge)
   → off-diagonal Bloch-ball Umegaki relative entropy & quantum Spohn dissipation (established: BlochBallUmegakiAndQuantumSpohn, SchrodingerGKSLFlowBridge)
   → doubled Minkowski/Krein circular split-octonion Weyl connection, curvature action & colimit bridge (established: DoubledMinkowskiCircularChiralYangMillsBridge)
   → canonical Krein–circular Peirce Weyl connection, non-Abelian self-dual Yang–Mills & Bogomolnyi synthesis (established: DoubledMinkowskiCircularPeirceYangMills)
+  → OS lattice transfer-semigroup Peirce cut, Cl(1,1)^{⊗n} limit clustering & Virasoro L₀ Jordan obstruction (established: OsterwalderSchraderPeirceColimitBridge)
 ```
 
 In particular, a nonzero `genV` proves failure of Peirce-projectability for the
@@ -342,6 +343,19 @@ states can have nonzero `genV`, while entangled states also exhibit reduced stat
 idempotency defect. Establishing continuum 4D quantum Yang–Mills with a mass gap,
 continuous $L^2(\mathbb{R})$ Bourgain–Dyatlov FUP, and HTTP 404 Drive doc recovery
 remain active open frontiers.
+
+### 14. Lattice OS Transfer Semigroup, Multi-Site Reflection Positivity & Log-CFT Jordan Obstruction (`OsterwalderSchraderPeirceColimitBridge`)
+
+Owner module: `lean/InfoGeometry/OperatorAlgebra/OsterwalderSchraderPeirceColimitBridge.lean`.
+
+This bridge connects the lattice Osterwalder–Schrader transfer semigroup, Peirce idempotent defect calculus, `Cl(1,1)^{⊗n}` inductive-colimit clustering, and logarithmic CFT monodromy obstructions:
+
+1. **OS Spectral Cut as Peirce Projector**: `projGround` satisfies idempotency and self-adjointness, `invS projGround = matSigmaX` (`invS_projGround_eq_matSigmaX`), `genV projGround matSigmaZ = 1` (`genV_projGround_matSigmaZ`), and `os_peirce_maurer_cartan_bianchi` establishes the exact covariant Bianchi and self-dual Yang–Mills curvature identities on the OS Peirce cut.
+2. **Two-Sided Wilson Clustering & `Cl(1,1)^{⊗n}` Colimit Transport**: `normTransferMat_pow_sandwich_matSigmaZ` reduces the `matSigmaZ`-sandwiched transfer power to `(tanh J)^L • projGround`, while `mat2ToStage1`, `mat2ToStage`, and `mat2ToLimit` embed `M₂(ℝ)` star-preservingly into `Stage n` and the inductive colimit `Limit` with exact normalized-trace preservation (`normalizedTrace_mat2ToStage`) and exponential mass-gap clustering `limit_os_semigroup_peirce_and_trace_clustering`.
+3. **Arbitrary Finite-Site ($N$-Site) Reflection Positivity & Mass Gap**: `multiSite_os_reflection_positivity` proves nonnegative reflection positivity of the $N$-site Euclidean kernel for positive couplings `∀ s, 0 < J s`; `multiSiteSpectralMassGap_pos` and `multiSite_wilson_clustering_le_exp_gap` prove strict spectral mass-gap positivity and exponential correlation clustering.
+4. **Log-CFT Jordan Secular Growth Obstruction**: `virasoroL0Cell_pow` proves `(virasoroL0Cell h)^L = !![h^L, L * h^(L-1); 0, h^L]` (`virasoroL0Cell_pow_apply_01`) and `virasoroL0Cell_not_hermitian` proves non-Hermiticity of the rank-2 Jordan cell, separating defective logarithmic monodromy from self-adjoint OS transfer semigroups.
+
+Latest 4-gate check on `InfoGeometry.OperatorAlgebra.OsterwalderSchraderPeirceColimitBridge`: `opengauss_screener.py` passed (`0 traps`), `run_locked_lake_build.py` exited `0`, `axiom_check.lean` reported `✓ all 72 declarations clean` (`PASS`), and `proof_proxy_staged_gate.py` returned `ok`. Continuity to 4D continuum Yang–Mills remains open.
 
 ## Worktree and verification boundary
 
@@ -388,3 +402,4 @@ and tower results only, not the unproved carrier maps above.
 - `tests/lean/InfoGeometry/Lie/DoubledMinkowskiCircularChiralYangMillsBridgeTest.lean`
 - `lean/InfoGeometry/Canonical/DoubledMinkowskiCircularPeirceYangMills.lean`
 - `src/InfoGeometry/Canonical/DoubledMinkowskiCircularPeirceYangMills.lean`
+- `lean/InfoGeometry/OperatorAlgebra/OsterwalderSchraderPeirceColimitBridge.lean`

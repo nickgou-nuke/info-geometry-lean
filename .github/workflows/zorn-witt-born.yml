@@ -1,0 +1,320 @@
+name: Zorn Witt Born and null exactness (scoped)
+
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/zorn-witt-born.yml'
+      - 'lake-manifest.json'
+      - 'lean-toolchain'
+      - 'lean/InfoGeometry/Algebra/AlternativeDerivations.lean'
+      - 'lean/InfoGeometry/Algebra/CartanSouriauAffineCocycle.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Algebra/KingdonAlgebra.lean'
+      - 'lean/InfoGeometry/Algebra/KingdonSplitOctonion.lean'
+      - 'lean/InfoGeometry/Algebra/UnitizationNonAssoc.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/Basic.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/CanonicalVectorMatrixBridge.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/Composition.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/G2TrifactorSU3.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/KingdonCanonicalBridge.lean'
+      - 'lean/InfoGeometry/Algebra/ZornAlternativeLaws.lean'
+      - 'lean/InfoGeometry/Algebra/ZornChiralOperatorReconstruction.lean'
+      - 'lean/InfoGeometry/Algebra/ZornDerivationBridge.lean'
+      - 'lean/InfoGeometry/Algebra/ZornLeftCAR.lean'
+      - 'lean/InfoGeometry/Algebra/ZornLeftDeterminant.lean'
+      - 'lean/InfoGeometry/Algebra/ZornLeftGrading.lean'
+      - 'lean/InfoGeometry/Algebra/ZornLeftInverse.lean'
+      - 'lean/InfoGeometry/Algebra/ZornLeftMajorana.lean'
+      - 'lean/InfoGeometry/Algebra/ZornLeftParity.lean'
+      - 'lean/InfoGeometry/Algebra/ZornNullIncidence.lean'
+      - 'lean/InfoGeometry/Algebra/ZornPinorReconstruction.lean'
+      - 'lean/InfoGeometry/Algebra/ZornPrimalDual.lean'
+      - 'lean/InfoGeometry/Algebra/ZornVectorMatrix.lean'
+      - 'lean/InfoGeometry/All.lean'
+      - 'lean/InfoGeometry/Canonical/CartanSouriauCocycleGibbsCharacter.lean'
+      - 'lean/InfoGeometry/Canonical/SouriauAffineActionGroupoid.lean'
+      - 'lean/InfoGeometry/Canonical/SouriauCoadjointCovariance.lean'
+      - 'lean/InfoGeometry/Canonical/SplitOctonionAutomorphismCore.lean'
+      - 'lean/InfoGeometry/Canonical/TetractysCliffordLorentzAction.lean'
+      - 'lean/InfoGeometry/Canonical/ZornCliffordKleinHierarchy.lean'
+      - 'lean/InfoGeometry/Canonical/ZornCliffordRepresentation.lean'
+      - 'lean/InfoGeometry/Canonical/ZornCliffordSourceVolume.lean'
+      - 'lean/InfoGeometry/Canonical/ZornCliffordWittBorn.lean'
+      - 'lean/InfoGeometry/Canonical/ZornSpinor.lean'
+      - 'lean/InfoGeometry/Canonical/ZornVectorMatrixExplicit.lean'
+      - 'lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean'
+      - 'lean/InfoGeometry/Geometry/DualFlatKreinLegendreGraph.lean'
+      - 'lean/InfoGeometry/Geometry/SouriauCotangentGraphSigns.lean'
+      - 'lean/InfoGeometry/Lie/CanonicalZornDerivation.lean'
+      - 'lean/InfoGeometry/Lie/CanonicalZornRegularDerivation.lean'
+      - 'lean/InfoGeometry/Lie/CanonicalZornRegularOperators.lean'
+      - 'lean/InfoGeometry/Lie/SplitOctonionAnnihilatorDimension.lean'
+      - 'lean/InfoGeometry/Lie/SplitOctonionCliffordAction.lean'
+      - 'lean/InfoGeometry/Lie/SplitOctonionCliffordNoninjective.lean'
+      - 'lean/InfoGeometry/Lie/SplitOctonionImaginaryAction.lean'
+      - 'lean/InfoGeometry/Lie/SplitOctonionNullPlaneCovariance.lean'
+      - 'lean/InfoGeometry/Meta/Architecture.lean'
+      - 'lean/InfoGeometry/Physics/ZornMatrixSU3/Vector3.lean'
+      - 'lean/InfoGeometry/Physics/ZornMatrixSU3/ZornMatrixCore.lean'
+      - 'lean/InfoGeometry/Verification/SuppliedTableCounterexample.lean'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/pathing.py'
+      - 'verification/klein-operator-hierarchy/Audit.lean'
+      - 'verification/supplied-zorn-counterexample/Audit.lean'
+      - 'verification/witt-born-null-exactness/Audit.lean'
+      - 'verification/witt-born-null-exactness/diagnose.py'
+      - 'verification/zorn-primal-dual/Audit.lean'
+      - 'verification/zorn-primal-dual/check.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: zorn-witt-born-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  pinned-native:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Fetch the exact public source without credentials or submodules
+        shell: bash
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "$GITHUB_SERVER_URL/$GITHUB_REPOSITORY.git"
+          git -C project -c protocol.version=2 fetch --no-tags --depth=1 origin "$GITHUB_SHA"
+          git -C project checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$GITHUB_SHA"
+          mkdir -p native-evidence
+          python3 - <<'PY_SOURCE'
+          import json, os, subprocess
+          from pathlib import Path
+          def git(*args):
+              return subprocess.check_output(['git', '-C', 'project', *args], text=True).strip()
+          Path('native-evidence/source.json').write_text(json.dumps({
+              'revision': git('rev-parse', 'HEAD'),
+              'tree': git('rev-parse', 'HEAD^{tree}'),
+              'event_sha': os.environ['GITHUB_SHA'],
+              'run_id': os.environ['GITHUB_RUN_ID'],
+              'run_attempt': os.environ['GITHUB_RUN_ATTEMPT'],
+              'scope': 'Selected real Zorn, Souriau, Klein, Witt/Born and counterexample owners'
+          }, indent=2) + '\n')
+          PY_SOURCE
+
+      - name: Install the repository-pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/zorn-elan-init.sh"
+          sh "$RUNNER_TEMP/zorn-elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+
+      - name: Prepare exact native dependencies in an independent flat layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -u - <<'PY_CACHE' 2>&1 | tee native-evidence/cache-preparation.log
+          import argparse, importlib.util, json, os, subprocess, sys
+          from pathlib import Path
+          repo = Path('project').resolve()
+          evidence = Path('native-evidence').resolve()
+          sys.path.insert(0, str(repo))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          spec = importlib.util.spec_from_file_location('zorn_native_checker', repo / 'verification/zorn-primal-dual/check.py')
+          checker = importlib.util.module_from_spec(spec)
+          spec.loader.exec_module(checker)
+          manifest_path = repo / 'lake-manifest.json'
+          root_manifest_hash = checker.digest(manifest_path)
+          manifest = json.loads(manifest_path.read_text())
+          pins = {p['name']: p for p in manifest['packages'] if p['type'] == 'git'}
+          pin = pins['mathlib']
+          if pin['rev'] != checker.PIN:
+              raise RuntimeError('Root Mathlib pin differs from the native checker')
+          packages = Path(os.environ['RUNNER_TEMP']) / 'zorn-witt-native-packages'
+          packages.mkdir(exist_ok=False)
+          mathlib = packages / 'mathlib'
+          def run(*args):
+              subprocess.run(args, check=True)
+          def git(directory, *args):
+              return subprocess.check_output(['git', '-C', str(directory), *args], text=True).strip()
+          def check_checkout(directory, revision):
+              if directory.is_symlink() or not (directory / '.git').is_dir():
+                  raise RuntimeError(f'Expected an ordinary independent Git checkout: {directory}')
+              if git(directory, 'rev-parse', 'HEAD') != revision:
+                  raise RuntimeError(f'Dependency revision differs: {directory}')
+              if git(directory, 'status', '--porcelain', '--untracked-files=no'):
+                  raise RuntimeError(f'Dependency tracked source changed: {directory}')
+          run('git', 'init', str(mathlib))
+          run('git', '-C', str(mathlib), 'remote', 'add', 'origin', pin['url'])
+          run('git', '-C', str(mathlib), 'fetch', '--no-tags', '--depth=1', 'origin', pin['rev'])
+          run('git', '-C', str(mathlib), 'checkout', '--detach', 'FETCH_HEAD')
+          check_checkout(mathlib, pin['rev'])
+          if (mathlib / 'lean-toolchain').read_text().strip() != (repo / 'lean-toolchain').read_text().strip():
+              raise RuntimeError('Mathlib and repository toolchains differ')
+          native_manifest_path = mathlib / 'lake-manifest.json'
+          native_manifest_hash = checker.digest(native_manifest_path)
+          native_manifest = json.loads(native_manifest_path.read_text())
+          native_pins = {p['name']: p for p in native_manifest['packages']}
+          expected_names = {'plausible', 'LeanSearchClient', 'importGraph', 'proofwidgets', 'aesop', 'Qq', 'batteries', 'Cli'}
+          if native_manifest['packagesDir'] != '.lake/packages' or set(native_pins) != expected_names:
+              raise RuntimeError('Unexpected pinned Mathlib dependency layout')
+          for name, package in native_pins.items():
+              if package['type'] != 'git' or package.get('subDir') is not None:
+                  raise RuntimeError(f'Unsupported native dependency shape: {name}')
+              if (package['url'], package['rev']) != (pins[name]['url'], pins[name]['rev']):
+                  raise RuntimeError(f'Native dependency differs from root pin: {name}')
+          modules = checker.closure(checker.SUITES['witt-born-null-exactness'])
+          native_imports = sorted({
+              dep for module in modules for dep in checker.dependencies(module)
+              if dep.split('.')[0] in {'Mathlib', 'Batteries', 'Qq', 'Aesop'}
+          })
+          if not native_imports:
+              raise RuntimeError('No native imports were discovered')
+          lean = Path(subprocess.check_output(['elan', 'which', 'lean'], cwd=repo, text=True).strip()).resolve()
+          cache_env = os.environ.copy()
+          for key in ('LEAN_PATH', 'LEAN_SRC_PATH', 'LEAN_SYSROOT', 'LEAN_GITHASH', 'LAKE_PKG_URL_MAP'):
+              cache_env.pop(key, None)
+          cache_env['LEAN_NUM_THREADS'] = '1'
+          # Mathlib materializes only its own pinned dependency graph here.
+          # No root Lake configuration, optional root package or submodule is loaded.
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'zorn-witt-native-cache', shared=False) as lock:
+              command = [str(lean.with_name('lake')), 'exe', 'cache', 'get', *native_imports]
+              result = checker.execute(command, cache_env, evidence / 'mathlib-cache.log',
+                                       lock.fileno(), cwd=mathlib)
+              if result['returncode']:
+                  raise RuntimeError(f'Native Mathlib cache retrieval failed: {result["returncode"]}')
+              # Check the actual transitive build artifacts before flattening;
+              # a successful download count alone does not certify their presence.
+              build_command = [str(lean.with_name('lake')), 'build', *native_imports]
+              build_result = checker.execute(build_command, cache_env,
+                                             evidence / 'native-import-build.log',
+                                             lock.fileno(), cwd=mathlib)
+              if build_result['returncode']:
+                  raise RuntimeError(f'Pinned native import build failed: {build_result["returncode"]}')
+              if checker.digest(native_manifest_path) != native_manifest_hash:
+                  raise RuntimeError('Mathlib manifest changed during cache preparation')
+              if checker.digest(manifest_path) != root_manifest_hash:
+                  raise RuntimeError('Root manifest changed during cache preparation')
+              check_checkout(mathlib, pin['rev'])
+              # Fresh job-owned directories are moved, preserving Git metadata and
+              # avoiding duplicated artifacts or symlinked .lake/package roots.
+              for name, package in native_pins.items():
+                  nested = mathlib / '.lake/packages' / name
+                  check_checkout(nested, package['rev'])
+                  destination = packages / name
+                  if destination.exists():
+                      raise RuntimeError(f'Unexpected pre-existing flat dependency: {destination}')
+                  nested.rename(destination)
+                  check_checkout(destination, package['rev'])
+              args = argparse.Namespace(lean=lean, packages=packages)
+              fingerprint, _ = checker.environment(args, repo / '.lake/witt-born-null-exactness/lib/lean')
+              if checker.digest(checker.CHECKER) != checker.STARTUP_CHECKER_HASH:
+                  raise RuntimeError('Native checker changed during cache preparation')
+          (evidence / 'native-environment.json').write_text(json.dumps({
+              'status': 'prepared', 'environment': fingerprint,
+              'native_imports': native_imports,
+              'native_manifest_sha256': native_manifest_hash,
+              'package_revisions': {'mathlib': pin['rev'], **{n: p['rev'] for n, p in native_pins.items()}},
+              'cache_command': result,
+              'native_build_command': build_result,
+              'lake_runtime_threads': 1
+          }, indent=2) + '\n')
+          with open(os.environ['GITHUB_ENV'], 'a') as env_file:
+              env_file.write(f'ZORN_LEAN_BIN={lean}\n')
+              env_file.write(f'ZORN_PACKAGES_PATH={packages}\n')
+          PY_CACHE
+
+      - name: Compile and audit the supplied-table counterexamples
+        working-directory: project
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/zorn-primal-dual/check.py \
+            --suite supplied-zorn-counterexample \
+            --lean "$ZORN_LEAN_BIN" --packages "$ZORN_PACKAGES_PATH" \
+            --no-wait-for-build-lock 2>&1 | tee ../native-evidence/counterexample.log
+
+      - name: Compile the full selected PR closure and audit its declarations
+        id: strict_scope
+        working-directory: project
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/zorn-primal-dual/check.py \
+            --suite witt-born-null-exactness \
+            --lean "$ZORN_LEAN_BIN" --packages "$ZORN_PACKAGES_PATH" \
+            --no-wait-for-build-lock 2>&1 | tee ../native-evidence/full-scope.log
+
+      - name: Collect isolated nonaccepting source diagnostics after strict failure
+        if: failure() && steps.strict_scope.outcome == 'failure'
+        working-directory: project
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/witt-born-null-exactness/diagnose.py \
+            --lean "$ZORN_LEAN_BIN" --packages "$ZORN_PACKAGES_PATH" \
+            2>&1 | tee ../native-evidence/diagnostics.log
+
+      - name: Confirm both selected suites completed their axiom audits
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY_REPORT'
+          import hashlib, json
+          from pathlib import Path
+          for suite in ('supplied-zorn-counterexample', 'witt-born-null-exactness'):
+              report = json.loads((Path('.lake') / suite / 'report.json').read_text())
+              if report['status'] != 'compiled' or not report['audit_expected'] or report['audit_status'] != 'passed':
+                  raise RuntimeError(f'Incomplete native validation: {suite}')
+              for module, expected in report['sources'].items():
+                  source = Path('lean') / (module.replace('.', '/') + '.lean')
+                  if hashlib.sha256(source.read_bytes()).hexdigest() != expected:
+                      raise RuntimeError(f'Source changed after validation: {module}')
+          PY_REPORT
+
+      - name: Collect receipts and logs even after a failed check
+        if: always()
+        shell: bash
+        run: |
+          python3 - <<'PY_EVIDENCE'
+          import shutil
+          from pathlib import Path
+          evidence = Path('native-evidence')
+          evidence.mkdir(exist_ok=True)
+          repo = Path('project')
+          for suite in ('supplied-zorn-counterexample', 'witt-born-null-exactness'):
+              destination = evidence / suite
+              destination.mkdir(exist_ok=True)
+              for pattern in ('*.json', '*.log'):
+                  for source in (repo / '.lake' / suite).glob(pattern):
+                      shutil.copy2(source, destination / source.name)
+              audit = repo / 'verification' / suite / 'Audit.lean'
+              if audit.is_file():
+                  shutil.copy2(audit, destination / 'Audit.lean')
+          checker = repo / 'verification/zorn-primal-dual/check.py'
+          if checker.is_file():
+              shutil.copy2(checker, evidence / 'check.py')
+          diagnostic = repo / 'verification/witt-born-null-exactness/diagnose.py'
+          if diagnostic.is_file():
+              shutil.copy2(diagnostic, evidence / 'diagnose.py')
+          diagnostic_root = repo / '.lake/witt-born-diagnostics'
+          for source in diagnostic_root.rglob('*'):
+              if source.is_file() and source.suffix in {'.json', '.log'}:
+                  destination = evidence / 'diagnostics' / source.relative_to(diagnostic_root)
+                  destination.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy2(source, destination)
+          PY_EVIDENCE
+
+      - name: Preserve scoped validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zorn-witt-born-${{ github.run_id }}-${{ github.run_attempt }}
+          path: native-evidence
+          if-no-files-found: warn
+          retention-days: 14

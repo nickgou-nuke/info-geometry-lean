@@ -13,7 +13,6 @@ import InfoGeometry.OperatorAlgebra.PeirceSpine.CustodialTwinExchangeProtection
 import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.Supertwistor16AndRealBloch
 import InfoGeometry.Canonical.Pin55
 import Mathlib.Analysis.InnerProductSpace.l2Space
-import InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants
 
 /-!
 # Custodial Twin Witt Bridge: Synthesis of Twin Universe Cosmology
@@ -49,7 +48,6 @@ open InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly
 open InfoGeometry.Canonical.ConcreteHilbertCommutation
 open InfoGeometry.Lie.SO55GlobalConformalPrecursors
 open InfoGeometry.OperatorAlgebra.PeirceSpine
-open InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants
 
 namespace InfoGeometry.Cosmology.CustodialTwinWittBridge
 
@@ -230,18 +228,7 @@ theorem so55_boost_preserves_witt_structure (ξ : ℝ) :
 /-- The null quadric (light cone) in `R^{5,5}` is invariant under the `SO(5,5)` action. -/
 theorem null_quadric_invariant (M : Matrix (Fin 10) (Fin 10) ℝ) (hM : IsSO55GroupMatrix M)
     {x : Fin 10 → ℝ} (hx : x ∈ NullQuadric) : M.mulVec x ∈ NullQuadric :=
-  nullQuadric_invariant M hM hx
-
-/-- **Spohn Entropy Production**: forward thermodynamic arrow (`t ≥ 0` semigroup),
-formalized by `master_spohn_entropy_production_and_gibbs_relaxation` in
-`InfoGeometry.Modular.GKSLGibbsAndDuallyFlatSpinCumulants`. -/
-theorem emergent_thermodynamic_arrow {γ θ η₀ t : ℝ}
-    (hγ : 0 < γ) (ht : 0 ≤ t) (h0_lo : -1 < η₀) (h0_hi : η₀ < 1) :
-    -γ * (bregmanPhi (etaTraj γ θ η₀ t) (meanSpin θ) +
-            bregmanPhi (meanSpin θ) (etaTraj γ θ η₀ t)) ≤ 0 := by
-  have h := master_spohn_entropy_production_and_gibbs_relaxation
-    (γ := γ) (θ := θ) (η₀ := η₀) (t := t) hγ ht h0_lo h0_hi
-  simpa using h.2.2.2.1
+  InfoGeometry.Lie.SO55GlobalConformalPrecursors.nullQuadric_invariant M hM hx
 
 /-! ## 5. Synthesis Theorem: Twin Witt Fluctuation Cosmology -/
 
@@ -255,10 +242,7 @@ theorem custodial_twin_witt_cosmology_synthesis :
       inner ℝ canonicalCantorSewnState
         (((epsilon_lp_clm (E := ℝ)).comp B) canonicalCantorSewnState) = 0) ∧
     (∀ (M : Matrix (Fin 10) (Fin 10) ℝ), IsSO55GroupMatrix M →
-      ∀ {x : Fin 10 → ℝ}, x ∈ NullQuadric → M.mulVec x ∈ NullQuadric) ∧
-    (∀ {γ θ η₀ t : ℝ}, 0 < γ → 0 ≤ t → -1 < η₀ → η₀ < 1 →
-      -γ * (bregmanPhi (etaTraj γ θ η₀ t) (meanSpin θ) +
-              bregmanPhi (meanSpin θ) (etaTraj γ θ η₀ t)) ≤ 0) := by
+      ∀ {x : Fin 10 → ℝ}, x ∈ NullQuadric → M.mulVec x ∈ NullQuadric) := by
   constructor
   · exact custodial_protects_witt_cross_pairing (Polynomial.C (1 : ℝ)) (Polynomial.C (1 : ℝ)) 0
   constructor
@@ -266,10 +250,7 @@ theorem custodial_twin_witt_cosmology_synthesis :
   constructor
   · intro B hB
     exact canonicalCantorSewnState_chiral_zero B hB
-  constructor
   · intro M hM x hx
     exact nullQuadric_invariant M hM hx
-  · intro γ θ η₀ t hγ ht hlo hhi
-    exact emergent_thermodynamic_arrow hγ ht hlo hhi
 
 end InfoGeometry.Cosmology.CustodialTwinWittBridge

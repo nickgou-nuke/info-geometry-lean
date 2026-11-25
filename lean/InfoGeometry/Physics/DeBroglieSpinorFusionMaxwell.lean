@@ -10,7 +10,6 @@ import InfoGeometry.OperatorAlgebra.PeirceBiSandwich.CustodialTwinLoopAndJosephs
 import InfoGeometry.OperatorAlgebra.PeirceSpine.CustodialTwinExchangeProtection
 import InfoGeometry.Lie.Pin55NondegenerateKreinBridge
 import InfoGeometry.Algebra.WeylCartanKANPolarEquivariance
-import InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance
 import InfoGeometry.Core.TripotentChiralRestriction
 import InfoGeometry.Algebra.NoncommutativeKreinMathlibBridge
 import InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly
@@ -58,9 +57,7 @@ open scoped Kronecker
 open InfoGeometry.OperatorAlgebra.PeirceBiSandwich
 open InfoGeometry.Clifford.GEMMidpointRotorBogoliubovQGT
 open InfoGeometry.Lie.Pin55NondegenerateKreinBridge
--- only the noncommutative Weyl--Cartan owner is opened: opening both made
--- weylScalePart / tracelessSymPart / tracelessAntisymPart ambiguous
-open InfoGeometry.Algebra.NoncommutativeWeylCartanKANPolarEquivariance
+open InfoGeometry.Algebra.WeylCartanKANPolarEquivariance
 open InfoGeometry.Algebra.NoncommutativeKreinMathlibBridge
 open InfoGeometry.Canonical.ConcreteHilbertSewnAnomaly
 open InfoGeometry.Canonical.ConcreteHilbertCommutation
@@ -106,7 +103,7 @@ theorem phaseWeylCartanDecomposition (M : Mat16Prod) :
     (weylScalePart (phaseFactorProjection M)) +
       (tracelessSymPart (phaseFactorProjection M)) +
       (tracelessAntisymPart (phaseFactorProjection M)) = 2 • (phaseFactorProjection M) := by
-  exact (weyl_cartan_split_and_noncommutative_trace_to_det (phaseFactorProjection M)).1
+  exact weyl_cartan_split (phaseFactorProjection M)
 
 /-- **Dilaton / Chiral Density**: Scalar trace part of the phase factor projection
 of the outer product. Corresponds to `χ̄ψ`. -/
@@ -127,16 +124,14 @@ def maxwellBivector (Ψ Φ : DiracSpinor) : Matrix (Fin 2) (Fin 2) ℝ :=
 /-- The Maxwell bivector is traceless (by Weyl-Cartan property). -/
 theorem maxwellBivector_traceless (Ψ Φ : DiracSpinor) :
     Matrix.trace (maxwellBivector Ψ Φ) = 0 := by
-  have h := weyl_cartan_split_and_noncommutative_trace_to_det (phaseFactorProjection (spinorOuterProduct Ψ Φ))
-  have h₂ : Matrix.trace (tracelessAntisymPart (phaseFactorProjection (spinorOuterProduct Ψ Φ))) = 0 := h.2.2.1
-  simpa [maxwellBivector] using h₂
+  simpa [maxwellBivector] using
+    trace_tracelessAntisymPart (phaseFactorProjection (spinorOuterProduct Ψ Φ))
 
 /-- The Maxwell bivector is skew-symmetric (by Weyl-Cartan property). -/
 theorem maxwellBivector_skewSymmetric (Ψ Φ : DiracSpinor) :
     (maxwellBivector Ψ Φ).transpose = -maxwellBivector Ψ Φ := by
-  have h := weyl_cartan_split_and_noncommutative_trace_to_det (phaseFactorProjection (spinorOuterProduct Ψ Φ))
-  have h₂ : (tracelessAntisymPart (phaseFactorProjection (spinorOuterProduct Ψ Φ))).transpose = -tracelessAntisymPart (phaseFactorProjection (spinorOuterProduct Ψ Φ)) := h.2.2.2.2.1
-  simpa [maxwellBivector] using h₂
+  simpa [maxwellBivector] using
+    transpose_tracelessAntisymPart (phaseFactorProjection (spinorOuterProduct Ψ Φ))
 
 /-- The full Weyl-Cartan decomposition of the phase factor projection. -/
 theorem phaseFactor_weyl_cartan_full (Ψ Φ : DiracSpinor) :

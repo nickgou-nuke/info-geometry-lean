@@ -82,7 +82,122 @@ theorem mcculloch_pitts_two_layer_computes_xor (x₁ x₂ : Bool) :
     twoLayerThresholdXOR x₁ x₂ ↔ xor x₁ x₂ = true := by
   cases x₁ <;> cases x₂ <;> norm_num [twoLayerThresholdXOR, bitToReal]
 
-/-! ## 2. Shannon (1948) Cross-Entropy and Compression Lower Bound -/
+/-! ## 2. Finite Automata, Hebbian Updates, and Perceptron Algebra -/
+
+/-- A deterministic finite-state transition system. -/
+structure DeterministicAutomaton (State Symbol : Type*) where
+  step : State → Symbol → State
+  accepting : State → Prop
+
+namespace DeterministicAutomaton
+
+variable {State Symbol : Type*}
+
+/-- State reached after reading a finite word. -/
+def run (A : DeterministicAutomaton State Symbol) (s : State) : List Symbol → State
+  | [] => s
+  | a :: w => run A (A.step s a) w
+
+/-- The empty word leaves the state unchanged. -/
+@[simp] theorem run_nil (A : DeterministicAutomaton State Symbol) (s : State) :
+    run A s [] = s := rfl
+
+/-- Reading a leading symbol is one transition followed by the remaining word. -/
+@[simp] theorem run_cons (A : DeterministicAutomaton State Symbol)
+    (s : State) (a : Symbol) (w : List Symbol) :
+    run A s (a :: w) = run A (A.step s a) w := rfl
+
+/-- Sequential reading factors through the state after the first word. -/
+theorem run_append (A : DeterministicAutomaton State Symbol)
+    (s : State) (u v : List Symbol) :
+    run A s (u ++ v) = run A (run A s u) v := by
+  induction u generalizing s with
+  | nil => rfl
+  | cons a u ih =>
+      simp [ih]
+
+/-- Acceptance is determined by the state reached after the word. -/
+def accepts (A : DeterministicAutomaton State Symbol) (s : State)
+    (w : List Symbol) : Prop :=
+  A.accepting (run A s w)
+
+@[simp] theorem accepts_nil (A : DeterministicAutomaton State Symbol) (s : State) :
+    A.accepts s [] ↔ A.accepting s := by
+  rfl
+
+/-- Acceptance after concatenation is acceptance from the intermediate state. -/
+theorem accepts_append (A : DeterministicAutomaton State Symbol)
+    (s : State) (u v : List Symbol) :
+    A.accepts s (u ++ v) ↔ A.accepts (run A s u) v := by
+  change A.accepting (run A s (u ++ v)) ↔
+    A.accepting (run A (run A s u) v)
+  rw [run_append]
+
+end DeterministicAutomaton
+
+/-- One scalar Hebbian-style update, with all parameters explicit. -/
+def hebbianUpdate (weight input output rate : ℝ) : ℝ :=
+  weight + rate * output * input
+
+/-- The Hebbian increment is exactly the product of rate and co-activity. -/
+theorem hebbianUpdate_sub (weight input output rate : ℝ) :
+    hebbianUpdate weight input output rate - weight = rate * output * input := by
+  unfold hebbianUpdate
+  ring
+
+/-- Positive co-activity strictly increases a weight at positive learning rate. -/
+theorem hebbianUpdate_lt_of_pos (weight input output rate : ℝ)
+    (hrate : 0 < rate) (hinput : 0 < input) (houtput : 0 < output) :
+    weight < hebbianUpdate weight input output rate := by
+  unfold hebbianUpdate
+  nlinarith [mul_pos (mul_pos hrate houtput) hinput]
+
+/-- The finite-dimensional perceptron update used by the algebraic part of the
+learning rule. -/
+def perceptronUpdate {ι : Type*} (w x : ι → ℝ)
+    (target prediction rate : ℝ) : ι → ℝ :=
+  fun i => w i + rate * (target - prediction) * x i
+
+/-- The score change under a perceptron update is the prediction error times
+its input self-correlation. -/
+theorem dotProduct_perceptronUpdate {ι : Type*} [Fintype ι]
+    (w x : ι → ℝ) (target prediction rate : ℝ) :
+    dotProduct (perceptronUpdate w x target prediction rate) x =
+      dotProduct w x + rate * (target - prediction) * dotProduct x x := by
+  classical
+  unfold dotProduct perceptronUpdate
+  simp_rw [add_mul]
+  calc
+    (∑ i, (w i * x i + rate * (target - prediction) * x i * x i)) =
+        (∑ i, w i * x i) +
+          ∑ i, (rate * (target - prediction)) * (x i * x i) := by
+      rw [Finset.sum_add_distrib]
+      congr 1
+      apply Finset.sum_congr rfl
+      intro i hi
+      ring
+    _ = dotProduct w x + rate * (target - prediction) * dotProduct x x := by
+      unfold dotProduct
+      rw [Finset.mul_sum]
+
+/-- The squared self-correlation of a finite real input vector is nonnegative. -/
+theorem dotProduct_self_nonneg {ι : Type*} [Fintype ι] (x : ι → ℝ) :
+    0 ≤ dotProduct x x := by
+  classical
+  unfold dotProduct
+  exact Finset.sum_nonneg (fun i _ => mul_self_nonneg (x i))
+
+/-- Under a nonnegative update coefficient, a perceptron update cannot decrease
+its score on the updated input.  This is an algebraic monotonicity statement,
+not a convergence theorem for the perceptron algorithm. -/
+theorem perceptron_score_nondec {ι : Type*} [Fintype ι]
+    (w x : ι → ℝ) (target prediction rate : ℝ)
+    (hcoef : 0 ≤ rate * (target - prediction)) :
+    dotProduct w x ≤ dotProduct (perceptronUpdate w x target prediction rate) x := by
+  rw [dotProduct_perceptronUpdate]
+  exact le_add_of_nonneg_right (mul_nonneg hcoef (dotProduct_self_nonneg x))
+
+/-! ## 3. Shannon (1948) Cross-Entropy and Compression Lower Bound -/
 
 /-- Shannon entropy `H(p) = -∑ pᵢ log pᵢ` (in nats) on a finite alphabet. -/
 def shannonEntropy {ι : Type*} [Fintype ι] (p : ι → ℝ) : ℝ :=

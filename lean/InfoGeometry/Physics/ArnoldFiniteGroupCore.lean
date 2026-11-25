@@ -165,4 +165,16 @@ theorem arnoldFiniteGroup_quadratic_trace_invariant (n : ℕ)
     Matrix.trace (X * X) :=
   arnoldFiniteGroup_tracePairing_invariant n g X X
 
+/-- Infinitesimal adjoint invariance of the trace pairing:
+`⟪[Z,X],Y⟫ + ⟪X,[Z,Y]⟫ = 0`.
+This is the finite algebraic form of Euler--Arnold/Casimir conservation. -/
+theorem arnoldFiniteGroup_ad_invariant_tracePairing {n : ℕ}
+    (X Y Z : Matrix (Fin n) (Fin n) ℝ) :
+    Matrix.trace ((Z * X - X * Z) * Y) + Matrix.trace (X * (Z * Y - Y * Z)) = 0 := by
+  rw [sub_mul, Matrix.trace_sub, mul_sub, Matrix.trace_sub]
+  rw [Matrix.trace_mul_cycle Z X Y]
+  rw [Matrix.trace_mul_cycle Y Z X]
+  simp only [mul_assoc]
+  ring
+
 end InfoGeometry.Physics.ArnoldFiniteGroupCore

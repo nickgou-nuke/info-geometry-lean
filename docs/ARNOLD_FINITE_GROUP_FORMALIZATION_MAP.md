@@ -44,6 +44,7 @@ Declarations:
 - `arnoldFiniteGroup_adjoint_mem`
 - `arnoldFiniteGroup_tracePairing_invariant`
 - `arnoldFiniteGroup_quadratic_trace_invariant`
+- `arnoldFiniteGroup_ad_invariant_tracePairing`
 
 These give the finite determinant-one volume-preserving group and the
 trace-zero incompressible Lie-algebra closure.

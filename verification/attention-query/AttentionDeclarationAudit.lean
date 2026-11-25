@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.AttentionQueryGeometry
+import InfoGeometry.Canonical.AttentionQueryGibbsDuality
 import InfoGeometry.Canonical.AttentionQueryKeyReversal
 import InfoGeometry.Rotary.RotaryAttentionFlow
 import Lean.Util.CollectAxioms
@@ -11,7 +12,7 @@ import Lean.Elab.Command
 import Lean.Data.Json
 
 /-!
-Audit all declarations owned by the three added attention-query/rotation modules. Ownership is
+Audit all declarations owned by the four added attention-query/rotation modules. Ownership is
 read from the imported Lean environment, rather than inferred from a name
 prefix or a hand-maintained list of theorems. The source owners provide no
 axiom or audit-exemption input to this command.
@@ -28,6 +29,7 @@ namespace AttentionDeclarationAudit
 
 private def owners : Array Name := #[
   `InfoGeometry.Canonical.AttentionQueryGeometry,
+  `InfoGeometry.Canonical.AttentionQueryGibbsDuality,
   `InfoGeometry.Canonical.AttentionQueryKeyReversal,
   `InfoGeometry.Rotary.RotaryAttentionFlow
 ]

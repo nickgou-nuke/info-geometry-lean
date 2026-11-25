@@ -4,6 +4,7 @@ on:
   pull_request:
     paths:
       - 'lean/InfoGeometry/Canonical/AttentionQueryGeometry.lean'
+      - 'lean/InfoGeometry/Canonical/AttentionQueryGibbsDuality.lean'
       - 'lean/InfoGeometry/Canonical/AttentionQueryKeyReversal.lean'
       - 'lean/InfoGeometry/Rotary/RotaryAttentionFlow.lean'
       - 'lean/InfoGeometry/Canonical/AttentionInformationGeometry.lean'
@@ -15,6 +16,12 @@ on:
       - 'lean/InfoGeometry/Meta/Architecture.lean'
       - 'lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean'
       - 'lean/InfoGeometry/Rotary/RotarySpiralBridge.lean'
+      - 'lean/InfoGeometry/Inference/FiniteRelativeEntropy.lean'
+      - 'lean/InfoGeometry/Inference/FiniteRelativeEntropyEquality.lean'
+      - 'lean/InfoGeometry/Inference/FiniteGibbsInference.lean'
+      - 'lean/InfoGeometry/Inference/GibbsVariational.lean'
+      - 'lean/InfoGeometry/Inference/GibbsVariationalDecomposition.lean'
+      - 'lean/InfoGeometry/Inference/GibbsUniqueMinimizer.lean'
       - 'verification/attention-query/**'
       - 'tools/build_lock.py'
       - 'lean-toolchain'

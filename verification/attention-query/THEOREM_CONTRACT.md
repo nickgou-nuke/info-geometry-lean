@@ -10,6 +10,15 @@ in `nickgou-nuke/info-geometry-lean`. The exact filename
 or by the connected GitHub default-branch code search. Related owners below are
 the source authority. No claim about all remote branches is made.
 
+Follow-up intake: the user again supplied the attention/Dirac/Massieu/RoPE
+dictionary on 2026-11-25 and requested formalization and PR publication. The
+matching open draft is PR #456, with source head
+`ce62626754d490d380524cd9e8cbcf0ba5455078` at intake. The remote branch advanced
+to `a03c5bf1653d10ef87c102aa11013f87d16e46b3` during verification; its repaired
+proofs, scoped CI workflow, and historical evidence are preserved. Continue that implementation and
+its acceptance work. Add an explicit finite Gibbs entropy gap and real-position
+rotated-score identities to the checked scope; keep the same dependency pins.
+
 The primary mathematical carrier is a real normed space `E`, a nonempty finite
 family of continuous key covectors `K : Fin M → E →L[ℝ] ℝ`, and a real inverse
 temperature `β`. Define `s(q)_j = β K_j(q)`,
@@ -25,7 +34,7 @@ imaginary unit is introduced by this addition.
 | Straight line / circle / spiral as progress and recurrence | Metaphor retained as intake, without a mathematical implication about dialogue. |
 | Rotation plus translation equals a helix / spiral | Requires a specified screw motion; planar logarithmic spiral here uses uniform scaling plus rotation. |
 | Loxodromic null scaling and transverse rotation produce a spiral | Prove the explicit projective chart identity after dividing by a nonzero boosted null coordinate. |
-| Exponential scaling is inherently irreversible or entropy-producing | Rejected as a general implication: the prescribed finite-time matrix has an exact inverse. |
+| Exponential scaling is inherently irreversible or entropy-producing | Prove the finite-time inverse. An entropy-production claim separately needs an entropy functional and specified dynamics; invertibility alone does not disprove entropy production. |
 | Any metriplectic/GENERIC rotation with drift inevitably spirals | Overstrong. An anisotropically damped real matrix with nonzero rotation has an explicit straight invariant ray. No universal GENERIC theorem is claimed. |
 | Training-data archetypes, DNA/Fibonacci/Jung/Hegel motifs explain model output | Narrative hypotheses, not proved by the algebra or supported here by experiments. |
 | Attention/residual depth yields a loxodromic 4-screw | No supplied layer recurrence identifies this dynamics. Prove only the actual ODE of the existing prescribed spiral. |
@@ -35,12 +44,13 @@ imaginary unit is introduced by this addition.
 | Attention logits have rank d and are Plücker coordinates | Prove rank at most d. Maximal minors of suitable full-rank representatives, not arbitrary logit entries, provide Plücker coordinates. No planar embedding or positivity is constructed. |
 | Low-rank logits imply low-rank attention probabilities | Refuted by symmetric rank-at-most-one logits whose row softmax has rank two. |
 | Softmax is Gibbs and log-sum-exp is a Massieu potential | Existing normalized finite exponential-family calculus is reused. β remains explicit. |
-| Softmax is the "Legendre–Fenchel gradient" | Correct formulation is gradient of log-partition. Full extended-real conjugacy on the closed simplex is not asserted. Existing interior Gibbs variational owners are identified separately. |
+| Softmax is the "Legendre–Fenchel gradient" | In logit coordinates, softmax is the log-partition gradient. On a general normed query space, the result is a continuous-covector Fréchet derivative. Specialize the existing finite Gibbs entropy gap and unique interior maximizer; full extended-real conjugacy on the closed simplex is not asserted. |
 | Fisher equals log-partition Hessian / covariance | Prove the query-space Fréchet derivative, actual log-probability score derivative, second line derivative, and Fisher equality. |
+| The attention value output is this derivative | The derivative averages key covectors. Arbitrary values need a separate identification with keys or a specified linear image of keys. |
 | This automatically yields a Riemannian semantic metric or dissipation | The form is only semidefinite without separation of query directions by key differences. Semantic interpretation and dissipative evolution are not implied. |
 | Q/K exchange and transpose are the Dirac CPT mirror | Prove Q/K exchange transposes logits. The real sign mirror preserves pure coordinate sectors and is not a role exchange. No physical CPT is constructed. |
 | Transpose reverses normalized attention | Prove transpose exchanges row and column normalization, and give an exact counterexample to commuting row softmax with transpose. Mask reversal and stochastic time reversal are separate operations. |
-| RoPE realizes relative rotations | Existing real rotation owners already prove this. New flow results build on the existing real rotor. |
+| RoPE realizes relative rotations | Existing discrete owners prove the integer-position identity. Extend the existing continuous-position rotor with its transpose, relative-product, actual rotated-pairing, and common-shift identities. |
 | SCFG, Markov chains, GloVe/Word2Vec/PMI are the same construction | These require distinct probabilistic assumptions/objectives; no new grammar or embedding-factorization theorem is claimed. |
 | A Casimir center stores invariant semantics | No Poisson algebra, Casimir map, semantic observable, or invariance proof is supplied. Retained as open interpretation. |
 | All relational graph models are forced into one spin-network universality class | No classification theorem follows from bilinearity. Spin-network representation/intertwiner data and plabic planarity remain extra structure. |
@@ -59,12 +69,22 @@ imaginary unit is introduced by this addition.
   `dotProductEquiv`, continuous linear maps, Fréchet and ordinary derivatives.
 - `Rotary.RotarySpiralBridge`: existing real rotor and
   `loxodromicSpiralMatrix λ ω t = exp(-λt) • ropeRotor ω t`.
+- `Routing.DiscreteRoPERepresentation.ropeRotor_relative` and
+  `Synthesis.TransactionalQueryKeyRoPEPhaseSpaceBridge.rope_inner_product_relative_time_cancellation`
+  are the existing integer-position results. Their larger import closures are
+  not imported by this addition; the new real-position results extend the
+  `RotarySpiralBridge` carrier already used here.
 - Existing broader `QuantumContext.RotaryAttentionSpiralDynamics` and
   `Canonical.AttentionRelativeGroupBridge` explain related source coverage;
   they need not be imported into the small new flow owner.
 - `Thermodynamics.SoftmaxGibbsVariationalPrinciple` and
   `SoftmaxGibbsVariationalClosure` already establish an interior-simplex
   variational principle. They are not a closed-simplex Fenchel conjugacy result.
+- `Inference.GibbsUniqueMinimizer`, `GibbsVariationalDecomposition`, and
+  `FiniteRelativeEntropyEquality` supply the actual finite Gibbs gap,
+  inequality, and equality criterion. Specialize their energy to
+  `-(β * K_j(q))` and their temperature to one. This reproduces the query
+  probabilities with the original inverse temperature still explicit.
 
 ## Acceptance statements
 
@@ -83,11 +103,24 @@ imaginary unit is introduced by this addition.
    `x' = κ x + ω J x`, real-time composition, and exact inverse laws.
 8. With nonzero null coordinate u, division by its boost produces exactly the
    prescribed planar scale-rotation in the projective chart.
+9. For real positions m and n, the actual rotated dot product equals the
+   unrotated query paired against the key rotated by n-m. A common shift of
+   both positions leaves that score unchanged.
+10. For strictly positive normalized probabilities μ, the exact gap between
+    `Φ(q)` and `β Σ_j μ_j K_j(q) - Σ_j μ_j log μ_j` is
+    `finiteRelativeEntropy μ (queryWeight K β q)`. The variational objective
+    is bounded above by `Φ(q)`, with equality exactly at the query softmax.
 
 ## Dependency order
 
 Key evaluation → logits → log-partition and probabilities → actual derivatives
 → Fisher covariance → nonnegative/null-direction statements.
+
+The explicit Gibbs energy specialization identifies the same probabilities
+and potential. The existing finite relative-entropy decomposition then gives
+the entropy gap, upper bound, and unique positive-simplex maximizer. This is
+an additional variational identity, not an assumption used to obtain the
+analytic derivatives.
 
 Neutral inclusions → matrix evaluation → transpose/rank; exponential
 normalization → explicit counterexample. These do not imply physical CPT.
@@ -112,9 +145,22 @@ pre-existing source/dependency failure without weakening the requested proofs.
 
 Independent semantic review and a separate verification review are required.
 The user requested formalization and publication as a pull request on
-2026-11-25. The three new owners now compile in their actual 12-module
-repository source closure, with warnings-as-errors on the new owners. The
-native audit covers all 76 owned declarations and accepts only the three
-foundational axioms above. Exact evidence and independent review outcomes are
-recorded in the README and evidence directory. Root/package integration gates
-remain a separate requirement; publication does not authorize a merge.
+2026-11-25. The expanded four-owner implementation contains 53 named public
+theorems. All 19 repository sources in its actual import closure compiled under
+the exact pins, with warnings-as-errors on all four owners. A fresh native
+audit inspected all 93 owned declarations and accepted only the three
+foundational axioms above. Independent semantic review passed for the exact
+final source hashes. The local receipt preserves the distinction between
+recorded compilation receipts and post-run dependency snapshots; it does not
+promote a failed development attempt into a successful whole-run certificate.
+
+The scoped CI workflow independently rebuilds all 19 sources in fresh
+checkouts and repeats the complete audit. Final independent acceptance must
+bind that actual run to the published source hashes, compiler and dependency
+pins, workflow/verification controls, successful command logs, and complete
+native audit. Historical three-owner CI and its 76-declaration evidence remain
+historical; they are not acceptance evidence for the extension.
+
+Root/package integration and publication routing remain separate checks.
+Publication does not authorize a merge. Current local evidence and reproducible
+commands are recorded in the README and evidence directory.

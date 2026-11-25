@@ -16,6 +16,7 @@ from pathlib import Path
 
 OWNERS = (
     'InfoGeometry.Canonical.AttentionQueryGeometry',
+    'InfoGeometry.Canonical.AttentionQueryGibbsDuality',
     'InfoGeometry.Canonical.AttentionQueryKeyReversal',
     'InfoGeometry.Rotary.RotaryAttentionFlow',
 )

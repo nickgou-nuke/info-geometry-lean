@@ -129,7 +129,11 @@ theorem log_queryWeight_line_deriv
     exact (InfoGeometry.Analytic.hasDerivAt_logSumExp
       (fun l => Real.exp (queryLogits K β q l)) (fun l => β * K l u)
       (fun l => Real.exp_pos _) 0).differentiableAt
-  rw [hfun, deriv_fun_sub hlin.differentiableAt hpath, hlin.deriv,
+  rw [hfun]
+  change deriv
+    ((fun t : ℝ => β * K j (q + t • u)) -
+      (fun t : ℝ => queryPotential K β (q + t • u))) 0 = _
+  rw [deriv_sub hlin.differentiableAt hpath, hlin.deriv,
     queryPotential_line_deriv]
   ring
 

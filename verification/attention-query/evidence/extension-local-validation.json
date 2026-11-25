@@ -1,0 +1,1511 @@
+{
+  "compile_contexts": {
+    "1d89fc2e5ff1d3fbd728794b2220dc24a8ddfeba5f950ea48c41ba12d1562376": {
+      "captured_at": "2026-11-25T16:21:41.160726+00:00",
+      "compile_controls": {
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/lakefile.lean": "7f1682a266e65a251ff8adb0b3acc8146ff94004bc78c83850583145434fc5da",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45",
+        "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lake": "6f53827dab18010d6c690d14c8401cacabc1db958edb3552a877ed4cf1dd995d",
+        "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/lake-manifest.json": "8f67b2cf24143ac091cdb425e886c2164b2fc2d6fbccd6db9454b697f9541a67",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/lakefile.lean": "274e720ccc7dbabeb9fbf362290dc7e5ed2c5175fbade0ef20cc19b1331affaf",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+      },
+      "dependency_pins": {
+        "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+        "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+        "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+        "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+        "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+        "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+        "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+        "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5"
+      },
+      "external_artifact_inventory": {
+        "entries": 32739,
+        "sha256": "a3aa198c4de4a2d44ed6c0236de92a921d0eb7366a02542c2f1b0250e8e41251",
+        "storage": "Full inventory retained in the complete local transaction; omitted from this compact record."
+      },
+      "external_roots": [
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+      ],
+      "guard_controls": {
+        "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/attention_qa.py": "55dc0216c1d8e534da7073fd0c89d722232b3c7ad6044ea0f723e20d033b8be7",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/attention-query/AttentionDeclarationAudit.lean": "8403d7f6733d19f90ef00a2c6f0ee92e9809287fdc92ccaaa2b483d5da49184c",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/attention-query/review_audit.py": "7f045d5261f6772f0bb98116fc5e2b0994ac36b05825a641cb2393c85a0c3a5a",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/attention-query/verify.py": "5e7b2fdd46929633f26da6c0cc21ed09649991475179d34035755e600664d14c"
+      },
+      "lean": "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+      "lean_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+      "mathlib": "/workspace/scratch/f9f21c55d3f4/mathlib",
+      "mathlib_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "repo": "/workspace/scratch/f9f21c55d3f4/info-geometry-lean",
+      "schema": "attention-qa-provenance-v1",
+      "toolchain": "leanprover/lean4:v4.34.1"
+    },
+    "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3": {
+      "captured_at": "2026-11-25T16:17:39.668029+00:00",
+      "compile_controls": {
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/lakefile.lean": "7f1682a266e65a251ff8adb0b3acc8146ff94004bc78c83850583145434fc5da",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45",
+        "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lake": "6f53827dab18010d6c690d14c8401cacabc1db958edb3552a877ed4cf1dd995d",
+        "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/lake-manifest.json": "8f67b2cf24143ac091cdb425e886c2164b2fc2d6fbccd6db9454b697f9541a67",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/lakefile.lean": "274e720ccc7dbabeb9fbf362290dc7e5ed2c5175fbade0ef20cc19b1331affaf",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+      },
+      "dependency_pins": {
+        "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+        "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+        "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+        "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+        "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+        "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+        "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+        "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5"
+      },
+      "external_artifact_inventory": {
+        "entries": 32739,
+        "sha256": "a3aa198c4de4a2d44ed6c0236de92a921d0eb7366a02542c2f1b0250e8e41251",
+        "storage": "Full inventory retained in the complete local transaction; omitted from this compact record."
+      },
+      "external_roots": [
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean",
+        "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+      ],
+      "guard_controls": {
+        "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/attention_qa.py": "55dc0216c1d8e534da7073fd0c89d722232b3c7ad6044ea0f723e20d033b8be7",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/attention-query/AttentionDeclarationAudit.lean": "8403d7f6733d19f90ef00a2c6f0ee92e9809287fdc92ccaaa2b483d5da49184c",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/attention-query/review_audit.py": "7f045d5261f6772f0bb98116fc5e2b0994ac36b05825a641cb2393c85a0c3a5a",
+        "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/attention-query/verify.py": "6e26bc51ed2def9aa9390bdb61867dac09f186ea3aa20d7038205af773ac24f0"
+      },
+      "lean": "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+      "lean_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+      "mathlib": "/workspace/scratch/f9f21c55d3f4/mathlib",
+      "mathlib_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "repo": "/workspace/scratch/f9f21c55d3f4/info-geometry-lean",
+      "schema": "attention-qa-provenance-v1",
+      "toolchain": "leanprover/lean4:v4.34.1"
+    }
+  },
+  "complete_local_transaction": {
+    "audit_reconciliation_sha256": "57b3a705e7365c36cf3c6fb2bc70438cd1394d9f4c5bb3b76596439d907f9094",
+    "fingerprint_supplement_sha256": "4b762627c8ef569988756a5c144338873e2eef33529976de41f76a0307717fb5",
+    "readiness_sha256": "84b4f6f23a6d0f4103293c9ff970f6e0ff4c69607c4174c5b2eeaba279000ec7",
+    "run": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/native-ready-01/run.json",
+    "run_sha256": "c8eff312932cf309079c5a1988046d2a8a6f77318d4fe2e6faf5bd38347173a7"
+  },
+  "completed_at": "2026-11-25T16:42:07.314958+00:00",
+  "dependency_provenance_basis": {
+    "post_run_snapshot": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Convex.Bregman",
+      "InfoGeometry.Analytic.LogSumExp",
+      "InfoGeometry.Analytic.LogSumExpVariancePositivity",
+      "InfoGeometry.Canonical.AttentionInformationGeometry",
+      "InfoGeometry.Inference.FiniteRelativeEntropy",
+      "InfoGeometry.Inference.FiniteRelativeEntropyEquality",
+      "InfoGeometry.Inference.FiniteGibbsInference",
+      "InfoGeometry.Inference.GibbsVariational",
+      "InfoGeometry.Inference.GibbsVariationalDecomposition",
+      "InfoGeometry.Inference.GibbsUniqueMinimizer"
+    ],
+    "recorded_compile": [
+      "InfoGeometry.Meta.Architecture",
+      "InfoGeometry.Clifford.NeutralPhaseSpaceCore",
+      "InfoGeometry.Canonical.NeutralDualPairSplitting",
+      "InfoGeometry.Rotary.RotarySpiralBridge"
+    ]
+  },
+  "final_independent_acceptance": "PENDING_FRESH_ALL_19_SOURCE_CI_AND_INDEPENDENT_RECONCILIATION",
+  "fingerprint_supplement": {
+    "git_status": {
+      "argv": [
+        "git",
+        "status",
+        "--short"
+      ],
+      "cwd": "/workspace/scratch/f9f21c55d3f4/info-geometry-lean",
+      "environment": {},
+      "exit_code": 0,
+      "finished_at": "2026-11-25T16:34:54.426451+00:00",
+      "log": {
+        "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/native-ready-01/logs/022-git-status.log",
+        "sha256": "104882b957f177038e93b43f1d9bf598b1a979555698f42b233641e70df8f280"
+      },
+      "log_text": " M lean/InfoGeometry/Canonical/AttentionQueryGibbsDuality.lean\n",
+      "started_at": "2026-11-25T16:34:54.018293+00:00"
+    },
+    "lake_version": {
+      "argv": [
+        "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lake",
+        "--version"
+      ],
+      "cwd": "/workspace/scratch/f9f21c55d3f4/info-geometry-lean",
+      "environment": {},
+      "exit_code": 0,
+      "finished_at": "2026-11-25T16:34:54.473223+00:00",
+      "log": {
+        "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/native-ready-01/logs/023-lake-version.log",
+        "sha256": "36526a338068c343bedff5daa38fec328b4f722df1e8f0b5d026d4f0f908f3a3"
+      },
+      "log_text": "Lake version 5.0.0-src+5045d00 (Lean version 4.34.1)\n",
+      "started_at": "2026-11-25T16:34:54.427868+00:00"
+    },
+    "root_head": "cfe777abd172c0cdd3f42e43fa26f5c014986387",
+    "schema": "attention-qa-provenance-v1",
+    "scope": "Fingerprint observations under the shared BuildLock"
+  },
+  "module_compilation_evidence": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Algebra/FiniteSpinAlgebra.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Algebra/FiniteSpinAlgebra.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Algebra.FiniteSpinAlgebra.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": ""
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 2,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/module.olean",
+          "sha256": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a",
+      "repository_imports": {},
+      "source_path": "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean",
+      "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Analytic.LogSumExp": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Analytic/LogSumExp.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Analytic/LogSumExp.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Analytic.LogSumExp.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": ""
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 4,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Analytic.LogSumExp/module.olean",
+          "sha256": "ec6b7f1c19aacaa72794b61af104845bb35606c0b1b0f693e842c18f28247960"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "15c693ddc3e7fef974c31584fe322c2a79798812e99a769055890fe632c5661f",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        },
+        "InfoGeometry.Convex.Bregman": {
+          "artifacts": {
+            "": "10d5d8c281a6faac6add74b4fd680a9b5e7758530b89fe46f2e04dbd6a08f3ff"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Convex.Bregman/receipt.json",
+            "sha256": "3ffc55555958542523236d54ed5e9653cb2895f4c49bd3a42ed142a3a38794f4"
+          },
+          "source_sha256": "0bd59cec68cb9860657b08b925bf2ad9c80802dae584a10825690ab2e0dde5af"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Analytic/LogSumExp.lean",
+      "source_sha256": "5e4330dd7c77aa65d67bb807f5e70e9efb1c556d87ff204436341889bc98ce03",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Analytic.LogSumExpVariancePositivity": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Analytic/LogSumExpVariancePositivity.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Analytic/LogSumExpVariancePositivity.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Analytic.LogSumExpVariancePositivity.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": ""
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 5,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Analytic.LogSumExpVariancePositivity/module.olean",
+          "sha256": "219c1193b38b3219c8d40d6dbdf1906d0c01afc0fbf5448eb0ae39c3718b2a3b"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "3f8e517b684419a05b1c8cb11cbbe4fb2bba3940b6b378e94ea256c1faa630c9",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        },
+        "InfoGeometry.Analytic.LogSumExp": {
+          "artifacts": {
+            "": "ec6b7f1c19aacaa72794b61af104845bb35606c0b1b0f693e842c18f28247960"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Analytic.LogSumExp/receipt.json",
+            "sha256": "15c693ddc3e7fef974c31584fe322c2a79798812e99a769055890fe632c5661f"
+          },
+          "source_sha256": "5e4330dd7c77aa65d67bb807f5e70e9efb1c556d87ff204436341889bc98ce03"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Analytic/LogSumExpVariancePositivity.lean",
+      "source_sha256": "17520385d2a72e290c02a368e1c48beada7d85d902ac49626ad6e6fc6a09f7ec",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Canonical.AttentionInformationGeometry": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Canonical/AttentionInformationGeometry.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Canonical/AttentionInformationGeometry.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Canonical.AttentionInformationGeometry.log",
+          "sha256": "bf16fdfee1209d001f1d23eb167dc939cf709e5a74d353f6b5b647f3aa5b0c5e"
+        },
+        "log_text": "InfoGeometry/Canonical/AttentionInformationGeometry.lean:2:0: warning: \n'Mathlib.Data.Real.Basic' has been deprecated: please replace this import by\n\nimport Mathlib.Basic.Real.Basic\nInfoGeometry/Canonical/AttentionInformationGeometry.lean:120:10: warning: `if_neg` has been deprecated: Use `ite_eq_right` instead\nInfoGeometry/Canonical/AttentionInformationGeometry.lean:123:9: warning: `if_pos` has been deprecated: Use `ite_eq_left` instead\n"
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 6,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Canonical.AttentionInformationGeometry/module.olean",
+          "sha256": "2700b135ded445cb5cf3fa7c1fbe28be95fc2ce07535baa61010c10aaa5d5700"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "defd9b8a035f02a9789b2326e3215d426024cbf4d9040139349f1cbdd2da5f59",
+      "repository_imports": {
+        "InfoGeometry.Analytic.LogSumExp": {
+          "artifacts": {
+            "": "ec6b7f1c19aacaa72794b61af104845bb35606c0b1b0f693e842c18f28247960"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Analytic.LogSumExp/receipt.json",
+            "sha256": "15c693ddc3e7fef974c31584fe322c2a79798812e99a769055890fe632c5661f"
+          },
+          "source_sha256": "5e4330dd7c77aa65d67bb807f5e70e9efb1c556d87ff204436341889bc98ce03"
+        },
+        "InfoGeometry.Analytic.LogSumExpVariancePositivity": {
+          "artifacts": {
+            "": "219c1193b38b3219c8d40d6dbdf1906d0c01afc0fbf5448eb0ae39c3718b2a3b"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Analytic.LogSumExpVariancePositivity/receipt.json",
+            "sha256": "3f8e517b684419a05b1c8cb11cbbe4fb2bba3940b6b378e94ea256c1faa630c9"
+          },
+          "source_sha256": "17520385d2a72e290c02a368e1c48beada7d85d902ac49626ad6e6fc6a09f7ec"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Canonical/AttentionInformationGeometry.lean",
+      "source_sha256": "5ba36f032f325b0a92a7c80bc2cc3e02ec0d8a0d737775c596d7fe2a5cf0b600",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Canonical.AttentionQueryGeometry": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "-DwarningAsError=true",
+          "InfoGeometry/Canonical/AttentionQueryGeometry.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Canonical/AttentionQueryGeometry.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Canonical.AttentionQueryGeometry.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": ""
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 7,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Canonical.AttentionQueryGeometry/module.olean",
+          "sha256": "585d42e3dc6ed7a1ad3f57f8bacb75d95dbf67138cd94b546dbd9905bc9d22ec"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "f34580b24c5448b8beb5ece12550e832e40a445120b6cdc197c78552a648a09d",
+      "repository_imports": {
+        "InfoGeometry.Canonical.AttentionInformationGeometry": {
+          "artifacts": {
+            "": "2700b135ded445cb5cf3fa7c1fbe28be95fc2ce07535baa61010c10aaa5d5700"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Canonical.AttentionInformationGeometry/receipt.json",
+            "sha256": "defd9b8a035f02a9789b2326e3215d426024cbf4d9040139349f1cbdd2da5f59"
+          },
+          "source_sha256": "5ba36f032f325b0a92a7c80bc2cc3e02ec0d8a0d737775c596d7fe2a5cf0b600"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Canonical/AttentionQueryGeometry.lean",
+      "source_sha256": "4732003f4b36fe5eacce6d0b36789259fe50e0022c2189914734da0efd1bf3c6",
+      "warnings_as_errors": true
+    },
+    "InfoGeometry.Canonical.AttentionQueryGibbsDuality": {
+      "after_record_sha256": "0b5f86022defe2b8603b810023ba65a93cf2d6ec5ba96e0f06c5c84dc6caef16",
+      "before_record_sha256": "193b23f11a0307eb0b066b9f14187a8cba6d47d76862033e5f9b07bcb8680348",
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "-DwarningAsError=true",
+          "InfoGeometry/Canonical/AttentionQueryGibbsDuality.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/generated/InfoGeometry/Canonical/AttentionQueryGibbsDuality.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "exit_code": 0,
+        "finished_at": "2026-11-25T16:23:42.319764+00:00",
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/logs/022-InfoGeometry.Canonical.AttentionQueryGibbsDuality.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": "",
+        "started_at": "2026-11-25T16:21:41.277426+00:00"
+      },
+      "context_sha256": "1d89fc2e5ff1d3fbd728794b2220dc24a8ddfeba5f950ea48c41ba12d1562376",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Canonical.AttentionQueryGibbsDuality/module.olean",
+          "sha256": "a01db8e1d0fb495bbba4717d74f149c11f360f025da8b649a74f6c178e157f0b"
+        }
+      },
+      "provenance_kind": "recorded_compile",
+      "receipt_sha256": "9bed115269c91e0d577a406ee366e94fec64f88e63123e8f2bf7bde066605b3d",
+      "repository_imports": {
+        "InfoGeometry.Canonical.AttentionQueryGeometry": {
+          "artifacts": {
+            "": "585d42e3dc6ed7a1ad3f57f8bacb75d95dbf67138cd94b546dbd9905bc9d22ec"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Canonical.AttentionQueryGeometry/receipt.json",
+            "sha256": "f34580b24c5448b8beb5ece12550e832e40a445120b6cdc197c78552a648a09d"
+          },
+          "source_sha256": "4732003f4b36fe5eacce6d0b36789259fe50e0022c2189914734da0efd1bf3c6"
+        },
+        "InfoGeometry.Inference.GibbsUniqueMinimizer": {
+          "artifacts": {
+            "": "699c2aacdced8f0169ff26dae48beb10b865f1d4f034f6bb373cb08f0c2582df"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.GibbsUniqueMinimizer/receipt.json",
+            "sha256": "21286341a03ea0f672b73bd6e608039fb680979867b8291c33a59a624f3c169b"
+          },
+          "source_sha256": "389e18614e4548da43157a45eb7a7c5e4885b45ff23f71ea6fa1446527383df7"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Canonical/AttentionQueryGibbsDuality.lean",
+      "source_sha256": "7bc539a6fd77df544c21cdd7fe919c4bed9ac8bbb3024acac207ae5666b3d9aa",
+      "warnings_as_errors": true
+    },
+    "InfoGeometry.Canonical.AttentionQueryKeyReversal": {
+      "after_record_sha256": "2ad9fd70f9dd849d80ab7c71fe7891b913431584c7e2b09fd1ab7eba81cdaf64",
+      "before_record_sha256": "436209535064e871ac6ab4c09f690050c51e972b72d91e73acc6d381c3c295a7",
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "-DwarningAsError=true",
+          "InfoGeometry/Canonical/AttentionQueryKeyReversal.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/generated/InfoGeometry/Canonical/AttentionQueryKeyReversal.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "exit_code": 0,
+        "finished_at": "2026-11-25T16:31:35.872541+00:00",
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/logs/026-InfoGeometry.Canonical.AttentionQueryKeyReversal.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": "",
+        "started_at": "2026-11-25T16:28:57.038549+00:00"
+      },
+      "context_sha256": "1d89fc2e5ff1d3fbd728794b2220dc24a8ddfeba5f950ea48c41ba12d1562376",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Canonical.AttentionQueryKeyReversal/module.olean",
+          "sha256": "c80fdf87dbd3e622efa14c29075f25721ef2102c19078544fa3e9dd045a2a231"
+        }
+      },
+      "provenance_kind": "recorded_compile",
+      "receipt_sha256": "dbd2d31cfe982904a65eec97b37ba64f4c0aaa6fa033fcb9cf08c45fb740f61d",
+      "repository_imports": {
+        "InfoGeometry.Canonical.AttentionInformationGeometry": {
+          "artifacts": {
+            "": "2700b135ded445cb5cf3fa7c1fbe28be95fc2ce07535baa61010c10aaa5d5700"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Canonical.AttentionInformationGeometry/receipt.json",
+            "sha256": "defd9b8a035f02a9789b2326e3215d426024cbf4d9040139349f1cbdd2da5f59"
+          },
+          "source_sha256": "5ba36f032f325b0a92a7c80bc2cc3e02ec0d8a0d737775c596d7fe2a5cf0b600"
+        },
+        "InfoGeometry.Canonical.NeutralDualPairSplitting": {
+          "artifacts": {
+            "": "28dd6d99eb714d07d60990bc73ccd0ab8a2db94cf87cac4813159b7e99e41f16"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Canonical.NeutralDualPairSplitting/receipt.json",
+            "sha256": "4fac1f2b84eed88bd298394894c29498492dd534a09c091c9b85462706687a57"
+          },
+          "source_sha256": "30cef224f2beeb2156a738acf6f13c5c526ea9cc7cafd2ce15fd744215e9faaf"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Canonical/AttentionQueryKeyReversal.lean",
+      "source_sha256": "a8f60e7f3bacd87ec213172140c46c713043ec6b76b3a8b7c91dd93d9565d390",
+      "warnings_as_errors": true
+    },
+    "InfoGeometry.Canonical.NeutralDualPairSplitting": {
+      "after_record_sha256": "6c53b299d0731e3ea5a16ebc9abbc092ad46a0d7d5fee9556d85615cb2bfc1e0",
+      "before_record_sha256": "fc8473579138d313b96fc42bee8bbedc5df4515b9d033dbb9f32c0d9ff6531e2",
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Canonical/NeutralDualPairSplitting.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/generated/InfoGeometry/Canonical/NeutralDualPairSplitting.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "exit_code": 0,
+        "finished_at": "2026-11-25T16:28:56.964224+00:00",
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/logs/025-InfoGeometry.Canonical.NeutralDualPairSplitting.log",
+          "sha256": "40af116ca911632ce3724b2ed2870261a2fe06359645c130ef200097a9396a50"
+        },
+        "log_text": "InfoGeometry/Canonical/NeutralDualPairSplitting.lean:63:15: warning: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead\nInfoGeometry/Canonical/NeutralDualPairSplitting.lean:67:15: warning: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead\nInfoGeometry/Canonical/NeutralDualPairSplitting.lean:76:15: warning: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead\nInfoGeometry/Canonical/NeutralDualPairSplitting.lean:80:15: warning: `Set.mem_setOf_eq` has been deprecated: Use `Set.mem_ofPred_eq` instead\n",
+        "started_at": "2026-11-25T16:26:22.604439+00:00"
+      },
+      "context_sha256": "1d89fc2e5ff1d3fbd728794b2220dc24a8ddfeba5f950ea48c41ba12d1562376",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Canonical.NeutralDualPairSplitting/module.olean",
+          "sha256": "28dd6d99eb714d07d60990bc73ccd0ab8a2db94cf87cac4813159b7e99e41f16"
+        }
+      },
+      "provenance_kind": "recorded_compile",
+      "receipt_sha256": "4fac1f2b84eed88bd298394894c29498492dd534a09c091c9b85462706687a57",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        },
+        "InfoGeometry.Clifford.NeutralPhaseSpaceCore": {
+          "artifacts": {
+            "": "a4769891f5057c0e2e560372a5d7b5280b084b7650022d9481b20ad55028bfba"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Clifford.NeutralPhaseSpaceCore/receipt.json",
+            "sha256": "5ba80a1baa72e2d3249e7a52e3f426fa8ef9fb6d57f31bbf3daa360e4fd2d480"
+          },
+          "source_sha256": "1e9af32b34ffef78d0bc93a446abd1f90fb8d7b58583db10efc39aba46cf2093"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Canonical/NeutralDualPairSplitting.lean",
+      "source_sha256": "30cef224f2beeb2156a738acf6f13c5c526ea9cc7cafd2ce15fd744215e9faaf",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Clifford.NeutralPhaseSpaceCore": {
+      "after_record_sha256": "d1e190fe30f5b078e77d604bdcfb604809330cf8976bfa8ba5d3e63999a874af",
+      "before_record_sha256": "484b090ec500436193723fd7c79d9a56269103b438e33a4665b85084c1ef19ae",
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/generated/InfoGeometry/Clifford/NeutralPhaseSpaceCore.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "exit_code": 0,
+        "finished_at": "2026-11-25T16:26:22.565063+00:00",
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/logs/024-InfoGeometry.Clifford.NeutralPhaseSpaceCore.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": "",
+        "started_at": "2026-11-25T16:23:49.298819+00:00"
+      },
+      "context_sha256": "1d89fc2e5ff1d3fbd728794b2220dc24a8ddfeba5f950ea48c41ba12d1562376",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Clifford.NeutralPhaseSpaceCore/module.olean",
+          "sha256": "a4769891f5057c0e2e560372a5d7b5280b084b7650022d9481b20ad55028bfba"
+        }
+      },
+      "provenance_kind": "recorded_compile",
+      "receipt_sha256": "5ba80a1baa72e2d3249e7a52e3f426fa8ef9fb6d57f31bbf3daa360e4fd2d480",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        },
+        "InfoGeometry.Meta.Architecture": {
+          "artifacts": {
+            "": "79243fb862b5e476f54dbba944fdb393a463fbde4529ed3f46b125e46be6bec9"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Meta.Architecture/receipt.json",
+            "sha256": "5f2f0f80579b4abc418c1afbb87b86e6f122f41f046879dffd2683b76cd0a14a"
+          },
+          "source_sha256": "0f74caea1284e1c0dfc8d00d46357e0310a24aa12fc36fa7c0d02ef5f97e0434"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Clifford/NeutralPhaseSpaceCore.lean",
+      "source_sha256": "1e9af32b34ffef78d0bc93a446abd1f90fb8d7b58583db10efc39aba46cf2093",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Convex.Bregman": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Convex/Bregman.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Convex/Bregman.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Convex.Bregman.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": ""
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 3,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Convex.Bregman/module.olean",
+          "sha256": "10d5d8c281a6faac6add74b4fd680a9b5e7758530b89fe46f2e04dbd6a08f3ff"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "3ffc55555958542523236d54ed5e9653cb2895f4c49bd3a42ed142a3a38794f4",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Convex/Bregman.lean",
+      "source_sha256": "0bd59cec68cb9860657b08b925bf2ad9c80802dae584a10825690ab2e0dde5af",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Inference.FiniteGibbsInference": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Inference/FiniteGibbsInference.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Inference/FiniteGibbsInference.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Inference.FiniteGibbsInference.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": ""
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 10,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.FiniteGibbsInference/module.olean",
+          "sha256": "f90bec4a5cf1d1bca83543d6af6e79c3f0a5ed9158611c3c25b311d92382125c"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "16c784f2b68a3087f05d0e2fe5ad69973caffa220ec08aa8225901fa6caa2fcf",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Inference/FiniteGibbsInference.lean",
+      "source_sha256": "57edcb6afba1621bc598a89017fb07b7bb700ce72fa24045360cea6ac7ae6182",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Inference.FiniteRelativeEntropy": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Inference/FiniteRelativeEntropy.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Inference/FiniteRelativeEntropy.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Inference.FiniteRelativeEntropy.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": ""
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 8,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.FiniteRelativeEntropy/module.olean",
+          "sha256": "85f925774f752637a58dece8e6517b5f0101ecdd61e819754ea87a952d1c62a5"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "83f38178d5afa3a2377d864b6b320f19448e204cae483dddc6a38042d390c6aa",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Inference/FiniteRelativeEntropy.lean",
+      "source_sha256": "a12aa9a220d3273528c8f1de74ff2ec0b786b51759a2519c3aec67a3c0caa32b",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Inference.FiniteRelativeEntropyEquality": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Inference/FiniteRelativeEntropyEquality.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Inference/FiniteRelativeEntropyEquality.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Inference.FiniteRelativeEntropyEquality.log",
+          "sha256": "eb11a0edc90a649cb9aa4bfd03abc12a34c8337c40fc0841b0641fff4e2d1559"
+        },
+        "log_text": "InfoGeometry/Inference/FiniteRelativeEntropyEquality.lean:26:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.Inference.relativeEntropyGap_nonneg`:\n  [Fintype Data]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Fintype Data] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`\nInfoGeometry/Inference/FiniteRelativeEntropyEquality.lean:46:0: warning: automatically included section variable(s) unused in theorem `InfoGeometry.Inference.relativeEntropyGap_pos_of_ne`:\n  [Fintype Data]\nconsider restructuring your `variable` declarations so that the variables are not in scope or explicitly omit them:\n  omit [Fintype Data] in theorem ...\n\nNote: This linter can be disabled with `set_option linter.unusedSectionVars false`\n"
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 9,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.FiniteRelativeEntropyEquality/module.olean",
+          "sha256": "21b58c74e1d8bddb3af0faa26df356870de520b15b24885d7cd3177d10ec4979"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "b9f84282662c0dd7f9b34df41b819920048bddbbab5f2f1e9ab49dafaa95a29d",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        },
+        "InfoGeometry.Inference.FiniteRelativeEntropy": {
+          "artifacts": {
+            "": "85f925774f752637a58dece8e6517b5f0101ecdd61e819754ea87a952d1c62a5"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.FiniteRelativeEntropy/receipt.json",
+            "sha256": "83f38178d5afa3a2377d864b6b320f19448e204cae483dddc6a38042d390c6aa"
+          },
+          "source_sha256": "a12aa9a220d3273528c8f1de74ff2ec0b786b51759a2519c3aec67a3c0caa32b"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Inference/FiniteRelativeEntropyEquality.lean",
+      "source_sha256": "cd508aa274ada5c56c6e19c4cb20e55e60ff233f5cf0870d2ab30fc61c0b3f02",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Inference.GibbsUniqueMinimizer": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Inference/GibbsUniqueMinimizer.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Inference/GibbsUniqueMinimizer.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Inference.GibbsUniqueMinimizer.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": ""
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 13,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.GibbsUniqueMinimizer/module.olean",
+          "sha256": "699c2aacdced8f0169ff26dae48beb10b865f1d4f034f6bb373cb08f0c2582df"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "21286341a03ea0f672b73bd6e608039fb680979867b8291c33a59a624f3c169b",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        },
+        "InfoGeometry.Inference.FiniteRelativeEntropyEquality": {
+          "artifacts": {
+            "": "21b58c74e1d8bddb3af0faa26df356870de520b15b24885d7cd3177d10ec4979"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.FiniteRelativeEntropyEquality/receipt.json",
+            "sha256": "b9f84282662c0dd7f9b34df41b819920048bddbbab5f2f1e9ab49dafaa95a29d"
+          },
+          "source_sha256": "cd508aa274ada5c56c6e19c4cb20e55e60ff233f5cf0870d2ab30fc61c0b3f02"
+        },
+        "InfoGeometry.Inference.GibbsVariationalDecomposition": {
+          "artifacts": {
+            "": "fa8ccf6a4dbe54e754edaf4de8f4208d6a38725541d29f991711534b2c609194"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.GibbsVariationalDecomposition/receipt.json",
+            "sha256": "b8228f9d55aef0992e946b662642d482103791e1eeb17948d0f7dcdf5dfd3b43"
+          },
+          "source_sha256": "7347c6f8a7b7b172434433fe222a8ab784b44782442045a877ec6d0418e10e25"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Inference/GibbsUniqueMinimizer.lean",
+      "source_sha256": "389e18614e4548da43157a45eb7a7c5e4885b45ff23f71ea6fa1446527383df7",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Inference.GibbsVariational": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Inference/GibbsVariational.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Inference/GibbsVariational.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Inference.GibbsVariational.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": ""
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 11,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.GibbsVariational/module.olean",
+          "sha256": "f90dd2e3d4e4fe84c4577156e9a1ad5db0864ad30a5b877b68f82ccb2aed9e1a"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "cec7ad00b9f5dbd3dd4508fec179e364de4fbdbf6a3ba8687a15731e28a1faf9",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        },
+        "InfoGeometry.Inference.FiniteGibbsInference": {
+          "artifacts": {
+            "": "f90bec4a5cf1d1bca83543d6af6e79c3f0a5ed9158611c3c25b311d92382125c"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.FiniteGibbsInference/receipt.json",
+            "sha256": "16c784f2b68a3087f05d0e2fe5ad69973caffa220ec08aa8225901fa6caa2fcf"
+          },
+          "source_sha256": "57edcb6afba1621bc598a89017fb07b7bb700ce72fa24045360cea6ac7ae6182"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Inference/GibbsVariational.lean",
+      "source_sha256": "e20005de1dbd96b25d65b9aa6ace85b79eac6838d1301e10afd7f3a0d009ea3c",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Inference.GibbsVariationalDecomposition": {
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Inference/GibbsVariationalDecomposition.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build/InfoGeometry/Inference/GibbsVariationalDecomposition.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "environment_note": "Reconstructed from the verified original environment probe and verifier source",
+        "exit_code": 0,
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/original-logs/InfoGeometry.Inference.GibbsVariationalDecomposition.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": ""
+      },
+      "context_sha256": "6cb44ddd1fc5df3adb83a8f9c9f57cbc675b1ca7b415034e26c01271880a0ff3",
+      "original_command_index": 12,
+      "original_run_sha256": "c3ce90d7aa71968069d3c5f2ebdbab863cf66e2635b543629d51a651610de373",
+      "original_whole_run_status": "FAIL",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.GibbsVariationalDecomposition/module.olean",
+          "sha256": "fa8ccf6a4dbe54e754edaf4de8f4208d6a38725541d29f991711534b2c609194"
+        }
+      },
+      "provenance_kind": "post_run_snapshot",
+      "provenance_note": "Post-run capture of successful command outputs; not an original before/after receipt. Original failed whole run remains failed.",
+      "receipt_sha256": "b8228f9d55aef0992e946b662642d482103791e1eeb17948d0f7dcdf5dfd3b43",
+      "repository_imports": {
+        "InfoGeometry.Algebra.FiniteSpinAlgebra": {
+          "artifacts": {
+            "": "bf417e1fce575f46b123cd5f049595ded4bcc1798392f5ac3fc2cc59b19100c6"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Algebra.FiniteSpinAlgebra/receipt.json",
+            "sha256": "e9d5999b252df3654bab6cfb2deb3391588ef5012e918cb96edc755e7872c68a"
+          },
+          "source_sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567"
+        },
+        "InfoGeometry.Inference.FiniteRelativeEntropy": {
+          "artifacts": {
+            "": "85f925774f752637a58dece8e6517b5f0101ecdd61e819754ea87a952d1c62a5"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.FiniteRelativeEntropy/receipt.json",
+            "sha256": "83f38178d5afa3a2377d864b6b320f19448e204cae483dddc6a38042d390c6aa"
+          },
+          "source_sha256": "a12aa9a220d3273528c8f1de74ff2ec0b786b51759a2519c3aec67a3c0caa32b"
+        },
+        "InfoGeometry.Inference.GibbsVariational": {
+          "artifacts": {
+            "": "f90dd2e3d4e4fe84c4577156e9a1ad5db0864ad30a5b877b68f82ccb2aed9e1a"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/seal-dev-02/modules/InfoGeometry.Inference.GibbsVariational/receipt.json",
+            "sha256": "cec7ad00b9f5dbd3dd4508fec179e364de4fbdbf6a3ba8687a15731e28a1faf9"
+          },
+          "source_sha256": "e20005de1dbd96b25d65b9aa6ace85b79eac6838d1301e10afd7f3a0d009ea3c"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Inference/GibbsVariationalDecomposition.lean",
+      "source_sha256": "7347c6f8a7b7b172434433fe222a8ab784b44782442045a877ec6d0418e10e25",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Meta.Architecture": {
+      "after_record_sha256": "18ffd9c9cd883178516df28e32e9f7d7ce470b53d8db29ae0304a5a522932f92",
+      "before_record_sha256": "ea1a829005fae8e2debd1b90a9aa8fc36226fed7b517b8057928907f3456de51",
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Meta/Architecture.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/generated/InfoGeometry/Meta/Architecture.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "exit_code": 0,
+        "finished_at": "2026-11-25T16:23:49.207746+00:00",
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/logs/023-InfoGeometry.Meta.Architecture.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": "",
+        "started_at": "2026-11-25T16:23:42.387761+00:00"
+      },
+      "context_sha256": "1d89fc2e5ff1d3fbd728794b2220dc24a8ddfeba5f950ea48c41ba12d1562376",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Meta.Architecture/module.olean",
+          "sha256": "79243fb862b5e476f54dbba944fdb393a463fbde4529ed3f46b125e46be6bec9"
+        }
+      },
+      "provenance_kind": "recorded_compile",
+      "receipt_sha256": "5f2f0f80579b4abc418c1afbb87b86e6f122f41f046879dffd2683b76cd0a14a",
+      "repository_imports": {},
+      "source_path": "lean/InfoGeometry/Meta/Architecture.lean",
+      "source_sha256": "0f74caea1284e1c0dfc8d00d46357e0310a24aa12fc36fa7c0d02ef5f97e0434",
+      "warnings_as_errors": false
+    },
+    "InfoGeometry.Rotary.RotaryAttentionFlow": {
+      "after_record_sha256": "03a298a91f971680d872e961bcc21d6f58e8709c5c8bc6b048346d7aab606cb6",
+      "before_record_sha256": "a47368600c17750450ceaa0366ed5f20474346a7514ab80587ccc278a3864c4e",
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "-DwarningAsError=true",
+          "InfoGeometry/Rotary/RotaryAttentionFlow.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/generated/InfoGeometry/Rotary/RotaryAttentionFlow.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "exit_code": 0,
+        "finished_at": "2026-11-25T16:33:44.611886+00:00",
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/logs/028-InfoGeometry.Rotary.RotaryAttentionFlow.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": "",
+        "started_at": "2026-11-25T16:32:00.800161+00:00"
+      },
+      "context_sha256": "1d89fc2e5ff1d3fbd728794b2220dc24a8ddfeba5f950ea48c41ba12d1562376",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Rotary.RotaryAttentionFlow/module.olean",
+          "sha256": "01d6d26f45267cbecf372857deef468e87a4b3eb63b8e7140272f51186bbfba5"
+        }
+      },
+      "provenance_kind": "recorded_compile",
+      "receipt_sha256": "49ba6437c42d0a66dc18bae6fdb21b6958847cbb3a4cd0207a4e6d5717967904",
+      "repository_imports": {
+        "InfoGeometry.Rotary.RotarySpiralBridge": {
+          "artifacts": {
+            "": "2b3d388bd107880757928542c36d1733b923567ee2309542961d980d086f1550"
+          },
+          "receipt": {
+            "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Rotary.RotarySpiralBridge/receipt.json",
+            "sha256": "0466fc7d59bda9aa636e602aa56ef923032abe476705c0fa712b903dea527511"
+          },
+          "source_sha256": "ad6c06dc84b84002ee6afbefc716ce74e31d56a7494647955a108e4d3460a90b"
+        }
+      },
+      "source_path": "lean/InfoGeometry/Rotary/RotaryAttentionFlow.lean",
+      "source_sha256": "cfe80be5019f7f5107a98376f6997910fd3d15cf80b07f29e8cf7278ed5e50ee",
+      "warnings_as_errors": true
+    },
+    "InfoGeometry.Rotary.RotarySpiralBridge": {
+      "after_record_sha256": "1e8a85c23c9cb8d5e85f091f3359913572599215f8466049e23d0757e45cfdb2",
+      "before_record_sha256": "8bdce4863e0a1039d1381549b6070395861f488fe40cd46f74c61a74c8ea4f82",
+      "command": {
+        "argv": [
+          "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+          "InfoGeometry/Rotary/RotarySpiralBridge.lean",
+          "-o",
+          "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/generated/InfoGeometry/Rotary/RotarySpiralBridge.olean"
+        ],
+        "cwd": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/sources",
+        "environment": {
+          "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+        },
+        "exit_code": 0,
+        "finished_at": "2026-11-25T16:32:00.787606+00:00",
+        "log": {
+          "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/logs/027-InfoGeometry.Rotary.RotarySpiralBridge.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "log_text": "",
+        "started_at": "2026-11-25T16:31:35.940039+00:00"
+      },
+      "context_sha256": "1d89fc2e5ff1d3fbd728794b2220dc24a8ddfeba5f950ea48c41ba12d1562376",
+      "output_artifacts": {
+        "": {
+          "captured_path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/dev-03/modules/InfoGeometry.Rotary.RotarySpiralBridge/module.olean",
+          "sha256": "2b3d388bd107880757928542c36d1733b923567ee2309542961d980d086f1550"
+        }
+      },
+      "provenance_kind": "recorded_compile",
+      "receipt_sha256": "0466fc7d59bda9aa636e602aa56ef923032abe476705c0fa712b903dea527511",
+      "repository_imports": {},
+      "source_path": "lean/InfoGeometry/Rotary/RotarySpiralBridge.lean",
+      "source_sha256": "ad6c06dc84b84002ee6afbefc716ce74e31d56a7494647955a108e4d3460a90b",
+      "warnings_as_errors": false
+    }
+  },
+  "native_audit": {
+    "audit_log_sha256": "e477d3a8ce80572260de07f5ee52a53dc773f998b2098f6d598c9d94bfeb89b0",
+    "axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "declaration_names": [
+      "InfoGeometry.RotaryAttentionFlow.anisotropicDamping",
+      "InfoGeometry.RotaryAttentionFlow.anisotropic_damping_rotation_noncommute",
+      "InfoGeometry.RotaryAttentionFlow.anisotropic_damping_rotation_radial_eigenvector",
+      "InfoGeometry.RotaryAttentionFlow.boosted_null_chart_eq_loxodromicSpiralMatrix",
+      "InfoGeometry.RotaryAttentionFlow.deriv_loxodromicSpiralMatrix_mulVec",
+      "InfoGeometry.RotaryAttentionFlow.hasDerivAt_loxodromicSpiralMatrix_mulVec",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_add",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_mul_neg",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_neg_apply",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_zero",
+      "InfoGeometry.RotaryAttentionFlow.ropeRotor_dotProduct_relative",
+      "InfoGeometry.RotaryAttentionFlow.ropeRotor_dotProduct_shift_invariant",
+      "InfoGeometry.RotaryAttentionFlow.ropeRotor_transpose",
+      "InfoGeometry.RotaryAttentionFlow.ropeRotor_transpose_mul",
+      "InfoGeometry.RotaryAttentionFlow.rotationGenerator",
+      "InfoGeometry.Attention.QueryKeyReversal.columnSoftmax",
+      "InfoGeometry.Attention.QueryKeyReversal.negative_para_dualIncl",
+      "InfoGeometry.Attention.QueryKeyReversal.negative_para_primalIncl",
+      "InfoGeometry.Attention.QueryKeyReversal.negative_para_primalIncl_ne_dualIncl",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits_eq_neutral",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits_rank_le",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits_transpose",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_pos",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_sum_one",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det_pos",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_not_symmetric",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_one_one",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_one_zero",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_rank_two",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_zero_one",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_zero_zero",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_transpose",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_transpose_counterexample",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneFactor",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores_factorization",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores_rank_le_one",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores_transpose",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.fderiv_queryPotential_apply",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.hasFDerivAt_queryPotential",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.log_queryWeight_line_deriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.meanKey",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_eq_secondDeriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_eq_variance",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_eq_zero_iff",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_nonneg",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_pos_iff",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryLogits",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential_line_deriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential_line_eq",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential_line_secondDeriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryWeight",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryGibbsModel",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryGibbs_freeEnergy_eq",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryGibbs_objective_eq",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryGibbs_partitionFunction_eq",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryGibbs_weight_eq",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryPotential_entropy_gap",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryPotential_entropy_identity",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryPotential_variational_bound",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryPotential_variational_eq_iff",
+      "InfoGeometry.RotaryAttentionFlow.anisotropicDamping._proof_1",
+      "InfoGeometry.RotaryAttentionFlow.anisotropicDamping.eq_1",
+      "InfoGeometry.RotaryAttentionFlow.rotationGenerator.eq_1",
+      "InfoGeometry.RotarySpiralBridge.loxodromicSpiralMatrix.eq_1",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits.eq_1",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax.eq_1",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_1",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_2",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_3",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_4",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_5",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_6",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det._simp_1_7",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneFactor._proof_1",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneFactor.eq_1",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores.eq_1",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.meanKey._proof_1",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.meanKey._proof_2",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.meanKey._proof_3",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.meanKey.eq_1",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryLogits.eq_1",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential.eq_1",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryWeight.eq_1",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryGibbsModel.eq_1",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryPotential_variational_eq_iff._simp_1_1",
+      "InfoGeometry.Inference.FiniteGibbs.freeEnergy.eq_1",
+      "InfoGeometry.Inference.FiniteGibbs.partitionFunction.eq_1"
+    ],
+    "declarations": 93,
+    "module_counts": {
+      "InfoGeometry.Canonical.AttentionQueryGeometry": 23,
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality": 13,
+      "InfoGeometry.Canonical.AttentionQueryKeyReversal": 38,
+      "InfoGeometry.Rotary.RotaryAttentionFlow": 19
+    },
+    "scope": "Independent reconciliation of completed native audit output",
+    "status": "PASS"
+  },
+  "native_audit_command": {
+    "argv": [
+      "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+      "-DwarningAsError=true",
+      "AttentionDeclarationAudit.lean"
+    ],
+    "cwd": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/native-ready-01/probe",
+    "environment": {
+      "LEAN_PATH": "/workspace/scratch/f9f21c55d3f4/attention-verification/dev-02/build:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean:/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+    },
+    "exit_code": 0,
+    "finished_at": "2026-11-25T16:41:49.583042+00:00",
+    "log": {
+      "path": "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/runs/native-ready-01/logs/024-native-declaration-audit.log",
+      "sha256": "e477d3a8ce80572260de07f5ee52a53dc773f998b2098f6d598c9d94bfeb89b0"
+    },
+    "started_at": "2026-11-25T16:34:54.475596+00:00"
+  },
+  "native_audit_context": {
+    "captured_at": "2026-11-25T16:34:53.685652+00:00",
+    "compile_controls": {
+      "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+      "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/lakefile.lean": "7f1682a266e65a251ff8adb0b3acc8146ff94004bc78c83850583145434fc5da",
+      "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+      "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45",
+      "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lake": "6f53827dab18010d6c690d14c8401cacabc1db958edb3552a877ed4cf1dd995d",
+      "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/lake-manifest.json": "8f67b2cf24143ac091cdb425e886c2164b2fc2d6fbccd6db9454b697f9541a67",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/lakefile.lean": "274e720ccc7dbabeb9fbf362290dc7e5ed2c5175fbade0ef20cc19b1331affaf",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b"
+    },
+    "dependency_pins": {
+      "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+      "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+      "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5"
+    },
+    "external_roots": [
+      "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Cli/.lake/build/lib/lean",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/batteries/.lake/build/lib/lean",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/Qq/.lake/build/lib/lean",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/aesop/.lake/build/lib/lean",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/proofwidgets/.lake/build/lib/lean",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/importGraph/.lake/build/lib/lean",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/LeanSearchClient/.lake/build/lib/lean",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/packages/plausible/.lake/build/lib/lean",
+      "/workspace/scratch/f9f21c55d3f4/mathlib/.lake/build/lib/lean",
+      "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/lib/lean"
+    ],
+    "guard_controls": {
+      "/workspace/scratch/f9f21c55d3f4/attention-qa-tools/attention_qa.py": "55dc0216c1d8e534da7073fd0c89d722232b3c7ad6044ea0f723e20d033b8be7",
+      "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/attention-query/AttentionDeclarationAudit.lean": "8403d7f6733d19f90ef00a2c6f0ee92e9809287fdc92ccaaa2b483d5da49184c",
+      "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/attention-query/review_audit.py": "7f045d5261f6772f0bb98116fc5e2b0994ac36b05825a641cb2393c85a0c3a5a",
+      "/workspace/scratch/f9f21c55d3f4/info-geometry-lean/verification/attention-query/verify.py": "5e7b2fdd46929633f26da6c0cc21ed09649991475179d34035755e600664d14c"
+    },
+    "lean": "/workspace/scratch/f9f21c55d3f4/lean-toolchain/lean-4.34.1-linux/bin/lean",
+    "lean_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+    "mathlib": "/workspace/scratch/f9f21c55d3f4/mathlib",
+    "mathlib_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "repo": "/workspace/scratch/f9f21c55d3f4/info-geometry-lean",
+    "schema": "attention-qa-provenance-v1",
+    "toolchain": "leanprover/lean4:v4.34.1"
+  },
+  "native_audit_context_sha256": "b3cb5845c6c109cda25f946948e14073336c3eb54b261649f8af145c1786fa08",
+  "native_audit_log_file": "extension-declaration-audit.jsonl",
+  "native_audit_source_sha256": "8403d7f6733d19f90ef00a2c6f0ee92e9809287fdc92ccaaa2b483d5da49184c",
+  "provenance_note": "11 reused dependencies are post-run snapshots and 4 are recorded development commands. Across all 19 modules, 12 successful commands were captured after failed dev-02 and 7 were recorded in successful dev-03. Failed runs are not relabeled as successful full-closure runs.",
+  "public_theorem_count": 53,
+  "public_theorem_names_by_owner": {
+    "InfoGeometry.Canonical.AttentionQueryGeometry": [
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential_line_eq",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.hasFDerivAt_queryPotential",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.fderiv_queryPotential_apply",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential_line_deriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryPotential_line_secondDeriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.log_queryWeight_line_deriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_eq_variance",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_eq_secondDeriv",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_nonneg",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_pos_iff",
+      "InfoGeometry.Canonical.AttentionQueryGeometry.queryFisher_eq_zero_iff"
+    ],
+    "InfoGeometry.Canonical.AttentionQueryGibbsDuality": [
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryGibbs_partitionFunction_eq",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryGibbs_weight_eq",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryGibbs_freeEnergy_eq",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryGibbs_objective_eq",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryPotential_entropy_gap",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryPotential_variational_bound",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryPotential_variational_eq_iff",
+      "InfoGeometry.Canonical.AttentionQueryGibbsDuality.queryPotential_entropy_identity"
+    ],
+    "InfoGeometry.Canonical.AttentionQueryKeyReversal": [
+      "InfoGeometry.Attention.QueryKeyReversal.negative_para_primalIncl",
+      "InfoGeometry.Attention.QueryKeyReversal.negative_para_dualIncl",
+      "InfoGeometry.Attention.QueryKeyReversal.negative_para_primalIncl_ne_dualIncl",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits_eq_neutral",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits_transpose",
+      "InfoGeometry.Attention.QueryKeyReversal.queryKeyLogits_rank_le",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_transpose",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_sum_one",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_pos",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores_factorization",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores_rank_le_one",
+      "InfoGeometry.Attention.QueryKeyReversal.symmetricRankOneScores_transpose",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_zero_zero",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_zero_one",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_one_zero",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_one_one",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_not_symmetric",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_transpose_counterexample",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_det_pos",
+      "InfoGeometry.Attention.QueryKeyReversal.rowSoftmax_symmetricRankOneScores_rank_two"
+    ],
+    "InfoGeometry.Rotary.RotaryAttentionFlow": [
+      "InfoGeometry.RotaryAttentionFlow.ropeRotor_transpose",
+      "InfoGeometry.RotaryAttentionFlow.ropeRotor_transpose_mul",
+      "InfoGeometry.RotaryAttentionFlow.ropeRotor_dotProduct_relative",
+      "InfoGeometry.RotaryAttentionFlow.ropeRotor_dotProduct_shift_invariant",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_zero",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_add",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_mul_neg",
+      "InfoGeometry.RotaryAttentionFlow.loxodromicSpiralMatrix_neg_apply",
+      "InfoGeometry.RotaryAttentionFlow.boosted_null_chart_eq_loxodromicSpiralMatrix",
+      "InfoGeometry.RotaryAttentionFlow.hasDerivAt_loxodromicSpiralMatrix_mulVec",
+      "InfoGeometry.RotaryAttentionFlow.deriv_loxodromicSpiralMatrix_mulVec",
+      "InfoGeometry.RotaryAttentionFlow.anisotropic_damping_rotation_radial_eigenvector",
+      "InfoGeometry.RotaryAttentionFlow.anisotropic_damping_rotation_noncommute"
+    ]
+  },
+  "role_record": {
+    "final_acceptance": "Not yet issued; depends on the fresh scoped CI run.",
+    "generation": "Parent/orchestrator and theorem-owner contributors; QA authored no theorem repairs.",
+    "independent_readiness_execution": "/root/attention_qa",
+    "independent_semantic_review": "Separate A-A role: /root/mathematical_audit; its disposition is maintained separately."
+  },
+  "root_lake_integration": "NOT_ESTABLISHED_BY_THIS_RECORD",
+  "schema": "attention-extension-local-readiness-v1",
+  "scope": "19 exact-current-source successful module commands across development runs, followed by a fresh complete native ownership/axiom audit. No fresh owner compilation was performed by the readiness wrapper.",
+  "source_hashes": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Analytic.LogSumExp": "5e4330dd7c77aa65d67bb807f5e70e9efb1c556d87ff204436341889bc98ce03",
+    "InfoGeometry.Analytic.LogSumExpVariancePositivity": "17520385d2a72e290c02a368e1c48beada7d85d902ac49626ad6e6fc6a09f7ec",
+    "InfoGeometry.Canonical.AttentionInformationGeometry": "5ba36f032f325b0a92a7c80bc2cc3e02ec0d8a0d737775c596d7fe2a5cf0b600",
+    "InfoGeometry.Canonical.AttentionQueryGeometry": "4732003f4b36fe5eacce6d0b36789259fe50e0022c2189914734da0efd1bf3c6",
+    "InfoGeometry.Canonical.AttentionQueryGibbsDuality": "7bc539a6fd77df544c21cdd7fe919c4bed9ac8bbb3024acac207ae5666b3d9aa",
+    "InfoGeometry.Canonical.AttentionQueryKeyReversal": "a8f60e7f3bacd87ec213172140c46c713043ec6b76b3a8b7c91dd93d9565d390",
+    "InfoGeometry.Canonical.NeutralDualPairSplitting": "30cef224f2beeb2156a738acf6f13c5c526ea9cc7cafd2ce15fd744215e9faaf",
+    "InfoGeometry.Clifford.NeutralPhaseSpaceCore": "1e9af32b34ffef78d0bc93a446abd1f90fb8d7b58583db10efc39aba46cf2093",
+    "InfoGeometry.Convex.Bregman": "0bd59cec68cb9860657b08b925bf2ad9c80802dae584a10825690ab2e0dde5af",
+    "InfoGeometry.Inference.FiniteGibbsInference": "57edcb6afba1621bc598a89017fb07b7bb700ce72fa24045360cea6ac7ae6182",
+    "InfoGeometry.Inference.FiniteRelativeEntropy": "a12aa9a220d3273528c8f1de74ff2ec0b786b51759a2519c3aec67a3c0caa32b",
+    "InfoGeometry.Inference.FiniteRelativeEntropyEquality": "cd508aa274ada5c56c6e19c4cb20e55e60ff233f5cf0870d2ab30fc61c0b3f02",
+    "InfoGeometry.Inference.GibbsUniqueMinimizer": "389e18614e4548da43157a45eb7a7c5e4885b45ff23f71ea6fa1446527383df7",
+    "InfoGeometry.Inference.GibbsVariational": "e20005de1dbd96b25d65b9aa6ace85b79eac6838d1301e10afd7f3a0d009ea3c",
+    "InfoGeometry.Inference.GibbsVariationalDecomposition": "7347c6f8a7b7b172434433fe222a8ab784b44782442045a877ec6d0418e10e25",
+    "InfoGeometry.Meta.Architecture": "0f74caea1284e1c0dfc8d00d46357e0310a24aa12fc36fa7c0d02ef5f97e0434",
+    "InfoGeometry.Rotary.RotaryAttentionFlow": "cfe80be5019f7f5107a98376f6997910fd3d15cf80b07f29e8cf7278ed5e50ee",
+    "InfoGeometry.Rotary.RotarySpiralBridge": "ad6c06dc84b84002ee6afbefc716ce74e31d56a7494647955a108e4d3460a90b"
+  },
+  "source_order": [
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "InfoGeometry.Convex.Bregman",
+    "InfoGeometry.Analytic.LogSumExp",
+    "InfoGeometry.Analytic.LogSumExpVariancePositivity",
+    "InfoGeometry.Canonical.AttentionInformationGeometry",
+    "InfoGeometry.Canonical.AttentionQueryGeometry",
+    "InfoGeometry.Inference.FiniteRelativeEntropy",
+    "InfoGeometry.Inference.FiniteRelativeEntropyEquality",
+    "InfoGeometry.Inference.FiniteGibbsInference",
+    "InfoGeometry.Inference.GibbsVariational",
+    "InfoGeometry.Inference.GibbsVariationalDecomposition",
+    "InfoGeometry.Inference.GibbsUniqueMinimizer",
+    "InfoGeometry.Canonical.AttentionQueryGibbsDuality",
+    "InfoGeometry.Meta.Architecture",
+    "InfoGeometry.Clifford.NeutralPhaseSpaceCore",
+    "InfoGeometry.Canonical.NeutralDualPairSplitting",
+    "InfoGeometry.Canonical.AttentionQueryKeyReversal",
+    "InfoGeometry.Rotary.RotarySpiralBridge",
+    "InfoGeometry.Rotary.RotaryAttentionFlow"
+  ],
+  "status": "LOCAL_SOURCE_AND_NATIVE_AUDIT_READY",
+  "tool_sha256": "55dc0216c1d8e534da7073fd0c89d722232b3c7ad6044ea0f723e20d033b8be7",
+  "wrapper_sha256": "74e5aac3deaf8c0cc48fab13a75c2fda9359c8d61469deedf9a97b17a9a695c7"
+}

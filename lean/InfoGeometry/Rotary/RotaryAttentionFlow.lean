@@ -28,6 +28,45 @@ open InfoGeometry.RotarySpiralBridge
 
 namespace InfoGeometry.RotaryAttentionFlow
 
+/-! ## Real-position RoPE and relative query-key scores
+
+These identities use the existing unscaled real rotor. They concern actual
+Euclidean dot products on its two-dimensional carrier; the exponential scale
+in the later spiral flow is not included in the shift-invariance claim.
+-/
+
+/-- Transposition reverses the real position of the existing RoPE rotor. -/
+theorem ropeRotor_transpose (ω m : ℝ) :
+    (ropeRotor ω m).transpose = ropeRotor ω (-m) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [ropeRotor, Matrix.transpose_apply, neg_mul]
+
+/-- The relative real-position rotor is the product of the first transpose
+and the second rotor. This uses the existing real addition law. -/
+theorem ropeRotor_transpose_mul (ω m n : ℝ) :
+    (ropeRotor ω m).transpose * ropeRotor ω n = ropeRotor ω (n - m) := by
+  rw [ropeRotor_transpose, ← ropeRotor_add]
+  congr 1
+  ring
+
+/-- Rotating a query and key at real positions leaves only their relative
+position in the actual Euclidean dot product. -/
+theorem ropeRotor_dotProduct_relative (ω m n : ℝ) (q k : Fin 2 → ℝ) :
+    dotProduct (ropeRotor ω m *ᵥ q) (ropeRotor ω n *ᵥ k) =
+      dotProduct q (ropeRotor ω (n - m) *ᵥ k) := by
+  rw [Matrix.dotProduct_mulVec, Matrix.vecMul_mulVec,
+    ropeRotor_transpose_mul, ← Matrix.dotProduct_mulVec]
+
+/-- A common real shift of the query and key positions preserves their
+rotated dot-product score. No nonzero-frequency assumption is needed. -/
+theorem ropeRotor_dotProduct_shift_invariant
+    (ω m n s : ℝ) (q k : Fin 2 → ℝ) :
+    dotProduct (ropeRotor ω (m + s) *ᵥ q) (ropeRotor ω (n + s) *ᵥ k) =
+      dotProduct (ropeRotor ω m *ᵥ q) (ropeRotor ω n *ᵥ k) := by
+  rw [ropeRotor_dotProduct_relative, ropeRotor_dotProduct_relative,
+    show n + s - (m + s) = n - m by ring]
+
 /-- Real quarter-turn generator used by the differential equation below. -/
 def rotationGenerator : Matrix (Fin 2) (Fin 2) ℝ := !![0, -1; 1, 0]
 

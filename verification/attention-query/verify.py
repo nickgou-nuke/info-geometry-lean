@@ -23,7 +23,12 @@ sys.path.insert(0, str(ROOT))
 from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
 from review_audit import OWNERS, reconcile
 
-TARGETS = ['InfoGeometry.Canonical.AttentionQueryGeometry', 'InfoGeometry.Canonical.AttentionQueryKeyReversal', 'InfoGeometry.Rotary.RotaryAttentionFlow']
+TARGETS = [
+    'InfoGeometry.Canonical.AttentionQueryGeometry',
+    'InfoGeometry.Canonical.AttentionQueryGibbsDuality',
+    'InfoGeometry.Canonical.AttentionQueryKeyReversal',
+    'InfoGeometry.Rotary.RotaryAttentionFlow',
+]
 PIN = "d13f23b723b8a846827a245b89c10fc7d3f11612"
 TOOLCHAIN = "leanprover/lean4:v4.34.1"
 IMPORT = re.compile(r"^(?:public\s+)?import\s+([A-Za-z0-9_.]+)", re.MULTILINE)

@@ -535,6 +535,25 @@ def scalarDecayFlow (c : ℝ) :
 theorem scalarDecayFlow_eval (c t x : ℝ) :
     (scalarDecayFlow c).eval t x = Real.exp (c * t) * x := rfl
 
+/-- Positive scalar generators produce exponential growth at positive time. -/
+theorem scalarDecayFlow_grows {c t : ℝ} (hc : 0 < c) (ht : 0 < t) :
+    1 < Real.exp (c * t) := by
+  rw [← Real.exp_zero]
+  apply Real.exp_lt_exp.mpr
+  nlinarith
+
+/-- A zero scalar generator is time-independent. -/
+theorem scalarDecayFlow_neutral {t : ℝ} :
+    Real.exp ((0 : ℝ) * t) = 1 := by
+  simp
+
+/-- Negative scalar generators produce exponential decay at positive time. -/
+theorem scalarDecayFlow_decays {c t : ℝ} (hc : c < 0) (ht : 0 < t) :
+    Real.exp (c * t) < 1 := by
+  rw [← Real.exp_zero]
+  apply Real.exp_lt_exp.mpr
+  nlinarith
+
 /-- Its infinitesimal generator is multiplication by `c`. -/
 theorem scalarDecayFlow_hasDerivAt_zero (c : ℝ) :
     HasDerivAt (fun t : ℝ => (scalarDecayFlow c).eval t)

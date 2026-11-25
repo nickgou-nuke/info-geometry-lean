@@ -165,16 +165,51 @@ theorem arnoldFiniteGroup_quadratic_trace_invariant (n : ℕ)
     Matrix.trace (X * X) :=
   arnoldFiniteGroup_tracePairing_invariant n g X X
 
-/-- Infinitesimal adjoint invariance of the trace pairing:
-`⟪[Z,X],Y⟫ + ⟪X,[Z,Y]⟫ = 0`.
-This is the finite algebraic form of Euler--Arnold/Casimir conservation. -/
-theorem arnoldFiniteGroup_ad_invariant_tracePairing {n : ℕ}
-    (X Y Z : Matrix (Fin n) (Fin n) ℝ) :
-    Matrix.trace ((Z * X - X * Z) * Y) + Matrix.trace (X * (Z * Y - Y * Z)) = 0 := by
-  rw [sub_mul, Matrix.trace_sub, mul_sub, Matrix.trace_sub]
-  rw [Matrix.trace_mul_cycle Z X Y]
-  rw [Matrix.trace_mul_cycle Y Z X]
-  simp only [mul_assoc]
+/-- Pure Lie advection leaves the finite quadratic trace invariant unchanged:
+`tr([Z,X] X) = 0`. -/
+theorem arnoldFiniteGroup_commutator_self_trace_zero {n : ℕ}
+    (Z X : Matrix (Fin n) (Fin n) ℝ) :
+    Matrix.trace ((Z * X - X * Z) * X) = 0 := by
+  rw [sub_mul, Matrix.trace_sub]
+  rw [Matrix.trace_mul_cycle Z X X]
+  rw [Matrix.trace_mul_cycle X Z X]
   ring
+
+/-- Finite Navier--Stokes damping identity: adding `-c X` to the Lie advection
+generator contributes exactly `-c · tr(X²)`. -/
+theorem arnoldFiniteGroup_damped_generator_trace {n : ℕ}
+    (Z X : Matrix (Fin n) (Fin n) ℝ) (c : ℝ) :
+    Matrix.trace (((Z * X - X * Z) - c • X) * X) = -c * Matrix.trace (X * X) := by
+  rw [sub_mul, Matrix.trace_sub, arnoldFiniteGroup_commutator_self_trace_zero]
+  rw [smul_mul_assoc, Matrix.trace_smul]
+  simp
+
+/-- Strict dissipation when the damping coefficient and positive quadratic
+invariant are both positive. -/
+theorem arnoldFiniteGroup_damped_generator_trace_neg {n : ℕ}
+    (Z X : Matrix (Fin n) (Fin n) ℝ) {c : ℝ} (hc : 0 < c)
+    (hpos : 0 < Matrix.trace (X * X)) :
+    Matrix.trace (((Z * X - X * Z) - c • X) * X) < 0 := by
+  rw [arnoldFiniteGroup_damped_generator_trace]
+  exact mul_neg_of_neg_of_pos (neg_neg_of_pos hc) hpos
+
+/-- A single finite Fourier mode with viscosity `ν` and frequency `λ` has
+trace production `-ν λ² tr(X²)`. This is the explicit mode form of the
+finite damping identity; it makes no assertion about a PDE or continuum limit. -/
+theorem arnoldFiniteGroup_viscous_mode_trace {n : ℕ}
+    (Z X : Matrix (Fin n) (Fin n) ℝ) (ν freq : ℝ) :
+    Matrix.trace (((Z * X - X * Z) - (ν * freq ^ 2) • X) * X) =
+      -(ν * freq ^ 2) * Matrix.trace (X * X) := by
+  exact arnoldFiniteGroup_damped_generator_trace Z X (ν * freq ^ 2)
+
+/-- Strict finite-mode dissipation for positive viscosity, nonzero frequency,
+and a positive quadratic trace. -/
+theorem arnoldFiniteGroup_viscous_mode_trace_neg {n : ℕ}
+    (Z X : Matrix (Fin n) (Fin n) ℝ) {ν freq : ℝ} (hν : 0 < ν)
+    (hfreq : freq ≠ 0) (hpos : 0 < Matrix.trace (X * X)) :
+    Matrix.trace (((Z * X - X * Z) - (ν * freq ^ 2) • X) * X) < 0 := by
+  apply arnoldFiniteGroup_damped_generator_trace_neg Z X
+  · exact mul_pos hν (sq_pos_of_ne_zero hfreq)
+  · exact hpos
 
 end InfoGeometry.Physics.ArnoldFiniteGroupCore

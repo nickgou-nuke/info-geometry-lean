@@ -26,6 +26,23 @@ Euler--Arnold Navier--Stokes equation. Those remain open debts.
   flow associated with the area-preserving diffeomorphism group. This is
   `retrieval_context_only`.
 
+## Literature anchors
+
+- Guha's metriplectic paper gives Proposition 6.2 for 2D Navier--Stokes as a
+  Leibniz flow associated with the area-preserving diffeomorphism group, with
+  entropy `S = ½⟨Ω,Ω⟩` and dissipative contribution `ν∇² δS/δΩ`.[1]
+- Izosimov--Khesin describe enstrophies as Casimir invariants for the coadjoint
+  action of area-preserving diffeomorphisms; this motivates the trace pairing
+  layer, not a proof of the infinite-dimensional theorem.[2]
+- Hu's stochastic Euler--Arnold study uses the finite-dimensional `SU(N)`
+  approximation where Casimirs are `tr(Ω²), tr(Ω³), ...` and includes viscous
+  and drag terms in the 2D Navier--Stokes vorticity equation.[3]
+- Hu--Šverák study finite-dimensional Euler--Arnold flow with Langevin damping
+  of the form `ż = q(z,z) - νz + noise`.[4]
+
+All four are retrieval/navigation sources only; Lean closure comes from the
+kernel-checked declarations below.
+
 ## New owner
 
 `lean/InfoGeometry/Physics/ArnoldFiniteGroupCore.lean`
@@ -44,7 +61,9 @@ Declarations:
 - `arnoldFiniteGroup_adjoint_mem`
 - `arnoldFiniteGroup_tracePairing_invariant`
 - `arnoldFiniteGroup_quadratic_trace_invariant`
-- `arnoldFiniteGroup_ad_invariant_tracePairing`
+- `arnoldFiniteGroup_commutator_self_trace_zero`
+- `arnoldFiniteGroup_damped_generator_trace`
+- `arnoldFiniteGroup_damped_generator_trace_neg`
 
 These give the finite determinant-one volume-preserving group and the
 trace-zero incompressible Lie-algebra closure.
@@ -59,7 +78,15 @@ trace-zero incompressible Lie-algebra closure.
 1. A native carrier for `SDiff(M)` as volume-preserving diffeomorphisms.
 2. Euler equation `du/dt + ∇_u u = -∇p` on that carrier.
 3. Euler--Arnold form `dω/dt = -ad*_u ω`.
-4. Navier--Stokes viscous term `νΔu` in the same Lie-group framework.
+4. Navier--Stokes viscous term on the infinite-dimensional `SDiff(M)` carrier;
+   the finite damped trace identity is now closed above.
 5. A theorem identifying helicity with the relevant coadjoint Casimir on the
    infinite-dimensional carrier.
 6. A native bridge from the Alexandria Proposition 6.2 chunk to a Lean theorem.
+
+## Sources
+
+[1] https://www.sciencedirect.com/science/article/pii/S0022247X06001028/pdf?md5=4b73428be61740726ae166216f037435&pid=1-s2.0-S0022247X06001028-main.pdf — Guha 2007 Metriplectic structure, Leibniz dynamics and dissipative systems
+[2] https://arxiv.org/pdf/1702.01843 — Izosimov and Khesin: Classification of Casimirs in 2D hydrodynamics
+[3] https://arxiv.org/pdf/2607.17943 — Coadjoint averaging and cross-scale fluxes in a fast-slow stochastic Euler-Arnold system on SU(N)
+[4] https://arxiv.org/pdf/1510.05279 — Hu and Sverak: Dynamics of geodesic flows with random forcing on Lie groups

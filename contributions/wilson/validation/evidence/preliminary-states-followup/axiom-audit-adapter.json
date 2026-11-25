@@ -1,0 +1,17 @@
+{
+  "allowed_axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "audit_source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/InfoGeometry/Canonical/ApproximateStateColimitAudit.lean",
+  "audit_source_sha256": "4f1ba917fcd3986d7ef605d526e22b0370ad9c76f5d359bd7f95d6a65746b0cc",
+  "axiom_log_sha256": "230b98fde7cdb195598ef2a48dd1fe8dc68ab936ab5cee30abdd226d98350057",
+  "declarations": {
+    "CStarStateColimit.Native.exists_compatibleStateFamily_of_summable_errors": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  }
+}

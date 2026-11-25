@@ -1,0 +1,51 @@
+{
+  "upstream_sha": "c25e77e9654a54fc5e4a04bfb637b7144defacc0",
+  "toolchain": "leanprover/lean4:v4.36.0",
+  "expected_mathlib_sha": "fc4f59e577feb1a4956671bc04ac18aaaf8cd842",
+  "candidate": "gram",
+  "pinned_file_hashes": {
+    "lean-toolchain": "582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a",
+    "lakefile.toml": "5fcec99108cc5fdd8d1064e57260747a1610302fdfed5a90bc05209802588da9",
+    "lake-manifest.json": "a2f40629d4557042a0fe242f3275915bb759cdb50e25a5b74fa3ff404ae382c1"
+  },
+  "sources": {
+    "CoreLean/PositiveKernelFiniteColimit.lean": "63263ea1b23b594089b0753d855e074f0fb4c692630fabc3d0f3721a40210022",
+    "CoreLean/PositiveKernelFiniteColimitAudit.lean": "41134760d85ba80ad1f1eb1240184aeb614d806ab2bddcd3d7f209bb05cf679d",
+    "CoreLean/PositiveKernelLimit.lean": "abb38a2d5b87742f26fffd6d8e62f96904704f975229951a8d10926b97092262",
+    "LICENSE-InfoGeometry-Apache-2.0": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+    "THEOREM_CONTRACT.md": "b4ec74bd67790e3fa2633973ca00bc38174aa8488fe025902904ed3894c698c4",
+    "CoreLean.lean": "7a8dbecc01bdf3721717b8cc51366c2e565cbfa23791e19be93d9ac3e4669132"
+  },
+  "expected_axiom_declarations": [
+    "CoreLean.PositiveKernel.inner_preToHilbert",
+    "CoreLean.PositiveKernel.inner_feature",
+    "CoreLean.PositiveKernel.inner_finiteEval",
+    "CoreLean.PositiveKernel.mem_ker_finiteEval_iff",
+    "CoreLean.PositiveKernel.mem_ker_finiteEval_iff_radical",
+    "CoreLean.PositiveKernel.quotientEmbedding_injective",
+    "CoreLean.PositiveKernel.quotientEmbedding_mk",
+    "CoreLean.PositiveKernel.inner_quotientEmbedding_mk",
+    "CoreLean.PositiveKernel.finiteEval_zeroExtend",
+    "CoreLean.PositiveKernel.finiteGram_zeroExtend",
+    "CoreLean.PositiveKernel.stage_mono",
+    "CoreLean.PositiveKernel.stageMap_self",
+    "CoreLean.PositiveKernel.stageMap_comp",
+    "CoreLean.PositiveKernel.quotientEmbedding_quotientMap",
+    "CoreLean.PositiveKernel.quotientMap_mk",
+    "CoreLean.PositiveKernel.quotientMap_injective",
+    "CoreLean.PositiveKernel.colimitToHilbert_stage",
+    "CoreLean.PositiveKernel.colimitToHilbert_injective",
+    "CoreLean.PositiveKernel.existsUnique_lift",
+    "CoreLean.PositiveKernel.feature_mem_range_colimit",
+    "CoreLean.PositiveKernel.preToHilbert_mem_range_colimit",
+    "CoreLean.PositiveKernel.denseRange_colimitToHilbert",
+    "CoreLean.PositiveKernel.range_colimitToHilbert_eq_union",
+    "CoreLean.PositiveKernel.dense_stageUnion",
+    "CoreLean.PositiveKernel.completionToHilbert_surjective",
+    "CoreLean.PositiveKernel.completionEquiv_stage",
+    "CoreLean.PositiveKernel.posSemidef_of_tendsto",
+    "CoreLean.PositiveKernel.stageToColimitIsometry",
+    "CoreLean.PositiveKernel.completionEquiv"
+  ],
+  "public_theorem_count": 27
+}

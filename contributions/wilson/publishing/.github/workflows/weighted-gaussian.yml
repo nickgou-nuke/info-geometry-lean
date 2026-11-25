@@ -1,0 +1,94 @@
+name: Weighted Gaussian kernels and reflected covariances
+
+on:
+  pull_request:
+    paths:
+      - 'LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Weighted*.lean'
+      - 'LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Reflection*.lean'
+      - 'LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/EffectiveForm.lean'
+      - 'LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Convolution.lean'
+      - 'LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Kernel.lean'
+      - 'LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/GaussianIntegral.lean'
+      - 'LEAN/Libraries/GaussianBlockSpin/lean-toolchain'
+      - 'LEAN/Libraries/GaussianBlockSpin/lakefile.*'
+      - 'LEAN/Libraries/GaussianBlockSpin/lake-manifest.json'
+      - '.github/workflows/weighted-gaussian.yml'
+      - '.github/scripts/check_lean_axioms.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+        working-directory: LEAN/Libraries/GaussianBlockSpin
+    env:
+      EVIDENCE: ${{ github.workspace }}/lean-ci-evidence/weighted-gaussian
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Record checked-in pins
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE/pins.before"
+          git rev-parse HEAD | tee "$EVIDENCE/source-revision.txt"
+          for file in lean-toolchain lakefile.lean lakefile.toml lake-manifest.json; do
+            if [ -f "$file" ]; then cp "$file" "$EVIDENCE/pins.before/$file"; fi
+          done
+      - name: Install the checked-in Lean toolchain
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+          "$HOME/.elan/bin/lean" --version | tee "$EVIDENCE/toolchain.log"
+          "$HOME/.elan/bin/lake" --version | tee -a "$EVIDENCE/toolchain.log"
+      - name: Obtain pinned Mathlib artifacts
+        run: |
+          set -euo pipefail
+          lake exe cache get 2>&1 | tee "$EVIDENCE/cache.log"
+      - name: Build the focused audit and its imports
+        run: |
+          set -euo pipefail
+          lake --wfail build GaussianBlockSpin.WeightedCoarseGrainingAudit 2>&1 | tee "$EVIDENCE/build.log"
+      - name: Generate and check a fresh axiom transcript
+        run: |
+          set -euo pipefail
+          lake env lean GaussianBlockSpin/WeightedCoarseGrainingAudit.lean 2>&1 | tee "$EVIDENCE/axioms.log"
+          python3 "$GITHUB_WORKSPACE/.github/scripts/check_lean_axioms.py" \
+            GaussianBlockSpin/WeightedCoarseGrainingAudit.lean "$EVIDENCE/axioms.log" \
+            --json "$EVIDENCE/axiom-audit.json"
+      - name: Record resolved pins and verify existing pins were preserved
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE/pins.after"
+          status=0
+          for file in lean-toolchain lakefile.lean lakefile.toml lake-manifest.json; do
+            if [ -f "$file" ]; then cp "$file" "$EVIDENCE/pins.after/$file"; fi
+            if [ -f "$EVIDENCE/pins.before/$file" ]; then
+              if ! cmp -s "$EVIDENCE/pins.before/$file" "$file"; then
+                echo "Existing pin or Lake configuration changed: $file" >&2
+                status=1
+              fi
+            fi
+          done
+          exit "$status"
+      - name: Archive focused validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: weighted-gaussian-verification
+          path: lean-ci-evidence/weighted-gaussian
+          if-no-files-found: warn

@@ -1,0 +1,23 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+module
+
+public import GaussianBlockSpin.ReflectionPositiveCovariance
+
+/-! # Focused axiom audit of finite reflected covariance transport. -/
+
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.reflected_covariance_transport_eq
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.reflected_covariance_posSemidef
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.reflection_transpose
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.reflection_sq
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.reflection_not_commute_positiveTime_projection
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.noise_posDef
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.noise_commutes
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.noise_not_reflection_positive
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.identity_reflection_positive
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.identity_add_noise_posDef
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.identity_add_noise_commutes
+#print axioms GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.identity_add_noise_not_reflection_positive

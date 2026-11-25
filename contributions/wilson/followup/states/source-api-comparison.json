@@ -1,0 +1,50 @@
+{
+  "scope": "Read-only source/API comparison. Identical selected declaration signatures do not constitute destination compiler validation.",
+  "destination_mathlib": "fc4f59e577feb1a4956671bc04ac18aaaf8cd842",
+  "local_mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "files": [
+    {
+      "path": "Mathlib/Topology/Algebra/InfiniteSum/Real.lean",
+      "identical_source": false,
+      "declarations": [
+        {
+          "name": "theorem cauchySeq_of_dist_le_of_summable",
+          "identical_signature": true,
+          "signature": "theorem cauchySeq_of_dist_le_of_summable (d : ℕ → ℝ) (hf : ∀ n, dist (f n) (f n.succ) ≤ d n) (hd : Summable d) : CauchySeq f"
+        },
+        {
+          "name": "theorem dist_le_tsum_of_dist_le_of_tendsto",
+          "identical_signature": true,
+          "signature": "theorem dist_le_tsum_of_dist_le_of_tendsto (d : ℕ → ℝ) (hf : ∀ n, dist (f n) (f n.succ) ≤ d n) (hd : Summable d) {a : α} (ha : Tendsto f atTop (𝓝 a)) (n : ℕ) : dist (f n) a ≤ ∑' m, d (n + m)"
+        }
+      ]
+    },
+    {
+      "path": "Mathlib/Analysis/CStarAlgebra/Spectrum.lean",
+      "identical_source": false,
+      "declarations": [
+        {
+          "name": "lemma norm_apply_le",
+          "identical_signature": true,
+          "signature": "lemma norm_apply_le (φ : F) (a : A) : ‖φ a‖ ≤ ‖a‖"
+        }
+      ]
+    },
+    {
+      "path": "Mathlib/Algebra/Order/Module/PositiveLinearMap.lean",
+      "identical_source": false,
+      "declarations": [
+        {
+          "name": "protected lemma map_nonneg",
+          "identical_signature": true,
+          "signature": "protected lemma map_nonneg (f : E₁ →ₚ[R] E₂) {x : E₁} (hx : 0 ≤ x) : 0 ≤ f x"
+        },
+        {
+          "name": "def mk₀",
+          "identical_signature": true,
+          "signature": "def mk₀ (f : E₁ →ₗ[R] E₂) (hf : ∀ x, 0 ≤ x → 0 ≤ f x) : E₁ →ₚ[R] E₂"
+        }
+      ]
+    }
+  ]
+}

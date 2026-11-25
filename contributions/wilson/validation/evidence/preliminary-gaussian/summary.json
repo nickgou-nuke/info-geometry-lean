@@ -1,0 +1,9 @@
+{
+  "classification": "preliminary compiler verification; not destination-pin verification",
+  "lean": "4.34.1",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "result": "pass",
+  "warnings": 0,
+  "audit_declarations": 29,
+  "scope": "five candidate modules and three upstream Gaussian dependencies; source hashes checked after compilation"
+}

@@ -1,0 +1,18 @@
+{
+  "completed_at_utc": "2026-11-24T18:39:30Z",
+  "lean_version": "4.34.1",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "module_count": 9,
+  "all_exit_codes_zero": true,
+  "source_hashes_match": true,
+  "warnings": 0,
+  "errors": 0,
+  "fresh_axiom_reports": 14,
+  "axiom_checker_result": "PASS",
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "compilation_lock_released": true
+}

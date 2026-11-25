@@ -1,0 +1,89 @@
+name: Summable approximate state compatibility
+
+on:
+  pull_request:
+    paths:
+      - 'LEAN/CoreLean/CoreLean/Approximate*.lean'
+      - 'LEAN/CoreLean/lean-toolchain'
+      - 'LEAN/CoreLean/lakefile.*'
+      - 'LEAN/CoreLean/lake-manifest.json'
+      - '.github/workflows/approximate-state-limits.yml'
+      - '.github/scripts/check_lean_axioms.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    defaults:
+      run:
+        shell: bash
+        working-directory: LEAN/CoreLean
+    env:
+      EVIDENCE: ${{ github.workspace }}/lean-ci-evidence/approximate-state-limits
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Record checked-in pins
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE/pins.before"
+          git rev-parse HEAD | tee "$EVIDENCE/source-revision.txt"
+          for file in lean-toolchain lakefile.lean lakefile.toml lake-manifest.json; do
+            if [ -f "$file" ]; then cp "$file" "$EVIDENCE/pins.before/$file"; fi
+          done
+      - name: Install the checked-in Lean toolchain
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+          "$HOME/.elan/bin/lean" --version | tee "$EVIDENCE/toolchain.log"
+          "$HOME/.elan/bin/lake" --version | tee -a "$EVIDENCE/toolchain.log"
+      - name: Obtain pinned Mathlib artifacts
+        run: |
+          set -euo pipefail
+          lake exe cache get 2>&1 | tee "$EVIDENCE/cache.log"
+      - name: Build the focused audit and its imports
+        run: |
+          set -euo pipefail
+          lake --wfail build CoreLean.ApproximateStateLimitsAudit 2>&1 | tee "$EVIDENCE/build.log"
+      - name: Generate and check a fresh axiom transcript
+        run: |
+          set -euo pipefail
+          lake env lean CoreLean/ApproximateStateLimitsAudit.lean 2>&1 | tee "$EVIDENCE/axioms.log"
+          python3 "$GITHUB_WORKSPACE/.github/scripts/check_lean_axioms.py" \
+            CoreLean/ApproximateStateLimitsAudit.lean "$EVIDENCE/axioms.log" \
+            --json "$EVIDENCE/axiom-audit.json"
+      - name: Record resolved pins and verify existing pins were preserved
+        if: always()
+        run: |
+          set -euo pipefail
+          mkdir -p "$EVIDENCE/pins.after"
+          status=0
+          for file in lean-toolchain lakefile.lean lakefile.toml lake-manifest.json; do
+            if [ -f "$file" ]; then cp "$file" "$EVIDENCE/pins.after/$file"; fi
+            if [ -f "$EVIDENCE/pins.before/$file" ]; then
+              if ! cmp -s "$EVIDENCE/pins.before/$file" "$file"; then
+                echo "Existing pin or Lake configuration changed: $file" >&2
+                status=1
+              fi
+            fi
+          done
+          exit "$status"
+      - name: Archive focused validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: approximate-state-limits-verification
+          path: lean-ci-evidence/approximate-state-limits
+          if-no-files-found: warn

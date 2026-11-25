@@ -1,0 +1,1130 @@
+From 33f42ce6fbc581cb9ba927957e0751c09a3c4071 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Wed, 25 Nov 2026 10:04:14 +0200
+Subject: [PATCH] Add normalized cutoff estimates and real power-log
+ summability
+
+Prepared upstream contribution; see its theorem contract and focused audit.
+---
+ .github/scripts/check_lean_axioms.py          | 104 ++++++++++
+ .github/workflows/cutoff-comparison.yml       |  89 +++++++++
+ LEAN/CoreLean/CoreLean.lean                   |   2 +
+ LEAN/CoreLean/CoreLean/CutoffCheck.lean       |  30 +++
+ LEAN/CoreLean/CoreLean/CutoffComparison.lean  | 113 +++++++++++
+ LEAN/CoreLean/CoreLean/CutoffLimit.lean       |  79 ++++++++
+ LEAN/CoreLean/CoreLean/CutoffRecursion.lean   | 123 ++++++++++++
+ LEAN/CoreLean/CoreLean/CutoffSummability.lean | 136 +++++++++++++
+ LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0 | 176 +++++++++++++++++
+ LEAN/CoreLean/README-cutoff-comparison.md     | 184 ++++++++++++++++++
+ 10 files changed, 1036 insertions(+)
+ create mode 100644 .github/scripts/check_lean_axioms.py
+ create mode 100644 .github/workflows/cutoff-comparison.yml
+ create mode 100644 LEAN/CoreLean/CoreLean/CutoffCheck.lean
+ create mode 100644 LEAN/CoreLean/CoreLean/CutoffComparison.lean
+ create mode 100644 LEAN/CoreLean/CoreLean/CutoffLimit.lean
+ create mode 100644 LEAN/CoreLean/CoreLean/CutoffRecursion.lean
+ create mode 100644 LEAN/CoreLean/CoreLean/CutoffSummability.lean
+ create mode 100644 LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0
+ create mode 100644 LEAN/CoreLean/README-cutoff-comparison.md
+
+diff --git a/.github/scripts/check_lean_axioms.py b/.github/scripts/check_lean_axioms.py
+new file mode 100644
+index 0000000..e482dda
+--- /dev/null
++++ b/.github/scripts/check_lean_axioms.py
+@@ -0,0 +1,104 @@
++#!/usr/bin/env python3
++"""Check a fresh Lean axiom log against an explicit audit source inventory."""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import re
++import sys
++
++ALLOWED_AXIOMS = frozenset({'propext', 'Classical.choice', 'Quot.sound'})
++
++
++def without_comments(source: str) -> str:
++    """Remove nested Lean block comments and line comments from audit source."""
++    result: list[str] = []
++    depth = 0
++    index = 0
++    while index < len(source):
++        if source.startswith('/-', index):
++            depth += 1
++            result.append(' ')
++            index += 2
++        elif depth and source.startswith('-/', index):
++            depth -= 1
++            result.append(' ')
++            index += 2
++        elif depth:
++            if source[index] == '\n':
++                result.append('\n')
++            index += 1
++        elif source.startswith('--', index):
++            end = source.find('\n', index)
++            index = len(source) if end < 0 else end
++        else:
++            result.append(source[index])
++            index += 1
++    if depth:
++        raise ValueError('Unterminated block comment in axiom audit source')
++    return ''.join(result)
++
++
++def expected_declarations(source: str) -> set[str]:
++    declarations = re.findall(
++        r'^[ \t]*#print[ \t]+axioms[ \t]+([^\s]+)[ \t]*$',
++        without_comments(source), flags=re.M)
++    if not declarations:
++        raise ValueError('The audit source has no explicit #print axioms declarations')
++    if len(declarations) != len(set(declarations)):
++        raise ValueError('The audit source contains duplicate declarations')
++    return set(declarations)
++
++
++def check_log(expected: set[str], log: str) -> dict[str, list[str]]:
++    log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', log)
++    reports: dict[str, list[str]] = {}
++    pattern = (
++        r"'([^'\r\n]+)'\s+(?:depends on axioms:\s*\[([^\]]*)\]"
++        r'|does not depend on any axioms)'
++    )
++    for declaration, raw in re.findall(pattern, log):
++        if declaration in reports:
++            raise ValueError(f'Duplicate axiom report: {declaration}')
++        axioms = [name.strip() for name in raw.split(',') if name.strip()]
++        forbidden = set(axioms) - ALLOWED_AXIOMS
++        if forbidden:
++            raise ValueError(f'Unapproved axioms for {declaration}: {sorted(forbidden)}')
++        reports[declaration] = axioms
++    if set(reports) != expected:
++        raise ValueError(
++            f'Axiom inventory mismatch: missing={sorted(expected - reports.keys())}, '
++            f'unexpected={sorted(reports.keys() - expected)}')
++    return reports
++
++
++def main() -> None:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('audit_source', type=Path)
++    parser.add_argument('axiom_log', type=Path)
++    parser.add_argument('--json', type=Path, required=True, dest='json_output')
++    args = parser.parse_args()
++    source = args.audit_source.read_text(encoding='utf-8')
++    log = args.axiom_log.read_text(encoding='utf-8')
++    reports = check_log(expected_declarations(source), log)
++    record = {
++        'audit_source': str(args.audit_source),
++        'audit_source_sha256': hashlib.sha256(args.audit_source.read_bytes()).hexdigest(),
++        'axiom_log_sha256': hashlib.sha256(args.axiom_log.read_bytes()).hexdigest(),
++        'allowed_axioms': sorted(ALLOWED_AXIOMS),
++        'declarations': reports,
++    }
++    args.json_output.parent.mkdir(parents=True, exist_ok=True)
++    args.json_output.write_text(json.dumps(record, indent=2, sort_keys=True) + '\n')
++    print(f'PASS: {len(reports)} exact axiom reports; only permitted foundational axioms.')
++
++
++if __name__ == '__main__':
++    try:
++        main()
++    except (OSError, ValueError) as error:
++        print(f'Axiom check failed: {error}', file=sys.stderr)
++        raise SystemExit(1) from error
+diff --git a/.github/workflows/cutoff-comparison.yml b/.github/workflows/cutoff-comparison.yml
+new file mode 100644
+index 0000000..51925f2
+--- /dev/null
++++ b/.github/workflows/cutoff-comparison.yml
+@@ -0,0 +1,89 @@
++name: Cutoff comparison estimates
++
++on:
++  pull_request:
++    paths:
++      - 'LEAN/CoreLean/CoreLean/Cutoff*.lean'
++      - 'LEAN/CoreLean/lean-toolchain'
++      - 'LEAN/CoreLean/lakefile.*'
++      - 'LEAN/CoreLean/lake-manifest.json'
++      - '.github/workflows/cutoff-comparison.yml'
++      - '.github/scripts/check_lean_axioms.py'
++  workflow_dispatch:
++
++permissions:
++  contents: read
++
++concurrency:
++  group: ${{ github.workflow }}-${{ github.ref }}
++  cancel-in-progress: false
++
++jobs:
++  check:
++    runs-on: ubuntu-latest
++    timeout-minutes: 90
++    defaults:
++      run:
++        shell: bash
++        working-directory: LEAN/CoreLean
++    env:
++      EVIDENCE: ${{ github.workspace }}/lean-ci-evidence/cutoff-comparison
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - name: Record checked-in pins
++        run: |
++          set -euo pipefail
++          mkdir -p "$EVIDENCE/pins.before"
++          git rev-parse HEAD | tee "$EVIDENCE/source-revision.txt"
++          for file in lean-toolchain lakefile.lean lakefile.toml lake-manifest.json; do
++            if [ -f "$file" ]; then cp "$file" "$EVIDENCE/pins.before/$file"; fi
++          done
++      - name: Install the checked-in Lean toolchain
++        run: |
++          set -euo pipefail
++          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
++          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
++          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
++          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
++          "$HOME/.elan/bin/lean" --version | tee "$EVIDENCE/toolchain.log"
++          "$HOME/.elan/bin/lake" --version | tee -a "$EVIDENCE/toolchain.log"
++      - name: Obtain pinned Mathlib artifacts
++        run: |
++          set -euo pipefail
++          lake exe cache get 2>&1 | tee "$EVIDENCE/cache.log"
++      - name: Build the focused audit and its imports
++        run: |
++          set -euo pipefail
++          lake --wfail build CoreLean.CutoffCheck 2>&1 | tee "$EVIDENCE/build.log"
++      - name: Generate and check a fresh axiom transcript
++        run: |
++          set -euo pipefail
++          lake env lean CoreLean/CutoffCheck.lean 2>&1 | tee "$EVIDENCE/axioms.log"
++          python3 "$GITHUB_WORKSPACE/.github/scripts/check_lean_axioms.py" \
++            CoreLean/CutoffCheck.lean "$EVIDENCE/axioms.log" \
++            --json "$EVIDENCE/axiom-audit.json"
++      - name: Record resolved pins and verify existing pins were preserved
++        if: always()
++        run: |
++          set -euo pipefail
++          mkdir -p "$EVIDENCE/pins.after"
++          status=0
++          for file in lean-toolchain lakefile.lean lakefile.toml lake-manifest.json; do
++            if [ -f "$file" ]; then cp "$file" "$EVIDENCE/pins.after/$file"; fi
++            if [ -f "$EVIDENCE/pins.before/$file" ]; then
++              if ! cmp -s "$EVIDENCE/pins.before/$file" "$file"; then
++                echo "Existing pin or Lake configuration changed: $file" >&2
++                status=1
++              fi
++            fi
++          done
++          exit "$status"
++      - name: Archive focused validation evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: cutoff-comparison-verification
++          path: lean-ci-evidence/cutoff-comparison
++          if-no-files-found: warn
+diff --git a/LEAN/CoreLean/CoreLean.lean b/LEAN/CoreLean/CoreLean.lean
+index 93575ac..719ce46 100644
+--- a/LEAN/CoreLean/CoreLean.lean
++++ b/LEAN/CoreLean/CoreLean.lean
+@@ -446,3 +446,5 @@ import CoreLean.LevelsBridge
+ import CoreLean.AverageKernelsDiff
+ import CoreLean.SFConstraintComp
+ import CoreLean.QTrivialBridge
++import CoreLean.CutoffRecursion
++import CoreLean.CutoffLimit
+diff --git a/LEAN/CoreLean/CoreLean/CutoffCheck.lean b/LEAN/CoreLean/CoreLean/CutoffCheck.lean
+new file mode 100644
+index 0000000..545498f
+--- /dev/null
++++ b/LEAN/CoreLean/CoreLean/CutoffCheck.lean
+@@ -0,0 +1,30 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0.
++Authors: InfoGeometry Engine Contributors
++-/
++module
++
++public import CoreLean.CutoffRecursion
++public import CoreLean.CutoffLimit
++
++set_option linter.style.header.license
++  "Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0." in
++/-! Explicit axiom audit for the cutoff comparison endpoint. -/
++
++#print axioms CoreLean.CutoffComparison.normalized_sub
++#print axioms CoreLean.CutoffComparison.norm_normalized_sub_le
++#print axioms CoreLean.CutoffComparison.norm_exp_mul_sub_le
++#print axioms CoreLean.CutoffComparison.exists_limit_of_relative_errors
++#print axioms CoreLean.CutoffRecursion.le_weight_of_monotone_homogeneous
++#print axioms CoreLean.CutoffRecursion.le_weight_of_row_bound
++#print axioms CoreLean.CutoffRecursion.le_two_mul_weight_of_quarter_row_bound
++#print axioms CoreLean.CutoffSummability.log_affine_isBigO_log
++#print axioms CoreLean.CutoffSummability.log_affine_rpow_isBigO_rpow
++#print axioms CoreLean.CutoffSummability.log_affine_pow_isBigO_rpow
++#print axioms CoreLean.CutoffSummability.summable_rpow_mul_log_affine_rpow
++#print axioms CoreLean.CutoffSummability.summable_rpow_mul_log_affine_pow
++#print axioms CoreLean.CutoffSummability.summable_cutoff_remainder
++#print axioms CoreLean.CutoffSummability.summable_cutoff_remainder_mul_cutoff
++#print axioms CoreLean.CutoffLimit.summable_linearLossRemainder
++#print axioms CoreLean.CutoffLimit.exists_limit_of_cutoff_remainder
+diff --git a/LEAN/CoreLean/CoreLean/CutoffComparison.lean b/LEAN/CoreLean/CoreLean/CutoffComparison.lean
+new file mode 100644
+index 0000000..65cd91c
+--- /dev/null
++++ b/LEAN/CoreLean/CoreLean/CutoffComparison.lean
+@@ -0,0 +1,113 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0.
++Authors: InfoGeometry Engine Contributors
++-/
++module
++
++public import Mathlib.Analysis.Complex.Basic
++public import Mathlib.Analysis.Complex.Exponential
++public import Mathlib.Topology.Algebra.InfiniteSum.Real
++public import Mathlib.Topology.Algebra.InfiniteSum.Ring
++public import Mathlib.Tactic.FieldSimp
++public import Mathlib.Tactic.Ring
++
++set_option linter.style.header.license
++  "Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0." in
++/-!
++# Normalized consecutive-cutoff comparisons
++
++The physical partition function stays in the denominator. The numerator may
++already include the perimeter/corner normalization of the observable. Relative
++numerator and denominator errors, together with a bound on the new normalized
++observable, give the increment estimate used in Section 11 of
++`WILSON_LOOPS_CONTINUUM_LIMIT.tex`.
++
++The final theorem derives full-sequence convergence and a quantitative tail
++bound. Its hypotheses are estimates to be supplied by the RG construction;
++this file does not assert those estimates for the Wilson measure.
++-/
++
++@[expose] public section
++
++noncomputable section
++
++open Filter
++open scoped Topology
++
++namespace CoreLean.CutoffComparison
++
++/-- Exact difference identity, retaining the old physical denominator. -/
++theorem normalized_sub (N N' Z Z' : ℂ) (hZ : Z ≠ 0) (hZ' : Z' ≠ 0) :
++    N' / Z' - N / Z = ((N' - N) - (N' / Z') * (Z' - Z)) / Z := by
++  field_simp [hZ, hZ']
++  ring
++
++/-- Relative errors in the numerator and partition function control the
++normalized expectation. No absolute lower bound uniform in the cutoff is
++needed: both errors are measured relative to the same positive denominator. -/
++theorem norm_normalized_sub_le (N N' : ℂ) {Z Z' B εN εZ : ℝ}
++    (hZ : 0 < Z) (hZ' : 0 < Z') (hB : 0 ≤ B)
++    (hN : ‖N' - N‖ ≤ εN * Z)
++    (hPartition : |Z' - Z| ≤ εZ * Z)
++    (hNormalized : ‖N' / (Z' : ℂ)‖ ≤ B) :
++    ‖N' / (Z' : ℂ) - N / (Z : ℂ)‖ ≤ εN + B * εZ := by
++  have hZc : (Z : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hZ.ne'
++  have hZc' : (Z' : ℂ) ≠ 0 := Complex.ofReal_ne_zero.mpr hZ'.ne'
++  rw [normalized_sub N N' (Z : ℂ) (Z' : ℂ) hZc hZc', norm_div,
++    Complex.norm_real, Real.norm_of_nonneg hZ.le]
++  apply (div_le_iff₀ hZ).2
++  calc
++    ‖(N' - N) - N' / (Z' : ℂ) * ((Z' : ℂ) - Z)‖
++        ≤ ‖N' - N‖ + ‖N' / (Z' : ℂ) * ((Z' : ℂ) - Z)‖ := norm_sub_le _ _
++    _ = ‖N' - N‖ + ‖N' / (Z' : ℂ)‖ * |Z' - Z| := by
++      rw [norm_mul, ← Complex.ofReal_sub, Complex.norm_real, Real.norm_eq_abs]
++    _ ≤ εN * Z + B * (εZ * Z) := by
++      exact add_le_add hN
++        (mul_le_mul hNormalized hPartition (abs_nonneg _) hB)
++    _ = (εN + B * εZ) * Z := by ring
++
++/-- A complex scalar normalization changes a bounded observable by an
++explicit exponential error. This accounts for swapping loop constants. -/
++theorem norm_exp_mul_sub_le (z w : ℂ) {δ B : ℝ}
++    (hz : ‖z‖ ≤ δ) (hw : ‖w‖ ≤ B) :
++    ‖Complex.exp z * w - w‖ ≤ (Real.exp δ - 1) * B := by
++  rw [show Complex.exp z * w - w = (Complex.exp z - 1) * w by ring, norm_mul]
++  have hδ : 0 ≤ δ := (norm_nonneg z).trans hz
++  have hexp : ‖Complex.exp z - 1‖ ≤ Real.exp ‖z‖ - 1 := by
++    simpa using Complex.norm_exp_sub_sum_le_exp_norm_sub_sum z 1
++  have he : ‖Complex.exp z - 1‖ ≤ Real.exp δ - 1 := by
++    exact hexp.trans
++      (sub_le_sub_right (Real.exp_le_exp.mpr hz) 1)
++  exact mul_le_mul he hw (norm_nonneg _) (sub_nonneg.mpr (Real.one_le_exp hδ))
++
++/-- Summable relative numerator/denominator errors give a full cutoff limit
++and its tail estimate, starting at any fixed admissible cutoff `K₀`. -/
++theorem exists_limit_of_relative_errors
++    (N : ℕ → ℂ) (Z εN εZ : ℕ → ℝ) (K₀ : ℕ) {B : ℝ}
++    (hZ : ∀ k, 0 < Z (K₀ + k)) (hB : 0 ≤ B)
++    (hN : ∀ k, ‖N (K₀ + (k + 1)) - N (K₀ + k)‖ ≤ εN k * Z (K₀ + k))
++    (hPartition : ∀ k, |Z (K₀ + (k + 1)) - Z (K₀ + k)| ≤ εZ k * Z (K₀ + k))
++    (hNormalized : ∀ k, ‖N (K₀ + (k + 1)) / (Z (K₀ + (k + 1)) : ℂ)‖ ≤ B)
++    (hsN : Summable εN) (hsZ : Summable εZ) :
++    ∃ limit : ℂ,
++      Tendsto (fun k => N k / (Z k : ℂ)) atTop (𝓝 limit) ∧
++      ∀ k, ‖N (K₀ + k) / (Z (K₀ + k) : ℂ) - limit‖ ≤
++        ∑' j, (εN (k + j) + B * εZ (k + j)) := by
++  let F : ℕ → ℂ := fun k => N (K₀ + k) / (Z (K₀ + k) : ℂ)
++  let e : ℕ → ℝ := fun k => εN k + B * εZ k
++  have he : Summable e := hsN.add (hsZ.mul_left B)
++  have hstep : ∀ k, dist (F k) (F (k + 1)) ≤ e k := by
++    intro k
++    rw [dist_comm, dist_eq_norm]
++    exact norm_normalized_sub_le _ _ (hZ k) (hZ (k + 1)) hB
++      (hN k) (hPartition k) (hNormalized k)
++  obtain ⟨limit, hlimit⟩ := cauchySeq_tendsto_of_complete
++    (cauchySeq_of_dist_le_of_summable e hstep he)
++  refine ⟨limit, ?_, fun k => ?_⟩
++  · apply (tendsto_add_atTop_iff_nat K₀).mp
++    simpa only [F, Nat.add_comm] using hlimit
++  · exact (dist_eq_norm (F k) limit) ▸
++      dist_le_tsum_of_dist_le_of_tendsto e hstep he hlimit k
++
++end CoreLean.CutoffComparison
+diff --git a/LEAN/CoreLean/CoreLean/CutoffLimit.lean b/LEAN/CoreLean/CoreLean/CutoffLimit.lean
+new file mode 100644
+index 0000000..c6cc7cd
+--- /dev/null
++++ b/LEAN/CoreLean/CoreLean/CutoffLimit.lean
+@@ -0,0 +1,79 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0.
++Authors: InfoGeometry Engine Contributors
++-/
++module
++
++public import CoreLean.CutoffComparison
++public import CoreLean.CutoffSummability
++
++set_option linter.style.header.license
++  "Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0." in
++/-!
++# Applying the cutoff remainder to normalized observables
++
++This file joins the explicit relative-error inequality to the summability
++theorem with the extra linear scale loss. The conclusion concerns the full
++normalized sequence, and the quantitative bound retains all constants.
++
++The physical ingredients still needed are positive partition functions,
++a uniform bound on normalized observables, and the two displayed relative
++comparison inequalities. These are substantive hypotheses about the RG
++construction, not conclusions established by this generic analytic bridge.
++-/
++
++@[expose] public section
++
++noncomputable section
++
++open Filter
++open scoped Topology
++
++namespace CoreLean.CutoffLimit
++
++/-- The manuscript's cutoff error including the possible extra factor `K`.
++The nonnegative offset `c` can be instantiated with `gbar⁻²`. -/
++def linearLossRemainder (κ b c p : ℝ) (K : ℕ) : ℝ :=
++  (K : ℝ) * ((K : ℝ) ^ (3 - κ / 2) * (Real.log (b * K + c)) ^ p)
++
++/-- The actual logarithmic cutoff profile, including the linear scale loss,
++is summable for a nonnegative real log exponent; its summability is derived
++from `κ ≥ 13`. -/
++theorem summable_linearLossRemainder {κ b c : ℝ}
++    (hκ : 13 ≤ κ) (hb : 0 < b) (hc : 0 ≤ c) (p : ℝ) (hp : 0 ≤ p) :
++    Summable (linearLossRemainder κ b c p) :=
++  CutoffSummability.summable_cutoff_remainder_mul_cutoff hκ hb hc p hp
++
++/-- Relative cutoff comparisons with the manuscript's logarithmic remainder
++yield convergence of the full normalized sequence and an explicit tail
++bound. Both comparison constants and the uniform normalized bound remain
++visible in the conclusion. -/
++theorem exists_limit_of_cutoff_remainder
++    (N : ℕ → ℂ) (Z : ℕ → ℝ) (K₀ : ℕ) (p : ℝ) {κ b c B CN CZ : ℝ}
++    (hκ : 13 ≤ κ) (hb : 0 < b) (hc : 0 ≤ c) (hp : 0 ≤ p)
++    (hZ : ∀ k, 0 < Z (K₀ + k)) (hB : 0 ≤ B)
++    (hN : ∀ k, ‖N (K₀ + (k + 1)) - N (K₀ + k)‖ ≤
++      (CN * linearLossRemainder κ b c p (K₀ + k)) * Z (K₀ + k))
++    (hPartition : ∀ k, |Z (K₀ + (k + 1)) - Z (K₀ + k)| ≤
++      (CZ * linearLossRemainder κ b c p (K₀ + k)) * Z (K₀ + k))
++    (hNormalized : ∀ k, ‖N (K₀ + (k + 1)) / (Z (K₀ + (k + 1)) : ℂ)‖ ≤ B) :
++    ∃ limit : ℂ,
++      Tendsto (fun k => N k / (Z k : ℂ)) atTop (𝓝 limit) ∧
++      ∀ k, ‖N (K₀ + k) / (Z (K₀ + k) : ℂ) - limit‖ ≤
++        (CN + B * CZ) * ∑' j, linearLossRemainder κ b c p (K₀ + (k + j)) := by
++  have hs : Summable (fun k => linearLossRemainder κ b c p (K₀ + k)) := by
++    simpa only [Nat.add_comm] using
++      (summable_nat_add_iff K₀).mpr (summable_linearLossRemainder hκ hb hc p hp)
++  obtain ⟨limit, hlimit, htail⟩ :=
++    CutoffComparison.exists_limit_of_relative_errors N Z
++      (fun k => CN * linearLossRemainder κ b c p (K₀ + k))
++      (fun k => CZ * linearLossRemainder κ b c p (K₀ + k)) K₀
++      hZ hB hN hPartition hNormalized (hs.mul_left CN) (hs.mul_left CZ)
++  refine ⟨limit, hlimit, fun k => (htail k).trans_eq ?_⟩
++  rw [← tsum_mul_left]
++  apply tsum_congr
++  intro j
++  ring
++
++end CoreLean.CutoffLimit
+diff --git a/LEAN/CoreLean/CoreLean/CutoffRecursion.lean b/LEAN/CoreLean/CoreLean/CutoffRecursion.lean
+new file mode 100644
+index 0000000..77f551e
+--- /dev/null
++++ b/LEAN/CoreLean/CoreLean/CutoffRecursion.lean
+@@ -0,0 +1,123 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0.
++Authors: InfoGeometry Engine Contributors
++-/
++module
++
++public import Mathlib.Algebra.Order.BigOperators.Ring.Finset
++public import Mathlib.Algebra.Order.Pi
++public import Mathlib.Basic.Real.Basic
++public import Mathlib.Order.Monotone.Basic
++public import Mathlib.Tactic.Linarith
++
++set_option linter.style.header.license
++  "Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0." in
++/-!
++# Finite weighted comparison recursions
++
++A monotone, positively homogeneous operator with a weighted bound is enough
++to solve a finite comparison inequality. This is the elementary maximum
++argument underlying the weighted norm step of Proposition
++`prop:recursion-solution` in the continuum manuscript. A concrete nonnegative
++matrix is a useful special case; it need not be symmetric, triangular, or
++diagonalizable.
++
++The row estimate and the comparison inequality remain explicit hypotheses.
++They must be proved for the actual coupled RG recursion before applying this
++lemma to the Wilson observables.
++-/
++
++@[expose] public section
++
++noncomputable section
++
++open scoped BigOperators
++
++namespace CoreLean.CutoffRecursion
++
++/-- The finite maximum argument applies to the nonlinear operator described
++in the manuscript. Monotonicity and positive homogeneity are needed only
++on the nonnegative cone. Only its action on the weight is bounded; the
++desired bound on `u` is derived. -/
++theorem le_weight_of_monotone_homogeneous
++    {ι : Type*} [Finite ι] (T : (ι → ℝ) → ι → ℝ) (u s w : ι → ℝ)
++    {θ C : ℝ} (hmono : MonotoneOn T (Set.Ici (0 : ι → ℝ)))
++    (hhom : ∀ a : ℝ, 0 ≤ a → ∀ v, 0 ≤ v →
++      ∀ i, T (fun j => a * v j) i = a * T v i)
++    (hu : ∀ i, 0 ≤ u i)
++    (hw : ∀ i, 0 < w i) (hθ : θ < 1)
++    (hweight : ∀ i, T w i ≤ θ * w i)
++    (hsource : ∀ i, s i ≤ C * w i)
++    (hrec : ∀ i, u i ≤ T u i + s i) :
++    ∀ i, u i ≤ C / (1 - θ) * w i := by
++  classical
++  let := Fintype.ofFinite ι
++  intro i
++  let : Nonempty ι := ⟨i⟩
++  obtain ⟨k, _, hk⟩ := Finset.exists_max_image Finset.univ
++    (fun j => u j / w j) Finset.univ_nonempty
++  let M : ℝ := u k / w k
++  have hM : 0 ≤ M := div_nonneg (hu k) (hw k).le
++  have hbound : ∀ j, u j ≤ M * w j := fun j =>
++    (div_le_iff₀ (hw j)).mp (hk j (Finset.mem_univ j))
++  have hTu : T u k ≤ M * T w k :=
++    (hmono hu (fun j => mul_nonneg hM (hw j).le) hbound k).trans_eq
++      (hhom M hM w (fun j => (hw j).le) k)
++  have hMk : M * w k = u k := div_mul_cancel₀ _ (hw k).ne'
++  have hineq : M * w k ≤ (θ * M + C) * w k := by
++    rw [hMk]
++    calc
++      u k ≤ T u k + s k := hrec k
++      _ ≤ M * T w k + C * w k := add_le_add hTu (hsource k)
++      _ ≤ M * (θ * w k) + C * w k :=
++        add_le_add (mul_le_mul_of_nonneg_left (hweight k) hM) le_rfl
++      _ = (θ * M + C) * w k := by ring
++  have hMineq : M ≤ θ * M + C := (mul_le_mul_iff_left₀ (hw k)).mp hineq
++  have hMfinal : M ≤ C / (1 - θ) := by
++    apply (le_div_iff₀ (sub_pos.mpr hθ)).2
++    nlinarith
++  exact (hbound i).trans (mul_le_mul_of_nonneg_right hMfinal (hw i).le)
++
++/-- A finite nonnegative matrix whose weighted row sums are at most `θ < 1`
++gives the resolvent bound `uᵢ ≤ C/(1-θ) · wᵢ` directly from `u ≤ T u + s`.
++Monotonicity and homogeneity are proved from its entries. -/
++theorem le_weight_of_row_bound
++    {ι : Type*} [Fintype ι] (T : ι → ι → ℝ) (u s w : ι → ℝ)
++    {θ C : ℝ} (hT : ∀ i j, 0 ≤ T i j) (hu : ∀ i, 0 ≤ u i)
++    (hw : ∀ i, 0 < w i) (hθ : θ < 1)
++    (hrow : ∀ i, ∑ j, T i j * w j ≤ θ * w i)
++    (hsource : ∀ i, s i ≤ C * w i)
++    (hrec : ∀ i, u i ≤ ∑ j, T i j * u j + s i) :
++    ∀ i, u i ≤ C / (1 - θ) * w i := by
++  apply le_weight_of_monotone_homogeneous (fun v i => ∑ j, T i j * v j)
++    u s w ?_ ?_ hu hw hθ hrow hsource hrec
++  · intro v _ v' _ hv i
++    exact Finset.sum_le_sum fun j _ => mul_le_mul_of_nonneg_left (hv j) (hT i j)
++  · intro a _ v _ i
++    rw [Finset.mul_sum]
++    apply Finset.sum_congr rfl
++    intro j _
++    ring
++
++/-- The quarter-contraction used in the manuscript gives the sharper factor
++`4/3`; its stated factor `2` follows immediately. -/
++theorem le_two_mul_weight_of_quarter_row_bound
++    {ι : Type*} [Fintype ι] (T : ι → ι → ℝ) (u s w : ι → ℝ)
++    {C : ℝ} (hC : 0 ≤ C) (hT : ∀ i j, 0 ≤ T i j) (hu : ∀ i, 0 ≤ u i)
++    (hw : ∀ i, 0 < w i)
++    (hrow : ∀ i, ∑ j, T i j * w j ≤ (1 / 4 : ℝ) * w i)
++    (hsource : ∀ i, s i ≤ C * w i)
++    (hrec : ∀ i, u i ≤ ∑ j, T i j * u j + s i) :
++    ∀ i, u i ≤ 2 * C * w i := by
++  intro i
++  have h := le_weight_of_row_bound T u s w hT hu hw (by norm_num : (1 / 4 : ℝ) < 1)
++    hrow hsource hrec i
++  calc
++    u i ≤ C / (1 - (1 / 4 : ℝ)) * w i := h
++    _ ≤ 2 * C * w i := by
++      apply mul_le_mul_of_nonneg_right _ (hw i).le
++      norm_num
++      nlinarith
++
++end CoreLean.CutoffRecursion
+diff --git a/LEAN/CoreLean/CoreLean/CutoffSummability.lean b/LEAN/CoreLean/CoreLean/CutoffSummability.lean
+new file mode 100644
+index 0000000..a61811d
+--- /dev/null
++++ b/LEAN/CoreLean/CoreLean/CutoffSummability.lean
+@@ -0,0 +1,136 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0.
++Authors: InfoGeometry Engine Contributors
++-/
++module
++
++public import Mathlib.Analysis.Asymptotics.Lemmas
++public import Mathlib.Analysis.PSeries
++public import Mathlib.Analysis.SpecialFunctions.Log.Base
++public import Mathlib.Analysis.SpecialFunctions.Pow.Asymptotics
++public import Mathlib.Tactic.Linarith
++public import Mathlib.Tactic.Ring
++
++set_option linter.style.header.license
++  "Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0." in
++/-!
++# Summability of the continuum-cutoff remainder
++
++Section 11 of `WILSON_LOOPS_CONTINUUM_LIMIT.tex` uses
++`μ_K = K^(3-κ/2) * log (b*K + gbar⁻²)^p` and occasionally loses a factor `K`.
++These theorems establish both summability assertions, rather than assuming a
++summable increment certificate. The offset `c` stands for the positive
++quantity `gbar⁻²`; the general result only needs `0 ≤ c`.
++
++The proof first bounds the affine logarithm by a logarithm at infinity, then
++absorbs its fixed nonnegative real power into an arbitrarily small positive
++real power. Native Mathlib p-series comparison finishes the argument. The
++real log exponent covers `4*r + 2*p0` without an integrality assumption on
++the manuscript's threshold exponent `p0`.
++-/
++
++@[expose] public section
++
++noncomputable section
++
++open Filter Asymptotics
++open scoped Topology
++
++namespace CoreLean.CutoffSummability
++
++/-- A positive affine change of variable preserves the logarithmic growth
++bound at positive infinity. -/
++theorem log_affine_isBigO_log {b c : ℝ} (hb : 0 < b) (hc : 0 ≤ c) :
++    (fun x : ℝ => Real.log (b * x + c)) =O[atTop] Real.log := by
++  let C : ℝ := b + c + 1
++  have hlim : Tendsto (fun x : ℝ => b * x + c) atTop atTop :=
++    tendsto_atTop_add_const_right _ c (tendsto_id.const_mul_atTop hb)
++  have hcmp : (fun x : ℝ => Real.log (b * x + c)) =O[atTop]
++      (fun x : ℝ => Real.log (C * x)) := by
++    apply IsBigO.of_bound'
++    filter_upwards [eventually_ge_atTop (1 : ℝ), hlim.eventually_ge_atTop 1]
++      with x hx harg
++    have hcx : c ≤ c * x := by
++      simpa only [mul_one] using mul_le_mul_of_nonneg_left hx hc
++    have hinput : b * x + c ≤ C * x := by
++      dsimp [C]
++      nlinarith
++    rw [Real.norm_of_nonneg (Real.log_nonneg harg),
++      Real.norm_of_nonneg (Real.log_nonneg (harg.trans hinput))]
++    exact Real.log_le_log (lt_of_lt_of_le zero_lt_one harg) hinput
++  exact hcmp.trans (Real.isBigO_log_const_mul_log_atTop C)
++
++/-- Every fixed nonnegative real log power is absorbed by any strictly positive
++power at infinity, including after a positive affine change of variable. -/
++theorem log_affine_rpow_isBigO_rpow {b c δ : ℝ}
++    (hb : 0 < b) (hc : 0 ≤ c) (hδ : 0 < δ) (p : ℝ) (hp : 0 ≤ p) :
++    (fun x : ℝ => (Real.log (b * x + c)) ^ p) =O[atTop]
++      (fun x : ℝ => x ^ δ) := by
++  have hlog_nonneg : (0 : ℝ → ℝ) ≤ᶠ[atTop] Real.log := by
++    filter_upwards [eventually_ge_atTop (1 : ℝ)] with x hx
++    exact Real.log_nonneg hx
++  exact (IsBigO.rpow hp hlog_nonneg (log_affine_isBigO_log hb hc)).trans
++    (isLittleO_log_rpow_rpow_atTop p hδ).isBigO
++
++/-- Natural log powers are a specialization of the real-exponent bound. -/
++theorem log_affine_pow_isBigO_rpow {b c δ : ℝ}
++    (hb : 0 < b) (hc : 0 ≤ c) (hδ : 0 < δ) (p : ℕ) :
++    (fun x : ℝ => (Real.log (b * x + c)) ^ p) =O[atTop]
++      (fun x : ℝ => x ^ δ) := by
++  simpa only [Real.rpow_natCast] using
++    log_affine_rpow_isBigO_rpow hb hc hδ (p : ℝ) (Nat.cast_nonneg p)
++
++/-- A real power strictly below `-1` remains summable after multiplication
++by any fixed nonnegative real power of the affine logarithm. -/
++theorem summable_rpow_mul_log_affine_rpow {a b c : ℝ}
++    (ha : a < -1) (hb : 0 < b) (hc : 0 ≤ c) (p : ℝ) (hp : 0 ≤ p) :
++    Summable (fun k : ℕ => (k : ℝ) ^ a * (Real.log (b * k + c)) ^ p) := by
++  let δ : ℝ := (-1 - a) / 2
++  have hδ : 0 < δ := by dsimp [δ]; linarith
++  have hexp : a + δ < -1 := by dsimp [δ]; linarith
++  have hprod : (fun x : ℝ => x ^ a * (Real.log (b * x + c)) ^ p) =O[atTop]
++      (fun x : ℝ => x ^ (a + δ)) := by
++    have h := (isBigO_refl (fun x : ℝ => x ^ a) atTop).mul
++      (log_affine_rpow_isBigO_rpow hb hc hδ p hp)
++    refine h.congr' Filter.EventuallyEq.rfl ?_
++    filter_upwards [eventually_gt_atTop (0 : ℝ)] with x hx
++    exact (Real.rpow_add hx a δ).symm
++  exact summable_of_isBigO_nat (Real.summable_nat_rpow.mpr hexp)
++    (hprod.comp_tendsto tendsto_natCast_atTop_atTop)
++
++/-- Natural log powers remain available as a convenient specialization. -/
++theorem summable_rpow_mul_log_affine_pow {a b c : ℝ}
++    (ha : a < -1) (hb : 0 < b) (hc : 0 ≤ c) (p : ℕ) :
++    Summable (fun k : ℕ => (k : ℝ) ^ a * (Real.log (b * k + c)) ^ p) := by
++  simpa only [Real.rpow_natCast] using
++    summable_rpow_mul_log_affine_rpow ha hb hc (p : ℝ) (Nat.cast_nonneg p)
++
++/-- The manuscript's `κ ≥ 13` condition makes the cutoff remainder
++summable for every fixed nonnegative real log exponent. The proof needs
++only `κ > 8`. -/
++theorem summable_cutoff_remainder {κ b c : ℝ}
++    (hκ : 13 ≤ κ) (hb : 0 < b) (hc : 0 ≤ c) (p : ℝ) (hp : 0 ≤ p) :
++    Summable (fun k : ℕ =>
++      (k : ℝ) ^ (3 - κ / 2) * (Real.log (b * k + c)) ^ p) := by
++  exact summable_rpow_mul_log_affine_rpow (by linarith) hb hc p hp
++
++/-- The remainder remains summable after a full linear loss in `K`.
++This is the loss appearing when the final observable estimate sums over
++scales. The proof needs only `κ > 10`, so `κ ≥ 13` has a strict margin. -/
++theorem summable_cutoff_remainder_mul_cutoff {κ b c : ℝ}
++    (hκ : 13 ≤ κ) (hb : 0 < b) (hc : 0 ≤ c) (p : ℝ) (hp : 0 ≤ p) :
++    Summable (fun k : ℕ => (k : ℝ) *
++      ((k : ℝ) ^ (3 - κ / 2) * (Real.log (b * k + c)) ^ p)) := by
++  have hs : Summable (fun k : ℕ =>
++      (k : ℝ) ^ (4 - κ / 2) * (Real.log (b * k + c)) ^ p) :=
++    summable_rpow_mul_log_affine_rpow (by linarith) hb hc p hp
++  apply hs.congr_cofinite
++  rw [Nat.cofinite_eq_atTop]
++  filter_upwards [eventually_gt_atTop (0 : ℕ)] with k hk
++  have hk' : 0 < (k : ℝ) := Nat.cast_pos.mpr hk
++  rw [show 4 - κ / 2 = (3 - κ / 2) + 1 by ring,
++    Real.rpow_add_one hk'.ne']
++  ring
++
++end CoreLean.CutoffSummability
+diff --git a/LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0 b/LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0
+new file mode 100644
+index 0000000..d9a10c0
+--- /dev/null
++++ b/LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0
+@@ -0,0 +1,176 @@
++                                 Apache License
++                           Version 2.0, January 2004
++                        http://www.apache.org/licenses/
++
++   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
++
++   1. Definitions.
++
++      "License" shall mean the terms and conditions for use, reproduction,
++      and distribution as defined by Sections 1 through 9 of this document.
++
++      "Licensor" shall mean the copyright owner or entity authorized by
++      the copyright owner that is granting the License.
++
++      "Legal Entity" shall mean the union of the acting entity and all
++      other entities that control, are controlled by, or are under common
++      control with that entity. For the purposes of this definition,
++      "control" means (i) the power, direct or indirect, to cause the
++      direction or management of such entity, whether by contract or
++      otherwise, or (ii) ownership of fifty percent (50%) or more of the
++      outstanding shares, or (iii) beneficial ownership of such entity.
++
++      "You" (or "Your") shall mean an individual or Legal Entity
++      exercising permissions granted by this License.
++
++      "Source" form shall mean the preferred form for making modifications,
++      including but not limited to software source code, documentation
++      source, and configuration files.
++
++      "Object" form shall mean any form resulting from mechanical
++      transformation or translation of a Source form, including but
++      not limited to compiled object code, generated documentation,
++      and conversions to other media types.
++
++      "Work" shall mean the work of authorship, whether in Source or
++      Object form, made available under the License, as indicated by a
++      copyright notice that is included in or attached to the work
++      (an example is provided in the Appendix below).
++
++      "Derivative Works" shall mean any work, whether in Source or Object
++      form, that is based on (or derived from) the Work and for which the
++      editorial revisions, annotations, elaborations, or other modifications
++      represent, as a whole, an original work of authorship. For the purposes
++      of this License, Derivative Works shall not include works that remain
++      separable from, or merely link (or bind by name) to the interfaces of,
++      the Work and Derivative Works thereof.
++
++      "Contribution" shall mean any work of authorship, including
++      the original version of the Work and any modifications or additions
++      to that Work or Derivative Works thereof, that is intentionally
++      submitted to Licensor for inclusion in the Work by the copyright owner
++      or by an individual or Legal Entity authorized to submit on behalf of
++      the copyright owner. For the purposes of this definition, "submitted"
++      means any form of electronic, verbal, or written communication sent
++      to the Licensor or its representatives, including but not limited to
++      communication on electronic mailing lists, source code control systems,
++      and issue tracking systems that are managed by, or on behalf of, the
++      Licensor for the purpose of discussing and improving the Work, but
++      excluding communication that is conspicuously marked or otherwise
++      designated in writing by the copyright owner as "Not a Contribution."
++
++      "Contributor" shall mean Licensor and any individual or Legal Entity
++      on behalf of whom a Contribution has been received by Licensor and
++      subsequently incorporated within the Work.
++
++   2. Grant of Copyright License. Subject to the terms and conditions of
++      this License, each Contributor hereby grants to You a perpetual,
++      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
++      copyright license to reproduce, prepare Derivative Works of,
++      publicly display, publicly perform, sublicense, and distribute the
++      Work and such Derivative Works in Source or Object form.
++
++   3. Grant of Patent License. Subject to the terms and conditions of
++      this License, each Contributor hereby grants to You a perpetual,
++      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
++      (except as stated in this section) patent license to make, have made,
++      use, offer to sell, sell, import, and otherwise transfer the Work,
++      where such license applies only to those patent claims licensable
++      by such Contributor that are necessarily infringed by their
++      Contribution(s) alone or by combination of their Contribution(s)
++      with the Work to which such Contribution(s) was submitted. If You
++      institute patent litigation against any entity (including a
++      cross-claim or counterclaim in a lawsuit) alleging that the Work
++      or a Contribution incorporated within the Work constitutes direct
++      or contributory patent infringement, then any patent licenses
++      granted to You under this License for that Work shall terminate
++      as of the date such litigation is filed.
++
++   4. Redistribution. You may reproduce and distribute copies of the
++      Work or Derivative Works thereof in any medium, with or without
++      modifications, and in Source or Object form, provided that You
++      meet the following conditions:
++
++      (a) You must give any other recipients of the Work or
++          Derivative Works a copy of this License; and
++
++      (b) You must cause any modified files to carry prominent notices
++          stating that You changed the files; and
++
++      (c) You must retain, in the Source form of any Derivative Works
++          that You distribute, all copyright, patent, trademark, and
++          attribution notices from the Source form of the Work,
++          excluding those notices that do not pertain to any part of
++          the Derivative Works; and
++
++      (d) If the Work includes a "NOTICE" text file as part of its
++          distribution, then any Derivative Works that You distribute must
++          include a readable copy of the attribution notices contained
++          within such NOTICE file, excluding those notices that do not
++          pertain to any part of the Derivative Works, in at least one
++          of the following places: within a NOTICE text file distributed
++          as part of the Derivative Works; within the Source form or
++          documentation, if provided along with the Derivative Works; or,
++          within a display generated by the Derivative Works, if and
++          wherever such third-party notices normally appear. The contents
++          of the NOTICE file are for informational purposes only and
++          do not modify the License. You may add Your own attribution
++          notices within Derivative Works that You distribute, alongside
++          or as an addendum to the NOTICE text from the Work, provided
++          that such additional attribution notices cannot be construed
++          as modifying the License.
++
++      You may add Your own copyright statement to Your modifications and
++      may provide additional or different license terms and conditions
++      for use, reproduction, or distribution of Your modifications, or
++      for any such Derivative Works as a whole, provided Your use,
++      reproduction, and distribution of the Work otherwise complies with
++      the conditions stated in this License.
++
++   5. Submission of Contributions. Unless You explicitly state otherwise,
++      any Contribution intentionally submitted for inclusion in the Work
++      by You to the Licensor shall be under the terms and conditions of
++      this License, without any additional terms or conditions.
++      Notwithstanding the above, nothing herein shall supersede or modify
++      the terms of any separate license agreement you may have executed
++      with Licensor regarding such Contributions.
++
++   6. Trademarks. This License does not grant permission to use the trade
++      names, trademarks, service marks, or product names of the Licensor,
++      except as required for reasonable and customary use in describing the
++      origin of the Work and reproducing the content of the NOTICE file.
++
++   7. Disclaimer of Warranty. Unless required by applicable law or
++      agreed to in writing, Licensor provides the Work (and each
++      Contributor provides its Contributions) on an "AS IS" BASIS,
++      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
++      implied, including, without limitation, any warranties or conditions
++      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
++      PARTICULAR PURPOSE. You are solely responsible for determining the
++      appropriateness of using or redistributing the Work and assume any
++      risks associated with Your exercise of permissions under this License.
++
++   8. Limitation of Liability. In no event and under no legal theory,
++      whether in tort (including negligence), contract, or otherwise,
++      unless required by applicable law (such as deliberate and grossly
++      negligent acts) or agreed to in writing, shall any Contributor be
++      liable to You for damages, including any direct, indirect, special,
++      incidental, or consequential damages of any character arising as a
++      result of this License or out of the use or inability to use the
++      Work (including but not limited to damages for loss of goodwill,
++      work stoppage, computer failure or malfunction, or any and all
++      other commercial damages or losses), even if such Contributor
++      has been advised of the possibility of such damages.
++
++   9. Accepting Warranty or Additional Liability. While redistributing
++      the Work or Derivative Works thereof, You may choose to offer,
++      and charge a fee for, acceptance of support, warranty, indemnity,
++      or other liability obligations and/or rights consistent with this
++      License. However, in accepting such obligations, You may act only
++      on Your own behalf and on Your sole responsibility, not on behalf
++      of any other Contributor, and only if You agree to indemnify,
++      defend, and hold each Contributor harmless for any liability
++      incurred by, or claims asserted against, such Contributor by reason
++      of your accepting any such warranty or additional liability.
++
++   END OF TERMS AND CONDITIONS
+diff --git a/LEAN/CoreLean/README-cutoff-comparison.md b/LEAN/CoreLean/README-cutoff-comparison.md
+new file mode 100644
+index 0000000..12d4894
+--- /dev/null
++++ b/LEAN/CoreLean/README-cutoff-comparison.md
+@@ -0,0 +1,184 @@
++# Cutoff comparison estimates and the continuum-limit endpoint
++
++## Current destination verification — 2026-11-25
++
++The unchanged Lean sources passed the destination-pin build and fresh audit
++in [run 45571203500](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45571203500),
++job `139058006434`, at preparation source
++`ff8e1632b45569d88da1c73c0ec160c913fe55f9`, on upstream
++`c25e77e9654a54fc5e4a04bfb637b7144defacc0`. All 16 expected reports passed
++the foundational-axiom check; source hashes and dependency pins matched.
++Earlier validation records below retain their original scope and provenance.
++
++
++This contribution formalizes the analytic steps linking consecutive-cutoff
++comparison estimates to convergence of normalized observables in Section 11
++of `Continuum Limit Manuscripts/WILSON_LOOPS_CONTINUUM_LIMIT.tex`.
++
++The files use native Mathlib functions and predicates: complex division and
++norms, finite sums and maxima, monotonicity, real powers and logarithms,
++`Asymptotics.IsBigO`, `Summable`, `CauchySeq`, and `Filter.Tendsto`.
++They introduce no custom convergence or positivity certificates.
++
++## Theorem contracts
++
++| Module | Proved conclusion | Explicit inputs |
++| --- | --- | --- |
++| `CoreLean.CutoffComparison` | Exact normalized ratio difference; norm bound `εN + B * εZ`; scalar exponential normalization error; full-sequence convergence with a tail sum | Positive physical denominators, relative numerator and denominator errors, a bound `B` on the new normalized observable, summability of the relative errors for the generic endpoint |
++| `CoreLean.CutoffRecursion` | `u i ≤ C / (1 - θ) * w i`; at weighted contraction `1/4`, the manuscript's bound `2 * C * w i` | Finite index set, nonnegative `u`, positive weights, `u ≤ T u + s`, `s ≤ C w`, `θ < 1`, and the displayed weighted estimate for `T` |
++| `CoreLean.CutoffSummability` | Summability of `K^(3-κ/2) * log(b*K+c)^p`, including multiplication by `K` | `κ ≥ 13`, `b > 0`, `c ≥ 0`, fixed real exponent `p ≥ 0` |
++| `CoreLean.CutoffLimit` | Full normalized-sequence convergence, with tail constant `CN + B * CZ` and the explicit logarithmic remainder | The preceding numerical conditions plus the two displayed relative comparison inequalities for actual `N` and `Z` |
++| `CoreLean.CutoffCheck` | Printed dependency audit for every public theorem | The four proof modules |
++
++### Physical normalization
++
++For complex numerators and positive real partition functions, the exact
++identity is
++
++\[
++ \frac{N'}{Z'}-\frac N Z
++ =\frac{(N'-N)-(N'/Z')(Z'-Z)}{Z}.
++\]
++
++If `‖N' − N‖ ≤ εN * Z`, `|Z' − Z| ≤ εZ * Z`, and
++`‖N'/Z'‖ ≤ B`, then
++
++\[
++ \left\lVert\frac{N'}{Z'}-\frac N Z\right\rVert
++ \le \varepsilon_N+B\varepsilon_Z.
++\]
++
++The denominator remains the physical partition function. No uniform positive
++lower bound on partition functions is assumed: both errors are relative to
++the same old positive denominator. The numerator can include perimeter and
++corner normalization factors.
++
++The separate scalar estimate
++`‖exp z * w − w‖ ≤ (exp δ − 1) * B`, for `‖z‖ ≤ δ` and `‖w‖ ≤ B`,
++handles a change of those factors when a bound on their exponent difference
++is available.
++
++### Finite recursion
++
++`le_weight_of_monotone_homogeneous` treats the manuscript's nonlinear
++monotone, positively homogeneous operator directly. Both properties are
++required only on the nonnegative cone. It assumes the estimate
++`T w ≤ θ w` only at the weight, and derives the desired estimate on `u`.
++The proof constructs a maximizing index for the finite family `u i / w i`
++and obtains `M ≤ θ * M + C`. It also covers an empty index type without an
++extra nonemptiness assumption.
++
++`le_weight_of_row_bound` specializes this argument to the concrete operator
++`T v i = ∑ j, A i j * v j`. Nonnegative matrix entries establish
++monotonicity, finite-sum algebra establishes homogeneity, and the weighted
++row sums provide `T w ≤ θ w`.
++
++The RG application uses `w i = i * thetaTilde^i + wK`. Its positivity,
++the uniform weighted kernel estimate, and the source estimates remain to be
++proved from the actual two-run recursion. The current files do not assert
++these physical estimates.
++
++### Summability and cutoff limit
++
++The general summability lemma proves
++
++\[
++ \sum_{K=0}^{\infty}K^a\bigl(\log(bK+c)\bigr)^p
++ \quad\text{is summable when }a<-1,
++\]
++
++for `b > 0`, `c ≥ 0`, and real `p ≥ 0`. The logarithmic power uses native
++`Real.rpow`. The proof applies Mathlib's `Asymptotics.IsBigO.rpow` and
++`isLittleO_log_rpow_rpow_atTop` to absorb the log power into `K^δ`, with
++`δ = (-1-a)/2`, then uses Mathlib's real p-series theorem. Natural-power
++corollaries are retained via `Real.rpow_natCast`. The finitely many values
++before the logarithm becomes positive, including `K = 0`, have no effect
++on summability.
++
++The manuscript specialization takes `c = gbar⁻²` and `p = 4*r + 2*p0`
++directly as a real exponent. Appendix `app:constants`, Stage 0, fixes `r = 2`
++and bounds `p0` below but does not require it to be an integer. Thus the
++real-exponent contract avoids an extra integrality hypothesis; its
++nonnegativity follows from the stated lower bounds. The two resulting power exponents are
++`3 − κ/2` and `4 − κ/2`. In fact, the summability proofs respectively need
++only `κ > 8` and `κ > 10`; the stated manuscript condition `κ ≥ 13`
++satisfies both with a strict margin.
++
++Let
++
++\[
++ e_K=K\,K^{3-\kappa/2}\bigl(\log(bK+c)\bigr)^p.
++\]
++
++For a fixed admissible starting cutoff `K0`, the final theorem uses
++
++\[
++ \begin{aligned}
++ \lVert N_{K+1}-N_K\rVert&\le C_N e_K Z_K,\\
++ |Z_{K+1}-Z_K|&\le C_Z e_K Z_K,\\
++ \lVert N_{K+1}/Z_{K+1}\rVert&\le B,
++ \end{aligned}
++ \qquad K\ge K_0.
++\]
++
++It proves convergence of the full sequence `N K / Z K` to a complex number
++`limit`, with the explicit estimate
++
++\[
++ \left\lVert\frac{N_{K_0+k}}{Z_{K_0+k}}-\mathrm{limit}\right\rVert
++ \le (C_N+B C_Z)\sum_{j=0}^{\infty}e_{K_0+k+j}.
++\]
++
++The Cauchy and tail steps use Mathlib's
++`cauchySeq_of_dist_le_of_summable` and
++`dist_le_tsum_of_dist_le_of_tendsto`; finite initial cutoffs are removed by
++`Filter.tendsto_add_atTop_iff_nat`.
++
++## Scope and integration
++
++The manuscript also contains geometric depth terms, insertion remainders,
++and sums over paired backgrounds. The generic relative-error endpoint can
++combine any such terms after their summability and relative error bounds
++have been proved. The explicit logarithmic specialization covers the
++polynomial-logarithmic error and its linear loss; it does not claim to
++derive every summand of the manuscript's complete error profile.
++
++These files do not establish gauge-theory correlation estimates, construct
++the Wilson measure, prove the RG row bounds, identify an inductive colimit
++with a continuum probability measure, or settle a physical continuum-limit
++theorem. They discharge concrete finite-dimensional and analytic steps
++that such a theorem requires.
++
++Existing `ComparisonArith` supplies local mean-value and lattice summation
++estimates. `ChainConditionsArith.power_log_tendsto` supplies decay of a
++specific real function. The present modules add normalized-denominator
++comparison, a finite weighted recursion solution, actual summability,
++and a full-sequence endpoint; they do not replace those existing owners.
++
++## Verification
++
++From `LEAN/CoreLean`, compile the four modules in dependency order and run
++the axiom audit:
++
++```sh
++lake --wfail build CoreLean.CutoffRecursion CoreLean.CutoffComparison CoreLean.CutoffSummability CoreLean.CutoffLimit
++lake env lean CoreLean/CutoffCheck.lean
++```
++
++The target repository's pinned Lean and Mathlib versions remain authoritative;
++the build treats warnings as failures.
++
++All five sources passed exact destination Lean 4.36.0 with Mathlib
++`fc4f59e577feb1a4956671bc04ac18aaaf8cd842`, run `45458690593`,
++job `138675000638`, preparation commit `0d848bd531f595d8cac0e06b13dad2e48fca8132`. The warnings-as-errors
++build, separate fresh 16-declaration axiom audit, source hashes and unchanged
++dependency-pin checks all passed. The reports use only `propext`,
++`Classical.choice`, and `Quot.sound`.
++
++The parent independently matched every current Lean source hash to the
++successful artifact in `validation/evidence/exact-cutoff-0d848bd`.
++The nonlinear maximum theorem uses `Finite` and chooses an enumeration
++inside its proof. The header linter remains enabled with the separate
++Apache notice text. Independent review confirmed that the cone hypotheses,
++physical denominator, real logarithmic exponent and tail constants remain
++unchanged by the destination compatibility repairs.
+-- 
+2.56.1
+

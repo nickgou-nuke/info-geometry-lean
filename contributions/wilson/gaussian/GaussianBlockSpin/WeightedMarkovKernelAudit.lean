@@ -1,0 +1,22 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import GaussianBlockSpin.WeightedMarkovKernel
+
+/-! Fresh axiom inventory for the native Gaussian Markov adapter. -/
+
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.continuous_weightedBlockKernel
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.measurable_weightedBlockDensity
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.integrable_weightedBlockKernel
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.lintegral_weightedBlockDensity
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.weightedMarkovKernel
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.weightedMarkovKernel_apply
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.weightedMarkovKernel_apply_set
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.instIsMarkovKernel_weightedMarkovKernel
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.lintegral_weightedMarkovKernel
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.integrable_weightedBlockKernel_mul_weightedBlockKernel
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.lintegral_weightedBlockDensity_mul_weightedBlockDensity
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.weightedMarkovKernel_comp
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.klDiv_weightedMarkovKernel_comp_le

@@ -1,0 +1,148 @@
+{
+  "scope": "Local Lean 4.34.1 check of the portable native state-limit owners and actual InfoGeometry State-family adapter. Exact upstream Lean 4.36.0 portable CI is recorded separately.",
+  "lean_version": "Lean 4.34.1, commit 5045d0056413266e57c625dcd7c365b10e377c52",
+  "mathlib_revision": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "new_modules": [
+    {
+      "module": "CoreLean.ApproximateCompatibility",
+      "sha256": "35f94d5d13d756b7be3056216ace51fa5f3602eb78001ebd8d90f760f1cbb249",
+      "warnings": 0,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateCompatibility.lean"
+    },
+    {
+      "module": "CoreLean.ApproximateStateLimits",
+      "sha256": "4ceabf4bdf6be47689e621daf50a87d89c8b34d10226587de340bf1d64a5e19d",
+      "warnings": 0,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateStateLimits.lean"
+    },
+    {
+      "module": "CoreLean.ApproximateStateLimitsAudit",
+      "sha256": "eb2bf6a91c2505e12c4c31d2747f7bc0d3d1b4b23bf6a61fe15fafb9aa4b96b3",
+      "warnings": 0,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateStateLimitsAudit.lean"
+    },
+    {
+      "module": "InfoGeometry.Canonical.ApproximateStateColimit",
+      "sha256": "15f418b86ff536b352423158e929b6f00231deb66f865c24d1c6c0d1fddd9f89",
+      "warnings": 0,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/InfoGeometry/Canonical/ApproximateStateColimit.lean"
+    },
+    {
+      "module": "InfoGeometry.Canonical.ApproximateStateColimitAudit",
+      "sha256": "4f1ba917fcd3986d7ef605d526e22b0370ad9c76f5d359bd7f95d6a65746b0cc",
+      "warnings": 0,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/InfoGeometry/Canonical/ApproximateStateColimitAudit.lean"
+    }
+  ],
+  "inherited_modules": [
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "sha256": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+      "warnings": 1,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean"
+    },
+    {
+      "module": "InfoGeometry.Canonical.UHFInductiveColimitBoundary",
+      "sha256": "58f4197543ae6410a338123256d1eed456811da127ec557593c530e2e7bd1d6d",
+      "warnings": 1,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Canonical/UHFInductiveColimitBoundary.lean"
+    },
+    {
+      "module": "InfoGeometry.Categorical.FilteredDirectLimitOwner",
+      "sha256": "06345ae3895a465733249a9d0f9070121c806b2ffeb5de58f9b7ae19c7433c1f",
+      "warnings": 0,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Categorical/FilteredDirectLimitOwner.lean"
+    },
+    {
+      "module": "InfoGeometry.Categorical.Holonomy",
+      "sha256": "6f3502555ad217f7e68628b910ce1c7d6c4621ccad21266ff8e710d355095f57",
+      "warnings": 3,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Categorical/Holonomy.lean"
+    },
+    {
+      "module": "InfoGeometry.Categorical.StateSpaceColimitCommutativity",
+      "sha256": "c87a73e6dfd66cfe985f89ec9c569fac4b472aaac49845760d1af489e015c38e",
+      "warnings": 0,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Categorical/StateSpaceColimitCommutativity.lean"
+    },
+    {
+      "module": "InfoGeometry.Canonical.FilteredDirectInverseColimit",
+      "sha256": "ce310b2eee125d4dfbf707366f397f07aeffd70049405dc5131e9fcb0777fd9b",
+      "warnings": 7,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Canonical/FilteredDirectInverseColimit.lean"
+    },
+    {
+      "module": "InfoGeometry.Canonical.CStarAlgebraStateColimit",
+      "sha256": "b805e8a78c139098acd4bb237d0817a209dea002dfb9590f6f8203b04288432c",
+      "warnings": 2,
+      "errors": 0,
+      "source": "/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Canonical/CStarAlgebraStateColimit.lean"
+    }
+  ],
+  "public_theorems": 11,
+  "axiom_reports": 12,
+  "portable_axiom_reports": 11,
+  "adapter_axiom_reports": 1,
+  "allowed_axioms": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "axiom_checker_commands": [
+    [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "/workspace/scratch/058543be00a5/wilson-contributions/publishing/.github/scripts/check_lean_axioms.py",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateStateLimitsAudit.lean",
+      "/dev/shm/wilson-contributions-058543be00a5/states-followup/logs/CoreLean.ApproximateStateLimitsAudit.log",
+      "--json",
+      "/workspace/scratch/058543be00a5/wilson-contributions/validation/evidence/preliminary-states-followup/axiom-audit-portable.json"
+    ],
+    [
+      "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python3",
+      "/workspace/scratch/058543be00a5/wilson-contributions/publishing/.github/scripts/check_lean_axioms.py",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/InfoGeometry/Canonical/ApproximateStateColimitAudit.lean",
+      "/dev/shm/wilson-contributions-058543be00a5/states-followup/logs/InfoGeometry.Canonical.ApproximateStateColimitAudit.log",
+      "--json",
+      "/workspace/scratch/058543be00a5/wilson-contributions/validation/evidence/preliminary-states-followup/axiom-audit-adapter.json"
+    ]
+  ],
+  "scan": [
+    {
+      "path": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateCompatibility.lean",
+      "sha256": "35f94d5d13d756b7be3056216ace51fa5f3602eb78001ebd8d90f760f1cbb249",
+      "forbidden_tokens": []
+    },
+    {
+      "path": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateStateLimits.lean",
+      "sha256": "4ceabf4bdf6be47689e621daf50a87d89c8b34d10226587de340bf1d64a5e19d",
+      "forbidden_tokens": []
+    },
+    {
+      "path": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateStateLimitsAudit.lean",
+      "sha256": "eb2bf6a91c2505e12c4c31d2747f7bc0d3d1b4b23bf6a61fe15fafb9aa4b96b3",
+      "forbidden_tokens": []
+    },
+    {
+      "path": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/InfoGeometry/Canonical/ApproximateStateColimit.lean",
+      "sha256": "15f418b86ff536b352423158e929b6f00231deb66f865c24d1c6c0d1fddd9f89",
+      "forbidden_tokens": []
+    },
+    {
+      "path": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/InfoGeometry/Canonical/ApproximateStateColimitAudit.lean",
+      "sha256": "4f1ba917fcd3986d7ef605d526e22b0370ad9c76f5d359bd7f95d6a65746b0cc",
+      "forbidden_tokens": []
+    }
+  ],
+  "validation_note": "Portable audit was compiled fresh in the initial combined pass; portable sources were unchanged thereafter. The final focused adapter pass reused only hash-and-command-matching dependencies and freshly compiled the changed adapter and its audit. Inherited owner style warnings remain; all five new files have zero warnings/errors."
+}

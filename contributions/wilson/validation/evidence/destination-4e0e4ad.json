@@ -1,0 +1,279 @@
+{
+  "run_id": 45460909233,
+  "source_commit": "4e0e4add51d44649cb232d9c8f540f26d34a709d",
+  "checked_at_utc": "2026-11-24 18:55:25 UTC",
+  "jobs": [
+    {
+      "id": 138682886234,
+      "name": "cutoff destination pins",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare exact contribution and source inventory",
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore pinned dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install unchanged destination toolchain",
+          "conclusion": "success"
+        },
+        {
+          "name": "Obtain pinned Mathlib artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Save pinned dependencies",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Compile contribution and audit imports",
+          "conclusion": "success"
+        },
+        {
+          "name": "Generate fresh axiom transcript",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify axioms, unchanged pins and source hashes",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 138682886883,
+      "name": "gaussian destination pins",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare exact contribution and source inventory",
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore pinned dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install unchanged destination toolchain",
+          "conclusion": "success"
+        },
+        {
+          "name": "Obtain pinned Mathlib artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Save pinned dependencies",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Compile contribution and audit imports",
+          "conclusion": "success"
+        },
+        {
+          "name": "Generate fresh axiom transcript",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify axioms, unchanged pins and source hashes",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 138682887078,
+      "name": "gram destination pins",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare exact contribution and source inventory",
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore pinned dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install unchanged destination toolchain",
+          "conclusion": "success"
+        },
+        {
+          "name": "Obtain pinned Mathlib artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Save pinned dependencies",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Compile contribution and audit imports",
+          "conclusion": "success"
+        },
+        {
+          "name": "Generate fresh axiom transcript",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify axioms, unchanged pins and source hashes",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 138682887362,
+      "name": "states destination pins",
+      "status": "completed",
+      "conclusion": "success",
+      "steps": [
+        {
+          "name": "Set up job",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Prepare exact contribution and source inventory",
+          "conclusion": "success"
+        },
+        {
+          "name": "Restore pinned dependencies",
+          "conclusion": "success"
+        },
+        {
+          "name": "Install unchanged destination toolchain",
+          "conclusion": "success"
+        },
+        {
+          "name": "Obtain pinned Mathlib artifacts",
+          "conclusion": "success"
+        },
+        {
+          "name": "Save pinned dependencies",
+          "conclusion": "skipped"
+        },
+        {
+          "name": "Compile contribution and audit imports",
+          "conclusion": "success"
+        },
+        {
+          "name": "Generate fresh axiom transcript",
+          "conclusion": "success"
+        },
+        {
+          "name": "Verify axioms, unchanged pins and source hashes",
+          "conclusion": "success"
+        },
+        {
+          "name": "Run actions/upload-artifact@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Post Run actions/checkout@v4",
+          "conclusion": "success"
+        },
+        {
+          "name": "Complete job",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "upstream_sha": "9a4492cc6bdf3338379123a085af59dfd8018a9c",
+  "toolchain": "leanprover/lean4:v4.34.0-rc2",
+  "expected_mathlib_sha": "8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a",
+  "candidate": "gaussian",
+  "pinned_file_hashes": {
+    "lean-toolchain": "8190e75a201741065fe508b28955dd64dd72d090babe5f70ce6848879d68ae88",
+    "lakefile.toml": "0c4b9b6c1743c1cf5e89361416a8679768422ae25a63af88f09c95e0c71ea65d"
+  },
+  "sources": {
+    "GaussianBlockSpin/WeightedCoarseGraining.lean": "784b1d5fc7c59325a7068bc7885162526c87421a410a848ee58ef07a148161d1",
+    "GaussianBlockSpin/WeightedCoarseGrainingAudit.lean": "8cc03e22c29aed184d90c91b248e31ec3168b14701b8c9beccd82e103cf4191e",
+    "GaussianBlockSpin/WeightedCoarseGrainingComposition.lean": "d1067ad37250ea2a913a05ad5115493d2e1a0dcc00254e8ecb108f649db4ead7",
+    "GaussianBlockSpin/WeightedCoarseGrainingVariational.lean": "59071a1ea8fd30db4b268cf57fe8300360943c9e6b51884c8b7fb6b6c08861b6",
+    "GaussianBlockSpin/WeightedEffectiveForm.lean": "9c1081be2460a6103eedcb83fb8b26d4e66663f5b612a231304b7dabb1e1e7c9",
+    "LICENSE-InfoGeometry-Apache-2.0": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+    "THEOREM_CONTRACT.md": "eabf70a3a9890615ca676e73f9b296bb20b77ab6cb2d2305c833a8499ccbc1fb",
+    "GaussianBlockSpin.lean": "5998a73546ad287989e03dc6d84d1d937a6e88e6deaa47e9238cb027a736299f"
+  },
+  "expected_axiom_declarations": [
+    "GaussianBlockSpin.WeightedCoarseGraining.finePrecision_posDef",
+    "GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_posDef",
+    "GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_inv",
+    "GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_posDef",
+    "GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_inv",
+    "GaussianBlockSpin.WeightedCoarseGraining.finePrecision_inv",
+    "GaussianBlockSpin.WeightedCoarseGraining.finePrecision_mul_harmonicExtension",
+    "GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_adjoint_mul_finePrecision",
+    "GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_eq_sub_response",
+    "GaussianBlockSpin.WeightedCoarseGraining.twoStage_coarsePrecision_inv",
+    "GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_completion",
+    "GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_lower_bound",
+    "GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_eq_min_iff",
+    "GaussianBlockSpin.WeightedCoarseGraining.is_joint_minimizer_iff",
+    "GaussianBlockSpin.WeightedCoarseGraining.block_quadratic_eq",
+    "GaussianBlockSpin.WeightedCoarseGraining.quadratic_completion",
+    "GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_completion",
+    "GaussianBlockSpin.WeightedCoarseGraining.quadratic_re_eq_zero_iff",
+    "GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_lower_bound",
+    "GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_eq_min_iff",
+    "GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_at_harmonicExtension",
+    "GaussianBlockSpin.WeightedCoarseGraining.is_minimizer_iff",
+    "GaussianBlockSpin.WeightedCoarseGraining.finePrecision_scalar_toEuclideanLin",
+    "GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_scalar_mulVec_eq",
+    "GaussianBlockSpin.WeightedCoarseGraining.effStiffness_harmonicExtension",
+    "GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_scalar_eq",
+    "GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_scalar_inner",
+    "GaussianBlockSpin.WeightedCoarseGraining.inner_toEuclideanLin_pos",
+    "GaussianBlockSpin.WeightedCoarseGraining.integral_blockKernel_mul_gaussian_coarsePrecision"
+  ],
+  "public_theorem_count": 29
+}

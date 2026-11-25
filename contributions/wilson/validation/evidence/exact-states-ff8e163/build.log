@@ -1,0 +1,15 @@
+✔ [6278/6283] Built CoreLean.ApproximateCompatibility (793ms)
+✔ [6280/6283] Built CoreLean.ApproximateStateLimits (1.2s)
+ℹ [6282/6283] Built CoreLean.ApproximateStateLimitsAudit (811ms)
+info: CoreLean/ApproximateStateLimitsAudit.lean:16:0: 'ApproximateCompatibility.evaluationSequence' does not depend on any axioms
+info: CoreLean/ApproximateStateLimitsAudit.lean:17:0: 'ApproximateCompatibility.evaluationSequence_zero' does not depend on any axioms
+info: CoreLean/ApproximateStateLimitsAudit.lean:18:0: 'ApproximateCompatibility.evaluationSequence_succ' does not depend on any axioms
+info: CoreLean/ApproximateStateLimitsAudit.lean:19:0: 'ApproximateCompatibility.dist_evaluationSequence_succ_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/ApproximateStateLimitsAudit.lean:20:0: 'ApproximateCompatibility.cauchySeq_evaluationSequence' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/ApproximateStateLimitsAudit.lean:21:0: 'ApproximateCompatibility.exists_compatible_limit' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/ApproximateStateLimitsAudit.lean:22:0: 'ApproximateCompatibility.evaluationSequence_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/ApproximateStateLimitsAudit.lean:23:0: 'ApproximateCompatibility.evaluationSequence_smul' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/ApproximateStateLimitsAudit.lean:24:0: 'ApproximateCompatibility.evaluationSequence_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/ApproximateStateLimitsAudit.lean:25:0: 'ApproximateCompatibility.evaluationSequence_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/ApproximateStateLimitsAudit.lean:26:0: 'ApproximateCompatibility.exists_normalized_positive_limits' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (6283 jobs).

@@ -1,0 +1,82 @@
+{
+  "allowed_axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "audit_source": "wilson-contributions/followup/gaussian/GaussianBlockSpin/WeightedCoarseGrainingFollowupAudit.lean",
+  "audit_source_sha256": "9e5c5b8f0a9a2adb52f3082037878faa353229e1bdfdcc500d26897bbb0659c5",
+  "axiom_log_sha256": "da78f5558c937228464773d2f4ad24dfe29d783a6c01cb0f09c9225e1f1a2f65",
+  "declarations": {
+    "GaussianBlockSpin.WeightedCoarseGraining.Examples.coarsePrecision_example_posDef": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.Examples.coarsePrecision_inv_eq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.Examples.coarseWeight_inv": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.Examples.coarseWeight_posDef": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.Examples.fineWeight_inv": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.Examples.fineWeight_posDef": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.Examples.inverse_sandwich_order_matters": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.Examples.weights_do_not_commute": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_scalar_eq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_scalar_eq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.finePrecision_weighted_adjoint": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.finePrecision_weighted_identity": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.integral_blockKernel_mul_blockKernel_matrix": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.weighted_adjoint_inner": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  }
+}

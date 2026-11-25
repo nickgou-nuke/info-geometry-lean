@@ -1,0 +1,3 @@
+/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Canonical/UHFInductiveColimitBoundary.lean:190:4: warning: 'noncomputable section' starts on column 4, but all commands should start at the beginning of the line.
+
+Note: This linter can be disabled with `set_option linter.style.whitespace false`

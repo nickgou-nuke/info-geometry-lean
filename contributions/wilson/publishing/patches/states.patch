@@ -1,0 +1,882 @@
+From a4762b6481c6737a3c4fb2bae37de5c2d451e228 Mon Sep 17 00:00:00 2001
+From: Codex <codex@openai.com>
+Date: Wed, 25 Nov 2026 10:04:14 +0200
+Subject: [PATCH] Construct positive compatible limits from summable state
+ errors
+
+Prepared upstream contribution; see its theorem contract and focused audit.
+---
+ .github/scripts/check_lean_axioms.py          | 104 +++++++++++
+ .../workflows/approximate-state-limits.yml    |  89 +++++++++
+ LEAN/CoreLean/CoreLean.lean                   |   2 +
+ .../CoreLean/ApproximateCompatibility.lean    | 111 +++++++++++
+ .../CoreLean/ApproximateStateLimits.lean      | 131 +++++++++++++
+ .../CoreLean/ApproximateStateLimitsAudit.lean |  26 +++
+ LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0 | 176 ++++++++++++++++++
+ .../README-approximate-state-limits.md        | 165 ++++++++++++++++
+ 8 files changed, 804 insertions(+)
+ create mode 100644 .github/scripts/check_lean_axioms.py
+ create mode 100644 .github/workflows/approximate-state-limits.yml
+ create mode 100644 LEAN/CoreLean/CoreLean/ApproximateCompatibility.lean
+ create mode 100644 LEAN/CoreLean/CoreLean/ApproximateStateLimits.lean
+ create mode 100644 LEAN/CoreLean/CoreLean/ApproximateStateLimitsAudit.lean
+ create mode 100644 LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0
+ create mode 100644 LEAN/CoreLean/README-approximate-state-limits.md
+
+diff --git a/.github/scripts/check_lean_axioms.py b/.github/scripts/check_lean_axioms.py
+new file mode 100644
+index 0000000..e482dda
+--- /dev/null
++++ b/.github/scripts/check_lean_axioms.py
+@@ -0,0 +1,104 @@
++#!/usr/bin/env python3
++"""Check a fresh Lean axiom log against an explicit audit source inventory."""
++
++from __future__ import annotations
++
++import argparse
++import hashlib
++import json
++from pathlib import Path
++import re
++import sys
++
++ALLOWED_AXIOMS = frozenset({'propext', 'Classical.choice', 'Quot.sound'})
++
++
++def without_comments(source: str) -> str:
++    """Remove nested Lean block comments and line comments from audit source."""
++    result: list[str] = []
++    depth = 0
++    index = 0
++    while index < len(source):
++        if source.startswith('/-', index):
++            depth += 1
++            result.append(' ')
++            index += 2
++        elif depth and source.startswith('-/', index):
++            depth -= 1
++            result.append(' ')
++            index += 2
++        elif depth:
++            if source[index] == '\n':
++                result.append('\n')
++            index += 1
++        elif source.startswith('--', index):
++            end = source.find('\n', index)
++            index = len(source) if end < 0 else end
++        else:
++            result.append(source[index])
++            index += 1
++    if depth:
++        raise ValueError('Unterminated block comment in axiom audit source')
++    return ''.join(result)
++
++
++def expected_declarations(source: str) -> set[str]:
++    declarations = re.findall(
++        r'^[ \t]*#print[ \t]+axioms[ \t]+([^\s]+)[ \t]*$',
++        without_comments(source), flags=re.M)
++    if not declarations:
++        raise ValueError('The audit source has no explicit #print axioms declarations')
++    if len(declarations) != len(set(declarations)):
++        raise ValueError('The audit source contains duplicate declarations')
++    return set(declarations)
++
++
++def check_log(expected: set[str], log: str) -> dict[str, list[str]]:
++    log = re.sub(r'\x1b\[[0-?]*[ -/]*[@-~]', '', log)
++    reports: dict[str, list[str]] = {}
++    pattern = (
++        r"'([^'\r\n]+)'\s+(?:depends on axioms:\s*\[([^\]]*)\]"
++        r'|does not depend on any axioms)'
++    )
++    for declaration, raw in re.findall(pattern, log):
++        if declaration in reports:
++            raise ValueError(f'Duplicate axiom report: {declaration}')
++        axioms = [name.strip() for name in raw.split(',') if name.strip()]
++        forbidden = set(axioms) - ALLOWED_AXIOMS
++        if forbidden:
++            raise ValueError(f'Unapproved axioms for {declaration}: {sorted(forbidden)}')
++        reports[declaration] = axioms
++    if set(reports) != expected:
++        raise ValueError(
++            f'Axiom inventory mismatch: missing={sorted(expected - reports.keys())}, '
++            f'unexpected={sorted(reports.keys() - expected)}')
++    return reports
++
++
++def main() -> None:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('audit_source', type=Path)
++    parser.add_argument('axiom_log', type=Path)
++    parser.add_argument('--json', type=Path, required=True, dest='json_output')
++    args = parser.parse_args()
++    source = args.audit_source.read_text(encoding='utf-8')
++    log = args.axiom_log.read_text(encoding='utf-8')
++    reports = check_log(expected_declarations(source), log)
++    record = {
++        'audit_source': str(args.audit_source),
++        'audit_source_sha256': hashlib.sha256(args.audit_source.read_bytes()).hexdigest(),
++        'axiom_log_sha256': hashlib.sha256(args.axiom_log.read_bytes()).hexdigest(),
++        'allowed_axioms': sorted(ALLOWED_AXIOMS),
++        'declarations': reports,
++    }
++    args.json_output.parent.mkdir(parents=True, exist_ok=True)
++    args.json_output.write_text(json.dumps(record, indent=2, sort_keys=True) + '\n')
++    print(f'PASS: {len(reports)} exact axiom reports; only permitted foundational axioms.')
++
++
++if __name__ == '__main__':
++    try:
++        main()
++    except (OSError, ValueError) as error:
++        print(f'Axiom check failed: {error}', file=sys.stderr)
++        raise SystemExit(1) from error
+diff --git a/.github/workflows/approximate-state-limits.yml b/.github/workflows/approximate-state-limits.yml
+new file mode 100644
+index 0000000..0a4822c
+--- /dev/null
++++ b/.github/workflows/approximate-state-limits.yml
+@@ -0,0 +1,89 @@
++name: Summable approximate state compatibility
++
++on:
++  pull_request:
++    paths:
++      - 'LEAN/CoreLean/CoreLean/Approximate*.lean'
++      - 'LEAN/CoreLean/lean-toolchain'
++      - 'LEAN/CoreLean/lakefile.*'
++      - 'LEAN/CoreLean/lake-manifest.json'
++      - '.github/workflows/approximate-state-limits.yml'
++      - '.github/scripts/check_lean_axioms.py'
++  workflow_dispatch:
++
++permissions:
++  contents: read
++
++concurrency:
++  group: ${{ github.workflow }}-${{ github.ref }}
++  cancel-in-progress: false
++
++jobs:
++  check:
++    runs-on: ubuntu-latest
++    timeout-minutes: 90
++    defaults:
++      run:
++        shell: bash
++        working-directory: LEAN/CoreLean
++    env:
++      EVIDENCE: ${{ github.workspace }}/lean-ci-evidence/approximate-state-limits
++    steps:
++      - uses: actions/checkout@v4
++        with:
++          persist-credentials: false
++      - name: Record checked-in pins
++        run: |
++          set -euo pipefail
++          mkdir -p "$EVIDENCE/pins.before"
++          git rev-parse HEAD | tee "$EVIDENCE/source-revision.txt"
++          for file in lean-toolchain lakefile.lean lakefile.toml lake-manifest.json; do
++            if [ -f "$file" ]; then cp "$file" "$EVIDENCE/pins.before/$file"; fi
++          done
++      - name: Install the checked-in Lean toolchain
++        run: |
++          set -euo pipefail
++          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
++          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
++          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
++          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
++          "$HOME/.elan/bin/lean" --version | tee "$EVIDENCE/toolchain.log"
++          "$HOME/.elan/bin/lake" --version | tee -a "$EVIDENCE/toolchain.log"
++      - name: Obtain pinned Mathlib artifacts
++        run: |
++          set -euo pipefail
++          lake exe cache get 2>&1 | tee "$EVIDENCE/cache.log"
++      - name: Build the focused audit and its imports
++        run: |
++          set -euo pipefail
++          lake --wfail build CoreLean.ApproximateStateLimitsAudit 2>&1 | tee "$EVIDENCE/build.log"
++      - name: Generate and check a fresh axiom transcript
++        run: |
++          set -euo pipefail
++          lake env lean CoreLean/ApproximateStateLimitsAudit.lean 2>&1 | tee "$EVIDENCE/axioms.log"
++          python3 "$GITHUB_WORKSPACE/.github/scripts/check_lean_axioms.py" \
++            CoreLean/ApproximateStateLimitsAudit.lean "$EVIDENCE/axioms.log" \
++            --json "$EVIDENCE/axiom-audit.json"
++      - name: Record resolved pins and verify existing pins were preserved
++        if: always()
++        run: |
++          set -euo pipefail
++          mkdir -p "$EVIDENCE/pins.after"
++          status=0
++          for file in lean-toolchain lakefile.lean lakefile.toml lake-manifest.json; do
++            if [ -f "$file" ]; then cp "$file" "$EVIDENCE/pins.after/$file"; fi
++            if [ -f "$EVIDENCE/pins.before/$file" ]; then
++              if ! cmp -s "$EVIDENCE/pins.before/$file" "$file"; then
++                echo "Existing pin or Lake configuration changed: $file" >&2
++                status=1
++              fi
++            fi
++          done
++          exit "$status"
++      - name: Archive focused validation evidence
++        if: always()
++        uses: actions/upload-artifact@v4
++        with:
++          name: approximate-state-limits-verification
++          path: lean-ci-evidence/approximate-state-limits
++          if-no-files-found: warn
+diff --git a/LEAN/CoreLean/CoreLean.lean b/LEAN/CoreLean/CoreLean.lean
+index 93575ac..3f53cba 100644
+--- a/LEAN/CoreLean/CoreLean.lean
++++ b/LEAN/CoreLean/CoreLean.lean
+@@ -446,3 +446,5 @@ import CoreLean.LevelsBridge
+ import CoreLean.AverageKernelsDiff
+ import CoreLean.SFConstraintComp
+ import CoreLean.QTrivialBridge
++import CoreLean.ApproximateCompatibility
++import CoreLean.ApproximateStateLimits
+diff --git a/LEAN/CoreLean/CoreLean/ApproximateCompatibility.lean b/LEAN/CoreLean/CoreLean/ApproximateCompatibility.lean
+new file mode 100644
+index 0000000..bc4f882
+--- /dev/null
++++ b/LEAN/CoreLean/CoreLean/ApproximateCompatibility.lean
+@@ -0,0 +1,111 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0.
++Authors: InfoGeometry Engine Contributors
++-/
++module
++
++public import Mathlib.Analysis.Normed.Group.Basic
++public import Mathlib.Topology.Algebra.InfiniteSum.Real
++public import Mathlib.Topology.Algebra.InfiniteSum.Ring
++
++set_option linter.style.header.license
++  "Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0." in
++
++/-!
++# Summable errors along contractive refinement maps
++
++The output may be any complete metric space. This file constructs compatible
++limit *functions*. Linearity, positivity, and normalization require additional
++algebraic hypotheses and are proved separately in `ApproximateStateLimits`.
++-/
++
++@[expose] public section
++
++noncomputable section
++
++open Filter
++open scoped Topology
++
++namespace ApproximateCompatibility
++
++variable {A : ℕ → Type*} {E : Type*}
++
++/-- Evaluate after a finite number of refinement steps, without dependent casts. -/
++def evaluationSequence (ι : ∀ n, A n → A (n + 1)) (ω : ∀ n, A n → E) :
++    (n : ℕ) → A n → ℕ → E
++  | n, a, 0 => ω n a
++  | n, a, k + 1 => evaluationSequence ι ω (n + 1) (ι n a) k
++
++@[simp] theorem evaluationSequence_zero
++    (ι : ∀ n, A n → A (n + 1)) (ω : ∀ n, A n → E) (n : ℕ) (a : A n) :
++    evaluationSequence ι ω n a 0 = ω n a := rfl
++
++@[simp] theorem evaluationSequence_succ
++    (ι : ∀ n, A n → A (n + 1)) (ω : ∀ n, A n → E)
++    (n : ℕ) (a : A n) (k : ℕ) :
++    evaluationSequence ι ω n a (k + 1) =
++      evaluationSequence ι ω (n + 1) (ι n a) k := rfl
++
++variable [∀ n, SeminormedAddCommGroup (A n)] [MetricSpace E]
++
++/-- Refinement preserves the one-step error bound at every later index. -/
++theorem dist_evaluationSequence_succ_le
++    (ι : ∀ n, A n → A (n + 1)) (ω : ∀ n, A n → E) (ε : ℕ → ℝ)
++    (hε : ∀ n, 0 ≤ ε n)
++    (hι : ∀ n (a : A n), ‖ι n a‖ ≤ ‖a‖)
++    (hω : ∀ n (a : A n), dist (ω n a) (ω (n + 1) (ι n a)) ≤ ε n * ‖a‖)
++    (k n : ℕ) (a : A n) :
++    dist (evaluationSequence ι ω n a k) (evaluationSequence ι ω n a (k + 1)) ≤
++      ε (n + k) * ‖a‖ := by
++  induction k generalizing n with
++  | zero => simpa using hω n a
++  | succ k ih =>
++    calc
++      dist (evaluationSequence ι ω n a (k + 1))
++          (evaluationSequence ι ω n a (k + 1 + 1)) ≤
++          ε (n + 1 + k) * ‖ι n a‖ := ih (n + 1) (ι n a)
++      _ ≤ ε (n + 1 + k) * ‖a‖ :=
++        mul_le_mul_of_nonneg_left (hι n a) (hε _)
++      _ = ε (n + (k + 1)) * ‖a‖ := by rw [Nat.add_right_comm n 1 k, Nat.add_assoc]
++
++/-- Summable one-step errors make each refined evaluation sequence Cauchy. -/
++theorem cauchySeq_evaluationSequence
++    (ι : ∀ n, A n → A (n + 1)) (ω : ∀ n, A n → E) (ε : ℕ → ℝ)
++    (hε : ∀ n, 0 ≤ ε n) (hSum : Summable ε)
++    (hι : ∀ n (a : A n), ‖ι n a‖ ≤ ‖a‖)
++    (hω : ∀ n (a : A n), dist (ω n a) (ω (n + 1) (ι n a)) ≤ ε n * ‖a‖)
++    (n : ℕ) (a : A n) : CauchySeq (evaluationSequence ι ω n a) := by
++  apply cauchySeq_of_dist_le_of_summable (fun k => ε (n + k) * ‖a‖)
++  · exact fun k => dist_evaluationSequence_succ_le ι ω ε hε hι hω k n a
++  · exact (hSum.comp_injective (add_right_injective n)).mul_right ‖a‖
++
++/-- Pointwise limits of approximately compatible functions are exactly compatible,
++with a bound at every finite refinement horizon. -/
++theorem exists_compatible_limit [CompleteSpace E]
++    (ι : ∀ n, A n → A (n + 1)) (ω : ∀ n, A n → E) (ε : ℕ → ℝ)
++    (hε : ∀ n, 0 ≤ ε n) (hSum : Summable ε)
++    (hι : ∀ n (a : A n), ‖ι n a‖ ≤ ‖a‖)
++    (hω : ∀ n (a : A n), dist (ω n a) (ω (n + 1) (ι n a)) ≤ ε n * ‖a‖) :
++    ∃ ωLimit : ∀ n, A n → E,
++      (∀ n (a : A n), Tendsto (evaluationSequence ι ω n a) atTop (𝓝 (ωLimit n a))) ∧
++      (∀ n (a : A n), ωLimit (n + 1) (ι n a) = ωLimit n a) ∧
++      (∀ n (a : A n) k,
++        dist (evaluationSequence ι ω n a k) (ωLimit n a) ≤
++          (∑' j : ℕ, ε (n + k + j)) * ‖a‖) := by
++  have hCauchy := cauchySeq_evaluationSequence ι ω ε hε hSum hι hω
++  choose ωLimit hLimit using fun n (a : A n) =>
++    cauchySeq_tendsto_of_complete (hCauchy n a)
++  refine ⟨ωLimit, hLimit, ?_, ?_⟩
++  · intro n a
++    exact tendsto_nhds_unique (hLimit (n + 1) (ι n a))
++      ((hLimit n a).comp (tendsto_add_atTop_nat 1))
++  · intro n a k
++    have hBound := dist_le_tsum_of_dist_le_of_tendsto
++      (fun j => ε (n + j) * ‖a‖)
++      (fun j => dist_evaluationSequence_succ_le ι ω ε hε hι hω j n a)
++      ((hSum.comp_injective (add_right_injective n)).mul_right ‖a‖)
++      (hLimit n a) k
++    simpa only [← Nat.add_assoc, tsum_mul_right] using hBound
++
++end ApproximateCompatibility
+diff --git a/LEAN/CoreLean/CoreLean/ApproximateStateLimits.lean b/LEAN/CoreLean/CoreLean/ApproximateStateLimits.lean
+new file mode 100644
+index 0000000..5daf7d5
+--- /dev/null
++++ b/LEAN/CoreLean/CoreLean/ApproximateStateLimits.lean
+@@ -0,0 +1,131 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0.
++Authors: InfoGeometry Engine Contributors
++-/
++module
++
++public import CoreLean.ApproximateCompatibility
++public import Mathlib.Analysis.CStarAlgebra.PositiveLinearMap
++public import Mathlib.Analysis.CStarAlgebra.Spectrum
++
++set_option linter.style.header.license
++  "Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0." in
++
++/-!
++# Limits of approximately compatible normalized positive functionals
++
++For genuine complex C-star algebras and unital star-algebra homomorphisms,
++summable approximate compatibility gives exactly compatible limit states.
++Linearity, positivity, and normalization are proved from the finite-stage
++maps. Contractivity of the transitions is derived from Mathlib's C-star API.
++
++No injectivity, commutativity, or finite dimensionality is assumed. The
++theorem supplies compatible functionals; a GNS or algebraic colimit is a
++separate construction that may consume them.
++-/
++
++@[expose] public section
++
++noncomputable section
++
++open Filter
++open scoped Topology ComplexOrder
++
++namespace ApproximateCompatibility
++
++variable {A : ℕ → Type*}
++variable [∀ n, CStarAlgebra (A n)] [∀ n, PartialOrder (A n)]
++variable [∀ n, StarOrderedRing (A n)]
++
++variable (ι : ∀ n, A n →⋆ₐ[ℂ] A (n + 1)) (ω : ∀ n, A n →ₚ[ℂ] ℂ)
++
++omit [∀ n, StarOrderedRing (A n)] in
++/-- Each finite-horizon evaluation is complex-linear in its initial observable. -/
++theorem evaluationSequence_add (k n : ℕ) (a b : A n) :
++    evaluationSequence (fun n => ι n) (fun n => ω n) n (a + b) k =
++      evaluationSequence (fun n => ι n) (fun n => ω n) n a k +
++        evaluationSequence (fun n => ι n) (fun n => ω n) n b k := by
++  induction k generalizing n with
++  | zero => exact map_add (ω n) a b
++  | succ k ih =>
++    simpa only [evaluationSequence_succ, map_add] using ih (n + 1) (ι n a) (ι n b)
++
++omit [∀ n, StarOrderedRing (A n)] in
++/-- Complex scalar multiplication is retained at every finite horizon. -/
++theorem evaluationSequence_smul (k n : ℕ) (c : ℂ) (a : A n) :
++    evaluationSequence (fun n => ι n) (fun n => ω n) n (c • a) k =
++      c • evaluationSequence (fun n => ι n) (fun n => ω n) n a k := by
++  induction k generalizing n with
++  | zero => exact map_smul (ω n) c a
++  | succ k ih =>
++    simpa only [evaluationSequence_succ, map_smul] using ih (n + 1) (ι n a)
++
++omit [∀ n, StarOrderedRing (A n)] in
++/-- Normalization is retained by the unital refinement homomorphisms. -/
++theorem evaluationSequence_one (hOne : ∀ n, ω n 1 = 1) (k n : ℕ) :
++    evaluationSequence (fun n => ι n) (fun n => ω n) n 1 k = 1 := by
++  induction k generalizing n with
++  | zero => exact hOne n
++  | succ k ih => simpa only [evaluationSequence_succ, map_one] using ih (n + 1)
++
++/-- The full complex value is nonnegative in the native C-star order. -/
++theorem evaluationSequence_nonneg (k n : ℕ) (a : A n) (ha : 0 ≤ a) :
++    0 ≤ evaluationSequence (fun n => ι n) (fun n => ω n) n a k := by
++  induction k generalizing n with
++  | zero => exact (ω n).map_nonneg ha
++  | succ k ih =>
++    apply ih (n + 1) (ι n a)
++    exact map_nonneg (ι n) ha
++
++/-- Summable RG compatibility errors produce native normalized positive linear
++functionals with exact compatibility and a quantitative bound at every horizon. -/
++theorem exists_normalized_positive_limits
++    (hOne : ∀ n, ω n 1 = 1) (ε : ℕ → ℝ)
++    (hε : ∀ n, 0 ≤ ε n) (hSum : Summable ε)
++    (hApprox : ∀ n (a : A n), ‖ω (n + 1) (ι n a) - ω n a‖ ≤ ε n * ‖a‖) :
++    ∃ ωLimit : ∀ n, A n →ₚ[ℂ] ℂ,
++      (∀ n, ωLimit n 1 = 1) ∧
++      (∀ n (a : A n),
++        Tendsto (evaluationSequence (fun n => ι n) (fun n => ω n) n a)
++          atTop (𝓝 (ωLimit n a))) ∧
++      (∀ n (a : A n), ωLimit (n + 1) (ι n a) = ωLimit n a) ∧
++      (∀ n (a : A n) k,
++        ‖ωLimit n a - evaluationSequence (fun n => ι n) (fun n => ω n) n a k‖ ≤
++          (∑' j : ℕ, ε (n + k + j)) * ‖a‖) := by
++  obtain ⟨v, hv, hCompatible, hTail⟩ := exists_compatible_limit
++    (fun n => ι n) (fun n => ω n) ε hε hSum
++    (fun n a => NonUnitalStarAlgHom.norm_apply_le (ι n) a)
++    (fun n a => by
++      rw [dist_eq_norm, norm_sub_rev]
++      exact hApprox n a)
++  have hAdd (n : ℕ) (a b : A n) : v n (a + b) = v n a + v n b := by
++    apply tendsto_nhds_unique (hv n (a + b))
++    exact Tendsto.congr'
++      (Eventually.of_forall (fun k => (evaluationSequence_add ι ω k n a b).symm))
++      ((hv n a).add (hv n b))
++  have hSmul (n : ℕ) (c : ℂ) (a : A n) : v n (c • a) = c • v n a := by
++    apply tendsto_nhds_unique (hv n (c • a))
++    exact Tendsto.congr'
++      (Eventually.of_forall (fun k => (evaluationSequence_smul ι ω k n c a).symm))
++      ((hv n a).const_smul c)
++  let ωLimit : ∀ n, A n →ₚ[ℂ] ℂ := fun n =>
++    PositiveLinearMap.mk₀
++      { toFun := v n
++        map_add' := hAdd n
++        map_smul' := hSmul n }
++      (fun a ha => ge_of_tendsto (hv n a)
++        (Eventually.of_forall (fun k => evaluationSequence_nonneg ι ω k n a ha)))
++  refine ⟨ωLimit, ?_, hv, hCompatible, ?_⟩
++  · intro n
++    change v n 1 = 1
++    apply tendsto_nhds_unique (hv n 1)
++    exact Tendsto.congr'
++      (Eventually.of_forall (fun k => (evaluationSequence_one ι ω hOne k n).symm))
++      (tendsto_const_nhds : Tendsto (fun _ : ℕ => (1 : ℂ)) atTop (𝓝 1))
++  · intro n a k
++    change ‖v n a - evaluationSequence (fun n => ι n) (fun n => ω n) n a k‖ ≤ _
++    rw [norm_sub_rev]
++    simpa only [dist_eq_norm] using hTail n a k
++
++end ApproximateCompatibility
+diff --git a/LEAN/CoreLean/CoreLean/ApproximateStateLimitsAudit.lean b/LEAN/CoreLean/CoreLean/ApproximateStateLimitsAudit.lean
+new file mode 100644
+index 0000000..a1528e0
+--- /dev/null
++++ b/LEAN/CoreLean/CoreLean/ApproximateStateLimitsAudit.lean
+@@ -0,0 +1,26 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0.
++Authors: InfoGeometry Engine Contributors
++-/
++module
++
++public import CoreLean.ApproximateStateLimits
++
++set_option linter.style.header.license
++  "Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0." in
++/-! # Axiom audit of summable approximate compatibility -/
++
++public section
++
++#print axioms ApproximateCompatibility.evaluationSequence
++#print axioms ApproximateCompatibility.evaluationSequence_zero
++#print axioms ApproximateCompatibility.evaluationSequence_succ
++#print axioms ApproximateCompatibility.dist_evaluationSequence_succ_le
++#print axioms ApproximateCompatibility.cauchySeq_evaluationSequence
++#print axioms ApproximateCompatibility.exists_compatible_limit
++#print axioms ApproximateCompatibility.evaluationSequence_add
++#print axioms ApproximateCompatibility.evaluationSequence_smul
++#print axioms ApproximateCompatibility.evaluationSequence_one
++#print axioms ApproximateCompatibility.evaluationSequence_nonneg
++#print axioms ApproximateCompatibility.exists_normalized_positive_limits
+diff --git a/LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0 b/LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0
+new file mode 100644
+index 0000000..d9a10c0
+--- /dev/null
++++ b/LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0
+@@ -0,0 +1,176 @@
++                                 Apache License
++                           Version 2.0, January 2004
++                        http://www.apache.org/licenses/
++
++   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
++
++   1. Definitions.
++
++      "License" shall mean the terms and conditions for use, reproduction,
++      and distribution as defined by Sections 1 through 9 of this document.
++
++      "Licensor" shall mean the copyright owner or entity authorized by
++      the copyright owner that is granting the License.
++
++      "Legal Entity" shall mean the union of the acting entity and all
++      other entities that control, are controlled by, or are under common
++      control with that entity. For the purposes of this definition,
++      "control" means (i) the power, direct or indirect, to cause the
++      direction or management of such entity, whether by contract or
++      otherwise, or (ii) ownership of fifty percent (50%) or more of the
++      outstanding shares, or (iii) beneficial ownership of such entity.
++
++      "You" (or "Your") shall mean an individual or Legal Entity
++      exercising permissions granted by this License.
++
++      "Source" form shall mean the preferred form for making modifications,
++      including but not limited to software source code, documentation
++      source, and configuration files.
++
++      "Object" form shall mean any form resulting from mechanical
++      transformation or translation of a Source form, including but
++      not limited to compiled object code, generated documentation,
++      and conversions to other media types.
++
++      "Work" shall mean the work of authorship, whether in Source or
++      Object form, made available under the License, as indicated by a
++      copyright notice that is included in or attached to the work
++      (an example is provided in the Appendix below).
++
++      "Derivative Works" shall mean any work, whether in Source or Object
++      form, that is based on (or derived from) the Work and for which the
++      editorial revisions, annotations, elaborations, or other modifications
++      represent, as a whole, an original work of authorship. For the purposes
++      of this License, Derivative Works shall not include works that remain
++      separable from, or merely link (or bind by name) to the interfaces of,
++      the Work and Derivative Works thereof.
++
++      "Contribution" shall mean any work of authorship, including
++      the original version of the Work and any modifications or additions
++      to that Work or Derivative Works thereof, that is intentionally
++      submitted to Licensor for inclusion in the Work by the copyright owner
++      or by an individual or Legal Entity authorized to submit on behalf of
++      the copyright owner. For the purposes of this definition, "submitted"
++      means any form of electronic, verbal, or written communication sent
++      to the Licensor or its representatives, including but not limited to
++      communication on electronic mailing lists, source code control systems,
++      and issue tracking systems that are managed by, or on behalf of, the
++      Licensor for the purpose of discussing and improving the Work, but
++      excluding communication that is conspicuously marked or otherwise
++      designated in writing by the copyright owner as "Not a Contribution."
++
++      "Contributor" shall mean Licensor and any individual or Legal Entity
++      on behalf of whom a Contribution has been received by Licensor and
++      subsequently incorporated within the Work.
++
++   2. Grant of Copyright License. Subject to the terms and conditions of
++      this License, each Contributor hereby grants to You a perpetual,
++      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
++      copyright license to reproduce, prepare Derivative Works of,
++      publicly display, publicly perform, sublicense, and distribute the
++      Work and such Derivative Works in Source or Object form.
++
++   3. Grant of Patent License. Subject to the terms and conditions of
++      this License, each Contributor hereby grants to You a perpetual,
++      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
++      (except as stated in this section) patent license to make, have made,
++      use, offer to sell, sell, import, and otherwise transfer the Work,
++      where such license applies only to those patent claims licensable
++      by such Contributor that are necessarily infringed by their
++      Contribution(s) alone or by combination of their Contribution(s)
++      with the Work to which such Contribution(s) was submitted. If You
++      institute patent litigation against any entity (including a
++      cross-claim or counterclaim in a lawsuit) alleging that the Work
++      or a Contribution incorporated within the Work constitutes direct
++      or contributory patent infringement, then any patent licenses
++      granted to You under this License for that Work shall terminate
++      as of the date such litigation is filed.
++
++   4. Redistribution. You may reproduce and distribute copies of the
++      Work or Derivative Works thereof in any medium, with or without
++      modifications, and in Source or Object form, provided that You
++      meet the following conditions:
++
++      (a) You must give any other recipients of the Work or
++          Derivative Works a copy of this License; and
++
++      (b) You must cause any modified files to carry prominent notices
++          stating that You changed the files; and
++
++      (c) You must retain, in the Source form of any Derivative Works
++          that You distribute, all copyright, patent, trademark, and
++          attribution notices from the Source form of the Work,
++          excluding those notices that do not pertain to any part of
++          the Derivative Works; and
++
++      (d) If the Work includes a "NOTICE" text file as part of its
++          distribution, then any Derivative Works that You distribute must
++          include a readable copy of the attribution notices contained
++          within such NOTICE file, excluding those notices that do not
++          pertain to any part of the Derivative Works, in at least one
++          of the following places: within a NOTICE text file distributed
++          as part of the Derivative Works; within the Source form or
++          documentation, if provided along with the Derivative Works; or,
++          within a display generated by the Derivative Works, if and
++          wherever such third-party notices normally appear. The contents
++          of the NOTICE file are for informational purposes only and
++          do not modify the License. You may add Your own attribution
++          notices within Derivative Works that You distribute, alongside
++          or as an addendum to the NOTICE text from the Work, provided
++          that such additional attribution notices cannot be construed
++          as modifying the License.
++
++      You may add Your own copyright statement to Your modifications and
++      may provide additional or different license terms and conditions
++      for use, reproduction, or distribution of Your modifications, or
++      for any such Derivative Works as a whole, provided Your use,
++      reproduction, and distribution of the Work otherwise complies with
++      the conditions stated in this License.
++
++   5. Submission of Contributions. Unless You explicitly state otherwise,
++      any Contribution intentionally submitted for inclusion in the Work
++      by You to the Licensor shall be under the terms and conditions of
++      this License, without any additional terms or conditions.
++      Notwithstanding the above, nothing herein shall supersede or modify
++      the terms of any separate license agreement you may have executed
++      with Licensor regarding such Contributions.
++
++   6. Trademarks. This License does not grant permission to use the trade
++      names, trademarks, service marks, or product names of the Licensor,
++      except as required for reasonable and customary use in describing the
++      origin of the Work and reproducing the content of the NOTICE file.
++
++   7. Disclaimer of Warranty. Unless required by applicable law or
++      agreed to in writing, Licensor provides the Work (and each
++      Contributor provides its Contributions) on an "AS IS" BASIS,
++      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
++      implied, including, without limitation, any warranties or conditions
++      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
++      PARTICULAR PURPOSE. You are solely responsible for determining the
++      appropriateness of using or redistributing the Work and assume any
++      risks associated with Your exercise of permissions under this License.
++
++   8. Limitation of Liability. In no event and under no legal theory,
++      whether in tort (including negligence), contract, or otherwise,
++      unless required by applicable law (such as deliberate and grossly
++      negligent acts) or agreed to in writing, shall any Contributor be
++      liable to You for damages, including any direct, indirect, special,
++      incidental, or consequential damages of any character arising as a
++      result of this License or out of the use or inability to use the
++      Work (including but not limited to damages for loss of goodwill,
++      work stoppage, computer failure or malfunction, or any and all
++      other commercial damages or losses), even if such Contributor
++      has been advised of the possibility of such damages.
++
++   9. Accepting Warranty or Additional Liability. While redistributing
++      the Work or Derivative Works thereof, You may choose to offer,
++      and charge a fee for, acceptance of support, warranty, indemnity,
++      or other liability obligations and/or rights consistent with this
++      License. However, in accepting such obligations, You may act only
++      on Your own behalf and on Your sole responsibility, not on behalf
++      of any other Contributor, and only if You agree to indemnify,
++      defend, and hold each Contributor harmless for any liability
++      incurred by, or claims asserted against, such Contributor by reason
++      of your accepting any such warranty or additional liability.
++
++   END OF TERMS AND CONDITIONS
+diff --git a/LEAN/CoreLean/README-approximate-state-limits.md b/LEAN/CoreLean/README-approximate-state-limits.md
+new file mode 100644
+index 0000000..43f0346
+--- /dev/null
++++ b/LEAN/CoreLean/README-approximate-state-limits.md
+@@ -0,0 +1,165 @@
++# Summable approximate state compatibility
++
++## Current destination verification — 2026-11-25
++
++The unchanged Lean sources passed the destination-pin build and fresh audit
++in [run 45571203500](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45571203500),
++job `139058006920`, at preparation source
++`ff8e1632b45569d88da1c73c0ec160c913fe55f9`, on upstream
++`c25e77e9654a54fc5e4a04bfb637b7144defacc0`. All 11 expected reports passed
++the foundational-axiom check; source hashes and dependency pins matched.
++Earlier validation records below retain their original scope and provenance.
++
++
++## Provenance and correction of the intake
++
++The intake is `Pasted text(20261124-150457).txt`, supplied on 2026-11-24.
++Its proposed recursion and telescoping argument concern arbitrary real-valued
++functions on seminormed groups. They can establish pointwise convergence and
++exact compatibility of functions, but do not establish a state: additivity,
++scalar linearity, positivity, normalization, and star-algebra transitions are
++absent from that theorem's hypotheses. For example, identity transitions and
++the constant family `ω(a) = a²` on the real numbers have zero compatibility
++error, while their limit is not linear.
++
++The replacement keeps that useful general limit result and adds the missing
++state proof under genuine C-star hypotheses.
++
++## Carriers and exact statements
++
++### Portable native Mathlib layer
++
++`CoreLean.ApproximateCompatibility` uses a dependent sequence `A n` of
++seminormed additive groups, arbitrary norm-contracting functions
++`ι n : A n → A (n+1)`, and functions into an arbitrary complete metric space.
++Given nonnegative summable errors and
++
++```
++dist (ω n a) (ω (n+1) (ι n a)) ≤ ε n * ‖a‖,
++```
++
++it constructs pointwise limits, proves exact adjacent compatibility, and proves
++the full quantitative tail estimate at every finite horizon `k`:
++
++```
++dist (evaluationSequence ι ω n a k) (ωLimit n a)
++  ≤ (∑' j, ε (n+k+j)) * ‖a‖.
++```
++
++The real-valued intake is a specialization. The complex case does not discard
++imaginary components.
++
++`CoreLean.ApproximateStateLimits` uses genuine, possibly noncommutative complex
++C-star algebras; unital star-algebra homomorphisms; and native positive linear
++maps `A n →ₚ[ℂ] ℂ`, normalized at one. It derives transition contractivity from
++Mathlib. The pointwise limit is constructed as a native positive linear map:
++additivity and complex homogeneity pass through limits; positivity passes
++through the closed native complex order; normalization passes through unital
++transitions. No continuity or positivity of the desired limit is assumed.
++
++### Existing repository consumer
++
++`InfoGeometry.Canonical.ApproximateStateColimit` imports the actual
++`CStarAlgebraStateColimit` owner. On an existing sequential
++`ContinuousStarInductiveSystem`, it constructs that owner's actual
++`CompatibleStateFamily`, with native `State` values and compatibility for
++**all** transitions `i ≤ j`, proved from adjacent compatibility and the system's
++composition law. The result can therefore supply the state-family input to
++the existing filtered GNS constructions.
++
++This adapter belongs to the InfoGeometry integration layer. The portable
++CoreLean owners require only Mathlib and one another; they do not import
++InfoGeometry or construct a second state wrapper.
++
++The existing repository system uses one universe for both its index type and
++its stage types. Consequently this natural-indexed adapter uses `A : ℕ → Type`,
++matching that owner's actual API. This is not a finite-dimensionality
++restriction. The portable convergence and positive-functional theorems remain
++polymorphic in the universe of the stages. The adapter also retains the legacy
++module convention required to import the unchanged repository owner; only the
++portable upstream modules use Lean's modern `module` form.
++
++## Native owners and declarations reused
++
++- `cauchySeq_of_dist_le_of_summable` and
++  `dist_le_tsum_of_dist_le_of_tendsto` from
++  `Mathlib.Topology.Algebra.InfiniteSum.Real`.
++- `cauchySeq_tendsto_of_complete`, `tendsto_nhds_unique`, and the natural-index
++  shift theorem.
++- `PositiveLinearMap.mk₀`, native complex order and `ge_of_tendsto`.
++- `NonUnitalStarAlgHom.norm_apply_le`, so a redundant contractivity assumption
++  is not required for the C-star theorem.
++- The native `StarRingHomClass.instOrderHomClass` and `map_nonneg`, preserving
++  positivity on the full algebra without diagonal or commuting reductions.
++- Existing repository `State`, `State.restrict`,
++  `ContinuousStarInductiveSystem`, and `CompatibleStateFamily`.
++
++## Boundaries
++
++The analytic compatibility estimate and summability are inputs. This module
++does not derive them for Wilson-loop observables or extend estimates proved
++only on a selected collection of loops to an entire C-star algebra. The
++refinement maps must actually be unital star-algebra homomorphisms; a general
++Markov averaging operator cannot be silently substituted. No injectivity or
++finite-dimensionality hypothesis is imposed. No full continuum theorem,
++reflection positivity, mass gap, or construction of the underlying physical
++observable algebra is asserted.
++
++## Verification
++
++### Exact upstream portable check: passed
++
++The three portable CoreLean files passed the unchanged upstream Lean **4.36.0**
++and Mathlib **`fc4f59e577feb1a4956671bc04ac18aaaf8cd842`** in
++[CI run 45460909233](https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45460909233),
++job **138682887362**, preparation source commit
++**`4e0e4add51d44649cb232d9c8f540f26d34a709d`**. The focused
++`lake --wfail build CoreLean.ApproximateStateLimitsAudit` gate and a separate
++fresh `lake env lean CoreLean/ApproximateStateLimitsAudit.lean` audit passed.
++The exact declaration inventory contains **10 public theorems and one recursive
++definition**, giving **11 axiom reports**. The final three Lean source hashes
++match the saved destination artifact. Toolchain, lakefile, manifest, and resolved
++dependency revisions were checked without changing the existing pins.
++
++The source inventory, build log, fresh axiom log, checker output, dependency
++revisions, and artifact receipt are in the preparation repository
++`nickgou-nuke/info-geometry-lean`, directory
++`contributions/wilson/validation/evidence/exact-states-4e0e4ad/`.
++
++### Actual InfoGeometry state-family adapter: passed locally
++
++The portable owners and the two InfoGeometry-facing adapter files also passed
++the available Lean **4.34.1** and Mathlib
++**`d13f23b723b8a846827a245b89c10fc7d3f11612`**, using the maintained exclusive
++compilation lock and standard linters. All **five new files have zero warnings
++and zero errors**. The shared transcript checker accepted the 11 portable
++reports plus the adapter's **one fresh report**. Every report is either
++axiom-free or uses only `propext`, `Classical.choice`, and `Quot.sound`.
++
++The actual existing repository dependencies compiled successfully, with
++**14 inherited style warnings** in unchanged owner files. These are distinct
++from the warning-free new sources. The adapter validation is a focused
++dependency-closure check, not a whole-repository build certificate.
++
++The final focused command was:
++
++```bash
++python3 wilson-contributions/check_candidate.py cutoff \
++  InfoGeometry.Canonical.ApproximateStateColimitAudit \
++  --source-root wilson-contributions/followup/states \
++  --output-name states-followup --standard-linters --wait-for-build-lock
++```
++
++This reused only source-hash- and command-matching successful dependencies;
++the changed adapter and its audit were compiled fresh. The portable audit was
++compiled fresh in the initial combined check and its sources remained unchanged.
++The final source scan found no proof holes, custom axioms, unsafe proofs, or
++native-decide shortcuts. The saved compiler inventories and final source hashes
++reconcile both checks.
++
++Local evidence is in the preparation repository directory
++`contributions/wilson/validation/evidence/preliminary-states-followup/`:
++`summary.json`, `portable-results.json`, `preliminary-results.json`, the two
++axiom-audit JSON files, and raw logs. The three upstream portable files are
++verified under the exact CoreLean pin; the existing-owner adapter is verified
++under InfoGeometry's separate local pin and is not part of the upstream patch.
+-- 
+2.56.1
+

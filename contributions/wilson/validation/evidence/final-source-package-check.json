@@ -1,0 +1,82 @@
+{
+  "upstream_base": "9a4492cc6bdf3338379123a085af59dfd8018a9c",
+  "ci_run_id": 45460909233,
+  "ci_source_commit": "4e0e4add51d44649cb232d9c8f540f26d34a709d",
+  "scope": "Focused contribution audit dependency closures; no whole-repository build claimed.",
+  "packages": {
+    "gaussian": {
+      "local_commit": "899a3cd2337b6935cb7de44d87d33cb575570e8c",
+      "patch_sha256": "a98fec4bf49025c80d2554e9fceaf4eaaa570ecd57fa14a507dc32314408512b",
+      "public_theorems": 54,
+      "fresh_axiom_reports": 54,
+      "verified_lean_files_including_umbrella": [
+        "GaussianBlockSpin/WeightedCoarseGraining.lean",
+        "GaussianBlockSpin/WeightedCoarseGrainingAudit.lean",
+        "GaussianBlockSpin/WeightedCoarseGrainingComposition.lean",
+        "GaussianBlockSpin/WeightedCoarseGrainingExamples.lean",
+        "GaussianBlockSpin/WeightedCoarseGrainingSpecialization.lean",
+        "GaussianBlockSpin/WeightedCoarseGrainingVariational.lean",
+        "GaussianBlockSpin/WeightedEffectiveForm.lean",
+        "GaussianBlockSpin/WeightedKernel.lean",
+        "GaussianBlockSpin/WeightedKernelConvolution.lean",
+        "GaussianBlockSpin.lean"
+      ],
+      "all_commit_files_match_manifest": true,
+      "patch_applies_cleanly_to_base": true,
+      "checked_lean_source_equals_patch": true,
+      "evidence_directory": "validation/evidence/exact-gaussian-4e0e4ad"
+    },
+    "cutoff": {
+      "local_commit": "add0d8544ba18c89046d9cde5ca389dba763c26e",
+      "patch_sha256": "5120fbc7e94ac66647f0728064bb92ebecbfbe868547bdb175b376b0390427d5",
+      "public_theorems": 16,
+      "fresh_axiom_reports": 16,
+      "verified_lean_files_including_umbrella": [
+        "CoreLean/CutoffCheck.lean",
+        "CoreLean/CutoffComparison.lean",
+        "CoreLean/CutoffLimit.lean",
+        "CoreLean/CutoffRecursion.lean",
+        "CoreLean/CutoffSummability.lean",
+        "CoreLean.lean"
+      ],
+      "all_commit_files_match_manifest": true,
+      "patch_applies_cleanly_to_base": true,
+      "checked_lean_source_equals_patch": true,
+      "evidence_directory": "validation/evidence/exact-cutoff-4e0e4ad"
+    },
+    "gram": {
+      "local_commit": "5e02fa1cb5f8eac987bb5c637e8317f3cc02171a",
+      "patch_sha256": "b1f1652d60d4996ac4642a8e8da3363b3a4829e377df3f6ec7b1b38c36d2ee67",
+      "public_theorems": 27,
+      "fresh_axiom_reports": 29,
+      "verified_lean_files_including_umbrella": [
+        "CoreLean/PositiveKernelFiniteColimit.lean",
+        "CoreLean/PositiveKernelFiniteColimitAudit.lean",
+        "CoreLean/PositiveKernelLimit.lean",
+        "CoreLean.lean"
+      ],
+      "all_commit_files_match_manifest": true,
+      "patch_applies_cleanly_to_base": true,
+      "checked_lean_source_equals_patch": true,
+      "evidence_directory": "validation/evidence/exact-gram-4e0e4ad"
+    },
+    "states": {
+      "local_commit": "30132bd0218398dbce018723dc342c0d0fbcebfd",
+      "patch_sha256": "c86420146b5e5539b9d04e4c6ea9917535d1d70f8342b6e9a8b357d4a2ea9f98",
+      "public_theorems": 10,
+      "fresh_axiom_reports": 11,
+      "verified_lean_files_including_umbrella": [
+        "CoreLean/ApproximateCompatibility.lean",
+        "CoreLean/ApproximateStateLimits.lean",
+        "CoreLean/ApproximateStateLimitsAudit.lean",
+        "CoreLean.lean"
+      ],
+      "all_commit_files_match_manifest": true,
+      "patch_applies_cleanly_to_base": true,
+      "checked_lean_source_equals_patch": true,
+      "evidence_directory": "validation/evidence/exact-states-4e0e4ad"
+    }
+  },
+  "total_public_theorems": 107,
+  "total_fresh_axiom_reports": 110
+}

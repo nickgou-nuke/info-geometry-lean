@@ -1,0 +1,27 @@
+{
+  "run_id": 45432101797,
+  "source_commit": "a7ed9fd8d8b9a3330e33691ae137355ed6b28bbb",
+  "upstream": "9a4492cc6bdf3338379123a085af59dfd8018a9c",
+  "jobs": {
+    "gaussian": {
+      "id": 138599453859,
+      "result": "success",
+      "lean": "4.34.0-rc2",
+      "mathlib": "8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a",
+      "fresh_axiom_reports": 29
+    },
+    "cutoff": {
+      "id": 138599454059,
+      "result": "failed warnings-as-errors gate",
+      "lean": "4.36.0",
+      "proof_errors": 0
+    },
+    "gram": {
+      "id": 138599453375,
+      "result": "failed warnings-as-errors gate",
+      "lean": "4.36.0",
+      "proof_errors": 0
+    }
+  }
+}
+

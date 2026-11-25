@@ -1,0 +1,170 @@
+✔ [8920/8933] Built GaussianBlockSpin.WeightedCoarseGraining (3.1s)
+✔ [8922/8933] Built GaussianBlockSpin.WeightedCoarseGrainingExamples (2.9s)
+✔ [8923/8933] Built GaussianBlockSpin.WeightedCoarseGrainingVariational (3.2s)
+✔ [8924/8933] Built GaussianBlockSpin.WeightedCoarseGrainingComposition (2.3s)
+✔ [8925/8933] Built GaussianBlockSpin.GaussianIntegral (5.0s)
+✔ [8926/8933] Built GaussianBlockSpin.Kernel (4.4s)
+✔ [8927/8933] Built GaussianBlockSpin.EffectiveForm (5.6s)
+✔ [8928/8933] Built GaussianBlockSpin.Convolution (6.6s)
+✔ [8929/8933] Built GaussianBlockSpin.WeightedEffectiveForm (7.1s)
+✔ [8930/8933] Built GaussianBlockSpin.WeightedCoarseGrainingSpecialization (6.1s)
+✔ [8931/8933] Built GaussianBlockSpin.WeightedKernel (6.6s)
+✔ [8932/8933] Built GaussianBlockSpin.WeightedKernelConvolution (4.7s)
+ℹ [8933/8933] Built GaussianBlockSpin.WeightedCoarseGrainingAudit (3.6s)
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:15:0: 'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:16:0: 'GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:17:0: 'GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:18:0: 'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:19:0: 'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:20:0: 'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_inv' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:21:0: 'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_mul_harmonicExtension' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:22:0: 'GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_adjoint_mul_finePrecision' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:23:0: 'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_eq_sub_response' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:24:0: 'GaussianBlockSpin.WeightedCoarseGraining.twoStage_coarsePrecision_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:25:0: 'GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_completion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:26:0: 'GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_lower_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:27:0: 'GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_eq_min_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:28:0: 'GaussianBlockSpin.WeightedCoarseGraining.is_joint_minimizer_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:29:0: 'GaussianBlockSpin.WeightedCoarseGraining.block_quadratic_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:30:0: 'GaussianBlockSpin.WeightedCoarseGraining.quadratic_completion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:31:0: 'GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_completion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:32:0: 'GaussianBlockSpin.WeightedCoarseGraining.quadratic_re_eq_zero_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:33:0: 'GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_lower_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:34:0: 'GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_eq_min_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:35:0: 'GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_at_harmonicExtension' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:36:0: 'GaussianBlockSpin.WeightedCoarseGraining.is_minimizer_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:37:0: 'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_scalar_toEuclideanLin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:38:0: 'GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_scalar_mulVec_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:39:0: 'GaussianBlockSpin.WeightedCoarseGraining.effStiffness_harmonicExtension' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:40:0: 'GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_scalar_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:41:0: 'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_scalar_inner' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:42:0: 'GaussianBlockSpin.WeightedCoarseGraining.inner_toEuclideanLin_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:43:0: 'GaussianBlockSpin.WeightedCoarseGraining.integral_blockKernel_mul_gaussian_coarsePrecision' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:45:0: 'GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_scalar_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:46:0: 'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_scalar_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:47:0: 'GaussianBlockSpin.WeightedCoarseGraining.integral_blockKernel_mul_blockKernel_matrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:48:0: 'GaussianBlockSpin.WeightedCoarseGraining.weighted_adjoint_inner' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:49:0: 'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_weighted_adjoint' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:50:0: 'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_weighted_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:51:0: 'GaussianBlockSpin.WeightedCoarseGraining.Examples.fineWeight_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:52:0: 'GaussianBlockSpin.WeightedCoarseGraining.Examples.coarseWeight_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:53:0: 'GaussianBlockSpin.WeightedCoarseGraining.Examples.fineWeight_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:54:0: 'GaussianBlockSpin.WeightedCoarseGraining.Examples.coarseWeight_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:55:0: 'GaussianBlockSpin.WeightedCoarseGraining.Examples.weights_do_not_commute' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:56:0: 'GaussianBlockSpin.WeightedCoarseGraining.Examples.inverse_sandwich_order_matters' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:57:0: 'GaussianBlockSpin.WeightedCoarseGraining.Examples.coarsePrecision_inv_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:58:0: 'GaussianBlockSpin.WeightedCoarseGraining.Examples.coarsePrecision_example_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:60:0: 'GaussianBlockSpin.WeightedCoarseGraining.weightedKernelNormalizer_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:61:0: 'GaussianBlockSpin.WeightedCoarseGraining.weightedBlockKernel_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:62:0: 'GaussianBlockSpin.WeightedCoarseGraining.integral_exp_neg_half_matrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:63:0: 'GaussianBlockSpin.WeightedCoarseGraining.integral_weightedBlockKernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:64:0: 'GaussianBlockSpin.WeightedCoarseGraining.weightedKernelNormalizer_scalar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:65:0: 'GaussianBlockSpin.WeightedCoarseGraining.weightedBlockKernel_scalar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:66:0: 'GaussianBlockSpin.WeightedCoarseGraining.quadratic_completion_euclidean' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:67:0: 'GaussianBlockSpin.WeightedCoarseGraining.integral_weightedBlockKernel_mul_gaussian' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:68:0: 'GaussianBlockSpin.WeightedCoarseGraining.det_finePrecision_mul_coarsePrecision' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:69:0: 'GaussianBlockSpin.WeightedCoarseGraining.weightedKernelNormalizer_elimination' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean:70:0: 'GaussianBlockSpin.WeightedCoarseGraining.integral_weightedBlockKernel_mul_weightedBlockKernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+Build completed successfully (8933 jobs).

@@ -1,0 +1,120 @@
+{
+  "classification": "source/API comparison, not compiler verification",
+  "repository": "leanprover-community/mathlib4",
+  "local_reference": {
+    "mathlib_commit": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+    "lean_version": "4.34.1",
+    "checked_source_files_unmodified": true
+  },
+  "destination_reference": {
+    "mathlib_commit": "fc4f59e577feb1a4956671bc04ac18aaaf8cd842",
+    "lean_version": "4.36.0"
+  },
+  "method": "Read cached local source and fetch exact destination-commit source through GitHub fetch_file; compare the named public theorem types and relevant module-level changes.",
+  "files": [
+    {
+      "path": "Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean",
+      "local_blob_sha": "66fb2601c9d7d572f3950b54fbf9616034ffff6e",
+      "destination_blob_sha": "fe64eac072e34331646fe1c3173eeba13c5d016e",
+      "local_source_url": "https://github.com/leanprover-community/mathlib4/blob/d13f23b723b8a846827a245b89c10fc7d3f11612/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean",
+      "destination_source_url": "https://github.com/leanprover-community/mathlib4/blob/fc4f59e577feb1a4956671bc04ac18aaaf8cd842/Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean",
+      "destination_fetched_lines": [
+        215,
+        405
+      ]
+    },
+    {
+      "path": "Mathlib/Analysis/PSeries.lean",
+      "local_blob_sha": "4bb5bb9bfa696fafa8776e4f41dbd7c12a8948b0",
+      "destination_blob_sha": "46da57f7e8de929d2a39f5aec2ad636fae29b937",
+      "local_source_url": "https://github.com/leanprover-community/mathlib4/blob/d13f23b723b8a846827a245b89c10fc7d3f11612/Mathlib/Analysis/PSeries.lean",
+      "destination_source_url": "https://github.com/leanprover-community/mathlib4/blob/fc4f59e577feb1a4956671bc04ac18aaaf8cd842/Mathlib/Analysis/PSeries.lean",
+      "destination_fetched_lines": [
+        260,
+        335
+      ]
+    },
+    {
+      "path": "Mathlib/Topology/Algebra/InfiniteSum/Real.lean",
+      "local_blob_sha": "82131f71d8c5c0b14cb5d23cd6da8543422a4e3b",
+      "destination_blob_sha": "bf94705edc398cd7f39dc2354fbdf592c5aa843f",
+      "local_source_url": "https://github.com/leanprover-community/mathlib4/blob/d13f23b723b8a846827a245b89c10fc7d3f11612/Mathlib/Topology/Algebra/InfiniteSum/Real.lean",
+      "destination_source_url": "https://github.com/leanprover-community/mathlib4/blob/fc4f59e577feb1a4956671bc04ac18aaaf8cd842/Mathlib/Topology/Algebra/InfiniteSum/Real.lean",
+      "destination_fetched_lines": [
+        1,
+        90
+      ]
+    }
+  ],
+  "checked_apis": [
+    {
+      "name": "Asymptotics.IsBigO.rpow",
+      "path": "Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean",
+      "context": "{r : ℝ} {l : Filter α} {f g : α → ℝ}",
+      "signature": "(hr : 0 ≤ r) (hg : 0 ≤ᶠ[l] g) (h : f =O[l] g) : (fun x => f x ^ r) =O[l] fun x => g x ^ r",
+      "comparison": "Identical parameter order, hypotheses, and result type."
+    },
+    {
+      "name": "isLittleO_log_rpow_rpow_atTop",
+      "path": "Mathlib/Analysis/SpecialFunctions/Pow/Asymptotics.lean",
+      "signature": "{s : ℝ} (r : ℝ) (hs : 0 < s) : (fun x => Real.log x ^ r) =o[atTop] fun x => x ^ s",
+      "comparison": "Identical parameter order, hypotheses, and result type."
+    },
+    {
+      "name": "Real.summable_nat_rpow",
+      "path": "Mathlib/Analysis/PSeries.lean",
+      "signature": "{p : ℝ} : Summable (fun n => (n : ℝ) ^ p : ℕ → ℝ) ↔ p < -1",
+      "comparison": "Identical parameter, result type, and simp attribute."
+    },
+    {
+      "name": "cauchySeq_of_dist_le_of_summable",
+      "path": "Mathlib/Topology/Algebra/InfiniteSum/Real.lean",
+      "context": "[PseudoMetricSpace α] {f : ℕ → α}",
+      "signature": "(d : ℕ → ℝ) (hf : ∀ n, dist (f n) (f n.succ) ≤ d n) (hd : Summable d) : CauchySeq f",
+      "comparison": "Identical parameter order, hypotheses, and result type."
+    },
+    {
+      "name": "dist_le_tsum_of_dist_le_of_tendsto",
+      "path": "Mathlib/Topology/Algebra/InfiniteSum/Real.lean",
+      "context": "[PseudoMetricSpace α] {f : ℕ → α}",
+      "signature": "(d : ℕ → ℝ) (hf : ∀ n, dist (f n) (f n.succ) ≤ d n) (hd : Summable d) {a : α} (ha : Tendsto f atTop (𝓝 a)) (n : ℕ) : dist (f n) a ≤ ∑' m, d (n + m)",
+      "comparison": "Identical parameter order, hypotheses, and result type."
+    }
+  ],
+  "observed_relevant_differences": [
+    {
+      "path": "Mathlib/Topology/Algebra/InfiniteSum/Real.lean",
+      "kind": "direct imports",
+      "local": [
+        "Mathlib.Algebra.BigOperators.Intervals",
+        "Mathlib.Topology.Algebra.InfiniteSum.Order",
+        "Mathlib.Topology.Algebra.InfiniteSum.ENNReal"
+      ],
+      "destination": [
+        "Mathlib.Topology.Algebra.InfiniteSum.ENNReal"
+      ],
+      "candidate_impact": "Candidate invokes the retained public Cauchy/tail theorems and also explicitly imports InfiniteSum.Ring. It does not directly invoke interval-sum lemmas from this owner."
+    },
+    {
+      "path": "Mathlib/Topology/Algebra/InfiniteSum/Real.lean",
+      "kind": "documentation options",
+      "destination_added": [
+        "set_option doc.verso true",
+        "set_option doc.verso.suggestions false"
+      ],
+      "candidate_impact": "No theorem-type change."
+    },
+    {
+      "path": "Mathlib/Topology/Algebra/InfiniteSum/Real.lean",
+      "kind": "internal proof syntax",
+      "change": "The two casts in cauchySeq_of_dist_le_of_summable use `exact mod_cast` in the destination, instead of `exact_mod_cast` locally.",
+      "candidate_impact": "Candidate calls this theorem and does not reproduce its internal proof."
+    }
+  ],
+  "conclusion": "No source-level signature incompatibility was found for the five checked public APIs.",
+  "limitations": [
+    "This is not a Lean compiler run and does not certify the candidate modules on Lean/Mathlib 4.36.0.",
+    "Only the named APIs and fetched source ranges were compared; the entire destination import closure and tactic behavior were not validated.",
+    "Compiler results, including preliminary Lean 4.34.1 checks and destination Lean 4.36.0 checks, are separate evidence and are not certified by this source/API comparison."
+  ]
+}

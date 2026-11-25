@@ -1,0 +1,26 @@
+{
+  "name": "gaussian",
+  "id": 15003020917,
+  "digest": "sha256:87fdb7a1748fbbbce7731350a9a1f579f4a27b4d93a5cf0d2e24429865e9bb70",
+  "run_id": 45571203500,
+  "source_commit": "ff8e1632b45569d88da1c73c0ec160c913fe55f9",
+  "matched_lean_sources": [
+    "GaussianBlockSpin/ReflectionPositiveCovariance.lean",
+    "GaussianBlockSpin/ReflectionPositiveCovarianceAudit.lean",
+    "GaussianBlockSpin/WeightedCoarseGraining.lean",
+    "GaussianBlockSpin/WeightedCoarseGrainingAudit.lean",
+    "GaussianBlockSpin/WeightedCoarseGrainingComposition.lean",
+    "GaussianBlockSpin/WeightedCoarseGrainingExamples.lean",
+    "GaussianBlockSpin/WeightedCoarseGrainingSpecialization.lean",
+    "GaussianBlockSpin/WeightedCoarseGrainingVariational.lean",
+    "GaussianBlockSpin/WeightedEffectiveForm.lean",
+    "GaussianBlockSpin/WeightedKernel.lean",
+    "GaussianBlockSpin/WeightedKernelConvolution.lean",
+    "GaussianBlockSpin/WeightedMarkovKernel.lean",
+    "GaussianBlockSpin/WeightedMarkovKernelAudit.lean",
+    "GaussianBlockSpin/WeightedReflectionPositive.lean",
+    "GaussianBlockSpin/WeightedReflectionPositiveAudit.lean"
+  ],
+  "public_theorem_count": 78,
+  "fresh_axiom_reports": 80
+}

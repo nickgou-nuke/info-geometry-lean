@@ -1,0 +1,9 @@
+# License notice for InfoGeometry contributions
+
+The files in this package carrying the copyright notice “InfoGeometry Authors”
+are licensed under the Apache License, Version 2.0. The complete license is
+provided in `LICENSE-InfoGeometry-Apache-2.0` in this directory.
+
+This notice applies only to those InfoGeometry contributions. It does not
+change the licensing of pre-existing GaussianBlockSpin files or other upstream
+work, which retain their original license notices and project licensing.

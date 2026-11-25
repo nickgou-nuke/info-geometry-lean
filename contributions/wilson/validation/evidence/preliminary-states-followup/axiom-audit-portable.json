@@ -1,0 +1,55 @@
+{
+  "allowed_axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "audit_source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateStateLimitsAudit.lean",
+  "audit_source_sha256": "eb2bf6a91c2505e12c4c31d2747f7bc0d3d1b4b23bf6a61fe15fafb9aa4b96b3",
+  "axiom_log_sha256": "429f43949136bf4cedf9475b4a9d5d2c0484302da293e2ed2268b0f98ef0c4d3",
+  "declarations": {
+    "ApproximateCompatibility.cauchySeq_evaluationSequence": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "ApproximateCompatibility.dist_evaluationSequence_succ_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "ApproximateCompatibility.evaluationSequence": [],
+    "ApproximateCompatibility.evaluationSequence_add": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "ApproximateCompatibility.evaluationSequence_nonneg": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "ApproximateCompatibility.evaluationSequence_one": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "ApproximateCompatibility.evaluationSequence_smul": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "ApproximateCompatibility.evaluationSequence_succ": [],
+    "ApproximateCompatibility.evaluationSequence_zero": [],
+    "ApproximateCompatibility.exists_compatible_limit": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "ApproximateCompatibility.exists_normalized_positive_limits": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  }
+}

@@ -1,0 +1,82 @@
+{
+  "CoreLean.CutoffComparison.normalized_sub": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffComparison.norm_normalized_sub_le": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffComparison.norm_exp_mul_sub_le": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffComparison.exists_limit_of_relative_errors": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffRecursion.le_weight_of_monotone_homogeneous": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffRecursion.le_weight_of_row_bound": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffRecursion.le_two_mul_weight_of_quarter_row_bound": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffSummability.log_affine_isBigO_log": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffSummability.log_affine_rpow_isBigO_rpow": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffSummability.log_affine_pow_isBigO_rpow": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffSummability.summable_rpow_mul_log_affine_rpow": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffSummability.summable_rpow_mul_log_affine_pow": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffSummability.summable_cutoff_remainder": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffSummability.summable_cutoff_remainder_mul_cutoff": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffLimit.summable_linearLossRemainder": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.CutoffLimit.exists_limit_of_cutoff_remainder": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ]
+}

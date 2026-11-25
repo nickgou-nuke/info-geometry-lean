@@ -1,0 +1,120 @@
+name: Wilson upstream contributions
+
+on:
+  push:
+    branches: ['codex/wilson-upstream-contributions-20261124']
+    paths:
+      - 'contributions/wilson/**'
+      - '.github/workflows/wilson-upstream-validation.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wilson-upstream-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    name: ${{ matrix.candidate }} destination pins
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix:
+        include:
+          - candidate: gaussian
+            project: LEAN/Libraries/GaussianBlockSpin
+            audit: GaussianBlockSpin.WeightedCoarseGrainingAudit
+            audit_file: GaussianBlockSpin/WeightedCoarseGrainingAudit.lean
+            cache: gaussian-434rc2-8d52ea9a
+          - candidate: cutoff
+            project: LEAN/CoreLean
+            audit: CoreLean.CutoffCheck
+            audit_file: CoreLean/CutoffCheck.lean
+            cache: corelean-436-fc4f59e5
+          - candidate: gram
+            project: LEAN/CoreLean
+            audit: CoreLean.PositiveKernelFiniteColimitAudit
+            audit_file: CoreLean/PositiveKernelFiniteColimitAudit.lean
+            cache: corelean-436-fc4f59e5
+          - candidate: states
+            project: LEAN/CoreLean
+            audit: CoreLean.ApproximateStateLimitsAudit
+            audit_file: CoreLean/ApproximateStateLimitsAudit.lean
+            cache: corelean-436-fc4f59e5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: contribution-source
+          sparse-checkout: contributions/wilson
+      - uses: actions/checkout@v4
+        with:
+          repository: MathePhysics/4D_Wilson_Loop_RG
+          ref: c25e77e9654a54fc5e4a04bfb637b7144defacc0
+          path: upstream
+          sparse-checkout: ${{ matrix.project }}
+          persist-credentials: false
+      - name: Prepare exact contribution and source inventory
+        run: >-
+          python3 contribution-source/contributions/wilson/validation/validate.py
+          prepare ${{ matrix.candidate }}
+          --source contribution-source/contributions/wilson
+          --upstream upstream --evidence evidence
+      - name: Restore pinned dependencies
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            upstream/${{ matrix.project }}/.lake/packages
+          key: wilson-upstream-${{ matrix.cache }}-${{ runner.os }}-v1
+      - name: Install unchanged destination toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          cd "upstream/${{ matrix.project }}"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < lean-toolchain)"
+          "$HOME/.elan/bin/lean" --version
+          "$HOME/.elan/bin/lake" --version
+      - name: Obtain pinned Mathlib artifacts
+        working-directory: upstream/${{ matrix.project }}
+        run: lake exe cache get
+      - name: Save pinned dependencies
+        if: steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            upstream/${{ matrix.project }}/.lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
+      - name: Compile contribution and audit imports
+        shell: bash
+        working-directory: upstream/${{ matrix.project }}
+        run: |
+          set -euo pipefail
+          lake --wfail build '${{ matrix.audit }}' 2>&1 | tee "$GITHUB_WORKSPACE/evidence/build.log"
+      - name: Generate fresh axiom transcript
+        shell: bash
+        working-directory: upstream/${{ matrix.project }}
+        run: |
+          set -euo pipefail
+          lake env lean '${{ matrix.audit_file }}' 2>&1 | tee "$GITHUB_WORKSPACE/evidence/axioms.log"
+      - name: Verify axioms, unchanged pins and source hashes
+        run: >-
+          python3 contribution-source/contributions/wilson/validation/validate.py
+          audit ${{ matrix.candidate }}
+          --source contribution-source/contributions/wilson
+          --upstream upstream --evidence evidence
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wilson-${{ matrix.candidate }}-verification
+          path: evidence

@@ -1,0 +1,11 @@
+{
+  "run_url": "https://github.com/nickgou-nuke/info-geometry-lean/actions/runs/45419535086",
+  "job_id": 138534954593,
+  "source_commit": "4e9dd38fb2fb1032a115d8030d96a5e01398aef4",
+  "toolchain": "leanprover/lean4:v4.34.0-rc2",
+  "mathlib": "8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a",
+  "conclusion": "failure",
+  "failure": "Unused Fintype l and DecidableEq l section instances in private composition lemma; --wfail",
+  "observed": "All contribution owners and audit module elaborated; dedicated fresh audit/check steps skipped",
+  "next_step": "Rerun exact-pin workflow after the scoped omit fix"
+}

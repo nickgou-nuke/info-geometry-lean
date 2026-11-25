@@ -1,0 +1,45 @@
+{
+  "ApproximateCompatibility.evaluationSequence": [],
+  "ApproximateCompatibility.evaluationSequence_zero": [],
+  "ApproximateCompatibility.evaluationSequence_succ": [],
+  "ApproximateCompatibility.dist_evaluationSequence_succ_le": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "ApproximateCompatibility.cauchySeq_evaluationSequence": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "ApproximateCompatibility.exists_compatible_limit": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "ApproximateCompatibility.evaluationSequence_add": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "ApproximateCompatibility.evaluationSequence_smul": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "ApproximateCompatibility.evaluationSequence_one": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "ApproximateCompatibility.evaluationSequence_nonneg": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "ApproximateCompatibility.exists_normalized_positive_limits": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ]
+}

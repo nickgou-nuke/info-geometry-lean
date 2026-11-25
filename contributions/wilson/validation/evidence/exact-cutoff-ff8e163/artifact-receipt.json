@@ -1,0 +1,16 @@
+{
+  "name": "cutoff",
+  "id": 15002805659,
+  "digest": "sha256:2ed2756f9459aa3defdd174ecf89401ae083e93f4872a0e79b4b3377f34c5c17",
+  "run_id": 45571203500,
+  "source_commit": "ff8e1632b45569d88da1c73c0ec160c913fe55f9",
+  "matched_lean_sources": [
+    "CoreLean/CutoffCheck.lean",
+    "CoreLean/CutoffComparison.lean",
+    "CoreLean/CutoffLimit.lean",
+    "CoreLean/CutoffRecursion.lean",
+    "CoreLean/CutoffSummability.lean"
+  ],
+  "public_theorem_count": 16,
+  "fresh_axiom_reports": 16
+}

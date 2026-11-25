@@ -1,0 +1,234 @@
+'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_inv' depends on axioms: [propext, Classical.choice, Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_mul_harmonicExtension' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_adjoint_mul_finePrecision' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_eq_sub_response' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.twoStage_coarsePrecision_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_completion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_lower_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_eq_min_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.is_joint_minimizer_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.block_quadratic_eq' depends on axioms: [propext, Classical.choice, Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.quadratic_completion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_completion' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.quadratic_re_eq_zero_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_lower_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_eq_min_iff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_at_harmonicExtension' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.is_minimizer_iff' depends on axioms: [propext, Classical.choice, Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_scalar_toEuclideanLin' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_scalar_mulVec_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.effStiffness_harmonicExtension' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_scalar_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_scalar_inner' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.inner_toEuclideanLin_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.integral_blockKernel_mul_gaussian_coarsePrecision' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_scalar_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_scalar_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.integral_blockKernel_mul_blockKernel_matrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.weighted_adjoint_inner' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_weighted_adjoint' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.finePrecision_weighted_identity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.Examples.fineWeight_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.Examples.coarseWeight_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.Examples.fineWeight_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.Examples.coarseWeight_inv' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.Examples.weights_do_not_commute' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.Examples.inverse_sandwich_order_matters' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.Examples.coarsePrecision_inv_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.Examples.coarsePrecision_example_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.weightedKernelNormalizer_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.weightedBlockKernel_pos' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.integral_exp_neg_half_matrix' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.integral_weightedBlockKernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.weightedKernelNormalizer_scalar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.weightedBlockKernel_scalar' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.quadratic_completion_euclidean' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.integral_weightedBlockKernel_mul_gaussian' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.det_finePrecision_mul_coarsePrecision' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.weightedKernelNormalizer_elimination' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.integral_weightedBlockKernel_mul_weightedBlockKernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.continuous_weightedBlockKernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.measurable_weightedBlockDensity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.integrable_weightedBlockKernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.lintegral_weightedBlockDensity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.weightedMarkovKernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.weightedMarkovKernel_apply' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.weightedMarkovKernel_apply_set' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.instIsMarkovKernel_weightedMarkovKernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.lintegral_weightedMarkovKernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.integrable_weightedBlockKernel_mul_weightedBlockKernel' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.lintegral_weightedBlockDensity_mul_weightedBlockDensity' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.weightedMarkovKernel_comp' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.klDiv_weightedMarkovKernel_comp_le' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.reflected_covariance_transport_eq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.reflected_covariance_posSemidef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.reflection_transpose' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.reflection_sq' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.reflection_not_commute_positiveTime_projection' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.noise_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.noise_commutes' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.noise_not_reflection_positive' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.identity_reflection_positive' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.identity_add_noise_posDef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.identity_add_noise_commutes' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.ReflectionPositiveCovariance.Counterexample.identity_add_noise_not_reflection_positive' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+'GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_inv_reflection_posSemidef' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

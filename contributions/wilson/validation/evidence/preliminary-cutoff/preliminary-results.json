@@ -1,0 +1,83 @@
+[
+  {
+    "module": "CoreLean.CutoffRecursion",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/cutoff/CoreLean/CutoffRecursion.lean",
+    "sha256": "ab6ee3586e3f779eaa0424ad191dbfd40769eb3f0f2fecaf09383f9d0c20a1c8",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/cutoff",
+      "/workspace/scratch/058543be00a5/wilson-contributions/cutoff/CoreLean/CutoffRecursion.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/cutoff/lib/CoreLean/CutoffRecursion.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/cutoff/logs/CoreLean.CutoffRecursion.log",
+    "cached": true
+  },
+  {
+    "module": "CoreLean.CutoffComparison",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/cutoff/CoreLean/CutoffComparison.lean",
+    "sha256": "8b9281932f6fc7b555f6d396213104b1620417955c918ce510cb89fb8063c177",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/cutoff",
+      "/workspace/scratch/058543be00a5/wilson-contributions/cutoff/CoreLean/CutoffComparison.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/cutoff/lib/CoreLean/CutoffComparison.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/cutoff/logs/CoreLean.CutoffComparison.log"
+  },
+  {
+    "module": "CoreLean.CutoffSummability",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/cutoff/CoreLean/CutoffSummability.lean",
+    "sha256": "a9a1a7e7d3b3ad5d7efb271be84cce32870eb5c104584ae08cc57bc66bdc590f",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/cutoff",
+      "/workspace/scratch/058543be00a5/wilson-contributions/cutoff/CoreLean/CutoffSummability.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/cutoff/lib/CoreLean/CutoffSummability.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/cutoff/logs/CoreLean.CutoffSummability.log"
+  },
+  {
+    "module": "CoreLean.CutoffLimit",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/cutoff/CoreLean/CutoffLimit.lean",
+    "sha256": "7330e37c2be3312e1cad2121d645551c74f22a8c32e444971ff4163ca6b18423",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/cutoff",
+      "/workspace/scratch/058543be00a5/wilson-contributions/cutoff/CoreLean/CutoffLimit.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/cutoff/lib/CoreLean/CutoffLimit.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/cutoff/logs/CoreLean.CutoffLimit.log"
+  },
+  {
+    "module": "CoreLean.CutoffCheck",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/cutoff/CoreLean/CutoffCheck.lean",
+    "sha256": "1098891df6f323eb3fadb7eab6210884f31605c8109c8e59a7b4038dce5ed499",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/cutoff",
+      "/workspace/scratch/058543be00a5/wilson-contributions/cutoff/CoreLean/CutoffCheck.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/cutoff/lib/CoreLean/CutoffCheck.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/cutoff/logs/CoreLean.CutoffCheck.log"
+  }
+]

@@ -1,0 +1,146 @@
+[
+  {
+    "module": "GaussianBlockSpin.GaussianIntegral",
+    "source": "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/GaussianIntegral.lean",
+    "sha256": "229e3171b1cda3ff275ded8da2ee4af661c1b7b9587643bd6f557468e94f784e",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin",
+      "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/GaussianIntegral.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/lib/GaussianBlockSpin/GaussianIntegral.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/logs/GaussianBlockSpin.GaussianIntegral.log"
+  },
+  {
+    "module": "GaussianBlockSpin.Kernel",
+    "source": "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Kernel.lean",
+    "sha256": "71ce5fb8f08fbd67a04c5352b883cd09094c105bfff1d762f849c21fa892b9bb",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin",
+      "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Kernel.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/lib/GaussianBlockSpin/Kernel.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/logs/GaussianBlockSpin.Kernel.log"
+  },
+  {
+    "module": "GaussianBlockSpin.EffectiveForm",
+    "source": "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/EffectiveForm.lean",
+    "sha256": "ba9d46c0ba9ff360665c862443dce3fa3823684f92707ce5b4e6340802089a60",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin",
+      "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/EffectiveForm.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/lib/GaussianBlockSpin/EffectiveForm.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/logs/GaussianBlockSpin.EffectiveForm.log"
+  },
+  {
+    "module": "GaussianBlockSpin.WeightedCoarseGraining",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/gaussian/GaussianBlockSpin/WeightedCoarseGraining.lean",
+    "sha256": "784b1d5fc7c59325a7068bc7885162526c87421a410a848ee58ef07a148161d1",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/gaussian",
+      "/workspace/scratch/058543be00a5/wilson-contributions/gaussian/GaussianBlockSpin/WeightedCoarseGraining.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/lib/GaussianBlockSpin/WeightedCoarseGraining.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/logs/GaussianBlockSpin.WeightedCoarseGraining.log"
+  },
+  {
+    "module": "GaussianBlockSpin.WeightedEffectiveForm",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/gaussian/GaussianBlockSpin/WeightedEffectiveForm.lean",
+    "sha256": "9c1081be2460a6103eedcb83fb8b26d4e66663f5b612a231304b7dabb1e1e7c9",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/gaussian",
+      "/workspace/scratch/058543be00a5/wilson-contributions/gaussian/GaussianBlockSpin/WeightedEffectiveForm.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/lib/GaussianBlockSpin/WeightedEffectiveForm.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/logs/GaussianBlockSpin.WeightedEffectiveForm.log"
+  },
+  {
+    "module": "GaussianBlockSpin.Convolution",
+    "source": "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Convolution.lean",
+    "sha256": "acaf627eb57f6f233a19957127a4f0e7a41f6448d867a9c2f5a086fe54715426",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin",
+      "/workspace/scratch/058543be00a5/4D_Wilson_Loop_RG/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/Convolution.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/lib/GaussianBlockSpin/Convolution.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/logs/GaussianBlockSpin.Convolution.log"
+  },
+  {
+    "module": "GaussianBlockSpin.WeightedCoarseGrainingSpecialization",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/gaussian/GaussianBlockSpin/WeightedCoarseGrainingSpecialization.lean",
+    "sha256": "46ca03a866acecf73b232d585a64390be00be474afef6751800b632cf07270cd",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/gaussian",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/gaussian/GaussianBlockSpin/WeightedCoarseGrainingSpecialization.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/lib/GaussianBlockSpin/WeightedCoarseGrainingSpecialization.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/logs/GaussianBlockSpin.WeightedCoarseGrainingSpecialization.log"
+  },
+  {
+    "module": "GaussianBlockSpin.WeightedCoarseGrainingExamples",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/gaussian/GaussianBlockSpin/WeightedCoarseGrainingExamples.lean",
+    "sha256": "d1fa1579149496970be34ae7c0be046c0e587db04d97074ba02f2415e32aa333",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/gaussian",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/gaussian/GaussianBlockSpin/WeightedCoarseGrainingExamples.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/lib/GaussianBlockSpin/WeightedCoarseGrainingExamples.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/logs/GaussianBlockSpin.WeightedCoarseGrainingExamples.log"
+  },
+  {
+    "module": "GaussianBlockSpin.WeightedCoarseGrainingFollowupAudit",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/gaussian/GaussianBlockSpin/WeightedCoarseGrainingFollowupAudit.lean",
+    "sha256": "9e5c5b8f0a9a2adb52f3082037878faa353229e1bdfdcc500d26897bbb0659c5",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/gaussian",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/gaussian/GaussianBlockSpin/WeightedCoarseGrainingFollowupAudit.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/lib/GaussianBlockSpin/WeightedCoarseGrainingFollowupAudit.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gaussian-followup/logs/GaussianBlockSpin.WeightedCoarseGrainingFollowupAudit.log"
+  }
+]

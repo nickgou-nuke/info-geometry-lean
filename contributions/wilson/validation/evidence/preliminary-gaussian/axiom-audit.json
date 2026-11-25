@@ -1,0 +1,157 @@
+{
+  "allowed_axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "audit_source": "/workspace/scratch/058543be00a5/wilson-contributions/gaussian/GaussianBlockSpin/WeightedCoarseGrainingAudit.lean",
+  "audit_source_sha256": "8cc03e22c29aed184d90c91b248e31ec3168b14701b8c9beccd82e103cf4191e",
+  "axiom_log_sha256": "3321f1dd4b050cf3c0842bd4bf1a18ca391367b5d6873e24217434bc2313884a",
+  "declarations": {
+    "GaussianBlockSpin.WeightedCoarseGraining.block_quadratic_eq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_inv": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_posDef": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_eq_sub_response": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_inv": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_posDef": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_scalar_inner": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.effStiffness_harmonicExtension": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.finePrecision_inv": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.finePrecision_mul_harmonicExtension": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.finePrecision_posDef": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.finePrecision_scalar_toEuclideanLin": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_adjoint_mul_finePrecision": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_scalar_eq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.harmonicExtension_scalar_mulVec_eq": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.inner_toEuclideanLin_pos": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.integral_blockKernel_mul_gaussian_coarsePrecision": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.is_joint_minimizer_iff": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.is_minimizer_iff": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_at_harmonicExtension": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_completion": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_eq_min_iff": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.quadraticEnergy_lower_bound": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.quadratic_completion": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.quadratic_re_eq_zero_iff": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_completion": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_eq_min_iff": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.twoStageEnergy_lower_bound": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "GaussianBlockSpin.WeightedCoarseGraining.twoStage_coarsePrecision_inv": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+[
+  {
+    "module": "CoreLean.ApproximateCompatibility",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateCompatibility.lean",
+    "sha256": "35f94d5d13d756b7be3056216ace51fa5f3602eb78001ebd8d90f760f1cbb249",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/states",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateCompatibility.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/states-followup/lib/CoreLean/ApproximateCompatibility.olean",
+      "-Dlinter.mathlibStandardSet=true"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/states-followup/logs/CoreLean.ApproximateCompatibility.log"
+  },
+  {
+    "module": "CoreLean.ApproximateStateLimits",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateStateLimits.lean",
+    "sha256": "4ceabf4bdf6be47689e621daf50a87d89c8b34d10226587de340bf1d64a5e19d",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/states",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateStateLimits.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/states-followup/lib/CoreLean/ApproximateStateLimits.olean",
+      "-Dlinter.mathlibStandardSet=true"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/states-followup/logs/CoreLean.ApproximateStateLimits.log"
+  },
+  {
+    "module": "CoreLean.ApproximateStateLimitsAudit",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateStateLimitsAudit.lean",
+    "sha256": "eb2bf6a91c2505e12c4c31d2747f7bc0d3d1b4b23bf6a61fe15fafb9aa4b96b3",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/states",
+      "/workspace/scratch/058543be00a5/wilson-contributions/followup/states/CoreLean/ApproximateStateLimitsAudit.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/states-followup/lib/CoreLean/ApproximateStateLimitsAudit.olean",
+      "-Dlinter.mathlibStandardSet=true"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/states-followup/logs/CoreLean.ApproximateStateLimitsAudit.log"
+  }
+]

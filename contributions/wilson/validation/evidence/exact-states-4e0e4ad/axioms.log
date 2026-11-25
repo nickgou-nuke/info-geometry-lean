@@ -1,0 +1,11 @@
+'ApproximateCompatibility.evaluationSequence' does not depend on any axioms
+'ApproximateCompatibility.evaluationSequence_zero' does not depend on any axioms
+'ApproximateCompatibility.evaluationSequence_succ' does not depend on any axioms
+'ApproximateCompatibility.dist_evaluationSequence_succ_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ApproximateCompatibility.cauchySeq_evaluationSequence' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ApproximateCompatibility.exists_compatible_limit' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ApproximateCompatibility.evaluationSequence_add' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ApproximateCompatibility.evaluationSequence_smul' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ApproximateCompatibility.evaluationSequence_one' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ApproximateCompatibility.evaluationSequence_nonneg' depends on axioms: [propext, Classical.choice, Quot.sound]
+'ApproximateCompatibility.exists_normalized_positive_limits' depends on axioms: [propext, Classical.choice, Quot.sound]

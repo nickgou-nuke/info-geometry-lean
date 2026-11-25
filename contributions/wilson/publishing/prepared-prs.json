@@ -1,0 +1,136 @@
+{
+  "upstream_repository": "MathePhysics/4D_Wilson_Loop_RG",
+  "upstream_base": "c25e77e9654a54fc5e4a04bfb637b7144defacc0",
+  "publication_status": "requires writable fork",
+  "prs": {
+    "gaussian": {
+      "project": "LEAN/Libraries/GaussianBlockSpin",
+      "branch": "codex/weighted-gaussian-coarse-graining-20261124",
+      "title": "Add matrix-weighted Gaussian coarse-graining and native Markov kernels",
+      "workflow": "weighted-gaussian.yml",
+      "readme": "README-weighted-coarse-graining.md",
+      "umbrella": "GaussianBlockSpin.lean",
+      "imports": [
+        "GaussianBlockSpin.WeightedCoarseGrainingComposition",
+        "GaussianBlockSpin.WeightedEffectiveForm",
+        "GaussianBlockSpin.WeightedCoarseGrainingSpecialization",
+        "GaussianBlockSpin.WeightedKernelConvolution",
+        "GaussianBlockSpin.WeightedMarkovKernel",
+        "GaussianBlockSpin.WeightedReflectionPositive"
+      ],
+      "local_commit": "c1666039370b89720c6f3403032a9e8c4fbf1c6b",
+      "tree": "252d757c2ecd89bdc40a6c57d7d4f91d5e38546c",
+      "patch": "patches/gaussian.patch",
+      "description": "descriptions/gaussian.md",
+      "files": {
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/ReflectionPositiveCovariance.lean": "60895362740af4a57657f84e891dd72e57d87a87add9eec045468c0f4a7a44da",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/ReflectionPositiveCovarianceAudit.lean": "f0b57ed1546a1a612e9e0ec2a15cbe81e6182350b20bcc17852d39ea84543bee",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedCoarseGraining.lean": "784b1d5fc7c59325a7068bc7885162526c87421a410a848ee58ef07a148161d1",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedCoarseGrainingAudit.lean": "fc047eed1d0467eecf39f9c25bba901456385faa8a54408d2e7025d30ad850c0",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedCoarseGrainingComposition.lean": "d1067ad37250ea2a913a05ad5115493d2e1a0dcc00254e8ecb108f649db4ead7",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedCoarseGrainingExamples.lean": "d1fa1579149496970be34ae7c0be046c0e587db04d97074ba02f2415e32aa333",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedCoarseGrainingSpecialization.lean": "46ca03a866acecf73b232d585a64390be00be474afef6751800b632cf07270cd",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedCoarseGrainingVariational.lean": "59071a1ea8fd30db4b268cf57fe8300360943c9e6b51884c8b7fb6b6c08861b6",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedEffectiveForm.lean": "9c1081be2460a6103eedcb83fb8b26d4e66663f5b612a231304b7dabb1e1e7c9",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedKernel.lean": "9deb8cbbe86c20847b1aaac49d582b18a87361e0251ff1c7bc4528e264e676e0",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedKernelConvolution.lean": "2da94c02dcb9a9ff4594658e83a1e961224c0eb4517f1f4b35087e7e34608477",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedMarkovKernel.lean": "350eea7735ba80d6cff36387a7658f0f4989fc1fe15168fd0b3581d60591ec9b",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedMarkovKernelAudit.lean": "eca2decd12041d650c80f9770a2c17fe73856266108feb33cb17ed6148b69951",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedReflectionPositive.lean": "2d35164841286342645bc373a777c4c84d7d6c0c7ff569574de5f83de6e570bd",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/WeightedReflectionPositiveAudit.lean": "c2e81508f96dacb0bc063acfc187380e701b5a83800249534608fc940d0a8e8c",
+        "LEAN/Libraries/GaussianBlockSpin/LICENSE": "97788321c39af446ed0507b71982c8b82185475c8c8cf13a1b7736ee1f22aa30",
+        "LEAN/Libraries/GaussianBlockSpin/LICENSE-InfoGeometry-Apache-2.0": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+        "LEAN/Libraries/GaussianBlockSpin/README-weighted-coarse-graining.md": "558bfa9fbca99c9947a59e86eee481b1c1d705e3d5368a3c5cb68f6e3e89e308",
+        "LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin.lean": "db1e9a08fcea7aef355ecc1e3f5dc556e599ac024f869114865ee5684131ab75",
+        ".github/scripts/check_lean_axioms.py": "e277a58bf6db1f985e74a2ccd3538452108890a7531d49ec0e7aa171f6bae669",
+        ".github/workflows/weighted-gaussian.yml": "ec0dc811138241a9e21dd2dc3d706dc8b42ba5c29b38aa575ba9cbf3d46b4ebf"
+      },
+      "patch_sha256": "511061fb730e27661672a57f863ab404d9554c9c646a04676261c48f67fad717"
+    },
+    "cutoff": {
+      "project": "LEAN/CoreLean",
+      "branch": "codex/cutoff-comparison-summability-20261124",
+      "title": "Add normalized cutoff estimates and real power-log summability",
+      "workflow": "cutoff-comparison.yml",
+      "readme": "README-cutoff-comparison.md",
+      "umbrella": "CoreLean.lean",
+      "imports": [
+        "CoreLean.CutoffRecursion",
+        "CoreLean.CutoffLimit"
+      ],
+      "local_commit": "33f42ce6fbc581cb9ba927957e0751c09a3c4071",
+      "tree": "59ae67aaed5231637d81909b4da2e5f0e11d0e17",
+      "patch": "patches/cutoff.patch",
+      "description": "descriptions/cutoff.md",
+      "files": {
+        "LEAN/CoreLean/CoreLean/CutoffCheck.lean": "36b2f44f1f4b169d3c525070cca186fd95f994ce27e1c522e03735d1e8ebe0dc",
+        "LEAN/CoreLean/CoreLean/CutoffComparison.lean": "37e9c908d5380487f4e30f2e2cfc1403ea804e2df4c9d31c304f6443423993e2",
+        "LEAN/CoreLean/CoreLean/CutoffLimit.lean": "24d257ab22797ee821489b7bdebea08e3bda302d4b6f166d557c01ceec05f2d4",
+        "LEAN/CoreLean/CoreLean/CutoffRecursion.lean": "8e57bd67e24c8c584e3fef5c44a87bce06496647a5a523d5f7383f5679a9e1e2",
+        "LEAN/CoreLean/CoreLean/CutoffSummability.lean": "3324b4b353d058a0ae0d77db20fd10310c453b7995b5c9f6cb66d6329671abac",
+        "LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+        "LEAN/CoreLean/README-cutoff-comparison.md": "3e0c3fd710e22b12552d2ec8182f3a7fc852e9d1dd3257683cc462a083c094a2",
+        "LEAN/CoreLean/CoreLean.lean": "d6e6e1920d0478e4e9732422eefaf7c9c169df3b3c3b4f57788cf2f57b4f879b",
+        ".github/scripts/check_lean_axioms.py": "e277a58bf6db1f985e74a2ccd3538452108890a7531d49ec0e7aa171f6bae669",
+        ".github/workflows/cutoff-comparison.yml": "2a2df26974202debfeb00927de03a96749e60e2c33fd1d42981ba1923d9498a6"
+      },
+      "patch_sha256": "02c1ae985bb8e8e122faa6a7803032a5dec1ec8d110f385df3f7b71709cec2f1"
+    },
+    "gram": {
+      "project": "LEAN/CoreLean",
+      "branch": "codex/positive-kernel-hilbert-colimit-20261124",
+      "title": "Construct complex finite Gram quotients and their Hilbert colimit",
+      "workflow": "positive-kernel-colimit.yml",
+      "readme": "README-positive-kernel-colimit.md",
+      "umbrella": "CoreLean.lean",
+      "imports": [
+        "CoreLean.PositiveKernelFiniteColimit",
+        "CoreLean.PositiveKernelLimit"
+      ],
+      "local_commit": "3aed069466eb9d117dfe5a435f48b434ec12091a",
+      "tree": "cb62e5740a74685318274c229fb8f12ba8917faa",
+      "patch": "patches/gram.patch",
+      "description": "descriptions/gram.md",
+      "files": {
+        "LEAN/CoreLean/CoreLean/PositiveKernelFiniteColimit.lean": "63263ea1b23b594089b0753d855e074f0fb4c692630fabc3d0f3721a40210022",
+        "LEAN/CoreLean/CoreLean/PositiveKernelFiniteColimitAudit.lean": "41134760d85ba80ad1f1eb1240184aeb614d806ab2bddcd3d7f209bb05cf679d",
+        "LEAN/CoreLean/CoreLean/PositiveKernelLimit.lean": "abb38a2d5b87742f26fffd6d8e62f96904704f975229951a8d10926b97092262",
+        "LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+        "LEAN/CoreLean/README-positive-kernel-colimit.md": "fe11ae1189724373c1f8452e82155ef570c985072d1d81887662cfaf51ee6550",
+        "LEAN/CoreLean/CoreLean.lean": "7a8dbecc01bdf3721717b8cc51366c2e565cbfa23791e19be93d9ac3e4669132",
+        ".github/scripts/check_lean_axioms.py": "e277a58bf6db1f985e74a2ccd3538452108890a7531d49ec0e7aa171f6bae669",
+        ".github/workflows/positive-kernel-colimit.yml": "5da9b2d0ffbf1de28369b0d6ff916a6b90ec5d510c92cd16a3437553fe910c5b"
+      },
+      "patch_sha256": "4376a83b51ff3289351ea212f58e5f93548b0b72638164e6f5a290c3a415705c"
+    },
+    "states": {
+      "project": "LEAN/CoreLean",
+      "source": "followup/states",
+      "lean_prefix": "CoreLean",
+      "branch": "codex/approximate-compatible-states-20261124",
+      "title": "Construct positive compatible limits from summable state errors",
+      "workflow": "approximate-state-limits.yml",
+      "readme": "README-approximate-state-limits.md",
+      "umbrella": "CoreLean.lean",
+      "imports": [
+        "CoreLean.ApproximateCompatibility",
+        "CoreLean.ApproximateStateLimits"
+      ],
+      "local_commit": "a4762b6481c6737a3c4fb2bae37de5c2d451e228",
+      "tree": "2791c2ea7de7f39bfbf23cb013af22d6e46d9fb9",
+      "patch": "patches/states.patch",
+      "description": "descriptions/states.md",
+      "files": {
+        "LEAN/CoreLean/CoreLean/ApproximateCompatibility.lean": "35f94d5d13d756b7be3056216ace51fa5f3602eb78001ebd8d90f760f1cbb249",
+        "LEAN/CoreLean/CoreLean/ApproximateStateLimits.lean": "4ceabf4bdf6be47689e621daf50a87d89c8b34d10226587de340bf1d64a5e19d",
+        "LEAN/CoreLean/CoreLean/ApproximateStateLimitsAudit.lean": "eb2bf6a91c2505e12c4c31d2747f7bc0d3d1b4b23bf6a61fe15fafb9aa4b96b3",
+        "LEAN/CoreLean/LICENSE-InfoGeometry-Apache-2.0": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+        "LEAN/CoreLean/README-approximate-state-limits.md": "6190a389c3c0778f1e673a59b42c20651b46898cb6bf86aa055cd32da97c179d",
+        "LEAN/CoreLean/CoreLean.lean": "aad22eddc18cdcf60355502edbb3c244526fe03636404f2d0c01481c10be2359",
+        ".github/scripts/check_lean_axioms.py": "e277a58bf6db1f985e74a2ccd3538452108890a7531d49ec0e7aa171f6bae669",
+        ".github/workflows/approximate-state-limits.yml": "1cbb05c353adf52ff085b32decd68fb0e0736d035ed28062f40849e58fb04bf2"
+      },
+      "patch_sha256": "8e3036013c5e7ca4aa7e8e5370291f28157749467273dec50fa986e10c22334b"
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "gaussian",
+  "id": 14953070945,
+  "digest": "sha256:f4838fd98f3e9b6d91b121bfd6f86c9732e465c68ea56c562d37693b7fa5b8b2",
+  "run_id": 45460909233,
+  "source_commit": "4e0e4add51d44649cb232d9c8f540f26d34a709d",
+  "matched_lean_sources": [
+    "GaussianBlockSpin/WeightedCoarseGraining.lean",
+    "GaussianBlockSpin/WeightedCoarseGrainingAudit.lean",
+    "GaussianBlockSpin/WeightedCoarseGrainingComposition.lean",
+    "GaussianBlockSpin/WeightedCoarseGrainingExamples.lean",
+    "GaussianBlockSpin/WeightedCoarseGrainingSpecialization.lean",
+    "GaussianBlockSpin/WeightedCoarseGrainingVariational.lean",
+    "GaussianBlockSpin/WeightedEffectiveForm.lean",
+    "GaussianBlockSpin/WeightedKernel.lean",
+    "GaussianBlockSpin/WeightedKernelConvolution.lean"
+  ],
+  "public_theorem_count": 54
+}

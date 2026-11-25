@@ -1,0 +1,50 @@
+[
+  {
+    "module": "CoreLean.PositiveKernelFiniteColimit",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/gram/CoreLean/PositiveKernelFiniteColimit.lean",
+    "sha256": "90ef181605158872ae881c7687b88d945b499b03193a9e05e53f62ae0e722d68",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/gram",
+      "/workspace/scratch/058543be00a5/wilson-contributions/gram/CoreLean/PositiveKernelFiniteColimit.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gram/lib/CoreLean/PositiveKernelFiniteColimit.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gram/logs/CoreLean.PositiveKernelFiniteColimit.log"
+  },
+  {
+    "module": "CoreLean.PositiveKernelLimit",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/gram/CoreLean/PositiveKernelLimit.lean",
+    "sha256": "db62f2c4c45f8a23e27ea606a6e0a1600cb6a5bc0d0492a2112b642982eb492b",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/gram",
+      "/workspace/scratch/058543be00a5/wilson-contributions/gram/CoreLean/PositiveKernelLimit.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gram/lib/CoreLean/PositiveKernelLimit.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gram/logs/CoreLean.PositiveKernelLimit.log"
+  },
+  {
+    "module": "CoreLean.PositiveKernelFiniteColimitAudit",
+    "source": "/workspace/scratch/058543be00a5/wilson-contributions/gram/CoreLean/PositiveKernelFiniteColimitAudit.lean",
+    "sha256": "ee3287448b00e473f8942e960784b3a261f1e49bc0c2f578fa427e2ecae7db44",
+    "command": [
+      "/workspace/scratch/058543be00a5/lean-runtime/lean-4.34.1-linux/bin/lean",
+      "-j1",
+      "-R",
+      "/workspace/scratch/058543be00a5/wilson-contributions/gram",
+      "/workspace/scratch/058543be00a5/wilson-contributions/gram/CoreLean/PositiveKernelFiniteColimitAudit.lean",
+      "-o",
+      "/dev/shm/wilson-contributions-058543be00a5/gram/lib/CoreLean/PositiveKernelFiniteColimitAudit.olean"
+    ],
+    "exit_code": 0,
+    "log": "/dev/shm/wilson-contributions-058543be00a5/gram/logs/CoreLean.PositiveKernelFiniteColimitAudit.log"
+  }
+]

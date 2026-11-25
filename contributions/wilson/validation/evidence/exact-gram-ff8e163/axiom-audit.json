@@ -1,0 +1,147 @@
+{
+  "CoreLean.PositiveKernel.inner_preToHilbert": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.inner_feature": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.inner_finiteEval": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.mem_ker_finiteEval_iff": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.mem_ker_finiteEval_iff_radical": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.quotientEmbedding_injective": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.quotientEmbedding_mk": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.inner_quotientEmbedding_mk": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.finiteEval_zeroExtend": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.finiteGram_zeroExtend": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.stage_mono": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.stageMap_self": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.stageMap_comp": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.quotientEmbedding_quotientMap": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.quotientMap_mk": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.quotientMap_injective": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.colimitToHilbert_stage": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.colimitToHilbert_injective": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.existsUnique_lift": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.feature_mem_range_colimit": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.preToHilbert_mem_range_colimit": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.denseRange_colimitToHilbert": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.range_colimitToHilbert_eq_union": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.dense_stageUnion": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.completionToHilbert_surjective": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.completionEquiv_stage": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.posSemidef_of_tendsto": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.stageToColimitIsometry": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ],
+  "CoreLean.PositiveKernel.completionEquiv": [
+    "propext",
+    "Classical.choice",
+    "Quot.sound"
+  ]
+}

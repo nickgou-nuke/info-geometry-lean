@@ -1,0 +1,34 @@
+{
+  "upstream_sha": "9a4492cc6bdf3338379123a085af59dfd8018a9c",
+  "toolchain": "leanprover/lean4:v4.36.0",
+  "expected_mathlib_sha": "fc4f59e577feb1a4956671bc04ac18aaaf8cd842",
+  "candidate": "states",
+  "pinned_file_hashes": {
+    "lean-toolchain": "582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a",
+    "lakefile.toml": "5fcec99108cc5fdd8d1064e57260747a1610302fdfed5a90bc05209802588da9",
+    "lake-manifest.json": "a2f40629d4557042a0fe242f3275915bb759cdb50e25a5b74fa3ff404ae382c1"
+  },
+  "sources": {
+    "CoreLean/ApproximateCompatibility.lean": "35f94d5d13d756b7be3056216ace51fa5f3602eb78001ebd8d90f760f1cbb249",
+    "CoreLean/ApproximateStateLimits.lean": "4ceabf4bdf6be47689e621daf50a87d89c8b34d10226587de340bf1d64a5e19d",
+    "CoreLean/ApproximateStateLimitsAudit.lean": "eb2bf6a91c2505e12c4c31d2747f7bc0d3d1b4b23bf6a61fe15fafb9aa4b96b3",
+    "LICENSE-InfoGeometry-Apache-2.0": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+    "THEOREM_CONTRACT.md": "e9e6302041fe791608007a7ab1b39df8a936906e071803cc68e687abe7cc90e9",
+    "source-api-comparison.json": "3d97537948e2326a295adaef8d80d94263e56615d73252f6b53a1215582a5d9d",
+    "CoreLean.lean": "d410e5c1826b83f07bfbe72ff628ca58f4d837afde0c18f40721497319b95c30"
+  },
+  "expected_axiom_declarations": [
+    "ApproximateCompatibility.evaluationSequence",
+    "ApproximateCompatibility.evaluationSequence_zero",
+    "ApproximateCompatibility.evaluationSequence_succ",
+    "ApproximateCompatibility.dist_evaluationSequence_succ_le",
+    "ApproximateCompatibility.cauchySeq_evaluationSequence",
+    "ApproximateCompatibility.exists_compatible_limit",
+    "ApproximateCompatibility.evaluationSequence_add",
+    "ApproximateCompatibility.evaluationSequence_smul",
+    "ApproximateCompatibility.evaluationSequence_one",
+    "ApproximateCompatibility.evaluationSequence_nonneg",
+    "ApproximateCompatibility.exists_normalized_positive_limits"
+  ],
+  "public_theorem_count": 10
+}

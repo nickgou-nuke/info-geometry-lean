@@ -1,0 +1,9 @@
+/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Canonical/CStarAlgebraStateColimit.lean:13:0: warning: The module doc-string for a file should be the first command after the imports.
+Please, add a module doc-string (`/-! ... -/`) before `set_option linter.unusedSectionVars false`.
+
+Hint: Type `m(odule docstring) + [tab]` to insert a template via snippet.
+
+Note: This linter can be disabled with `set_option linter.style.header false`
+/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Canonical/CStarAlgebraStateColimit.lean:383:100: warning: This line exceeds the 100 character limit, please shorten it!
+
+Note: This linter can be disabled with `set_option linter.style.longLine false`

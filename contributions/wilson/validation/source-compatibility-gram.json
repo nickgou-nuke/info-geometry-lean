@@ -1,0 +1,72 @@
+{
+  "kind": "read-only source API compatibility review",
+  "date": "2026-11-24",
+  "destination_mathlib": "fc4f59e577feb1a4956671bc04ac18aaaf8cd842",
+  "preliminary_toolchain": "Lean 4.34.1; this source receipt does not certify compilation",
+  "retrieval": "GitHub fetch_file at exact destination commit",
+  "checked": [
+    {
+      "path": "Mathlib/Analysis/InnerProductSpace/Defs.lean",
+      "url": "https://github.com/leanprover-community/mathlib4/blob/fc4f59e577feb1a4956671bc04ac18aaaf8cd842/Mathlib/Analysis/InnerProductSpace/Defs.lean",
+      "blob_sha": "4e79b8b6fcc4ef6e148bd1b181d7af8a140d25fd",
+      "symbols": [
+        "PreInnerProductSpace.Core",
+        "InnerProductSpace.Core.toSeminormedAddCommGroup",
+        "InnerProductSpace.ofCore"
+      ],
+      "result": "Required fields and constructor signatures retained."
+    },
+    {
+      "path": "Mathlib/Analysis/InnerProductSpace/Completion.lean",
+      "url": "https://github.com/leanprover-community/mathlib4/blob/fc4f59e577feb1a4956671bc04ac18aaaf8cd842/Mathlib/Analysis/InnerProductSpace/Completion.lean",
+      "blob_sha": "596a9b09dfda4160aebae434e9769b9e54bc534f",
+      "symbols": [
+        "UniformSpace.Completion.inner_coe",
+        "UniformSpace.Completion.innerProductSpace"
+      ],
+      "result": "Required signatures retained; completion accepts seminormed source."
+    },
+    {
+      "path": "Mathlib/Algebra/Colimit/Module.lean",
+      "url": "https://github.com/leanprover-community/mathlib4/blob/fc4f59e577feb1a4956671bc04ac18aaaf8cd842/Mathlib/Algebra/Colimit/Module.lean",
+      "blob_sha": "84eadd39fd4b5f3eabdc0c68cc548d6987bd8fb7",
+      "symbols": [
+        "Module.DirectLimit.of",
+        "Module.DirectLimit.exists_of",
+        "Module.DirectLimit.lift",
+        "Module.DirectLimit.lift_of",
+        "Module.DirectLimit.hom_ext",
+        "Module.DirectLimit.lift_injective"
+      ],
+      "result": "Required signatures retained. exists_of needs nonempty directed index; lift_injective needs directed index. These particular declarations do not require a DirectedSystem instance."
+    },
+    {
+      "path": "Mathlib/Analysis/Matrix/Order.lean",
+      "url": "https://github.com/leanprover-community/mathlib4/blob/fc4f59e577feb1a4956671bc04ac18aaaf8cd842/Mathlib/Analysis/Matrix/Order.lean",
+      "blob_sha": "1f2e1b05714df898502753dc3be66250e33ab9c7",
+      "symbols": [
+        "Matrix.posSemidef_is_closed",
+        "Matrix.nonneg_iff_posSemidef",
+        "Matrix.instOrderClosedTopology"
+      ],
+      "result": "posSemidef_is_closed retained but deprecated since 2026-10-28. Nonneg/PSD equivalence and MatrixOrder-scoped order-closed topology available without finite-index restriction."
+    },
+    {
+      "path": "Mathlib/Topology/Order/OrderClosed.lean",
+      "url": "https://github.com/leanprover-community/mathlib4/blob/fc4f59e577feb1a4956671bc04ac18aaaf8cd842/Mathlib/Topology/Order/OrderClosed.lean",
+      "blob_sha": "1484e24cc64942dcb8ea0cc58b72c8da953af3d7",
+      "symbols": [
+        "le_of_tendsto",
+        "ge_of_tendsto"
+      ],
+      "result": "ge_of_tendsto is the generated dual for an eventual lower bound b \u2264 f i; le_of_tendsto instead passes an upper bound f i \u2264 b."
+    }
+  ],
+  "candidate_adjustment": "PositiveKernelLimit now uses MatrixOrder, entrywise Tendsto promoted to matrix Tendsto, eventual matrix nonnegativity, and ge_of_tendsto. It no longer calls the deprecated closed-cone alias.",
+  "hard_api_gaps_found": [],
+  "limitations": [
+    "Source review is not elaboration, kernel checking, or a destination-pin build.",
+    "Only the named core, completion, colimit, and closed-cone/order APIs were reviewed.",
+    "Actual preliminary build and destination CI results are separate evidence."
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "checked_source_commit": "ff8e1632b45569d88da1c73c0ec160c913fe55f9",
+  "workflow_run_id": 45571203500,
+  "upstream_base": "c25e77e9654a54fc5e4a04bfb637b7144defacc0",
+  "also_applies_to": "a82aefbb07ff4fa1dd2e77ed8edaf7ec05547c04",
+  "checks": {
+    "gaussian": {
+      "local_commit": "c1666039370b89720c6f3403032a9e8c4fbf1c6b",
+      "patch_sha256": "511061fb730e27661672a57f863ab404d9554c9c646a04676261c48f67fad717",
+      "proposed_file_count": 21,
+      "lean_files_matching_successful_ci_including_umbrella": 16,
+      "apply_check": "PASS",
+      "applied_trees": {
+        "c25e77e9654a54fc5e4a04bfb637b7144defacc0": "252d757c2ecd89bdc40a6c57d7d4f91d5e38546c",
+        "a82aefbb07ff4fa1dd2e77ed8edaf7ec05547c04": "1d0753af8206d6eab955b5bdfe3f4b3c2c6339f4"
+      }
+    },
+    "cutoff": {
+      "local_commit": "33f42ce6fbc581cb9ba927957e0751c09a3c4071",
+      "patch_sha256": "02c1ae985bb8e8e122faa6a7803032a5dec1ec8d110f385df3f7b71709cec2f1",
+      "proposed_file_count": 10,
+      "lean_files_matching_successful_ci_including_umbrella": 6,
+      "apply_check": "PASS",
+      "applied_trees": {
+        "c25e77e9654a54fc5e4a04bfb637b7144defacc0": "59ae67aaed5231637d81909b4da2e5f0e11d0e17",
+        "a82aefbb07ff4fa1dd2e77ed8edaf7ec05547c04": "e7977ee99e04798c39c93b76ca86649844014af3"
+      }
+    },
+    "gram": {
+      "local_commit": "3aed069466eb9d117dfe5a435f48b434ec12091a",
+      "patch_sha256": "4376a83b51ff3289351ea212f58e5f93548b0b72638164e6f5a290c3a415705c",
+      "proposed_file_count": 8,
+      "lean_files_matching_successful_ci_including_umbrella": 4,
+      "apply_check": "PASS",
+      "applied_trees": {
+        "c25e77e9654a54fc5e4a04bfb637b7144defacc0": "cb62e5740a74685318274c229fb8f12ba8917faa",
+        "a82aefbb07ff4fa1dd2e77ed8edaf7ec05547c04": "f2d37a6bb117ec172ce31c16a08b6d204778eeac"
+      }
+    },
+    "states": {
+      "local_commit": "a4762b6481c6737a3c4fb2bae37de5c2d451e228",
+      "patch_sha256": "8e3036013c5e7ca4aa7e8e5370291f28157749467273dec50fa986e10c22334b",
+      "proposed_file_count": 8,
+      "lean_files_matching_successful_ci_including_umbrella": 4,
+      "apply_check": "PASS",
+      "applied_trees": {
+        "c25e77e9654a54fc5e4a04bfb637b7144defacc0": "2791c2ea7de7f39bfbf23cb013af22d6e46d9fb9",
+        "a82aefbb07ff4fa1dd2e77ed8edaf7ec05547c04": "8211bb3c1eec687b83af094e5cac0605f91e000a"
+      }
+    }
+  }
+}

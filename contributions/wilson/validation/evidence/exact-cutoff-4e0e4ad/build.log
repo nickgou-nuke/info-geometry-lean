@@ -1,0 +1,28 @@
+✔ [4948/4957] Built CoreLean.CutoffRecursion (955ms)
+✔ [4950/4957] Built CoreLean.CutoffComparison (987ms)
+✔ [4952/4957] Built CoreLean.CutoffSummability (1.0s)
+✔ [4954/4957] Built CoreLean.CutoffLimit (737ms)
+ℹ [4956/4957] Built CoreLean.CutoffCheck (673ms)
+info: CoreLean/CutoffCheck.lean:15:0: 'CoreLean.CutoffComparison.normalized_sub' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:16:0: 'CoreLean.CutoffComparison.norm_normalized_sub_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:17:0: 'CoreLean.CutoffComparison.norm_exp_mul_sub_le' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:18:0: 'CoreLean.CutoffComparison.exists_limit_of_relative_errors' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:19:0: 'CoreLean.CutoffRecursion.le_weight_of_monotone_homogeneous' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:20:0: 'CoreLean.CutoffRecursion.le_weight_of_row_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:21:0: 'CoreLean.CutoffRecursion.le_two_mul_weight_of_quarter_row_bound' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CoreLean/CutoffCheck.lean:22:0: 'CoreLean.CutoffSummability.log_affine_isBigO_log' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:23:0: 'CoreLean.CutoffSummability.log_affine_rpow_isBigO_rpow' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:24:0: 'CoreLean.CutoffSummability.log_affine_pow_isBigO_rpow' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:25:0: 'CoreLean.CutoffSummability.summable_rpow_mul_log_affine_rpow' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CoreLean/CutoffCheck.lean:26:0: 'CoreLean.CutoffSummability.summable_rpow_mul_log_affine_pow' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:27:0: 'CoreLean.CutoffSummability.summable_cutoff_remainder' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:28:0: 'CoreLean.CutoffSummability.summable_cutoff_remainder_mul_cutoff' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+info: CoreLean/CutoffCheck.lean:29:0: 'CoreLean.CutoffLimit.summable_linearLossRemainder' depends on axioms: [propext, Classical.choice, Quot.sound]
+info: CoreLean/CutoffCheck.lean:30:0: 'CoreLean.CutoffLimit.exists_limit_of_cutoff_remainder' depends on axioms: [propext, Classical.choice, Quot.sound]
+Build completed successfully (4957 jobs).

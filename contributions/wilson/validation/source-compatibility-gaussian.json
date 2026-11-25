@@ -1,0 +1,68 @@
+{
+  "scope": "source/API comparison, not compiler verification",
+  "repository": "leanprover-community/mathlib4",
+  "destination_ref": "8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a",
+  "destination_toolchain": "leanprover/lean4:v4.34.0-rc2",
+  "local_ref": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "local_toolchain": "leanprover/lean4:v4.34.1",
+  "local_checkout": "/workspace/scratch/058543be00a5/info-geometry-lean/.lake/packages/mathlib",
+  "method": "Destination blob SHA returned by GitHub fetch_file at the exact commit; local blob SHA computed as SHA-1 of git blob header followed by the file bytes. Relevant declaration signatures were read from the fetched source.",
+  "files": [
+    {
+      "path": "Mathlib/Analysis/Matrix/PosDef.lean",
+      "destination_git_blob_sha": "5ed87a4e89156114c838a1c80a17bee923db0a8d",
+      "local_git_blob_sha": "5ed87a4e89156114c838a1c80a17bee923db0a8d",
+      "source_url": "https://github.com/leanprover-community/mathlib4/blob/8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a/Mathlib/Analysis/Matrix/PosDef.lean",
+      "match": true
+    },
+    {
+      "path": "Mathlib/LinearAlgebra/Matrix/NonsingularInverse.lean",
+      "destination_git_blob_sha": "b3ea61392d1cea6611deddfcf2c1da7938f3d9e6",
+      "local_git_blob_sha": "b3ea61392d1cea6611deddfcf2c1da7938f3d9e6",
+      "source_url": "https://github.com/leanprover-community/mathlib4/blob/8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a/Mathlib/LinearAlgebra/Matrix/NonsingularInverse.lean",
+      "match": true
+    },
+    {
+      "path": "Mathlib/Analysis/Normed/Lp/Matrix.lean",
+      "destination_git_blob_sha": "bbe4769e298c51c4f3c7047c0ab97dcebe78c435",
+      "local_git_blob_sha": "bbe4769e298c51c4f3c7047c0ab97dcebe78c435",
+      "source_url": "https://github.com/leanprover-community/mathlib4/blob/8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a/Mathlib/Analysis/Normed/Lp/Matrix.lean",
+      "match": true
+    },
+    {
+      "path": "Mathlib/LinearAlgebra/Matrix/PosDef.lean",
+      "destination_git_blob_sha": "d85277376a28a5c2265aad6e21472b1fec73185a",
+      "local_git_blob_sha": "d85277376a28a5c2265aad6e21472b1fec73185a",
+      "source_url": "https://github.com/leanprover-community/mathlib4/blob/8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a/Mathlib/LinearAlgebra/Matrix/PosDef.lean",
+      "match": true
+    },
+    {
+      "path": "Mathlib/LinearAlgebra/Matrix/Hermitian.lean",
+      "destination_git_blob_sha": "f731d5d3ec8ac4ac509d6d4e91c5801649a53c89",
+      "local_git_blob_sha": "f731d5d3ec8ac4ac509d6d4e91c5801649a53c89",
+      "source_url": "https://github.com/leanprover-community/mathlib4/blob/8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a/Mathlib/LinearAlgebra/Matrix/Hermitian.lean",
+      "match": true
+    },
+    {
+      "path": "Mathlib/Analysis/Matrix/Hermitian.lean",
+      "destination_git_blob_sha": "1053555f8b3721e9ebc33c4d4d444bb1cb47f7e7",
+      "local_git_blob_sha": "1053555f8b3721e9ebc33c4d4d444bb1cb47f7e7",
+      "source_url": "https://github.com/leanprover-community/mathlib4/blob/8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a/Mathlib/Analysis/Matrix/Hermitian.lean",
+      "match": true
+    },
+    {
+      "path": "Mathlib/Analysis/InnerProductSpace/Adjoint.lean",
+      "destination_git_blob_sha": "2a6292b78ff0806a603bc86f966096dd67cf2dc6",
+      "local_git_blob_sha": "2a6292b78ff0806a603bc86f966096dd67cf2dc6",
+      "source_url": "https://github.com/leanprover-community/mathlib4/blob/8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a/Mathlib/Analysis/InnerProductSpace/Adjoint.lean",
+      "match": true
+    },
+    {
+      "path": "Mathlib/Analysis/InnerProductSpace/PiL2.lean",
+      "destination_git_blob_sha": "2b67b8cc8a3eab5000f6646b8c9115c5b55a963f",
+      "local_git_blob_sha": "2b67b8cc8a3eab5000f6646b8c9115c5b55a963f",
+      "source_url": "https://github.com/leanprover-community/mathlib4/blob/8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a/Mathlib/Analysis/InnerProductSpace/PiL2.lean",
+      "match": true
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+/-
+Released under Apache 2.0 license; see LICENSE-InfoGeometry-Apache-2.0.
+-/
+import GaussianBlockSpin.WeightedCoarseGrainingSpecialization
+import GaussianBlockSpin.WeightedCoarseGrainingExamples
+
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.coarseCovariance_scalar_eq
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.coarsePrecision_scalar_eq
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.integral_blockKernel_mul_blockKernel_matrix
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.weighted_adjoint_inner
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.finePrecision_weighted_adjoint
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.finePrecision_weighted_identity
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.Examples.fineWeight_posDef
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.Examples.coarseWeight_posDef
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.Examples.fineWeight_inv
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.Examples.coarseWeight_inv
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.Examples.weights_do_not_commute
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.Examples.inverse_sandwich_order_matters
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.Examples.coarsePrecision_inv_eq
+#print axioms GaussianBlockSpin.WeightedCoarseGraining.Examples.coarsePrecision_example_posDef

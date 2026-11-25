@@ -1,0 +1,40 @@
+{
+  "upstream_sha": "9a4492cc6bdf3338379123a085af59dfd8018a9c",
+  "toolchain": "leanprover/lean4:v4.36.0",
+  "expected_mathlib_sha": "fc4f59e577feb1a4956671bc04ac18aaaf8cd842",
+  "candidate": "cutoff",
+  "pinned_file_hashes": {
+    "lean-toolchain": "582a63f8f9c5128067b688778c1051cf1464c3ca9d57b9325025c051c29b774a",
+    "lakefile.toml": "5fcec99108cc5fdd8d1064e57260747a1610302fdfed5a90bc05209802588da9",
+    "lake-manifest.json": "a2f40629d4557042a0fe242f3275915bb759cdb50e25a5b74fa3ff404ae382c1"
+  },
+  "sources": {
+    "CoreLean/CutoffCheck.lean": "36b2f44f1f4b169d3c525070cca186fd95f994ce27e1c522e03735d1e8ebe0dc",
+    "CoreLean/CutoffComparison.lean": "37e9c908d5380487f4e30f2e2cfc1403ea804e2df4c9d31c304f6443423993e2",
+    "CoreLean/CutoffLimit.lean": "24d257ab22797ee821489b7bdebea08e3bda302d4b6f166d557c01ceec05f2d4",
+    "CoreLean/CutoffRecursion.lean": "8e57bd67e24c8c584e3fef5c44a87bce06496647a5a523d5f7383f5679a9e1e2",
+    "CoreLean/CutoffSummability.lean": "3324b4b353d058a0ae0d77db20fd10310c453b7995b5c9f6cb66d6329671abac",
+    "LICENSE-InfoGeometry-Apache-2.0": "a6cba85bc92e0cff7a450b1d873c0eaa2e9fc96bf472df0247a26bec77bf3ff9",
+    "README-cutoff-comparison.md": "54f68726927ec6584928c00d10672384ee908abe35dda7a8b3c3221fc47eac55",
+    "CoreLean.lean": "52a177006ff5107e0663000ad5aa6c3082811037a3d8019e14750e6b113cdbb1"
+  },
+  "expected_axiom_declarations": [
+    "CoreLean.CutoffComparison.normalized_sub",
+    "CoreLean.CutoffComparison.norm_normalized_sub_le",
+    "CoreLean.CutoffComparison.norm_exp_mul_sub_le",
+    "CoreLean.CutoffComparison.exists_limit_of_relative_errors",
+    "CoreLean.CutoffRecursion.le_weight_of_monotone_homogeneous",
+    "CoreLean.CutoffRecursion.le_weight_of_row_bound",
+    "CoreLean.CutoffRecursion.le_two_mul_weight_of_quarter_row_bound",
+    "CoreLean.CutoffSummability.log_affine_isBigO_log",
+    "CoreLean.CutoffSummability.log_affine_rpow_isBigO_rpow",
+    "CoreLean.CutoffSummability.log_affine_pow_isBigO_rpow",
+    "CoreLean.CutoffSummability.summable_rpow_mul_log_affine_rpow",
+    "CoreLean.CutoffSummability.summable_rpow_mul_log_affine_pow",
+    "CoreLean.CutoffSummability.summable_cutoff_remainder",
+    "CoreLean.CutoffSummability.summable_cutoff_remainder_mul_cutoff",
+    "CoreLean.CutoffLimit.summable_linearLossRemainder",
+    "CoreLean.CutoffLimit.exists_limit_of_cutoff_remainder"
+  ],
+  "public_theorem_count": 16
+}

@@ -1,0 +1,11 @@
+/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Categorical/Holonomy.lean:16:0: warning: The module doc-string for a file should be the first command after the imports.
+Please, add a module doc-string (`/-! ... -/`) before `noncomputable section`.
+
+Hint: Type `m(odule docstring) + [tab]` to insert a template via snippet.
+
+Note: This linter can be disabled with `set_option linter.style.header false`
+/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Categorical/Holonomy.lean:158:0: warning: Definition `InfoGeometry.Categorical.Holonomy.filteredColimitPreservesFiniteLimitsOfShape` of class type is semireducible. Most type class instances should be instance-reducible, so consider marking this
+definition with `@[instance_reducible]`. If it is intentionally semireducible, this warning can be disabled with `set_option warn.classDefReducibility false`.
+/workspace/scratch/058543be00a5/info-geometry-lean/lean/InfoGeometry/Categorical/Holonomy.lean:158:0: warning: Definition `filteredColimitPreservesFiniteLimitsOfShape` is a proposition; use `theorem` instead of `def`
+
+Note: This linter can be disabled with `set_option linter.defProp false`

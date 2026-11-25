@@ -1,0 +1,92 @@
+{
+  "allowed_axioms": [
+    "Classical.choice",
+    "Quot.sound",
+    "propext"
+  ],
+  "audit_source": "wilson-contributions/cutoff/CoreLean/CutoffCheck.lean",
+  "audit_source_sha256": "1098891df6f323eb3fadb7eab6210884f31605c8109c8e59a7b4038dce5ed499",
+  "axiom_log_sha256": "9f614c350768e71671d3aef638154cc93cba04ed69477aa3838373da7331fbbf",
+  "declarations": {
+    "CoreLean.CutoffComparison.exists_limit_of_relative_errors": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffComparison.norm_exp_mul_sub_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffComparison.norm_normalized_sub_le": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffComparison.normalized_sub": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffLimit.exists_limit_of_cutoff_remainder": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffLimit.summable_linearLossRemainder": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffRecursion.le_two_mul_weight_of_quarter_row_bound": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffRecursion.le_weight_of_monotone_homogeneous": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffRecursion.le_weight_of_row_bound": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffSummability.log_affine_isBigO_log": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffSummability.log_affine_pow_isBigO_rpow": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffSummability.log_affine_rpow_isBigO_rpow": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffSummability.summable_cutoff_remainder": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffSummability.summable_cutoff_remainder_mul_cutoff": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffSummability.summable_rpow_mul_log_affine_pow": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "CoreLean.CutoffSummability.summable_rpow_mul_log_affine_rpow": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ]
+  }
+}

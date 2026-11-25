@@ -1,0 +1,3 @@
+'CStarStateColimit.Native.exists_compatibleStateFamily_of_summable_errors' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]

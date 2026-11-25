@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.SplitZornNullBoundary
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.TypeIIIModularCantorSystem
@@ -162,6 +167,95 @@ theorem addressNullGenerator_child_polar_self_zero (w : FiniteBinaryWord) (b : B
     polarZ (addressNullGenerator (child w b))
       (addressNullGenerator (child w b)) = 0 := by
   simp [addressNullGenerator_child]
+
+/-! ### Prefix-faithful address map into a Zorn null line
+
+Binary-tree heap indices are embedded in the `x1` axis of the Zorn carrier, a
+null line for `detZ`. Appending a bit follows the corresponding child step. -/
+
+/-- Heap index of a finite binary word, with root index `1`. -/
+def addressIndex : FiniteBinaryWord → ℕ :=
+  List.foldl (fun n b => 2 * n + (if b then 1 else 0)) 1
+
+/-- A word-dependent point on the top-right Zorn null line. -/
+def addressZornNullCell (w : FiniteBinaryWord) : ZornCell ℝ where
+  r := 0
+  s := 0
+  x1 := (addressIndex w : ℝ)
+  x2 := 0
+  x3 := 0
+  y1 := 0
+  y2 := 0
+  y3 := 0
+
+theorem addressIndex_child (w : FiniteBinaryWord) (b : Bool) :
+    addressIndex (child w b) = 2 * addressIndex w + (if b then 1 else 0) := by
+  simp [addressIndex, child, List.foldl_append]
+
+theorem addressZornNullCell_child_x1 (w : FiniteBinaryWord) (b : Bool) :
+    (addressZornNullCell (child w b)).x1 =
+      (2 * addressIndex w + (if b then 1 else 0) : ℕ) := by
+  simp [addressZornNullCell, addressIndex_child]
+
+theorem addressZornNullCell_detZ_zero (w : FiniteBinaryWord) :
+    detZ (addressZornNullCell w) = 0 := by
+  simp [addressZornNullCell, detZ]
+
+theorem addressZornNullCell_sq_zero (w : FiniteBinaryWord) :
+    addressZornNullCell w * addressZornNullCell w = (0 : ZornCell ℝ) := by
+  change mulZ (addressZornNullCell w) (addressZornNullCell w) = zornZero
+  simp [addressZornNullCell, zornZero, mulZ]
+
+theorem addressZornNullCell_children_distinct (w : FiniteBinaryWord) :
+    addressZornNullCell (child w false) ≠ addressZornNullCell (child w true) := by
+  intro h
+  have hx := congrArg ZornCell.x1 h
+  rw [addressZornNullCell_child_x1, addressZornNullCell_child_x1] at hx
+  have hn : (2 * addressIndex w : ℕ) = 2 * addressIndex w + 1 := by
+    exact_mod_cast hx
+  omega
+
+/-- Parity of all branch bits in a finite address. -/
+def addressParity : FiniteBinaryWord → Bool
+  | [] => false
+  | b :: w => Bool.xor b (addressParity w)
+
+/-- Appending a branch updates address parity by xor with that branch. -/
+theorem addressParity_child (w : FiniteBinaryWord) (b : Bool) :
+    addressParity (child w b) = Bool.xor (addressParity w) b := by
+  induction w with
+  | nil => simp [addressParity, child]
+  | cons a w ih =>
+      simp only [child, List.cons_append, addressParity]
+      have ih' : addressParity (w ++ [b]) = Bool.xor (addressParity w) b := by
+        simpa [child] using ih
+      rw [ih']
+      cases a <;> cases addressParity w <;> cases b <;> rfl
+
+/-- A recursive address readout into the two Zorn null directions.
+
+Unlike `addressNullGenerator`, this readout depends on the parity of the entire
+word and updates by a specified branch transition.  It is intentionally only a
+two-state quotient of addresses; it does not claim injectivity. -/
+def parityAddressNullGenerator (w : FiniteBinaryWord) : ZornCell ℝ :=
+  bitNullGenerator (addressParity w)
+
+/-- Appending a bit intertwines the Zorn readout with its parity transition. -/
+theorem parityAddressNullGenerator_child (w : FiniteBinaryWord) (b : Bool) :
+    parityAddressNullGenerator (child w b) =
+      bitNullGenerator (Bool.xor (addressParity w) b) := by
+  simp [parityAddressNullGenerator, addressParity_child]
+
+/-- Every parity-address readout remains in the split null cone. -/
+theorem parityAddressNullGenerator_detZ_zero (w : FiniteBinaryWord) :
+    detZ (parityAddressNullGenerator w) = 0 := by
+  simp [parityAddressNullGenerator]
+
+/-- Every parity-address readout remains square-zero. -/
+theorem parityAddressNullGenerator_sq_zero (w : FiniteBinaryWord) :
+    parityAddressNullGenerator w * parityAddressNullGenerator w =
+      (0 : ZornCell ℝ) := by
+  simp [parityAddressNullGenerator]
 
 /-- The two bit-controlled split-null directions form a concrete hyperbolic pair. -/
 @[simp] theorem topRight_bottomLeft_polar_pair :

@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.Algebra.NonAssocDerivation
 import Mathlib.Tactic
 
 /-!
@@ -69,6 +70,33 @@ theorem map_commutator (D : DerivationFamily (ι := ι) (A := A))
   noncomm_ring
 
 end DerivationFamily
+
+/-- Repackage one real-linear member of a finite Shirokov derivation family as
+Mathlib's native derivation of the same coefficient algebra. -/
+noncomputable def DerivationFamily.toMathlibDerivation
+    [Algebra ℝ A]
+    (D : DerivationFamily (ι := ι) (A := A))
+    (hDsmul : ∀ (i : ι) (r : ℝ) (a : A),
+      D.apply i (r • a) = r • D.apply i a)
+    (i : ι) : InfoGeometry.Algebra.NonAssocDerivation.derivations ℝ A := by
+  refine ⟨{
+    toFun := D.apply i
+    map_add' := D.map_add i
+    map_smul' := hDsmul i
+  }, ?_⟩
+  intro a b
+  exact D.map_mul i a b
+
+omit [Fintype ι] [DecidableEq ι] in
+@[simp] theorem DerivationFamily.toMathlibDerivation_apply
+    [Algebra ℝ A]
+    (D : DerivationFamily (ι := ι) (A := A))
+    (hDsmul : ∀ (i : ι) (r : ℝ) (a : A),
+      D.apply i (r • a) = r • D.apply i a)
+    (i : ι) (a : A) :
+    ((D.toMathlibDerivation hDsmul i :
+      InfoGeometry.Algebra.NonAssocDerivation.derivations ℝ A) :
+      Module.End ℝ A) a = D.apply i a := rfl
 
 /-- Curvature with the sign convention in Shirokov's equations (4.3), (5.15). -/
 def fieldStrength (D : DerivationFamily (ι := ι) (A := A))
@@ -413,5 +441,36 @@ theorem pseudoYangMills_solution_background_plus_parallel
   · intro j
     rw [pseudoYangMillsCurrent_background_plus_parallel D C K hflat hparallel ε j]
     exact hsource j
+
+omit [DecidableEq ι] in
+/-- The source prescribed by the finite-coordinate pseudo-Euclidean transfer
+is covariantly conserved whenever the coordinate derivations commute and are
+real-linear. This is the source-side consequence of the transferred solution
+and the general finite-coordinate current-conservation identity. -/
+theorem pseudoYangMills_source_conservation_background_plus_parallel
+    [Algebra ℝ A]
+    (D : DerivationFamily (ι := ι) (A := A)) (C K : ι → A)
+    (hflat : ∀ i j,
+      D.apply i (C j) - D.apply j (C i) - commutator (C i) (C j) = 0)
+    (hparallel : ∀ i j, D.apply i (K j) = commutator (C i) (K j))
+    (ε : ι → ℝ) (J : ι → A)
+    (hsource : ∀ j,
+      ε j • ∑ i, ε i • commutator (K i) (commutator (K i) (K j)) = J j)
+    (hDsmul : ∀ (i : ι) (r : ℝ) (a : A),
+      D.apply i (r • a) = r • D.apply i a)
+    (hcomm : ∀ i j a, D.apply i (D.apply j a) = D.apply j (D.apply i a)) :
+    ∑ j, covariantDerivative D (fun k => C k + K k) j (J j) = 0 := by
+  let B := fun k => C k + K k
+  have hsolution := pseudoYangMills_solution_background_plus_parallel
+    D C K hflat hparallel ε J hsource
+  have hconservation := pseudo_current_conservation D B ε hDsmul hcomm
+  calc
+    ∑ j, covariantDerivative D B j (J j) =
+        ∑ j, covariantDerivative D B j
+          (pseudoYangMillsCurrent D ε B (fieldStrength D B) j) := by
+      apply Finset.sum_congr rfl
+      intro j hj
+      rw [← hsolution.2 j]
+    _ = 0 := hconservation
 
 end InfoGeometry.Canonical.ShirokovYangMillsTransfer

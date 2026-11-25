@@ -1,0 +1,1644 @@
+diff --git a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin.lean b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin.lean
+index 959c36a..094c050 100644
+--- a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin.lean
++++ b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin.lean
+@@ -74,3 +74,5 @@ import GaussianBlockSpin.KruskalForests
+ import GaussianBlockSpin.PowerCountingSpatial
+ import GaussianBlockSpin.PowerCounting
+ import GaussianBlockSpin.PowerCountingDegrees
++
++import GaussianBlockSpin.MatrixWeighted
+diff --git a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted.lean b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted.lean
+new file mode 100644
+index 0000000..7077d29
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted.lean
+@@ -0,0 +1,10 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license as described in the file LICENSE.
++Authors: InfoGeometry Engine Contributors
++-/
++/- The Apache LICENSE for these contributed files is retained as
++`LICENSE-InfoGeometry-Apache-2.0` at the package root, together with
++`NOTICE-InfoGeometry`; the upstream root CC0 license is separate. -/
++import GaussianBlockSpin.MatrixWeighted.Convolution
++import GaussianBlockSpin.MatrixWeighted.Examples
+diff --git a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Composition.lean b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Composition.lean
+new file mode 100644
+index 0000000..94b7350
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Composition.lean
+@@ -0,0 +1,185 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license as described in the file LICENSE.
++Authors: InfoGeometry Engine Contributors
++-/
++/- The Apache LICENSE for these contributed files is retained as
++`LICENSE-InfoGeometry-Apache-2.0` at the package root, together with
++`NOTICE-InfoGeometry`; the upstream root CC0 license is separate. -/
++import GaussianBlockSpin.MatrixWeighted.Variational
++import Mathlib.Tactic.FieldSimp
++import Mathlib.Tactic.Ring
++
++/-!
++Adapted to real matrices from
++`InfoGeometry.OperatorAlgebra.CoarseGrainingComposition` in
++`nickgou-nuke/info-geometry-lean`; original Apache 2.0 attribution is retained.
++The scalar field in this module is `ℝ`. Native conjugate transpose and real-part
++notations reduce to ordinary transpose and the identity, respectively.
++
++# Composition of positive operator eliminations
++
++Two arbitrary rectangular coarse-graining maps transport covariance in order.
++The joint quadratic problem has the same unique minimizer as successive
++elimination. The result retains both matrix-valued noise weights and every
++cross-space coupling; no simultaneous diagonalization is assumed.
++-/
++
++noncomputable section
++
++namespace GaussianBlockSpin.MatrixWeighted
++
++open Matrix
++
++variable {n m l : Type*}
++variable [Fintype n] [Fintype m] [Fintype l]
++variable [DecidableEq n] [DecidableEq m] [DecidableEq l]
++variable {A : Matrix n n ℝ} {R₁ : Matrix m m ℝ} {R₂ : Matrix l l ℝ}
++variable (Q₁ : Matrix m n ℝ) (Q₂ : Matrix l m ℝ)
++
++/-- The covariance of two successive eliminations, with ordered composite map. -/
++theorem twoStage_coarsePrecision_inv (hA : A.PosDef) (hR₁ : R₁.PosDef)
++    (hR₂ : R₂.PosDef) :
++    (coarsePrecision (coarsePrecision A R₁ Q₁) R₂ Q₂)⁻¹ =
++      R₂⁻¹ + Q₂ * R₁⁻¹ * Q₂ᴴ + (Q₂ * Q₁) * A⁻¹ * (Q₂ * Q₁)ᴴ := by
++  rw [coarsePrecision_inv Q₂ (coarsePrecision_posDef Q₁ hA hR₁) hR₂,
++    coarsePrecision_inv Q₁ hA hR₁]
++  simp only [Matrix.mul_add, Matrix.add_mul, Matrix.conjTranspose_mul,
++    Matrix.mul_assoc, add_assoc]
++
++/-- Joint energy before either of the two fine variables has been eliminated. -/
++def twoStageEnergy (A : Matrix n n ℝ) (R₁ : Matrix m m ℝ) (R₂ : Matrix l l ℝ)
++    (Q₁ : Matrix m n ℝ) (Q₂ : Matrix l m ℝ)
++    (y : l → ℝ) (z : m → ℝ) (x : n → ℝ) : ℝ :=
++  quadraticEnergy A R₁ Q₁ z x +
++    RCLike.re (star (y - Q₂ *ᵥ z) ⬝ᵥ (R₂ *ᵥ (y - Q₂ *ᵥ z)))
++
++omit [DecidableEq l] in
++/-- Two exact square completions retain both positive residual terms. -/
++theorem twoStageEnergy_completion (hA : A.PosDef) (hR₁ : R₁.PosDef)
++    (hR₂ : R₂.PosDef) (y : l → ℝ) (z : m → ℝ) (x : n → ℝ) :
++    let S₁ := coarsePrecision A R₁ Q₁
++    let E₁ := harmonicExtension A R₁ Q₁
++    let E₂ := harmonicExtension S₁ R₂ Q₂
++    twoStageEnergy A R₁ R₂ Q₁ Q₂ y z x =
++      RCLike.re (star y ⬝ᵥ (coarsePrecision S₁ R₂ Q₂ *ᵥ y)) +
++        RCLike.re (star (z - E₂ *ᵥ y) ⬝ᵥ
++          (finePrecision S₁ R₂ Q₂ *ᵥ (z - E₂ *ᵥ y))) +
++        RCLike.re (star (x - E₁ *ᵥ z) ⬝ᵥ
++          (finePrecision A R₁ Q₁ *ᵥ (x - E₁ *ᵥ z))) := by
++  dsimp only
++  rw [twoStageEnergy, quadraticEnergy_completion Q₁ hA hR₁]
++  have h₂ := quadraticEnergy_completion Q₂ (coarsePrecision_posDef Q₁ hA hR₁) hR₂ y z
++  dsimp only [quadraticEnergy] at h₂
++  rw [add_right_comm, h₂]
++
++omit [DecidableEq l] in
++theorem twoStageEnergy_lower_bound (hA : A.PosDef) (hR₁ : R₁.PosDef)
++    (hR₂ : R₂.PosDef) (y : l → ℝ) (z : m → ℝ) (x : n → ℝ) :
++    RCLike.re (star y ⬝ᵥ
++        (coarsePrecision (coarsePrecision A R₁ Q₁) R₂ Q₂ *ᵥ y)) ≤
++      twoStageEnergy A R₁ R₂ Q₁ Q₂ y z x := by
++  rw [twoStageEnergy_completion Q₁ Q₂ hA hR₁ hR₂, add_assoc]
++  apply le_add_of_nonneg_right
++  exact add_nonneg
++    ((finePrecision_posDef Q₂ (coarsePrecision_posDef Q₁ hA hR₁)
++      hR₂).posSemidef.re_dotProduct_nonneg _)
++    ((finePrecision_posDef Q₁ hA hR₁).posSemidef.re_dotProduct_nonneg _)
++
++omit [DecidableEq l] in
++/-- Equality identifies the unique joint state, with composed harmonic extension. -/
++theorem twoStageEnergy_eq_min_iff (hA : A.PosDef) (hR₁ : R₁.PosDef)
++    (hR₂ : R₂.PosDef) (y : l → ℝ) (z : m → ℝ) (x : n → ℝ) :
++    let E₁ := harmonicExtension A R₁ Q₁
++    let E₂ := harmonicExtension (coarsePrecision A R₁ Q₁) R₂ Q₂
++    twoStageEnergy A R₁ R₂ Q₁ Q₂ y z x =
++        RCLike.re (star y ⬝ᵥ
++          (coarsePrecision (coarsePrecision A R₁ Q₁) R₂ Q₂ *ᵥ y)) ↔
++      z = E₂ *ᵥ y ∧ x = (E₁ * E₂) *ᵥ y := by
++  dsimp only
++  have hH₁ := finePrecision_posDef Q₁ hA hR₁
++  have hH₂ := finePrecision_posDef Q₂ (coarsePrecision_posDef Q₁ hA hR₁) hR₂
++  rw [twoStageEnergy_completion Q₁ Q₂ hA hR₁ hR₂, add_assoc, add_eq_left,
++    add_eq_zero_iff_of_nonneg (hH₂.posSemidef.re_dotProduct_nonneg _)
++      (hH₁.posSemidef.re_dotProduct_nonneg _),
++    quadratic_re_eq_zero_iff hH₂, quadratic_re_eq_zero_iff hH₁, sub_eq_zero, sub_eq_zero]
++  constructor
++  · rintro ⟨hz, hx⟩
++    exact ⟨hz, by simpa only [hz, Matrix.mulVec_mulVec] using hx⟩
++  · rintro ⟨hz, hx⟩
++    exact ⟨hz, by simpa only [hz, Matrix.mulVec_mulVec] using hx⟩
++
++omit [DecidableEq l] in
++/-- Successive elimination solves the global joint minimization problem. -/
++theorem is_joint_minimizer_iff (hA : A.PosDef) (hR₁ : R₁.PosDef)
++    (hR₂ : R₂.PosDef) (y : l → ℝ) (z : m → ℝ) (x : n → ℝ) :
++    let E₁ := harmonicExtension A R₁ Q₁
++    let E₂ := harmonicExtension (coarsePrecision A R₁ Q₁) R₂ Q₂
++    (∀ z' x', twoStageEnergy A R₁ R₂ Q₁ Q₂ y z x ≤
++      twoStageEnergy A R₁ R₂ Q₁ Q₂ y z' x') ↔
++      z = E₂ *ᵥ y ∧ x = (E₁ * E₂) *ᵥ y := by
++  dsimp only
++  let E₁ := harmonicExtension A R₁ Q₁
++  let E₂ := harmonicExtension (coarsePrecision A R₁ Q₁) R₂ Q₂
++  have hmin := (twoStageEnergy_eq_min_iff Q₁ Q₂ hA hR₁ hR₂ y
++    (E₂ *ᵥ y) ((E₁ * E₂) *ᵥ y)).2 ⟨rfl, rfl⟩
++  constructor
++  · intro h
++    apply (twoStageEnergy_eq_min_iff Q₁ Q₂ hA hR₁ hR₂ y z x).1
++    refine le_antisymm ?_ (twoStageEnergy_lower_bound Q₁ Q₂ hA hR₁ hR₂ y z x)
++    simpa only [hmin] using h (E₂ *ᵥ y) ((E₁ * E₂) *ᵥ y)
++  · intro h z' x'
++    rw [(twoStageEnergy_eq_min_iff Q₁ Q₂ hA hR₁ hR₂ y z x).2 h]
++    exact twoStageEnergy_lower_bound Q₁ Q₂ hA hR₁ hR₂ y z' x'
++
++/-- Combining the noise weights first gives the same precision as successive elimination. -/
++theorem twoStage_coarsePrecision_eq_single (hA : A.PosDef) (hR₁ : R₁.PosDef)
++    (hR₂ : R₂.PosDef) :
++    coarsePrecision (coarsePrecision A R₁ Q₁) R₂ Q₂ =
++      coarsePrecision A (coarsePrecision R₁ R₂ Q₂) (Q₂ * Q₁) := by
++  have hS₁ := coarsePrecision_posDef Q₁ hA hR₁
++  have hReff := coarsePrecision_posDef Q₂ hR₁ hR₂
++  let := (coarsePrecision_posDef Q₂ hS₁ hR₂).isUnit.invertible
++  let := (coarsePrecision_posDef (Q₂ * Q₁) hA hReff).isUnit.invertible
++  have h : (coarsePrecision (coarsePrecision A R₁ Q₁) R₂ Q₂)⁻¹ =
++      (coarsePrecision A (coarsePrecision R₁ R₂ Q₂) (Q₂ * Q₁))⁻¹ := by
++    rw [twoStage_coarsePrecision_inv Q₁ Q₂ hA hR₁ hR₂,
++      coarsePrecision_inv (Q₂ * Q₁) hA hReff,
++      coarsePrecision_inv Q₂ hR₁ hR₂]
++  simpa only [Matrix.inv_inv_of_invertible] using congrArg (fun M => M⁻¹) h
++
++/-- Inverting a nonzero scalar identity needs no choice of coordinates. -/
++theorem scalarIdentity_inv {k : Type*} [Fintype k] [DecidableEq k]
++    (a : ℝ) (ha : a ≠ 0) :
++    (a • (1 : Matrix k k ℝ))⁻¹ = a⁻¹ • (1 : Matrix k k ℝ) := by
++  apply Matrix.inv_eq_right_inv
++  simp only [Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, smul_smul,
++    mul_inv_cancel₀ ha, one_smul]
++
++/-- Isotropic input weights and a scaled coisometry give an isotropic output covariance. -/
++theorem scalar_coarseCovariance {α β s : ℝ} (hα : 0 < α) (hβ : 0 < β)
++    (Q : Matrix m n ℝ) (hQ : Q * Qᵀ = s • (1 : Matrix m m ℝ)) :
++    coarseCovariance (β • (1 : Matrix n n ℝ)) (α • (1 : Matrix m m ℝ)) Q =
++      (α⁻¹ + s * β⁻¹) • (1 : Matrix m m ℝ) := by
++  rw [coarseCovariance, scalarIdentity_inv α (ne_of_gt hα),
++    scalarIdentity_inv β (ne_of_gt hβ)]
++  simp only [Matrix.conjTranspose_eq_transpose_of_trivial, Matrix.mul_smul,
++    Matrix.mul_one, Matrix.smul_mul, hQ, smul_smul]
++  rw [← add_smul, mul_comm β⁻¹ s]
++
++/-- The matrix composition law specializes to the scalar coefficient used by `Convolution`. -/
++theorem scalar_coarsePrecision {α β s : ℝ} (hα : 0 < α) (hβ : 0 < β) (hs : 0 ≤ s)
++    (Q : Matrix m n ℝ) (hQ : Q * Qᵀ = s • (1 : Matrix m m ℝ)) :
++    coarsePrecision (β • (1 : Matrix n n ℝ)) (α • (1 : Matrix m m ℝ)) Q =
++      (α * β / (β + s * α)) • (1 : Matrix m m ℝ) := by
++  have hA : (β • (1 : Matrix n n ℝ)).PosDef := Matrix.PosDef.one.smul hβ
++  have hR : (α • (1 : Matrix m m ℝ)).PosDef := Matrix.PosDef.one.smul hα
++  have ht : 0 < α⁻¹ + s * β⁻¹ :=
++    add_pos_of_pos_of_nonneg (inv_pos.2 hα) (mul_nonneg hs (inv_nonneg.2 hβ.le))
++  rw [← coarseCovariance_inv Q hA hR, scalar_coarseCovariance hα hβ Q hQ,
++    scalarIdentity_inv _ (ne_of_gt ht)]
++  have hscalar : α⁻¹ + s * β⁻¹ = (β + s * α) / (α * β) := by
++    field_simp [ne_of_gt hα, ne_of_gt hβ] <;> ring
++  rw [hscalar, inv_div]
++
++end GaussianBlockSpin.MatrixWeighted
+diff --git a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Convolution.lean b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Convolution.lean
+new file mode 100644
+index 0000000..5bc8875
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Convolution.lean
+@@ -0,0 +1,187 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license as described in the file LICENSE.
++Authors: InfoGeometry Engine Contributors
++-/
++/- The Apache LICENSE for these contributed files is retained as
++`LICENSE-InfoGeometry-Apache-2.0` at the package root, together with
++`NOTICE-InfoGeometry`; the upstream root CC0 license is separate. -/
++import GaussianBlockSpin.MatrixWeighted.EffectiveForm
++import GaussianBlockSpin.MatrixWeighted.Composition
++import GaussianBlockSpin.Convolution
++
++/-!
++# Convolution of matrix-weighted Gaussian block kernels
++
++For arbitrary positive definite precisions `R₁` and `R₂`, integrating the
++intermediate Euclidean field composes two normalized block kernels. The new
++averaging map is `Q₂ * Q₁`; the new precision is
++`coarsePrecision R₁ R₂ Q₂`, whose inverse is
++`R₂⁻¹ + Q₂ * R₁⁻¹ * Q₂ᴴ`.
++
++The proof uses the actual volume integral, translation of the intermediate
++field, the effective-form integral, and the positive determinant identity.
++No commutation or coisometry hypothesis is needed for the matrix theorem.
++The final corollary recovers the scalar coefficient under the original
++scaled-coisometry hypothesis.
++-/
++
++noncomputable section
++
++open MeasureTheory Real Matrix
++open scoped RealInnerProductSpace
++
++namespace GaussianBlockSpin.MatrixWeighted
++
++variable {n m l : Type*}
++variable [Fintype n] [Fintype m] [Fintype l]
++variable [DecidableEq n] [DecidableEq m] [DecidableEq l]
++variable {A : Matrix n n ℝ} {R : Matrix m m ℝ}
++
++/-- The fine Gaussian normalization combines with the elimination determinant
++to give the normalized coarse Gaussian. -/
++lemma gaussianPrefactor_convolution (Q : Matrix m n ℝ)
++    (hA : A.PosDef) (hR : R.PosDef) :
++    gaussianPrefactor A.toEuclideanLin * gaussianPrefactor R.toEuclideanLin *
++        ((2 * π) ^ ((Fintype.card n : ℝ) / 2) /
++          Real.sqrt (finePrecision A R Q).det) =
++      gaussianPrefactor (coarsePrecision A R Q).toEuclideanLin := by
++  have hvol : 0 < (2 * π) ^ ((Fintype.card n : ℝ) / 2) :=
++    Real.rpow_pos_of_pos (by positivity) _
++  simp only [gaussianPrefactor, det_toEuclideanLin, finrank_euclideanSpace]
++  rw [sqrt_det_coarsePrecision Q hA hR]
++  calc
++    _ = (Real.sqrt R.det / (2 * π) ^ ((Fintype.card m : ℝ) / 2)) *
++        ((Real.sqrt A.det / (2 * π) ^ ((Fintype.card n : ℝ) / 2)) *
++          ((2 * π) ^ ((Fintype.card n : ℝ) / 2) /
++            Real.sqrt (finePrecision A R Q).det)) := by ring
++    _ = (Real.sqrt R.det / (2 * π) ^ ((Fintype.card m : ℝ) / 2)) *
++        (Real.sqrt A.det / Real.sqrt (finePrecision A R Q).det) := by
++      rw [div_mul_div_cancel₀ hvol.ne']
++    _ = _ := by ring
++
++/-- Pushing a normalized Gaussian through a normalized observation kernel
++gives the Gaussian with the Schur-complement precision. -/
++theorem integral_weightedBlockKernel_mul_normalizedGaussian (Q : Matrix m n ℝ)
++    (hA : A.PosDef) (hR : R.PosDef) (y : EuclideanSpace ℝ m) :
++    ∫ x : EuclideanSpace ℝ n,
++      weightedBlockKernel R.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR) (inner_toEuclideanLin_pos hR)
++          Q.toEuclideanLin y x *
++        normalizedGaussian A.toEuclideanLin
++          (toEuclideanLin_isSymmetric hA) (inner_toEuclideanLin_pos hA) x =
++      normalizedGaussian (coarsePrecision A R Q).toEuclideanLin
++        (toEuclideanLin_isSymmetric (coarsePrecision_posDef Q hA hR))
++        (inner_toEuclideanLin_pos (coarsePrecision_posDef Q hA hR)) y := by
++  have hint (x : EuclideanSpace ℝ n) :
++      weightedBlockKernel R.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR) (inner_toEuclideanLin_pos hR)
++          Q.toEuclideanLin y x *
++        normalizedGaussian A.toEuclideanLin
++          (toEuclideanLin_isSymmetric hA) (inner_toEuclideanLin_pos hA) x =
++      gaussianPrefactor A.toEuclideanLin *
++        (weightedBlockKernel R.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR) (inner_toEuclideanLin_pos hR)
++          Q.toEuclideanLin y x * Real.exp (-(1 / 2) * ⟪x, A.toEuclideanLin x⟫)) := by
++    unfold normalizedGaussian
++    exact mul_left_comm _ _ _
++  simp only [hint]
++  rw [integral_const_mul, integral_weightedBlockKernel_mul_gaussian Q hA hR y]
++  unfold normalizedGaussian
++  calc
++    _ = (gaussianPrefactor A.toEuclideanLin * gaussianPrefactor R.toEuclideanLin *
++          ((2 * π) ^ ((Fintype.card n : ℝ) / 2) /
++            Real.sqrt (finePrecision A R Q).det)) *
++        Real.exp (-(1 / 2) * ⟪y, (coarsePrecision A R Q).toEuclideanLin y⟫) := by
++      simp only [mul_assoc]
++    _ = _ := by rw [gaussianPrefactor_convolution Q hA hR]
++
++variable {R₁ : Matrix m m ℝ} {R₂ : Matrix l l ℝ}
++
++/-- Actual kernel convolution on the intermediate Euclidean field.
++The positive output precision is the existing ordered Schur complement. -/
++theorem integral_weightedBlockKernel_mul_weightedBlockKernel
++    (Q₁ : Matrix m n ℝ) (Q₂ : Matrix l m ℝ)
++    (hR₁ : R₁.PosDef) (hR₂ : R₂.PosDef)
++    (ψ : EuclideanSpace ℝ l) (φ : EuclideanSpace ℝ n) :
++    ∫ θ : EuclideanSpace ℝ m,
++      weightedBlockKernel R₂.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR₂) (inner_toEuclideanLin_pos hR₂)
++          Q₂.toEuclideanLin ψ θ *
++        weightedBlockKernel R₁.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR₁) (inner_toEuclideanLin_pos hR₁)
++          Q₁.toEuclideanLin θ φ =
++      weightedBlockKernel (coarsePrecision R₁ R₂ Q₂).toEuclideanLin
++        (toEuclideanLin_isSymmetric (coarsePrecision_posDef Q₂ hR₁ hR₂))
++        (inner_toEuclideanLin_pos (coarsePrecision_posDef Q₂ hR₁ hR₂))
++        (Q₂ * Q₁).toEuclideanLin ψ φ := by
++  have hint (θ : EuclideanSpace ℝ m) :
++      weightedBlockKernel R₂.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR₂) (inner_toEuclideanLin_pos hR₂)
++          Q₂.toEuclideanLin ψ (θ + Q₁.toEuclideanLin φ) *
++        weightedBlockKernel R₁.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR₁) (inner_toEuclideanLin_pos hR₁)
++          Q₁.toEuclideanLin (θ + Q₁.toEuclideanLin φ) φ =
++      weightedBlockKernel R₂.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR₂) (inner_toEuclideanLin_pos hR₂)
++          Q₂.toEuclideanLin (ψ - Q₂.toEuclideanLin (Q₁.toEuclideanLin φ)) θ *
++        normalizedGaussian R₁.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR₁) (inner_toEuclideanLin_pos hR₁) θ := by
++    have hshift : ψ - Q₂.toEuclideanLin (θ + Q₁.toEuclideanLin φ) =
++        (ψ - Q₂.toEuclideanLin (Q₁.toEuclideanLin φ)) - Q₂.toEuclideanLin θ := by
++      rw [map_add]
++      abel
++    simp only [weightedBlockKernel, hshift, add_sub_cancel_right]
++  rw [← integral_add_right_eq_self
++    (fun θ : EuclideanSpace ℝ m =>
++      weightedBlockKernel R₂.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR₂) (inner_toEuclideanLin_pos hR₂)
++          Q₂.toEuclideanLin ψ θ *
++        weightedBlockKernel R₁.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR₁) (inner_toEuclideanLin_pos hR₁)
++          Q₁.toEuclideanLin θ φ) (Q₁.toEuclideanLin φ)]
++  simp only [hint]
++  rw [integral_weightedBlockKernel_mul_normalizedGaussian Q₂ hR₁ hR₂]
++  simp only [weightedBlockKernel, toEuclideanLin_mul, LinearMap.comp_apply]
++
++/-- Scalar matrix precision reads back to the original scalar kernel. -/
++lemma weightedBlockKernel_smul_matrix_one {α : ℝ} (hα : 0 < α)
++    (Q : Matrix m n ℝ) (ψ : EuclideanSpace ℝ m) (φ : EuclideanSpace ℝ n) :
++    weightedBlockKernel (α • (1 : Matrix m m ℝ)).toEuclideanLin
++        (toEuclideanLin_isSymmetric (Matrix.PosDef.one.smul hα))
++        (inner_toEuclideanLin_pos (Matrix.PosDef.one.smul hα))
++        Q.toEuclideanLin ψ φ =
++      blockKernel α hα Q.toEuclideanLin ψ φ := by
++  simpa only [weightedBlockKernel, normalizedGaussian, toEuclideanLin_smul_one] using
++    weightedBlockKernel_smul_id hα Q.toEuclideanLin ψ φ
++
++/-- The general matrix convolution specializes to the original scalar law
++when the outer observation is a scaled coisometry. -/
++theorem integral_blockKernel_mul_blockKernel_of_matrix
++    {α β s : ℝ} (hα : 0 < α) (hβ : 0 < β) (hs : 0 ≤ s)
++    (Q₁ : Matrix m n ℝ) (Q₂ : Matrix l m ℝ)
++    (hQ : Q₂ * Q₂ᵀ = s • (1 : Matrix l l ℝ))
++    (ψ : EuclideanSpace ℝ l) (φ : EuclideanSpace ℝ n) :
++    ∫ θ : EuclideanSpace ℝ m,
++      blockKernel α hα Q₂.toEuclideanLin ψ θ *
++        blockKernel β hβ Q₁.toEuclideanLin θ φ =
++      blockKernel (α * β / (β + s * α))
++        (GaussianBlockSpin.convCoeff_pos hα hβ hs) (Q₂ * Q₁).toEuclideanLin ψ φ := by
++  have hβI : (β • (1 : Matrix m m ℝ)).PosDef := Matrix.PosDef.one.smul hβ
++  have hαI : (α • (1 : Matrix l l ℝ)).PosDef := Matrix.PosDef.one.smul hα
++  have hγ := GaussianBlockSpin.convCoeff_pos hα hβ hs
++  calc
++    _ = weightedBlockKernel
++        (coarsePrecision (β • (1 : Matrix m m ℝ)) (α • (1 : Matrix l l ℝ)) Q₂).toEuclideanLin
++        (toEuclideanLin_isSymmetric (coarsePrecision_posDef Q₂ hβI hαI))
++        (inner_toEuclideanLin_pos (coarsePrecision_posDef Q₂ hβI hαI))
++        (Q₂ * Q₁).toEuclideanLin ψ φ := by
++      simpa only [weightedBlockKernel_smul_matrix_one hα,
++        weightedBlockKernel_smul_matrix_one hβ] using
++        integral_weightedBlockKernel_mul_weightedBlockKernel Q₁ Q₂ hβI hαI ψ φ
++    _ = _ := by
++      simpa only [weightedBlockKernel, normalizedGaussian,
++        scalar_coarsePrecision hα hβ hs Q₂ hQ] using
++        weightedBlockKernel_smul_matrix_one hγ (Q₂ * Q₁) ψ φ
++
++end GaussianBlockSpin.MatrixWeighted
+diff --git a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Coordinates.lean b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Coordinates.lean
+new file mode 100644
+index 0000000..7a560a8
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Coordinates.lean
+@@ -0,0 +1,161 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license as described in the file LICENSE.
++Authors: InfoGeometry Engine Contributors
++-/
++/- The Apache LICENSE for these contributed files is retained as
++`LICENSE-InfoGeometry-Apache-2.0` at the package root, together with
++`NOTICE-InfoGeometry`; the upstream root CC0 license is separate. -/
++import GaussianBlockSpin.MatrixWeighted.Variational
++import Mathlib.Analysis.InnerProductSpace.Adjoint
++
++/-!
++# Euclidean coordinates for matrix-weighted Gaussian elimination
++
++The algebraic operators act on the existing `EuclideanSpace ℝ n` through
++Mathlib's `Matrix.toEuclideanLin`. This is the map in the standard orthonormal
++basis, so its determinant and quadratic form agree with the matrix determinant
++and dot product. The inner product and its canonical volume are unchanged.
++
++These lemmas transport the positive matrix hypotheses, ordered response, and
++completed square to the linear-map interface of `GaussianBlockSpin`.
++-/
++
++noncomputable section
++
++open Matrix
++open WithLp (ofLp)
++open scoped RealInnerProductSpace
++
++namespace GaussianBlockSpin.MatrixWeighted
++
++variable {n m l : Type*}
++variable [Fintype n] [Fintype m] [Fintype l]
++variable [DecidableEq n] [DecidableEq m] [DecidableEq l]
++
++/-- The native Euclidean linear map has the original matrix-vector coordinates. -/
++@[simp]
++theorem ofLp_toEuclideanLin (M : Matrix m n ℝ) (x : EuclideanSpace ℝ n) :
++    ofLp (M.toEuclideanLin x) = M *ᵥ ofLp x :=
++  rfl
++
++/-- The real Euclidean inner product is the original ordered matrix form. -/
++theorem inner_toEuclideanLin (M : Matrix m n ℝ)
++    (x : EuclideanSpace ℝ m) (y : EuclideanSpace ℝ n) :
++    ⟪x, M.toEuclideanLin y⟫ = ofLp x ⬝ᵥ (M *ᵥ ofLp y) := by
++  rw [EuclideanSpace.inner_eq_star_dotProduct, ofLp_toEuclideanLin,
++    star_trivial, dotProduct_comm]
++
++/-- The standard orthonormal coordinate bridge preserves determinants. -/
++@[simp]
++theorem det_toEuclideanLin (M : Matrix n n ℝ) :
++    LinearMap.det M.toEuclideanLin = M.det :=
++  LinearMap.det_toLpLin 2 M
++
++/-- Positive definite matrix precision gives the symmetry required by the Gaussian integral. -/
++theorem toEuclideanLin_isSymmetric {M : Matrix n n ℝ} (hM : M.PosDef) :
++    M.toEuclideanLin.IsSymmetric :=
++  Matrix.isSymmetric_toEuclideanLin_iff.mpr hM.isHermitian
++
++/-- Strict matrix positivity is strict positivity for the existing Euclidean inner product. -/
++theorem inner_toEuclideanLin_pos {M : Matrix n n ℝ} (hM : M.PosDef) :
++    ∀ x : EuclideanSpace ℝ n, x ≠ 0 → 0 < ⟪x, M.toEuclideanLin x⟫ := by
++  intro x hx
++  have hx' : ofLp x ≠ 0 := by
++    simpa only [WithLp.ofLp_eq_zero] using hx
++  rw [inner_toEuclideanLin]
++  simpa only [star_trivial] using hM.dotProduct_mulVec_pos hx'
++
++/-- Positive semidefinite matrix forms remain nonnegative on Euclidean space. -/
++theorem inner_toEuclideanLin_nonneg {M : Matrix n n ℝ} (hM : M.PosSemidef)
++    (x : EuclideanSpace ℝ n) :
++    0 ≤ ⟪x, M.toEuclideanLin x⟫ := by
++  rw [inner_toEuclideanLin]
++  simpa only [star_trivial] using hM.dotProduct_mulVec_nonneg (ofLp x)
++
++/-- Ordered matrix multiplication becomes composition on Euclidean spaces. -/
++theorem toEuclideanLin_mul (M : Matrix l m ℝ) (N : Matrix m n ℝ) :
++    (M * N).toEuclideanLin = M.toEuclideanLin ∘ₗ N.toEuclideanLin :=
++  Matrix.toLpLin_mul_same 2 M N
++
++/-- The coordinate identity is the native identity linear map. -/
++@[simp]
++theorem toEuclideanLin_one :
++    (1 : Matrix n n ℝ).toEuclideanLin = LinearMap.id :=
++  Matrix.toLpLin_one 2
++
++/-- Scalar matrix precision agrees with the scalar precision in the original kernel. -/
++theorem toEuclideanLin_smul_one (α : ℝ) :
++    (α • (1 : Matrix n n ℝ)).toEuclideanLin =
++      α • (LinearMap.id : EuclideanSpace ℝ n →ₗ[ℝ] EuclideanSpace ℝ n) := by
++  rw [map_smul, toEuclideanLin_one]
++
++/-- Applying the inverse matrix gives an actual right inverse on Euclidean space. -/
++theorem toEuclideanLin_apply_inv {M : Matrix n n ℝ} (hM : M.PosDef)
++    (x : EuclideanSpace ℝ n) :
++    M.toEuclideanLin ((M⁻¹).toEuclideanLin x) = x := by
++  let := hM.isUnit.invertible
++  have h := congrArg (fun N : Matrix n n ℝ => N.toEuclideanLin x)
++    (Matrix.mul_inv_of_invertible M)
++  simpa only [toEuclideanLin_mul, LinearMap.comp_apply, toEuclideanLin_one,
++    LinearMap.id_apply] using h
++
++/-- Applying the inverse matrix gives an actual left inverse on Euclidean space. -/
++theorem toEuclideanLin_inv_apply {M : Matrix n n ℝ} (hM : M.PosDef)
++    (x : EuclideanSpace ℝ n) :
++    (M⁻¹).toEuclideanLin (M.toEuclideanLin x) = x := by
++  let := hM.isUnit.invertible
++  have h := congrArg (fun N : Matrix n n ℝ => N.toEuclideanLin x)
++    (Matrix.inv_mul_of_invertible M)
++  simpa only [toEuclideanLin_mul, LinearMap.comp_apply, toEuclideanLin_one,
++    LinearMap.id_apply] using h
++
++variable {A : Matrix n n ℝ} {R : Matrix m m ℝ} (Q : Matrix m n ℝ)
++
++/-- The fine precision is the usual native adjoint-composition expression. -/
++theorem toEuclideanLin_finePrecision :
++    (finePrecision A R Q).toEuclideanLin =
++      A.toEuclideanLin +
++        LinearMap.adjoint Q.toEuclideanLin ∘ₗ R.toEuclideanLin ∘ₗ Q.toEuclideanLin := by
++  simp only [finePrecision, map_add, toEuclideanLin_mul,
++    Matrix.toEuclideanLin_conjTranspose_eq_adjoint, LinearMap.comp_assoc]
++
++/-- The response applies the inverse fine precision after the ordered adjoint-weighted data. -/
++theorem toEuclideanLin_harmonicExtension_apply (y : EuclideanSpace ℝ m) :
++    (harmonicExtension A R Q).toEuclideanLin y =
++      ((finePrecision A R Q)⁻¹).toEuclideanLin
++        (LinearMap.adjoint Q.toEuclideanLin (R.toEuclideanLin y)) := by
++  simp only [harmonicExtension, toEuclideanLin_mul, LinearMap.comp_apply,
++    Matrix.toEuclideanLin_conjTranspose_eq_adjoint]
++
++/-- The matrix response solves the actual normal equation used in Gaussian integration. -/
++theorem finePrecision_harmonicExtension_normalEquation
++    (hA : A.PosDef) (hR : R.PosDef) (y : EuclideanSpace ℝ m) :
++    (finePrecision A R Q).toEuclideanLin ((harmonicExtension A R Q).toEuclideanLin y) =
++      LinearMap.adjoint Q.toEuclideanLin (R.toEuclideanLin y) := by
++  have h := congrArg (fun M : Matrix n m ℝ => M.toEuclideanLin y)
++    (finePrecision_mul_harmonicExtension Q hA hR)
++  simpa only [toEuclideanLin_mul, LinearMap.comp_apply,
++    Matrix.toEuclideanLin_conjTranspose_eq_adjoint] using h
++
++/-- The real matrix energy is the same energy in the canonical Euclidean inner products. -/
++theorem quadraticEnergy_eq_euclidean (y : EuclideanSpace ℝ m) (x : EuclideanSpace ℝ n) :
++    quadraticEnergy A R Q (ofLp y) (ofLp x) =
++      ⟪x, A.toEuclideanLin x⟫ +
++        ⟪y - Q.toEuclideanLin x, R.toEuclideanLin (y - Q.toEuclideanLin x)⟫ := by
++  simp only [quadraticEnergy, inner_toEuclideanLin, WithLp.ofLp_sub,
++    ofLp_toEuclideanLin, star_trivial]
++
++/-- Square completion on the actual spaces carrying the Gaussian integrals. -/
++theorem euclidean_quadratic_completion (hA : A.PosDef) (hR : R.PosDef)
++    (y : EuclideanSpace ℝ m) (x : EuclideanSpace ℝ n) :
++    ⟪x, A.toEuclideanLin x⟫ +
++        ⟪y - Q.toEuclideanLin x, R.toEuclideanLin (y - Q.toEuclideanLin x)⟫ =
++      ⟪y, (coarsePrecision A R Q).toEuclideanLin y⟫ +
++        ⟪x - (harmonicExtension A R Q).toEuclideanLin y,
++          (finePrecision A R Q).toEuclideanLin
++            (x - (harmonicExtension A R Q).toEuclideanLin y)⟫ := by
++  simpa only [inner_toEuclideanLin, ofLp_toEuclideanLin, WithLp.ofLp_sub,
++    star_trivial] using quadratic_completion Q hA hR (ofLp y) (ofLp x)
++
++end GaussianBlockSpin.MatrixWeighted
+diff --git a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/EffectiveForm.lean b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/EffectiveForm.lean
+new file mode 100644
+index 0000000..bc74664
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/EffectiveForm.lean
+@@ -0,0 +1,118 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license as described in the file LICENSE.
++Authors: InfoGeometry Engine Contributors
++-/
++/- The Apache LICENSE for these contributed files is retained as
++`LICENSE-InfoGeometry-Apache-2.0` at the package root, together with
++`NOTICE-InfoGeometry`; the upstream root CC0 license is separate. -/
++import GaussianBlockSpin.MatrixWeighted.Kernel
++import GaussianBlockSpin.MatrixWeighted.Coordinates
++
++/-!
++# The effective matrix-weighted Gaussian integral
++
++Integrating the fine Gaussian against the normalized observation kernel
++produces the ordered Schur-complement quadratic form. The determinant factor
++is computed with the same canonical Euclidean volume as the existing Gaussian
++integral theorem. The response is the actual matrix harmonic extension.
++
++Both precision matrices are positive definite. The observation matrix may be
++rectangular and need not be invertible or satisfy a coisometry condition.
++-/
++
++noncomputable section
++
++open MeasureTheory Real Matrix
++open scoped RealInnerProductSpace
++
++namespace GaussianBlockSpin.MatrixWeighted
++
++variable {n m : Type*} [Fintype n] [Fintype m]
++  [DecidableEq n] [DecidableEq m]
++variable {A : Matrix n n ℝ} {R : Matrix m m ℝ}
++
++/-- Exact integration of the matrix-weighted block kernel against a fine
++Gaussian, with its determinant factor and effective quadratic form. -/
++theorem integral_weightedBlockKernel_mul_gaussian (Q : Matrix m n ℝ)
++    (hA : A.PosDef) (hR : R.PosDef) (y : EuclideanSpace ℝ m) :
++    ∫ x : EuclideanSpace ℝ n,
++      weightedBlockKernel R.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR) (inner_toEuclideanLin_pos hR)
++          Q.toEuclideanLin y x *
++        Real.exp (-(1 / 2) * ⟪x, A.toEuclideanLin x⟫) =
++      gaussianPrefactor R.toEuclideanLin *
++        ((2 * π) ^ ((Fintype.card n : ℝ) / 2) /
++          Real.sqrt (finePrecision A R Q).det) *
++        Real.exp (-(1 / 2) * ⟪y, (coarsePrecision A R Q).toEuclideanLin y⟫) := by
++  have hK := finePrecision_posDef Q hA hR
++  have hexponent (x : EuclideanSpace ℝ n) :
++      -(1 / 2) * ⟪y - Q.toEuclideanLin x,
++          R.toEuclideanLin (y - Q.toEuclideanLin x)⟫ +
++        -(1 / 2) * ⟪x, A.toEuclideanLin x⟫ =
++      -(1 / 2) * ⟪y, (coarsePrecision A R Q).toEuclideanLin y⟫ +
++        -(1 / 2) * ⟪x - (harmonicExtension A R Q).toEuclideanLin y,
++          (finePrecision A R Q).toEuclideanLin
++            (x - (harmonicExtension A R Q).toEuclideanLin y)⟫ := by
++    linarith [euclidean_quadratic_completion Q hA hR y x]
++  have hshift :
++      ∫ x : EuclideanSpace ℝ n,
++        Real.exp (-(1 / 2) * ⟪x - (harmonicExtension A R Q).toEuclideanLin y,
++          (finePrecision A R Q).toEuclideanLin
++            (x - (harmonicExtension A R Q).toEuclideanLin y)⟫) =
++      (2 * π) ^ ((Fintype.card n : ℝ) / 2) /
++        Real.sqrt (finePrecision A R Q).det := by
++    rw [integral_sub_right_eq_self
++      (fun x : EuclideanSpace ℝ n =>
++        Real.exp (-(1 / 2) * ⟪x, (finePrecision A R Q).toEuclideanLin x⟫))
++      ((harmonicExtension A R Q).toEuclideanLin y)]
++    simpa only [finrank_euclideanSpace, det_toEuclideanLin] using
++      integral_exp_neg_half_inner (toEuclideanLin_isSymmetric hK)
++        (inner_toEuclideanLin_pos hK)
++  have hint (x : EuclideanSpace ℝ n) :
++      weightedBlockKernel R.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR) (inner_toEuclideanLin_pos hR)
++          Q.toEuclideanLin y x *
++        Real.exp (-(1 / 2) * ⟪x, A.toEuclideanLin x⟫) =
++      (gaussianPrefactor R.toEuclideanLin *
++          Real.exp (-(1 / 2) * ⟪y, (coarsePrecision A R Q).toEuclideanLin y⟫)) *
++        Real.exp (-(1 / 2) * ⟪x - (harmonicExtension A R Q).toEuclideanLin y,
++          (finePrecision A R Q).toEuclideanLin
++            (x - (harmonicExtension A R Q).toEuclideanLin y)⟫) := by
++    unfold weightedBlockKernel normalizedGaussian
++    rw [mul_assoc, ← Real.exp_add, hexponent x, Real.exp_add, ← mul_assoc]
++  calc
++    _ = ∫ x : EuclideanSpace ℝ n,
++        (gaussianPrefactor R.toEuclideanLin *
++            Real.exp (-(1 / 2) * ⟪y, (coarsePrecision A R Q).toEuclideanLin y⟫)) *
++          Real.exp (-(1 / 2) * ⟪x - (harmonicExtension A R Q).toEuclideanLin y,
++            (finePrecision A R Q).toEuclideanLin
++              (x - (harmonicExtension A R Q).toEuclideanLin y)⟫) :=
++      integral_congr_ae (Filter.Eventually.of_forall hint)
++    _ = (gaussianPrefactor R.toEuclideanLin *
++          Real.exp (-(1 / 2) * ⟪y, (coarsePrecision A R Q).toEuclideanLin y⟫)) *
++        ((2 * π) ^ ((Fintype.card n : ℝ) / 2) /
++          Real.sqrt (finePrecision A R Q).det) := by
++      rw [integral_const_mul, hshift]
++    _ = _ := by ring
++
++/-- The kernel-weighted fine Gaussian is genuinely integrable: the exact
++integral has a strictly positive finite real value. -/
++theorem integrable_weightedBlockKernel_mul_gaussian (Q : Matrix m n ℝ)
++    (hA : A.PosDef) (hR : R.PosDef) (y : EuclideanSpace ℝ m) :
++    Integrable (fun x : EuclideanSpace ℝ n =>
++      weightedBlockKernel R.toEuclideanLin
++          (toEuclideanLin_isSymmetric hR) (inner_toEuclideanLin_pos hR)
++          Q.toEuclideanLin y x *
++        Real.exp (-(1 / 2) * ⟪x, A.toEuclideanLin x⟫)) := by
++  apply Integrable.of_integral_ne_zero
++  rw [integral_weightedBlockKernel_mul_gaussian Q hA hR y]
++  have hfactor := gaussianPrefactor_pos R.toEuclideanLin
++    (toEuclideanLin_isSymmetric hR) (inner_toEuclideanLin_pos hR)
++  have hdet : 0 < Real.sqrt (finePrecision A R Q).det :=
++    Real.sqrt_pos.mpr (finePrecision_posDef Q hA hR).det_pos
++  exact ne_of_gt (mul_pos
++    (mul_pos hfactor (div_pos (Real.rpow_pos_of_pos (by positivity) _) hdet))
++    (Real.exp_pos _))
++
++end GaussianBlockSpin.MatrixWeighted
+diff --git a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Examples.lean b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Examples.lean
+new file mode 100644
+index 0000000..390df6d
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Examples.lean
+@@ -0,0 +1,136 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license as described in the file LICENSE.
++Authors: InfoGeometry Engine Contributors
++-/
++/- The Apache LICENSE for these contributed files is retained as
++`LICENSE-InfoGeometry-Apache-2.0` at the package root, together with
++`NOTICE-InfoGeometry`; the upstream root CC0 license is separate. -/
++import GaussianBlockSpin.MatrixWeighted.Composition
++import Mathlib.LinearAlgebra.Matrix.Notation
++import Mathlib.Tactic.FinCases
++import Mathlib.Tactic.NormNum
++
++/-!
++# A real, noncommuting matrix-weighted Gaussian example
++
++The construction follows the Gram-plus-identity positivity witnesses of
++`tests/BalabanOperatorTests.lean` in `nickgou-nuke/info-geometry-lean`.
++Here both spaces have real dimension two, both precision matrices have
++off-diagonal entries, and the observation is a nontrivial shear. Exact entries
++of the response, covariance, and precision distinguish the order of factors.
++No complexification or simultaneous diagonalization is used.
++-/
++
++noncomputable section
++
++namespace GaussianBlockSpin.MatrixWeighted.Examples
++
++open Matrix
++
++def fineSeed : Matrix (Fin 2) (Fin 2) ℝ := !![1, 1; 0, 0]
++def coarseSeed : Matrix (Fin 2) (Fin 2) ℝ := !![1, 1; 1, 0]
++def fineMatrix : Matrix (Fin 2) (Fin 2) ℝ := 1 + fineSeedᴴ * fineSeed
++def coarseWeight : Matrix (Fin 2) (Fin 2) ℝ := 1 + coarseSeedᴴ * coarseSeed
++def observation : Matrix (Fin 2) (Fin 2) ℝ := !![1, 1; 0, 1]
++
++theorem fineMatrix_posDef : fineMatrix.PosDef :=
++  Matrix.PosDef.one.add_posSemidef (Matrix.posSemidef_conjTranspose_mul_self fineSeed)
++
++theorem coarseWeight_posDef : coarseWeight.PosDef :=
++  Matrix.PosDef.one.add_posSemidef (Matrix.posSemidef_conjTranspose_mul_self coarseSeed)
++
++theorem fine_coarse_noncommuting : fineMatrix * coarseWeight ≠ coarseWeight * fineMatrix := by
++  intro h
++  have hentry := congrArg (fun M => M 0 1) h
++  norm_num [fineMatrix, fineSeed, coarseWeight, coarseSeed, Matrix.mul_apply,
++    Matrix.conjTranspose_apply, Matrix.one_apply, Fin.sum_univ_succ] at hentry
++
++theorem weight_transport_noncommuting :
++    coarseWeight * (observation * fineMatrix * observationᴴ) ≠
++      (observation * fineMatrix * observationᴴ) * coarseWeight := by
++  intro h
++  have hentry := congrArg (fun M => M 0 1) h
++  norm_num [coarseWeight, coarseSeed, fineMatrix, fineSeed, observation, Matrix.mul_apply,
++    Matrix.conjTranspose_apply, Matrix.one_apply, Fin.sum_univ_succ] at hentry
++
++theorem fineMatrix_inv : fineMatrix⁻¹ = !![(2 / 3 : ℝ), -1 / 3; -1 / 3, 2 / 3] := by
++  apply Matrix.inv_eq_right_inv
++  ext i j
++  fin_cases i <;> fin_cases j <;>
++    norm_num [fineMatrix, fineSeed, Matrix.mul_apply, Matrix.conjTranspose_apply,
++      Matrix.one_apply, Fin.sum_univ_succ]
++
++theorem coarseWeight_inv : coarseWeight⁻¹ = !![(2 / 5 : ℝ), -1 / 5; -1 / 5, 3 / 5] := by
++  apply Matrix.inv_eq_right_inv
++  ext i j
++  fin_cases i <;> fin_cases j <;>
++    norm_num [coarseWeight, coarseSeed, Matrix.mul_apply, Matrix.conjTranspose_apply,
++      Matrix.one_apply, Fin.sum_univ_succ]
++
++theorem explicit_finePrecision :
++    finePrecision fineMatrix coarseWeight observation = !![(5 : ℝ), 5; 5, 9] := by
++  ext i j
++  fin_cases i <;> fin_cases j <;>
++    norm_num [finePrecision, fineMatrix, fineSeed, coarseWeight, coarseSeed, observation,
++      Matrix.mul_apply, Matrix.conjTranspose_apply, Matrix.one_apply, Fin.sum_univ_succ]
++
++theorem explicit_finePrecision_inv :
++    (finePrecision fineMatrix coarseWeight observation)⁻¹ =
++      !![(9 / 20 : ℝ), -1 / 4; -1 / 4, 1 / 4] := by
++  rw [explicit_finePrecision]
++  apply Matrix.inv_eq_right_inv
++  ext i j
++  fin_cases i <;> fin_cases j <;>
++    norm_num [Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_succ]
++
++theorem explicit_harmonicExtension :
++    harmonicExtension fineMatrix coarseWeight observation =
++      !![(7 / 20 : ℝ), -3 / 10; 1 / 4, 1 / 2] := by
++  rw [harmonicExtension, explicit_finePrecision_inv]
++  ext i j
++  fin_cases i <;> fin_cases j <;>
++    norm_num [coarseWeight, coarseSeed, observation, Matrix.mul_apply,
++      Matrix.conjTranspose_apply, Matrix.one_apply, Fin.sum_univ_succ]
++
++/-- Transposition reverses the ordered response factors and differs from the response here. -/
++theorem harmonicExtension_not_symmetric :
++    (harmonicExtension fineMatrix coarseWeight observation)ᵀ ≠
++      harmonicExtension fineMatrix coarseWeight observation := by
++  rw [explicit_harmonicExtension]
++  intro h
++  have hentry := congrArg (fun M => M 0 1) h
++  norm_num [Matrix.transpose_apply] at hentry
++
++theorem explicit_coarse_covariance :
++    coarseCovariance fineMatrix coarseWeight observation =
++      !![(16 / 15 : ℝ), 2 / 15; 2 / 15, 19 / 15] := by
++  rw [coarseCovariance, fineMatrix_inv, coarseWeight_inv]
++  ext i j
++  fin_cases i <;> fin_cases j <;>
++    norm_num [observation, Matrix.mul_apply, Matrix.conjTranspose_apply, Fin.sum_univ_succ]
++
++theorem explicit_coarse_precision :
++    coarsePrecision fineMatrix coarseWeight observation =
++      !![(19 / 20 : ℝ), -1 / 10; -1 / 10, 4 / 5] := by
++  rw [← coarseCovariance_inv observation fineMatrix_posDef coarseWeight_posDef,
++    explicit_coarse_covariance]
++  apply Matrix.inv_eq_right_inv
++  ext i j
++  fin_cases i <;> fin_cases j <;>
++    norm_num [Matrix.mul_apply, Matrix.one_apply, Fin.sum_univ_succ]
++
++theorem explicit_determinants :
++    (finePrecision fineMatrix coarseWeight observation).det = 20 ∧
++      (coarsePrecision fineMatrix coarseWeight observation).det = 3 / 4 := by
++  rw [explicit_finePrecision, explicit_coarse_precision]
++  norm_num [Matrix.det_fin_two]
++
++theorem unique_minimizer (y x : Fin 2 → ℝ) :
++    (∀ z, quadraticEnergy fineMatrix coarseWeight observation y x ≤
++      quadraticEnergy fineMatrix coarseWeight observation y z) ↔
++      x = !![(7 / 20 : ℝ), -3 / 10; 1 / 4, 1 / 2] *ᵥ y := by
++  rw [is_minimizer_iff observation fineMatrix_posDef coarseWeight_posDef,
++    explicit_harmonicExtension]
++
++end GaussianBlockSpin.MatrixWeighted.Examples
+diff --git a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Kernel.lean b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Kernel.lean
+new file mode 100644
+index 0000000..5794dff
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Kernel.lean
+@@ -0,0 +1,175 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license as described in the file LICENSE.
++Authors: InfoGeometry Engine Contributors
++-/
++/- The Apache LICENSE for these contributed files is retained as
++`LICENSE-InfoGeometry-Apache-2.0` at the package root, together with
++`NOTICE-InfoGeometry`; the upstream root CC0 license is separate. -/
++import GaussianBlockSpin.Kernel
++
++/-!
++# Gaussian block kernels with a positive definite precision operator
++
++The precision is a symmetric, strictly positive real linear endomorphism of
++the finite-dimensional block-field inner product space. Its density is
++
++`sqrt (det R) / (2π) ^ (dim F / 2) * exp (-(1/2) ⟪x, R x⟫)`.
++
++All integrals use the same canonical volume as `GaussianBlockSpin.Kernel`.
++The kernel translates this density by the existing linear averaging map.
++For `R = α • id`, `α > 0`, it is exactly the existing `blockKernel`.
++-/
++
++open MeasureTheory Real
++open scoped RealInnerProductSpace
++
++namespace GaussianBlockSpin.MatrixWeighted
++
++variable {E F : Type*} [NormedAddCommGroup E] [InnerProductSpace ℝ E]
++  [FiniteDimensional ℝ E] [NormedAddCommGroup F] [InnerProductSpace ℝ F]
++  [FiniteDimensional ℝ F]
++
++/-- The normalizing factor for the canonical inner-product-space volume. -/
++noncomputable def gaussianPrefactor (R : F →ₗ[ℝ] F) : ℝ :=
++  Real.sqrt (LinearMap.det R) / (2 * π) ^ ((Module.finrank ℝ F : ℝ) / 2)
++
++/-- The normalized centered Gaussian with symmetric positive definite precision.
++The two proof arguments retain the domain on which this formula is a density. -/
++noncomputable def normalizedGaussian (R : F →ₗ[ℝ] F) (_hR : R.IsSymmetric)
++    (_hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) (x : F) : ℝ :=
++  gaussianPrefactor R * Real.exp (-(1 / 2) * ⟪x, R x⟫)
++
++/-- The Gaussian block kernel centered at the averaged fine field. -/
++noncomputable def weightedBlockKernel (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫)
++    (Q : E →ₗ[ℝ] F) (ψ : F) (φ : E) : ℝ :=
++  normalizedGaussian R hR hRpos (ψ - Q φ)
++
++lemma gaussianPrefactor_pos (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) :
++    0 < gaussianPrefactor R := by
++  exact div_pos (Real.sqrt_pos.mpr (det_pos_of_pos hR hRpos))
++    (Real.rpow_pos_of_pos (by positivity) _)
++
++lemma normalizedGaussian_pos (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) (x : F) :
++    0 < normalizedGaussian R hR hRpos x := by
++  exact mul_pos (gaussianPrefactor_pos R hR hRpos) (Real.exp_pos _)
++
++lemma weightedBlockKernel_pos (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫)
++    (Q : E →ₗ[ℝ] F) (ψ : F) (φ : E) :
++    0 < weightedBlockKernel R hR hRpos Q ψ φ :=
++  normalizedGaussian_pos R hR hRpos (ψ - Q φ)
++
++lemma continuous_normalizedGaussian (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) :
++    Continuous (normalizedGaussian R hR hRpos) := by
++  unfold normalizedGaussian
++  exact continuous_const.mul (Real.continuous_exp.comp
++    (continuous_const.mul (continuous_id.inner R.continuous_of_finiteDimensional)))
++
++/-- Joint continuity in the block and fine fields. -/
++lemma continuous_weightedBlockKernel (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) (Q : E →ₗ[ℝ] F) :
++    Continuous (fun z : F × E => weightedBlockKernel R hR hRpos Q z.1 z.2) := by
++  exact (continuous_normalizedGaussian R hR hRpos).comp
++    (continuous_fst.sub (Q.continuous_of_finiteDimensional.comp continuous_snd))
++
++lemma continuous_weightedBlockKernel_left (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) (Q : E →ₗ[ℝ] F) (φ : E) :
++    Continuous (fun ψ : F => weightedBlockKernel R hR hRpos Q ψ φ) := by
++  exact (continuous_normalizedGaussian R hR hRpos).comp
++    (continuous_id.sub continuous_const)
++
++/-- The matrix normalizer specializes to the existing scalar normalizer. -/
++lemma gaussianPrefactor_smul_id {α : ℝ} (hα : 0 < α) :
++    gaussianPrefactor (α • LinearMap.id : F →ₗ[ℝ] F) =
++      (α / (2 * π)) ^ ((Module.finrank ℝ F : ℝ) / 2) := by
++  have hs : Real.sqrt (α ^ Module.finrank ℝ F) =
++      α ^ ((Module.finrank ℝ F : ℝ) / 2) := by
++    rw [Real.sqrt_eq_rpow, ← Real.rpow_natCast, ← Real.rpow_mul hα.le]
++    congr 1
++    simp only [div_eq_mul_inv, one_mul]
++  unfold gaussianPrefactor
++  rw [LinearMap.det_smul, LinearMap.det_id, mul_one, hs,
++    Real.div_rpow hα.le (by positivity)]
++
++lemma normalizedGaussian_smul_id {α : ℝ} (hα : 0 < α) (x : F) :
++    normalizedGaussian (α • LinearMap.id : F →ₗ[ℝ] F)
++        (isSymmetric_smul_id α) (inner_smul_id_pos hα) x =
++      (α / (2 * π)) ^ ((Module.finrank ℝ F : ℝ) / 2) *
++        Real.exp (-(α / 2) * ‖x‖ ^ 2) := by
++  unfold normalizedGaussian
++  rw [gaussianPrefactor_smul_id hα]
++  congr 1
++  congr 1
++  simp only [LinearMap.smul_apply, LinearMap.id_apply, inner_smul_right,
++    real_inner_self_eq_norm_sq]
++  rw [← mul_assoc, neg_mul (1 / 2 : ℝ) α, mul_comm (1 / 2 : ℝ) α, mul_one_div]
++
++/-- Exact scalar-precision readback, with the original kernel and volume convention. -/
++theorem weightedBlockKernel_smul_id {α : ℝ} (hα : 0 < α)
++    (Q : E →ₗ[ℝ] F) (ψ : F) (φ : E) :
++    weightedBlockKernel (α • LinearMap.id : F →ₗ[ℝ] F)
++        (isSymmetric_smul_id α) (inner_smul_id_pos hα) Q ψ φ =
++      blockKernel α hα Q ψ φ := by
++  simpa only [weightedBlockKernel, blockKernel] using
++    normalizedGaussian_smul_id hα (ψ - Q φ)
++
++variable [MeasurableSpace F] [BorelSpace F]
++
++lemma measurable_normalizedGaussian (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) :
++    Measurable (normalizedGaussian R hR hRpos) :=
++  (continuous_normalizedGaussian R hR hRpos).measurable
++
++lemma measurable_weightedBlockKernel_left (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) (Q : E →ₗ[ℝ] F) (φ : E) :
++    Measurable (fun ψ : F => weightedBlockKernel R hR hRpos Q ψ φ) :=
++  (continuous_weightedBlockKernel_left R hR hRpos Q φ).measurable
++
++/-- Normalization with respect to the native canonical volume on `F`. -/
++theorem integral_normalizedGaussian (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) :
++    ∫ x : F, normalizedGaussian R hR hRpos x = 1 := by
++  have hdet : 0 < Real.sqrt (LinearMap.det R) :=
++    Real.sqrt_pos.mpr (det_pos_of_pos hR hRpos)
++  have hvol : 0 < (2 * π) ^ ((Module.finrank ℝ F : ℝ) / 2) :=
++    Real.rpow_pos_of_pos (by positivity) _
++  unfold normalizedGaussian gaussianPrefactor
++  rw [integral_const_mul, integral_exp_neg_half_inner hR hRpos,
++    div_mul_div_cancel₀ hvol.ne', div_self hdet.ne']
++
++lemma integrable_normalizedGaussian (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) :
++    Integrable (normalizedGaussian R hR hRpos) := by
++  apply Integrable.of_integral_ne_zero
++  rw [integral_normalizedGaussian R hR hRpos]
++  exact one_ne_zero
++
++/-- Every fine field determines a normalized density in the block field. -/
++theorem integral_weightedBlockKernel (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) (Q : E →ₗ[ℝ] F) (φ : E) :
++    ∫ ψ : F, weightedBlockKernel R hR hRpos Q ψ φ = 1 := by
++  unfold weightedBlockKernel
++  rw [← integral_add_right_eq_self
++    (fun ψ : F => normalizedGaussian R hR hRpos (ψ - Q φ)) (Q φ)]
++  simp only [add_sub_cancel_right]
++  exact integral_normalizedGaussian R hR hRpos
++
++lemma integrable_weightedBlockKernel (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) (Q : E →ₗ[ℝ] F) (φ : E) :
++    Integrable (fun ψ : F => weightedBlockKernel R hR hRpos Q ψ φ) := by
++  apply Integrable.of_integral_ne_zero
++  rw [integral_weightedBlockKernel R hR hRpos Q φ]
++  exact one_ne_zero
++
++lemma measurable_weightedBlockKernel [MeasurableSpace E] [BorelSpace E]
++    (R : F →ₗ[ℝ] F) (hR : R.IsSymmetric)
++    (hRpos : ∀ x : F, x ≠ 0 → 0 < ⟪x, R x⟫) (Q : E →ₗ[ℝ] F) :
++    Measurable (fun z : F × E => weightedBlockKernel R hR hRpos Q z.1 z.2) :=
++  (continuous_weightedBlockKernel R hR hRpos Q).measurable
++
++end GaussianBlockSpin.MatrixWeighted
+diff --git a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Positive.lean b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Positive.lean
+new file mode 100644
+index 0000000..9a10ae6
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Positive.lean
+@@ -0,0 +1,166 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license as described in the file LICENSE.
++Authors: InfoGeometry Engine Contributors
++-/
++/- The Apache LICENSE for these contributed files is retained as
++`LICENSE-InfoGeometry-Apache-2.0` at the package root, together with
++`NOTICE-InfoGeometry`; the upstream root CC0 license is separate. -/
++import Mathlib.Analysis.Matrix.PosDef
++import Mathlib.LinearAlgebra.Matrix.SchurComplement
++
++/-!
++Adapted to real matrices from
++`InfoGeometry.OperatorAlgebra.PositiveCoarseGraining` in
++`nickgou-nuke/info-geometry-lean`; original Apache 2.0 attribution is retained.
++The scalar field in this module is `ℝ`. Native conjugate transpose and real-part
++notations reduce to ordinary transpose and the identity, respectively.
++
++# Positive operator coarse-graining
++
++The exact elimination underlying Dimock's account of Balaban's block
++renormalization is a rectangular, weighted Schur complement. Both precision
++operators are arbitrary positive definite matrices; no operators are assumed
++to commute. The coarse weight is itself matrix-valued.
++
++The inverse formula below specializes Mathlib's Woodbury theorem. Positivity
++establishes every inverse hypothesis, including positivity of the resulting
++coarse precision. This is finite operator algebra, without an assertion about
++polymer expansions or continuum limits.
++-/
++
++noncomputable section
++
++namespace GaussianBlockSpin.MatrixWeighted
++
++open Matrix
++
++variable {n m : Type*}
++variable [Fintype n] [Fintype m] [DecidableEq n] [DecidableEq m]
++
++/-- Fine precision after imposing a matrix-weighted coarse observation. -/
++def finePrecision (A : Matrix n n ℝ) (R : Matrix m m ℝ)
++    (Q : Matrix m n ℝ) : Matrix n n ℝ :=
++  A + Qᴴ * R * Q
++
++/-- Coarse covariance: observation covariance plus transported fine covariance. -/
++def coarseCovariance (A : Matrix n n ℝ) (R : Matrix m m ℝ)
++    (Q : Matrix m n ℝ) : Matrix m m ℝ :=
++  R⁻¹ + Q * A⁻¹ * Qᴴ
++
++/-- The effective precision obtained by eliminating the fine variables. -/
++def coarsePrecision (A : Matrix n n ℝ) (R : Matrix m m ℝ)
++    (Q : Matrix m n ℝ) : Matrix m m ℝ :=
++  R - R * Q * (finePrecision A R Q)⁻¹ * Qᴴ * R
++
++/-- The fine state that solves the normal equation for a coarse state. -/
++def harmonicExtension (A : Matrix n n ℝ) (R : Matrix m m ℝ)
++    (Q : Matrix m n ℝ) : Matrix n m ℝ :=
++  (finePrecision A R Q)⁻¹ * Qᴴ * R
++
++variable {A : Matrix n n ℝ} {R : Matrix m m ℝ} (Q : Matrix m n ℝ)
++
++omit [DecidableEq n] [DecidableEq m] in
++theorem finePrecision_posDef (hA : A.PosDef) (hR : R.PosDef) :
++    (finePrecision A R Q).PosDef :=
++  hA.add_posSemidef (hR.posSemidef.conjTranspose_mul_mul_same Q)
++
++theorem coarseCovariance_posDef (hA : A.PosDef) (hR : R.PosDef) :
++    (coarseCovariance A R Q).PosDef :=
++  hR.inv.add_posSemidef (hA.inv.posSemidef.mul_mul_conjTranspose_same Q)
++
++/-- Woodbury with the covariance operators as its two invertible inputs. -/
++theorem coarseCovariance_inv (hA : A.PosDef) (hR : R.PosDef) :
++    (coarseCovariance A R Q)⁻¹ = coarsePrecision A R Q := by
++  let := hA.isUnit.invertible
++  let := hR.isUnit.invertible
++  have hH := finePrecision_posDef Q hA hR
++  have hInv : IsUnit (A⁻¹⁻¹ + Qᴴ * R⁻¹⁻¹ * Q) := by
++    simpa only [Matrix.inv_inv_of_invertible, finePrecision] using hH.isUnit
++  simpa only [coarseCovariance, coarsePrecision, finePrecision,
++    Matrix.inv_inv_of_invertible, Matrix.mul_assoc] using
++    Matrix.add_mul_mul_inv_eq_sub R⁻¹ Q A⁻¹ Qᴴ hR.inv.isUnit hA.inv.isUnit hInv
++
++theorem coarsePrecision_posDef (hA : A.PosDef) (hR : R.PosDef) :
++    (coarsePrecision A R Q).PosDef := by
++  rw [← coarseCovariance_inv Q hA hR]
++  exact (coarseCovariance_posDef Q hA hR).inv
++
++/-- Exact covariance transport, valid without any commutation hypothesis. -/
++theorem coarsePrecision_inv (hA : A.PosDef) (hR : R.PosDef) :
++    (coarsePrecision A R Q)⁻¹ = R⁻¹ + Q * A⁻¹ * Qᴴ := by
++  let := (coarseCovariance_posDef Q hA hR).isUnit.invertible
++  rw [← coarseCovariance_inv Q hA hR, Matrix.inv_inv_of_invertible]
++  rfl
++
++/-- The dual Woodbury formula for the conditioned fine covariance. -/
++theorem finePrecision_inv (hA : A.PosDef) (hR : R.PosDef) :
++    (finePrecision A R Q)⁻¹ =
++      A⁻¹ - A⁻¹ * Qᴴ * coarsePrecision A R Q * Q * A⁻¹ := by
++  have hC := coarseCovariance_posDef Q hA hR
++  change (A + Qᴴ * R * Q)⁻¹ = _
++  rw [Matrix.add_mul_mul_inv_eq_sub A Qᴴ R Q hA.isUnit hR.isUnit hC.isUnit]
++  rw [show (R⁻¹ + Q * A⁻¹ * Qᴴ)⁻¹ = coarsePrecision A R Q from
++    coarseCovariance_inv Q hA hR]
++
++omit [DecidableEq m] in
++/-- The actual matrix normal equation for harmonic extension. -/
++theorem finePrecision_mul_harmonicExtension (hA : A.PosDef) (hR : R.PosDef) :
++    finePrecision A R Q * harmonicExtension A R Q = Qᴴ * R := by
++  let := (finePrecision_posDef Q hA hR).isUnit.invertible
++  simp only [harmonicExtension, ← Matrix.mul_assoc, Matrix.mul_inv_of_invertible,
++    Matrix.one_mul]
++
++omit [DecidableEq m] in
++/-- Adjoint normal equation; the order of the factors is reversed by the adjoint. -/
++theorem harmonicExtension_adjoint_mul_finePrecision (hA : A.PosDef) (hR : R.PosDef) :
++    (harmonicExtension A R Q)ᴴ * finePrecision A R Q = R * Q := by
++  have h := congrArg Matrix.conjTranspose (finePrecision_mul_harmonicExtension Q hA hR)
++  simpa only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose,
++    hR.isHermitian.eq, (finePrecision_posDef Q hA hR).isHermitian.eq] using h
++
++omit [DecidableEq m] in
++/-- The Schur complement can also be read directly from the response map. -/
++theorem coarsePrecision_eq_sub_response :
++    coarsePrecision A R Q = R - R * Q * harmonicExtension A R Q := by
++  simp only [coarsePrecision, harmonicExtension, Matrix.mul_assoc]
++
++/-- The two Schur expansions of the joint precision give the Gaussian determinant factor. -/
++theorem coarsePrecision_det_mul_finePrecision_det (hA : A.PosDef) (hR : R.PosDef) :
++    (coarsePrecision A R Q).det * (finePrecision A R Q).det = R.det * A.det := by
++  let := hR.isUnit.invertible
++  let := (finePrecision_posDef Q hA hR).isUnit.invertible
++  have hSchurR :
++      finePrecision A R Q - (-(Qᴴ * R)) * ⅟R * (-(R * Q)) = A := by
++    simp only [Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.invOf_eq_nonsing_inv,
++      Matrix.mul_assoc, Matrix.mul_inv_cancel_left_of_invertible, finePrecision,
++      add_sub_cancel_right]
++  have hSchurK :
++      R - (-(R * Q)) * ⅟(finePrecision A R Q) * (-(Qᴴ * R)) =
++        coarsePrecision A R Q := by
++    simp only [Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.invOf_eq_nonsing_inv,
++      coarsePrecision, Matrix.mul_assoc]
++  have hRdet := Matrix.det_fromBlocks₁₁ R (-(R * Q)) (-(Qᴴ * R))
++    (finePrecision A R Q)
++  have hKdet := Matrix.det_fromBlocks₂₂ R (-(R * Q)) (-(Qᴴ * R))
++    (finePrecision A R Q)
++  rw [hSchurR] at hRdet
++  rw [hSchurK] at hKdet
++  calc
++    (coarsePrecision A R Q).det * (finePrecision A R Q).det =
++        (finePrecision A R Q).det * (coarsePrecision A R Q).det := mul_comm _ _
++    _ = (Matrix.fromBlocks R (-(R * Q)) (-(Qᴴ * R)) (finePrecision A R Q)).det :=
++      hKdet.symm
++    _ = R.det * A.det := hRdet
++
++/-- Positive square roots turn the determinant identity into the Gaussian normalization factor. -/
++theorem sqrt_det_coarsePrecision (hA : A.PosDef) (hR : R.PosDef) :
++    Real.sqrt (coarsePrecision A R Q).det =
++      Real.sqrt R.det * Real.sqrt A.det / Real.sqrt (finePrecision A R Q).det := by
++  have hHpos := (finePrecision_posDef Q hA hR).det_pos
++  have hSpos := (coarsePrecision_posDef Q hA hR).det_pos
++  have h := congrArg Real.sqrt (coarsePrecision_det_mul_finePrecision_det Q hA hR)
++  rw [Real.sqrt_mul hSpos.le, Real.sqrt_mul hR.det_pos.le] at h
++  exact (eq_div_iff (ne_of_gt (Real.sqrt_pos.2 hHpos))).2 h
++
++end GaussianBlockSpin.MatrixWeighted
+diff --git a/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Variational.lean b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Variational.lean
+new file mode 100644
+index 0000000..1ae929b
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/GaussianBlockSpin/MatrixWeighted/Variational.lean
+@@ -0,0 +1,149 @@
++/-
++Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
++Released under Apache 2.0 license as described in the file LICENSE.
++Authors: InfoGeometry Engine Contributors
++-/
++/- The Apache LICENSE for these contributed files is retained as
++`LICENSE-InfoGeometry-Apache-2.0` at the package root, together with
++`NOTICE-InfoGeometry`; the upstream root CC0 license is separate. -/
++import GaussianBlockSpin.MatrixWeighted.Positive
++import Mathlib.Tactic.Abel
++
++/-!
++Adapted to real matrices from
++`InfoGeometry.OperatorAlgebra.CoarseGrainingVariational` in
++`nickgou-nuke/info-geometry-lean`; original Apache 2.0 attribution is retained.
++The scalar field in this module is `ℝ`. Native conjugate transpose and real-part
++notations reduce to ordinary transpose and the identity, respectively.
++
++# Exact quadratic minimization for positive operator coarse-graining
++
++The quadratic energy is the real part of the actual Hermitian matrix form.
++Mathlib's rectangular Schur-complement identity gives square completion;
++strict positivity gives the unique minimizer. No diagonalization or
++commutation hypothesis is used.
++-/
++
++noncomputable section
++
++namespace GaussianBlockSpin.MatrixWeighted
++
++open Matrix
++
++variable {n m : Type*}
++variable [Fintype n] [Fintype m] [DecidableEq n] [DecidableEq m]
++
++/-- Fine energy plus the matrix-weighted discrepancy from a coarse state. -/
++def quadraticEnergy (A : Matrix n n ℝ) (R : Matrix m m ℝ) (Q : Matrix m n ℝ)
++    (y : m → ℝ) (x : n → ℝ) : ℝ :=
++  RCLike.re (star x ⬝ᵥ (A *ᵥ x)) +
++    RCLike.re (star (y - Q *ᵥ x) ⬝ᵥ (R *ᵥ (y - Q *ᵥ x)))
++
++variable {A : Matrix n n ℝ} {R : Matrix m m ℝ} (Q : Matrix m n ℝ)
++
++omit [DecidableEq n] [DecidableEq m] in
++/-- Identify the block quadratic form with the original weighted discrepancy. -/
++theorem block_quadratic_eq (hR : R.IsHermitian) (y : m → ℝ) (x : n → ℝ) :
++    (star (y ⊕ᵥ x)) ᵥ*
++        Matrix.fromBlocks R (-(R * Q)) (-(R * Q))ᴴ (finePrecision A R Q) ⬝ᵥ
++          (y ⊕ᵥ x) =
++      star x ⬝ᵥ (A *ᵥ x) +
++        star (y - Q *ᵥ x) ⬝ᵥ (R *ᵥ (y - Q *ᵥ x)) := by
++  simp [Function.star_sumElim, Matrix.vecMul_fromBlocks, finePrecision,
++    Matrix.conjTranspose_mul, hR.eq, Matrix.mulVec_sub,
++    Matrix.sub_vecMul, star_sub, Matrix.star_mulVec, dotProduct_sub,
++    sub_dotProduct, Matrix.vecMul_add, Matrix.vecMul_neg,
++    Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, Matrix.vecMul_vecMul, Matrix.mul_assoc]
++  abel
++
++omit [DecidableEq m] in
++/-- Exact square completion before taking real parts. -/
++theorem quadratic_completion (hA : A.PosDef) (hR : R.PosDef)
++    (y : m → ℝ) (x : n → ℝ) :
++    star x ⬝ᵥ (A *ᵥ x) +
++        star (y - Q *ᵥ x) ⬝ᵥ (R *ᵥ (y - Q *ᵥ x)) =
++      star y ⬝ᵥ (coarsePrecision A R Q *ᵥ y) +
++        star (x - harmonicExtension A R Q *ᵥ y) ⬝ᵥ
++          (finePrecision A R Q *ᵥ (x - harmonicExtension A R Q *ᵥ y)) := by
++  have hH := finePrecision_posDef Q hA hR
++  let := hH.isUnit.invertible
++  have h := Matrix.schur_complement_eq₂₂ R (-(R * Q)) y x hH.isHermitian
++  rw [block_quadratic_eq Q hR.isHermitian] at h
++  have hshift :
++      ((finePrecision A R Q)⁻¹ * (-(R * Q))ᴴ) *ᵥ y + x =
++        x - harmonicExtension A R Q *ᵥ y := by
++    simp only [Matrix.conjTranspose_neg, Matrix.conjTranspose_mul, hR.isHermitian.eq,
++      Matrix.mul_neg, Matrix.neg_mulVec, harmonicExtension, ← Matrix.mul_assoc]
++    abel
++  have hschur :
++      R - (-(R * Q)) * (finePrecision A R Q)⁻¹ * (-(R * Q))ᴴ =
++        coarsePrecision A R Q := by
++    simp only [Matrix.conjTranspose_neg, Matrix.conjTranspose_mul, hR.isHermitian.eq,
++      Matrix.neg_mul, Matrix.mul_neg, neg_neg, coarsePrecision, Matrix.mul_assoc]
++  rw [hshift, hschur] at h
++  simpa only [Matrix.dotProduct_mulVec, add_comm] using h
++
++omit [DecidableEq m] in
++/-- Energy splits into its coarse minimum and a strictly positive fine residual. -/
++theorem quadraticEnergy_completion (hA : A.PosDef) (hR : R.PosDef)
++    (y : m → ℝ) (x : n → ℝ) :
++    quadraticEnergy A R Q y x =
++      RCLike.re (star y ⬝ᵥ (coarsePrecision A R Q *ᵥ y)) +
++        RCLike.re (star (x - harmonicExtension A R Q *ᵥ y) ⬝ᵥ
++          (finePrecision A R Q *ᵥ (x - harmonicExtension A R Q *ᵥ y))) := by
++  simpa only [quadraticEnergy, map_add] using
++    congrArg RCLike.re (quadratic_completion Q hA hR y x)
++
++omit [DecidableEq n] [DecidableEq m] in
++/-- Positive definiteness characterizes the vanishing real quadratic form. -/
++theorem quadratic_re_eq_zero_iff (hA : A.PosDef) (x : n → ℝ) :
++    RCLike.re (star x ⬝ᵥ (A *ᵥ x)) = 0 ↔ x = 0 := by
++  constructor
++  · intro h
++    by_contra hx
++    exact (ne_of_gt (hA.re_dotProduct_pos hx)) h
++  · rintro rfl
++    simp
++
++omit [DecidableEq m] in
++theorem quadraticEnergy_lower_bound (hA : A.PosDef) (hR : R.PosDef)
++    (y : m → ℝ) (x : n → ℝ) :
++    RCLike.re (star y ⬝ᵥ (coarsePrecision A R Q *ᵥ y)) ≤ quadraticEnergy A R Q y x := by
++  rw [quadraticEnergy_completion Q hA hR]
++  exact le_add_of_nonneg_right
++    ((finePrecision_posDef Q hA hR).posSemidef.re_dotProduct_nonneg _)
++
++omit [DecidableEq m] in
++/-- Equality in the lower bound identifies exactly the harmonic extension. -/
++theorem quadraticEnergy_eq_min_iff (hA : A.PosDef) (hR : R.PosDef)
++    (y : m → ℝ) (x : n → ℝ) :
++    quadraticEnergy A R Q y x =
++        RCLike.re (star y ⬝ᵥ (coarsePrecision A R Q *ᵥ y)) ↔
++      x = harmonicExtension A R Q *ᵥ y := by
++  rw [quadraticEnergy_completion Q hA hR, add_eq_left,
++    quadratic_re_eq_zero_iff (finePrecision_posDef Q hA hR), sub_eq_zero]
++
++omit [DecidableEq m] in
++theorem quadraticEnergy_at_harmonicExtension (hA : A.PosDef) (hR : R.PosDef)
++    (y : m → ℝ) :
++    quadraticEnergy A R Q y (harmonicExtension A R Q *ᵥ y) =
++      RCLike.re (star y ⬝ᵥ (coarsePrecision A R Q *ᵥ y)) :=
++  (quadraticEnergy_eq_min_iff Q hA hR y _).2 rfl
++
++omit [DecidableEq m] in
++/-- A global minimizer exists and is characterized without an existence assumption. -/
++theorem is_minimizer_iff (hA : A.PosDef) (hR : R.PosDef)
++    (y : m → ℝ) (x : n → ℝ) :
++    (∀ z, quadraticEnergy A R Q y x ≤ quadraticEnergy A R Q y z) ↔
++      x = harmonicExtension A R Q *ᵥ y := by
++  constructor
++  · intro h
++    apply (quadraticEnergy_eq_min_iff Q hA hR y x).1
++    refine le_antisymm ?_ (quadraticEnergy_lower_bound Q hA hR y x)
++    simpa only [quadraticEnergy_at_harmonicExtension Q hA hR] using
++      h (harmonicExtension A R Q *ᵥ y)
++  · rintro rfl z
++    rw [quadraticEnergy_at_harmonicExtension Q hA hR]
++    exact quadraticEnergy_lower_bound Q hA hR y z
++
++end GaussianBlockSpin.MatrixWeighted
+diff --git a/LEAN/Libraries/GaussianBlockSpin/LICENSE-InfoGeometry-Apache-2.0 b/LEAN/Libraries/GaussianBlockSpin/LICENSE-InfoGeometry-Apache-2.0
+new file mode 100644
+index 0000000..d9a10c0
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/LICENSE-InfoGeometry-Apache-2.0
+@@ -0,0 +1,176 @@
++                                 Apache License
++                           Version 2.0, January 2004
++                        http://www.apache.org/licenses/
++
++   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
++
++   1. Definitions.
++
++      "License" shall mean the terms and conditions for use, reproduction,
++      and distribution as defined by Sections 1 through 9 of this document.
++
++      "Licensor" shall mean the copyright owner or entity authorized by
++      the copyright owner that is granting the License.
++
++      "Legal Entity" shall mean the union of the acting entity and all
++      other entities that control, are controlled by, or are under common
++      control with that entity. For the purposes of this definition,
++      "control" means (i) the power, direct or indirect, to cause the
++      direction or management of such entity, whether by contract or
++      otherwise, or (ii) ownership of fifty percent (50%) or more of the
++      outstanding shares, or (iii) beneficial ownership of such entity.
++
++      "You" (or "Your") shall mean an individual or Legal Entity
++      exercising permissions granted by this License.
++
++      "Source" form shall mean the preferred form for making modifications,
++      including but not limited to software source code, documentation
++      source, and configuration files.
++
++      "Object" form shall mean any form resulting from mechanical
++      transformation or translation of a Source form, including but
++      not limited to compiled object code, generated documentation,
++      and conversions to other media types.
++
++      "Work" shall mean the work of authorship, whether in Source or
++      Object form, made available under the License, as indicated by a
++      copyright notice that is included in or attached to the work
++      (an example is provided in the Appendix below).
++
++      "Derivative Works" shall mean any work, whether in Source or Object
++      form, that is based on (or derived from) the Work and for which the
++      editorial revisions, annotations, elaborations, or other modifications
++      represent, as a whole, an original work of authorship. For the purposes
++      of this License, Derivative Works shall not include works that remain
++      separable from, or merely link (or bind by name) to the interfaces of,
++      the Work and Derivative Works thereof.
++
++      "Contribution" shall mean any work of authorship, including
++      the original version of the Work and any modifications or additions
++      to that Work or Derivative Works thereof, that is intentionally
++      submitted to Licensor for inclusion in the Work by the copyright owner
++      or by an individual or Legal Entity authorized to submit on behalf of
++      the copyright owner. For the purposes of this definition, "submitted"
++      means any form of electronic, verbal, or written communication sent
++      to the Licensor or its representatives, including but not limited to
++      communication on electronic mailing lists, source code control systems,
++      and issue tracking systems that are managed by, or on behalf of, the
++      Licensor for the purpose of discussing and improving the Work, but
++      excluding communication that is conspicuously marked or otherwise
++      designated in writing by the copyright owner as "Not a Contribution."
++
++      "Contributor" shall mean Licensor and any individual or Legal Entity
++      on behalf of whom a Contribution has been received by Licensor and
++      subsequently incorporated within the Work.
++
++   2. Grant of Copyright License. Subject to the terms and conditions of
++      this License, each Contributor hereby grants to You a perpetual,
++      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
++      copyright license to reproduce, prepare Derivative Works of,
++      publicly display, publicly perform, sublicense, and distribute the
++      Work and such Derivative Works in Source or Object form.
++
++   3. Grant of Patent License. Subject to the terms and conditions of
++      this License, each Contributor hereby grants to You a perpetual,
++      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
++      (except as stated in this section) patent license to make, have made,
++      use, offer to sell, sell, import, and otherwise transfer the Work,
++      where such license applies only to those patent claims licensable
++      by such Contributor that are necessarily infringed by their
++      Contribution(s) alone or by combination of their Contribution(s)
++      with the Work to which such Contribution(s) was submitted. If You
++      institute patent litigation against any entity (including a
++      cross-claim or counterclaim in a lawsuit) alleging that the Work
++      or a Contribution incorporated within the Work constitutes direct
++      or contributory patent infringement, then any patent licenses
++      granted to You under this License for that Work shall terminate
++      as of the date such litigation is filed.
++
++   4. Redistribution. You may reproduce and distribute copies of the
++      Work or Derivative Works thereof in any medium, with or without
++      modifications, and in Source or Object form, provided that You
++      meet the following conditions:
++
++      (a) You must give any other recipients of the Work or
++          Derivative Works a copy of this License; and
++
++      (b) You must cause any modified files to carry prominent notices
++          stating that You changed the files; and
++
++      (c) You must retain, in the Source form of any Derivative Works
++          that You distribute, all copyright, patent, trademark, and
++          attribution notices from the Source form of the Work,
++          excluding those notices that do not pertain to any part of
++          the Derivative Works; and
++
++      (d) If the Work includes a "NOTICE" text file as part of its
++          distribution, then any Derivative Works that You distribute must
++          include a readable copy of the attribution notices contained
++          within such NOTICE file, excluding those notices that do not
++          pertain to any part of the Derivative Works, in at least one
++          of the following places: within a NOTICE text file distributed
++          as part of the Derivative Works; within the Source form or
++          documentation, if provided along with the Derivative Works; or,
++          within a display generated by the Derivative Works, if and
++          wherever such third-party notices normally appear. The contents
++          of the NOTICE file are for informational purposes only and
++          do not modify the License. You may add Your own attribution
++          notices within Derivative Works that You distribute, alongside
++          or as an addendum to the NOTICE text from the Work, provided
++          that such additional attribution notices cannot be construed
++          as modifying the License.
++
++      You may add Your own copyright statement to Your modifications and
++      may provide additional or different license terms and conditions
++      for use, reproduction, or distribution of Your modifications, or
++      for any such Derivative Works as a whole, provided Your use,
++      reproduction, and distribution of the Work otherwise complies with
++      the conditions stated in this License.
++
++   5. Submission of Contributions. Unless You explicitly state otherwise,
++      any Contribution intentionally submitted for inclusion in the Work
++      by You to the Licensor shall be under the terms and conditions of
++      this License, without any additional terms or conditions.
++      Notwithstanding the above, nothing herein shall supersede or modify
++      the terms of any separate license agreement you may have executed
++      with Licensor regarding such Contributions.
++
++   6. Trademarks. This License does not grant permission to use the trade
++      names, trademarks, service marks, or product names of the Licensor,
++      except as required for reasonable and customary use in describing the
++      origin of the Work and reproducing the content of the NOTICE file.
++
++   7. Disclaimer of Warranty. Unless required by applicable law or
++      agreed to in writing, Licensor provides the Work (and each
++      Contributor provides its Contributions) on an "AS IS" BASIS,
++      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
++      implied, including, without limitation, any warranties or conditions
++      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
++      PARTICULAR PURPOSE. You are solely responsible for determining the
++      appropriateness of using or redistributing the Work and assume any
++      risks associated with Your exercise of permissions under this License.
++
++   8. Limitation of Liability. In no event and under no legal theory,
++      whether in tort (including negligence), contract, or otherwise,
++      unless required by applicable law (such as deliberate and grossly
++      negligent acts) or agreed to in writing, shall any Contributor be
++      liable to You for damages, including any direct, indirect, special,
++      incidental, or consequential damages of any character arising as a
++      result of this License or out of the use or inability to use the
++      Work (including but not limited to damages for loss of goodwill,
++      work stoppage, computer failure or malfunction, or any and all
++      other commercial damages or losses), even if such Contributor
++      has been advised of the possibility of such damages.
++
++   9. Accepting Warranty or Additional Liability. While redistributing
++      the Work or Derivative Works thereof, You may choose to offer,
++      and charge a fee for, acceptance of support, warranty, indemnity,
++      or other liability obligations and/or rights consistent with this
++      License. However, in accepting such obligations, You may act only
++      on Your own behalf and on Your sole responsibility, not on behalf
++      of any other Contributor, and only if You agree to indemnify,
++      defend, and hold each Contributor harmless for any liability
++      incurred by, or claims asserted against, such Contributor by reason
++      of your accepting any such warranty or additional liability.
++
++   END OF TERMS AND CONDITIONS
+diff --git a/LEAN/Libraries/GaussianBlockSpin/MATRIX_WEIGHTED.md b/LEAN/Libraries/GaussianBlockSpin/MATRIX_WEIGHTED.md
+new file mode 100644
+index 0000000..de4b582
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/MATRIX_WEIGHTED.md
+@@ -0,0 +1,75 @@
++# Matrix-weighted Gaussian elimination and composition
++
++This extension uses the existing Gaussian integral and canonical Euclidean
++volume. The density is available on finite-dimensional real inner product
++spaces; the elimination and convolution theorems below use `EuclideanSpace ℝ n`
++and native `Matrix.toEuclideanLin` for arbitrary finite index types.
++
++For positive definite real matrices A and R and any rectangular Q, let
++
++- K = A + Qᵀ R Q;
++- E = K⁻¹ Qᵀ R;
++- S = R − R Q K⁻¹ Qᵀ R.
++
++`MatrixWeighted.Positive` establishes K,S > 0, both normal equations,
++S⁻¹ = R⁻¹ + Q A⁻¹ Qᵀ, and det(S)det(K) = det(R)det(A).
++`MatrixWeighted.Variational` proves exact square completion and identifies E y
++as the unique global minimizer. `MatrixWeighted.Composition` gives the ordered
++two-step covariance and joint minimizer, and collapse to the composite map.
++No commutation or rank assumption on Q is required.
++
++`MatrixWeighted.Kernel` defines the normalized density
++
++```
++sqrt(det R) / (2π)^(dim F / 2) * exp (−½ ⟪y−Qx, R(y−Qx)⟫).
++```
++
++It proves positivity, joint continuity, measurability, normalization,
++integrability, and exact readback to the original scalar `blockKernel`.
++`MatrixWeighted.Coordinates` preserves the adjoint, determinant, and quadratic
++form in the standard orthonormal coordinates. `MatrixWeighted.EffectiveForm`
++integrates the completed square, including its determinant normalizer.
++`MatrixWeighted.Convolution` proves the actual integral composition law:
++
++```
++∫ z, K(R₂,Q₂)(y,z) * K(R₁,Q₁)(z,x) = K(S,Q₂ Q₁)(y,x)
++S = coarsePrecision R₁ R₂ Q₂
++S⁻¹ = R₂⁻¹ + Q₂ R₁⁻¹ Q₂ᵀ.
++```
++
++For R₁ = βI, R₂ = αI, and Q₂ Q₂ᵀ = sI, α,β > 0 and s ≥ 0,
++`integral_blockKernel_mul_blockKernel_of_matrix` derives the existing scalar
++coefficient αβ/(β+sα) from the new matrix theorem.
++
++The exact 2×2 example has A=[[2,1],[1,2]], R=[[3,1],[1,2]], Q=[[1,1],[0,1]].
++Both precisions are positive definite and do not commute. The response is
++[[7/20,−3/10],[1/4,1/2]], and the output precision is
++[[19/20,−1/10],[−1/10,4/5]]. The example proves the factor-order obstruction
++and specializes the unique-minimizer theorem.
++
++## Conventions and boundaries
++
++All integrals use the existing canonical inner-product-space volume. The
++current Bałaban specialization uses plain Euclidean coordinates and absorbs
++lattice scale factors into its operators. No weighted lattice adjoint is
++silently identified with a transpose. Changing the inner product/volume needs
++an additional coordinate/Jacobian argument.
++
++The old EffectiveForm witness w satisfies K w = Q†y, and its minimizer is αw.
++The new E y includes R, so for R=αI its normal equation is K(E y)=αQ†y.
++The theorem concerns strictly positive fine precisions on the declared space;
++it does not eliminate gauge zero modes, prove uniform UV estimates, construct
++a Markov kernel, or establish interacting Wilson-loop convergence.
++
++## Attribution
++
++Positive, Variational, and Composition adapt the Apache-2.0 InfoGeometry owners
++`PositiveCoarseGraining`, `CoarseGrainingVariational`, and
++`CoarseGrainingComposition` at fe24e350b08fdea04f74c0748ef9fd9417c47529 from
++https://github.com/nickgou-nuke/info-geometry-lean . They specialize the field
++to real matrices and add determinant normalization and scalar readback.
++Examples follows the Gram-plus-identity construction of the source tests.
++Coordinates transports these results to the native Euclidean linear maps.
++Their original copyright/author notices are retained; see
++`LICENSE-InfoGeometry-Apache-2.0` and `NOTICE-InfoGeometry`. Those notices govern
++the attributed files independently of the upstream root CC0 license.
+diff --git a/LEAN/Libraries/GaussianBlockSpin/NOTICE-InfoGeometry b/LEAN/Libraries/GaussianBlockSpin/NOTICE-InfoGeometry
+new file mode 100644
+index 0000000..ea34cda
+--- /dev/null
++++ b/LEAN/Libraries/GaussianBlockSpin/NOTICE-InfoGeometry
+@@ -0,0 +1,11 @@
++info-geometry-lean
++Copyright 2024-2026 Nikolay Goutev and Dimitar Tonev
++Institute for Nuclear Research and Nuclear Energy (INRNE-BAS),
++Bulgarian Academy of Sciences
++
++This repository contains Lean 4 formalizations in information geometry,
++gauge-inspired inference structures, and transformer-related abstractions.
++
++Attribution notice:
++If you use this software in academic work, please cite the project using
++the metadata in CITATION.cff and include the repository URL or DOI.
+diff --git a/LEAN/Libraries/GaussianBlockSpin/README.md b/LEAN/Libraries/GaussianBlockSpin/README.md
+index 777b500..390418c 100644
+--- a/LEAN/Libraries/GaussianBlockSpin/README.md
++++ b/LEAN/Libraries/GaussianBlockSpin/README.md
+@@ -108,3 +108,8 @@ Lean 4 `v4.34.0-rc2`, Mathlib `8d52ea9a`. No `sorry`, no axioms.
+ Compiled module by module against the Mathlib build in `Projects/balaban`:
+ `sh Projects/higgs23_lower_bound/tools/leanc.sh <this folder> GaussianBlockSpin/<Module>.lean`
+ in import order (GaussianIntegral, Kernel, Convolution, Coefficients, EffectiveForm, DetExpansion, PiLpVolume, Cumulants, Wick, Matchings, ConnectedMatchings, JointCumulants, TruncatedExpectations, GaussianGraphs, LogDerivatives, SlotCumulants, PartitionCumulants, GaussianBlockGraphs, ParametricIntegrals, LogGaussianGraphs, FieldSpaces, GaussianShift, ModerateFamilies, ExpDomination, Polynomials, TaylorCoefficients, ExternalLegs, WordExpansion, Vanishing, GaussianFactorisation, CumulantSplit, CumulantTaylor, ProductIndependence, BoxFubini, BoxMoments, BoxStep, BoxInequality, DecouplingStep, DecouplingIterate, DeepPieces, TupleBounds, RestrictedLaw, ProductMoments, MonomialBounds, ProductMomentBounds, MonomialPolynomials, MonomialCompare, MonomialCumulants, StandardNormal, SqrtCoefficients, PsdNorm, MatrixInvSqrt, MatrixDecay, RestrictedProduct, Pullback, PullbackTail, ClipPieces, ClipAE, GaussPushforward, ProductDensities, GaussChangeOfVariables, CumulantConstant, FieldCoordinates, PairGaussLaws, InvSqrtLaws, UnitScaleLaws, ImageCumulants, PolynomialGrowth, PowerCountingScaleSums, PowerCountingOrderings, MergeTrees, LineConnectivity, KruskalForests, PowerCountingSpatial, PowerCounting, PowerCountingDegrees, then the root).
++
++## Matrix-weighted Gaussian extension
++
++See [MATRIX_WEIGHTED.md](MATRIX_WEIGHTED.md) for the positive matrix precision,
++exact minimizer, normalized elimination and convolution, and scalar readback.

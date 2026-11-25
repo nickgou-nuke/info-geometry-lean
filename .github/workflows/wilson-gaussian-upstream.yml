@@ -1,0 +1,82 @@
+name: Matrix Gaussian port at the Wilson upstream pins
+
+"on":
+  pull_request:
+    paths:
+      - 'contributions/wilson-gaussian/**'
+      - '.github/workflows/wilson-gaussian-upstream.yml'
+      - 'tools/build_lock.py'
+      - 'tools/pathing.py'
+      - 'tools/quality/common.py'
+      - 'tools/quality/audit_constructivity.py'
+      - 'tools/quality/reviewed_audit_source.py'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wilson-gaussian-upstream-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  pinned-upstream-kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      LEAN_NUM_THREADS: '2'
+      WILSON_CONTRIBUTION_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+    steps:
+      - name: Fetch the exact public contribution without credentials
+        env:
+          CONTRIBUTION_URL: ${{ github.server_url }}/${{ github.repository }}.git
+          GIT_TERMINAL_PROMPT: '0'
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "$CONTRIBUTION_URL"
+          git -c credential.helper= -c http.extraheader= fetch --no-tags --depth=1 origin "$WILSON_CONTRIBUTION_SHA"
+          git sparse-checkout set contributions/wilson-gaussian tools
+          git -c submodule.recurse=false checkout --detach "$WILSON_CONTRIBUTION_SHA"
+          test "$(git rev-parse HEAD)" = "$WILSON_CONTRIBUTION_SHA"
+      - name: Apply the reviewed overlay to the exact upstream revision
+        run: |
+          python3 -B contributions/wilson-gaussian/check.py \
+            --prepare-only --workdir "$RUNNER_TEMP/wilson-upstream" \
+            --patch "$RUNNER_TEMP/wilson-native/upstream.patch"
+      - name: Restore exact upstream dependencies
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            ${{ runner.temp }}/wilson-upstream/LEAN/Libraries/GaussianBlockSpin/.lake/packages
+          key: ${{ runner.os }}-wilson-gaussian-434rc2-8d52ea9a145a9255c4d301c0d1a1b8bf6e59305a
+      - name: Install the upstream compiler
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl --proto '=https' --tlsv1.2 -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build, freshly elaborate, and audit the actual upstream port
+        run: |
+          python3 -B contributions/wilson-gaussian/check.py \
+            --workdir "$RUNNER_TEMP/wilson-upstream" \
+            --output "$RUNNER_TEMP/wilson-native"
+      - name: Preserve the patch and complete native evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wilson-gaussian-upstream-native
+          path: ${{ runner.temp }}/wilson-native
+      - name: Save verified upstream dependencies
+        if: success() && steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            ${{ runner.temp }}/wilson-upstream/LEAN/Libraries/GaussianBlockSpin/.lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}

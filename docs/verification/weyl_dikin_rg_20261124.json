@@ -1,0 +1,125 @@
+{
+  "status": "passed",
+  "targets": [
+    "InfoGeometry.Analysis.PositiveMatrixDikinCongruence",
+    "InfoGeometry.Analysis.RelativeOperatorNeumann",
+    "InfoGeometry.OperatorAlgebra.CoarseGrainingRelativeStability",
+    "InfoGeometry.Canonical.RelativeDikinCoarseGraining",
+    "InfoGeometry.Canonical.WeylDikinRGTests"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.LogDetSelfConcordantBarrier",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.PositiveMatrixDikin",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.PositiveMatrixDikinCongruence",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.RelativeOperatorNeumann",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.CoarseGrainingVariational",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.OperatorAlgebra.CoarseGrainingRelativeStability",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.RelativeDikinCoarseGraining",
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.WeylDikinRGTests",
+      "warnings": 0
+    }
+  ],
+  "scope": "fresh selected repository source closure; native owner axiom audit",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "dependencies": {
+    "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+    "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+    "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+    "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+    "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+    "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+    "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+    "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204"
+  },
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.Analysis.LogDetSelfConcordantBarrier": "6be30a32ec4f9b4fdcd46e3249eb08ae63ccdaaabfdbd1297eaf2dc71e6732d3",
+    "InfoGeometry.Analysis.PositiveMatrixDikin": "db4e129db1adfb98c433d8c94923fa456b9a96a6ad13b7042a16e0f13c723a9c",
+    "InfoGeometry.Analysis.PositiveMatrixDikinCongruence": "afd05277fe094c4e67c8d2890c4f8c88b8b950405496b98c5f830a50d931be3c",
+    "InfoGeometry.Analysis.RelativeOperatorNeumann": "8bcca5092f1b926bb6290f5043828d76d0f3b071f1c553df01119853f0fda0cb",
+    "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining": "9b7be68720be13d4fdc0d7b4e948a3072d8bf271252f8f85b851de9b1ec82ba7",
+    "InfoGeometry.OperatorAlgebra.CoarseGrainingVariational": "11f229b51b15c61c18b6554797aa88a82c6d31a964fce6813177b9ab5af4a375",
+    "InfoGeometry.OperatorAlgebra.CoarseGrainingRelativeStability": "1a093543303bdaca280946e845da85b348e468f990277e215ca46ccd2e5a8416",
+    "InfoGeometry.Canonical.RelativeDikinCoarseGraining": "0ee948d50b1b6228a032797858a7dd52e4cb73eb58664fd9ca5d8c2f5a6f7a37",
+    "InfoGeometry.Canonical.WeylDikinRGTests": "bbdcfb3e65c9576fa5c43a213471bfae4581a5fd2fb0228329ed3f8ed74ad907"
+  },
+  "import_graph": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [],
+    "InfoGeometry.Analysis.LogDetSelfConcordantBarrier": [
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Analysis.PositiveMatrixDikin": [
+      "InfoGeometry.Analysis.LogDetSelfConcordantBarrier"
+    ],
+    "InfoGeometry.Analysis.PositiveMatrixDikinCongruence": [
+      "InfoGeometry.Analysis.PositiveMatrixDikin"
+    ],
+    "InfoGeometry.Analysis.RelativeOperatorNeumann": [],
+    "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining": [],
+    "InfoGeometry.OperatorAlgebra.CoarseGrainingVariational": [
+      "InfoGeometry.OperatorAlgebra.PositiveCoarseGraining"
+    ],
+    "InfoGeometry.OperatorAlgebra.CoarseGrainingRelativeStability": [
+      "InfoGeometry.OperatorAlgebra.CoarseGrainingVariational"
+    ],
+    "InfoGeometry.Canonical.RelativeDikinCoarseGraining": [
+      "InfoGeometry.Analysis.PositiveMatrixDikin",
+      "InfoGeometry.Analysis.RelativeOperatorNeumann",
+      "InfoGeometry.OperatorAlgebra.CoarseGrainingRelativeStability"
+    ],
+    "InfoGeometry.Canonical.WeylDikinRGTests": [
+      "InfoGeometry.Canonical.RelativeDikinCoarseGraining",
+      "InfoGeometry.Analysis.PositiveMatrixDikinCongruence"
+    ]
+  },
+  "declaration_counts": {
+    "InfoGeometry.Analysis.PositiveMatrixDikinCongruence": 9,
+    "InfoGeometry.Analysis.RelativeOperatorNeumann": 12,
+    "InfoGeometry.OperatorAlgebra.CoarseGrainingRelativeStability": 11,
+    "InfoGeometry.Canonical.RelativeDikinCoarseGraining": 4,
+    "InfoGeometry.Canonical.WeylDikinRGTests": 32
+  },
+  "axioms": "[propext, Classical.choice, Quot.sound]",
+  "axiom_audit_passed": true,
+  "local_checked_revision": "ed85b573863e0ee5197708216f74bc552ee4ca27",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "method": "Copied and hashed canonical sources; serial native Lean compilation under tools.build_lock; native reviewed_audit_source audit of every selected-owner declaration.",
+  "reproduction": "python3 tools/quality/check_weyl_dikin_rg.py --mathlib-root /path/to/pinned-mathlib --output /new/output --fetch-cache",
+  "root_pre_push": {
+    "status": "blocked",
+    "reason": "Mathlib clone failed: No space left on device",
+    "scope": "Attempted root Lake build, not a successful root-package certificate"
+  },
+  "hosted_ci": "Separate queued/pending check; no hosted success asserted by this local record."
+}

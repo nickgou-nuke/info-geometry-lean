@@ -1,0 +1,81 @@
+name: Weyl Dikin relative operator geometry (scoped)
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/Analysis/LogDetSelfConcordantBarrier.lean'
+      - 'lean/InfoGeometry/Analysis/PositiveMatrixDikin.lean'
+      - 'lean/InfoGeometry/Analysis/PositiveMatrixDikinCongruence.lean'
+      - 'lean/InfoGeometry/Analysis/RelativeOperatorNeumann.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PositiveCoarseGraining.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/CoarseGrainingVariational.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/CoarseGrainingRelativeStability.lean'
+      - 'lean/InfoGeometry/Canonical/RelativeDikinCoarseGraining.lean'
+      - 'lean/InfoGeometry/Canonical/WeylDikinRGTests.lean'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'docs/WEYL_DIKIN_RG_CONTRACT.md'
+      - 'tools/quality/check_weyl_dikin_rg.py'
+      - 'tools/quality/check_peirce_bdg_geometry.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/build_lock.py'
+      - '.github/workflows/weyl-dikin-rg.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: weyl-dikin-rg-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - name: Fetch the exact source and pinned Mathlib
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C project fetch --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          project = pathlib.Path('project')
+          manifest = json.loads((project / 'lake-manifest.json').read_text())
+          pin = next(p for p in manifest['packages'] if p['name'] == 'mathlib')
+          subprocess.run(['git', 'init', 'pinned-mathlib'], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'remote', 'add', 'origin', pin['url']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'fetch', '--depth=1', 'origin', pin['rev']], check=True)
+          subprocess.run(['git', '-C', 'pinned-mathlib', 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          PY
+      - name: Install the exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Rebuild the source closure and audit every selected declaration
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 project/tools/quality/check_weyl_dikin_rg.py \
+            --mathlib-root pinned-mathlib --output verification --fetch-cache
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: weyl-dikin-rg-verification
+          path: |
+            verification/**/*.log
+            verification/**/*.json
+            verification/**/*.txt
+            verification/src

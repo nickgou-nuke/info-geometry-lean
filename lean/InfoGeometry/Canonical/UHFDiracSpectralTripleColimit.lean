@@ -10,12 +10,14 @@ import InfoGeometry.Canonical.ConnesInfimumDistance
 import InfoGeometry.Prequantum.GNSQuotientStrictPositivity
 
 /-!
-# Inductive UHF Dirac Spectral-Triple Colimit & Tracial GNS Bridge (`D19`)
+# Jaynesian Inductive UHF Dirac Spectral-Triple Colimit & Tracial GNS Bridge (`D19`)
 
 Constructively discharges the inductive bounded Dirac operator tower,
 commutator-norm transport, Connes spectral-distance colimit transport, and
-tracial-state / GNS strict-positivity faithfulness bridge on the `2^∞` UHF
-C*-tower (`UHFStage n → UHFAlg → UHFCStar`).
+tracial-state / GNS strict-positivity faithfulness bridge purely in the
+`2^∞` Jaynesian inductive colimit (`UHFStage n → UHFAlg`), without positing
+any `UniformSpace.Completion` / Cauchy completion or non-inductive Hilbert
+continuum.
 
 Specifically:
 1. `uhfDirac n : UHFStage (n + 1)` embeds `diracGenerator` (Pauli `X`) along
@@ -25,21 +27,20 @@ Specifically:
 2. `uhfCommutatorNorm_bound`, `uhfCommutatorNorm_transport`, and
    `uhfLipschitzBall_transport` prove the uniform bound `‖[Dₙ, A]‖ ≤ 2‖A‖`
    and exact invariance under `uhfStep`.
-3. `uhfColimitDirac : UHFAlg` and `uhfCStarDirac : UHFCStar` lift the inductive
-   Dirac family to the directed colimit algebra and its C*-completion.
-4. `uhfStateDistanceBound_step`, `uhfStateDistanceBound_colimit`,
-   `uhfConnesInfDistance_stage_le_colimit`, and `uhfCStarStateDistanceBound_strict`
-   transport Connes Lipschitz distance bounds across stages, colimit, and
-   dense C*-completion.
-5. `uhfTracialState_compat`, `uhfColimitTrace`, `uhfCStarTrace`,
+3. `uhfColimitDirac : UHFAlg` lifts the inductive Dirac family into the
+   pure directed Jaynesian colimit algebra `UHFAlg`.
+4. `uhfStateDistanceBound_step`, `uhfConnesInfDistance_step_le`,
+   `uhfStateDistanceBound_colimit`, and `uhfConnesInfDistance_stage_le_colimit`
+   transport Connes Lipschitz distance bounds across stages and `UHFAlg`.
+5. `uhfTracialState_compat`, `uhfColimitTrace`,
    `stageOne_connesInfDistance_topLeft_trace` (`= 1 / 2`), and
    `uhfStageRealState_gns_strict_positivity` / `uhfColimitTrace_faithful`
    close the compatible tracial-state net and GNS quotient faithfulness lane.
 
 Note on scope: under the repository's colimit-continuum law, the directed
 colimit `UHFAlg` is the Jaynesian inductive colimit — the sole admissible
-infinite limit here — with `UHFCStar` providing norm-completion readback; this
-module does not posit a non-inductive unbounded Hilbert space continuum.
+infinite limit here — with no `UniformSpace.Completion`, Cauchy completion, or
+postulated non-inductive unbounded Hilbert space continuum.
 -/
 
 noncomputable section
@@ -191,7 +192,7 @@ theorem uhfDirac_noncomm (n : ℕ) :
   linarith
 
 /-!
-## 3. Colimit Dirac Operator on `UHFAlg` and `UHFCStar`
+## 3. Jaynesian Colimit Dirac Operator on `UHFAlg`
 -/
 
 /-- Canonical `RingHom` inclusion `UHFStage n →+* UHFAlg`. -/
@@ -249,44 +250,6 @@ theorem uhfColimitLipschitzBall_iff (n : ℕ) (A : UHFStage (n + 1)) :
     LipschitzBall uhfColimitDirac (toUHF (n + 1) A) ↔ LipschitzBall (uhfDirac n) A := by
   unfold LipschitzBall
   rw [uhfColimitCommutatorNorm_eq]
-
-/-- Dense `RingHom` embedding `UHFAlg →+* UHFCStar` into the C*-completion. -/
-def toUHFCStarRingHom : UHFAlg →+* UHFCStar :=
-  UniformSpace.Completion.coeRingHom
-
-/-- Canonical Dirac element inside the complete UHF C*-algebra `UHFCStar`. -/
-def uhfCStarDirac : UHFCStar := toUHFCStar uhfColimitDirac
-
-theorem uhfCStarDirac_selfAdjoint : star uhfCStarDirac = uhfCStarDirac := by
-  unfold uhfCStarDirac
-  rw [toUHFCStar_star, uhfColimitDirac_selfAdjoint]
-
-theorem uhfCStarDirac_sq : uhfCStarDirac * uhfCStarDirac = 1 := by
-  change toUHFCStarRingHom uhfColimitDirac * toUHFCStarRingHom uhfColimitDirac = 1
-  rw [← toUHFCStarRingHom.map_mul, uhfColimitDirac_sq, toUHFCStarRingHom.map_one]
-
-theorem uhfCStarDirac_norm : ‖uhfCStarDirac‖ = 1 := by
-  unfold uhfCStarDirac toUHFCStar
-  rw [UniformSpace.Completion.norm_coe, uhfColimitDirac_norm]
-
-/-- Isometric transport of commutator norms from `UHFAlg` to `UHFCStar`. -/
-theorem uhfCStarCommutatorNorm_eq (x : UHFAlg) :
-    commutatorNorm uhfCStarDirac (toUHFCStar x) = commutatorNorm uhfColimitDirac x :=
-  CuntzConnesSpectralDistance.commutatorNorm_transport
-    toUHFCStarRingHom uhfColimitDirac uhfCStarDirac rfl
-    (fun y => UniformSpace.Completion.norm_coe y) x
-
-theorem uhfCStarCommutatorNorm_toUHF (n : ℕ) (A : UHFStage (n + 1)) :
-    commutatorNorm uhfCStarDirac (toUHFCStar (toUHF (n + 1) A)) =
-      commutatorNorm (uhfDirac n) A := by
-  rw [uhfCStarCommutatorNorm_eq, uhfColimitCommutatorNorm_eq]
-
-theorem uhfCStarCommutatorNorm_bound (z : UHFCStar) :
-    commutatorNorm uhfCStarDirac z ≤ 2 * ‖z‖ := by
-  have hle := (ConnesSpectral.SpectralTriple.mk uhfCStarDirac).commutatorNorm_le z
-  change commutatorNorm uhfCStarDirac z ≤ 2 * ‖uhfCStarDirac‖ * ‖z‖ at hle
-  rw [uhfCStarDirac_norm, mul_one] at hle
-  exact hle
 
 /-!
 ## 4. Connes Spectral-Distance Colimit Transport (`uhfStateDistanceBound_colimit`)
@@ -353,46 +316,8 @@ theorem uhfConnesInfDistance_stage_le_colimit (μ ν : UHFAlg → ℝ)
   intro d hd
   exact (uhfStateDistanceBound_colimit μ ν d).mp hd n
 
-/-- Extension by density from `UHFAlg` to `UHFCStar` on the strict commutator ball
-`‖[D, z]‖ < 1` for continuous functionals. -/
-theorem uhfCStarStateDistanceBound_strict (μ ν : UHFCStar → ℝ)
-    (hμ : Continuous μ) (hν : Continuous ν) {d : ℝ}
-    (hbound : StateDistanceBound uhfColimitDirac
-      (fun x => μ (toUHFCStar x)) (fun x => ν (toUHFCStar x)) d)
-    (z : UHFCStar) (hz : commutatorNorm uhfCStarDirac z < 1) :
-    |μ z - ν z| ≤ d := by
-  by_contra hgt
-  have hlt : d < |μ z - ν z| := lt_of_not_ge hgt
-  set ε : ℝ := |μ z - ν z| - d
-  have hε : 0 < ε := sub_pos.mpr hlt
-  let f : UHFCStar → ℝ := fun w => μ w - ν w
-  have hf : Continuous f := hμ.sub hν
-  have hg : Continuous (commutatorNorm uhfCStarDirac) :=
-    (ConnesSpectral.SpectralTriple.mk uhfCStarDirac).lipschitzWith_commutatorNorm.continuous
-  let U : Set UHFCStar :=
-    {w | commutatorNorm uhfCStarDirac w < 1} ∩ {w | |f w - f z| < ε}
-  have hU_open : IsOpen U :=
-    (isOpen_lt hg continuous_const).inter
-      (isOpen_lt (continuous_abs.comp (hf.sub continuous_const)) continuous_const)
-  have hzU : z ∈ U := ⟨hz, by simp [f, sub_self, abs_zero, hε]⟩
-  have hdense : DenseRange (toUHFCStar : UHFAlg → UHFCStar) :=
-    UniformSpace.Completion.denseRange_coe
-  rcases hdense.exists_mem_open hU_open ⟨z, hzU⟩ with ⟨x, hx_lt, hx_eps⟩
-  have hxlip : LipschitzBall uhfColimitDirac x := by
-    unfold LipschitzBall
-    rw [← uhfCStarCommutatorNorm_eq x]
-    exact le_of_lt hx_lt
-  have hxbound : |f (toUHFCStar x)| ≤ d := hbound.1 x hxlip
-  have htri : |f z| ≤ |f (toUHFCStar x) - f z| + |f (toUHFCStar x)| := by
-    have hsub := abs_sub_le (f z) (f (toUHFCStar x)) 0
-    simpa [sub_zero, abs_sub_comm (f z) (f (toUHFCStar x))] using hsub
-  have hx_eps' : |f (toUHFCStar x) - f z| < ε := hx_eps
-  have hbad : |f z| < d + ε := by linarith
-  have hz_lt : |μ z - ν z| < d + ε := hbad
-  linarith
-
 /-!
-## 5. Tracial State Compatibility, Colimit/C*-Trace, Exact Stage-1 Distance, and GNS Bridge
+## 5. Tracial State Compatibility, Colimit Trace, Exact Stage-1 Distance, and GNS Bridge
 -/
 
 /-- Entrywise bound `‖A i j‖ ≤ ‖A‖` for the L2 operator norm on `UHFStage n`. -/
@@ -558,99 +483,6 @@ theorem uhfColimitTrace_norm_le (x : UHFAlg) :
   rcases exists_toUHF x with ⟨n, X, rfl⟩
   rw [uhfColimitTrace_toUHF, norm_toUHF_stage]
   exact uhfTracialState_norm_le n X
-
-/-- `uhfColimitTrace` is 1-Lipschitz on `UHFAlg`, hence uniformly continuous. -/
-theorem uhfColimitTrace_lipschitz : LipschitzWith 1 uhfColimitTrace := by
-  apply LipschitzWith.of_dist_le_mul
-  intro x y
-  rw [dist_eq_norm, dist_eq_norm, NNReal.coe_one, one_mul, ← uhfColimitTrace_sub]
-  exact uhfColimitTrace_norm_le (x - y)
-
-/-- Continuous extension of the normalized tracial state to the C*-completion `UHFCStar`. -/
-def uhfCStarTrace : UHFCStar → ℂ :=
-  UniformSpace.Completion.extension uhfColimitTrace
-
-@[simp]
-theorem uhfCStarTrace_toUHFCStar (x : UHFAlg) :
-    uhfCStarTrace (toUHFCStar x) = uhfColimitTrace x :=
-  UniformSpace.Completion.extension_coe uhfColimitTrace_lipschitz.uniformContinuous x
-
-theorem uhfCStarTrace_continuous : Continuous uhfCStarTrace :=
-  UniformSpace.Completion.continuous_extension
-
-theorem uhfCStarTrace_one : uhfCStarTrace (1 : UHFCStar) = 1 := by
-  change uhfCStarTrace (toUHFCStar 1) = 1
-  rw [uhfCStarTrace_toUHFCStar, uhfColimitTrace_one]
-
-theorem uhfCStarTrace_add (z w : UHFCStar) :
-    uhfCStarTrace (z + w) = uhfCStarTrace z + uhfCStarTrace w := by
-  induction z, w using UniformSpace.Completion.induction_on₂ with
-  | hp =>
-      exact isClosed_eq
-        (uhfCStarTrace_continuous.comp continuous_add)
-        ((uhfCStarTrace_continuous.comp continuous_fst).add
-          (uhfCStarTrace_continuous.comp continuous_snd))
-  | ih x y =>
-      change uhfCStarTrace (toUHFCStar x + toUHFCStar y) =
-        uhfCStarTrace (toUHFCStar x) + uhfCStarTrace (toUHFCStar y)
-      rw [show toUHFCStar x + toUHFCStar y = toUHFCStar (x + y) from
-        (UniformSpace.Completion.coe_add x y).symm]
-      rw [uhfCStarTrace_toUHFCStar, uhfCStarTrace_toUHFCStar, uhfCStarTrace_toUHFCStar,
-        uhfColimitTrace_add]
-
-theorem uhfCStarTrace_mul_comm (z w : UHFCStar) :
-    uhfCStarTrace (z * w) = uhfCStarTrace (w * z) := by
-  induction z, w using UniformSpace.Completion.induction_on₂ with
-  | hp =>
-      exact isClosed_eq
-        (uhfCStarTrace_continuous.comp continuous_mul)
-        (uhfCStarTrace_continuous.comp (continuous_snd.mul continuous_fst))
-  | ih x y =>
-      change uhfCStarTrace (toUHFCStar x * toUHFCStar y) =
-        uhfCStarTrace (toUHFCStar y * toUHFCStar x)
-      rw [show toUHFCStar x * toUHFCStar y = toUHFCStar (x * y) from
-        (UniformSpace.Completion.coe_mul x y).symm]
-      rw [show toUHFCStar y * toUHFCStar x = toUHFCStar (y * x) from
-        (UniformSpace.Completion.coe_mul y x).symm]
-      rw [uhfCStarTrace_toUHFCStar, uhfCStarTrace_toUHFCStar, uhfColimitTrace_mul_comm]
-
-theorem uhfCStarTrace_star (z : UHFCStar) :
-    star (uhfCStarTrace z) = uhfCStarTrace (star z) := by
-  induction z using UniformSpace.Completion.induction_on with
-  | hp =>
-      exact isClosed_eq
-        (continuous_star.comp uhfCStarTrace_continuous)
-        (uhfCStarTrace_continuous.comp
-          (UniformSpace.Completion.continuous_map (f := (Star.star : UHFAlg → UHFAlg))))
-  | ih x =>
-      change star (uhfCStarTrace (toUHFCStar x)) = uhfCStarTrace (star (toUHFCStar x))
-      rw [toUHFCStar_star, uhfCStarTrace_toUHFCStar, uhfCStarTrace_toUHFCStar,
-        uhfColimitTrace_star]
-
-theorem uhfCStarTrace_nonneg (z : UHFCStar) :
-    0 ≤ (uhfCStarTrace (star z * z)).re := by
-  induction z using UniformSpace.Completion.induction_on with
-  | hp =>
-      exact isClosed_le continuous_const
-        (Complex.continuous_re.comp
-          (uhfCStarTrace_continuous.comp
-            ((UniformSpace.Completion.continuous_map (f := (Star.star : UHFAlg → UHFAlg))).mul
-              continuous_id)))
-  | ih x =>
-      change 0 ≤ (uhfCStarTrace (star (toUHFCStar x) * toUHFCStar x)).re
-      rw [toUHFCStar_star, show toUHFCStar (star x) * toUHFCStar x = toUHFCStar (star x * x) from
-        (UniformSpace.Completion.coe_mul (star x) x).symm]
-      rw [uhfCStarTrace_toUHFCStar]
-      exact uhfColimitTrace_nonneg x
-
-theorem uhfCStarTrace_norm_le (z : UHFCStar) : ‖uhfCStarTrace z‖ ≤ ‖z‖ := by
-  induction z using UniformSpace.Completion.induction_on with
-  | hp =>
-      exact isClosed_le (continuous_norm.comp uhfCStarTrace_continuous) continuous_norm
-  | ih x =>
-      change ‖uhfCStarTrace (toUHFCStar x)‖ ≤ ‖(x : UHFCStar)‖
-      rw [uhfCStarTrace_toUHFCStar, UniformSpace.Completion.norm_coe]
-      exact uhfColimitTrace_norm_le x
 
 /-- Real part of the `(0, 0)` pure diagonal state on stage `1` (`M₂(ℂ)`). -/
 def stageOneTopLeftRe (A : UHFStage 1) : ℝ := (A 0 0).re

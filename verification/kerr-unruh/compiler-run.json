@@ -1,0 +1,146 @@
+{
+  "role": "independent QA-A",
+  "scope": "focused strict build and fresh declaration audit; excludes legacy thermal owner and All integration",
+  "started_utc": "2026-11-25T13:16:57Z",
+  "head": "2154e8e50c9fbffa72be7b5d3f93cf62fc65f3cd",
+  "tree": "26f3e87381edea0b8e69c1e03c7d0386506e7119",
+  "source_sha256": {
+    "lean/InfoGeometry/Clifford/FermiDiracAnalytic.lean": "d60ebe637c4eb6ffd452789a0184e4d7e84c6b2a468cdb3689bf76e57ed25768",
+    "lean/InfoGeometry/Lie/LorentzCartanKernel.lean": "2d62e6a70a07b10b8583b00c94557870b20560aa4ebdc0d42bca843e20039061",
+    "lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonBridge.lean": "632aca08afad76645a47ab11930ccb33c80dc81feb4c6c323d699c5470f7aee1",
+    "lean/InfoGeometry/Canonical/KerrUnruhFermionicHorizonAudit.lean": "881c0ff524624e9ea80b0cb844e52b6995c099dbd96ceda41a54fd59b23c7f3a",
+    "lean/InfoGeometry/Krein/TomitaMatrixAtom.lean": "d3c5244603717fc3f5293f9842526f478af7f7fb3766201234c01717b050aa33",
+    "lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "lean/InfoGeometry/Clifford/ChiralGrandCanonicalThermalGeometry.lean": "27d6e75187b8005614a29a1f642ab8b3fc4be9a32c6080bbfbad08c38feaf2c6",
+    "lean/InfoGeometry/All.lean": "7c68851153c443192a2e2f8ea06d102dd09d503b257b93e9db5c518d5c8cd826",
+    "verification/kerr-unruh/check.py": "ebf89f9ebad5e82bbbb062d9c338543ead9acaef2b9cc653568bf83c28c8adbe",
+    "verification/kerr-unruh/audit.py": "41392edfc69b272ff94c0dcb3da8ad6f2f71cb5bb6881e092d0c5d187dfd8fe7",
+    "verification/kerr-unruh/lakefile.toml": "9aa19cd57bd3e0c4fde2e29aee8728ac09f85baeaf997b0ffff6592d142f5d9f",
+    "verification/kerr-unruh/lake-manifest.json": "042ad95a33004687992bb7f9b6d8823defbad8bfa3f0de4e1a83459c49b222c3",
+    "verification/kerr-unruh/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "verification/kerr-unruh/THEOREM_CONTRACT.md": "c4eb327ffae9f6a978201501c7ef2690e14af8c375b0fd4c1e70ac90c1c921a5",
+    "tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45",
+    "tools/infra/build.py": "76575073b6fbf1054511ede20792e549ac216238f2519b2a2c2215d0aa646dc0",
+    "lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98"
+  },
+  "source_stable": true,
+  "commands": [
+    {
+      "argv": [
+        "python",
+        "-u",
+        "-B",
+        "verification/kerr-unruh/check.py",
+        "--validate"
+      ],
+      "exit_code": 0,
+      "seconds": 395.534,
+      "combined_output_path": "/workspace/scratch/f9f21c55d3f4/qa-kerr-compiler/attempt-04/validate.stdout.log",
+      "combined_output_sha256": "e694115fbf671cc320368f8620bdb3c77876ff14c3a8bd10909aa6f5df19eadf"
+    },
+    {
+      "argv": [
+        "python",
+        "-B",
+        "verification/kerr-unruh/audit.py",
+        "--log",
+        "/workspace/scratch/f9f21c55d3f4/qa-kerr-compiler/attempt-04/validate.stdout.log"
+      ],
+      "exit_code": 0,
+      "stdout": "Source coverage: 85 public declarations in 3 owners\nLean axiom audit passed; foundational axioms: ['Classical.choice', 'Quot.sound', 'propext']\n",
+      "stderr": ""
+    }
+  ],
+  "status": "PASS_FOCUSED",
+  "compiler_processes_before_in_namespace": [],
+  "compiler_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "compiler_resolved_path": "/tmp/dirac-toolchain-18ec/lean-4.34.1-linux/bin/lean",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "dependencies": [
+    {
+      "name": "mathlib",
+      "focused_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "root_pin": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "actual_head": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+      "tracked_dirty": "",
+      "symlink": false
+    },
+    {
+      "name": "plausible",
+      "focused_pin": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "root_pin": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "actual_head": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+      "tracked_dirty": "",
+      "symlink": false
+    },
+    {
+      "name": "LeanSearchClient",
+      "focused_pin": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "root_pin": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "actual_head": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+      "tracked_dirty": "",
+      "symlink": false
+    },
+    {
+      "name": "importGraph",
+      "focused_pin": "e928b72544873815af278d38681b31c0293588e3",
+      "root_pin": "e928b72544873815af278d38681b31c0293588e3",
+      "actual_head": "e928b72544873815af278d38681b31c0293588e3",
+      "tracked_dirty": "",
+      "symlink": false
+    },
+    {
+      "name": "proofwidgets",
+      "focused_pin": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "root_pin": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "actual_head": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+      "tracked_dirty": "",
+      "symlink": false
+    },
+    {
+      "name": "aesop",
+      "focused_pin": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "root_pin": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "actual_head": "355695d523e41d0554926416cba2a2b3544fbbc9",
+      "tracked_dirty": "",
+      "symlink": false
+    },
+    {
+      "name": "Qq",
+      "focused_pin": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "root_pin": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "actual_head": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+      "tracked_dirty": "",
+      "symlink": false
+    },
+    {
+      "name": "batteries",
+      "focused_pin": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "root_pin": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "actual_head": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+      "tracked_dirty": "",
+      "symlink": false
+    },
+    {
+      "name": "Cli",
+      "focused_pin": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+      "root_pin": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+      "actual_head": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204",
+      "tracked_dirty": "",
+      "symlink": false
+    }
+  ],
+  "fresh_audit": {
+    "record_count": 85,
+    "unique_count": 85,
+    "expected_count": 85,
+    "used_axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "fresh_section_only": true
+  },
+  "finished_utc": "2026-11-25T13:23:33Z"
+}

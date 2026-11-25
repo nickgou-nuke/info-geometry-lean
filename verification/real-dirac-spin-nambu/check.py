@@ -109,7 +109,12 @@ def run_command(report, output: Path, root: Path, label: str, argv: list[str],
     return log.read_text(encoding="utf-8", errors="replace")
 
 
-def main() -> int:
+def main(*, targets: tuple[str, ...] = TARGETS,
+         owners: tuple[str, ...] = OWNERS,
+         reused: tuple[str, ...] = REUSED,
+         reused_owners: tuple[str, ...] = REUSED_OWNERS,
+         probe_name: str = "RealDiracSpinNambuAxioms.lean",
+         entrypoint: Path | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--repo", required=True, type=Path)
     parser.add_argument("--output", required=True, type=Path)
@@ -126,7 +131,7 @@ def main() -> int:
 
     runtime = root / "verification/real-matrix-split"
     helper, locked_runner = runtime / "audit.py", runtime / "check.py"
-    sources = {module: source_path(root, module) for module in (*TARGETS, *REUSED_OWNERS)}
+    sources = {module: source_path(root, module) for module in (*targets, *reused_owners)}
     controls = {
         "runner": Path(__file__).resolve(), "audit_helper": helper,
         "locked_runner": locked_runner, "root_toolchain": root / "lean-toolchain",
@@ -135,10 +140,12 @@ def main() -> int:
         "focused_manifest": runtime / "lake-manifest.json",
         "focused_config": runtime / "lakefile.toml",
     }
+    if entrypoint is not None:
+        controls["entrypoint"] = entrypoint.resolve()
     report = {
         "schema_version": 1, "started_at": now(), "repo": str(root),
-        "runtime": str(runtime), "output": str(output), "targets": list(TARGETS),
-        "owner_modules": list(OWNERS), "reused_declarations": list(REUSED),
+        "runtime": str(runtime), "output": str(output), "targets": list(targets),
+        "owner_modules": list(owners), "reused_declarations": list(reused),
         "status": "blocked", "passed": False, "compilation": "not_run",
         "commands": [], "fresh_file_checks": [], "axiom_audit": "not_run", "errors": [],
         "source_paths": {key: str(path) for key, path in sources.items()},
@@ -147,7 +154,7 @@ def main() -> int:
         "control_sha256_before": {}, "control_sha256_after": {},
         "source_stability": "not_checked", "control_stability": "not_checked",
     }
-    probe = output / "RealDiracSpinNambuAxioms.lean"
+    probe = output / probe_name
     probe_hash = None
     exit_code = 2
     try:
@@ -169,12 +176,12 @@ def main() -> int:
         report["pins"] = "focused manifest and toolchain match root pins"
 
         inventory = {}
-        for module in TARGETS:
+        for module in targets:
             stripped = audit_call(audit.strip_comments, sources[module].read_text(encoding="utf-8"))
             forbidden = audit.FORBIDDEN.findall(stripped)
             if forbidden:
                 raise RuntimeError(f"Forbidden proof constructs in {module}: {forbidden}")
-            if module in OWNERS:
+            if module in owners:
                 inventory[module] = audit_call(audit.owner_declarations, module)
             else:
                 count = len(re.findall(r"^\s*example\s*:", stripped, re.MULTILINE))
@@ -185,18 +192,18 @@ def main() -> int:
         duplicates = [name for name, count in Counter(owner_heads).items() if count != 1]
         if duplicates:
             raise RuntimeError(f"Duplicate public declaration heads: {duplicates}")
-        expected = set(owner_heads).union(REUSED)
+        expected = set(owner_heads).union(reused)
         report["owner_head_count"] = len(owner_heads)
-        report["deduplicated_reused_heads"] = sorted(set(owner_heads).intersection(REUSED))
+        report["deduplicated_reused_heads"] = sorted(set(owner_heads).intersection(reused))
         report["expected_axiom_records"] = len(expected)
         (output / "inventory.json").write_text(json.dumps(
-            {"owners": inventory, "reused": list(REUSED), "expected": sorted(expected)},
+            {"owners": inventory, "reused": list(reused), "expected": sorted(expected)},
             indent=2) + "\n", encoding="utf-8")
         probe.write_text(
             "/-\nCopyright (c) 2026 InfoGeometry Authors. All rights reserved.\n"
             "Released under Apache 2.0 license as described in the file LICENSE.\n"
             "Authors: InfoGeometry Engine Contributors\n-/\n\n"
-            + "".join(f"import {module}\n" for module in OWNERS)
+            + "".join(f"import {module}\n" for module in owners)
             + "\n-- Fresh, bounded public-head and reused-declaration axiom probe.\n"
             + "".join(f"#print axioms {name}\n" for name in sorted(expected)),
             encoding="utf-8")
@@ -225,12 +232,12 @@ def main() -> int:
         if not re.search(r"\bversion\s+" + re.escape(version) + r"(?:[,\s)])", version_log):
             raise Blocked(f"Lean runtime does not report the pinned version {version}")
         report["compilation"] = "started"
-        run_command(report, output, root, "build", prefix + ["build", *TARGETS])
-        for index, module in enumerate(TARGETS, 1):
+        run_command(report, output, root, "build", prefix + ["build", *targets])
+        for index, module in enumerate(targets, 1):
             run_command(report, output, root, f"fresh-{index}",
                         prefix + ["env", "lean", "-DwarningAsError=true", str(sources[module])])
             report["fresh_file_checks"].append(module)
-        report["compilation"] = "five fresh warning-as-error file checks passed"
+        report["compilation"] = f"{len(targets)} fresh warning-as-error file checks passed"
         axiom_log = run_command(report, output, root, "axioms",
                                 prefix + ["env", "lean", "-DwarningAsError=true", str(probe)])
         diagnostic = io.StringIO()

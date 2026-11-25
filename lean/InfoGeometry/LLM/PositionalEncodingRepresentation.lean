@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.HypercomplexOneParameterFlows
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MeanValueInvariant
@@ -151,6 +156,14 @@ theorem relativeUnit_add
           (M.queryFactor t * M.keyFactor 0) := by
       rw [hshift]
     _ = M.relativeUnit s * M.relativeUnit t := rfl
+
+/-- The normalized factorization is exactly the relative operator at `t - s`.
+This is the abstract form of `F(t)ᵀ G(s) = A(t - s)`. -/
+theorem factorization_eq_relativeUnit
+    (M : TranslationCovariantModifiers A) (t s : ℝ) :
+    M.queryFactor t * M.keyFactor s = M.relativeUnit (t - s) := by
+  have hshift := M.shift_invariant t s (-s)
+  simpa [relativeUnit, sub_eq_add_neg] using hshift.symm
 
 /-- The relative positional operator as a native monoid homomorphism from the
 multiplicative wrapper of `(ℝ, +)`. -/

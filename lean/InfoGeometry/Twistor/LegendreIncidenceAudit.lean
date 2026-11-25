@@ -1,0 +1,136 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Twistor.FenchelContactIncidence
+import InfoGeometry.Geometry.LegendreGraphGeometry
+import InfoGeometry.Geometry.CotangentOperators
+import InfoGeometry.Twistor.FenchelContactTransport
+
+/-!
+# Legendre, incidence, and cotangent-operator declaration audit
+
+This module audits the explicitly declared public definitions and theorems
+in the four mathematical owners above. It is a validation target,
+not an umbrella import.
+Regenerate with `python3 verification/legendre-incidence/audit.py --write`.
+The validator compares actual Lean axiom output with this complete list.
+-/
+
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.homogeneousPoint
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.hyperplaneCovector
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.hyperplaneCovector_apply
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.homogeneousPoint_ne_zero
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.hyperplaneCovector_ne_zero
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactPair
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.homogeneousCoordinate
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactProjector
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactProjector_sq
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactProjector_mul_dyad
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactPair_eval
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.dyad_mul_contactProjector
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.dyad_contactProjector_corner_of_equality
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.incident_contactPair_iff
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.dyad_contactPair_ne_zero
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.dyad_contactPair_square
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.dyad_contactPair_sq_zero_iff
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.fenchel_hyperplane_nonpositive
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.dyad_fenchel_sq_zero_iff_isGreatest
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.fenchelSet_isGreatest_of_hasFDerivAt
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.dyad_fenchel_sq_zero_of_hasFDerivAt
+
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.symplecticForm_eq_canonicalSymplectic
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.graph_symplectic_orthogonal
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.graph_self_orthogonal_iff_symmetric
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.symmetric_graph_maximal_isotropic
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.neutralForm_graph_pairing
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.incidenceSpace_eq_graph_comap_swap
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.graph_para_stable_iff_zero
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.graph_finrank
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.graph_half_dimension
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.graphGrassmannian
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.graphGrassmannian_toSubmodule
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.graphGrassmannian_injective
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.continuousDualCarrierMap
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.continuousDualCarrierMap_apply
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.algebraicDualDerivative
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.algebraicDualDerivative_apply
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.hasFDerivAt_covectorGraph
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.covectorGraph_tangent_range
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.covectorGraph_tangent_self_orthogonal
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.graphGrassmannian_eq_covectorGraph_tangent
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.hasFDerivAt_potentialGraph
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.potentialHessian_symmetric
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.potentialGraph_tangent_self_orthogonal
+#print axioms InfoGeometry.Geometry.LegendreGraphGeometry.graphGrassmannian_eq_potentialGraph_tangent
+
+#print axioms InfoGeometry.Geometry.CotangentOperators.transportDuality
+#print axioms InfoGeometry.Geometry.CotangentOperators.transportDuality_apply
+#print axioms InfoGeometry.Geometry.CotangentOperators.frameAction_graphLift
+#print axioms InfoGeometry.Geometry.CotangentOperators.map_graph_frameAction
+#print axioms InfoGeometry.Geometry.CotangentOperators.transportDuality_symmetric
+#print axioms InfoGeometry.Geometry.CotangentOperators.transportDuality_alternating
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift_apply
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift_add
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift_smul
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift_commutator
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLiftLieHom
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift_injective
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift_para
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift_frameAction
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift_neutralForm
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift_symplecticForm
+#print axioms InfoGeometry.Geometry.CotangentOperators.infinitesimalLift_graph_le_iff
+#print axioms InfoGeometry.Geometry.CotangentOperators.hamiltonian
+#print axioms InfoGeometry.Geometry.CotangentOperators.hamiltonianTangent
+#print axioms InfoGeometry.Geometry.CotangentOperators.hamiltonianTangent_apply
+#print axioms InfoGeometry.Geometry.CotangentOperators.hamiltonian_add_smul
+#print axioms InfoGeometry.Geometry.CotangentOperators.symplecticForm_infinitesimalLift_eq_hamiltonianTangent
+#print axioms InfoGeometry.Geometry.CotangentOperators.hamiltonianTangent_infinitesimalLift
+#print axioms InfoGeometry.Geometry.CotangentOperators.hamiltonianTangent_zero_of_commute
+#print axioms InfoGeometry.Geometry.CotangentOperators.geometry_symplectic_eq
+#print axioms InfoGeometry.Geometry.CotangentOperators.quantum_symplectic_eq_neg
+
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactGrading
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactGrading_eq_two_mul_sub_one
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactGrading_sq
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactDyad_eq_conePlus
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactDyad_grading
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactDyad_anticommutes_grading
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactSuperDerivation
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactSuperDerivation_apply
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactSuperDerivation_eq_superDerivPlus
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactSuperDerivation_sq
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactSuperDerivation_leibniz
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactSuperDerivation_projector
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactSuperDerivation_ne_zero
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactSuperDerivation_fenchel_sq_and_ne_zero_of_hasFDerivAt
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactProjector_conjugate
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactGrading_conjugate
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.homogeneousFrame
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.homogeneousFrame_apply
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.homogeneousFrame_symm_apply
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.homogeneousFrame_coordinate
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.framePotential
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.frameDualPotential
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.dualTransport_frame_inverse
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.dualTransport_inverse_frame
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.fenchelConj_framePotential
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.homogeneousFrame_point
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactPair_frameAction
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactProjector_frame
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactGrading_frame
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactDyad_frame
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactSuperDerivation_frame
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactChartShear
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactChartShear_apply
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactChartShear_symm_apply
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactChartShear_point
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactChartShear_coordinate
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactProjector_shear
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactGrading_shear
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactPair_shear_of_equality
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactDyad_shear_of_equality
+#print axioms InfoGeometry.Twistor.FenchelContactIncidence.contactSuperDerivation_shear_of_equality

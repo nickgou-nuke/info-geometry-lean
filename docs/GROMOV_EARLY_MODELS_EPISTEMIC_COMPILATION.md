@@ -116,9 +116,9 @@ N10 (IsPositiveText, IdentifiesInLimit, prefixList_prefixText_append)
 
 ## Stage 4 (`Coagula`): Verification Record
 
-- **Owner modules:** `lean/InfoGeometry/LLM/EarlyLearningFoundations.lean`, `lean/InfoGeometry/LLM/PositionalEncodingClassification.lean`, `lean/InfoGeometry/Epistemology/CurryHowardReality.lean`, `lean/InfoGeometry/Epistemology/CurryHowardRealityDependency.lean`.
-- **Fresh builds:** `EarlyLearningFoundations` exit 0, 3198 jobs; `PositionalEncodingClassification` exit 0, 8992 jobs; `CurryHowardReality` exit 0, 881 jobs; `CurryHowardRealityDependency` exit 0, 713 jobs. Zero error lines in all four logs.
-- **Axiom audit:** `#print axioms` on 13 kernel-backed declarations reports only `[propext, Classical.choice, Quot.sound]`; `sorryAx` count 0. Audited declarations include the XOR pair, Shannon/KL chain, Gold obstruction, `attentionScore_diagonalizable_exp`, `exp_smul_jordanBlock`, `real_exp_decay_tendsto_zero`, `decayFlow_eq_exp`, `linearAttentionReadout_eq_pairwise_sum`, and `CurryHowardRealityDependency.normalization_and_dynamics_incomparable`.
-- **Hygiene:** owner files contain zero proof-level `sorry`, `axiom`, or `admit` declarations; this document mentions axiom audits only as prose, and its diff is whitespace-clean.
-- **Scope:** full staged gate is not claimed because the worktree contains unrelated staged divergences; verification is exact-path and module-local.
+- **Owner modules:** [`lean/InfoGeometry/LLM/EarlyLearningFoundations.lean`](../lean/InfoGeometry/LLM/EarlyLearningFoundations.lean), [`lean/InfoGeometry/LLM/PositionalEncodingClassification.lean`](../lean/InfoGeometry/LLM/PositionalEncodingClassification.lean).
+- **Exact-path 4-gate verification (`PASS`):**
+  - `EarlyLearningFoundations.lean`: `opengauss_screener.py` (`0 traps detected`), `run_locked_lake_build.py` (`Build completed successfully (3198 jobs).`, exit `0`), `axiom_check.lean` (`all 67 declarations clean`, `MODULE_RESULT:.lake/build/lib/lean/InfoGeometry/LLM/EarlyLearningFoundations.olean:PASS`), and `proof_proxy_staged_gate.py` (`proof_proxy_staged_gate: ok`).
+  - `PositionalEncodingClassification.lean`: `opengauss_screener.py` (`0 traps detected`), `run_locked_lake_build.py` (`Build completed successfully (8992 jobs).`, exit `0`), `axiom_check.lean` (`all 202 declarations clean`, `MODULE_RESULT:.lake/build/lib/lean/InfoGeometry/LLM/PositionalEncodingClassification.olean:PASS`), and `proof_proxy_staged_gate.py` (`proof_proxy_staged_gate: ok`).
+- **Scope:** full unscoped staged gate is not claimed where unrelated files in the shared worktree differ between worktree and active index; verification above is exact-path and module-local.
 - **Open debt retained honestly:** see the claim ledger; notably finite-width SGD generalization, uniform circuit-complexity bounds, Valiant PAC bounds, full Curry–Howard meta-theory, Solomonoff uncomputability, and Hebbian plasticity remain unclosed.

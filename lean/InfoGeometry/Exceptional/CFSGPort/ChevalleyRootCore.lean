@@ -46,6 +46,20 @@ namespace Tag
   | E7 => cartanE 7
   | E8 => cartanE 8
 
+/-- The local E₆ root-data convention is exactly Mathlib's Serre-construction convention.
+
+This identifies the Cartan input to the local root-operator lane with the matrix used by
+`LieAlgebra.e₆`; it does not yet identify their representations or Lie algebra carriers. -/
+theorem cartan_E6_eq_mathlib_rank : cartan E6 = CartanMatrix.E E6.rank := by
+  ext i j
+  simp only [cartan, cartanE, CartanMatrix.E, Matrix.of_apply]
+  split_ifs <;> omega
+
+@[simp] theorem rank_E6 : E6.rank = 6 := rfl
+
+theorem cartan_E6_eq_mathlib : cartan E6 = CartanMatrix.E 6 := by
+  simpa only [rank_E6] using cartan_E6_eq_mathlib_rank
+
 @[expose] def symmetrizer : (τ : Tag) → Matrix (Fin τ.rank) (Fin τ.rank) ℤ
   | G2 => Matrix.diagonal ![3, 1]
   | F4 => Matrix.diagonal ![2, 2, 1, 1]

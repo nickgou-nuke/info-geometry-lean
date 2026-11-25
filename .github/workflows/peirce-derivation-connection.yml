@@ -1,0 +1,76 @@
+name: Peirce derivation connection
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'verification/peirce-derivation-connection/**'
+      - 'verification/peirce-defect-boundaries/**'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'tools/infra/build.py'
+      - 'tools/infra/axiom_check.lean'
+      - 'tools/infra/opengauss_screener.py'
+      - 'tools/pathing.py'
+      - '.github/workflows/peirce-derivation-connection.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: peirce-derivation-connection-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify source inventory and dependency pins
+        run: python3 verification/peirce-derivation-connection/audit.py
+      - name: Restore pinned dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            .lake/packages
+          key: real-plucker-lean4341-d13f23b7-${{ runner.os }}-v1
+      - name: Install the pinned Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(cat lean-toolchain)"
+      - name: Restore the pinned Mathlib artifacts
+        run: python3 verification/peirce-defect-boundaries/check.py exe cache get
+      - name: Build and check the connection
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/peirce-defect-boundaries/check.py build InfoGeometry.OperatorAlgebra.PeirceDerivationConnection InfoGeometry.OperatorAlgebra.PeirceDerivationConnectionAudit 2>&1 | tee peirce-derivation-build.log
+          python3 verification/peirce-defect-boundaries/check.py env lean -DwarningAsError=true lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean 2>&1 | tee peirce-derivation-file.log
+      - name: Audit declarations and replay compiled proofs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 verification/peirce-defect-boundaries/check.py env lean -DwarningAsError=true lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnectionAudit.lean 2>&1 | tee peirce-derivation-axioms.log
+          python3 verification/peirce-derivation-connection/audit.py --log peirce-derivation-axioms.log
+          python3 verification/peirce-defect-boundaries/check.py env lean --run tools/infra/axiom_check.lean verification/peirce-defect-boundaries/.lake/build/lib/lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.olean 2>&1 | tee peirce-derivation-replay.log
+      - name: Screen new mathematics
+        run: python3 tools/infra/opengauss_screener.py --strict lean/InfoGeometry/OperatorAlgebra/PeirceDerivationConnection.lean
+      - name: Preserve validation evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: peirce-derivation-connection-build
+          path: |
+            peirce-derivation-build.log
+            peirce-derivation-file.log
+            peirce-derivation-axioms.log
+            peirce-derivation-replay.log

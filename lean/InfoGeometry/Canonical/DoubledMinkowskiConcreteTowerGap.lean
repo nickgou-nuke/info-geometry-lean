@@ -282,4 +282,35 @@ theorem perturbed_tower_explicit_Qinf (m : ℝ) :
   · intro n ψ
     rfl
 
+/-- Full nonzero-error instance: the abstract colimit theorem's Krein
+invariance, projective compatibility, gap and non-negativity conclusions are
+all available for the finite-support perturbation. -/
+theorem perturbed_tower_full_instance (m : ℝ) :
+    (∀ n (ψ φ : Fin n ⊕ Fin n → ℝ) (k : ℕ),
+      seqPair (fun n => padSum (n := n))
+        (fun n ψ φ => bdgKreinPair ψ φ) n ψ φ k = bdgKreinPair ψ φ) ∧
+    ∃ Q_inf : (n : ℕ) → (Fin n ⊕ Fin n → ℝ) → ℝ,
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        Tendsto (seqVal (fun n => padSum (n := n)) (fun n ψ => perturbedQuad m n ψ) n ψ) atTop
+          (nhds (Q_inf n ψ))) ∧
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        Q_inf (n + 1) (padSum ψ) = Q_inf n ψ) ∧
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        m ^ 2 * dotProduct ψ ψ ≤ Q_inf n ψ) ∧
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        0 ≤ Q_inf n ψ) := by
+  exact continuum_colimit_doubled_minkowski_and_bdg_mass_gap
+    (V := fun n => Fin n ⊕ Fin n → ℝ)
+    (ι := fun n => padSum (n := n))
+    (normSq := fun n ψ => dotProduct ψ ψ)
+    (kreinPair := fun n ψ φ => bdgKreinPair ψ φ)
+    (bdgQuad := fun n ψ => perturbedQuad m n ψ)
+    (ε := perturbEps) m
+    (by intro n ψ; exact Finset.sum_nonneg fun i _ => mul_self_nonneg (ψ i))
+    (by intro n ψ; exact padSum_dotProduct ψ ψ)
+    (by intro n ψ φ; exact padSum_bdgKreinPair ψ φ)
+    (perturbedQuad_gap m)
+    perturbEps_summable
+    (perturbedQuad_step m)
+
 end InfoGeometry.Canonical.DoubledMinkowskiConcreteTowerGap

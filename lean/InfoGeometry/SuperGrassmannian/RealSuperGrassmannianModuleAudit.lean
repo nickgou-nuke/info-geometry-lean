@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperGrassmannian.RealSuperGrassmannianModule
 import InfoGeometry.SuperGrassmannian.RealSuperGrassmannianOperatorBlocks
 
@@ -66,8 +71,7 @@ steps. The carrier and theorem scopes are described in the owner files.
 #print axioms SuperModule.act_odd_reverses_grading_plus
 #print axioms SuperModule.act_odd_reverses_grading_minus
 
--- 8. Scalar-Model Certificate and Noncommutative Operator-Block Bridge
-#print axioms compile_scalar_one_one_graded_algebra
+-- 8. Noncommutative Operator-Block Bridge
 #print axioms InfoGeometry.SuperGrassmannian.RealSuperGrassmannianOperatorBlocks.operator_block_superbracket_supertrace_zero
 #print axioms InfoGeometry.SuperGrassmannian.RealSuperGrassmannianOperatorBlocks.finite_operator_block_exp_ratio_law
 #print axioms InfoGeometry.SuperGrassmannian.RealSuperGrassmannianOperatorBlocks.concrete_operator_blocks_noncommute

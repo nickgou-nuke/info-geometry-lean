@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperGrassmannian.CrosscapBoundarySyzygy
 
 /-!
@@ -11,7 +16,6 @@ namespace InfoGeometry.SuperGrassmannian.CrosscapSyzygy.Audit
 
 open InfoGeometry.SuperGrassmannian.CrosscapSyzygy
 
-#check @compile_crosscap_boundary_syzygy
 #check @moebiusOddPullback_involutive
 #check @invariant_odd_vanishes
 #check @tadpole_cancellation_iff
@@ -21,7 +25,6 @@ open InfoGeometry.SuperGrassmannian.CrosscapSyzygy
 #check @tree_level_defect_zero_of_tadpole_cancellation
 #check @tree_level_defect_pos_of_anomaly
 
-#print axioms compile_crosscap_boundary_syzygy
 #print axioms moebiusOddPullback_involutive
 #print axioms invariant_odd_vanishes
 #print axioms tadpole_cancellation_iff

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.SuperGrassmannian.RealMajoranaChiralIdeal
@@ -10,7 +15,7 @@ Module: `InfoGeometry.SuperGrassmannian.RealMajoranaChiralIdealAudit`
 Independent Gate 2 Adversarial and Gate 4 Acceptance QA suite for Section 82.
 Confirms:
 - Zero sorry, zero admit, zero custom axioms.
-- Strict kernel verification of all 11 certificate components.
+- Strict kernel verification of all 11 component theorems.
 - Non-vacuous concrete witnesses on `ℝ`.
 -/
 
@@ -18,10 +23,44 @@ namespace InfoGeometry.SuperGrassmannian.RealMajoranaChiralIdealAudit
 
 open InfoGeometry.SuperGrassmannian.RealMajoranaChiralIdeal
 
-/-- Audit 1: Verification that the master certificate compiles without sorries. -/
-theorem audit_compile_real_majorana_chiral_ideal :
-    RealMajoranaChiralIdealCertificate :=
-  compile_real_majorana_chiral_ideal
+/-- Audit 1: Direct conjunction of the eleven individually proved component theorems. -/
+theorem audit_real_majorana_chiral_ideal_components :
+    (∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R), S.PL + S.PR = 1) ∧
+    (∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R),
+      S.PL * S.PR = 0 ∧ S.PR * S.PL = 0) ∧
+    (∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R),
+      S.J * S.PL * S.J = S.PR ∧ S.J * S.PR * S.J = S.PL) ∧
+    (∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R), S.K ^ 2 = -1) ∧
+    (∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R) (γ : R),
+      S.superchargeQ γ ^ 2 = 0 ∧ S.superchargeQ_dag γ ^ 2 = 0) ∧
+    (∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R) (γ : R),
+      S.susyH γ * S.superchargeQ γ - S.superchargeQ γ * S.susyH γ = 0) ∧
+    (∀ (R : Type) [Ring R] (ψ φ : Fin 2 → R),
+      (2 : R) • dyad ψ φ =
+        bilinScalar ψ φ • matOne + bilinChiral ψ φ • matGamma +
+        bilinVector1 ψ φ • matJ - bilinVector2 ψ φ • matK) ∧
+    (∀ (R : Type) [Ring R],
+      kronMul (matPL (R := R)) matPL + kronMul matPR matPR +
+      kronMul matQ matQ_dag + kronMul matQ_dag matQ = Swap2) ∧
+    (∀ (R : Type) [Ring R],
+      (2 : R) • (Swap2 (R := R)) =
+        kronMul (matOne (R := R)) matOne + kronMul matGamma matGamma +
+        kronMul matJ matJ - kronMul matK matK) ∧
+    (∀ (R : Type) [Ring R] (X : Matrix (Fin 2) (Fin 2) R),
+      gradingDeriv (gradingDeriv (gradingDeriv X)) = (4 : R) • gradingDeriv X) ∧
+    (∀ (R : Type) [Ring R] (v : R), superTrace2 (matSusyH (R := R) v) = 0) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · intros R _ S; exact S.PL_add_PR
+  · intros R _ S; exact ⟨S.PL_mul_PR, S.PR_mul_PL⟩
+  · intros R _ S; exact ⟨S.J_PL_J, S.J_PR_J⟩
+  · intros R _ S; exact S.K_sq
+  · intros R _ S γ; exact ⟨S.Q_sq γ, S.Q_dag_sq γ⟩
+  · intros R _ S γ; exact S.susyH_comm_Q γ
+  · intros R _ ψ φ; exact real_spinor_dyadic_expansion ψ φ
+  · intros R _; exact real_chiral_fierz_ideal_identity
+  · intros R _; exact real_chiral_fierz_pauli_identity
+  · intros R _ X; exact grading_derivation_cube X
+  · intros R _ v; exact superTrace2_susyH v
 
 /-- Audit 2: Concrete non-vacuity witness of the 2-sheeted chiral substrate over M₂(ℝ). -/
 noncomputable def realSubstrateWitness : ChiralSheetSubstrate (Matrix (Fin 2) (Fin 2) ℝ) where
@@ -69,5 +108,22 @@ theorem audit_nonvacuous_fierz_ideal :
 theorem audit_nonvacuous_vacuum_energy (v : ℝ) :
     superTrace2 (matSusyH (R := ℝ) v) = 0 :=
   superTrace2_susyH v
+
+/-- Explicit non-commutativity witness for the real 2×2 Majorana carrier. -/
+theorem audit_real_majorana_noncommutativity :
+    matGamma (R := ℝ) * matJ ≠ matJ * matGamma (R := ℝ) := by
+  intro h
+  have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h
+  norm_num [matGamma, matJ, Matrix.mul_apply, Fin.sum_univ_two] at h01
+
+/-- Closed noncommutativity witness for `Matrix (Fin 2) (Fin 2) ℝ` (Trap T16):
+the elementary upper and lower shear matrices do not commute. -/
+def ncShearA : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+def ncShearB : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+
+theorem realMatrix_noncommutativity_witness : ncShearA * ncShearB ≠ ncShearB * ncShearA := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+  norm_num [ncShearA, ncShearB, Matrix.mul_apply, Fin.sum_univ_two] at h00
 
 end InfoGeometry.SuperGrassmannian.RealMajoranaChiralIdealAudit

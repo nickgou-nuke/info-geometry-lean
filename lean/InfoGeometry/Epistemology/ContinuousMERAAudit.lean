@@ -32,4 +32,3 @@ open InfoGeometry.Epistemology.ContinuousMERA
 #print axioms cmera_rt_pos
 #print axioms cmera_rt_monotone
 #print axioms cmera_rt_coincidence
-#print axioms compile_continuous_mera

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Int.Basic
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
@@ -211,31 +216,5 @@ theorem equal_shift_preserves_dimension_difference (n : ℕ) (b : EqualShiftDime
   rw [b.h_plus, b.h_minus]
   push_cast
   ring
-
-/-! ### 6. Master Verification Certificate -/
-
-/-- Bundle of the arithmetic and scalar equal-shift results proved in this module. -/
-structure SplitCliffordDimensionArithmeticCertificate : Prop where
-  clifford_dim_sq : ∀ n : ℕ, (spinorDim n) ^ 2 = cliffordDim n
-  chiral_sum : ∀ n : ℕ, 1 ≤ n → chiralHalfDim n + chiralHalfDim n = spinorDim n
-  stage_four_dimension_formula_agreement : vectorDim 4 = chiralHalfDim 4 ∧ chiralHalfDim 4 = 8
-  stage_eight_dimension_formula_identity : spinorDim 8 = 256 ∧ (spinorDim 8) ^ 2 = cliffordDim 8 ∧ cliffordDim 8 = 65536
-  chiral_half_dimension_sign_even : ∀ n : ℕ, 2 ≤ n → (-1 : ℤ) ^ (chiralHalfDim n) = 1
-  normalized_scalar_factor_four_cancellation : ∀ (n : ℕ) (data : FactorFourScalarData n),
-    normalizedScalarValue (n + 1) data.tr_level_succ = normalizedScalarValue n data.tr_level_n
-  normalized_identity_trace_one : ∀ n : ℕ, normalizedScalarValue n (rawStageScalarValue n) = 1
-  equal_shift_preserves_dimension_difference : ∀ (n : ℕ) (b : EqualShiftDimensionData n),
-    integerDimensionDifference b.state_succ = integerDimensionDifference b.state_n
-
-/-- Construct the arithmetic certificate from the proved formula lemmas. -/
-theorem compile_split_clifford_dimension_arithmetic : SplitCliffordDimensionArithmeticCertificate where
-  clifford_dim_sq := spinor_sq_eq_clifford
-  chiral_sum := chiral_split_sum
-  stage_four_dimension_formula_agreement := stage_four_dimension_formula_agreement
-  stage_eight_dimension_formula_identity := stage_eight_dimension_formula_identity
-  chiral_half_dimension_sign_even := chiral_half_dimension_sign_even
-  normalized_scalar_factor_four_cancellation := normalized_scalar_factor_four_cancellation
-  normalized_identity_trace_one := normalized_identity_trace_eq_one
-  equal_shift_preserves_dimension_difference := equal_shift_preserves_dimension_difference
 
 end InfoGeometry.SuperGrassmannian.SplitCliffordColimit

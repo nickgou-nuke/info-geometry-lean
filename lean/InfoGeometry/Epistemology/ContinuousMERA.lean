@@ -40,10 +40,6 @@ generators, and holographic bulk spacetime:
    - Integrating the entangling rate `c / 3` along the causal cone geodesic reproduces the
      2D CFT / AdS₃ Ryu–Takayanagi logarithmic area law: `S_A = (c / 3) * ln(L / ε)`.
    - Verified strictly positive, monotonically increasing in `L`, and vanishing at `L = ε`.
-
-5. **Master Certificate**:
-   - Bundles all verified properties into `ContinuousMERACertificate` with zero `sorry`
-     and core Mathlib axioms only.
 -/
 
 namespace InfoGeometry.Epistemology.ContinuousMERA
@@ -233,39 +229,6 @@ theorem cmera_rt_coincidence (c ε : ℝ) (hε : ε ≠ 0) :
     cmeraEntanglementEntropy c ε ε = 0 := by
   dsimp [cmeraEntanglementEntropy]
   rw [div_self hε, Real.log_one, mul_zero]
-
-/-! ### 5. Master Certificate: Continuous MERA -/
-
-/-- Master certificate bundling the 11 verified components of Continuous MERA. -/
-structure ContinuousMERACertificate : Prop where
-  z_coord_pos : ∀ u : ℝ, 0 < zCoord u
-  u_z_inverse : ∀ u : ℝ, uCoord (zCoord u) = u
-  z_u_inverse : ∀ {z : ℝ}, 0 < z → zCoord (uCoord z) = z
-  poincare_transform : ∀ (u du dx : ℝ),
-    lineElement_z (Real.exp (-u)) (-Real.exp (-u) * du) dx = lineElement_u u dx du
-  projector_annihilate : ∀ {A : Type*} [Ring A] (P : A), P * P = P → P * (1 - P) = 0
-  interval_composition : ∀ (u1 u2 u3 : ℝ),
-    circuitInterval u1 u2 + circuitInterval u2 u3 = circuitInterval u1 u3
-  causal_depth_log_ratio : ∀ (L ε : ℝ), 0 < L → 0 < ε →
-    causalConeDepth L ε = Real.log (L / ε)
-  causal_depth_pos : ∀ {L ε : ℝ}, 0 < ε → ε < L → 0 < causalConeDepth L ε
-  rt_entropy_pos : ∀ {c L ε : ℝ}, 0 < c → 0 < ε → ε < L → 0 < cmeraEntanglementEntropy c L ε
-  rt_entropy_monotone : ∀ {c ε L1 L2 : ℝ}, 0 < c → 0 < ε → ε < L1 → L1 ≤ L2 →
-    cmeraEntanglementEntropy c L1 ε ≤ cmeraEntanglementEntropy c L2 ε
-  rt_entropy_coincidence : ∀ (c ε : ℝ), ε ≠ 0 → cmeraEntanglementEntropy c ε ε = 0
-
-theorem compile_continuous_mera : ContinuousMERACertificate where
-  z_coord_pos := zCoord_pos
-  u_z_inverse := uCoord_zCoord
-  z_u_inverse := zCoord_uCoord
-  poincare_transform := poincare_metric_transform
-  projector_annihilate := mra_projector_annihilation
-  interval_composition := circuit_interval_compose
-  causal_depth_log_ratio := causal_cone_depth_eq_log_ratio
-  causal_depth_pos := causal_cone_depth_pos
-  rt_entropy_pos := cmera_rt_pos
-  rt_entropy_monotone := cmera_rt_monotone
-  rt_entropy_coincidence := cmera_rt_coincidence
 
 end
 

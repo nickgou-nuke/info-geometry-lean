@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -157,7 +162,7 @@ theorem plucker_syzygy {n : ℕ} {R : Type*} [CommRing R] (C : Matrix (Fin 2) (F
     pluckerMinor C a c * pluckerMinor C b d +
     pluckerMinor C a d * pluckerMinor C b c = 0 := by
   dsimp [pluckerMinor]
-  ring
+  ring_nf
 
 /-! ### Section 4: Bost-Connes Operator Klein Quadric & Truncated KMS Weights -/
 
@@ -228,64 +233,18 @@ theorem socket_plucker_exact {R : Type*} [Ring R] {Boundary : Type*}
     pluckerMinor s.grassmannianCell 0 3 * pluckerMinor s.grassmannianCell 1 2 = 0 :=
   s.hPlucker
 
-/-- Master Certificate bundling the complete set of algebraic and geometric theorems. -/
-structure AmplituhedronBostConnesCertificate : Prop where
-  -- Section 1: Twistor Incidence & Spacetime Soldering Null Boundary
-  twistor_displacement : ∀ (R : Type*) [Ring R] (Z : Twistor R) (X Y : Matrix (Fin 2) (Fin 2) R)
-    (hX : Incident Z X) (hY : Incident Z Y), (X - Y).mulVec Z.2 = 0
-  twistor_det_smul : ∀ (R : Type*) [CommRing R] (Z : Twistor R) (X Y : Matrix (Fin 2) (Fin 2) R)
-    (hX : Incident Z X) (hY : Incident Z Y), (X - Y).det • Z.2 = 0
-  twistor_det_null : ∀ (K : Type*) [CommRing K] [IsDomain K] (Z : Twistor K) (X Y : Matrix (Fin 2) (Fin 2) K)
-    (hX : Incident Z X) (hY : Incident Z Y) (hPi : Z.2 ≠ 0), (X - Y).det = 0
 
-  -- Section 2: Free Edge Module & Arnold Logarithmic Syzygy
-  omega_sq_zero : ∀ (R : Type*) [CommRing R] {ι : Type*} [DecidableEq ι] (i j : ι),
-    omegaGen R i j * omegaGen R i j = 0
-  arnold_syzygy : ∀ (K : Type*) [Field K] (z1 z2 z3 : K) (h12 : z1 ≠ z2) (h23 : z2 ≠ z3) (h31 : z3 ≠ z1),
-    arnoldRational (1 / (z1 - z2)) (1 / (z2 - z3)) (1 / (z3 - z1)) = 0
+/-- Closed noncommutativity witness for `Matrix (Fin 2) (Fin 2) R` (Trap T16):
+the elementary upper and lower shear matrices do not commute. -/
+def ncShearA (R : Type*) [Ring R] : Matrix (Fin 2) (Fin 2) R := !![0, 1; 0, 0]
+def ncShearB (R : Type*) [Ring R] : Matrix (Fin 2) (Fin 2) R := !![0, 0; 1, 0]
 
-  -- Section 3: Positive Grassmannian Gr⁺(2, n) & Plücker Syzygies
-  plucker_antisymmetry : ∀ {n : ℕ} (R : Type*) [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n),
-    pluckerMinor C j i = - pluckerMinor C i j
-  plucker_diagonal_zero : ∀ {n : ℕ} (R : Type*) [Ring R] (C : Matrix (Fin 2) (Fin n) R) (i : Fin n),
-    pluckerMinor C i i = 0
-  plucker_quadric_syzygy : ∀ {n : ℕ} (R : Type*) [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (a b c d : Fin n),
-    pluckerMinor C a b * pluckerMinor C c d -
-    pluckerMinor C a c * pluckerMinor C b d +
-    pluckerMinor C a d * pluckerMinor C b c = 0
-
-  -- Section 4: Bost-Connes Operator Klein Quadric & Truncated KMS Weights
-  operator_klein_quadric : ∀ (Op : Type*) [Ring Op] (e0 e1 e2 e3 : Op)
-    (h12 : Commute e1 e2) (h13 : Commute e1 e3) (h23 : Commute e2 e3),
-    let P := makeDifferencePlucker e0 e1 e2 e3
-    P.p01 * P.p23 - P.p02 * P.p13 + P.p03 * P.p12 = 0
-  gibbs_normalized : ∀ (R : Type*) [Semiring R] (N : ℕ) (w : Fin N → R) (invZ : R)
-    (hZ : (∑ i : Fin N, w i) * invZ = 1),
-    ∑ i : Fin N, normalizedGibbsWeights N w invZ i = 1
-
-  -- Section 5: The Synthesis Transition Socket
-  socket_boundary : ∀ (R : Type*) [Ring R] {Boundary : Type*}
-    (s : AmplituhedronBostConnesSocket R Boundary),
-    s.boundaryMap s.partitionWeights = s.targetBoundary
-  socket_plucker : ∀ (R : Type*) [Ring R] {Boundary : Type*}
-    (s : AmplituhedronBostConnesSocket R Boundary),
-    pluckerMinor s.grassmannianCell 0 1 * pluckerMinor s.grassmannianCell 2 3 -
-    pluckerMinor s.grassmannianCell 0 2 * pluckerMinor s.grassmannianCell 1 3 +
-    pluckerMinor s.grassmannianCell 0 3 * pluckerMinor s.grassmannianCell 1 2 = 0
-
-/-- Compilation theorem: universal mathematical certificate for the Twistor Amplituhedron & Bost-Connes Synthesis. -/
-theorem compile_amplituhedron_bost_connes_synthesis : AmplituhedronBostConnesCertificate where
-  twistor_displacement := fun R _ Z X Y hX hY => twistor_incidence_displacement Z X Y hX hY
-  twistor_det_smul := fun R _ Z X Y hX hY => twistor_incidence_det_smul_zero Z X Y hX hY
-  twistor_det_null := fun K _ _ Z X Y hX hY hPi => twistor_incidence_det_zero Z X Y hX hY hPi
-  omega_sq_zero := fun R _ ι _ i j => omegaGen_sq_zero i j
-  arnold_syzygy := fun K _ z1 z2 z3 h12 h23 h31 => arnold_rational_field_syzygy z1 z2 z3 h12 h23 h31
-  plucker_antisymmetry := fun R _ C i j => plucker_antisymm C i j
-  plucker_diagonal_zero := fun R _ C i => plucker_self_zero C i
-  plucker_quadric_syzygy := fun R _ C a b c d => plucker_syzygy C a b c d
-  operator_klein_quadric := fun Op _ e0 e1 e2 e3 h12 h13 h23 => differencePlucker_klein_identity e0 e1 e2 e3 h12 h13 h23
-  gibbs_normalized := fun R _ N w invZ hZ => gibbs_weights_normalized N w invZ hZ
-  socket_boundary := fun R _ Boundary s => socket_boundary_readout s
-  socket_plucker := fun R _ Boundary s => socket_plucker_exact s
+theorem matrix2_noncommutativity_witness {R : Type*} [Ring R] [Nontrivial R] :
+    ncShearA (R := R) * ncShearB (R := R) ≠ ncShearB (R := R) * ncShearA (R := R) := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) R => M 0 0) h
+  have h10 : (1 : R) = 0 := by
+    simpa [ncShearA, ncShearB, Matrix.mul_apply, Fin.sum_univ_two] using h00
+  exact one_ne_zero h10
 
 end InfoGeometry.Projective.AmplituhedronBostConnesSynthesis

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Finset.Basic
@@ -299,45 +304,5 @@ theorem petz_reconstructs_reference {R : Type*} [CommRing R] (K s : R) (hK : K ^
   rw [petz_block_reconstruct_matrix]
   ext i j
   fin_cases i <;> fin_cases j <;> simp [blockCausalState, hK]
-
-/-! ### Section 6: Master Verification Certificate -/
-
-/-- Master certificate bundling the proved stages of Causal Petz Recovery with genuine Prop fields. -/
-structure CausalPetzRecoveryCertificate where
-  triangular_rank : ∀ (N : ℕ), 2 * (∑ i ∈ Finset.range N, (i + 1)) = N * (N + 1)
-  causal_pinching_annihilates_acausal : ∀ {R : Type*} [Ring R] (Pi Pi_perp : R) (h : Pi * Pi_perp = 0),
-    causalChannel Pi Pi_perp = 0
-  petz_gram_isometry : ∀ {R : Type*} [Ring R] (Pi Pi_perp P_pinv rho : R)
-    (h_comp : Pi + Pi_perp = 1) (h_r : P_pinv * Pi_perp = 0) (h_l : Pi_perp * P_pinv = 0),
-    P_pinv * rho * P_pinv = P_pinv * (causalChannel Pi rho) * P_pinv
-  past_restoration : ∀ {R : Type*} [CommRing R] (K L s : R),
-    petzBlockReconstruct K L s 0 0 = s * K ^ 2
-  coherence_regeneration_PQ : ∀ {R : Type*} [CommRing R] (K L s : R),
-    petzBlockReconstruct K L s 0 1 = s * K * L
-  coherence_regeneration_QP : ∀ {R : Type*} [CommRing R] (K L s : R),
-    petzBlockReconstruct K L s 1 0 = s * K * L
-  future_synthesis : ∀ {R : Type*} [CommRing R] (K L s : R),
-    petzBlockReconstruct K L s 1 1 = s * L ^ 2
-  gram_stiefel_constraint : ∀ {R : Type*} [Ring R] (K L : R),
-    ((blockIntertwiner K L)ᵀ * blockIntertwiner K L = !![1, 0; 0, 0] ↔
-      K ^ 2 + L ^ 2 = 1)
-  supported_trace_preservation : ∀ {R : Type*} [CommRing R] (K L s : R),
-    K ^ 2 + L ^ 2 = 1 → Matrix.trace (petzBlockReconstruct K L s) = s
-  decoupling_limit : ∀ {R : Type*} [Ring R] (K s : R),
-    petzBlockReconstruct K 0 s 1 1 = 0 ∧ petzBlockReconstruct K 0 s 0 1 = 0
-
-/-- Instantiation of the master certificate with zero open assumptions. -/
-theorem compile_causal_petz_recovery : CausalPetzRecoveryCertificate :=
-  { triangular_rank := triangular_rank_formula
-    causal_pinching_annihilates_acausal := fun Pi Pi_perp h => causal_channel_annihilates_acausal Pi Pi_perp h
-    petz_gram_isometry := fun Pi Pi_perp P_pinv rho h_comp h_r h_l =>
-      petz_gram_operator_identity Pi Pi_perp P_pinv rho h_comp h_r h_l
-    past_restoration := petz_block_past
-    coherence_regeneration_PQ := petz_block_coherence_PQ
-    coherence_regeneration_QP := petz_block_coherence_QP
-    future_synthesis := petz_block_future
-    gram_stiefel_constraint := gram_isometry_iff_stiefel
-    supported_trace_preservation := petz_block_trace_preservation_on_support
-    decoupling_limit := petz_decoupled_future_zero }
 
 end InfoGeometry.QuantumContext.CausalPetz

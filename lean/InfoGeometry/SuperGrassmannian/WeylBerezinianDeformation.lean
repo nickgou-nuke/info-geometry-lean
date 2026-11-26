@@ -36,7 +36,6 @@ Grounds the deformation triad natively in the noncommutative operator algebra `M
    - STr(X(k₁, k₂)) = 0 (Chiral unimodularity)
    - STr(V(a)) = 0 (Volume unimodularity)
    - Total deformation splitting: STr(S + X + V) = (p - q) · σ.
-8. Master verification certificate `WeylBerezinianDeformationCertificate`.
 -/
 
 namespace InfoGeometry.SuperGrassmannian.WeylBerezinian
@@ -198,30 +197,6 @@ theorem total_deformation_superTrace (p q σ k₁ k₂ a : R) :
   rw [superTrace_scaleOperator, superTrace_chiralOperator, superTrace_volumeOperator]
   abel
 
-/-! ### 5. Master Verification Certificate -/
-
-/-- Certificate bundling all operator noncommutative geometry theorems of the deformation triad. -/
-structure WeylBerezinianDeformationCertificate : Prop where
-  superTrace_linear : ∀ (M N : Matrix (Fin 2) (Fin 2) ℝ), superTrace (M + N) = superTrace M + superTrace N
-  even_odd_decomp : ∀ (M : Matrix (Fin 2) (Fin 2) ℝ), evenPart M + oddPart M = M
-  anticommutator_trace : ∀ (b1 c1 b2 c2 : ℝ),
-    superTrace (!![(0:ℝ), b1; c1, 0] * !![(0:ℝ), b2; c2, 0] +
-                !![(0:ℝ), b2; c2, 0] * !![(0:ℝ), b1; c1, 0]) = 0
-  commutator_bracket : ∀ (p q σ k₁ k₂ : ℝ),
-    scaleOperator p q σ * chiralOperator k₁ k₂ - chiralOperator k₁ k₂ * scaleOperator p q σ =
-    !![0, (p - q) * σ * k₁; -(p - q) * σ * k₂, 0]
-  commutator_balanced : ∀ (p σ k₁ k₂ : ℝ),
-    scaleOperator p p σ * chiralOperator k₁ k₂ - chiralOperator k₁ k₂ * scaleOperator p p σ = 0
-  chiral_sq_superTrace : ∀ (k₁ k₂ : ℝ),
-    superTrace (chiralOperator (R := ℝ) k₁ k₂ * chiralOperator (R := ℝ) k₁ k₂) = 0
-  scale_mode : ∀ (p q σ : ℝ), superTrace (scaleOperator (R := ℝ) p q σ) = (p - q) * σ
-  scale_balanced : ∀ (p σ : ℝ), superTrace (scaleOperator (R := ℝ) p p σ) = 0
-  chiral_mode : ∀ (k₁ k₂ : ℝ), superTrace (chiralOperator (R := ℝ) k₁ k₂) = 0
-  volume_mode : ∀ (a : ℝ), superTrace (volumeOperator (R := ℝ) a) = 0
-  total_splitting : ∀ (p q σ k₁ k₂ a : ℝ),
-    superTrace (scaleOperator p q σ + chiralOperator k₁ k₂ + volumeOperator a) = (p - q) * σ
-
-/-- Master Compilation Theorem for the Noncommutative Operator Deformation Triad. -/
 theorem odd_anticommutator_operator_coefficients_nonzero :
     let E₁₂ : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
     let E₂₁ : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]

@@ -5,6 +5,13 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.DoubledMinkowskiRotatingSpinInstability
 import InfoGeometry.Clifford.Cl11TensorTower
+import InfoGeometry.Canonical.Erlangen20OperatorGeometryDatum
+import InfoGeometry.Algebra.SupergradedBracket
+import InfoGeometry.OperatorAlgebra.SymmetryInvariants
+import InfoGeometry.Canonical.OperatorErlangenFixedPoints
+import InfoGeometry.Canonical.OperatorErlangenGaloisConnection
+import InfoGeometry.Core.LieJordanBoundaryOperators
+import InfoGeometry.OperatorAlgebra.ChiralRailPlane
 import Mathlib.Algebra.Module.LinearMap.Defs
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
@@ -44,6 +51,8 @@ with an expectation/trace state `τ : B →ₗ[ℝ] ℝ` (`τ 1 = 1`):
 * `erlangen_metriplectic_operator_laws`
 * `erlangen_m2_chiral_atom_spec`
 * `erlangen_cl11_stageEmbed_preserves_structure`
+* `m2ChiralErlangenDatum_lie_hom`
+* `ring_generic_erlangen_superbracket_and_invariants`, `m2_chiral_atom_eq_chiralRailPlane_and_datum`
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
 * Abstract ring / metriplectic theorems hold for any `[OperatorRing B]` and explicit cyclicity,
@@ -422,5 +431,127 @@ theorem erlangen_cl11_stageEmbed_preserves_structure (n : ℕ) (X Y : MatStage n
     rw [← map_mul, ← map_mul, ← map_add, ← map_smul, hTr, hTr, hTr]
   refine ⟨hJ, hL, hTr X, hCov X Y, ?_⟩
   simpa [fisherVar] using hCov X X
+
+/-! ### Part 5: Bridge to Repo `Erlangen20OperatorGeometryDatum` -/
+
+section DatumBridge
+
+open InfoGeometry.Canonical.Erlangen20OperatorGeometryDatum
+
+local instance end2LieRing : LieRing (Module.End ℝ (Fin 2 → ℝ)) :=
+  LieRing.ofAssociativeRing
+
+local instance end2LieAlgebra : LieAlgebra ℝ (Module.End ℝ (Fin 2 → ℝ)) :=
+  LieAlgebra.ofAssociativeAlgebra
+
+/-- Concrete `Erlangen20Datum` packaging `End_ℝ(ℝ²)` (`M₂(ℝ)`) with `(zCut2, xMir2, eps2)` and their
+three Krein Hilbert–Schmidt Koszul–Fisher invariants
+`(kreinFisherVar2 zCut2, kreinFisherVar2 xMir2, kreinFisherVar2 eps2)`. -/
+def m2ChiralErlangenDatum :
+    Erlangen20Datum ℝ (Fin 2 → ℝ) (Module.End ℝ (Fin 2 → ℝ))
+      (Matrix (Fin 2) (Fin 2) ℝ × Matrix (Fin 2) (Fin 2) ℝ × Matrix (Fin 2) (Fin 2) ℝ)
+      (ℝ × ℝ × ℝ) where
+  operatorAlgebra := ⊤
+  representation := LieHom.id
+  representation_mem _ := Algebra.mem_top
+  symmetryData := (zCut2, xMir2, eps2)
+  invariantData := (kreinFisherVar2 zCut2, kreinFisherVar2 xMir2, kreinFisherVar2 eps2)
+
+/-- `m2ChiralErlangenDatum` realizes exact Lie-bracket equivariance and unit normalized variances. -/
+theorem m2ChiralErlangenDatum_lie_hom (X Y : Module.End ℝ (Fin 2 → ℝ)) :
+    m2ChiralErlangenDatum.representation ⁅X, Y⁆ =
+      m2ChiralErlangenDatum.representation X * m2ChiralErlangenDatum.representation Y -
+        m2ChiralErlangenDatum.representation Y * m2ChiralErlangenDatum.representation X ∧
+    m2ChiralErlangenDatum.invariantData = (1, 1, 1) := by
+  have hSpec := erlangen_m2_chiral_atom_spec
+  refine ⟨m2ChiralErlangenDatum.representation_map_lie X Y, ?_⟩
+  simp [m2ChiralErlangenDatum, hSpec.2.2.2.2.1.1, hSpec.2.2.2.2.1.2.1, hSpec.2.2.2.2.1.2.2.1]
+
+end DatumBridge
+
+/-! ### Part 6: Preexisting Noncommutative-Ring (`[Ring B]` / `[Ring R]`) Erlangen 2.0 & `ChiralRailPlane` Bridge -/
+
+section NoncommRingErlangenBridge
+
+open InfoGeometry.Algebra.SupergradedBracket
+open InfoGeometry.Core.JordanMultiplicationClosure
+open InfoGeometry.Core.LieJordanBoundaryOperators
+open InfoGeometry.OperatorAlgebra
+open InfoGeometry.OperatorAlgebra.ChiralRailPlane
+open InfoGeometry.Canonical.OperatorErlangenFixedPoints
+
+/-- **Theorem 6A (Ring-Generic Noncommutative Erlangen 2.0, Superbracket, Lie–Jordan, & Galois Bridge)**:
+Over ANY noncommutative ring `[OperatorRing B]` and symmetry group `[Group G]` with
+`α : SymmetryAction G B` and `[MulSemiringAction G B]`:
+1. Identifies `lieBracket` / `jordanProd` with `SupergradedBracket.{commutator, anticommutator}`,
+   `Core.JordanMultiplicationClosure.jordanLeft`, and `LieJordanBoundaryOperators.ring_ad_mul_jordan_self_apply`.
+2. Proves `α.act g` preserves `SupergradedBracket.superBracket`, preserves the ring center
+   `inCenter Z → inCenter (α.act g Z)`, and characterizes `invariantSubring α`.
+3. Connects directly to `OperatorErlangenFixedPoints.subgroup_le_fixingSubgroup_iff` and
+   `fixedPointSet_superBracket_mem`. -/
+theorem ring_generic_erlangen_superbracket_and_invariants
+    {B : Type*} [OperatorRing B]
+    {G : Type*} [Group G] (α : SymmetryAction G B) [MulSemiringAction G B]
+    (H : Subgroup G) (S : Set B) (g : G) (X Y Z : B) (p q : Bool) :
+    (lieBracket X Y = commutator X Y) ∧
+    ((2 : ℝ) • jordanProd X Y = anticommutator X Y) ∧
+    (jordanLeft (R := ℝ) X Y = (2 : ℝ) • jordanProd X Y) ∧
+    (X * (X * Y + Y * X) - (X * Y + Y * X) * X = (X * X) * Y - Y * (X * X)) ∧
+    ((α.act g) (superBracket p q X Y) = superBracket p q (α.act g X) (α.act g Y)) ∧
+    (inCenter Z → inCenter (α.act g Z)) ∧
+    (Z ∈ invariantSubring α ↔ IsInvariant α Z) ∧
+    (H ≤ fixingSubgroup (G := G) (A := B) S ↔ S ⊆ fixedPointSet (G := G) (A := B) H) ∧
+    (X ∈ ringFixedPointSet (G := G) H → Y ∈ ringFixedPointSet (G := G) H →
+      superBracket p q X Y ∈ ringFixedPointSet (G := G) H) := by
+  have hLie : lieBracket X Y = commutator X Y := rfl
+  have hJord : (2 : ℝ) • jordanProd X Y = anticommutator X Y := by
+    unfold jordanProd anticommutator
+    rw [smul_smul]
+    norm_num
+  have hJLeft : jordanLeft (R := ℝ) X Y = (2 : ℝ) • jordanProd X Y := by
+    change X * Y + Y * X = (2 : ℝ) • jordanProd X Y
+    exact hJord.symm
+  have hAd : X * (X * Y + Y * X) - (X * Y + Y * X) * X = (X * X) * Y - Y * (X * X) :=
+    ring_ad_mul_jordan_self_apply X Y
+  have hMapSB : (α.act g) (superBracket p q X Y) = superBracket p q (α.act g X) (α.act g Y) :=
+    map_superBracket (α.act g).toRingHom p q X Y
+  have hCent : inCenter Z → inCenter (α.act g Z) := by
+    intro hZ W
+    unfold lieBracket
+    have hZW := hZ ((α.act g).symm W)
+    unfold lieBracket at hZW
+    have hEq : α.act g Z * W - W * α.act g Z =
+        α.act g (Z * (α.act g).symm W - (α.act g).symm W * Z) := by
+      rw [map_sub, map_mul, map_mul, RingEquiv.apply_symm_apply]
+    rw [hEq, hZW, map_zero]
+  have hInv : Z ∈ invariantSubring α ↔ IsInvariant α Z := mem_invariantSubring_iff α Z
+  have hGal : H ≤ fixingSubgroup (G := G) (A := B) S ↔ S ⊆ fixedPointSet (G := G) (A := B) H :=
+    subgroup_le_fixingSubgroup_iff
+  have hSB : X ∈ ringFixedPointSet (G := G) H → Y ∈ ringFixedPointSet (G := G) H →
+      superBracket p q X Y ∈ ringFixedPointSet (G := G) H :=
+    fixedPointSet_superBracket_mem (G := G) (B := B)
+      (fun h a b => MulSemiringAction.smul_mul (M := G) (R := B) h a b) H p q
+  exact ⟨hLie, hJord, hJLeft, hAd, hMapSB, hCent, hInv, hGal, hSB⟩
+
+/-- **Theorem 6B (`ChiralRailPlane` `[Ring R]` Anchor & `M₂(ℝ)` Specialization)**:
+Over ANY nontrivial ring `[Ring R] [Nontrivial R]`, `ChiralRailPlane`'s raising/lowering operators
+`E_R_standard, E_L_standard` do not commute, satisfy `[E_R, E_L] = Γ_standard` and `{E_R, E_L} = 1`,
+and at `R = ℝ` specialize to `zCut2`, `xMir2`, `eps2`. -/
+theorem m2_chiral_atom_eq_chiralRailPlane_and_datum (R : Type*) [Ring R] [Nontrivial R] :
+    ((E_R_standard : Matrix (Fin 2) (Fin 2) R) * E_L_standard ≠
+        E_L_standard * E_R_standard) ∧
+    (E_R_standard * E_L_standard - E_L_standard * E_R_standard =
+        (Γ_standard : Matrix (Fin 2) (Fin 2) R)) ∧
+    (E_R_standard * E_L_standard + E_L_standard * E_R_standard =
+        (1 : Matrix (Fin 2) (Fin 2) R)) ∧
+    (zCut2 = (Γ_standard : Matrix (Fin 2) (Fin 2) ℝ) ∧
+     xMir2 = (E_R_standard : Matrix (Fin 2) (Fin 2) ℝ) + E_L_standard ∧
+     eps2 = (Ω_standard : Matrix (Fin 2) (Fin 2) ℝ)) := by
+  refine ⟨E_R_E_L_noncomm, commutator_E_R_E_L_standard, anticommutator_E_R_E_L_standard, ?_, ?_, ?_⟩ <;>
+  · ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [zCut2, xMir2, eps2, Γ_standard, E_R_standard, E_L_standard, Ω_standard]
+
+end NoncommRingErlangenBridge
 
 end InfoGeometry.Canonical.ErlangenTwoZeroOperatorRing

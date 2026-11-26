@@ -100,7 +100,7 @@ theorem real_chiral_circular_peirce_laws :
     xMir2 * eps2 + eps2 * xMir2 = 0 := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
     { ext i j
-      simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.sub_apply, Matrix.neg_apply,
+      simp only [Matrix.mul_apply, Matrix.add_apply, Matrix.neg_apply,
         Matrix.transpose_apply, Matrix.one_apply, Matrix.zero_apply, Fin.sum_univ_two]
       fin_cases i <;> fin_cases j <;>
         dsimp [pPlus2, pMinus2, uPlus2, vMinus2, zCut2, xMir2, eps2] <;> norm_num }
@@ -117,16 +117,16 @@ def diracGamma3 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℝ := zCut2 ⊗ₖ (
 private lemma kronecker_add_left' {m₁ n₁ m₂ n₂ R : Type*} [Ring R]
     (A₁ A₂ : Matrix m₁ n₁ R) (B : Matrix m₂ n₂ R) :
     (A₁ + A₂) ⊗ₖ B = A₁ ⊗ₖ B + A₂ ⊗ₖ B := by
-  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩; simp [Matrix.kronecker, add_mul]
+  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩; simp [add_mul]
 
 private lemma kronecker_add_right' {m₁ n₁ m₂ n₂ R : Type*} [Ring R]
     (A : Matrix m₁ n₁ R) (B₁ B₂ : Matrix m₂ n₂ R) :
     A ⊗ₖ (B₁ + B₂) = A ⊗ₖ B₁ + A ⊗ₖ B₂ := by
-  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩; simp [Matrix.kronecker, mul_add]
+  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩; simp [mul_add]
 
 private lemma kronecker_neg_left' {m₁ n₁ m₂ n₂ R : Type*} [Ring R]
     (A : Matrix m₁ n₁ R) (B : Matrix m₂ n₂ R) : (-A) ⊗ₖ B = -(A ⊗ₖ B) := by
-  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩; simp [Matrix.kronecker, neg_mul]
+  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩; simp [neg_mul]
 
 private lemma scalar_dirac_trace_eq (x₀ x₁ x₂ x₃ : ℝ) :
     -(1 / 4 : ℝ) * ((-x₀ ^ 2 + x₁ ^ 2 + x₂ ^ 2 + x₃ ^ 2) * (2 * 2 : ℕ)) =
@@ -204,9 +204,9 @@ theorem real_majorana_dirac_interval (x₀ x₁ x₂ x₃ : ℝ) :
       (x₀ • diracGamma0 + x₁ • diracGamma1 + x₂ • diracGamma2 + x₃ • diracGamma3) =
       (-x₀ ^ 2 + x₁ ^ 2 + x₂ ^ 2 + x₃ ^ 2) •
         (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℝ) := by
-    simp only [Matrix.add_mul, Matrix.mul_add, Matrix.smul_mul, Matrix.mul_smul, smul_smul]
+    simp only [Matrix.add_mul, Matrix.mul_add, Matrix.smul_mul, Matrix.mul_smul]
     rw [h00, h11, h22, h33, hAnti01, hAnti02, hAnti03, hAnti12, hAnti13, hAnti23]
-    simp only [smul_neg, ← sq]
+    simp only [smul_neg]
     module
   refine ⟨hSq, ?_⟩
   rw [hSq, Matrix.trace_smul, Matrix.trace_one, Fintype.card_prod, Fintype.card_fin]
@@ -256,11 +256,11 @@ private lemma scalar_minkowski_off2 (x₀ x₁ x₂ x₃ : ℝ) :
     (x₀ + x₃) * (-x₂) + x₂ * (x₀ + x₃) + x₁ * 0 = 0 := by
   ring
 
-private lemma scalar_minkowski_off3 (x₀ x₁ x₂ x₃ : ℝ) :
+private lemma scalar_minkowski_off3 (x₀ x₁ _x₂ x₃ : ℝ) :
     (x₀ - x₃) * (-x₁) + x₁ * (x₀ - x₃) = 0 := by
   ring
 
-private lemma scalar_minkowski_off4 (x₀ x₁ x₂ x₃ : ℝ) :
+private lemma scalar_minkowski_off4 (x₀ _x₁ x₂ x₃ : ℝ) :
     (x₀ - x₃) * x₂ + (-x₂) * (x₀ - x₃) = 0 := by
   ring
 
@@ -353,27 +353,22 @@ theorem real_chiral_soldering_and_vacuum_fiber_det (x₀ x₁ x₂ x₃ α₀ α
       ((α₀ ^ 2 + α₁ ^ 2) * (β₀ ^ 2 + β₁ ^ 2)) ^ 2 * (x₀ ^ 2 - x₁ ^ 2 - x₂ ^ 2 - x₃ ^ 2) ^ 2 := by
   have hReidx : Matrix.reindex finProdFinEquiv finProdFinEquiv
       (realChiralSolderingKron x₀ x₁ x₂ x₃) = realSoldering4 x₀ x₁ x₂ x₃ := by
+    have hs0 : (finProdFinEquiv : Fin 2 × Fin 2 ≃ Fin 4).symm 0 = (0, 0) := by decide
+    have hs1 : (finProdFinEquiv : Fin 2 × Fin 2 ≃ Fin 4).symm 1 = (0, 1) := by decide
+    have hs2 : (finProdFinEquiv : Fin 2 × Fin 2 ≃ Fin 4).symm 2 = (1, 0) := by decide
+    have hs3 : (finProdFinEquiv : Fin 2 × Fin 2 ≃ Fin 4).symm 3 = (1, 1) := by decide
     ext i j
     fin_cases i <;> fin_cases j <;>
-      dsimp [realChiralSolderingKron, realSoldering4, finProdFinEquiv] <;>
-      simp only [Matrix.reindex_apply, Equiv.coe_fn_symm_mk, Matrix.add_apply, Matrix.sub_apply,
-        Matrix.smul_apply, smul_eq_mul, Matrix.one_apply, Matrix.kroneckerMap_apply,
-        Matrix.kronecker_apply] <;>
-      dsimp [pPlus2, pMinus2, uPlus2, vMinus2, eps2] <;>
-      norm_num <;> ring
+      simp [Matrix.reindex_apply, hs0, hs1, hs2, hs3, realChiralSolderingKron, realSoldering4,
+        pPlus2, pMinus2, uPlus2, vMinus2, eps2]
   have hMul : realChiralSolderingKron x₀ x₁ x₂ x₃ * realChiralSolderingAdjKron x₀ x₁ x₂ x₃ =
       (x₀ ^ 2 - x₁ ^ 2 - x₂ ^ 2 - x₃ ^ 2) •
         (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℝ) := by
     ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
-    simp only [Matrix.mul_apply, Fintype.sum_prod_type, Fin.sum_univ_two, Matrix.smul_apply,
-      smul_eq_mul, Matrix.one_apply]
     fin_cases i₁ <;> fin_cases i₂ <;> fin_cases j₁ <;> fin_cases j₂ <;>
-      dsimp [realChiralSolderingKron, realChiralSolderingAdjKron] <;>
-      simp only [Matrix.add_apply, Matrix.sub_apply, Matrix.neg_apply, Matrix.smul_apply,
-        smul_eq_mul, Matrix.one_apply, Matrix.kroneckerMap_apply, Matrix.kronecker_apply] <;>
-      dsimp [pPlus2, pMinus2, uPlus2, vMinus2, eps2] <;>
-      simp only [zero_mul, mul_zero, one_mul, mul_one, add_zero, zero_add, neg_mul, mul_neg,
-        neg_zero, Prod.mk.injEq, and_self, and_true, true_and]
+      simp [Matrix.mul_apply, Fintype.sum_prod_type, Fin.sum_univ_two,
+        realChiralSolderingKron, realChiralSolderingAdjKron,
+        pPlus2, pMinus2, uPlus2, vMinus2, eps2]
     all_goals first
       | exact scalar_minkowski_diag_top x₀ x₁ x₂ x₃
       | exact scalar_minkowski_diag_bot x₀ x₁ x₂ x₃
@@ -382,8 +377,7 @@ theorem real_chiral_soldering_and_vacuum_fiber_det (x₀ x₁ x₂ x₃ α₀ α
       | exact scalar_minkowski_off2 x₀ x₁ x₂ x₃
       | exact scalar_minkowski_off3 x₀ x₁ x₂ x₃
       | exact scalar_minkowski_off4 x₀ x₁ x₂ x₃
-      | (norm_num; done)
-      | linarith
+      | ring
   have hDetSold : (realSoldering4 x₀ x₁ x₂ x₃).det = (x₀ ^ 2 - x₁ ^ 2 - x₂ ^ 2 - x₃ ^ 2) ^ 2 := by
     rw [det_fin_four_formula]
     dsimp [realSoldering4]
@@ -464,8 +458,12 @@ private lemma scalar_susy_off_pos3 (a₁ b₁ a₂ b₂ : ℝ) :
   ring
 
 private lemma scalar_susy_off_neg2 (a₁ b₁ a₂ b₂ : ℝ) :
-    (-b₂) * a₁ + a₂ * b₁ = -(b₁ * a₂ - a₁ * b₂) := by
-  ring_nf
+    a₂ * (-b₁) + b₂ * a₁ = -(b₁ * a₂ - a₁ * b₂) := by
+  ring
+
+private lemma scalar_susy_off_pos4 (a₁ b₁ a₂ b₂ : ℝ) :
+    (-b₂) * a₁ + a₂ * b₁ = b₁ * a₂ - a₁ * b₂ := by
+  ring
 
 /-- Explicit `Fin 2` non-commutativity witness for `zCut2` and `xMir2`. -/
 theorem exists_noncomm_mat2_chiral :
@@ -549,19 +547,17 @@ theorem chiral_supercharge_anticommutator_translation (a₁ b₁ a₂ b₂ c₁ 
     rw [← Matrix.add_apply, hXY_at]
     simp only [Matrix.add_apply, Matrix.kronecker_apply]
     simp only [Matrix.mul_apply, Fin.sum_univ_four]
-    fin_cases i <;> fin_cases j <;> dsimp [SX, SY, realSoldering4] <;> norm_num
+    fin_cases i <;> fin_cases j <;> simp [SX, SY, realSoldering4, pPlus2, pMinus2]
     all_goals first
       | exact scalar_susy_block_top a₁ b₁ a₂ b₂
       | exact scalar_susy_block_bot a₁ b₁ a₂ b₂
       | exact scalar_susy_off_pos a₁ b₁ a₂ b₂
       | exact scalar_susy_off_pos2 a₁ b₁ a₂ b₂
       | exact scalar_susy_off_pos3 a₁ b₁ a₂ b₂
+      | exact scalar_susy_off_pos4 a₁ b₁ a₂ b₂
       | exact scalar_susy_off_neg a₁ b₁ a₂ b₂
       | exact scalar_susy_off_neg2 a₁ b₁ a₂ b₂
-      | linarith [scalar_susy_block_top a₁ b₁ a₂ b₂]
-      | linarith [scalar_susy_block_bot a₁ b₁ a₂ b₂]
-      | linarith [scalar_susy_off_pos a₁ b₁ a₂ b₂]
-      | linarith [scalar_susy_off_neg a₁ b₁ a₂ b₂]
+      | ring
   · exact scalar_susy_null_shell a₁ b₁ a₂ b₂
   · rw [(real_chiral_soldering_and_vacuum_fiber_det _ _ _ _ 0 0 0 0).2.2.1,
       scalar_susy_null_shell a₁ b₁ a₂ b₂, zero_pow two_ne_zero]
@@ -603,10 +599,10 @@ theorem lorentzBoost2_eq_cosh_add_sinh_xMir2 (η : ℝ) :
   fin_cases i <;> fin_cases j <;> dsimp [lorentzBoost2, xMir2, uPlus2, vMinus2] <;> norm_num
 
 private lemma scalar_half_two_cosh' (J : ℝ) : (1 / 2 : ℝ) * (2 * Real.cosh J) = Real.cosh J := by
-  linarith
+  ring
 
 private lemma scalar_half_two_sinh' (J : ℝ) : (1 / 2 : ℝ) * (2 * Real.sinh J) = Real.sinh J := by
-  linarith
+  ring
 
 /-- Rescaled hyperbolic two-sheet OS transfer matrix `(1/2) • transferMatHyp J` equals
 `cosh J • 1 + sinh J • xMir2`. -/
@@ -619,5 +615,263 @@ theorem transferMatHyp_half_eq_cosh_add_sinh_xMir2 (J : ℝ) :
   · exact scalar_half_two_sinh' J
   · exact scalar_half_two_sinh' J
   · exact scalar_half_two_cosh' J
+
+/-! ### Part 6: Unified `M₈(ℝ)` Chiral Weyl–Dirac Operator & Supercharge Block Placement -/
+
+/-- Explicit `Fin 4 × Fin 4` coordinate form of the mirror adjugate soldering matrix `M̃₄(x)`. -/
+def realSolderingAdj4 (x₀ x₁ x₂ x₃ : ℝ) : Matrix (Fin 4) (Fin 4) ℝ :=
+  !![x₀ - x₃, 0,       -x₁,     -x₂;
+     0,       x₀ - x₃, x₂,      -x₁;
+     -x₁,     x₂,      x₀ + x₃, 0;
+     -x₂,     -x₁,     0,       x₀ + x₃]
+
+/-- Realified chiral Weyl–Dirac operator `D(x) = u⁺ ⊗ M₄(x) + v⁻ ⊗ M̃₄(x)` in `M₂(M₄(ℝ)) ≅ M₈(ℝ)`. -/
+def weylDirac8 (x₀ x₁ x₂ x₃ : ℝ) : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ :=
+  uPlus2 ⊗ₖ realSoldering4 x₀ x₁ x₂ x₃ + vMinus2 ⊗ₖ realSolderingAdj4 x₀ x₁ x₂ x₃
+
+/-- Outer chirality grading `Γ₅ = Z ⊗ I₄` on `M₂(M₄(ℝ))`. -/
+def gamma5_8 : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ :=
+  zCut2 ⊗ₖ (1 : Matrix (Fin 4) (Fin 4) ℝ)
+
+/-- Outer sheet-flip mirror `J_mir = X ⊗ I₄` on `M₂(M₄(ℝ))`. -/
+def mirror8 : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ :=
+  xMir2 ⊗ₖ (1 : Matrix (Fin 4) (Fin 4) ℝ)
+
+/-- Realified 4D spinor fiber complex structure `J₄ = I₂ ⊗ ε` (`J₄² = -I₄`, zero complex `i`). -/
+def fiberJ4 : Matrix (Fin 4) (Fin 4) ℝ :=
+  !![0,  1, 0,  0;
+     -1, 0, 0,  0;
+     0,  0, 0,  1;
+     0,  0, -1, 0]
+
+/-- Lifted 8D fiber complex structure `J₈ = I₂ ⊗ J₄` (`J₈² = -I₈`). -/
+def fiberJ8 : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ :=
+  (1 : Matrix (Fin 2) (Fin 2) ℝ) ⊗ₖ fiberJ4
+
+/-- Reindexing `realChiralSolderingAdjKron` recovers `realSolderingAdj4`. -/
+theorem realChiralSolderingAdjKron_reindex (x₀ x₁ x₂ x₃ : ℝ) :
+    Matrix.reindex finProdFinEquiv finProdFinEquiv (realChiralSolderingAdjKron x₀ x₁ x₂ x₃) =
+      realSolderingAdj4 x₀ x₁ x₂ x₃ := by
+  have hs0 : (finProdFinEquiv : Fin 2 × Fin 2 ≃ Fin 4).symm 0 = (0, 0) := by decide
+  have hs1 : (finProdFinEquiv : Fin 2 × Fin 2 ≃ Fin 4).symm 1 = (0, 1) := by decide
+  have hs2 : (finProdFinEquiv : Fin 2 × Fin 2 ≃ Fin 4).symm 2 = (1, 0) := by decide
+  have hs3 : (finProdFinEquiv : Fin 2 × Fin 2 ≃ Fin 4).symm 3 = (1, 1) := by decide
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [Matrix.reindex_apply, hs0, hs1, hs2, hs3, realChiralSolderingAdjKron,
+      realSolderingAdj4, pPlus2, pMinus2, uPlus2, vMinus2, eps2]
+
+private lemma scalar_weyl_sq_half (x₀ x₁ x₂ x₃ : ℝ) :
+    (1 / 2 : ℝ) * (2 * (x₀ * x₀ - x₁ * x₁ - x₂ * x₂ - x₃ * x₃)) =
+      x₀ ^ 2 - x₁ ^ 2 - x₂ ^ 2 - x₃ ^ 2 := by
+  ring
+
+private lemma neg_kronecker24 (A : Matrix (Fin 2) (Fin 2) ℝ) (B : Matrix (Fin 4) (Fin 4) ℝ) :
+    (-A) ⊗ₖ B = -(A ⊗ₖ B) := by
+  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩; simp [Matrix.kroneckerMap_apply]
+
+private lemma kronecker_neg24 (A : Matrix (Fin 2) (Fin 2) ℝ) (B : Matrix (Fin 4) (Fin 4) ℝ) :
+    A ⊗ₖ (-B) = -(A ⊗ₖ B) := by
+  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩; simp [Matrix.kroneckerMap_apply]
+
+private lemma reindex_finProd_mul (A B : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℝ) :
+    Matrix.reindex finProdFinEquiv finProdFinEquiv A *
+      Matrix.reindex finProdFinEquiv finProdFinEquiv B =
+      Matrix.reindex finProdFinEquiv finProdFinEquiv (A * B) := by
+  ext i j
+  simp only [Matrix.mul_apply, Matrix.reindex_apply, Matrix.submatrix_apply]
+  exact (Equiv.sum_comp finProdFinEquiv.symm
+    (fun k => A (finProdFinEquiv.symm i) k * B k (finProdFinEquiv.symm j))).symm
+
+private lemma realChiralSolderingKron_add_adj_sym (u₀ u₁ u₂ u₃ v₀ v₁ v₂ v₃ : ℝ) :
+    realChiralSolderingKron u₀ u₁ u₂ u₃ * realChiralSolderingAdjKron v₀ v₁ v₂ v₃ +
+    realChiralSolderingKron v₀ v₁ v₂ v₃ * realChiralSolderingAdjKron u₀ u₁ u₂ u₃ =
+    (2 * (u₀ * v₀ - u₁ * v₁ - u₂ * v₂ - u₃ * v₃)) •
+      (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℝ) := by
+  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
+  fin_cases i₁ <;> fin_cases i₂ <;> fin_cases j₁ <;> fin_cases j₂ <;>
+    simp [Matrix.mul_apply, Fintype.sum_prod_type, Fin.sum_univ_two,
+      realChiralSolderingKron, realChiralSolderingAdjKron,
+      pPlus2, pMinus2, uPlus2, vMinus2, eps2] <;>
+    ring
+
+private lemma realChiralSolderingAdjKron_add_sym (u₀ u₁ u₂ u₃ v₀ v₁ v₂ v₃ : ℝ) :
+    realChiralSolderingAdjKron u₀ u₁ u₂ u₃ * realChiralSolderingKron v₀ v₁ v₂ v₃ +
+    realChiralSolderingAdjKron v₀ v₁ v₂ v₃ * realChiralSolderingKron u₀ u₁ u₂ u₃ =
+    (2 * (u₀ * v₀ - u₁ * v₁ - u₂ * v₂ - u₃ * v₃)) •
+      (1 : Matrix (Fin 2 × Fin 2) (Fin 2 × Fin 2) ℝ) := by
+  ext ⟨i₁, i₂⟩ ⟨j₁, j₂⟩
+  fin_cases i₁ <;> fin_cases i₂ <;> fin_cases j₁ <;> fin_cases j₂ <;>
+    simp [Matrix.mul_apply, Fintype.sum_prod_type, Fin.sum_univ_two,
+      realChiralSolderingKron, realChiralSolderingAdjKron,
+      pPlus2, pMinus2, uPlus2, vMinus2, eps2] <;>
+    ring
+
+private lemma realSoldering4_mul_adj_sym (u₀ u₁ u₂ u₃ v₀ v₁ v₂ v₃ : ℝ) :
+    realSoldering4 u₀ u₁ u₂ u₃ * realSolderingAdj4 v₀ v₁ v₂ v₃ +
+    realSoldering4 v₀ v₁ v₂ v₃ * realSolderingAdj4 u₀ u₁ u₂ u₃ =
+    (2 * (u₀ * v₀ - u₁ * v₁ - u₂ * v₂ - u₃ * v₃)) • (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
+  have hu := (real_chiral_soldering_and_vacuum_fiber_det u₀ u₁ u₂ u₃ 1 0 1 0).1
+  have hv := (real_chiral_soldering_and_vacuum_fiber_det v₀ v₁ v₂ v₃ 1 0 1 0).1
+  rw [← hu, ← hv, ← realChiralSolderingAdjKron_reindex u₀ u₁ u₂ u₃,
+    ← realChiralSolderingAdjKron_reindex v₀ v₁ v₂ v₃,
+    reindex_finProd_mul, reindex_finProd_mul]
+  have hSym := congrArg (Matrix.reindex finProdFinEquiv finProdFinEquiv)
+    (realChiralSolderingKron_add_adj_sym u₀ u₁ u₂ u₃ v₀ v₁ v₂ v₃)
+  ext i j
+  have hij := congrFun (congrFun hSym i) j
+  simpa [Matrix.reindex_apply, Matrix.one_apply] using hij
+
+private lemma realSolderingAdj4_mul_sym (u₀ u₁ u₂ u₃ v₀ v₁ v₂ v₃ : ℝ) :
+    realSolderingAdj4 u₀ u₁ u₂ u₃ * realSoldering4 v₀ v₁ v₂ v₃ +
+    realSolderingAdj4 v₀ v₁ v₂ v₃ * realSoldering4 u₀ u₁ u₂ u₃ =
+    (2 * (u₀ * v₀ - u₁ * v₁ - u₂ * v₂ - u₃ * v₃)) • (1 : Matrix (Fin 4) (Fin 4) ℝ) := by
+  have hu := (real_chiral_soldering_and_vacuum_fiber_det u₀ u₁ u₂ u₃ 1 0 1 0).1
+  have hv := (real_chiral_soldering_and_vacuum_fiber_det v₀ v₁ v₂ v₃ 1 0 1 0).1
+  rw [← hu, ← hv, ← realChiralSolderingAdjKron_reindex u₀ u₁ u₂ u₃,
+    ← realChiralSolderingAdjKron_reindex v₀ v₁ v₂ v₃,
+    reindex_finProd_mul, reindex_finProd_mul]
+  have hSym := congrArg (Matrix.reindex finProdFinEquiv finProdFinEquiv)
+    (realChiralSolderingAdjKron_add_sym u₀ u₁ u₂ u₃ v₀ v₁ v₂ v₃)
+  ext i j
+  have hij := congrFun (congrFun hSym i) j
+  simpa [Matrix.reindex_apply, Matrix.one_apply] using hij
+
+private lemma susy_block4_eq (a₁ b₁ a₂ b₂ : ℝ) :
+    !![a₁, b₁, 0, 0; -b₁, a₁, 0, 0; a₂, b₂, 0, 0; -b₂, a₂, 0, 0] *
+    !![a₁, -b₁, a₂, -b₂; b₁, a₁, b₂, a₂; 0, 0, 0, 0; 0, 0, 0, 0] =
+    realSoldering4 ((a₁ ^ 2 + b₁ ^ 2 + a₂ ^ 2 + b₂ ^ 2) / 2)
+      (a₁ * a₂ + b₁ * b₂) (b₁ * a₂ - a₁ * b₂)
+      ((a₁ ^ 2 + b₁ ^ 2 - a₂ ^ 2 - b₂ ^ 2) / 2) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [realSoldering4, Matrix.mul_apply, Fin.sum_univ_four]
+  all_goals first
+    | exact scalar_susy_block_top a₁ b₁ a₂ b₂
+    | exact scalar_susy_block_bot a₁ b₁ a₂ b₂
+    | exact scalar_susy_off_pos a₁ b₁ a₂ b₂
+    | exact scalar_susy_off_pos2 a₁ b₁ a₂ b₂
+    | exact scalar_susy_off_pos3 a₁ b₁ a₂ b₂
+    | exact scalar_susy_off_pos4 a₁ b₁ a₂ b₂
+    | exact scalar_susy_off_neg a₁ b₁ a₂ b₂
+    | exact scalar_susy_off_neg2 a₁ b₁ a₂ b₂
+    | ring
+
+/-- **Theorem 5 (Unifying Parts 3 & 4 in `M₈(ℝ)`: Chiral Weyl–Dirac Clifford Algebra & SUSY Block Placement)**:
+1. Chirality and fiber complex structure: `Γ₅² = I₈`, `{Γ₅, D(x)} = 0`, `J₈² = -I₈`, and `[J₈, D(x)] = 0`.
+2. **Realified Weyl–Dirac Interval**: `D(x)² = (x₀² - x₁² - x₂² - x₃²) • I₈`.
+3. **Polarized Clifford Anticommutator**: `D(x) D(y) + D(y) D(x) = 2(x₀ y₀ - x₁ y₁ - x₂ y₂ - x₃ y₃) • I₈`.
+4. **Unified SUSY Translation Placement**: Projecting `{X_SUSY, Y_SUSY}` onto `P₊ ⊗ I₄` equals the
+   upper-right chiral block of `D(p)` under `J_mir`. -/
+theorem unified_weyl_dirac8_and_susy_block (x₀ x₁ x₂ x₃ y₀ y₁ y₂ y₃ a₁ b₁ a₂ b₂ : ℝ) :
+    let D := weylDirac8 x₀ x₁ x₂ x₃
+    let Dy := weylDirac8 y₀ y₁ y₂ y₃
+    let Pplus8 : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ := pPlus2 ⊗ₖ 1
+    let X := superchargeBridgeX a₁ b₁ a₂ b₂
+    let Y := superchargeBridgeY a₁ b₁ a₂ b₂
+    let p₀ := (a₁ ^ 2 + b₁ ^ 2 + a₂ ^ 2 + b₂ ^ 2) / 2
+    let p₁ := a₁ * a₂ + b₁ * b₂
+    let p₂ := b₁ * a₂ - a₁ * b₂
+    let p₃ := (a₁ ^ 2 + b₁ ^ 2 - a₂ ^ 2 - b₂ ^ 2) / 2
+    gamma5_8 * gamma5_8 = 1 ∧
+    gamma5_8 * D + D * gamma5_8 = 0 ∧
+    fiberJ8 * fiberJ8 = -1 ∧
+    fiberJ8 * D = D * fiberJ8 ∧
+    D * D = (x₀ ^ 2 - x₁ ^ 2 - x₂ ^ 2 - x₃ ^ 2) •
+      (1 : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ) ∧
+    D * Dy + Dy * D = (2 * (x₀ * y₀ - x₁ * y₁ - x₂ * y₂ - x₃ * y₃)) •
+      (1 : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ) ∧
+    Pplus8 * (X * Y + Y * X) * Pplus8 = Pplus8 * weylDirac8 p₀ p₁ p₂ p₃ * mirror8 := by
+  have hPol : ∀ u₀ u₁ u₂ u₃ v₀ v₁ v₂ v₃ : ℝ,
+      weylDirac8 u₀ u₁ u₂ u₃ * weylDirac8 v₀ v₁ v₂ v₃ +
+      weylDirac8 v₀ v₁ v₂ v₃ * weylDirac8 u₀ u₁ u₂ u₃ =
+      (2 * (u₀ * v₀ - u₁ * v₁ - u₂ * v₂ - u₃ * v₃)) •
+        (1 : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ) := by
+    intro u₀ u₁ u₂ u₃ v₀ v₁ v₂ v₃
+    have hL := real_chiral_circular_peirce_laws
+    have hPsum := hL.2.2.2.1
+    have hU2 := hL.2.2.2.2.2.2.2.2.1
+    have hV2 := hL.2.2.2.2.2.2.2.2.2.1
+    have hUV := hL.2.2.2.2.2.2.2.2.2.2.1
+    have hVU := hL.2.2.2.2.2.2.2.2.2.2.2.1
+    dsimp [weylDirac8]
+    simp only [add_mul, mul_add, ← Matrix.mul_kronecker_mul,
+      hU2, hV2, hUV, hVU, Matrix.zero_kronecker, zero_add, add_zero]
+    calc (pMinus2 ⊗ₖ (realSolderingAdj4 u₀ u₁ u₂ u₃ * realSoldering4 v₀ v₁ v₂ v₃) +
+          pPlus2 ⊗ₖ (realSoldering4 u₀ u₁ u₂ u₃ * realSolderingAdj4 v₀ v₁ v₂ v₃)) +
+         (pMinus2 ⊗ₖ (realSolderingAdj4 v₀ v₁ v₂ v₃ * realSoldering4 u₀ u₁ u₂ u₃) +
+          pPlus2 ⊗ₖ (realSoldering4 v₀ v₁ v₂ v₃ * realSolderingAdj4 u₀ u₁ u₂ u₃))
+        = pPlus2 ⊗ₖ (realSoldering4 u₀ u₁ u₂ u₃ * realSolderingAdj4 v₀ v₁ v₂ v₃ +
+            realSoldering4 v₀ v₁ v₂ v₃ * realSolderingAdj4 u₀ u₁ u₂ u₃) +
+          pMinus2 ⊗ₖ (realSolderingAdj4 u₀ u₁ u₂ u₃ * realSoldering4 v₀ v₁ v₂ v₃ +
+            realSolderingAdj4 v₀ v₁ v₂ v₃ * realSoldering4 u₀ u₁ u₂ u₃) := by
+            simp only [Matrix.kronecker_add]; abel
+      _ = pPlus2 ⊗ₖ ((2 * (u₀ * v₀ - u₁ * v₁ - u₂ * v₂ - u₃ * v₃)) •
+            (1 : Matrix (Fin 4) (Fin 4) ℝ)) +
+          pMinus2 ⊗ₖ ((2 * (u₀ * v₀ - u₁ * v₁ - u₂ * v₂ - u₃ * v₃)) •
+            (1 : Matrix (Fin 4) (Fin 4) ℝ)) := by
+            rw [realSoldering4_mul_adj_sym u₀ u₁ u₂ u₃ v₀ v₁ v₂ v₃,
+              realSolderingAdj4_mul_sym u₀ u₁ u₂ u₃ v₀ v₁ v₂ v₃]
+      _ = (2 * (u₀ * v₀ - u₁ * v₁ - u₂ * v₂ - u₃ * v₃)) •
+            ((pPlus2 + pMinus2) ⊗ₖ (1 : Matrix (Fin 4) (Fin 4) ℝ)) := by
+            simp only [Matrix.kronecker_smul, ← smul_add, ← Matrix.add_kronecker]
+      _ = (2 * (u₀ * v₀ - u₁ * v₁ - u₂ * v₂ - u₃ * v₃)) •
+            (1 : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ) := by
+            rw [hPsum, Matrix.one_kronecker_one]
+  refine ⟨?_, ?_, ?_, ?_, ?_, hPol x₀ x₁ x₂ x₃ y₀ y₁ y₂ y₃, ?_⟩
+  · dsimp [gamma5_8]
+    rw [← Matrix.mul_kronecker_mul, real_chiral_circular_peirce_laws.2.2.2.2.2.2.2.2.2.2.2.2.2.2.1,
+      one_mul, Matrix.one_kronecker_one]
+  · dsimp [gamma5_8, weylDirac8]
+    have hZU : zCut2 * uPlus2 = uPlus2 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [zCut2, pPlus2, pMinus2, uPlus2, Matrix.mul_apply, Fin.sum_univ_two]
+    have hUZ : uPlus2 * zCut2 = -uPlus2 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [zCut2, pPlus2, pMinus2, uPlus2, Matrix.mul_apply, Fin.sum_univ_two]
+    have hZV : zCut2 * vMinus2 = -vMinus2 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [zCut2, pPlus2, pMinus2, vMinus2, Matrix.mul_apply, Fin.sum_univ_two]
+    have hVZ : vMinus2 * zCut2 = vMinus2 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [zCut2, pPlus2, pMinus2, vMinus2, Matrix.mul_apply, Fin.sum_univ_two]
+    simp only [mul_add, add_mul, ← Matrix.mul_kronecker_mul, one_mul, mul_one]
+    rw [hZU, hUZ, hZV, hVZ, neg_kronecker24, neg_kronecker24]
+    abel
+  · have hJ4 : fiberJ4 * fiberJ4 = -1 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [fiberJ4, Matrix.mul_apply, Fin.sum_univ_four]
+    dsimp [fiberJ8]
+    rw [← Matrix.mul_kronecker_mul, one_mul, hJ4, kronecker_neg24, Matrix.one_kronecker_one]
+  · have hJ4Sold : fiberJ4 * realSoldering4 x₀ x₁ x₂ x₃ = realSoldering4 x₀ x₁ x₂ x₃ * fiberJ4 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [fiberJ4, realSoldering4, Matrix.mul_apply, Fin.sum_univ_four]
+    have hJ4Adj : fiberJ4 * realSolderingAdj4 x₀ x₁ x₂ x₃ =
+        realSolderingAdj4 x₀ x₁ x₂ x₃ * fiberJ4 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [fiberJ4, realSolderingAdj4, Matrix.mul_apply, Fin.sum_univ_four]
+    dsimp [fiberJ8, weylDirac8]
+    simp only [mul_add, add_mul, ← Matrix.mul_kronecker_mul, one_mul, mul_one, hJ4Sold, hJ4Adj]
+  · have h2 := hPol x₀ x₁ x₂ x₃ x₀ x₁ x₂ x₃
+    have hHalf := congrArg (fun M : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ => (1 / 2 : ℝ) • M) h2
+    simp only [← two_smul ℝ, smul_smul, scalar_weyl_sq_half] at hHalf
+    have hOne : (1 / 2 : ℝ) * 2 = 1 := by norm_num
+    rw [hOne, one_smul] at hHalf
+    exact hHalf
+  · have hSusy4 := susy_block4_eq a₁ b₁ a₂ b₂
+    have hL := real_chiral_circular_peirce_laws
+    have hPpUV : pPlus2 * (uPlus2 * vMinus2) * pPlus2 = pPlus2 := by
+      rw [hL.2.2.2.2.2.2.2.2.2.2.1, hL.1, hL.1]
+    have hPpVU : pPlus2 * (vMinus2 * uPlus2) * pPlus2 = 0 := by
+      rw [hL.2.2.2.2.2.2.2.2.2.2.2.1, hL.2.2.1, zero_mul]
+    have hPpUX : pPlus2 * uPlus2 * xMir2 = pPlus2 := by
+      dsimp [xMir2]
+      rw [hL.2.2.2.2.1, mul_add, hL.2.2.2.2.2.2.2.2.1, hL.2.2.2.2.2.2.2.2.2.2.1, zero_add]
+    have hPpVX : pPlus2 * vMinus2 * xMir2 = 0 := by
+      ext i j; fin_cases i <;> fin_cases j <;>
+        simp [pPlus2, vMinus2, xMir2, uPlus2, Matrix.mul_apply, Fin.sum_univ_two]
+    dsimp [superchargeBridgeX, superchargeBridgeY, weylDirac8, mirror8]
+    simp only [add_mul, mul_add, ← Matrix.mul_kronecker_mul, one_mul, mul_one,
+      hPpUV, hPpVU, hPpUX, hPpVX, Matrix.zero_kronecker, add_zero, hSusy4]
 
 end InfoGeometry.Canonical.RealChiralDiracSolderingBridge

@@ -8,7 +8,9 @@ import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Canonical.Cl55WittCAR
 import InfoGeometry.Canonical.Cl11TensorTowerCrossSiteCAR
 import InfoGeometry.Clifford.Cl11TensorTowerLimit
+import InfoGeometry.OperatorAlgebra.OsterwalderSchraderContinuumReconstruction
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import Mathlib.LinearAlgebra.ExteriorAlgebra.Basis
 import Mathlib.Tactic
 
 /-!
@@ -48,13 +50,15 @@ geometry and lattice `a → 0` continuum limits of `DoubledMinkowskiLatticeConti
 #### BUCKET 1: CLOSED FINITE & ANALYTIC THEOREMS
 * `exists_noncomm_mat4c_ym_tower`, `exists_noncomm_matStage3_ym_tower`,
   `exists_noncomm_matStage4_ym_tower`, `exists_noncomm_matStage7_ym_tower`
-* `ymRealifyHom_properties`, `exteriorFormToCl11Stage4_properties`
-* `ymConnectionFormToTower_sq_eq_commutator_twoForm`, `ymFormToTower_chiral_grading`
+* `ymRealifyHom_properties`, `exteriorFormToCl11Stage4_properties`, `exteriorFormToCl11Stage4_injective`
+* `ymConnectionFormToTower_sq_eq_commutator_twoForm`, `ymFormToTower_chiral_grading`,
+  `ymCurvatureFormToTower_eq_extDeriv_add_sq`
 
 #### BUCKET 2: CONDITIONAL THEOREMS FROM EXPLICIT HYPOTHESES
 * `tendsto_lattice_yang_mills_in_cl11_tower` (under `ContDiff ℝ 2 A` and `DifferentiableAt ℝ Φ y`)
-* `ym_smooth_lattice_continuum_to_cl11_direct_limit` (packaging continuum-limit + direct-limit
-  bonding compatibility and concrete non-Abelian witness transport)
+* `ym_smooth_lattice_continuum_to_cl11_direct_limit` and `ym_cl11_direct_limit_and_os_continuum_bridge`
+  (packaging continuum-limit + direct-limit bonding compatibility, Cartan equation `F = dA + A * A`,
+  and OS continuum clustering)
 
 #### BUCKET 3: OPEN CLOSURE DEBT
 * Non-perturbative 4D quantum Yang–Mills measure existence and continuum mass gap remain open
@@ -206,7 +210,7 @@ private lemma mat4ImagPart_mul (M₁ M₂ : Mat4C) :
 def ymRealifyHom : Mat4C →ₐ[ℝ] MatStage 3 where
   toFun := ymRealify
   map_one' := by
-    simp [ymRealify, mat4RealPart_one, mat4ImagPart_one, Matrix.one_kronecker_one]
+    simp [ymRealify, mat4RealPart_one, mat4ImagPart_one]
     rfl
   map_mul' M₁ M₂ := by
     change ((mat4RealPart (M₁ * M₂) ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ) +
@@ -303,7 +307,7 @@ theorem ymRealifyHom_properties (M F : Mat4C) :
     unfold ymRealify mat4RealPart mat4ImagPart at hRe0' hIm0'
     simp only [Matrix.add_apply, Matrix.kroneckerMap, Equiv.apply_symm_apply, bivector_J_base,
       Matrix.one_apply, Matrix.of_apply, Matrix.cons_val_zero, Matrix.cons_val_one,
-      Fin.zero_eta, show (0 : Fin 2) ≠ 1 by decide, ↓reduceIte,
+      show (0 : Fin 2) ≠ 1 by decide, ↓reduceIte,
       mul_one, mul_zero, add_zero, zero_add] at hRe0' hIm0'
     exact Complex.ext hRe0' hIm0'
   have hCont : Continuous (fun X : Mat4C => ymRealifyHom X) := by
@@ -424,7 +428,7 @@ private lemma exteriorFormToCl11Stage4_dx (μ : Fin 4) :
   rw [Finset.sum_eq_single μ]
   · simp
   · intro ν _ hne
-    simp [Pi.single_apply, hne]
+    simp [hne]
   · simp
 
 private lemma jwCreation_4_0_apply (r0 c0 : Idx 0) (rb0 rb1 rb2 rb3 cb0 cb1 cb2 cb3 : Fin 2) :
@@ -573,7 +577,7 @@ theorem exteriorFormToCl11Stage4_properties (μ ν : Fin 4) :
       · simp
     rw [hProd, Matrix.zero_apply] at hEntry
     have hv0 : jwCreation 4 0 r0 r1 = 1 := by
-      simp [r0, r1, jwCreation_4_0_apply, wittCreationBase, Matrix.one_apply]
+      simp [r0, r1, jwCreation_4_0_apply, wittCreationBase]
     have hv1 : jwCreation 4 1 r1 r2 = 1 := by
       norm_num [r1, r2, jwCreation_4_1_apply, wittCreationBase, gamma_chiral_base, gamma_0_base,
         gamma_1_base, Cl11Matrix.J1, Cl11Matrix.Eminus, Matrix.one_apply, Matrix.mul_apply,
@@ -596,7 +600,7 @@ def idxAddEquiv (a : ℕ) : (b : ℕ) → (Idx a × Idx b) ≃ Idx (a + b)
   | 0 =>
       { toFun := fun p => p.1
         invFun := fun x => (x, default)
-        left_inv := fun p => Prod.ext rfl (Subsingleton.elim _ _).symm
+        left_inv := fun _ => Prod.ext rfl (Subsingleton.elim _ _).symm
         right_inv := fun _ => rfl }
   | b + 1 =>
       ((Equiv.prodAssoc (Idx a) (Idx b) (Fin 2)).symm).trans
@@ -794,15 +798,8 @@ private lemma jwCreation_4_col_bit2_zero (r c : Idx 4) (hc : c.1.2 = 0) :
   rcases c with ⟨⟨⟨⟨c0, cb0⟩, cb1⟩, cb2⟩, cb3⟩
   have hcb2 : cb2 = 0 := hc
   subst hcb2
-  have h23 : ((2 : Fin 4) : ℕ) < 3 := by decide
-  have h22 : ¬((2 : Fin 4) : ℕ) < 2 := by decide
-  simp only [jwCreation, jwStringWithBase, h23, h22, ↓reduceDIte, Fin.coe_ofNat_eq_mod, Nat.mod_succ]
-  have hL : (globalChirality 2 ⊗ₖ wittCreationBase) (((r0, rb0), rb1), rb2) (((c0, cb0), cb1), 0) = 0 := by
-    change globalChirality 2 ((r0, rb0), rb1) ((c0, cb0), cb1) * wittCreationBase rb2 0 = 0
-    rw [wittCreationBase_col_zero, mul_zero]
-  change (globalChirality 2 ⊗ₖ wittCreationBase) (((r0, rb0), rb1), rb2) (((c0, cb0), cb1), 0) *
-    (1 : Matrix (Fin 2) (Fin 2) ℝ) rb3 cb3 = 0
-  rw [hL, zero_mul]
+  rw [jwCreation_4_2_apply, wittCreationBase_col_zero]
+  simp
 
 private lemma jwCreation_4_col_bit3_zero (r c : Idx 4) (hc : c.2 = 0) :
     jwCreation 4 3 r c = 0 := by
@@ -860,20 +857,20 @@ private lemma jwCreation_4_mul_entry_bit23_zero (μ ν : Fin 4) :
       (Cl11TensorTowerCrossSiteCAR.creation_cross_site_anticommute 4 _ _ hab)
   fin_cases μ <;> fin_cases ν <;> dsimp only
   · rw [hSq _]; simp
-  · simpa using h01
-  · simpa using hcol2 (jwCreation 4 0) r0
-  · simpa using hcol3 (jwCreation 4 0) r0
-  · rw [hAnti (by decide), Matrix.neg_apply]; simpa [h01]
+  · simp [h01]
+  · simp [hcol2 (jwCreation 4 0) r0]
+  · simp [hcol3 (jwCreation 4 0) r0]
+  · rw [hAnti (by decide), Matrix.neg_apply]; simp [h01]
   · rw [hSq _]; simp
-  · simpa using hcol2 (jwCreation 4 1) r0
-  · simpa using hcol3 (jwCreation 4 1) r0
-  · rw [hAnti (by decide), Matrix.neg_apply]; simpa [hcol2 (jwCreation 4 0) r0]
-  · rw [hAnti (by decide), Matrix.neg_apply]; simpa [hcol2 (jwCreation 4 1) r0]
+  · simp [hcol2 (jwCreation 4 1) r0]
+  · simp [hcol3 (jwCreation 4 1) r0]
+  · rw [hAnti (by decide), Matrix.neg_apply]; simp [hcol2 (jwCreation 4 0) r0]
+  · rw [hAnti (by decide), Matrix.neg_apply]; simp [hcol2 (jwCreation 4 1) r0]
   · rw [hSq _]; simp
-  · simpa using hcol3 (jwCreation 4 2) r0
-  · rw [hAnti (by decide), Matrix.neg_apply]; simpa [hcol3 (jwCreation 4 0) r0]
-  · rw [hAnti (by decide), Matrix.neg_apply]; simpa [hcol3 (jwCreation 4 1) r0]
-  · rw [hAnti (by decide), Matrix.neg_apply]; simpa [hcol3 (jwCreation 4 2) r0]
+  · simp [hcol3 (jwCreation 4 2) r0]
+  · rw [hAnti (by decide), Matrix.neg_apply]; simp [hcol3 (jwCreation 4 0) r0]
+  · rw [hAnti (by decide), Matrix.neg_apply]; simp [hcol3 (jwCreation 4 1) r0]
+  · rw [hAnti (by decide), Matrix.neg_apply]; simp [hcol3 (jwCreation 4 2) r0]
   · rw [hSq _]; simp
 
 private lemma scalar_inv_two_add (x : ℝ) :
@@ -914,7 +911,7 @@ theorem ym_smooth_lattice_continuum_to_cl11_direct_limit
       exact hFne ((ymRealifyHom_properties 0 0).1 (by rw [h0, map_zero]))
     obtain ⟨i, j, hij⟩ : ∃ i j : Idx 3, ymRealifyHom (continuumCurvature A_wit y 0 1) i j ≠ 0 := by
       by_contra hAll
-      push_neg at hAll
+      push Not at hAll
       apply hRealNe
       ext i j
       exact hAll i j
@@ -958,5 +955,591 @@ theorem ym_smooth_lattice_continuum_to_cl11_direct_limit
     apply hCurvNe
     apply hInj7
     rw [hLim0, ofStage_zero]
+
+/-! ### Part 4: Full Exterior Injectivity, Cartan Structure Equation, & OS Continuum Bridge -/
+
+section ExteriorInjectivityAndOSBridge
+
+open InfoGeometry.Canonical.RealDoubledChiralKreinFrame (frameBasis)
+open InfoGeometry.OperatorAlgebra.OsterwalderSchraderContinuumReconstruction
+
+private def finsetToIdxFun : ∀ n : ℕ, Finset (Fin n) → Idx n
+  | 0, _ => (0 : Fin 1)
+  | n + 1, S =>
+      (finsetToIdxFun n (S.preimage Fin.castSucc (Fin.castSucc_injective n).injOn),
+        if Fin.last n ∈ S then (0 : Fin 2) else (1 : Fin 2))
+
+private def idxToFinsetFun : ∀ n : ℕ, Idx n → Finset (Fin n)
+  | 0, _ => ∅
+  | n + 1, (idx, b) =>
+      let S' := (idxToFinsetFun n idx).map ⟨Fin.castSucc, Fin.castSucc_injective n⟩
+      if b = 0 then insert (Fin.last n) S' else S'
+
+private lemma finsetToIdxFun_leftInv :
+    ∀ (n : ℕ) (S : Finset (Fin n)), idxToFinsetFun n (finsetToIdxFun n S) = S
+  | 0, S => by
+      ext x; exact Fin.elim0 x
+  | n + 1, S => by
+      dsimp [finsetToIdxFun, idxToFinsetFun]
+      rw [finsetToIdxFun_leftInv n]
+      by_cases hIn : Fin.last n ∈ S
+      · simp only [hIn, ↓reduceIte]
+        ext x
+        by_cases hx : x = Fin.last n
+        · subst hx; simp [hIn]
+        · obtain ⟨k, rfl⟩ := Fin.exists_castSucc_eq.mpr hx
+          simp [Fin.castSucc_ne_last]
+      · simp only [hIn, one_ne_zero, ↓reduceIte]
+        ext x
+        by_cases hx : x = Fin.last n
+        · subst hx
+          simp only [Finset.mem_map, Function.Embedding.coeFn_mk, hIn, iff_false, not_exists,
+            not_and]
+          intro a _ ha
+          exact (Fin.castSucc_lt_last a).ne ha
+        · obtain ⟨k, rfl⟩ := Fin.exists_castSucc_eq.mpr hx
+          simp only [Finset.mem_map, Finset.mem_preimage, Function.Embedding.coeFn_mk]
+          constructor
+          · rintro ⟨a, ha, haEq⟩
+            exact (Fin.castSucc_injective n haEq) ▸ ha
+          · intro hk
+            exact ⟨k, hk, rfl⟩
+
+private lemma finsetToIdxFun_rightInv :
+    ∀ (n : ℕ) (p : Idx n), finsetToIdxFun n (idxToFinsetFun n p) = p
+  | 0, p => by
+      dsimp [finsetToIdxFun]
+      exact Subsingleton.elim _ _
+  | n + 1, (idx, b) => by
+      dsimp [idxToFinsetFun, finsetToIdxFun]
+      by_cases hb : b = 0
+      · subst hb
+        have hPre :
+            (insert (Fin.last n)
+              ((idxToFinsetFun n idx).map ⟨Fin.castSucc, Fin.castSucc_injective n⟩)).preimage
+                Fin.castSucc (Fin.castSucc_injective n).injOn =
+              idxToFinsetFun n idx := by
+          ext k
+          rw [Finset.mem_preimage, Finset.mem_insert, Finset.mem_map]
+          simp only [Function.Embedding.coeFn_mk]
+          constructor
+          · rintro (hk | ⟨a, ha, haEq⟩)
+            · exact False.elim ((Fin.castSucc_lt_last k).ne hk)
+            · exact Fin.castSucc_injective n haEq ▸ ha
+          · intro hk
+            exact Or.inr ⟨k, hk, rfl⟩
+        simp only [↓reduceIte, Finset.mem_insert_self, hPre, finsetToIdxFun_rightInv n idx]
+        rfl
+      · have hb1 : b = 1 := by fin_cases b <;> simp_all
+        subst hb1
+        have hNot : Fin.last n ∉
+            (idxToFinsetFun n idx).map ⟨Fin.castSucc, Fin.castSucc_injective n⟩ := by
+          simp [Fin.castSucc_ne_last]
+        have hPre :
+            ((idxToFinsetFun n idx).map ⟨Fin.castSucc, Fin.castSucc_injective n⟩).preimage
+                Fin.castSucc (Fin.castSucc_injective n).injOn =
+              idxToFinsetFun n idx := by
+          ext k
+          rw [Finset.mem_preimage, Finset.mem_map]
+          simp only [Function.Embedding.coeFn_mk]
+          exact ⟨fun ⟨a, ha, haEq⟩ => Fin.castSucc_injective n haEq ▸ ha, fun hk => ⟨k, hk, rfl⟩⟩
+        simp only [one_ne_zero, ↓reduceIte, hPre, finsetToIdxFun_rightInv n idx, hNot]
+        rfl
+
+/-- Canonical equivalence `Finset (Fin n) ≃ Idx n` matching exterior basis blades to
+`2ⁿ`-component Fock spinor basis vectors (`0` occupied, `1` empty). -/
+def finsetToIdx (n : ℕ) : Finset (Fin n) ≃ Idx n where
+  toFun := finsetToIdxFun n
+  invFun := idxToFinsetFun n
+  left_inv := finsetToIdxFun_leftInv n
+  right_inv := finsetToIdxFun_rightInv n
+
+/-- Vacuum spinor basis vector `|∅⟩ = e_{(1,...,1)} : Idx n → ℝ`. -/
+def vacVec (n : ℕ) : Idx n → ℝ :=
+  Pi.single (finsetToIdx n ∅) (1 : ℝ)
+
+private lemma scalar_kron_mul_reassoc (a b c d : ℝ) :
+    a * b * (c * d) = (a * c) * (b * d) := by
+  ring
+
+private lemma mulVec_kron_single {α β : Type*} [Fintype α] [Fintype β] [DecidableEq α]
+    [DecidableEq β] (A : Matrix α α ℝ) (B : Matrix β β ℝ) (u : α → ℝ) (v : β → ℝ)
+    (i : α) (j : β) :
+    (A ⊗ₖ B).mulVec (fun p => u p.1 * v p.2) (i, j) = A.mulVec u i * B.mulVec v j := by
+  simp only [Matrix.mulVec, dotProduct, Fintype.sum_prod_type, Matrix.kroneckerMap_apply]
+  calc
+    ∑ a : α, ∑ b : β, A i a * B j b * (u a * v b)
+        = ∑ a : α, ∑ b : β, (A i a * u a) * (B j b * v b) :=
+          Finset.sum_congr rfl fun a _ =>
+            Finset.sum_congr rfl fun b _ => scalar_kron_mul_reassoc _ _ _ _
+    _ = ∑ a : α, (A i a * u a) * ∑ b : β, B j b * v b :=
+          Finset.sum_congr rfl fun a _ => (Finset.mul_sum _ _ _).symm
+    _ = (∑ a : α, A i a * u a) * ∑ b : β, B j b * v b := (Finset.sum_mul _ _ _).symm
+
+private lemma pi_single_prod {α β : Type*} [DecidableEq α] [DecidableEq β]
+    (a : α) (b : β) (c : ℝ) :
+    (Pi.single (a, b) c : α × β → ℝ) =
+      fun p => (Pi.single a c : α → ℝ) p.1 * (Pi.single b (1 : ℝ) : β → ℝ) p.2 := by
+  ext ⟨i, j⟩
+  by_cases hi : i = a <;> by_cases hj : j = b <;> simp [hi, hj]
+
+private lemma globalChirality_mulVec_single :
+    ∀ (n : ℕ) (idx : Idx n), ∃ c : ℝ, c ^ 2 = 1 ∧
+      (globalChirality n).mulVec (Pi.single idx (1 : ℝ)) = c • Pi.single idx (1 : ℝ)
+  | 0, idx => by
+      refine ⟨1, one_pow 2, ?_⟩
+      ext i
+      have hi : i = idx := Subsingleton.elim i idx
+      subst hi
+      simp [globalChirality, kronPow]
+  | n + 1, (idx, b) => by
+      obtain ⟨c, hc, ih⟩ := globalChirality_mulVec_single n idx
+      have hG : ∀ k : Fin 2, ∃ d : ℝ, d ^ 2 = 1 ∧
+          gamma_chiral_base.mulVec (Pi.single k (1 : ℝ)) = d • Pi.single k (1 : ℝ) := by
+        intro k
+        fin_cases k
+        · refine ⟨-1, by norm_num, ?_⟩
+          ext j; fin_cases j <;>
+            norm_num [gamma_chiral_base, gamma_0_base, gamma_1_base,
+              InfoGeometry.Clifford.Cl11Matrix.J1, InfoGeometry.Clifford.Cl11Matrix.Eminus,
+              Matrix.mulVec, dotProduct, Fin.sum_univ_two, Pi.single_apply]
+        · refine ⟨1, by norm_num, ?_⟩
+          ext j; fin_cases j <;>
+            norm_num [gamma_chiral_base, gamma_0_base, gamma_1_base,
+              InfoGeometry.Clifford.Cl11Matrix.J1, InfoGeometry.Clifford.Cl11Matrix.Eminus,
+              Matrix.mulVec, dotProduct, Fin.sum_univ_two, Pi.single_apply]
+      obtain ⟨d, hd, hdb⟩ := hG b
+      refine ⟨c * d, by rw [mul_pow, hc, hd, mul_one], ?_⟩
+      ext ⟨i, j⟩
+      change (globalChirality (n + 1) *ᵥ
+          (Pi.single ((idx, b) : Idx n × Fin 2) (1 : ℝ) : Idx n × Fin 2 → ℝ)) (i, j) =
+        ((c * d) •
+          (Pi.single ((idx, b) : Idx n × Fin 2) (1 : ℝ) : Idx n × Fin 2 → ℝ)) (i, j)
+      rw [pi_single_prod idx b 1]
+      change (kronPow gamma_chiral_base n ⊗ₖ gamma_chiral_base).mulVec
+          (fun p => (Pi.single idx (1 : ℝ) : Idx n → ℝ) p.1 *
+            (Pi.single b (1 : ℝ) : Fin 2 → ℝ) p.2) (i, j) = _
+      have ih' : (kronPow gamma_chiral_base n).mulVec (Pi.single idx (1 : ℝ)) =
+          c • Pi.single idx (1 : ℝ) := ih
+      rw [mulVec_kron_single, ih', hdb]
+      simp only [Pi.smul_apply, smul_eq_mul]
+      exact scalar_kron_mul_reassoc _ _ _ _
+
+private lemma wittCreationBase_mulVec_one :
+    wittCreationBase.mulVec (Pi.single (1 : Fin 2) (1 : ℝ)) = Pi.single (0 : Fin 2) (1 : ℝ) := by
+  ext j; fin_cases j <;>
+    norm_num [wittCreationBase, Matrix.mulVec, dotProduct, Fin.sum_univ_two, Pi.single_apply]
+
+private lemma finsetToIdx_insert_castSucc {n : ℕ} (k : Fin n) (S : Finset (Fin (n + 1))) :
+    finsetToIdxFun (n + 1) (insert k.castSucc S) =
+      (finsetToIdxFun n (insert k (S.preimage Fin.castSucc
+        (Fin.castSucc_injective n).injOn)),
+       if Fin.last n ∈ S then (0 : Fin 2) else (1 : Fin 2)) := by
+  dsimp [finsetToIdxFun]
+  have hBool : (if Fin.last n ∈ insert k.castSucc S then (0 : Fin 2) else (1 : Fin 2)) =
+      if Fin.last n ∈ S then (0 : Fin 2) else (1 : Fin 2) := by
+    simp [(Fin.castSucc_ne_last k).symm]
+  have hPre : (insert k.castSucc S).preimage Fin.castSucc
+      (Fin.castSucc_injective n).injOn =
+      insert k (S.preimage Fin.castSucc (Fin.castSucc_injective n).injOn) := by
+    ext x
+    rw [Finset.mem_preimage, Finset.mem_insert, Finset.mem_insert, Finset.mem_preimage,
+      Fin.castSucc_inj]
+  rw [hBool, hPre]
+
+private lemma finsetToIdx_insert_last {n : ℕ} (S : Finset (Fin (n + 1))) :
+    finsetToIdxFun (n + 1) (insert (Fin.last n) S) =
+      (finsetToIdxFun n (S.preimage Fin.castSucc
+        (Fin.castSucc_injective n).injOn),
+       (0 : Fin 2)) := by
+  dsimp [finsetToIdxFun]
+  have hPre : (insert (Fin.last n) S).preimage Fin.castSucc
+      (Fin.castSucc_injective n).injOn =
+      S.preimage Fin.castSucc (Fin.castSucc_injective n).injOn := by
+    ext x
+    simp [Fin.castSucc_ne_last]
+  simp only [Finset.mem_insert_self, ↓reduceIte, hPre]
+  rfl
+
+private lemma jwCreation_succ_castSucc (n : ℕ) (k' : Fin n) :
+    jwCreation (n + 1) k'.castSucc =
+      jwStringWithBase wittCreationBase n k' ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+  change (if h : ((k'.castSucc : Fin (n + 1)) : ℕ) < n then
+      jwStringWithBase wittCreationBase n ⟨(k'.castSucc : ℕ), h⟩ ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)
+    else globalChirality n ⊗ₖ wittCreationBase) = _
+  have hLt : ((k'.castSucc : Fin (n + 1)) : ℕ) < n := k'.isLt
+  simp only [hLt, ↓reduceDIte]
+  rfl
+
+private lemma jwCreation_succ_last (n : ℕ) :
+    jwCreation (n + 1) (Fin.last n) = globalChirality n ⊗ₖ wittCreationBase := by
+  have hNot : ¬((Fin.last n : ℕ) < n) := by simp
+  change (if h : ((Fin.last n : Fin (n + 1)) : ℕ) < n then
+      jwStringWithBase wittCreationBase n ⟨(Fin.last n : ℕ), h⟩ ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)
+    else globalChirality n ⊗ₖ wittCreationBase) = _
+  split_ifs
+  rfl
+
+private lemma jwCreation_mulVec_finset :
+    ∀ (n : ℕ) (k : Fin n) (S : Finset (Fin n)), k ∉ S →
+      ∃ c : ℝ, c ^ 2 = 1 ∧
+        (jwCreation n k).mulVec (Pi.single (finsetToIdx n S) (1 : ℝ)) =
+          c • Pi.single (finsetToIdx n (insert k S)) (1 : ℝ)
+  | 0, k, _, _ => Fin.elim0 k
+  | n + 1, k, S, hk => by
+      by_cases hlt : (k : ℕ) < n
+      · let k' : Fin n := ⟨k, hlt⟩
+        have hkEq : k = k'.castSucc := Fin.ext rfl
+        rw [hkEq]
+        rw [hkEq] at hk
+        let S' : Finset (Fin n) := S.preimage Fin.castSucc (Fin.castSucc_injective n).injOn
+        have hk' : k' ∉ S' := fun hMem => hk (Finset.mem_preimage.mp hMem)
+        obtain ⟨c, hc, ih⟩ := jwCreation_mulVec_finset n k' S' hk'
+        refine ⟨c, hc, ?_⟩
+        dsimp [finsetToIdx]
+        rw [finsetToIdx_insert_castSucc k' S, jwCreation_succ_castSucc n k']
+        ext ⟨i, j⟩
+        have hSingle :
+            (Pi.single (finsetToIdxFun (n + 1) S : Idx n × Fin 2) (1 : ℝ) : Idx n × Fin 2 → ℝ) =
+              fun p => (Pi.single (finsetToIdxFun n S') (1 : ℝ) : Idx n → ℝ) p.1 *
+                (Pi.single (if Fin.last n ∈ S then (0 : Fin 2) else (1 : Fin 2)) (1 : ℝ) : Fin 2 → ℝ) p.2 := by
+          dsimp [finsetToIdxFun, S']
+          exact pi_single_prod _ _ 1
+        change ((jwStringWithBase wittCreationBase n k' ⊗ₖ (1 : Matrix (Fin 2) (Fin 2) ℝ)).mulVec
+            (Pi.single (finsetToIdxFun (n + 1) S : Idx n × Fin 2) (1 : ℝ) : Idx n × Fin 2 → ℝ)) (i, j) =
+          (c • (Pi.single (finsetToIdxFun n (insert k' S'),
+            if Fin.last n ∈ S then (0 : Fin 2) else (1 : Fin 2)) (1 : ℝ) : Idx n × Fin 2 → ℝ)) (i, j)
+        rw [hSingle, mulVec_kron_single]
+        have ih' : (jwStringWithBase wittCreationBase n k').mulVec
+            (Pi.single (finsetToIdxFun n S') (1 : ℝ)) =
+            c • Pi.single (finsetToIdxFun n (insert k' S')) (1 : ℝ) := ih
+        rw [ih', Matrix.one_mulVec]
+        simp only [Pi.smul_apply, smul_eq_mul, Pi.single_apply, Prod.mk.injEq]
+        by_cases hi : i = finsetToIdxFun n (insert k' S') <;>
+          by_cases hj : j = (if Fin.last n ∈ S then (0 : Fin 2) else (1 : Fin 2)) <;>
+          simp [hi, hj]
+      · have hlast : k = Fin.last n := Fin.eq_last_of_not_lt hlt
+        subst hlast
+        let S' : Finset (Fin n) := S.preimage Fin.castSucc (Fin.castSucc_injective n).injOn
+        obtain ⟨c, hc, hgc⟩ := globalChirality_mulVec_single n (finsetToIdxFun n S')
+        refine ⟨c, hc, ?_⟩
+        dsimp [finsetToIdx]
+        rw [finsetToIdx_insert_last S, jwCreation_succ_last n]
+        have hSingle :
+            (Pi.single (finsetToIdxFun (n + 1) S : Idx n × Fin 2) (1 : ℝ) : Idx n × Fin 2 → ℝ) =
+              fun p => (Pi.single (finsetToIdxFun n S') (1 : ℝ) : Idx n → ℝ) p.1 *
+                (Pi.single (1 : Fin 2) (1 : ℝ) : Fin 2 → ℝ) p.2 := by
+          dsimp [finsetToIdxFun, S']
+          simp only [hk, ↓reduceIte]
+          exact pi_single_prod _ _ 1
+        ext ⟨i, j⟩
+        change ((kronPow gamma_chiral_base n ⊗ₖ wittCreationBase).mulVec
+            (Pi.single (finsetToIdxFun (n + 1) S : Idx n × Fin 2) (1 : ℝ) : Idx n × Fin 2 → ℝ)) (i, j) =
+          (c • (Pi.single (finsetToIdxFun n S', (0 : Fin 2)) (1 : ℝ) : Idx n × Fin 2 → ℝ)) (i, j)
+        rw [hSingle, mulVec_kron_single]
+        have hgc' : (kronPow gamma_chiral_base n).mulVec (Pi.single (finsetToIdxFun n S') 1) =
+            c • Pi.single (finsetToIdxFun n S') 1 := hgc
+        rw [hgc', wittCreationBase_mulVec_one]
+        simp only [Pi.smul_apply, smul_eq_mul, Pi.single_apply, Prod.mk.injEq]
+        by_cases hi : i = finsetToIdxFun n S' <;> by_cases hj : j = 0 <;> simp [hi, hj]
+
+private lemma basis_exteriorAlgebra_singleton (n : ℕ) (k : Fin n) :
+    (Pi.basisFun ℝ (Fin n)).ExteriorAlgebra ({k} : Finset (Fin n)) =
+      ExteriorAlgebra.ι ℝ (Pi.single k (1 : ℝ)) := by
+  have hkCard : ({k} : Finset (Fin n)).card = 1 := Finset.card_singleton k
+  rw [ExteriorAlgebra.basis_apply_ofCard (Pi.basisFun ℝ (Fin n)) hkCard]
+  dsimp [ExteriorAlgebra.ιMulti_family]
+  change ExteriorAlgebra.ιMulti ℝ 1
+      ((Pi.basisFun ℝ (Fin n)) ∘ ⇑(Set.powersetCard.ofFinEmbEquiv.symm
+        (Set.powersetCard.ofCard hkCard))) = _
+  rw [ExteriorAlgebra.ιMulti_succ_apply]
+  have hEmpty : Matrix.vecTail
+      ((Pi.basisFun ℝ (Fin n)) ∘ ⇑(Set.powersetCard.ofFinEmbEquiv.symm
+        (Set.powersetCard.ofCard hkCard))) = Fin.elim0 := by
+    ext x; exact Fin.elim0 x
+  rw [hEmpty]
+  have h1 : ExteriorAlgebra.ιMulti ℝ 0 (Fin.elim0 : Fin 0 → (Fin n → ℝ)) = 1 := rfl
+  rw [h1, mul_one]
+  congr 1
+  simp only [Function.comp_apply, Pi.basisFun_apply]
+  congr 1
+  have hMem :
+      (Set.powersetCard.ofFinEmbEquiv.symm (Set.powersetCard.ofCard hkCard) 0) ∈
+        ({k} : Finset (Fin n)) :=
+    Finset.orderEmbOfFin_mem ({k} : Finset (Fin n)) hkCard 0
+  exact Finset.mem_singleton.mp hMem
+
+private lemma exteriorBasis4_mulVec_vacVec :
+    ∀ S : Finset (Fin 4), ∃ c : ℝ, c ^ 2 = 1 ∧
+      (exteriorFormToCl11Stage4 ((Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra S)).mulVec (vacVec 4) =
+        c • Pi.single (finsetToIdx 4 S) (1 : ℝ) := by
+  intro S
+  induction S using Finset.induction_on with
+  | empty =>
+      refine ⟨1, one_pow 2, ?_⟩
+      have h0Card : (∅ : Finset (Fin 4)).card = 0 := Finset.card_empty
+      have hEmpty : (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra ∅ = 1 := by
+        rw [ExteriorAlgebra.basis_apply_ofCard (Pi.basisFun ℝ (Fin 4)) h0Card]
+        dsimp [ExteriorAlgebra.ιMulti_family]
+        rfl
+      rw [hEmpty, map_one, Matrix.one_mulVec, one_smul]
+      rfl
+  | @insert k S hk ih =>
+      obtain ⟨c, hc, hSVec⟩ := ih
+      let s₀ : Set.powersetCard (Fin 4) 1 := ⟨{k}, Finset.card_singleton k⟩
+      let t₀ : Set.powersetCard (Fin 4) S.card := ⟨S, rfl⟩
+      have hDisj : Disjoint s₀.1 t₀.1 := Finset.disjoint_singleton_left.mpr hk
+      have hMul := ExteriorAlgebra.basis_mul_of_disjoint (Pi.basisFun ℝ (Fin 4)) s₀ t₀ hDisj
+      have hDisjVal : (Set.powersetCard.disjUnion hDisj).1 = insert k S := by
+        ext x; simp [Set.powersetCard.disjUnion, s₀, t₀]
+      let ε := (Set.powersetCard.permOfDisjoint hDisj).sign
+      have hεSq : (ε : ℤ) * (ε : ℤ) = 1 := by
+        rcases Int.units_eq_one_or ε with h | h <;> simp [h]
+      have hBasisInsert :
+          (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra (insert k S) =
+            (ε : ℤ) • ((Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra {k} *
+              (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra S) := by
+        have hMul' : (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra {k} *
+            (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra S =
+            (ε : ℤ) • (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra (insert k S) := by
+          simpa [s₀, t₀, hDisjVal, Units.smul_def] using hMul
+        calc
+          (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra (insert k S)
+              = (1 : ℤ) • (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra (insert k S) := (one_zsmul _).symm
+          _ = ((ε : ℤ) * (ε : ℤ)) • (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra (insert k S) := by
+                rw [hεSq]
+          _ = (ε : ℤ) • ((ε : ℤ) • (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra (insert k S)) :=
+                mul_smul _ _ _
+          _ = (ε : ℤ) • ((Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra {k} *
+                (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra S) := by rw [← hMul']
+      obtain ⟨d, hd, hJW⟩ := jwCreation_mulVec_finset 4 k S hk
+      refine ⟨((ε : ℤ) : ℝ) * (c * d), ?_, ?_⟩
+      · have hεR : (((ε : ℤ) : ℝ)) ^ 2 = 1 := by
+          rcases Int.units_eq_one_or ε with h | h <;> simp [h]
+        rw [mul_pow, mul_pow, hεR, hc, hd]; ring
+      · rw [hBasisInsert, map_zsmul, map_mul, basis_exteriorAlgebra_singleton 4 k]
+        have hDx : ExteriorAlgebra.ι ℝ (Pi.single k (1 : ℝ)) = dx k := rfl
+        rw [hDx, exteriorFormToCl11Stage4_dx k, Matrix.smul_mulVec, ← Matrix.mulVec_mulVec,
+          hSVec, Matrix.mulVec_smul, hJW]
+        ext idx
+        simp [zsmul_eq_mul, mul_assoc]
+
+/-- **Dirac–Kähler / Fock Spinor Linear Map (`16`-dimensional)** evaluating
+`exteriorFormToCl11Stage4 ω` on the vacuum vector `vacVec 4`. -/
+def exteriorFormToSpinorMap4 : ExteriorAlgebra ℝ (Fin 4 → ℝ) →ₗ[ℝ] (Idx 4 → ℝ) where
+  toFun ω := (exteriorFormToCl11Stage4 ω).mulVec (vacVec 4)
+  map_add' ω₁ ω₂ := by rw [map_add, Matrix.add_mulVec]
+  map_smul' c ω := by rw [map_smul, Matrix.smul_mulVec]; rfl
+
+theorem exteriorFormToSpinorMap4_injective :
+    Function.Injective exteriorFormToSpinorMap4 := by
+  intro ω₁ ω₂ h
+  have hDiff : (exteriorFormToCl11Stage4 (ω₁ - ω₂)).mulVec (vacVec 4) = 0 := by
+    rw [map_sub, Matrix.sub_mulVec]
+    exact sub_eq_zero.mpr h
+  let b := (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra
+  have hDecomp : ω₁ - ω₂ = ∑ S : Finset (Fin 4), (b.repr (ω₁ - ω₂) S) • b S :=
+    (b.sum_repr (ω₁ - ω₂)).symm
+  have hVecSum : (exteriorFormToCl11Stage4 (ω₁ - ω₂)).mulVec (vacVec 4) =
+      ∑ S : Finset (Fin 4), (b.repr (ω₁ - ω₂) S) •
+        ((exteriorFormToCl11Stage4 (b S)).mulVec (vacVec 4)) := by
+    conv_lhs => rw [hDecomp]
+    rw [map_sum]
+    simp_rw [map_smul]
+    rw [Matrix.sum_mulVec]
+    refine Finset.sum_congr rfl fun S _ => ?_
+    rw [Matrix.smul_mulVec]
+  rw [hVecSum] at hDiff
+  have hZeroCoeff : ∀ S : Finset (Fin 4), b.repr (ω₁ - ω₂) S = 0 := by
+    intro S
+    have hCoord := congrFun hDiff (finsetToIdx 4 S)
+    simp only [Finset.sum_apply, Pi.smul_apply, smul_eq_mul, Pi.zero_apply] at hCoord
+    obtain ⟨cS, hcSSq, hSVec⟩ := exteriorBasis4_mulVec_vacVec S
+    have hSVec' : (exteriorFormToCl11Stage4 (b S)).mulVec (vacVec 4) =
+        cS • Pi.single (finsetToIdx 4 S) (1 : ℝ) := hSVec
+    have hTerm : (∑ T : Finset (Fin 4), b.repr (ω₁ - ω₂) T *
+          ((exteriorFormToCl11Stage4 (b T)).mulVec (vacVec 4)) (finsetToIdx 4 S)) =
+        b.repr (ω₁ - ω₂) S * cS := by
+      rw [Finset.sum_eq_single S]
+      · rw [hSVec']; simp
+      · intro T _ hTS
+        obtain ⟨cT, _, hTVec⟩ := exteriorBasis4_mulVec_vacVec T
+        have hTVec' : (exteriorFormToCl11Stage4 (b T)).mulVec (vacVec 4) =
+            cT • Pi.single (finsetToIdx 4 T) (1 : ℝ) := hTVec
+        rw [hTVec']
+        simp [(finsetToIdx 4).injective.ne (Ne.symm hTS)]
+      · intro hm; exact False.elim (hm (Finset.mem_univ S))
+    rw [hTerm] at hCoord
+    have hcNe : cS ≠ 0 := by
+      intro h0; rw [h0] at hcSSq; norm_num at hcSSq
+    exact (mul_eq_zero.mp hCoord).resolve_right hcNe
+  have hSub0 : ω₁ - ω₂ = 0 := b.repr.injective (Finsupp.ext fun S => by simpa using hZeroCoeff S)
+  exact sub_eq_zero.mp hSub0
+
+/-- **Theorem 4A (Strict Injectivity of `exteriorFormToCl11Stage4`)**:
+The algebra map `ExteriorAlgebra ℝ (Fin 4 → ℝ) →ₐ[ℝ] MatStage 4` is strictly injective on all
+differential-form degrees `0..4` simultaneously via the vacuum Fock vector `vacVec 4`. -/
+theorem exteriorFormToCl11Stage4_injective :
+    Function.Injective exteriorFormToCl11Stage4 := by
+  intro ω₁ ω₂ h
+  exact exteriorFormToSpinorMap4_injective (congrArg (fun M => M.mulVec (vacVec 4)) h)
+
+/-- Explicit `ℝ`-linear isomorphism `ExteriorAlgebra ℝ (Fin 4 → ℝ) ≃ₗ[ℝ] (Idx 4 → ℝ)`
+identifying the `16`-dimensional exterior algebra with the Fock spinor column space of `MatStage 4`. -/
+def exteriorFormToSpinorEquiv4 : ExteriorAlgebra ℝ (Fin 4 → ℝ) ≃ₗ[ℝ] (Idx 4 → ℝ) :=
+  LinearEquiv.ofBijective exteriorFormToSpinorMap4
+    ⟨exteriorFormToSpinorMap4_injective, by
+      have : Module.Finite ℝ (ExteriorAlgebra ℝ (Fin 4 → ℝ)) :=
+        Module.Finite.of_basis (Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra
+      have hFR : Module.finrank ℝ (ExteriorAlgebra ℝ (Fin 4 → ℝ)) = Module.finrank ℝ (Idx 4 → ℝ) := by
+        rw [Module.finrank_eq_card_basis ((Pi.basisFun ℝ (Fin 4)).ExteriorAlgebra),
+          Fintype.card_finset, Fintype.card_fin, Module.finrank_pi, idx_card_pow_two 4]
+      exact (LinearMap.injective_iff_surjective_of_finrank_eq_finrank hFR).mp
+        exteriorFormToSpinorMap4_injective⟩
+
+/-- Exterior derivative 2-form `d𝒜(y) = ∑_{μ,ν} ∂_μ A_ν(y) dx^μ ∧ dx^ν` inside `MatStage 7`. -/
+def ymExtDerivConnToTower (A : FourSpace → Fin 4 → Mat4C) (y : FourSpace) : MatStage 7 :=
+  ∑ μ : Fin 4, ∑ ν : Fin 4,
+    kronMatStage 3 4
+      (ymRealifyHom (fderiv ℝ (fun z => A z ν) y (frameBasis μ)))
+      (exteriorFormToCl11Stage4 (dx μ * dx ν))
+
+private lemma exteriorFormToCl11Stage4_dx_swap_neg (μ ν : Fin 4) :
+    exteriorFormToCl11Stage4 (dx ν * dx μ) = -(exteriorFormToCl11Stage4 (dx μ * dx ν)) := by
+  rw [map_mul, map_mul, exteriorFormToCl11Stage4_dx, exteriorFormToCl11Stage4_dx]
+  by_cases h : ν = μ
+  · subst h
+    rw [Cl55WittCAR.creation_sq 4 ν, neg_zero]
+  · exact eq_neg_of_add_eq_zero_left
+      (Cl11TensorTowerCrossSiteCAR.creation_cross_site_anticommute 4 ν μ h)
+
+private lemma scalar_half_add_half (a : ℝ) : (1 / 2 : ℝ) * a + (1 / 2 : ℝ) * a = a := by
+  ring
+
+/-- **Theorem 4B (Exact Cartan Curvature Equation `ℱ = d𝒜 + 𝒜 * 𝒜` in `MatStage 7`)**:
+Matches `ymCurvatureFormToTower` identically to `ymExtDerivConnToTower` +
+`ymConnectionFormToTower * ymConnectionFormToTower`. -/
+theorem ymCurvatureFormToTower_eq_extDeriv_add_sq
+    (A : FourSpace → Fin 4 → Mat4C) (y : FourSpace) :
+    ymCurvatureFormToTower A y =
+      ymExtDerivConnToTower A y +
+        ymConnectionFormToTower A y * ymConnectionFormToTower A y := by
+  have hDeriv :
+      (∑ μ : Fin 4, ∑ ν : Fin 4,
+        (1 / 2 : ℝ) • kronMatStage 3 4
+          (ymRealifyHom (fderiv ℝ (fun z => A z ν) y (frameBasis μ) -
+            fderiv ℝ (fun z => A z μ) y (frameBasis ν)))
+          (exteriorFormToCl11Stage4 (dx μ * dx ν))) =
+      ymExtDerivConnToTower A y := by
+    have hSwap :
+        (∑ μ : Fin 4, ∑ ν : Fin 4,
+          kronMatStage 3 4
+            (ymRealifyHom (fderiv ℝ (fun z => A z μ) y (frameBasis ν)))
+            (exteriorFormToCl11Stage4 (dx μ * dx ν))) =
+        -(ymExtDerivConnToTower A y) := by
+      unfold ymExtDerivConnToTower
+      rw [Finset.sum_comm, ← Finset.sum_neg_distrib]
+      refine Finset.sum_congr rfl fun μ _ => ?_
+      rw [← Finset.sum_neg_distrib]
+      refine Finset.sum_congr rfl fun ν _ => ?_
+      rw [exteriorFormToCl11Stage4_dx_swap_neg μ ν]
+      unfold kronMatStage
+      rw [kron_neg_right_real, map_neg]
+    have hTwo : (2 : ℝ) • ymExtDerivConnToTower A y =
+        (∑ μ : Fin 4, ∑ ν : Fin 4,
+          kronMatStage 3 4
+            (ymRealifyHom (fderiv ℝ (fun z => A z ν) y (frameBasis μ) -
+              fderiv ℝ (fun z => A z μ) y (frameBasis ν)))
+            (exteriorFormToCl11Stage4 (dx μ * dx ν))) := by
+      rw [two_smul]
+      conv_lhs => rhs; rw [← neg_neg (ymExtDerivConnToTower A y), ← hSwap]
+      unfold ymExtDerivConnToTower
+      rw [← Finset.sum_neg_distrib, ← Finset.sum_add_distrib]
+      refine Finset.sum_congr rfl fun μ _ => ?_
+      rw [← Finset.sum_neg_distrib, ← Finset.sum_add_distrib]
+      refine Finset.sum_congr rfl fun ν _ => ?_
+      rw [map_sub]
+      unfold kronMatStage
+      rw [kron_sub_left_real, map_sub, sub_eq_add_neg]
+    have hHalf := congrArg (fun X : MatStage 7 => (1 / 2 : ℝ) • X) hTwo
+    rw [smul_smul, show (1 / 2 : ℝ) * 2 = 1 by norm_num, one_smul, Finset.smul_sum] at hHalf
+    symm
+    rw [hHalf]
+    refine Finset.sum_congr rfl fun μ _ => ?_
+    rw [Finset.smul_sum]
+  have hSplit : ymCurvatureFormToTower A y =
+      (∑ μ : Fin 4, ∑ ν : Fin 4,
+        (1 / 2 : ℝ) • kronMatStage 3 4
+          (ymRealifyHom (fderiv ℝ (fun z => A z ν) y (frameBasis μ) -
+            fderiv ℝ (fun z => A z μ) y (frameBasis ν)))
+          (exteriorFormToCl11Stage4 (dx μ * dx ν))) +
+      (∑ μ : Fin 4, ∑ ν : Fin 4,
+        (1 / 2 : ℝ) • kronMatStage 3 4
+          (ymRealifyHom (A y μ * A y ν - A y ν * A y μ))
+          (exteriorFormToCl11Stage4 (dx μ * dx ν))) := by
+    unfold ymCurvatureFormToTower
+    rw [← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl fun μ _ => ?_
+    rw [← Finset.sum_add_distrib]
+    refine Finset.sum_congr rfl fun ν _ => ?_
+    unfold continuumCurvature
+    rw [map_add, kronMatStage_add_left, smul_add]
+  rw [hSplit, hDeriv, ymConnectionFormToTower_sq_eq_commutator_twoForm A y]
+
+/-- **Theorem 4C (Master Capstone: `Cl(1,1)^{⊗ n}` Colimit + Cartan Structure + OS Continuum Bridge)**:
+Unifies strict exterior-form and `Mat4C` realification injectivity, multi-step `bondMap stageBond 7 m h7m`
+and `ofStage 7` Cartan equation `ℱ = d𝒜 + 𝒜 * 𝒜`, `a → 0` Wilson plaquette and covariant-difference
+convergence, the nonzero non-Abelian colimit witness (`continuumPlaquetteAction = 4 > 0`), and
+`OsterwalderSchraderContinuumReconstruction.fourDim_os_continuum_bridge_boundary`. -/
+theorem ym_cl11_direct_limit_and_os_continuum_bridge
+    {m : ℕ} (h7m : 7 ≤ m)
+    {N : ℕ} (J : Fin N → ℝ) (hJ : ∀ s, 0 < J s) (q : OSQuotient (multiSiteOSForm J hJ))
+    {m_phys t : ℝ} (hm : 0 < m_phys) (ht : 0 ≤ t)
+    (A : FourSpace → Fin 4 → Mat4C) (Φ : FourSpace → Mat4C)
+    (y : FourSpace) (μ ν : Fin 4) (hA : ContDiff ℝ 2 A) (hΦ : DifferentiableAt ℝ Φ y) :
+    let bMap := bondMap stageBond 7 m h7m
+    let A_w : FourSpace → Fin 4 → Mat4C :=
+      fun z β => circularConnectionMat4 (witnessCircularField z β)
+    (Function.Injective exteriorFormToCl11Stage4 ∧ Function.Injective ymRealifyHom) ∧
+    (bMap (ymCurvatureFormToTower A y) =
+      bMap (ymExtDerivConnToTower A y) +
+        bMap (ymConnectionFormToTower A y) * bMap (ymConnectionFormToTower A y)) ∧
+    (ofStage 7 (ymCurvatureFormToTower A y) =
+      ofStage 7 (ymExtDerivConnToTower A y) +
+        ofStage 7 (ymConnectionFormToTower A y) * ofStage 7 (ymConnectionFormToTower A y)) ∧
+    Filter.Tendsto (fun a : ℝ => wilsonPlaquetteFormToTower A y a)
+      (𝓝[≠] 0) (𝓝 (ymExtDerivConnToTower A y +
+        ymConnectionFormToTower A y * ymConnectionFormToTower A y)) ∧
+    Filter.Tendsto (fun a : ℝ => ymRealifyHom (latticeCovariantDiff A Φ y μ a))
+      (𝓝[≠] 0) (𝓝 (ymRealifyHom (continuumCovariantDeriv A Φ y μ))) ∧
+    (ofStage 7 (ymCurvatureFormToTower A_w y) ≠ 0 ∧ continuumPlaquetteAction A_w y 0 1 = 4) ∧
+    ((osQuotInner (multiSiteOSForm J hJ) q q = 0 ↔ q = 0) ∧
+     (0 ≤ osQuotInner (multiSiteOSForm J hJ) q q) ∧
+     Filter.Tendsto (fun a : ℝ => (Real.tanh (criticalCoupling m_phys a)) ^ (Nat.floor (t / a)))
+       (nhdsWithin (0 : ℝ) (Set.Ioi 0)) (𝓝 (Real.exp (-m_phys * t)))) := by
+  dsimp only
+  have hRealInj : Function.Injective ymRealifyHom := (ymRealifyHom_properties 0 0).1
+  have hCartan := ymCurvatureFormToTower_eq_extDeriv_add_sq A y
+  have hBond : bondMap stageBond 7 m h7m (ymCurvatureFormToTower A y) =
+      bondMap stageBond 7 m h7m (ymExtDerivConnToTower A y) +
+        bondMap stageBond 7 m h7m (ymConnectionFormToTower A y) *
+          bondMap stageBond 7 m h7m (ymConnectionFormToTower A y) := by
+    rw [hCartan, map_add, map_mul]
+  have hLim : ofStage 7 (ymCurvatureFormToTower A y) =
+      ofStage 7 (ymExtDerivConnToTower A y) +
+        ofStage 7 (ymConnectionFormToTower A y) * ofStage 7 (ymConnectionFormToTower A y) := by
+    rw [hCartan, map_add, map_mul]
+  have hConv := tendsto_lattice_yang_mills_in_cl11_tower A Φ y μ ν hA hΦ
+  have hPlaq : Filter.Tendsto (fun a : ℝ => wilsonPlaquetteFormToTower A y a) (𝓝[≠] 0)
+      (𝓝 (ymExtDerivConnToTower A y +
+        ymConnectionFormToTower A y * ymConnectionFormToTower A y)) := by
+    rw [← hCartan]; exact hConv.2.1
+  have hDir := ym_smooth_lattice_continuum_to_cl11_direct_limit A y
+  have hWit := circularLattice_nonabelian_continuum_witness y
+  have hOS := fourDim_os_continuum_bridge_boundary J hJ q hm ht A y μ ν hA
+  exact ⟨⟨exteriorFormToCl11Stage4_injective, hRealInj⟩, hBond, hLim, hPlaq, hConv.1,
+    ⟨hDir.2.2.2, hWit.2.2.2.1⟩, ⟨hOS.1, hOS.2.1, hOS.2.2.1⟩⟩
+
+end ExteriorInjectivityAndOSBridge
 
 end InfoGeometry.Canonical.YangMillsContinuumCl11TowerBridge

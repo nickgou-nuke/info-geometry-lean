@@ -1,7 +1,13 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CorrelationSymmetrization
 import InfoGeometry.Canonical.OperatorialCramerRao
+import InfoGeometry.Canonical.PhaseObservableUncertainty
 
 open scoped InnerProductSpace
 
@@ -50,76 +56,9 @@ theorem inner_sq_add_modularComplexI_inner_sq_le
     (⟪x, y⟫_ℝ) ^ 2 + (⟪modularComplexI (E := E) x, y⟫_ℝ) ^ 2
       ≤
     ‖x‖ ^ 2 * ‖y‖ ^ 2 := by
-  by_cases hx : x = 0
-  · simp [hx]
-  let kx : H₂ := complex_i (E := E) x
-  have hKnormSq : ‖kx‖ ^ 2 = ‖x‖ ^ 2 := by
-    rw [← real_inner_self_eq_norm_sq, ← real_inner_self_eq_norm_sq]
-    simpa [kx] using complex_i_inner_comp (E := E) x x
-  have hKnorm : ‖kx‖ = ‖x‖ := by
-    exact (sq_eq_sq₀ (norm_nonneg _) (norm_nonneg _)).mp hKnormSq
-  have hNormNe : ‖x‖ ≠ 0 := by
-    exact norm_ne_zero_iff.mpr hx
-  have hkx : kx ≠ 0 := by
-    have hKnormNe : ‖kx‖ ≠ 0 := by
-      simpa [hKnorm] using hNormNe
-    exact norm_ne_zero_iff.mp hKnormNe
-  have hOrth : ⟪x, kx⟫_ℝ = 0 := by
-    have hSkew := complex_i_inner_skew (E := E) x x
-    have hEqNegBase :
-        ⟪x, complex_i (E := E) x⟫_ℝ
-          =
-        -⟪x, complex_i (E := E) x⟫_ℝ := by
-      calc
-        ⟪x, complex_i (E := E) x⟫_ℝ
-            = ⟪complex_i (E := E) x, x⟫_ℝ := by rw [real_inner_comm]
-        _ = -⟪x, complex_i (E := E) x⟫_ℝ := hSkew
-    have hEqNeg : ⟪x, kx⟫_ℝ = -⟪x, kx⟫_ℝ := by
-      simpa [kx] using hEqNegBase
-    have hZeroSum : ⟪x, kx⟫_ℝ + ⟪x, kx⟫_ℝ = 0 := by
-      exact eq_neg_iff_add_eq_zero.mp hEqNeg
-    have hTwo : (2 : ℝ) * ⟪x, kx⟫_ℝ = 0 := by
-      simpa [two_mul] using hZeroSum
-    linarith
-  have hOrthNorm :
-      ⟪NormedSpace.normalize x, NormedSpace.normalize kx⟫_ℝ = 0 := by
-    rw [NormedSpace.normalize, NormedSpace.normalize,
-      real_inner_smul_left, real_inner_smul_right, hOrth]
-    ring
-  let v : Fin 2 → H₂ := ![NormedSpace.normalize x, NormedSpace.normalize kx]
-  have hv : Orthonormal ℝ v := by
-    constructor
-    · intro i
-      fin_cases i
-      · simpa [v] using NormedSpace.norm_normalize hx
-      · simpa [v] using NormedSpace.norm_normalize hkx
-    · intro i j hij
-      fin_cases i <;> fin_cases j
-      · contradiction
-      · simpa [v] using hOrthNorm
-      · simpa [v, real_inner_comm] using hOrthNorm
-      · contradiction
-  have hBessel :
-      ‖⟪NormedSpace.normalize x, y⟫_ℝ‖ ^ 2
-        + ‖⟪NormedSpace.normalize kx, y⟫_ℝ‖ ^ 2
-      ≤
-      ‖y‖ ^ 2 := by
-    simpa [v] using hv.sum_inner_products_le (x := y) (s := Finset.univ)
-  have hScaled :=
-    mul_le_mul_of_nonneg_left hBessel (by positivity : 0 ≤ ‖x‖ ^ 2)
-  have hLhs :
-      ‖x‖ ^ 2
-          *
-        (‖⟪NormedSpace.normalize x, y⟫_ℝ‖ ^ 2
-          + ‖⟪NormedSpace.normalize kx, y⟫_ℝ‖ ^ 2)
-        =
-      (⟪x, y⟫_ℝ) ^ 2 + (⟪kx, y⟫_ℝ) ^ 2 := by
-    rw [NormedSpace.normalize, NormedSpace.normalize, real_inner_smul_left, real_inner_smul_left]
-    rw [Real.norm_eq_abs, Real.norm_eq_abs, sq_abs, sq_abs, hKnorm]
-    field_simp [pow_two, hNormNe]
-  rw [hLhs] at hScaled
-  simpa [kx, InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i,
-    mul_assoc, mul_left_comm, mul_comm] using hScaled
+  simpa [modularComplexI_eq_complex_i] using
+    InfoGeometry.Krein.InternalPhaseGram.inner_sq_add_phase_inner_sq_le
+      (E := E) x y
 
 @[rep_depth krein]
 theorem inner_sq_add_complex_i_inner_sq_le
@@ -127,8 +66,8 @@ theorem inner_sq_add_complex_i_inner_sq_le
     (⟪x, y⟫_ℝ) ^ 2 + (⟪InfoGeometry.Krein.complex_i (E := E) x, y⟫_ℝ) ^ 2
       ≤
     ‖x‖ ^ 2 * ‖y‖ ^ 2 := by
-  simpa [modularComplexI_eq_complex_i] using
-    inner_sq_add_modularComplexI_inner_sq_le (E := E) x y
+  exact InfoGeometry.Krein.InternalPhaseGram.inner_sq_add_phase_inner_sq_le
+    (E := E) x y
 
 /-- The comparison-state phase form is the metric with a left `K = Jε` channel twist. -/
 @[rep_depth krein, simp]

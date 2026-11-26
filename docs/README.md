@@ -58,6 +58,7 @@ An index entry, graph relation, or filename does not establish a theorem.
 | Nuclear operator parity, RPA, and phonon commutators | [Nuclear operator synthesis](NUCLEAR_OPERATOR_SYNTHESIS.md), [theorem contract](NUCLEAR_OPERATOR_PARITY_CONTRACT.md) |
 | Two-sheeted operator transport and framework progress | [Framework progress note](TWO_SHEETED_YANG_MILLS_FRAMEWORK_PROGRESS.md) |
 | Open debt problems & constructive closure | [Open debt problems](OPEN_DEBT_PROBLEMS.md) |
+| Historical foundations & prioritized missing constructions | [Gap-closure roadmap, 2026-11-26](HISTORICAL_GAP_CLOSURE_ROADMAP_2026-11-26.md), with source scope, pending PRs, and proposed theorem contracts |
 | Souriau/Bost–Connes claims | [Transition status](SOURIAU_BOST_CONNES_TRANSITION_STATUS.md) |
 | CAR, Krein carriers, and projectivization | [Topic scope note](../README-CURRENT.md) |
 | Owner/translator separation | [Bilingual spine policy](BILINGUAL_SPINE_POLICY.md) |

@@ -258,6 +258,7 @@ private theorem offDiagonal_square (A B : Mat4R) :
     upperLadder_square, lowerLadder_square,
     upperLadder_mul_lowerLadder, lowerLadder_mul_upperLadder,
     Matrix.zero_kronecker, zero_add, add_zero]
+  exact add_comm _ _
 
 /-- The Weyl square is the real Minkowski quadratic form on all coordinates. -/
 theorem weylDirac8_square (t x y z : ℝ) :
@@ -274,7 +275,8 @@ private theorem offDiagonal_time_spatial (t : ℝ) (A : Mat4R) :
       t • ((positive : Mat2R) ⊗ₖ (1 : Mat4R)) + (negative : Mat2R) ⊗ₖ A := by
   ext ⟨i, r⟩ ⟨j, s⟩
   fin_cases i <;> fin_cases j <;>
-    simp [upperLadder, lowerLadder, positive, negative, Matrix.kronecker_apply] <;> ring
+    simp [upperLadder, lowerLadder, positive, negative]
+  all_goals ring
 
 /-- Time is carried by the sheet exchange and space by the negative-square atom. -/
 theorem weylDirac8_one_plus_three (t x y z : ℝ) :

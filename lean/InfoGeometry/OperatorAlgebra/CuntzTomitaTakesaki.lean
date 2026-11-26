@@ -8,47 +8,39 @@ import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.PhysicalLanglandsHolonomy
 
 /-!
-# Cuntz Algebra and Tomita-Takesaki Cancellation
+# 2×2 Complex Matrix Hyperbolic-Weight Cancellation Shadow
 
-This module formalizes the exact algebraic cancellation of the hyperbolic 
-thermal weights within the Cuntz algebra, proving that the Tomita operator 
-S = J Δ^(1/2) simplifies exactly to the observable adjoint (X*).
+This module verifies an elementary `2×2` complex matrix entry-scaling identity:
+multiplying off-diagonal entries by `exp(-δ)` / `exp(δ)` inside `delta_half`,
+taking `conjTranspose`, and multiplying by the reciprocal real weights inside
+`J_conjugation` cancels via `exp(δ) * exp(-δ) = 1`, leaving `X.conjTranspose`.
+
+No Cuntz algebra `O_n`, generating isometries, GNS vacuum, or full Tomita-Takesaki
+theory is constructed here. For constructive finite/colimit polar decompositions and
+Cuntz GNS colimit towers, see `InfoGeometry.Canonical.FiniteMatrixTomitaPolar` and
+`InfoGeometry.Canonical.CuntzGNSFilteredTomitaColimit`.
 -/
 
 namespace InfoGeometry.OperatorAlgebra
 
 open scoped Matrix
 
-/-- 
-  The modular translation map on a 2x2 complex observable X, 
-  parameterized by the thermodynamic gap δ.
--/
+/-- Scales the off-diagonal entries of a `2×2` complex matrix by `exp(-δ)` and `exp(δ)`. -/
 noncomputable def delta_half (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   ![![X 0 0, X 0 1 * (Real.exp (-δ) : ℂ)], 
     ![X 1 0 * (Real.exp δ : ℂ), X 1 1]]
 
-/-- 
-  The modular conjugation map on a 2x2 complex observable X. 
-  It takes the adjoint (conjugate transpose) and then translates.
--/
+/-- Takes `X.conjTranspose` and scales its off-diagonal entries by `exp(-δ)` and `exp(δ)`. -/
 noncomputable def J_conjugation (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   let X_star := X.conjTranspose
   ![![X_star 0 0, X_star 0 1 * (Real.exp (-δ) : ℂ)], 
     ![X_star 1 0 * (Real.exp δ : ℂ), X_star 1 1]]
 
-/-- 
-  The Tomita Operator S is the composition of the modular conjugation 
-  with the adjoint of the modular translation.
-  (In the SymPy verification, S(X) = J(Delta^(1/2)(X).H))
--/
+/-- Composition `J_conjugation δ (delta_half δ X)` on `2×2` complex matrices. -/
 noncomputable def S_tomita (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) : Matrix (Fin 2) (Fin 2) ℂ :=
   J_conjugation δ (delta_half δ X)
 
-/-- 
-  THEOREM: Tomita-Takesaki Cancellation in the Cuntz Vacuum.
-  The hyperbolic thermal weights perfectly annihilate each other, 
-  leaving only the CPT conjugated observable (X*).
--/
+/-- Weight-cancellation identity: `S_tomita δ X = X.conjTranspose` from `exp(δ) * exp(-δ) = 1`. -/
 theorem tomita_cuntz_cancellation (δ : ℝ) (X : Matrix (Fin 2) (Fin 2) ℂ) :
     S_tomita δ X = X.conjTranspose := by
   ext i j

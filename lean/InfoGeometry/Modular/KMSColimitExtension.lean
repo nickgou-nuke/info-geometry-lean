@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Algebra.Basic
 import Mathlib.Algebra.Module.LinearMap.Basic
 import Mathlib.Algebra.Category.AlgCat.Basic
@@ -8,20 +13,23 @@ import Mathlib.Basic.Complex.Basic
 import Mathlib.Tactic
 
 /-!
-# Inductive Colimit Extension of KMS States on Operator Algebra Towers
+# Algebraic Colimit Transport of Compatible Staged Functionals
 
-This module formalizes:
-1. Inductive Sequences of C*-Algebras: (A_n)_{n ∈ ℕ} with inclusions ι_n : A_n → A_{n+1}.
-2. Staged Families of KMS States: (ω_n)_{n ∈ ℕ} with compatibility ω_{n+1} ∘ ι_n = ω_n.
-3. Multi-Step Inclusion Cocycle Compatibility: ω_{n+m} ∘ ι_{n, m} = ω_n.
-4. The Inductive Colimit Algebra A_inf and Descent Cocycle: Ω ∘ ψ_n = ω_n.
-5. THEOREM 1 (Colimit State Equivalence of Local Representatives):
-     ψ_n(x) = ψ_m(y) in A_inf ⟹ ω_n(x) = ω_m(y).
-6. THEOREM 2 (Colimit KMS Thermal Condition):
-     Ω(ψ_n(a) * ψ_n(b_thermal)) = Ω(ψ_n(b_shift) * ψ_n(a)),
-     proving that the KMS condition descends faithfully to the continuum colimit!
+This module formalizes purely algebraic compatibility and transport for normalized
+linear functionals across sequential `AlgHom` towers and Mathlib's `ℕ ⥤ AlgCat ℂ`
+categorical colimit:
+1. `categoricalStageState_rep_equality` & `categoricalStageState_kms_descent`:
+   Pulls back a colimit linear functional `Omega : (colimit F) →ₗ[ℂ] ℂ` along
+   `colimit.ι F n` and transports any supplied stage-`n` equality `a * bthermal = bshift * a`
+   under `categoricalStageState Omega n` to the colimit algebra.
+2. `iota_seq` & `staged_state_m_step_compatibility`: Multi-step compatibility
+   `ω_{n+m} ∘ ι_{n, m} = ω_n` for `StagedKMSFamily`.
+3. `colimit_state_rep_equality` & `colimit_kms_thermal_condition`:
+   Given a `ColimitKMSState` compatibility witness (`Omega ∘ psi n = omega n`) and a
+   supplied stage-`n` equality `omega n (a * b_thermal) = omega n (b_shift * a)`,
+   deduces `Omega (psi n a * psi n b_thermal) = Omega (psi n b_shift * psi n a)`.
 
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+No C*-norm completion or analytic KMS strip condition is constructed here.
 -/
 
 noncomputable section
@@ -141,11 +149,12 @@ theorem colimit_state_rep_equality
     exact congr_arg (fun (f : A m →ₗ[ℂ] ℂ) => f y) h
   rw [← h_n, ← h_m, h_colimit_eq]
 
-/-- 
-  MASTER THEOREM 2 (Colimit KMS Thermal Condition on Local Embeddings):
-  For any local stage n and any elements a, b ∈ A_n satisfying the stage-n KMS condition,
-  their colimit images ψ_n(a), ψ_n(b) satisfy the exact colimit KMS identity:
-    Ω(ψ_n(a) * ψ_n(b_thermal)) = Ω(ψ_n(b_thermal_shift) * ψ_n(a)).
+/--
+Colimit Transport of a Supplied Stage-n Bilinear State Equality:
+Given `ColimitKMSState psi Omega omega` and a supplied hypothesis
+`h_kms_stage : omega n (a * b_thermal) = omega n (b_shift * a)` at stage `n`,
+transports the equality along `psi n` to
+  `Omega (psi n a * psi n b_thermal) = Omega (psi n b_shift * psi n a)`.
 -/
 theorem colimit_kms_thermal_condition
     (psi : ∀ n, A n →ₐ[ℂ] A_inf)

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Algebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Hom
@@ -12,21 +17,24 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 /-!
-# Gel'fand–Naimark–Segal (GNS) Construction and Modular Operator on 𝒜_∞
+# Algebraic Gel'fand–Naimark–Segal (GNS) Quotient and Interface Layer
 
-Formalizes the algebraic GNS triple `(ℋ_ω, π_ω, Ω_ω)` and Tomita modular operator `Δ_ω`
-for a state `ω` on the C*-inductive colimit `𝒜_∞`:
+Formalizes an algebraic GNS quotient triple `(ℋ_ω⁰, π_ω, Ω_ω)` over a `ℂ`-algebra `A_inf`
+with a star-invariant left-null functional `ω : GNSState A_inf`:
 
-  1. `GNSState`: Normalized positive linear functional `ω : 𝒜_∞ → ℂ`.
-  2. `gnsNullSubmodule`: The Gel'fand left ideal `𝒩_ω = { x ∈ 𝒜_∞ | ∀ y, ω(y* x) = 0 }`.
-  3. `GNSCarrier`: The pre-Hilbert quotient space `ℋ_ω⁰ = 𝒜_∞ ⧸ 𝒩_ω`.
-  4. `gnsCyclicVector`: The cyclic vacuum vector `Ω_ω = [1] ∈ ℋ_ω⁰`.
-  5. `gnsRepOp`: The *-representation `π_ω : 𝒜_∞ → End_ℂ(ℋ_ω⁰)` satisfying `π_ω(a)[x] = [ax]`.
-  6. `tomitaS0`: Unbounded closeable anti-linear involution `S₀([x]) = [x*]`.
-  7. `tomita_takesaki_intertwine`: The Tomita–Takesaki modular operator `Δ_ω` intertwining with `σ_{∞, t}`:
-       `Δ_ω^{it} π_ω(a) Ω_ω = π_ω(σ_{∞, t}(a)) Ω_ω`.
-
-All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+  1. `GNSState`: Normalized functional `ω : A_inf →ₗ[ℂ] ℂ` with `star_inv` and `left_ideal_null`.
+  2. `gnsNullSubmodule`: The Gel'fand left ideal `𝒩_ω = { x ∈ A_inf | ∀ y, ω(y* x) = 0 }`.
+  3. `GNSCarrier`: The algebraic quotient space `ℋ_ω⁰ = A_inf ⧸ 𝒩_ω`.
+  4. `gnsCyclicVector`: The cyclic vector `Ω_ω = [1] ∈ ℋ_ω⁰`.
+  5. `gnsRepOp`: The representation `π_ω : A_inf → End_ℂ(ℋ_ω⁰)` satisfying `π_ω(a)[x] = [ax]`
+     and `gnsRep_star_adjoint`.
+  6. `tomitaS0`: Algebraic quotient involution `S₀([x]) = [x*]` conditional on an explicit
+     hypothesis `h_star_null` that `𝒩_ω` is `star`-invariant (no topology, closure, or
+     closability proof; for native C*-algebra GNS closability, closed operators, and Hilbert
+     completions, see `InfoGeometry.Canonical.FilteredGNSTomitaCore` and siblings).
+  7. `tomita_takesaki_intertwine`: Rewrites a supplied `ModularUnitaryFlow` intertwining
+     hypothesis `h_intertwine` using `gnsRep_cyclic` (does not construct `Δ_ω^{it}` from `S₀`).
+  8. `gns_expectation_value`: Evaluates `⟨Ω_ω, π_ω(a) π_ω(b) Ω_ω⟩_ω = ω(a * b)`.
 -/
 
 noncomputable section
@@ -215,7 +223,8 @@ theorem gnsRep_star_adjoint (ω : GNSState A_inf) (a : A_inf) (v w : GNSCarrier 
     ========================================================================= -/
 
 /--
-The Tomita fundamental involution `S₀ : ℋ_ω⁰ → ℋ_ω⁰`, `S₀(η_ω(x)) = η_ω(x*)`.
+Algebraic quotient involution `S₀ : ℋ_ω⁰ → ℋ_ω⁰`, `S₀(η_ω(x)) = η_ω(x*)`,
+conditional on the explicit star-invariance hypothesis `h_star_null` on `gnsNullSubmodule ω`.
 -/
 def tomitaS0 (ω : GNSState A_inf)
     (h_star_null : ∀ x, x ∈ gnsNullSubmodule ω → star x ∈ gnsNullSubmodule ω) :
@@ -253,7 +262,7 @@ theorem tomitaS0_sq (ω : GNSState A_inf)
   rw [tomitaS0_proj, tomitaS0_proj, star_star]
 
 /--
-A unitary 1-parameter group implementing the modular operator powers `Δ_ω^{it}` on `ℋ_ω⁰`.
+Abstract one-parameter linear group interface on `ℋ_ω⁰` (intended to model `Δ_ω^{it}`).
 -/
 structure ModularUnitaryFlow (ω : GNSState A_inf) where
   u : ℝ → (GNSCarrier ω →ₗ[ℂ] GNSCarrier ω)
@@ -262,10 +271,9 @@ structure ModularUnitaryFlow (ω : GNSState A_inf) where
   fixes_vacuum : ∀ (t : ℝ), u t (gnsCyclicVector ω) = gnsCyclicVector ω
 
 /--
-MAIN THEOREM 5 (Tomita–Takesaki Modular Intertwining on the Colimit):
-Let `σ_{∞, t}` be the modular flow on `𝒜_∞`. The modular unitary group `Δ_ω^{it}`
-intertwines the representation with the modular flow:
-  `Δ_ω^{it} π_ω(a) Ω_ω = π_ω(σ_{∞, t}(a)) Ω_ω`
+Transport of a supplied intertwining hypothesis `h_intertwine : modFlow.u t (gnsProj ω a) = gnsProj ω (flow t a)`
+along `gnsRep_cyclic`:
+  `modFlow.u t (π_ω(a) Ω_ω) = π_ω(flow t a) Ω_ω`.
 -/
 theorem tomita_takesaki_intertwine
     (ω : GNSState A_inf)
@@ -279,13 +287,13 @@ theorem tomita_takesaki_intertwine
   rw [gnsRep_cyclic, gnsRep_cyclic, h_intertwine]
 
 /-! =========================================================================
-    6. KMS-1 Condition in the GNS Hilbert Representation
+    6. GNS Vacuum Expectation Identity
     ========================================================================= -/
 
 /--
-MAIN THEOREM 6 (GNS Form of the KMS-1 Condition):
-The vector state expectation value reproduces the state correlation:
-  `⟨Ω_ω, π_ω(a) π_ω(b) Ω_ω⟩_ω = ω(ab)`
+GNS Vacuum Expectation Identity:
+Reproduces the algebra product evaluation from the cyclic GNS representation:
+  `⟨Ω_ω, π_ω(a) π_ω(b) Ω_ω⟩_ω = ω(a * b)`.
 -/
 theorem gns_expectation_value (ω : GNSState A_inf) (a b : A_inf) :
     gnsInner ω (gnsCyclicVector ω) (gnsRepOp ω a (gnsRepOp ω b (gnsCyclicVector ω))) =

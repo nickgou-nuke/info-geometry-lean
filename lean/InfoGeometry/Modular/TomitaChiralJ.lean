@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Algebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Star.Basic
@@ -9,25 +14,20 @@ set_option linter.unusedSectionVars false
 set_option linter.unusedVariables false
 
 /-!
-# Relation Between the Modular Conjugation J = S₀ Δ^{-1/2} and the Chiral Operator Γ
+# Abstract Interface for `J = S₀ ∘ Δ^{-1/2}` and Chiral Grading `Γ`
 
-Formalizes the algebraic structure connecting the Tomita modular conjugation `J`,
-the polar modular operator `Δ`, the fundamental involution `S₀`, and the
-fermionic chiral grading operator `Γ` on the GNS space `ℋ_ω`:
+Defines abstract module-level interfaces (`TomitaModularData`, `ChiralGrading`,
+`SingleModeGNSVectors`) over a `ℂ`-module `H`, taking `S₀`, `delta_half`,
+`delta_inv_half`, `Gamma`, commutation laws, and eigenvalue equations as fields:
 
-  1. Polar decomposition of the Tomita operator:
-       `S₀ = J ∘ Δ^{1/2}`,  `J = S₀ ∘ Δ^{-1/2}`
-  2. Modular conjugation algebraic properties:
-       `J² = id`,  `J Ω_ω = Ω_ω`,  `Δ Ω_ω = Ω_ω`
-  3. Chiral grading involution:
-       `Γ² = id`,  `Γ Ω_ω = Ω_ω`,  `Γ η(c) = - η(c)`
-  4. Commutation / Intertwining:
-       `J ∘ Γ = Γ ∘ J` on the vacuum sector
-  5. Action on CAR creation and annihilation states:
-       `S₀(η(c)) = η(c†)`,  `S₀(η(c†)) = η(c)`
-       `J(η(c)) = conj(λ) • η(c†)` for pure chiral Super-KMS states.
+  1. `modularJ`: `J := S₀ ∘ Δ^{-1/2}`
+  2. `modularJ_vacuum`: `J Ω = Ω` (from supplied vacuum-invariance fields)
+  3. `polar_reconstruction`: `J (Δ^{1/2} x) = S₀ x` (from `delta_inv_half_right`)
+  4. `modularJ_comm_gamma` & `modularJ_gamma_vacuum`: `[J, Γ] = 0` from supplied intertwining fields
+  5. `modularJ_psi_c`, `modularJ_psi_cdag`, `gamma_modularJ_psi_c`: action on supplied
+     creation/annihilation eigenvectors (`J(ψ_c) = conj(λ) • ψ_{c†}`, odd parity).
 
-All proofs are complete in native Mathlib with 0 `sorry`s and 0 custom axioms.
+Note: `J² = id` is not proved in this file; `S₀` and `Δ^{±1/2}` are supplied as structure fields.
 -/
 
 noncomputable section

@@ -12,27 +12,32 @@ noncomputable section
 namespace InfoGeometry.Canonical.TomitaModularAutomorphismFlow
 
 /-!
-# Tomita-Takesaki Modular Automorphism Group σₜ & KMS Boundary Flow
+# Abstract Unitary-Conjugation Automorphism Flow Interface
 
-This module formalizes the one-parameter modular automorphism flow
-  σ_t(A) = U(t) A U(-t) = Δ^{it} A Δ^{-it}
-on bounded linear operators B(H) on Hilbert spaces, proving:
-1. Identity flow: σ₀(A) = A
-2. Multiplicative flow homomorphism: σ_t(A B) = σ_t(A) σ_t(B)
-3. Composition group property: σ_{t1 + t2}(A) = σ_{t1}(σ_{t2}(A))
-4. State invariance under modular flow for KMS states.
+Given a supplied one-parameter unitary group `MUG : ModularUnitaryGroup H` on a
+complex inner-product space `H`, this module defines the conjugation flow
+`modularFlow MUG t A = U(t) ∘ A ∘ U(-t)` on bounded linear operators `H →L[ℂ] H`,
+proving:
+1. Identity flow at `t = 0`: `σ₀(A) = A`
+2. Multiplicative composition law: `σ_t(A ∘ B) = σ_t(A) ∘ σ_t(B)`
+3. Additive one-parameter law: `σ_{t1 + t2}(A) = σ_{t1}(σ_{t2}(A))` and inverse laws
+4. Norm transport along the unitary orbit
+
+This file does **not** construct the modular operator `Δ` from a state or prove
+KMS invariance: `kms_state_modular_flow_product` applies any function `omega` to
+`modularFlow_mul`, and `ModularInvariantState` takes invariance as a structure field.
 -/
 
 variable {H : Type*} [NormedAddCommGroup H] [InnerProductSpace ℂ H]
 
-/-- One-parameter modular unitary group U(t) = Δ^(it) on Hilbert space H. -/
+/-- Abstract one-parameter unitary group interface `U : ℝ → (H ≃ₗᵢ[ℂ] H)` (used to model `Δ^(it)`). -/
 structure ModularUnitaryGroup (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℂ H] where
   U : ℝ → (H ≃ₗᵢ[ℂ] H)
   map_zero : U 0 = LinearIsometryEquiv.refl ℂ H
   map_add : ∀ t1 t2 : ℝ, U (t1 + t2) = (U t2).trans (U t1)
   inv_cancel : ∀ (t : ℝ) (y : H), U (-t) (U t y) = y
 
-/-- Tomita-Takesaki modular automorphism flow σ_t(A) = U(t) A U(-t) on B(H). -/
+/-- Conjugation flow `σ_t(A) = U(t) ∘ A ∘ U(-t)` on `H →L[ℂ] H`. -/
 def modularFlow (MUG : ModularUnitaryGroup H) (t : ℝ) (A : H →L[ℂ] H) : H →L[ℂ] H :=
   (MUG.U t : H →L[ℂ] H).comp (A.comp (MUG.U (-t) : H →L[ℂ] H))
 
@@ -62,7 +67,7 @@ theorem modularFlow_add (MUG : ModularUnitaryGroup H) (t1 t2 : ℝ) (A : H →L[
   rw [MUG.map_add t1 t2, h_neg, MUG.map_add (-t2) (-t1)]
   rfl
 
-/-- **Theorem**: State invariance under modular flow for modular trace states. -/
+/-- Congruence under any readout `omega : (H →L[ℂ] H) → ℂ` applied to `modularFlow_mul`. -/
 theorem kms_state_modular_flow_product (MUG : ModularUnitaryGroup H) (t : ℝ)
     (omega : (H →L[ℂ] H) → ℂ) (A B : H →L[ℂ] H) :
     omega (modularFlow MUG t (A.comp B)) = omega ((modularFlow MUG t A).comp (modularFlow MUG t B)) := by
@@ -94,12 +99,13 @@ theorem modularFlow_apply_unitary_norm (MUG : ModularUnitaryGroup H) (t : ℝ)
   rw [MUG.inv_cancel t]
   exact (MUG.U t).norm_map _
 
+/-- Readout functional paired with an explicit `invariant` hypothesis under `modularFlow MUG`. -/
 structure ModularInvariantState (MUG : ModularUnitaryGroup H) where
   omega : (H →L[ℂ] H) → ℂ
   invariant : ∀ t : ℝ, ∀ A : H →L[ℂ] H,
     omega (modularFlow MUG t A) = omega A
 
-/-- The state readout is constant along the supplied modular flow. -/
+/-- Projects the supplied invariance hypothesis `S.invariant` at `(t, A)`. -/
 theorem modularFlow_state_invariant
     (MUG : ModularUnitaryGroup H)
     (S : ModularInvariantState MUG)
@@ -107,7 +113,7 @@ theorem modularFlow_state_invariant
     S.omega (modularFlow MUG t A) = S.omega A := by
   exact S.invariant t A
 
-/-- Invariance also applies to products of observables. -/
+/-- Projects the supplied invariance hypothesis `S.invariant` onto `A.comp B`. -/
 theorem modularFlow_product_state_invariant
     (MUG : ModularUnitaryGroup H)
     (S : ModularInvariantState MUG)

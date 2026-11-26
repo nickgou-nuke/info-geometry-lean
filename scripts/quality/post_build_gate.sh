@@ -146,7 +146,20 @@ if [ "$MODE" = "incremental" ]; then
         exit 2
     fi
     DELETED_LEAN_FILES=$(git diff --diff-filter=D --name-only "$BASE_REF" "$HEAD_REF" -- 'lean/*.lean' 'lean/**/*.lean' || true)
-    CHANGED_LEAN_FILES=$(grep '^lean/.*\.lean$' <<<"$CHANGED_FILES" | while IFS= read -r path; do
+    GRR_PURE_MATHLIB_RE='^lean/GRR/(GradedExp|GradedHom|ToddSeries)\.lean$'
+    GRR_STACKS_LEAN_FILES=$(grep '^lean/GRR/.*\.lean$' <<<"$CHANGED_FILES" | grep -Ev "$GRR_PURE_MATHLIB_RE" | while IFS= read -r path; do
+        if [ -f "$path" ]; then printf '%s\n' "$path"; fi
+    done || true)
+    CHANGED_LEAN_FILES=$(grep '^lean/.*\.lean$' <<<"$CHANGED_FILES" | { grep -Ev '^lean/GRR/.*\.lean$' || true; } | while IFS= read -r path; do
+        if [ -f "$path" ]; then printf '%s\n' "$path"; fi
+    done || true)
+    GRR_PURE_LEAN_FILES=$(grep -E "$GRR_PURE_MATHLIB_RE" <<<"$CHANGED_FILES" | while IFS= read -r path; do
+        if [ -f "$path" ]; then printf '%s\n' "$path"; fi
+    done || true)
+    if [ -n "$GRR_PURE_LEAN_FILES" ]; then
+        CHANGED_LEAN_FILES="${CHANGED_LEAN_FILES:+$CHANGED_LEAN_FILES$'\n'}$GRR_PURE_LEAN_FILES"
+    fi
+    WILSON_CONTRIB_LEAN_FILES=$(grep -E '^contributions/(wilson|wilson-gaussian)/.*\.lean$' <<<"$CHANGED_FILES" | while IFS= read -r path; do
         if [ -f "$path" ]; then printf '%s\n' "$path"; fi
     done || true)
     DELETED_SRC_LEAN_FILES=$(git diff --diff-filter=D --name-only "$BASE_REF" "$HEAD_REF" -- 'src/*.lean' 'src/**/*.lean' || true)
@@ -169,7 +182,7 @@ if [ "$MODE" = "incremental" ]; then
     TEST_LEAN_FILES=$(grep '^tests/.*\.lean$' <<<"$CHANGED_FILES" | while IFS= read -r path; do
         if [ -f "$path" ]; then printf '%s\n' "$path"; fi
     done || true)
-    AUDIT_TOOL_LEAN_FILES=$(grep -E '^(tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit)|tools/infra/axiom_index)\.lean$' <<<"$CHANGED_FILES" || true)
+    AUDIT_TOOL_LEAN_FILES=$(grep -E '^(tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit)|tools/infra/axiom_index|lean/NoncommutativeGaugeAndBraidedHolonomy|verification/attention-query/AttentionDeclarationAudit|verification/courant-dirac/CapstoneDeclarationAudit|verification/(klein-operator-hierarchy|supplied-zorn-counterexample|witt-born-null-exactness|zorn-primal-dual)/Audit)\.lean$' <<<"$CHANGED_FILES" || true)
     # This selected package reuses canonical owners and has its own shared-lock
     # audit entry point. Route only its exact configuration and wrapper paths.
     CLIFFORD_PEIRCE_WALSH_FILES=$(grep -E '^verification/clifford-peirce-walsh/(lakefile\.lean|lake-manifest\.json|lean-toolchain|check\.py)$' <<<"$CHANGED_FILES" || true)
@@ -189,7 +202,7 @@ if [ "$MODE" = "incremental" ]; then
         fi
     fi
     UNSUPPORTED_PACKAGE_CONFIGS=$(grep -E '^(lean/lakefile\.lean|lean/lake-manifest\.json|lean/lean-toolchain|lean_sandbox/lakefile\.lean|lean_sandbox/lake-manifest\.json|lean_sandbox/lean-toolchain|proofs/lakefile\.(toml|lean)|proofs/lake-manifest\.json|proofs/lean-toolchain|verification/spinorial-core/lakefile\.lean|verification/spinorial-core/lake-manifest\.json|verification/spinorial-core/lean-toolchain)$' <<<"$CHANGED_FILES" || true)
-    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.(src\.)?lean|lean-toolchain|lean/(Agent|AuditNative|AuditNativeRun|AuditStrict|B3PresentedGroup|CheckBasis|CheckTemp|DAG|Docs|Experimental|GrandPartitionAll|GrandPartitionEuler|GrandPartitionOnline|GrandPartitionPolynomial|GrandPartitionProbability|GrandPartitionRational|GrandPartitionRobustPoisson|GrandPartitionTransform|GrandUnifiedNoncommutativeOperatorSynthesis|InfoGeometry|KaplanskyCliffordBridge|NonIsoConf3OrlikSolomon|Omega|PrimitiveSetsAboveX|SelfReference|Socratic|SplitOctonionBraidSU3|Test|TestFin|VirasoroProject|YangBaxterQSwap|YangBaxterZornBridge|ZornScalingFlow|ast_export_test|temp_test|test_fixes2|test_reflection|test_rpow|test_selfconcordance)\.lean|src/(Agent|AuditNative|AuditNativeRun|AuditStrict|B3PresentedGroup|CheckBasis|CheckTemp|DAG|Docs|Experimental|GrandPartitionAll|GrandPartitionEuler|GrandPartitionOnline|GrandPartitionPolynomial|GrandPartitionProbability|GrandPartitionRational|GrandPartitionRobustPoisson|GrandPartitionTransform|InfoGeometry|KaplanskyCliffordBridge|NonIsoConf3OrlikSolomon|Omega|PrimitiveSetsAboveX|SelfReference|Socratic|SplitOctonionBraidSU3|Test|TestFin|VirasoroProject|YangBaxterQSwap|YangBaxterZornBridge|ZornScalingFlow|ast_export_test|temp_test|test_fixes2|test_reflection|test_rpow|test_selfconcordance)\.lean|verification/clifford-peirce-walsh/lakefile\.lean|tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit)\.lean|tools/infra/axiom_index\.lean)$|^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox|lean)/.*\.lean$|^src/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
+    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.(src\.)?lean|lean-toolchain|lean/(Agent|AuditNative|AuditNativeRun|AuditStrict|B3PresentedGroup|CheckBasis|CheckTemp|DAG|Docs|Experimental|GrandPartitionAll|GrandPartitionEuler|GrandPartitionOnline|GrandPartitionPolynomial|GrandPartitionProbability|GrandPartitionRational|GrandPartitionRobustPoisson|GrandPartitionTransform|GrandUnifiedNoncommutativeOperatorSynthesis|InfoGeometry|KaplanskyCliffordBridge|NonIsoConf3OrlikSolomon|NoncommutativeGaugeAndBraidedHolonomy|Omega|PrimitiveSetsAboveX|SelfReference|Socratic|SplitOctonionBraidSU3|Test|TestFin|VirasoroProject|YangBaxterQSwap|YangBaxterZornBridge|ZornScalingFlow|ast_export_test|temp_test|test_fixes2|test_reflection|test_rpow|test_selfconcordance)\.lean|src/(Agent|AuditNative|AuditNativeRun|AuditStrict|B3PresentedGroup|CheckBasis|CheckTemp|DAG|Docs|Experimental|GrandPartitionAll|GrandPartitionEuler|GrandPartitionOnline|GrandPartitionPolynomial|GrandPartitionProbability|GrandPartitionRational|GrandPartitionRobustPoisson|GrandPartitionTransform|InfoGeometry|KaplanskyCliffordBridge|NonIsoConf3OrlikSolomon|Omega|PrimitiveSetsAboveX|SelfReference|Socratic|SplitOctonionBraidSU3|Test|TestFin|VirasoroProject|YangBaxterQSwap|YangBaxterZornBridge|ZornScalingFlow|ast_export_test|temp_test|test_fixes2|test_reflection|test_rpow|test_selfconcordance)\.lean|verification/clifford-peirce-walsh/lakefile\.lean|verification/attention-query/AttentionDeclarationAudit\.lean|verification/courant-dirac/CapstoneDeclarationAudit\.lean|verification/(klein-operator-hierarchy|supplied-zorn-counterexample|witt-born-null-exactness|zorn-primal-dual)/Audit\.lean|tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit)\.lean|tools/infra/axiom_index\.lean)$|^lean/(InfoGeometry|DAG|GRR|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox|lean)/.*\.lean$|^src/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^contributions/(wilson|wilson-gaussian)/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
 
     if [ -n "$UNSUPPORTED_PACKAGE_CONFIGS" ]; then
         echo "  ❌ Nested Lake project configuration changed, but this root gate has no package-specific locked build route:" >&2
@@ -241,8 +254,8 @@ if [ "$MODE" = "incremental" ]; then
         fi
 
         # 1. Locked Lake builds (incremental targets or umbrella if configuration/all changed)
-        TARGETS=$(grep -E '^lean/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox|lean)/.*\.lean$' <<<"$CHANGED_LEAN_FILES" | sed -e 's|^lean/||' -e 's|\.lean$||' -e 's|/|.|g' || true)
-        TOP_LEVEL_TARGETS=$(grep -E '^lean/[^/]+\.lean$' <<<"$CHANGED_LEAN_FILES" | grep -Ev '^lean/(lakefile|AuditNativeRun)\.lean$' | sed -e 's|^lean/||' -e 's|\.lean$||' || true)
+        TARGETS=$(grep -E '^lean/(InfoGeometry|DAG|GRR|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox|lean)/.*\.lean$' <<<"$CHANGED_LEAN_FILES" | sed -e 's|^lean/||' -e 's|\.lean$||' -e 's|/|.|g' || true)
+        TOP_LEVEL_TARGETS=$(grep -E '^lean/[^/]+\.lean$' <<<"$CHANGED_LEAN_FILES" | grep -Ev '^lean/(lakefile|AuditNativeRun|NoncommutativeGaugeAndBraidedHolonomy)\.lean$' | sed -e 's|^lean/||' -e 's|\.lean$||' || true)
         if [ -n "$TOP_LEVEL_TARGETS" ]; then
             TARGETS="${TARGETS:+$TARGETS }$TOP_LEVEL_TARGETS"
         fi
@@ -393,6 +406,45 @@ if [ "$MODE" = "incremental" ]; then
     if [ -n "$CLIFFORD_PEIRCE_WALSH_FILES" ]; then
         run_check "Locked Clifford-Peirce-Walsh declaration audit" \
             python3 verification/clifford-peirce-walsh/check.py
+    fi
+
+    # External-Stacks-dependent GRR port modules (full StacksFrontier build
+    # targets external_refs/Stacks v4.34.0-rc2/v4.35.0 per lean/GRR/README.md).
+    if [ -n "$GRR_STACKS_LEAN_FILES" ]; then
+        echo "  ℹ StacksFrontier-dependent GRR files audited here; external Stacks v4.34.0-rc2/v4.35.0 build note: lean/GRR/README.md."
+        run_check "Axiom & Debt Audit (GRR Stacks-dependent port)" \
+            python3 tools/infra/axiom_audit.py --fail-on-gaps $GRR_STACKS_LEAN_FILES
+        run_check "OpenGauss Screener (GRR Stacks-dependent port)" \
+            python3 tools/infra/opengauss_screener.py $GRR_STACKS_LEAN_FILES
+    fi
+
+    # External 4D_Wilson_Loop_RG contribution overlays (compiled against upstream
+    # v4.34.0-rc2/v4.36.0 in .github/workflows/wilson-{gaussian-upstream,upstream-validation}.yml).
+    if [ -n "$WILSON_CONTRIB_LEAN_FILES" ]; then
+        echo "  ℹ External 4D_Wilson_Loop_RG compilation is covered by .github/workflows/wilson-upstream-validation.yml and .github/workflows/wilson-gaussian-upstream.yml."
+        run_check "External Wilson contribution manifest SHA-256 & evidence check" \
+            python3 -c '
+import hashlib, json
+from pathlib import Path
+wg = json.loads(Path("contributions/wilson-gaussian/source-manifest.json").read_text())
+for rel, exp in wg["overlay_sha256"].items():
+    p = Path("contributions/wilson-gaussian/overlay") / rel
+    assert p.is_file(), f"Missing {p}"
+    got = hashlib.sha256(p.read_bytes()).hexdigest()
+    assert got == exp, f"Hash mismatch for {p}: {got} != {exp}"
+pkg = Path("contributions/wilson/validation/evidence/package-ff8e163.json")
+assert pkg.is_file() and pkg.stat().st_size > 0, f"Missing {pkg}"
+for cand in ("cutoff", "gaussian", "gram", "states"):
+    for fname in ("source-inventory.json", "axiom-audit.json", "artifact-receipt.json"):
+        ep = Path(f"contributions/wilson/validation/evidence/exact-{cand}-ff8e163") / fname
+        assert ep.is_file() and ep.stat().st_size > 0, f"Missing {ep}"
+n_wg = len(wg["overlay_sha256"])
+print(f"Verified wilson-gaussian overlay manifest ({n_wg} files) and wilson CI evidence inventories.")
+'
+        run_check "Axiom & Debt Audit (Wilson upstream contributions)" \
+            python3 tools/infra/axiom_audit.py --fail-on-gaps $WILSON_CONTRIB_LEAN_FILES
+        run_check "OpenGauss Screener (Wilson upstream contributions)" \
+            python3 tools/infra/opengauss_screener.py $WILSON_CONTRIB_LEAN_FILES
     fi
 
     # Incremental scope and quarantine audits

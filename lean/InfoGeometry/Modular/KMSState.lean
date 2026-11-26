@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Algebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Algebra.Hom
@@ -10,26 +15,24 @@ import InfoGeometry.Modular.ConnesCocycle
 set_option linter.unusedSectionVars false
 
 /-!
-# Kubo–Martin–Schwinger (KMS) Condition at Inverse Temperature β = 1
+# Algebraic & Interface KMS-1 Condition at Inverse Temperature β = 1
 
-Formalizes the Tomita–Takesaki KMS state condition for a state `φ` on a 
-C*-algebra / *-algebra `A` with respect to a 1-parameter modular automorphism group `σ_t`:
+Defines boundary-value and algebraic KMS-1 predicates for a complex linear
+functional `φ : A →ₗ[ℂ] ℂ` with respect to a `ModularFlow A`:
 
-  1. `KMS1BoundaryCondition`: Analytic strip boundary values for pair (a, b):
-       - Real axis:   `F_{a,b}(t)     = φ(a * σ_t(b))`
-       - Shifted axis:`F_{a,b}(t + i) = φ(σ_t(b) * a)`
-  2. `IsKMS1State`: Bundled definition of a normalized state satisfying the KMS-1 condition.
-  3. `kms_modular_invariance`: Theorem that any KMS-1 state is invariant under the modular flow:
-       `φ(σ_t(a)) = φ(a)`
-  4. `IsAlgebraicKMS1`: The finite-dimensional / entire analytic element condition:
-       `φ(a * b) = φ(b * σ_i(a))`
-  5. `gibbsState`: Canonical trace functional `φ(x) = Tr(ρ * x)`.
-  6. `gibbs_state_is_algebraic_kms`: Gibbs canonical state satisfies algebraic KMS-1.
-  7. `LinearDerivation`: Leibniz derivation on non-commutative algebras.
-  8. `infinitesimal_kms_skew_adjoint`: Coupling to the modular derivation `δ = d/dt σ_t|_{t=0}`:
-       `φ(a * δ(b)) = -φ(δ(a) * b)`
-
-All proofs are complete in native Mathlib with zero `sorry`s and zero custom axioms.
+  1. `KMS1BoundaryCondition`: Boundary equations `F(t) = φ(a * σ_t(b))` and
+     `F(t + i) = φ(σ_t(b) * a)` for a correlation function `F : ℂ → ℂ`
+     (holomorphicity and boundedness on the strip `{0 ≤ Im(z) ≤ 1}` are not
+     encoded in the struct and must be supplied externally).
+  2. `IsKMS1State`: Normalized functional admitting such a correlation function.
+  3. `kms_modular_invariance`: Conditional invariance `φ(σ_t(a)) = φ(a)` given
+     the explicit constancy hypothesis `h_const` on `F`.
+  4. `IsAlgebraicKMS1`: Algebraic condition `φ(a * b) = φ(b * σ_i(a))`.
+  5. `gibbs_state_is_algebraic_kms`: Proves `IsAlgebraicKMS1` for `gibbsState tr rho`
+     from cyclic trace `h_cycl`, `rho_inv * rho = 1`, and `σ_i(a) = rho * a * rho_inv`.
+  6. `infinitesimal_kms_skew_adjoint`: Algebraic consequence `φ(a * δ(b)) = -φ(δ(a) * b)`
+     from the Leibniz rule and the supplied derivation-invariance hypothesis `h_inv_deriv`
+     (no differentiation at `t = 0` is performed in this file).
 -/
 
 namespace InfoGeometry.Modular.KMSState
@@ -76,9 +79,9 @@ structure IsKMS1State (φ : A →ₗ[ℂ] ℂ) (σ : ModularFlow A) : Prop where
     ========================================================================= -/
 
 /--
-MAIN THEOREM 1 (Modular Invariance):
-Every KMS state `φ` at `β = 1` is invariant under its modular flow:
-  `φ(σ_t(a)) = φ(a)` for all `t ∈ ℝ`.
+Conditional Modular Invariance:
+Given `IsKMS1State φ σ` and the explicit constancy hypothesis `h_const` on `F(t)`
+for `(1, a)`, deduces `φ(σ_t(a)) = φ(a)` for all `t ∈ ℝ`.
 -/
 theorem kms_modular_invariance
     (φ : A →ₗ[ℂ] ℂ) (σ : ModularFlow A) (hKMS : IsKMS1State φ σ)
@@ -157,10 +160,9 @@ instance : CoeFun (LinearDerivation ℂ A) (fun _ => A → A) where
   coe D := D.toLinearMap
 
 /--
-MAIN THEOREM 3 (Infinitesimal KMS Identity):
-Differentiating the KMS relation at `t = 0` yields the skew-adjointness of the
-modular derivation `δ = ad_𝒦` under the state `φ`:
-  `φ(a * δ(b)) + φ(δ(a) * b) = 0`  ⟹  `φ(a * δ(b)) = -φ(δ(a) * b)`
+Algebraic Skew-Adjointness of Invariant Derivations:
+Given any `LinearDerivation ℂ A` and the explicit invariance hypothesis `h_inv_deriv : ∀ x, φ (δ x) = 0`,
+the Leibniz rule yields `φ(a * δ(b)) = -φ(δ(a) * b)`.
 -/
 theorem infinitesimal_kms_skew_adjoint
     (φ : A →ₗ[ℂ] ℂ)

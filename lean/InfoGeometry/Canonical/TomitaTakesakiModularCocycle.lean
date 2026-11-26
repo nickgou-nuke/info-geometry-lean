@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -17,9 +22,21 @@ open Matrix Complex
 
 namespace TomitaTakesakiCocycle
 
+/-!
+# Finite Unitary-Group Matrix Wrapper (Radon–Nikodym Cocycle Naming Shadow)
+
+`RadonNikodymCocycle n` here is a direct `abbrev` for `Matrix.unitaryGroup (Fin n) ℂ`
+(a single time-independent unitary matrix). There is no time parameter `t`, no
+modular automorphism flow `σ_t`, and no 1-cocycle equation `u(s+t) = u(s) σ_s(u(t))`.
+For genuine Connes 1-cocycle formulations over operator flows, see
+`InfoGeometry.Modular.ConnesCocycle`,
+`InfoGeometry.OperatorAlgebra.ConstructiveConnesCocycle`, and
+`InfoGeometry.Volume.ConnesCocycle`.
+-/
+
 variable {n : ℕ} [Fintype (Fin n)] [DecidableEq (Fin n)]
 
-/-- Unitary Connes Radon-Nikodym Cocycle Element u(t) = (Dψ : Dφ)_t in M_n(ℂ). -/
+/-- Type alias for `Matrix.unitaryGroup (Fin n) ℂ` (time-independent unitary matrix). -/
 abbrev RadonNikodymCocycle (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] :=
   Matrix.unitaryGroup (Fin n) ℂ
 
@@ -43,28 +60,27 @@ theorem h_unitary_right : u_val u * u_star u = 1 := by
       (u : Matrix (Fin n) (Fin n) ℂ).conjTranspose = 1
   exact Matrix.mem_unitaryGroup_iff.mp u.2
 
-/-- **Theorem**: Radon-Nikodym Cocycle Unitarity Identity u* u = 1. -/
+/-- Left unitarity identity `u* u = 1` for a unitary matrix in `M_n(ℂ)`. -/
 theorem cocycle_unitary_left : u_star u * u_val u = 1 :=
   h_unitary_left u
 
-/-- **Theorem**: Radon-Nikodym Cocycle Right Unitarity Identity u u* = 1. -/
+/-- Right unitarity identity `u u* = 1` for a unitary matrix in `M_n(ℂ)`. -/
 theorem cocycle_unitary_right : u_val u * u_star u = 1 :=
   h_unitary_right u
 
-/-- Identity Cocycle (Dφ : Dφ)_t = 1. -/
+/-- Identity element `1` in `Matrix.unitaryGroup (Fin n) ℂ`. -/
 def identityCocycle (n : ℕ) [Fintype (Fin n)] [DecidableEq (Fin n)] : RadonNikodymCocycle n where
   val := 1
   property := by simp
 
-/-- **Theorem**: Identity Cocycle Value is Matrix Identity 1. -/
+/-- Value of `identityCocycle n` is the identity matrix `1`. -/
 theorem identity_cocycle_val : u_val (identityCocycle n) = 1 := rfl
 
-/-- Composition of Connes Radon-Nikodym Cocycles u₁₂ * u₂₃. -/
+/-- Matrix group product `u12 * u23` in `Matrix.unitaryGroup (Fin n) ℂ`. -/
 def cocycleComposition (u12 u23 : RadonNikodymCocycle n) : RadonNikodymCocycle n :=
   u12 * u23
 
-/-- **Theorem**: Connes Radon-Nikodym Cocycle Chain Rule Composition Associativity:
-    (u12 * u23) * u34 = u12 * (u23 * u34). -/
+/-- Associativity of unitary matrix multiplication: `(u12 * u23) * u34 = u12 * (u23 * u34)`. -/
 theorem cocycle_chain_rule_assoc (u12 u23 u34 : RadonNikodymCocycle n) :
     u_val (cocycleComposition (cocycleComposition u12 u23) u34) =
     u_val (cocycleComposition u12 (cocycleComposition u23 u34)) := by

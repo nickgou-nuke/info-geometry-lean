@@ -28,7 +28,7 @@ Implemented in [`src/igf/config/env_aliases.py`](../../src/igf/config/env_aliase
 1. **Explicit CLI flags** (`--endpoint`, `--database`, `--username`, `--password`) override everything else.
 2. **Pre-set shell environment variables** take precedence over `.env` files — `load_alexandria_arango_env()` never overwrites already-set `ALEXANDRIA_*` variables.
 3. **`ALEXANDRIA_ARANGO_ENV_FILE`** (or default `configs/alexandria/.env`) supplies defaults when shell vars are unset.
-4. **Port-only shortcut**: setting `ALEXANDRIA_ARANGO_PORT=8538` without `ALEXANDRIA_ARANGO_ENDPOINT` automatically resolves to `http://127.0.0.1:8538`.
+4. **Port-only shortcut**: setting `ALEXANDRIA_ARANGO_PORT=8538` without `ALEXANDRIA_ARANGO_ENDPOINT` automatically resolves to `http://127.0.0.1:8538`; when no explicit `ALEXANDRIA_ARANGO_DB`/`..._DATABASE` is set, that port now defaults to `alexandria_dag_brain`. Port `8532` keeps the default database `alexandria`. Explicit endpoint/database overrides always win.
 5. **Strict lane isolation**:
    - Alexandria loaders do **not** read or mutate generic `ARANGO_*` or `HIVE_*` variables.
    - `guard_alexandria_target(endpoint, database)` raises `ValueError` (and Alexandria CLIs exit with code `2`) if targeting forbidden ports `{8530, 8540}` or forbidden databases `{"infogeometry", "darwin_commits", "hive_live", "aiclaw_auto_rag"}`.

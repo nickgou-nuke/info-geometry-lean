@@ -65,6 +65,41 @@ theorem padSum_bdgKreinPair {n : ℕ} (ψ φ : Fin n ⊕ Fin n → ℝ) :
   simp [bdgKreinPair, sheetKrein, Matrix.mulVec, Matrix.one_apply, dotProduct,
     padSum, pad, Fin.sum_univ_castSucc, Fintype.sum_sum_type]
 
+/-- Signature coefficients for the standard `(1,n-1)` diagonal form on `Fin n`.
+At `n = 4` these are `(1,-1,-1,-1)`, the Minkowski convention used by
+`minkowski4` in the finite doubled-carrier module. -/
+def minkowskiSign {n : ℕ} (i : Fin n) : ℝ := if i.val == 0 then 1 else -1
+
+/-- Off-diagonal null-sheet Minkowski pairing at a finite refinement stage. -/
+def doubledMinkowskiNullPair {n : ℕ} (ψ φ : Fin n ⊕ Fin n → ℝ) : ℝ :=
+  ∑ i : Fin n, minkowskiSign i *
+    (ψ (Sum.inl i) * φ (Sum.inr i) + ψ (Sum.inr i) * φ (Sum.inl i))
+
+/-- Zero-padding transports the doubled null-sheet Minkowski pairing exactly.
+The newly added coordinate contributes zero, while all old signature signs are
+preserved by `Fin.castSucc`. -/
+theorem padSum_doubledMinkowskiNullPair {n : ℕ} (ψ φ : Fin n ⊕ Fin n → ℝ) :
+    doubledMinkowskiNullPair (padSum ψ) (padSum φ) = doubledMinkowskiNullPair ψ φ := by
+  simp [doubledMinkowskiNullPair, padSum, pad, Fin.sum_univ_castSucc]
+  apply Finset.sum_congr rfl
+  intro i hi
+  rw [show minkowskiSign i.castSucc = minkowskiSign i by rfl]
+
+/-- The doubled null-sheet Minkowski pairing is invariant at every finite stage
+of the concrete padding tower. -/
+theorem seqPair_doubledMinkowskiNullPair_pad :
+    ∀ n (ψ φ : Fin n ⊕ Fin n → ℝ) (k : ℕ),
+      seqPair (fun n => padSum (n := n))
+        (fun n ψ φ => doubledMinkowskiNullPair ψ φ) n ψ φ k =
+          doubledMinkowskiNullPair ψ φ := by
+  intro n ψ φ k
+  induction k generalizing n ψ φ with
+  | zero => rfl
+  | succ k ih =>
+    change seqPair (fun n => padSum (n := n))
+      (fun n ψ φ => doubledMinkowskiNullPair ψ φ) (n + 1) (padSum ψ) (padSum φ) k = _
+    rw [ih, padSum_doubledMinkowskiNullPair]
+
 /-- BdG quadratic form for the zero-kinetic stage with pairing gap `m`. -/
 def stageBdgQuad {n : ℕ} (m : ℝ) (ψ : Fin n ⊕ Fin n → ℝ) : ℝ :=
   let H := bdgHamiltonian (0 : Matrix (Fin n) (Fin n) ℝ) m

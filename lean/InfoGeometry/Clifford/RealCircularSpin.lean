@@ -105,6 +105,7 @@ theorem rotation_square (a : Fin 3) :
 theorem rotation_transpose (a : Fin 3) : (rotation a)ᵀ = -rotation a := by
   fin_cases a <;> spin_entrywise
 
+set_option maxHeartbeats 2000000 in
 theorem rotation_commutator_cyclic (a : Fin 3) :
     rotation a * rotation (a + 1) - rotation (a + 1) * rotation a =
       rotation (a + 2) := by
@@ -192,6 +193,7 @@ theorem solderConjugate_mul_solder (t x y z : ℝ) :
       (t ^ 2 - x ^ 2 - y ^ 2 - z ^ 2) • (1 : Mat4R) := by
   spin_entrywise
 
+set_option maxHeartbeats 2000000 in
 /-- A genuine real algebra representation of the split atom. The lower
 matrix unit maps to the *negative* circular ladder. -/
 def circularRepresentation : Matrix (Fin 2) (Fin 2) ℝ →ₐ[ℝ] Mat4R where

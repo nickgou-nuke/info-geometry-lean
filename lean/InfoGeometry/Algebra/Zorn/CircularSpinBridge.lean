@@ -199,8 +199,7 @@ theorem paired_anticommutator (i : Fin 3) :
 theorem pole_cut_square :
     (zornPlus (R := ℝ) - zornMinus) * (zornPlus - zornMinus) = 1 := by
   have h : twisted (1 : ℝ) * twisted 1 = (1 : Mat2R) := by
-    rw [twisted_mul, one_mul]
-    exact (repeatedHom (A := ℝ)).map_one
+    exact chirality_square
   rw [← fixedChannel_twisted_one (0 : Fin 3), ← fixedChannel_mul,
     h, fixedChannel_one]
 

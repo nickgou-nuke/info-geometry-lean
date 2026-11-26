@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.DoubledMinkowskiBdGColimitBridge
+import Mathlib.Order.DirectedInverseSystem
 
 /-!
 # Concrete finite-stage tower for doubled-Minkowski BdG gap persistence
@@ -357,5 +358,81 @@ def padSumLinear {n : ℕ} :
 /-- The linear padding map agrees pointwise with the tower transition. -/
 theorem padSumLinear_apply {n : ℕ} (ψ : Fin n ⊕ Fin n → ℝ) :
     padSumLinear ψ = padSum ψ := rfl
+
+/-- Finite BdG state space at a tower stage. -/
+abbrev BdgTowerState (n : ℕ) := Fin n ⊕ Fin n → ℝ
+
+/-- Iterated padding from stage `i` to stage `j`, defined by `Nat.leRecOn`. -/
+def padFun (i j : ℕ) (h : i ≤ j) : BdgTowerState i → BdgTowerState j :=
+  Nat.leRecOn (C := fun n => BdgTowerState i → BdgTowerState n) h
+    (fun {_k} f x => padSum (f x)) id
+
+/-- Iterated padding over a reflexive step is the identity. -/
+theorem padFun_self (i : ℕ) (x : BdgTowerState i) : padFun i i le_rfl x = x := by
+  simp [padFun, Nat.leRecOn_self]
+
+/-- Iterated padding composes along `i ≤ j ≤ k`. -/
+theorem padFun_map_map {i j k : ℕ} (hij : i ≤ j) (hjk : j ≤ k)
+    (x : BdgTowerState i) :
+    padFun j k hjk (padFun i j hij x) = padFun i k (hij.trans hjk) x := by
+  obtain ⟨e, rfl⟩ := Nat.exists_eq_add_of_le hjk
+  induction e with
+  | zero =>
+    simp [padFun_self]
+  | succ e ih =>
+    simp only [padFun]
+    rw [Nat.leRecOn_succ (n := j) (m := j + e) (h1 := Nat.le_add_right j e) (h2 := hjk)]
+    rw [Nat.leRecOn_succ (n := i) (m := j + e)
+      (h1 := hij.trans (Nat.le_add_right j e)) (h2 := hij.trans hjk)]
+    exact congrArg padSum (ih (Nat.le_add_right j e))
+
+/-- Iterated padding is additive. -/
+theorem padFun_add (i j : ℕ) (h : i ≤ j) (x y : BdgTowerState i) :
+    padFun i j h (x + y) = padFun i j h x + padFun i j h y := by
+  obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le h
+  change padFun i (i + d) (Nat.le_add_right i d) (x + y) =
+    padFun i (i + d) (Nat.le_add_right i d) x +
+      padFun i (i + d) (Nat.le_add_right i d) y
+  induction d with
+  | zero => simp [padFun, Nat.leRecOn_self]
+  | succ d ih =>
+    simp only [padFun]
+    rw [Nat.leRecOn_succ (n := i) (m := i + d) (h1 := Nat.le_add_right i d) (h2 := h)]
+    change padSum (padFun i (i + d) (Nat.le_add_right i d) (x + y)) =
+      padSum (padFun i (i + d) (Nat.le_add_right i d) x) +
+        padSum (padFun i (i + d) (Nat.le_add_right i d) y)
+    rw [ih (Nat.le_add_right i d)]
+    exact (padSumLinear.map_add _ _)
+
+/-- Iterated padding is scalar-homogeneous. -/
+theorem padFun_smul (i j : ℕ) (h : i ≤ j) (a : ℝ) (x : BdgTowerState i) :
+    padFun i j h (a • x) = a • padFun i j h x := by
+  obtain ⟨d, rfl⟩ := Nat.exists_eq_add_of_le h
+  change padFun i (i + d) (Nat.le_add_right i d) (a • x) =
+    a • padFun i (i + d) (Nat.le_add_right i d) x
+  induction d with
+  | zero => simp [padFun, Nat.leRecOn_self]
+  | succ d ih =>
+    simp only [padFun]
+    rw [Nat.leRecOn_succ (n := i) (m := i + d) (h1 := Nat.le_add_right i d) (h2 := h)]
+    change padSum (padFun i (i + d) (Nat.le_add_right i d) (a • x)) =
+      a • padSum (padFun i (i + d) (Nat.le_add_right i d) x)
+    rw [ih (Nat.le_add_right i d)]
+    exact (padSumLinear.map_smul a _)
+
+/-- Linear-map form of the iterated padding over `i ≤ j`. -/
+def padMapLin (i j : ℕ) (h : i ≤ j) : BdgTowerState i →ₗ[ℝ] BdgTowerState j where
+  toFun := padFun i j h
+  map_add' := padFun_add i j h
+  map_smul' := padFun_smul i j h
+
+/-- The iterated padding maps form a genuine directed system. -/
+instance padMapLin_directed : DirectedSystem BdgTowerState (fun i j h => padMapLin i j h) where
+  map_self := by
+    intro i x
+    exact padFun_self i x
+  map_map := by
+    intro k j i hij hjk x
+    exact padFun_map_map hij hjk x
 
 end InfoGeometry.Canonical.DoubledMinkowskiConcreteTowerGap

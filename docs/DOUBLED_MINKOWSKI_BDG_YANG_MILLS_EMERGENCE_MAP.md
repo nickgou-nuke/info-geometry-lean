@@ -25,7 +25,7 @@ Those stay explicit open frontiers.
 | C2 | The massive BdG dispersion commutes with the Krein metric and with positive/negative Nambu projectors; ghost sectors decouple | `lean/InfoGeometry/Physics/KreinBdGMassDecoupling.lean:223` (`bdg_dispersion_commutes_P_plus`), `:261` (`bdg_dispersion_commutes_P_minus`), `:300` (`bdg_dispersion_commutes_krein`), `:316`/`:331` (`bdg_dispersion_ghost_decoupling_*`) | BUCKET 1, kernel-verified | Operator identities under the supplied Krein structure; no Hilbert spectral lower bound is proved. |
 | C3 | Eight real Nambu/BdG coordinates are carried into the real doubled Krein space by an actual linear equivalence intertwining particle–hole and metric actions | `lean/InfoGeometry/Krein/MajoranaBdGSheetBridge.lean:124` (`nambuDoubledEquiv`), `:172` (`particleHole8` → `modular_j`), `:182` (`kreinMetric8` → `spectral_epsilon`) | BUCKET 1, kernel-verified | Finite-dimensional carrier transport, not a continuum manifold chart. |
 | C4 | The indefinite doubled-Minkowski metric is soldered to Pauli/chiral involutions on the doubled carrier | `lean/InfoGeometry/CliffordWeyl/IndefiniteMetricModulePauliBridge.lean:78`, `:133`, `:176`; `lean/InfoGeometry/Lie/DoubledMinkowskiCircularChiralYangMillsBridge.lean:500` (`doubledMinkowski_krein_pauli_soldering_bridge`) | BUCKET 1, kernel-verified | Algebraic/coordinate soldering; not a pseudo-Riemannian manifold object. |
-| C4a | The finite BdG sheet carrier `Fin 4 ⊕ Fin 4` is explicitly reindexed to `Fin 2 × Fin 4`, carrying `diag(η₁,₃, -η₁,₃)` exactly to `𝒦_diag = Z ⊗ η₁,₃` and preserving the Krein pairing | `lean/InfoGeometry/Canonical/DoubledMinkowskiSheetSoldering.lean:31` (`sheetToDoubled`), `:44` (`sheetKrein_reindex_doubledMinkowskiDiag`), `:59` (`doubledMinkowskiKreinPair_eq_pairing`) | BUCKET 1, kernel-verified | Finite-dimensional index soldering; not a continuum spacetime chart or YM measure. |
+| C4a | The finite BdG sheet carrier `Fin 4 ⊕ Fin 4` is explicitly reindexed to `Fin 2 × Fin 4`, carrying `diag(η₁,₃, -η₁,₃)` exactly to `𝒦_diag = Z ⊗ η₁,₃`, preserving the Krein pairing, and expressing the zero-kinetic BdG gap as `m²` times the `K = 𝒦² = 1` restored norm | `lean/InfoGeometry/Canonical/DoubledMinkowskiSheetSoldering.lean:31` (`sheetToDoubled`), `:44` (`sheetKrein_reindex_doubledMinkowskiDiag`), `:59` (`doubledMinkowskiKreinPair_eq_pairing`), `:91` (`doubledMinkowskiSum_sq`), `:99` (`stageBdgQuad_eq_doubledMinkowskiJNorm`) | BUCKET 1, kernel-verified | Finite-dimensional index/soldering theorem; not a continuum spacetime chart or YM measure. |
 | C5 | A concrete doubled-Minkowski matrix-valued connection has nonzero Yang–Mills curvature, satisfies Bianchi, and a displayed form solves the Yang–Mills PDE | `lean/InfoGeometry/Lie/DoubledMinkowskiManifoldYangMillsPDE.lean:591` (`ymCurvature`), `:767` (`bianchi_identity_ymCurvature`), `:1351` (`YangMillsPDE`), `:1536` (`circularGaugeForm_solves_yangMillsPDE`), `:2076` (Minkowski wave solution) | BUCKET 1, kernel-verified | Explicit classical solutions on a concrete `Mat4(ℂ)`-form carrier; not existence for arbitrary initial data. |
 | C5a | The BdG square off-diagonal block is exactly the commutator curvature `DΔ - ΔD`, and the single-colour Zorn embedding preserves that readout | `lean/InfoGeometry/Physics/NoncommutativeZornBdGDerivations.lean:443` (`embedMat2_bdg_square_curvature`) | BUCKET 1, kernel-verified | Algebraic curvature readout; not the classical doubled-Minkowski PDE in C5. |
 | C6 | Lattice covariant derivative, Wilson curvature, and plaquette action converge locally as mesh `a → 0` under smoothness hypotheses | `lean/InfoGeometry/Lie/DoubledMinkowskiLatticeContinuumLimit.lean:158`, `:395`, `:541`, `:721` (`circularColimit_continuum_transport`) | BUCKET 2, conditional | Needs `ContDiff`/`C²` regularity; gives local lattice-to-continuum limits, not a full constructive continuum QFT. |
@@ -94,7 +94,7 @@ Bounded `lake build` runs under the shared scratch lock at the stated HEAD:
 | `InfoGeometry.Physics.BdGColimitGapTransport` | exit 0, 0 errors, `Build completed successfully (1255 jobs)` |
 | `InfoGeometry.Canonical.DoubledMinkowskiBdGColimitBridge` | exit 0, 0 errors, `Build completed successfully (3094 jobs)` |
 | `InfoGeometry.Canonical.DoubledMinkowskiConcreteTowerGap` | exit 0, 0 errors, `Build completed successfully (3095 jobs)` |
-| `InfoGeometry.Canonical.DoubledMinkowskiSheetSoldering` | exit 0, 0 errors, `Build completed successfully (3095 jobs)` |
+| `InfoGeometry.Canonical.DoubledMinkowskiSheetSoldering` | exit 0, 0 errors, `Build completed successfully (3096 jobs)` |
 | `InfoGeometry.Canonical.PeirceTetraktysColimitCoercivity` | exit 0, 0 errors, `Build completed successfully (9136 jobs)` |
 | `InfoGeometry.Canonical.PeirceTelegrapherVirasoroColimitBridge` | exit 0, 0 errors, `Build completed successfully (9666 jobs)` |
 | `InfoGeometry.Algebra.Zorn.TetractysZeemanZornAssociatorBridge` | exit 0, 0 errors, `Build completed successfully (9185 jobs)` |
@@ -108,8 +108,10 @@ axioms and `sorryAx = 0`, as did a three-declaration probe covering C6a's
 metric spec and colimit theorem and a three-declaration probe covering C6b's
 Krein pairing, BdG square, concrete colimit and the explicit `Q_inf`
 identification, and a three-declaration probe covering C4a's index equivalence,
-metric reindexing and pairing soldering. These are sampled axiom checks, not
-claims about every declaration in the listed modules.
+metric reindexing, pairing soldering, sum-metric involution and BdG-energy
+restored-norm identity, and a three-declaration probe covering C6a's metric
+spec/colimit theorem plus the C6b/C4a updates. These are sampled axiom checks,
+not claims about every declaration in the listed modules.
 
 ## Roadmap for a future honest closure
 

@@ -234,4 +234,52 @@ theorem perturbed_tower_gap (m : ℝ) :
   rcases h with ⟨hKrein, Q_inf, hTendsto, hProj, hGap, hNN⟩
   exact ⟨Q_inf, hTendsto, hGap⟩
 
+/-- After the first refinement stage the finite-support perturbation vanishes. -/
+theorem perturbedQuad_eq_of_ne_zero (m : ℝ) {n : ℕ} (hn : n ≠ 0)
+    (ψ : Fin n ⊕ Fin n → ℝ) :
+    perturbedQuad m n ψ = m ^ 2 * dotProduct ψ ψ := by
+  simp [perturbedQuad, perturbCoeff, hn]
+
+/-- The perturbed sequence is exactly constant from stage one onward. -/
+theorem seqVal_perturbed_after_first (m : ℝ) :
+    ∀ n (ψ : Fin (n + 1) ⊕ Fin (n + 1) → ℝ) (k : ℕ),
+      seqVal (fun n => padSum (n := n)) (fun n ψ => perturbedQuad m n ψ) (n + 1) ψ k =
+        m ^ 2 * dotProduct ψ ψ := by
+  intro n ψ k
+  induction k generalizing n ψ with
+  | zero =>
+    simp [seqVal, perturbedQuad_eq_of_ne_zero m (Nat.succ_ne_zero n)]
+  | succ k ih =>
+    change seqVal (fun n => padSum (n := n)) (fun n ψ => perturbedQuad m n ψ)
+      ((n + 1) + 1) (padSum ψ) k = m ^ 2 * dotProduct ψ ψ
+    rw [ih, padSum_dotProduct]
+
+/-- Nonzero-error tower with an explicitly washed-out limit: the single
+stage-zero perturbation disappears and `Q_inf = m²‖ψ‖²`. -/
+theorem perturbed_tower_explicit_Qinf (m : ℝ) :
+    ∃ Q_inf : (n : ℕ) → (Fin n ⊕ Fin n → ℝ) → ℝ,
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        Tendsto (seqVal (fun n => padSum (n := n)) (fun n ψ => perturbedQuad m n ψ) n ψ) atTop
+          (nhds (Q_inf n ψ))) ∧
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        m ^ 2 * dotProduct ψ ψ ≤ Q_inf n ψ) ∧
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        Q_inf n ψ = m ^ 2 * dotProduct ψ ψ) := by
+  refine ⟨fun n ψ => m ^ 2 * dotProduct ψ ψ, ?_, ?_, ?_⟩
+  · intro n ψ
+    apply (tendsto_add_atTop_iff_nat 1).mp
+    have htail : (fun k => seqVal (fun n => padSum (n := n))
+        (fun n ψ => perturbedQuad m n ψ) n ψ (k + 1)) =
+        (fun _ => m ^ 2 * dotProduct ψ ψ) := by
+      funext k
+      have h := seqVal_perturbed_after_first m n (padSum ψ) k
+      rw [padSum_dotProduct] at h
+      exact h
+    rw [htail]
+    exact tendsto_const_nhds
+  · intro n ψ
+    exact le_rfl
+  · intro n ψ
+    rfl
+
 end InfoGeometry.Canonical.DoubledMinkowskiConcreteTowerGap

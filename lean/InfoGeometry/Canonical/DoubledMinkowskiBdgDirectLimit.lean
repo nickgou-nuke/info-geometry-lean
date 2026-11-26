@@ -89,4 +89,26 @@ theorem bdgLimitKreinForm_of (i : ℕ) (x y : BdgTowerState i) :
     (form_of (fun i j h => padMapLin i j h) bdgStageKreinBilin
       bdgStageKreinBilin_compat i x y)
 
+/-- A purely hole-like stage-one vector has strictly negative sheet-Krein norm. -/
+def bdgNegativeStageOne : BdgTowerState 1 := fun i =>
+  match i with
+  | Sum.inl _ => 0
+  | Sum.inr _ => 1
+
+/-- The explicit stage-one witness has sheet-Krein square `-1`. -/
+theorem bdgNegativeStageOne_pair_self :
+    bdgKreinPair bdgNegativeStageOne bdgNegativeStageOne = -1 := by
+  norm_num [bdgKreinPair, sheetKrein, Matrix.mulVec, dotProduct, bdgNegativeStageOne]
+
+/-- The limit pairing is genuinely indefinite: a nonzero limit vector has
+negative sheet-Krein square. -/
+theorem bdgLimitKreinForm_indefinite :
+    ∃ x : BdgTowerDirectLimit, x ≠ 0 ∧ bdgLimitKreinForm x x < 0 := by
+  refine ⟨DirectLimit.Module.of ℝ ℕ BdgTowerState (fun i j h => padMapLin i j h)
+    1 bdgNegativeStageOne, ?_⟩
+  simpa [bdgLimitKreinForm, bdgStageKreinBilin_apply] using
+    (negative_survives (fun i j h => padMapLin i j h) bdgStageKreinBilin
+      bdgStageKreinBilin_compat 1 bdgNegativeStageOne
+      (by simpa [bdgStageKreinBilin_apply, bdgNegativeStageOne_pair_self]))
+
 end InfoGeometry.Canonical.DoubledMinkowskiBdgDirectLimit

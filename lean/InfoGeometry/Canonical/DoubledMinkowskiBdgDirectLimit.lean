@@ -111,4 +111,46 @@ theorem bdgLimitKreinForm_indefinite :
       bdgStageKreinBilin_compat 1 bdgNegativeStageOne
       (by simpa [bdgStageKreinBilin_apply, bdgNegativeStageOne_pair_self]))
 
+/-- The sheet-Krein metric matrix is symmetric at every finite stage. -/
+theorem sheetKrein_isSymm (n : ℕ) : (sheetKrein n).IsSymm := by
+  ext i j
+  cases i <;> cases j <;>
+    simp [sheetKrein, Matrix.transpose_apply, Matrix.one_apply, eq_comm]
+
+/-- The finite sheet-Krein pairing is symmetric. -/
+theorem bdgKreinPair_symm {n : ℕ} (ψ φ : BdgTowerState n) :
+    bdgKreinPair ψ φ = bdgKreinPair φ ψ := by
+  unfold bdgKreinPair
+  calc
+    ψ ⬝ᵥ (sheetKrein n).mulVec φ =
+        Matrix.vecMul ψ (sheetKrein n) ⬝ᵥ φ :=
+      Matrix.dotProduct_mulVec ψ (sheetKrein n) φ
+    _ = (sheetKrein n).mulVec ψ ⬝ᵥ φ := by
+      rw [← Matrix.mulVec_transpose (sheetKrein n) ψ, sheetKrein_isSymm n]
+    _ = φ ⬝ᵥ (sheetKrein n).mulVec ψ := dotProduct_comm _ _
+
+/-- Each stage bilinear form is symmetric in the semilinear sense required by
+`form_isSymm`. -/
+theorem bdgStageKreinBilin_isSemilinearSymm (n : ℕ) :
+    LinearMap.IsSymm (I := RingHom.id ℝ) (bdgStageKreinBilin n) := by
+  refine ⟨?_⟩
+  intro ψ φ
+  simpa [bdgStageKreinBilin_apply] using bdgKreinPair_symm ψ φ
+
+/-- Each stage bilinear form is symmetric in the bilinear-form sense. -/
+theorem bdgStageKreinBilin_isSymm (n : ℕ) :
+    (bdgStageKreinBilin n).IsSymm := by
+  refine ⟨?_⟩
+  intro ψ φ
+  simpa [bdgStageKreinBilin_apply] using bdgKreinPair_symm ψ φ
+
+/-- Symmetry descends to the native direct-limit Krein form. -/
+theorem bdgLimitKreinForm_isSymm : (bdgLimitKreinForm).IsSymm := by
+  unfold bdgLimitKreinForm
+  refine ⟨?_⟩
+  intro x y
+  have h := form_isSymm (fun i j h => padMapLin i j h) bdgStageKreinBilin
+    bdgStageKreinBilin_compat bdgStageKreinBilin_isSemilinearSymm
+  exact h.eq x y
+
 end InfoGeometry.Canonical.DoubledMinkowskiBdgDirectLimit

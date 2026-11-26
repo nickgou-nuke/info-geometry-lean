@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Clifford.NormalizedVectorPin
+import InfoGeometry.Canonical.GradedCliffordOperatorRepresentation
 import InfoGeometry.Canonical.Cl11MatrixCliffordBridge
 import InfoGeometry.Canonical.OperatorValuedSouriauFamily
 import InfoGeometry.Canonical.SouriauOperatorialLogPotential
@@ -80,65 +81,6 @@ theorem pinOperatorRepresentation_mul
   change ρ (((pinVector Q v hv : pin Q) : (CliffordAlgebra Q)ˣ) :
     CliffordAlgebra Q) = _
   rw [pinVector_coe]
-
-/-- A represented Clifford module with a specified involutive grading
-operator. The generator anticommutation equation is the grading contract. -/
-structure GradedCliffordOperatorRepresentation where
-  representation : CliffordAlgebra Q →ₐ[R] Module.End R W
-  grading : Module.End R W
-  grading_sq : grading * grading = 1
-  generator_odd : ∀ v : M,
-    grading * representation (ι Q v) + representation (ι Q v) * grading = 0
-
-namespace GradedCliffordOperatorRepresentation
-
-variable (ρ : GradedCliffordOperatorRepresentation (R := R) (M := M) (W := W) (Q := Q))
-
-/-- Conjugation by the grading sends every represented Clifford vector to its
-negative. -/
-theorem grading_conjugates_generator (v : M) :
-    ρ.grading * ρ.representation (ι Q v) * ρ.grading =
-      -(ρ.representation (ι Q v)) := by
-  have hanti := ρ.generator_odd v
-  have hleft : ρ.grading * ρ.representation (ι Q v) =
-      -(ρ.representation (ι Q v) * ρ.grading) := by
-    calc
-      ρ.grading * ρ.representation (ι Q v) =
-          (ρ.grading * ρ.representation (ι Q v) +
-            ρ.representation (ι Q v) * ρ.grading) -
-            ρ.representation (ι Q v) * ρ.grading := by abel
-      _ = -(ρ.representation (ι Q v) * ρ.grading) := by rw [hanti]; simp
-  calc
-    ρ.grading * ρ.representation (ι Q v) * ρ.grading =
-        -(ρ.representation (ι Q v) * ρ.grading) * ρ.grading := by rw [hleft]
-    _ = -(ρ.representation (ι Q v) * (ρ.grading * ρ.grading)) := by noncomm_ring
-    _ = -(ρ.representation (ι Q v)) := by rw [ρ.grading_sq]; simp
-
-/-- Conjugation by the grading fixes a product of two represented Clifford
-vectors; this gives the explicit even two-generator calculation. -/
-theorem grading_fixes_two_generators (v w : M) :
-    ρ.grading * (ρ.representation (ι Q v) * ρ.representation (ι Q w)) * ρ.grading =
-      ρ.representation (ι Q v) * ρ.representation (ι Q w) := by
-  calc
-    ρ.grading * (ρ.representation (ι Q v) * ρ.representation (ι Q w)) * ρ.grading =
-        (ρ.grading * ρ.representation (ι Q v) * ρ.grading) *
-          (ρ.grading * ρ.representation (ι Q w) * ρ.grading) := by
-            calc
-              ρ.grading * (ρ.representation (ι Q v) * ρ.representation (ι Q w)) * ρ.grading =
-                  (ρ.grading * ρ.representation (ι Q v)) *
-                    (ρ.representation (ι Q w) * ρ.grading) := by noncomm_ring
-              _ = (ρ.grading * ρ.representation (ι Q v) * ρ.grading) *
-                    (ρ.grading * ρ.representation (ι Q w) * ρ.grading) := by
-                  calc
-                    _ = (ρ.grading * ρ.representation (ι Q v)) * 1 *
-                        (ρ.representation (ι Q w) * ρ.grading) := by simp
-                    _ = (ρ.grading * ρ.representation (ι Q v)) *
-                        (ρ.grading * ρ.grading) *
-                        (ρ.representation (ι Q w) * ρ.grading) := by rw [ρ.grading_sq]
-                    _ = _ := by noncomm_ring
-    _ = _ := by rw [ρ.grading_conjugates_generator, ρ.grading_conjugates_generator]; noncomm_ring
-
-end GradedCliffordOperatorRepresentation
 
 /-! ## Explicit real `Cl(1,1)` matrix representation and grading -/
 

@@ -14,6 +14,8 @@ state spaces by padding one zero particle/hole component per stage. It proves
 that Euclidean norm and sheet-Krein pairing are preserved, that the zero-kinetic
 BdG quadratic form is exactly `m² * ‖ψ‖²`, and that the abstract colimit theorem
 therefore yields a projective limit quadratic form with the same lower bound.
+A finite-support nonzero step-error perturbation is also included so the
+summable-error hypothesis is exercised non-trivially.
 
 No continuum 4D Yang–Mills existence, Wightman/OS axioms, or physical spectral
 mass-gap theorem is claimed.
@@ -163,5 +165,73 @@ theorem concrete_tower_explicit_Qinf (m : ℝ) :
     rfl
   · intro n ψ
     rfl
+
+/-- Single nonzero step error at stage zero; finite support makes it summable. -/
+def perturbEps : ℕ → ℝ := fun n => if n = 0 then 1 else 0
+
+/-- Matching finite-support perturbation of the BdG quadratic coefficient. -/
+def perturbCoeff : ℕ → ℝ := fun n => if n = 0 then 1 else 0
+
+/-- BdG quadratic form with a finite-support perturbation at the first stage. -/
+def perturbedQuad (m : ℝ) (n : ℕ) (ψ : Fin n ⊕ Fin n → ℝ) : ℝ :=
+  (m ^ 2 + perturbCoeff n) * dotProduct ψ ψ
+
+theorem perturbEps_summable : Summable perturbEps := by
+  refine summable_of_ne_finset_zero (s := {0}) ?_
+  intro b hb
+  simp [perturbEps]
+  exact by simpa using hb
+
+theorem perturbCoeff_nonneg (n : ℕ) : 0 ≤ perturbCoeff n := by
+  by_cases h : n = 0 <;> simp [perturbCoeff, h]
+
+/-- The perturbed form still dominates `m²‖ψ‖²`. -/
+theorem perturbedQuad_gap (m : ℝ) :
+    ∀ n (ψ : Fin n ⊕ Fin n → ℝ), m ^ 2 * dotProduct ψ ψ ≤ perturbedQuad m n ψ := by
+  intro n ψ
+  have hnn : 0 ≤ dotProduct ψ ψ :=
+    Finset.sum_nonneg fun i _ => mul_self_nonneg (ψ i)
+  have hc : 0 ≤ perturbCoeff n * dotProduct ψ ψ :=
+    mul_nonneg (perturbCoeff_nonneg n) hnn
+  dsimp [perturbedQuad]
+  nlinarith
+
+/-- The step error is nonzero only at stage zero and is dominated by `ε₀`. -/
+theorem perturbedQuad_step (m : ℝ) :
+    ∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+      |perturbedQuad m (n + 1) (padSum ψ) - perturbedQuad m n ψ| ≤
+        perturbEps n * dotProduct ψ ψ := by
+  intro n ψ
+  dsimp [perturbedQuad]
+  rw [padSum_dotProduct]
+  by_cases hn : n = 0
+  · subst n
+    simp [perturbedQuad, perturbCoeff, perturbEps]
+  · simp [hn, perturbedQuad, perturbCoeff, perturbEps]
+
+/-- Nonzero-error instance: a summable finite-support perturbation preserves
+the uniform BdG gap through the abstract colimit theorem. -/
+theorem perturbed_tower_gap (m : ℝ) :
+    ∃ Q_inf : (n : ℕ) → (Fin n ⊕ Fin n → ℝ) → ℝ,
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        Tendsto (seqVal (fun n => padSum (n := n)) (fun n ψ => perturbedQuad m n ψ) n ψ) atTop
+          (nhds (Q_inf n ψ))) ∧
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        m ^ 2 * dotProduct ψ ψ ≤ Q_inf n ψ) := by
+  have h := continuum_colimit_doubled_minkowski_and_bdg_mass_gap
+    (V := fun n => Fin n ⊕ Fin n → ℝ)
+    (ι := fun n => padSum (n := n))
+    (normSq := fun n ψ => dotProduct ψ ψ)
+    (kreinPair := fun n ψ φ => bdgKreinPair ψ φ)
+    (bdgQuad := fun n ψ => perturbedQuad m n ψ)
+    (ε := perturbEps) m
+    (by intro n ψ; exact Finset.sum_nonneg fun i _ => mul_self_nonneg (ψ i))
+    (by intro n ψ; exact padSum_dotProduct ψ ψ)
+    (by intro n ψ φ; exact padSum_bdgKreinPair ψ φ)
+    (perturbedQuad_gap m)
+    perturbEps_summable
+    (perturbedQuad_step m)
+  rcases h with ⟨hKrein, Q_inf, hTendsto, hProj, hGap, hNN⟩
+  exact ⟨Q_inf, hTendsto, hGap⟩
 
 end InfoGeometry.Canonical.DoubledMinkowskiConcreteTowerGap

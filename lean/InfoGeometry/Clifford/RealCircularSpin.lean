@@ -200,7 +200,7 @@ def circularRepresentation : Matrix (Fin 2) (Fin 2) ℝ →ₐ[ℝ] Mat4R where
   toFun A := A 0 0 • polePlus + A 0 1 • circularPlus -
     A 1 0 • circularMinus + A 1 1 • poleMinus
   map_one' := by spin_entrywise
-  map_mul' A B := by spin_entrywise
+  map_mul' A B := by spin_entrywise <;> simp
   map_zero' := by spin_entrywise
   map_add' A B := by spin_entrywise
   commutes' r := by spin_entrywise

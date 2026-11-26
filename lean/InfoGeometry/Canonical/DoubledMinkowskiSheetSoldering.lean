@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.DoubledMinkowskiBdGColimitBridge
+import InfoGeometry.Canonical.DoubledMinkowskiConcreteTowerGap
 
 /-!
 # Soldering the finite BdG sheet carrier to the doubled Minkowski metric
@@ -21,6 +22,7 @@ Yang–Mills manifold, Wightman/OS axioms, or a physical spectral mass gap.
 namespace InfoGeometry.Canonical.DoubledMinkowskiSheetSoldering
 
 open InfoGeometry.Canonical.DoubledMinkowskiBdGColimitBridge
+open InfoGeometry.Canonical.DoubledMinkowskiConcreteTowerGap
 
 /-- Non-commutativity witness for the doubled sheet/spacetime matrix carrier. -/
 theorem sheetSoldering_noncommWitness :
@@ -64,5 +66,40 @@ theorem doubledMinkowskiKreinPair_eq_pairing (ψ φ : Fin 4 ⊕ Fin 4 → ℝ) :
   rw [← sheetKrein_reindex_doubledMinkowskiDiag]
   simp [doubledMinkowskiKreinPair, Matrix.mulVec, dotProduct, Fintype.sum_sum_type,
     Fintype.sum_prod_type, sheetToDoubled]
+
+/-- Sheet-swap matrix giving a noncommutativity witness on the sum-index
+doubled carrier. -/
+def sheetSwapSum : Matrix (Fin 4 ⊕ Fin 4) (Fin 4 ⊕ Fin 4) ℝ :=
+  Matrix.fromBlocks 0 1 1 0
+
+/-- The doubled Minkowski sum metric does not commute with the sheet swap. -/
+theorem sheetSolderingSum_noncommWitness :
+    doubledMinkowskiSum * sheetSwapSum ≠ sheetSwapSum * doubledMinkowskiSum := by
+  intro h
+  have h01 := congrArg
+    (fun M : Matrix (Fin 4 ⊕ Fin 4) (Fin 4 ⊕ Fin 4) ℝ => M (Sum.inl 0) (Sum.inr 0)) h
+  simp [doubledMinkowskiSum, sheetSwapSum, Matrix.fromBlocks_multiply,
+    Matrix.mul_apply, Fin.sum_univ_four, minkowski4] at h01
+  norm_num at h01
+
+private theorem minkowski4_sq : minkowski4 * minkowski4 = 1 := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [minkowski4, Matrix.mul_apply, Fin.sum_univ_four]
+
+/-- The doubled Minkowski sum metric is an involution. -/
+theorem doubledMinkowskiSum_sq : doubledMinkowskiSum * doubledMinkowskiSum = 1 := by
+  unfold doubledMinkowskiSum
+  rw [Matrix.fromBlocks_multiply]
+  ext i j <;> cases i <;> cases j <;>
+    simp [Matrix.one_apply, minkowski4_sq]
+
+/-- The zero-kinetic BdG quadratic form equals `m²` times the Euclidean norm
+restored by the doubled Minkowski fundamental symmetry `K = 𝒦² = 1`. -/
+theorem stageBdgQuad_eq_doubledMinkowskiJNorm (m : ℝ)
+    (ψ : Fin 4 ⊕ Fin 4 → ℝ) :
+    stageBdgQuad m ψ =
+      m ^ 2 * dotProduct ψ ((doubledMinkowskiSum * doubledMinkowskiSum).mulVec ψ) := by
+  rw [doubledMinkowskiSum_sq, Matrix.one_mulVec, stageBdgQuad_eq]
 
 end InfoGeometry.Canonical.DoubledMinkowskiSheetSoldering

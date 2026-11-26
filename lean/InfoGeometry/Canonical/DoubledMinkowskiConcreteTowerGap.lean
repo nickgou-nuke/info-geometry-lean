@@ -313,4 +313,49 @@ theorem perturbed_tower_full_instance (m : ℝ) :
     perturbEps_summable
     (perturbedQuad_step m)
 
+/-- Linear map form of the single-component padding. -/
+def padLinear {n : ℕ} : (Fin n → ℝ) →ₗ[ℝ] (Fin (n + 1) → ℝ) where
+  toFun := pad
+  map_add' u v := by
+    funext i
+    refine Fin.lastCases ?_ (fun j => ?_) i
+    · simp [pad]
+    · simp [pad]
+  map_smul' a u := by
+    funext i
+    refine Fin.lastCases ?_ (fun j => ?_) i
+    · simp [pad]
+    · simp [pad]
+
+/-- Linear map form of the doubled-state padding. -/
+def padSumLinear {n : ℕ} :
+    (Fin n ⊕ Fin n → ℝ) →ₗ[ℝ] (Fin (n + 1) ⊕ Fin (n + 1) → ℝ) where
+  toFun := padSum
+  map_add' ψ φ := by
+    funext i
+    cases i with
+    | inl i =>
+      refine Fin.lastCases ?_ (fun j => ?_) i
+      · simp [padSum, pad]
+      · simp [padSum, pad]
+    | inr i =>
+      refine Fin.lastCases ?_ (fun j => ?_) i
+      · simp [padSum, pad]
+      · simp [padSum, pad]
+  map_smul' a ψ := by
+    funext i
+    cases i with
+    | inl i =>
+      refine Fin.lastCases ?_ (fun j => ?_) i
+      · simp [padSum, pad]
+      · simp [padSum, pad]
+    | inr i =>
+      refine Fin.lastCases ?_ (fun j => ?_) i
+      · simp [padSum, pad]
+      · simp [padSum, pad]
+
+/-- The linear padding map agrees pointwise with the tower transition. -/
+theorem padSumLinear_apply {n : ℕ} (ψ : Fin n ⊕ Fin n → ℝ) :
+    padSumLinear ψ = padSum ψ := rfl
+
 end InfoGeometry.Canonical.DoubledMinkowskiConcreteTowerGap

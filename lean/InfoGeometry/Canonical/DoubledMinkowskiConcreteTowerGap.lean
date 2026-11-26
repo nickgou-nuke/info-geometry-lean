@@ -126,4 +126,42 @@ theorem concrete_tower_gap (m : ℝ) :
   rcases h with ⟨hKrein, Q_inf, hTendsto, hProj, hGap, hNN⟩
   exact ⟨Q_inf, hTendsto, hGap⟩
 
+/-- The BdG quadratic sequence is exactly constant along the concrete tower. -/
+theorem seqVal_stageBdgQuad_pad (m : ℝ) :
+    ∀ n (ψ : Fin n ⊕ Fin n → ℝ) (k : ℕ),
+      seqVal (fun n => padSum (n := n)) (fun n ψ => stageBdgQuad m ψ) n ψ k =
+        m ^ 2 * dotProduct ψ ψ := by
+  intro n ψ k
+  induction k generalizing n ψ with
+  | zero => simp [seqVal, stageBdgQuad_eq]
+  | succ k ih =>
+    change seqVal (fun n => padSum (n := n)) (fun n ψ => stageBdgQuad m ψ) (n + 1)
+      (padSum ψ) k = m ^ 2 * dotProduct ψ ψ
+    rw [ih, padSum_dotProduct]
+
+/-- Stronger concrete limit: the colimit quadratic form is explicitly
+`m²‖ψ‖²`, not merely an unspecified gap-preserving limit. -/
+theorem concrete_tower_explicit_Qinf (m : ℝ) :
+    ∃ Q_inf : (n : ℕ) → (Fin n ⊕ Fin n → ℝ) → ℝ,
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        Tendsto (seqVal (fun n => padSum (n := n)) (fun n ψ => stageBdgQuad m ψ) n ψ) atTop
+          (nhds (Q_inf n ψ))) ∧
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        m ^ 2 * dotProduct ψ ψ ≤ Q_inf n ψ) ∧
+      (∀ n (ψ : Fin n ⊕ Fin n → ℝ),
+        Q_inf n ψ = m ^ 2 * dotProduct ψ ψ) := by
+  refine ⟨fun n ψ => m ^ 2 * dotProduct ψ ψ, ?_, ?_, ?_⟩
+  · intro n ψ
+    have hfun : seqVal (fun n => padSum (n := n))
+        (fun n ψ => stageBdgQuad m ψ) n ψ =
+        (fun _ => m ^ 2 * dotProduct ψ ψ) := by
+      funext k
+      exact seqVal_stageBdgQuad_pad m n ψ k
+    rw [hfun]
+    exact tendsto_const_nhds
+  · intro n ψ
+    rfl
+  · intro n ψ
+    rfl
+
 end InfoGeometry.Canonical.DoubledMinkowskiConcreteTowerGap

@@ -72,13 +72,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - name: Check out the exact source without external submodules
-        uses: actions/checkout@v4
-        with:
-          path: project
-          ref: ${{ github.sha }}
-          submodules: false
-          persist-credentials: false
+      # Public source fetch avoids checkout-action credential cleanup traversing
+      # unrelated gitlinks with missing URLs in the repository's .gitmodules.
+      - name: Fetch the exact public source without traversing submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPOSITORY}.git"
+          git -C project -c protocol.version=2 fetch --no-tags --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
 
       - name: Read the exact dependency pin and verify source revision
         id: pins

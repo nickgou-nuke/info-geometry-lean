@@ -1772,6 +1772,63 @@ theorem colorGluon_cartan_singlet_neutrality :
     dsimp [colorGluon3Y]; noncomm_ring
   rw [h3Y, add_mul, smul_mul_assoc, h01, h12, smul_zero, add_zero]
 
+/-- **White Vacuum Singlet Neutrality (`colorGluon_cartan_vacuum_singlet_neutrality`)**:
+    Both Gell-Mann Cartan gluon charges `T₃^{color}` and `3Y^{color}` annihilate the 0-quark
+    white vacuum singlet `Π_{vac}` (`1₀`). -/
+theorem colorGluon_cartan_vacuum_singlet_neutrality :
+    colorGluonT3 * colorVacuumSingletProj = 0 ∧
+    colorGluon3Y * colorVacuumSingletProj = 0 := by
+  have hm0 : modeOccupied 0 * colorVacuumSingletProj = 0 := by
+    dsimp [colorVacuumSingletProj]
+    calc
+      modeOccupied 0 * (modeVacant 0 * modeVacant 1 * modeVacant 2) =
+        (modeOccupied 0 * modeVacant 0) * modeVacant 1 * modeVacant 2 := by noncomm_ring
+      _ = 0 := by rw [modeOccupied_mul_modeVacant 0, zero_mul, zero_mul]
+  have hm1 : modeOccupied 1 * colorVacuumSingletProj = 0 := by
+    dsimp [colorVacuumSingletProj]
+    rw [modeVacant_eq_one_sub_modeOccupied 0]
+    calc
+      modeOccupied 1 * ((1 - modeOccupied 0) * modeVacant 1 * modeVacant 2) =
+        (modeOccupied 1 - modeOccupied 1 * modeOccupied 0) * modeVacant 1 * modeVacant 2 := by
+        noncomm_ring
+      _ = (modeOccupied 1 - modeOccupied 0 * modeOccupied 1) * modeVacant 1 * modeVacant 2 := by
+        rw [modeOccupied_comm 1 0]
+      _ = (1 - modeOccupied 0) * (modeOccupied 1 * modeVacant 1) * modeVacant 2 := by
+        noncomm_ring
+      _ = 0 := by rw [modeOccupied_mul_modeVacant 1, mul_zero, zero_mul]
+  have hm2 : modeOccupied 2 * colorVacuumSingletProj = 0 := by
+    dsimp [colorVacuumSingletProj]
+    rw [modeVacant_eq_one_sub_modeOccupied 0, modeVacant_eq_one_sub_modeOccupied 1]
+    calc
+      modeOccupied 2 * ((1 - modeOccupied 0) * (1 - modeOccupied 1) * modeVacant 2) =
+        (modeOccupied 2 - modeOccupied 2 * modeOccupied 0 - modeOccupied 2 * modeOccupied 1 +
+          modeOccupied 2 * modeOccupied 0 * modeOccupied 1) * modeVacant 2 := by noncomm_ring
+      _ = (modeOccupied 2 - modeOccupied 0 * modeOccupied 2 - modeOccupied 1 * modeOccupied 2 +
+          modeOccupied 0 * modeOccupied 2 * modeOccupied 1) * modeVacant 2 := by
+        rw [modeOccupied_comm 2 0, modeOccupied_comm 2 1]
+      _ = (modeOccupied 2 - modeOccupied 0 * modeOccupied 2 - modeOccupied 1 * modeOccupied 2 +
+          modeOccupied 0 * (modeOccupied 1 * modeOccupied 2)) * modeVacant 2 := by
+        rw [mul_assoc (modeOccupied 0) (modeOccupied 2) (modeOccupied 1), modeOccupied_comm 2 1]
+      _ = (1 - modeOccupied 0) * (1 - modeOccupied 1) *
+          (modeOccupied 2 * modeVacant 2) := by noncomm_ring
+      _ = 0 := by rw [modeOccupied_mul_modeVacant 2, mul_zero]
+  refine ⟨?_, ?_⟩
+  · dsimp [colorGluonT3]
+    rw [sub_mul, hm0, hm1, sub_zero]
+  · dsimp [colorGluon3Y]
+    rw [sub_mul, add_mul, smul_mul_assoc, hm0, hm1, hm2, add_zero, smul_zero, sub_zero]
+
+/-- Both Gell-Mann Cartan gluon charges annihilate the combined white color-singlet subspace
+`Π_{baryon} + Π_{vac}` (`1₃ ⊕ 1₀`). -/
+theorem colorGluon_cartan_white_singlets_neutrality :
+    colorGluonT3 * (colorBaryonSingletProj + colorVacuumSingletProj) = 0 ∧
+    colorGluon3Y * (colorBaryonSingletProj + colorVacuumSingletProj) = 0 := by
+  refine ⟨?_, ?_⟩
+  · rw [mul_add, colorGluon_cartan_singlet_neutrality.1,
+      colorGluon_cartan_vacuum_singlet_neutrality.1, add_zero]
+  · rw [mul_add, colorGluon_cartan_singlet_neutrality.2,
+      colorGluon_cartan_vacuum_singlet_neutrality.2, add_zero]
+
 /-- **Universal Zero-Hypothesis Spectral Decomposition of Color Quark Number (`N₀ + N₁ + N₂`)**:
     With zero hypotheses, the total color quark number `colorSingletNumber = N₀ + N₁ + N₂`
     decomposes into `1 • Π_{quark} + 2 • Π_{diquark} + 3 • Π_{baryon}`! -/

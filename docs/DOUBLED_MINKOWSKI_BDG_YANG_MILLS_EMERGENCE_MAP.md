@@ -27,6 +27,7 @@ Those stay explicit open frontiers.
 | C4 | The indefinite doubled-Minkowski metric is soldered to Pauli/chiral involutions on the doubled carrier | `lean/InfoGeometry/CliffordWeyl/IndefiniteMetricModulePauliBridge.lean:78`, `:133`, `:176`; `lean/InfoGeometry/Lie/DoubledMinkowskiCircularChiralYangMillsBridge.lean:500` (`doubledMinkowski_krein_pauli_soldering_bridge`) | BUCKET 1, kernel-verified | Algebraic/coordinate soldering; not a pseudo-Riemannian manifold object. |
 | C5 | A concrete doubled-Minkowski matrix-valued connection has nonzero Yang–Mills curvature, satisfies Bianchi, and a displayed form solves the Yang–Mills PDE | `lean/InfoGeometry/Lie/DoubledMinkowskiManifoldYangMillsPDE.lean:591` (`ymCurvature`), `:767` (`bianchi_identity_ymCurvature`), `:1351` (`YangMillsPDE`), `:1536` (`circularGaugeForm_solves_yangMillsPDE`), `:2076` (Minkowski wave solution) | BUCKET 1, kernel-verified | Explicit classical solutions on a concrete `Mat4(ℂ)`-form carrier; not existence for arbitrary initial data. |
 | C6 | Lattice covariant derivative, Wilson curvature, and plaquette action converge locally as mesh `a → 0` under smoothness hypotheses | `lean/InfoGeometry/Lie/DoubledMinkowskiLatticeContinuumLimit.lean:158`, `:395`, `:541`, `:721` (`circularColimit_continuum_transport`) | BUCKET 2, conditional | Needs `ContDiff`/`C²` regularity; gives local lattice-to-continuum limits, not a full constructive continuum QFT. |
+| C6a | A directed refinement tower preserving `normSq`/`kreinPair` with summable step errors keeps the doubled-Minkowski pairing invariant and converges to a projective quadratic form with the same uniform BdG gap bound | `lean/InfoGeometry/Canonical/DoubledMinkowskiBdGColimitBridge.lean:327` (`seqVal`), `:333` (`seqPair`), `:345` (`continuum_colimit_doubled_minkowski_and_bdg_mass_gap`) | BUCKET 2, conditional | Abstract tower hypotheses; proves Cauchy convergence and gap persistence, not 4D Wightman/OS Yang–Mills existence or a physical continuum spectral theorem. |
 | C7 | Two-sheeted Yang–Mills operator identities transport through an inductive star-colimit cone | `lean/InfoGeometry/Canonical/TwoSheetedYangMillsInductiveColimit.lean:161` (`starRingHom_intertwines_two_sheeted_operators`), `:206` (`star_hom_two_sheeted_operator_identities`), `:312` (`StarRingHom`), `:332` (`InductiveStarColimitCone`) | BUCKET 1, kernel-verified | Algebraic colimit of operator identities; not an analytic manifold or QFT limit. |
 | C7a | The commuting-mass BdG square identity survives any unital ring homomorphism, hence each `StarRingHom` cone map | `lean/InfoGeometry/Physics/BdGColimitGapTransport.lean:43` (`massiveBdGHamiltonian_sq_map`), `:55` (`massiveBdGHamiltonian_sq_cone_transport`) | BUCKET 1, kernel-verified | Finite-stage transport of `H² = D² + M²` on the diagonal. It does not transport a scalar singular-value gap or prove continuum positivity. |
 | C8 | The Mannheim-type typed bridge gathers the doubled-Minkowski Yang–Mills suite across layers 0–3 | `lean/InfoGeometry/Synthesis/MannheimDoubledMinkowskiYangMillsBridge.lean:22–38` (layer map), `:2163` (`archMannheimDoubledMinkowskiYangMillsBridge`) | BUCKET 1, kernel-verified | Typed archetype over already-proved layers; not a physical continuum emergence theorem. |
@@ -85,19 +86,23 @@ Bounded `lake build` runs under the shared scratch lock at the stated HEAD:
 | `InfoGeometry.CliffordWeyl.IndefiniteMetricModulePauliBridge` | exit 0, 0 errors, `Build completed successfully (8976 jobs)` |
 | `InfoGeometry.Krein.MajoranaBdGSheetBridge` | exit 0, 0 errors, `Build completed successfully (9146 jobs)` |
 | `InfoGeometry.Physics.BdGColimitGapTransport` | exit 0, 0 errors, `Build completed successfully (1255 jobs)` |
+| `InfoGeometry.Canonical.DoubledMinkowskiBdGColimitBridge` | exit 0, 0 errors, `Build completed successfully (3094 jobs)` |
 | `InfoGeometry.Synthesis.MannheimDoubledMinkowskiYangMillsBridge` | exit 0, 0 errors, `Build completed successfully (10013 jobs)` |
 
 A six-declaration `#print axioms` probe covering C1, C2, C4, C5, C6 and C7
 reported only `[propext, Classical.choice, Quot.sound]` and `sorryAx = 0`.
 A separate three-declaration probe for C7a likewise reported only standard
-axioms and `sorryAx = 0`. These are sampled axiom checks, not claims about
-every declaration in the listed modules.
+axioms and `sorryAx = 0`, as did a three-declaration probe covering C6a's
+metric spec and colimit theorem. These are sampled axiom checks, not claims
+about every declaration in the listed modules.
 
 ## Roadmap for a future honest closure
 
 1. Name the missing analytic theorem precisely: a net of BdG Hamiltonians
    whose continuum limit satisfies OS/Wightman axioms and a uniform positive
-   mass gap. Keep it as BUCKET 3 until proved.
+   mass gap. C6a already proves an abstract Cauchy/gap-persistence theorem
+   under summable step-error hypotheses; keep that distinct from the physical
+   continuum theorem, which remains BUCKET 3.
 2. Finite-stage transport of the BdG square identity is now kernel-checked in
    `BdGColimitGapTransport` (C7a). Transport of the scalar singular-value gap
    remains open; do not conflate the algebraic square identity with positivity.

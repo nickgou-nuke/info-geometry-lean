@@ -72,14 +72,21 @@ frontier. The coverage matrix is the authority for frontier descriptions.
 
 ## 3. Runs
 
-### RUN 0 — Step 0 verification
+### RUN 0 — Step 0 verification — COMPLETE
 
-- Wait for external build PID 3840946 to release `/tmp/info-geometry-build.lock`.
-- Do not kill that build. Do not delete `.lake` or use linked worktrees.
-- Run `python3 tools/infra/run_locked_lean.py --check-files <12 files>`.
-- Record exit code and raw log. Index the two sibling analytic-KMS owners in
-  the coverage matrix only when the file is not concurrently owned.
-- Acceptance: exact 12-file check exit `0`, no target `error:` diagnostics.
+- Waited for external build PID 3840946 to release `/tmp/info-geometry-build.lock`.
+- Did not kill that build. Did not delete `.lake` or use linked worktrees.
+- Ran `python3 tools/infra/run_locked_lean.py --check-files` on all 12 files.
+- Raw log: `/tmp/tomita_step0_locked_lean.log`.
+- Evidence: `12` `[locked-lean] executing:` lines, `STEP0_EXIT=0`,
+  `error:` count `0`, `error(` count `0`.
+- Only warnings: deprecated `Mathlib.Data.Real.Basic` /
+  `Mathlib.Data.Complex.Basic` imports and one unused-tactic linter warning in
+  `TomitaModularAutomorphismFlow.lean:58`.
+- Coverage matrix indexing was not applied because
+  `docs/rn_tomita_typeiii_coverage_matrix.md` is concurrently modified in the
+  worktree and must not be overwritten here.
+- Acceptance met: exact 12-file check exit `0`, no target error diagnostics.
 
 ### RUN-F1 — unbounded polar + Stone
 

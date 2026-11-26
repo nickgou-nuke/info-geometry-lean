@@ -359,6 +359,22 @@ def test_load_alexandria_arango_env_does_not_shadow_explicit_database_or_port(
     assert alexandria_arango_password() == "from_root_pw"
 
 
+def test_alexandria_port_8538_defaults_to_dag_brain_database(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _clear_alexandria_env(monkeypatch)
+    monkeypatch.setenv("ALEXANDRIA_ARANGO_PORT", "8538")
+    assert load_alexandria_arango_env(tmp_path) is None
+    assert alexandria_arango_endpoint() == "http://127.0.0.1:8538"
+    assert alexandria_arango_database() == "alexandria_dag_brain"
+    assert normalized_alexandria_arango_env() == {
+        "endpoint": "http://127.0.0.1:8538",
+        "database": "alexandria_dag_brain",
+        "user": "root",
+        "password": "",
+    }
+
+
 def test_alexandria_arango_endpoint_derives_from_port_without_env_file(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

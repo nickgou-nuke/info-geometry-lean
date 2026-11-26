@@ -10,6 +10,8 @@ from urllib.parse import urlsplit
 DEFAULT_ARANGO_ENDPOINT = "http://127.0.0.1:8530"
 DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT = "http://127.0.0.1:8532"
 DEFAULT_ALEXANDRIA_ARANGO_DATABASE = "alexandria"
+DEFAULT_ALEXANDRIA_DAG_BRAIN_DATABASE = "alexandria_dag_brain"
+DEFAULT_ALEXANDRIA_DAG_BRAIN_PORT = "8538"
 DEFAULT_HIVE_ARANGO_ENDPOINT = "http://127.0.0.1:8540"
 DEFAULT_ARANGO_DATABASE = "infogeometry"
 DEFAULT_DARWIN_ARANGO_DATABASE = "darwin_commits"
@@ -160,13 +162,21 @@ def load_alexandria_arango_env(repo_root: Path | None = None) -> Path | None:
     if root_password and not get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_PASS"]):
         os.environ["ALEXANDRIA_ARANGO_PASSWORD"] = root_password
 
+    # A port-only override selects the dedicated DAG brain, even when the
+    # default Alexandria .env supplies its own database name. Explicit
+    # ALEXANDRIA_ARANGO_DB/..._DATABASE always wins.
+    if (not had_db and
+            os.environ.get("ALEXANDRIA_ARANGO_PORT", "").strip()
+            == DEFAULT_ALEXANDRIA_DAG_BRAIN_PORT):
+        os.environ["ALEXANDRIA_ARANGO_DB"] = DEFAULT_ALEXANDRIA_DAG_BRAIN_DATABASE
+
     if not get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_ENDPOINT"]):
         port = os.environ.get("ALEXANDRIA_ARANGO_PORT", "").strip()
         default_endpoint = f"http://127.0.0.1:{port}" if port else DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT
         os.environ["ALEXANDRIA_ARANGO_ENDPOINT"] = default_endpoint
 
     if not get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_DATABASE"]):
-        os.environ["ALEXANDRIA_ARANGO_DB"] = DEFAULT_ALEXANDRIA_ARANGO_DATABASE
+        os.environ["ALEXANDRIA_ARANGO_DB"] = alexandria_arango_database()
 
     if not get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_USER"]):
         os.environ["ALEXANDRIA_ARANGO_USERNAME"] = "root"
@@ -303,7 +313,13 @@ def alexandria_arango_endpoint(default: str = DEFAULT_ALEXANDRIA_ARANGO_ENDPOINT
 
 
 def alexandria_arango_database(default: str = DEFAULT_ALEXANDRIA_ARANGO_DATABASE) -> str:
-    return get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_DATABASE"]) or default
+    explicit = get_env_alias(*ALEXANDRIA_ALIASES["ARANGO_DATABASE"])
+    if explicit:
+        return explicit
+    port = os.environ.get("ALEXANDRIA_ARANGO_PORT", "").strip()
+    if port == DEFAULT_ALEXANDRIA_DAG_BRAIN_PORT:
+        return DEFAULT_ALEXANDRIA_DAG_BRAIN_DATABASE
+    return default
 
 
 def alexandria_arango_username(default: str = "root") -> str:

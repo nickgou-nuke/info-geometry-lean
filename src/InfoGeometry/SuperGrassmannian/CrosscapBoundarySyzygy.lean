@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Ring
@@ -122,27 +127,5 @@ theorem tree_level_defect_pos_of_anomaly
     apply sq_pos_of_ne_zero
     exact_mod_cast h_anomaly
   exact div_pos h_sq_pos h_mass
-
-/-! ### Section 5: Master Verification Certificate -/
-
-/-- Master certificate bundling all Crosscap Boundary Syzygy and Tadpole Cancellation theorems. -/
-structure CrosscapBoundarySyzygyCertificate : Prop where
-  odd_involutive       : ∀ (θ : R), moebiusOddPullback (moebiusOddPullback θ) = θ
-  tadpole_balance      : ∀ (b s : ℕ), totalRRCharge b s = 0 ↔ b = s
-  typeI_cancellation   : totalRRCharge 32 32 = 0
-  syzygy_balance       : ∀ (c v : ℕ), chiralSyzygySum c v = 0 ↔ c = v
-  syzygy_step          : ∀ (c v : ℕ), chiralSyzygySum (c + 1) (v + 1) = chiralSyzygySum c v
-  defect_vanishing     : ∀ (b s : ℕ) (_h : totalRRCharge b s = 0) (m : ℝ),
-                          treeLevelDefect (totalRRCharge b s) m = 0
-
-/-- Constructor for the master certificate with zero unresolved assumptions. -/
-theorem compile_crosscap_boundary_syzygy : CrosscapBoundarySyzygyCertificate (R := R) := {
-  odd_involutive     := moebiusOddPullback_involutive
-  tadpole_balance    := tadpole_cancellation_iff
-  typeI_cancellation := typeI_so32_tadpole_cancellation
-  syzygy_balance     := chiral_syzygy_zero_iff
-  syzygy_step        := chiral_syzygy_step_preserved
-  defect_vanishing   := tree_level_defect_zero_of_tadpole_cancellation
-}
 
 end InfoGeometry.SuperGrassmannian.CrosscapSyzygy

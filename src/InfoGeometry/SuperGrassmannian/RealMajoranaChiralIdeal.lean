@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -34,8 +39,6 @@ This module formalizes Section 82 of the unified architecture:
    - Characteristic polynomial $\mathcal{D}^3(X) = 4 \mathcal{D}(X)$ where $\mathcal{D}(X) = [\Gamma, X]$, establishing the root-space decomposition with eigenvalues $\{0, \pm 2\}$.
 6. **Supertrace & Real SUSY Vacuum Energy Cancellation**:
    - $\operatorname{STr}(H_{\mathrm{susy}}) = 0$.
-7. **Master Verification Certificate**:
-   - `compile_real_majorana_chiral_ideal` with 0 sorry, 0 admit, 0 custom axioms.
 -/
 
 namespace InfoGeometry.SuperGrassmannian.RealMajoranaChiralIdeal
@@ -557,51 +560,5 @@ theorem superTrace2_susyH (v : R) :
   simp [superTrace2, matOne]
 
 end MatrixCarrier
-
-/-! ### 7. Master Verification Certificate -/
-
-structure RealMajoranaChiralIdealCertificate : Prop where
-  abstract_projector_sum : ∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R),
-    S.PL + S.PR = 1
-  abstract_projector_ortho : ∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R),
-    S.PL * S.PR = 0 ∧ S.PR * S.PL = 0
-  abstract_sheet_swap : ∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R),
-    S.J * S.PL * S.J = S.PR ∧ S.J * S.PR * S.J = S.PL
-  abstract_complex_axis : ∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R),
-    S.K ^ 2 = -1
-  abstract_supercharge_nilpotence : ∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R) (γ : R),
-    S.superchargeQ γ ^ 2 = 0 ∧ S.superchargeQ_dag γ ^ 2 = 0
-  abstract_susy_conservation : ∀ (R : Type) [Ring R] (S : ChiralSheetSubstrate R) (γ : R),
-    S.susyH γ * S.superchargeQ γ - S.superchargeQ γ * S.susyH γ = 0
-  concrete_dyadic_expansion : ∀ (R : Type) [Ring R] (ψ φ : Fin 2 → R),
-    (2 : R) • dyad ψ φ =
-      bilinScalar ψ φ • matOne + bilinChiral ψ φ • matGamma +
-      bilinVector1 ψ φ • matJ - bilinVector2 ψ φ • matK
-  concrete_chiral_fierz_ideal : ∀ (R : Type) [Ring R],
-    kronMul (matPL (R := R)) matPL + kronMul matPR matPR +
-    kronMul matQ matQ_dag + kronMul matQ_dag matQ = Swap2
-  concrete_chiral_fierz_pauli : ∀ (R : Type) [Ring R],
-    (2 : R) • (Swap2 (R := R)) =
-      kronMul (matOne (R := R)) matOne + kronMul matGamma matGamma +
-      kronMul matJ matJ - kronMul matK matK
-  concrete_five_graded_derivation : ∀ (R : Type) [Ring R] (X : Matrix (Fin 2) (Fin 2) R),
-    gradingDeriv (gradingDeriv (gradingDeriv X)) = (4 : R) • gradingDeriv X
-  concrete_vacuum_energy_cancellation : ∀ (R : Type) [Ring R] (v : R),
-    superTrace2 (matSusyH (R := R) v) = 0
-
-theorem compile_real_majorana_chiral_ideal :
-    RealMajoranaChiralIdealCertificate := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intros R _ S; exact S.PL_add_PR
-  · intros R _ S; exact ⟨S.PL_mul_PR, S.PR_mul_PL⟩
-  · intros R _ S; exact ⟨S.J_PL_J, S.J_PR_J⟩
-  · intros R _ S; exact S.K_sq
-  · intros R _ S γ; exact ⟨S.Q_sq γ, S.Q_dag_sq γ⟩
-  · intros R _ S γ; exact S.susyH_comm_Q γ
-  · intros R _ ψ φ; exact real_spinor_dyadic_expansion ψ φ
-  · intros R _; exact real_chiral_fierz_ideal_identity
-  · intros R _; exact real_chiral_fierz_pauli_identity
-  · intros R _ X; exact grading_derivation_cube X
-  · intros R _ v; exact superTrace2_susyH v
 
 end InfoGeometry.SuperGrassmannian.RealMajoranaChiralIdeal

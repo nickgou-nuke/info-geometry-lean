@@ -108,7 +108,7 @@ theorem selectedStageColimitFunctional_succ_eq
     omega
   have hstepMap : concreteStep k Dk =
       rawMap (Nat.le.step (le_refl k)) Dk := by
-    change concreteData.step k Dk =
+    change concreteData k Dk =
       map concreteData (Nat.le.step (le_refl k)) Dk
     rw [map_succ concreteData (le_refl k), map_id]
     rfl

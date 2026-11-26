@@ -24,6 +24,7 @@ import InfoGeometry.Analysis.ComplexBSpline
 import InfoGeometry.Analysis.BinaryCuntzEntropy
 import InfoGeometry.Analysis.AsanoLeeYangCircleBridge
 import InfoGeometry.Analysis.CliffordWaveletTransform
+import InfoGeometry.Analysis.Cl31WaveletAlgebraicCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Analysis.BipolarCrossRatioLog
 import InfoGeometry.Analysis.BipolarCriticalPhase

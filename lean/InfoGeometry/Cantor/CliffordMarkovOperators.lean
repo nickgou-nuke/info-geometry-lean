@@ -46,7 +46,8 @@ def cantorModeCliffordOperator (i : Fin n) :
 /-- Each normalized finite-mode Clifford operator is an involution. -/
 theorem cantorModeCliffordOperator_sq (i : Fin n) :
     cantorModeCliffordOperator n i * cantorModeCliffordOperator n i = 1 := by
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   change towerFockRep n
       (CliffordAlgebra.ι (TowerForm n)
         (neutralToSplit n (cantorNeutralMode n i)))
@@ -63,7 +64,8 @@ noncommutative CAR structure. -/
 theorem cantorModeCliffordOperator_cross_CAR {i j : Fin n} (hij : i ≠ j) :
     cantorModeCliffordOperator n i * cantorModeCliffordOperator n j +
       cantorModeCliffordOperator n j * cantorModeCliffordOperator n i = 0 := by
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   change
     towerFockRep n
         (CliffordAlgebra.ι (TowerForm n)

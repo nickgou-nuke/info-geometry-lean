@@ -81,11 +81,10 @@ theorem ideleScaleCharacter_inverse
       (ideleScaleCharacter A s)⁻¹ := by
   simp [ideleScaleCharacter, IdeleClassLayer.inverse, Complex.exp_neg]
 
-end LogScale
-
-
 theorem ideleScaleCharacter_identity (s : ℂ) :
     ideleScaleCharacter (IdeleClassLayer.identity : IdeleClassLayer G) s = 1 := by
   simp [ideleScaleCharacter, IdeleClassLayer.identity]
+
+end LogScale
 
 end InfoGeometry.Arithmetic.ConnesFiniteTraceBridge

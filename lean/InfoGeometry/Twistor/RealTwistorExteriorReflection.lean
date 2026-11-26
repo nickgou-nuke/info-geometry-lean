@@ -34,7 +34,7 @@ abbrev ExteriorVector := InfoGeometry.Canonical.FierzKleinFoundation.Vec4
 abbrev ExteriorCarrier := ⋀[ℝ]^2 ExteriorVector
 
 /-- The existing real spinor pair and exterior owner's vector space agree linearly. -/
-def twistorVectorEquiv : TwistorSpace ≃ₗ[ℝ] ExteriorVector where
+def twistorVectorEquiv : RealTwistorBlockInversion.TwistorSpace ≃ₗ[ℝ] ExteriorVector where
   toFun z := fun
     | I4.t => z.1 0
     | I4.x => z.1 1
@@ -51,7 +51,7 @@ def twistorVectorEquiv : TwistorSpace ≃ₗ[ℝ] ExteriorVector where
 def vectorRotation : ExteriorVector ≃ₗ[ℝ] ExteriorVector :=
   twistorVectorEquiv.symm.trans (blockRotation.trans twistorVectorEquiv)
 
-theorem twistorVectorEquiv_blockRotation (z : TwistorSpace) :
+theorem twistorVectorEquiv_blockRotation (z : RealTwistorBlockInversion.TwistorSpace) :
     twistorVectorEquiv (blockRotation z) = vectorRotation (twistorVectorEquiv z) := by
   simp [vectorRotation]
 
@@ -91,7 +91,7 @@ theorem coordinateRotation_involutive (c : Vec6R) :
   funext i
   fin_cases i <;> rfl
 
-theorem asPlucker_pluckerCoords (z w : TwistorSpace) :
+theorem asPlucker_pluckerCoords (z w : RealTwistorBlockInversion.TwistorSpace) :
     asPlucker (pluckerCoords (twistorVectorEquiv z) (twistorVectorEquiv w)) =
       twistorPlucker z w := by
   apply Plucker6.ext <;> rfl
@@ -155,7 +155,7 @@ def nativeExteriorEmbedding : ExteriorCarrier →ₗ[ℝ] V55 :=
 theorem nativeExteriorEmbedding_injective : Function.Injective nativeExteriorEmbedding :=
   nativeCoordinates_injective.comp pluckerExteriorLinearEquiv.injective
 
-theorem nativeExteriorEmbedding_ιMulti (z w : TwistorSpace) :
+theorem nativeExteriorEmbedding_ιMulti (z w : RealTwistorBlockInversion.TwistorSpace) :
     nativeExteriorEmbedding
         (exteriorPower.ιMulti ℝ 2 ![twistorVectorEquiv z, twistorVectorEquiv w]) =
       pluckerToV55 (twistorPlucker z w) := by

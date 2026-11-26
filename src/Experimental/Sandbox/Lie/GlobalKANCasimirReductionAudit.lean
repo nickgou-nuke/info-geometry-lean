@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -37,4 +42,3 @@ open Experimental.Sandbox.Lie.GlobalKANCasimirReduction
 #print axioms casimirTwo_on_nilpotent_zero
 #print axioms casimirTwo_weyl_invariant
 #print axioms casimirTwo_gauge_invariant
-#print axioms compile_global_kan_casimir_reduction

@@ -220,13 +220,6 @@ theorem modularDeviationAtOne_eq (ξ : g) :
       NormedSpace.exp ((-1 : ℝ) • R.modularHamiltonian ξ) - 1 := by
   rfl
 
-
-abbrev rep {g : Type*} (R : SouriauOperatorRepresentation (E := E) g) :
-    g → OperatorPrimal (E := E) :=
-  R
-
-variable {g : Type*} (R : SouriauOperatorRepresentation (E := E) g)
-
 end SouriauOperatorRepresentation
 
 /-- Link to the existing regular-cone Bregman root: diagonal divergence vanishes. -/

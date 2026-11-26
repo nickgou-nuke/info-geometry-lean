@@ -19,7 +19,8 @@ Alexandria combines deterministic structural parsing, mathematical-archetype ent
 Each ingested PDF chunk undergoes deterministic extraction before any optional LLM enrichment:
 
 1. **Structural & Symbolic Entities (`alexandria_entities`):**
-   - `theorem_result`, `definition_term`, `symbolic_expr`, `unicode_math`, `domain_term`, `math_archetype`, plus local structural anchors (`math_label`, `math_reference`, `bib_entry`).
+   - Cross-document concept types emitted by `pdf_corpus_ingest.py`: `math_symbol`, `defined_term`, `math_archetype` (plus `llm_entity` when `--enrich-ollama` is enabled).
+   - Document-local structural anchors emitted by `pdf_corpus_ingest.py`: `math_label`, `math_reference`, `bib_entry`. (Other ingest scripts such as `semantic_ingest.py` / `math_paper_graphrag_ingest.py` emit their own typed labels, e.g. `theorem`, `definition`, `module`, `identifier`.)
 2. **10 Mathematical Archetypes (`MATH_ARCHETYPE_PATTERNS`):**
    - `z2_graded_polarization` — $\mathbb{Z}/2$-grading, chiral grading, Peirce decomposition, isotropic nullcone, $\gamma_5$, Krein involution
    - `curved_dga_differential` — curved DG, Maurer–Cartan, Bianchi identity, Cartan curvature, soldering
@@ -49,7 +50,7 @@ Each ingested PDF chunk undergoes deterministic extraction before any optional L
 3. `chunk_cites_entry`
 4. `chunk_uses_definition`
 5. `chunk_references_result`
-6. `document_cites_document` (arXiv ID / DOI citation resolution across the corpus)
+6. `document_cites_document` (arXiv ID preferring highest version, DOI, and normalized title anchor matching across the corpus)
 
 Before writing JSONL artifacts, `verify_and_prune_dag` drops self-loops and any lower-priority edge that closes a cycle, then runs an independent Kahn topological sort check so `alexandria_dag_edges` is guaranteed strictly acyclic.
 

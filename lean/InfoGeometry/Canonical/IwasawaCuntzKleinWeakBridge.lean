@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.InnerProductSpace.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Matrix.Basic
@@ -112,7 +117,7 @@ theorem cl11_N_minus_sq :
 theorem cl11_N_anticomm :
     cl11_N_plus * cl11_N_minus + cl11_N_minus * cl11_N_plus = 1 := by
   apply cl11EquivMat.injective
-  simp only [map_add, map_mul, map_one, cl11EquivMat_cl11_N_plus,
+  simp only [map_add, map_mul, _root_.map_one, cl11EquivMat_cl11_N_plus,
     cl11EquivMat_cl11_N_minus]
   rw [mat_dN_one_transpose]
   ext i j
@@ -271,6 +276,7 @@ theorem krein_pairing_eq_temporal_distance (t : ℝ) :
 /-- The predicate `isKleinSeam` forces zero pairing for these vectors. -/
 theorem seam_implies_krein_orthogonality (p : SpacetimePoint) (h_seam : isKleinSeam p) :
     kreinDiracPairing (postState p.t) preState = 0 := by
+  unfold isKleinSeam at h_seam
   rw [klein_seam_iff_t_zero] at h_seam
   rw [h_seam]
   exact krein_pairing_eq_temporal_distance 0
@@ -316,7 +322,7 @@ theorem weak_induced_subluminal (p num den : ℝ)
   have h_weak_ne_zero : aharonovWeakValue num den ≠ 0 := by
     dsimp [aharonovWeakValue]
     exact div_ne_zero h_num h_den
-  exact subluminal_group_velocity p (aharonovWeakValue num den) h_p h_weak_ne_zero
+  exact subluminal_group_velocity p (aharonovWeakValue num den) h_weak_ne_zero
 
 
 /-- Certified structural record for the Iwasawa-Cuntz-Klein Weak Horizon synthesis. -/

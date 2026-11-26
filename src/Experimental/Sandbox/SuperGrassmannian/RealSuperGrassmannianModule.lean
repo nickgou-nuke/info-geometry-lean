@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.SpecialFunctions.Exp
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic
@@ -40,9 +45,6 @@ This module formalizes the second pillar of the Split Metric $\mathcal{C}\ell(1,
    - Preservation of grading by even endomorphisms: $\mathbb{S}^\pm \to \mathbb{S}^\pm$.
    - Reversal of grading by odd endomorphisms: $\mathbb{S}^\pm \to \mathbb{S}^\mp$.
    - Representation associativity: $(M N) \cdot v = M \cdot (N \cdot v)$.
-7. **Master Verification Certificate**:
-   - Structure `RealSuperGrassmannianModuleCertificate : Prop`.
-   - Theorem `compile_real_super_grassmannian_module` verified with 0 sorry, 0 admit, 0 custom axioms.
 -/
 
 namespace InfoGeometry.SuperGrassmannian.RealSuperGrassmannianModule
@@ -604,91 +606,5 @@ theorem act_odd_reverses_grading_minus (M : SuperMatrix R) (v : SuperVector R)
   ring
 
 end SuperModule
-
-/-! ### 8. Master Verification Certificate -/
-
-/-- Master certificate bundling all proved Real Super-Grassmannian and Berezinian invariance theorems. -/
-structure RealSuperGrassmannianModuleCertificate : Prop where
-  -- 1. Graded decomposition
-  even_odd_decomp : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R),
-    SuperMatrix.evenPart M + SuperMatrix.oddPart M = M
-  evenPart_is_even : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R),
-    SuperMatrix.isEven (SuperMatrix.evenPart M)
-  oddPart_is_odd : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R),
-    SuperMatrix.isOdd (SuperMatrix.oddPart M)
-  -- 2. Graded multiplication rules
-  even_mul_even : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
-    SuperMatrix.isEven M → SuperMatrix.isEven N → SuperMatrix.isEven (M * N)
-  odd_mul_odd : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
-    SuperMatrix.isOdd M → SuperMatrix.isOdd N → SuperMatrix.isEven (M * N)
-  even_mul_odd : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
-    SuperMatrix.isEven M → SuperMatrix.isOdd N → SuperMatrix.isOdd (M * N)
-  odd_mul_even : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
-    SuperMatrix.isOdd M → SuperMatrix.isEven N → SuperMatrix.isOdd (M * N)
-  -- 3. Graded supertrace linearity
-  supertrace_add : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
-    SuperMatrix.supertrace (M + N) = SuperMatrix.supertrace M + SuperMatrix.supertrace N
-  supertrace_odd_vanish : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R),
-    SuperMatrix.isOdd M → SuperMatrix.supertrace M = 0
-  -- 4. Supercommutator cyclicity
-  supertrace_even_supercommutator : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
-    SuperMatrix.isEven M → SuperMatrix.isEven N → SuperMatrix.supertrace (M * N - N * M) = 0
-  supertrace_odd_supercommutator : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
-    SuperMatrix.isOdd M → SuperMatrix.isOdd N → SuperMatrix.supertrace (M * N + N * M) = 0
-  supertrace_mixed_supercommutator : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R),
-    SuperMatrix.isEven M → SuperMatrix.isOdd N → SuperMatrix.supertrace (M * N - N * M) = 0
-  -- 5. Super-Grassmannian idempotent projectors
-  projector_idempotent : ∀ {R : Type*} [CommRing R] (p q : R),
-    p ^ 2 = p → q ^ 2 = q → (SuperMatrix.diagonalProjector p q) ^ 2 = SuperMatrix.diagonalProjector p q
-  projector_supertrace : ∀ {R : Type*} [CommRing R] (p q : R),
-    SuperMatrix.supertrace (SuperMatrix.diagonalProjector p q) = p - q
-  balanced_projector_supertrace_zero : ∀ {R : Type*} [CommRing R] (p : R),
-    SuperMatrix.supertrace (SuperMatrix.diagonalProjector p p) = 0
-  -- 6. Berezinian invariance
-  berezinian_mul : ∀ {K : Type*} [Field K] (M N : SuperMatrix K),
-    SuperMatrix.isEven M → SuperMatrix.isEven N → M.D ≠ 0 → N.D ≠ 0 →
-    SuperMatrix.berezinianEven (M * N) = SuperMatrix.berezinianEven M * SuperMatrix.berezinianEven N
-  balanced_berezinian_one : ∀ {K : Type*} [Field K] (c : K),
-    c ≠ 0 → SuperMatrix.berezinianEven (⟨c, 0, 0, c⟩ : SuperMatrix K) = 1
-  berezinian_exp_supertrace : ∀ (M : SuperMatrix ℝ),
-    SuperMatrix.berezinianEven (SuperMatrix.expEven M) = Real.exp (SuperMatrix.supertrace (SuperMatrix.evenPart M))
-  supertraceless_berezinian_exp_one : ∀ (M : SuperMatrix ℝ),
-    SuperMatrix.supertrace (SuperMatrix.evenPart M) = 0 →
-    SuperMatrix.berezinianEven (SuperMatrix.expEven M) = 1
-  -- 7. Graded module action
-  act_mul : ∀ {R : Type*} [CommRing R] (M N : SuperMatrix R) (v : SuperVector R),
-    act (M * N) v = act M (act N v)
-  act_even_preserves_grading : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R) (v : SuperVector R),
-    SuperMatrix.isEven M → v.minus = 0 → (act M v).minus = 0
-  act_odd_reverses_grading : ∀ {R : Type*} [CommRing R] (M : SuperMatrix R) (v : SuperVector R),
-    SuperMatrix.isOdd M → v.minus = 0 → (act M v).plus = 0
-
-/--
-**Main Theorem**: Compilation and instantiation of the Real Super-Grassmannian Module Certificate.
-Closed under 100% native Mathlib theorems with 0 sorry, 0 admit, and 0 custom axioms.
--/
-theorem compile_real_super_grassmannian_module : RealSuperGrassmannianModuleCertificate where
-  even_odd_decomp := λ M => SuperMatrix.even_add_odd M
-  evenPart_is_even := λ M => SuperMatrix.evenPart_is_even M
-  oddPart_is_odd := λ M => SuperMatrix.oddPart_is_odd M
-  even_mul_even := λ M N hM hN => SuperMatrix.even_mul_even M N hM hN
-  odd_mul_odd := λ M N hM hN => SuperMatrix.odd_mul_odd M N hM hN
-  even_mul_odd := λ M N hM hN => SuperMatrix.even_mul_odd M N hM hN
-  odd_mul_even := λ M N hM hN => SuperMatrix.odd_mul_even M N hM hN
-  supertrace_add := λ M N => SuperMatrix.supertrace_add M N
-  supertrace_odd_vanish := λ M hM => SuperMatrix.supertrace_odd M hM
-  supertrace_even_supercommutator := λ M N hM hN => SuperMatrix.supertrace_even_supercommutator M N hM hN
-  supertrace_odd_supercommutator := λ M N hM hN => SuperMatrix.supertrace_odd_supercommutator M N hM hN
-  supertrace_mixed_supercommutator := λ M N hM hN => SuperMatrix.supertrace_mixed_supercommutator_even_odd M N hM hN
-  projector_idempotent := λ p q hp hq => SuperMatrix.projector_idempotent p q hp hq
-  projector_supertrace := λ p q => SuperMatrix.projector_supertrace p q
-  balanced_projector_supertrace_zero := λ p => SuperMatrix.balanced_projector_supertrace_zero p
-  berezinian_mul := λ M N hM hN hMd hNd => SuperMatrix.berezinian_mul_even M N hM hN hMd hNd
-  balanced_berezinian_one := λ c hc => SuperMatrix.balanced_berezinian_one c hc
-  berezinian_exp_supertrace := λ M => SuperMatrix.berezinian_exp_even M
-  supertraceless_berezinian_exp_one := λ M hstr => SuperMatrix.supertraceless_berezinian_exp_one M hstr
-  act_mul := λ M N v => SuperModule.act_mul M N v
-  act_even_preserves_grading := λ M v hM hv => SuperModule.act_even_preserves_grading_plus M v hM hv
-  act_odd_reverses_grading := λ M v hM hv => SuperModule.act_odd_reverses_grading_plus M v hM hv
 
 end InfoGeometry.SuperGrassmannian.RealSuperGrassmannianModule

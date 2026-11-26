@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Topology.Category.TopCat.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
@@ -48,8 +53,8 @@ theorem projectiveLimitUnitIntervalReadoutTopCatHom_continuous :
     Continuous projectiveLimitUnitIntervalReadout :=
   continuous_projectiveLimitUnitIntervalReadout
 
-instance : MeasurableSpace (Set.Icc (0 : ℝ) 1) := borel (Set.Icc (0 : ℝ) 1)
-instance : BorelSpace (Set.Icc (0 : ℝ) 1) := ⟨rfl⟩
+scoped instance : MeasurableSpace (Set.Icc (0 : ℝ) 1) := borel (Set.Icc (0 : ℝ) 1)
+scoped instance : BorelSpace (Set.Icc (0 : ℝ) 1) := ⟨rfl⟩
 
 def projectiveLimitUnitIntervalMeasure : Measure (Set.Icc (0 : ℝ) 1) :=
   Measure.map projectiveLimitUnitIntervalReadout projectiveLimitMeasure

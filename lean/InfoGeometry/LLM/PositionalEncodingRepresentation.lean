@@ -370,7 +370,48 @@ theorem relativeModifier_eq_exponential_of_hasDerivAt_zero
 
 end ExponentialClassification
 
-/-! ## 4. Exact RoPE and ALiBi realizations -/
+/-! ## 4. Diagonal spectral modes -/
+
+section DiagonalModes
+
+/-- A diagonal complex generator exponentiates independently on each mode. -/
+theorem diagonal_generator_exponential
+    {n : ℕ} (eigs : Fin n → ℂ) (t : ℝ) :
+    NormedSpace.exp ((t : ℂ) • (Matrix.diagonal eigs : Matrix (Fin n) (Fin n) ℂ)) =
+      Matrix.diagonal (fun i => Complex.exp ((t : ℂ) * eigs i)) := by
+  rw [show (t : ℂ) • (Matrix.diagonal eigs : Matrix (Fin n) (Fin n) ℂ) =
+      Matrix.diagonal (fun i => (t : ℂ) * eigs i) by
+    ext i j
+    by_cases h : i = j <;> simp [Matrix.diagonal, h]]
+  rw [Matrix.exp_diagonal]
+  ext i j
+  by_cases h : i = j
+  · subst h
+    simp [Complex.exp_eq_exp_ℂ]
+  · simp [Matrix.diagonal, h]
+
+/-- In a diagonal spectral basis, the transformed attention score is a sum of
+independent scalar mode contributions; no distinct modes mix. -/
+theorem diagonal_generator_attentionScore
+    {n : ℕ} (eigs : Fin n → ℂ) (t : ℝ) (q k : Fin n → ℂ) :
+    attentionScore
+        ((NormedSpace.exp
+          ((t : ℂ) • (Matrix.diagonal eigs : Matrix (Fin n) (Fin n) ℂ))).mulVec q) k =
+      ∑ i : Fin n, Complex.exp ((t : ℂ) * eigs i) * q i * k i := by
+  rw [show (t : ℂ) • (Matrix.diagonal eigs : Matrix (Fin n) (Fin n) ℂ) =
+      Matrix.diagonal (fun i => (t : ℂ) * eigs i) by
+    ext i j
+    by_cases h : i = j <;> simp [Matrix.diagonal, h]]
+  rw [Matrix.exp_diagonal]
+  unfold attentionScore dotProduct Matrix.mulVec
+  simp only [Matrix.diagonal_apply]
+  apply Finset.sum_congr rfl
+  intro i hi
+  simp [dotProduct, mul_assoc, Complex.exp_eq_exp_ℂ]
+
+end DiagonalModes
+
+/-! ## 5. Exact RoPE and ALiBi realizations -/
 
 section RoPE
 
@@ -494,7 +535,7 @@ theorem alibiAugmentedScore_eq
 
 end ALiBi
 
-/-! ## 5. Scalar exponential decay flow -/
+/-! ## 6. Scalar exponential decay flow -/
 
 section ScalarDecay
 
@@ -581,7 +622,7 @@ theorem scalarDecayFlow_eq_exponential (c : ℝ) :
 
 end ScalarDecay
 
-/-! ## 6. Exponential relative decay scores -/
+/-! ## 7. Exponential relative decay scores -/
 
 noncomputable section ExponentialDecayScore
 

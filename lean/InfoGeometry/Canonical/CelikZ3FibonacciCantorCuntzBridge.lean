@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.Z3GrassmannDifferentialCalculus
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CelikErlangenBraidBridge
@@ -81,7 +86,7 @@ theorem cantor_cuntz_null_boundary_orbit_readout
     CantorCuntzBasisPacket.orbit B (b :: w) =
       (if b then B.cuntz.S_right else B.cuntz.S_left) *
         CantorCuntzBasisPacket.orbit B w :=
-  orbit_branch_recursion_readout B b w
+  CantorCuntzBasisPacket.orbit_branch_recursion B b w
 
 /--
 Explicit theorem-safe bridge from Salih Çelik's `Z3`-graded calculus technology

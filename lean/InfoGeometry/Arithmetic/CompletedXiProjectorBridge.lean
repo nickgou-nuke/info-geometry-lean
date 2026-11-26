@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Arithmetic.CompletedZetaSouriauDInfinityThermodynamics
@@ -66,7 +71,7 @@ theorem centered_u_eq_zero_of_complex_fixed
     (hs : CompletedZetaSouriauDInfinityThermodynamics.antiunitaryCriticalReflection s = s) :
     (centeredOfComplex s).u = 0 := by
   have hline : CompletedZetaSouriauDInfinityThermodynamics.CriticalLine s :=
-    (CompletedZetaSouriauDInfinityThermodynamics.fixed_antiunitaryCriticalReflection_iff_criticalLine s).mp hs
+    (CompletedZetaSouriauDInfinityThermodynamics.fixed_antiunitaryCriticalReflection_iff_criticalLine s).mp hs.symm
   simp [CompletedZetaSouriauDInfinityThermodynamics.CriticalLine,
     centeredOfComplex, toCentered, ofComplex, centeredSigma] at hline ⊢
   linarith
@@ -142,7 +147,7 @@ theorem xi_anchor_on_criticalLine (P : CompletedXiProjectorPacket) :
     CompletedZetaSouriauDInfinityThermodynamics.CriticalLine P.anchorValue := by
   exact
     (CompletedZetaSouriauDInfinityThermodynamics.fixed_antiunitaryCriticalReflection_iff_criticalLine
-      P.anchorValue).mp P.xi_anchor_fixed
+      P.anchorValue).mp P.xi_anchor_fixed.symm
 
 /-- The supplied anchor is fixed by the centered critical mirror. -/
 theorem xi_anchor_centered_fixed (P : CompletedXiProjectorPacket) :

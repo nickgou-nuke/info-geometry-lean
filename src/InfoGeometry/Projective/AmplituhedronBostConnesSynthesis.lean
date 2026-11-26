@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -48,7 +53,7 @@ Gr⁺(2, n) Plücker Syzygies, Operator Klein Quadric, and the Synthesis Transit
    whenever the displacement generators mutually commute. The truncated Gibbs weights sum
    identically to unity under partition function normalization.
 
-5. **Synthesis Transition Socket & Master Certificate**:
+5. **Synthesis Transition Socket**:
    Rigorous boundary socket structure connecting positive Grassmannian cells with Bost-Connes
    partition data, verified with zero sorry/admit/axioms under standard Lean 4 core axioms.
 -/
@@ -64,6 +69,13 @@ abbrev Twistor (R : Type*) := (Fin 2 → R) × (Fin 2 → R)
 to spacetime point `X : Matrix (Fin 2) (Fin 2) R` acting on the secondary component `Z.2`. -/
 def Incident {R : Type*} [CommRing R] (Z : Twistor R) (X : Matrix (Fin 2) (Fin 2) R) : Prop :=
   Z.1 = X.mulVec Z.2
+
+/-- Explicit T16 non-commutativity witness on `Matrix (Fin 2) (Fin 2) R`. -/
+theorem src_amplituhedron_mat2_noncomm_witness {R : Type*} [Ring R] [Nontrivial R] :
+    ∃ A B : Matrix (Fin 2) (Fin 2) R, A * B ≠ B * A := by
+  refine ⟨!![1, 0; 0, 0], !![0, 1; 0, 0], fun h => ?_⟩
+  have h01 := congrFun (congrFun h 0) 1
+  simp [Matrix.mul_apply, Fin.sum_univ_two] at h01
 
 /-- If twistor `Z` is incident to two spacetime points `X` and `Y`, the displacement
 `(X - Y)` annihilates the secondary spinor `Z.2`. -/
@@ -151,13 +163,20 @@ theorem plucker_self_zero {n : ℕ} {R : Type*} [CommRing R] (C : Matrix (Fin 2)
   dsimp [pluckerMinor]
   ring
 
+private lemma scalar_plucker_syzygy {R : Type*} [CommRing R]
+    (a0 a1 b0 b1 c0 c1 d0 d1 : R) :
+    (a0 * b1 - b0 * a1) * (c0 * d1 - d0 * c1) -
+      (a0 * c1 - c0 * a1) * (b0 * d1 - d0 * b1) +
+      (a0 * d1 - d0 * a1) * (b0 * c1 - c0 * b1) = 0 := by
+  ring
+
 /-- The three-term Plücker quadratic syzygy on `Gr(2, n)`. -/
 theorem plucker_syzygy {n : ℕ} {R : Type*} [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (a b c d : Fin n) :
     pluckerMinor C a b * pluckerMinor C c d -
     pluckerMinor C a c * pluckerMinor C b d +
     pluckerMinor C a d * pluckerMinor C b c = 0 := by
   dsimp [pluckerMinor]
-  ring
+  exact scalar_plucker_syzygy (C 0 a) (C 1 a) (C 0 b) (C 1 b) (C 0 c) (C 1 c) (C 0 d) (C 1 d)
 
 /-! ### Section 4: Bost-Connes Operator Klein Quadric & Truncated KMS Weights -/
 
@@ -201,7 +220,7 @@ theorem gibbs_weights_normalized {R : Type*} [CommRing R] (N : ℕ) (w : Fin N �
   rw [← Finset.sum_mul]
   exact hZ
 
-/-! ### Section 5: The Synthesis Transition Socket & Master Certificate -/
+/-! ### Section 5: The Synthesis Transition Socket -/
 
 /-- Explicit transition socket connecting the positive Grassmannian cell to the Bost-Connes boundary readout. -/
 structure AmplituhedronBostConnesSocket (R : Type*) [CommRing R] (Boundary : Type*) where
@@ -227,65 +246,5 @@ theorem socket_plucker_exact {R : Type*} [CommRing R] {Boundary : Type*}
     pluckerMinor s.grassmannianCell 0 2 * pluckerMinor s.grassmannianCell 1 3 +
     pluckerMinor s.grassmannianCell 0 3 * pluckerMinor s.grassmannianCell 1 2 = 0 :=
   s.hPlucker
-
-/-- Master Certificate bundling the complete set of algebraic and geometric theorems. -/
-structure AmplituhedronBostConnesCertificate : Prop where
-  -- Section 1: Twistor Incidence & Spacetime Soldering Null Boundary
-  twistor_displacement : ∀ (R : Type*) [CommRing R] (Z : Twistor R) (X Y : Matrix (Fin 2) (Fin 2) R)
-    (hX : Incident Z X) (hY : Incident Z Y), (X - Y).mulVec Z.2 = 0
-  twistor_det_smul : ∀ (R : Type*) [CommRing R] (Z : Twistor R) (X Y : Matrix (Fin 2) (Fin 2) R)
-    (hX : Incident Z X) (hY : Incident Z Y), (X - Y).det • Z.2 = 0
-  twistor_det_null : ∀ (K : Type*) [Field K] (Z : Twistor K) (X Y : Matrix (Fin 2) (Fin 2) K)
-    (hX : Incident Z X) (hY : Incident Z Y) (hPi : Z.2 ≠ 0), (X - Y).det = 0
-
-  -- Section 2: Free Edge Module & Arnold Logarithmic Syzygy
-  omega_sq_zero : ∀ (R : Type*) [CommRing R] {ι : Type*} [DecidableEq ι] (i j : ι),
-    omegaGen R i j * omegaGen R i j = 0
-  arnold_syzygy : ∀ (K : Type*) [Field K] (z1 z2 z3 : K) (h12 : z1 ≠ z2) (h23 : z2 ≠ z3) (h31 : z3 ≠ z1),
-    arnoldRational (1 / (z1 - z2)) (1 / (z2 - z3)) (1 / (z3 - z1)) = 0
-
-  -- Section 3: Positive Grassmannian Gr⁺(2, n) & Plücker Syzygies
-  plucker_antisymmetry : ∀ {n : ℕ} (R : Type*) [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (i j : Fin n),
-    pluckerMinor C j i = - pluckerMinor C i j
-  plucker_diagonal_zero : ∀ {n : ℕ} (R : Type*) [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (i : Fin n),
-    pluckerMinor C i i = 0
-  plucker_quadric_syzygy : ∀ {n : ℕ} (R : Type*) [CommRing R] (C : Matrix (Fin 2) (Fin n) R) (a b c d : Fin n),
-    pluckerMinor C a b * pluckerMinor C c d -
-    pluckerMinor C a c * pluckerMinor C b d +
-    pluckerMinor C a d * pluckerMinor C b c = 0
-
-  -- Section 4: Bost-Connes Operator Klein Quadric & Truncated KMS Weights
-  operator_klein_quadric : ∀ (Op : Type*) [Ring Op] (e0 e1 e2 e3 : Op)
-    (h12 : Commute e1 e2) (h13 : Commute e1 e3) (h23 : Commute e2 e3),
-    let P := makeDifferencePlucker e0 e1 e2 e3
-    P.p01 * P.p23 - P.p02 * P.p13 + P.p03 * P.p12 = 0
-  gibbs_normalized : ∀ (R : Type*) [CommRing R] (N : ℕ) (w : Fin N → R) (invZ : R)
-    (hZ : (∑ i : Fin N, w i) * invZ = 1),
-    ∑ i : Fin N, normalizedGibbsWeights N w invZ i = 1
-
-  -- Section 5: The Synthesis Transition Socket
-  socket_boundary : ∀ (R : Type*) [CommRing R] {Boundary : Type*}
-    (s : AmplituhedronBostConnesSocket R Boundary),
-    s.boundaryMap s.partitionWeights = s.targetBoundary
-  socket_plucker : ∀ (R : Type*) [CommRing R] {Boundary : Type*}
-    (s : AmplituhedronBostConnesSocket R Boundary),
-    pluckerMinor s.grassmannianCell 0 1 * pluckerMinor s.grassmannianCell 2 3 -
-    pluckerMinor s.grassmannianCell 0 2 * pluckerMinor s.grassmannianCell 1 3 +
-    pluckerMinor s.grassmannianCell 0 3 * pluckerMinor s.grassmannianCell 1 2 = 0
-
-/-- Compilation theorem: universal mathematical certificate for the Twistor Amplituhedron & Bost-Connes Synthesis. -/
-theorem compile_amplituhedron_bost_connes_synthesis : AmplituhedronBostConnesCertificate where
-  twistor_displacement := fun R _ Z X Y hX hY => twistor_incidence_displacement Z X Y hX hY
-  twistor_det_smul := fun R _ Z X Y hX hY => twistor_incidence_det_smul_zero Z X Y hX hY
-  twistor_det_null := fun K _ Z X Y hX hY hPi => twistor_incidence_det_zero Z X Y hX hY hPi
-  omega_sq_zero := fun R _ ι _ i j => omegaGen_sq_zero i j
-  arnold_syzygy := fun K _ z1 z2 z3 h12 h23 h31 => arnold_rational_field_syzygy z1 z2 z3 h12 h23 h31
-  plucker_antisymmetry := fun R _ C i j => plucker_antisymm C i j
-  plucker_diagonal_zero := fun R _ C i => plucker_self_zero C i
-  plucker_quadric_syzygy := fun R _ C a b c d => plucker_syzygy C a b c d
-  operator_klein_quadric := fun Op _ e0 e1 e2 e3 h12 h13 h23 => differencePlucker_klein_identity e0 e1 e2 e3 h12 h13 h23
-  gibbs_normalized := fun R _ N w invZ hZ => gibbs_weights_normalized N w invZ hZ
-  socket_boundary := fun R _ Boundary s => socket_boundary_readout s
-  socket_plucker := fun R _ Boundary s => socket_plucker_exact s
 
 end InfoGeometry.Projective.AmplituhedronBostConnesSynthesis

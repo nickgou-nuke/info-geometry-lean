@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.CyclicCocycleCantor
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 open Matrix Complex
@@ -107,10 +113,8 @@ theorem chiral_anomaly_vanishes_at_flat_boundary
           nth_rw 2 [hτ_neg]
       _ = 0 := by simp
   have h2 : (2 : ℂ) * Matrix.trace (tilt * proj.e) = 0 := by
-    calc
-      (2 : ℂ) * Matrix.trace (tilt * proj.e) =
-          Matrix.trace (tilt * proj.e) + Matrix.trace (tilt * proj.e) := by ring
-      _ = 0 := by rw [h_sum]
+    rw [two_mul]
+    exact h_sum
   rcases mul_eq_zero.mp h2 with (h2z | hz)
   · exact absurd h2z (by norm_num : (2 : ℂ) ≠ 0)
   · exact hz

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.ProjectiveKrein.ProjectiveKreinDecomposition
 
 open InfoGeometry.ProjectiveKrein
@@ -25,4 +30,3 @@ in `ProjectiveKreinDecomposition.lean` to verify:
 #print axioms gl2N_dimension_sum_exact
 #print axioms gl2N_matrix_dim
 #print axioms three_mode_pythagorean_decomposition
-#print axioms compile_projective_krein_certificate

@@ -324,7 +324,7 @@ End every pipeline execution turn with a QMS-compliant report containing:
 | ArangoDB | Declaration graph | 8530 | Database `infogeometry` |
 | Hive queue | Task queue | 8540 | Database `hive_live` |
 | aiClaw memory | Proof/text memory | 8540 | Database `aiclaw_auto_rag` |
-| Alexandria | Literature | 8532 | Database `alexandria` |
+| Alexandria | Literature / PDF-to-DAG-brain (`retrieval_context_only`) | 8532 (default) or dedicated isolated port (e.g. `8538`) | Database `alexandria` (or e.g. `alexandria_dag_brain` via `configs/alexandria/docker-compose.pdf.yml`; `:8530`/`:8540` forbidden) |
 
 **Oracle outputs belong in candidate/report artifacts.** A coding agent inspects and applies source changes, then runs the relevant checks. Do not stack browser prompts or bypass the shared ChatGPT lane.
 
@@ -344,6 +344,9 @@ End every pipeline execution turn with a QMS-compliant report containing:
 | Vacuity linter | `python3 tools/scripts/vacuity-linter.py <file.lean> --json` |
 | OpenGauss screener | `python3 tools/infra/opengauss_screener.py <file.lean> --strict` |
 | Context preflight | `python3 tools/infra/context_preflight.py "question" --include-external` |
+| Alexandria BM25 + DAG retrieval | `python3 tools/alexandria/retrieve_context.py --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain --query "<query>" --top-k 5 --hops 2 --format text` |
+| Alexandria PPR subgraph ranking (`networkx` env) | `.venv/bin/python3 tools/alexandria/graph_context_rank.py --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain --query "<query>" --top-k 5 --hops 2 --format text` |
+| Unified GraphRAG w/ Alexandria | `python3 tools/infra/ask_repo.py "<query>" --scope alexandria --alexandria-endpoint http://127.0.0.1:8538 --alexandria-database alexandria_dag_brain --top-k 5 --brief` |
 | Taxonomy tests | `python3 -m pytest tests/test_evolution_taxonomy.py` |
 | Full pipeline | `./scripts/run_pipeline.sh [--skip-lean-build] [--generation-id <ID>] [--report-dir <DIR>]` |
 | Dry-run ontology bridge | `python3 tools/infra/arango_to_ontology.py --dry-run --decls-jsonl <file> --report-json <file>` |

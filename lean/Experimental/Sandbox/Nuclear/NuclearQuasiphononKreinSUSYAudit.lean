@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.Nuclear.NuclearQuasiphononKreinSUSY
 
 open Experimental.Sandbox.Nuclear.NuclearQuasiphononKreinSUSY
@@ -17,4 +22,3 @@ open Experimental.Sandbox.Nuclear.NuclearQuasiphononKreinSUSY
 #print axioms andreev_bdg_swap
 #print axioms bdgBlock_traceless
 #print axioms bdgBlock_det
-#print axioms compile_nuclear_quasiphonon_krein_susy

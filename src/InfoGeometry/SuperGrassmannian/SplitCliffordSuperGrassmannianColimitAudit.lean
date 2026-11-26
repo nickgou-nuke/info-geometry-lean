@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperGrassmannian.SplitCliffordSuperGrassmannianColimit
 
 /-!
@@ -32,8 +37,5 @@ open InfoGeometry.SuperGrassmannian.SplitCliffordColimit
 
 -- Section 5: Equal-Shift Integer-Difference Arithmetic
 #print axioms equal_shift_preserves_dimension_difference
-
--- Section 6: Master Verification Certificate
-#print axioms compile_split_clifford_dimension_arithmetic
 
 end InfoGeometry.SuperGrassmannian.SplitCliffordColimit.Audit

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CuntzMatrixTraceTopologicalGNSBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTowerColimitBridge
@@ -21,18 +26,20 @@ open InfoGeometry.Canonical.CuntzMatrixTraceTopologicalColimit
 open InfoGeometry.Canonical.CuntzMatrixTowerInstantiation
 
 theorem realTrace_colimit_projection1
-    (T : InfoGeometry.Canonical.CuntzMatrixTraceTower.Data) :
-    realTraceTopologicalColimitMap T
+    (T : InfoGeometry.Canonical.CuntzMatrixTraceTower.Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
+    realTraceTopologicalColimitMap T hT
         (topologicalInclusion T 1 cuntzStage1_S1) = (1 / 2 : ℝ) := by
-  rw [realTraceTopologicalColimitMap_inclusion]
+  rw [realTraceTopologicalColimitMap_inclusion T hT]
   have h := congrArg Complex.re cuntzStage1_trace_S1
   simpa [matrixTraceState, matrixTraceFunctional_apply] using h
 
 theorem realTrace_colimit_projection2
-    (T : InfoGeometry.Canonical.CuntzMatrixTraceTower.Data) :
-    realTraceTopologicalColimitMap T
+    (T : InfoGeometry.Canonical.CuntzMatrixTraceTower.Data)
+    (hT : ∀ n A, matrixTraceState (n + 1) (T n A) = matrixTraceState n A) :
+    realTraceTopologicalColimitMap T hT
         (topologicalInclusion T 1 cuntzStage1_S2) = (1 / 2 : ℝ) := by
-  rw [realTraceTopologicalColimitMap_inclusion]
+  rw [realTraceTopologicalColimitMap_inclusion T hT]
   have h := congrArg Complex.re cuntzStage1_trace_S2
   simpa [matrixTraceState, matrixTraceFunctional_apply] using h
 

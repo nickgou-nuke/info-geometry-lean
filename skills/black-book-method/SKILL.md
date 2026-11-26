@@ -96,11 +96,21 @@ Find where the content belongs:
 
 Use Arango/gravity retrieval to locate nearby theorem mass, but only as navigation. Read raw Lean before editing.
 
-Useful command pattern:
+Useful command patterns:
 
 ```bash
 python3 tools/infra/arango_gravity_context.py --query "<concepts>" --top-k 12 --json-out /tmp/gravity.json --md-out /tmp/gravity.md
+
+# Prior-art mathematical PDF literature via Alexandria (retrieval_context_only; never proof authority)
+python3 tools/alexandria/retrieve_context.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "<concepts>" --top-k 5 --hops 2 --format text
+.venv/bin/python3 tools/alexandria/graph_context_rank.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "<concepts>" --top-k 5 --seed-k 5 --hops 2 --format text
 ```
+
+See `skills/alexandria-pipeline/SKILL.md`, `docs/alexandria/README.md`, and `tools/alexandria/README.md` for offline `--input-dir` fallback and lane isolation (`:8530`/`:8540` forbidden).
 
 ### 4. Preserve Bridge Commentary
 

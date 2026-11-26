@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.UHFInductiveColimitBoundary
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStageTransportBridge
@@ -68,7 +73,7 @@ theorem traceProbe_cylinderMatrix
   have hpow : (1 / 2 : ℂ) ^ n = 1 / (2 ^ n : ℂ) := by
     simpa only [one_div] using (inv_pow (2 : ℂ) n)
   rw [← Finset.sum_mul, hpow]
-  ring
+  exact mul_comm _ _
 
 /- The same finite cylinder, now viewed in the genuine bounded-operator
  carrier used by the BKM construction. -/
@@ -105,7 +110,7 @@ theorem maximallyMixed_bkm_kernel_cylinderFiniteOperator
         (1 : FiniteOperatorAlgebra (2 ^ n)) s
         (cylinderFiniteOperator n f) =
       bitWordMatrixTraceProbe n (cylinderMatrix n f) := by
-  rw [maximallyMixed_bkm_kernel_eq_normalized_trace]
+  rw [CuntzMatrixTraceTower.maximallyMixed_bkm_kernel_eq_normalized_trace]
   rw [finiteOperatorTrace_cylinderFiniteOperator_eq_traceProbe]
   field_simp
 

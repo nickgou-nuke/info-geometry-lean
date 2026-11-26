@@ -164,10 +164,10 @@ theorem rohozhkinMatrix_isUnit_of_admissible
             (1 : Matrix (Fin (rohozhkinDim n)) (Fin (rohozhkinDim n)) ℚ))
   | cons A tail ih =>
       apply IsUnit.mul
-      · exact hW A (by simp)
+      · exact hW A List.mem_cons_self
       · apply ih
         intro F hF
-        exact hW F (by simp [hF])
+        exact hW F (List.mem_cons_of_mem A hF)
 
 /-- Concrete presentation-level move relation for Delaunay flip sequences. -/
 inductive DelaunayMoveList {n : ℕ} : DelaunayMoveKind → List (DelaunayFlipContext n) → List (DelaunayFlipContext n) → Prop

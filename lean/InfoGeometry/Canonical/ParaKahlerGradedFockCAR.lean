@@ -179,7 +179,8 @@ theorem superBracket_create_create (K : V →ₗ[ℝ] V) (u w : primalSheet K) :
     ChakravalaGA.superBracket (R := ℝ) .odd .odd
       (paraKahlerCreateEnd K u) (paraKahlerCreateEnd K w) = 0 := by
   rw [ChakravalaGA.superBracket_fermionic]
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   exact creation_anticommute u w ψ
 
 /-- Odd-odd graded Lie superbracket of two annihilation endomorphisms vanishes identically:
@@ -189,7 +190,8 @@ theorem superBracket_annihilate_annihilate (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ)
     ChakravalaGA.superBracket (R := ℝ) .odd .odd
       (paraKahlerAnnihilateEnd g K α) (paraKahlerAnnihilateEnd g K β) = 0 := by
   rw [ChakravalaGA.superBracket_fermionic]
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   exact annihilation_anticommute
     (hyperbolicPairingMinusToDualPlus g K α)
     (hyperbolicPairingMinusToDualPlus g K β) ψ
@@ -203,7 +205,8 @@ theorem superBracket_create_annihilate (g : V →ₗ[ℝ] V →ₗ[ℝ] ℝ) (K 
       (paraKahlerCreateEnd K u) (paraKahlerAnnihilateEnd g K α) =
       (g α.1 u.1) • (1 : Module.End ℝ (FockExteriorEnvelope K)) := by
   rw [ChakravalaGA.superBracket_fermionic]
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   exact creation_annihilation_CAR u (hyperbolicPairingMinusToDualPlus g K α) ψ
 
 /-- Under a `ParaKahlerStructure g omega K`, the CAR superbracket is symmetric in the
@@ -326,7 +329,8 @@ theorem paraKahlerCliffordEnd_sq (hK : ParaComplexStructure K)
     paraKahlerCliffordEnd g K hK v * paraKahlerCliffordEnd g K hK v =
       (g (paraProjectorPlus K v) (paraProjectorMinus K v)) •
         (1 : Module.End ℝ (FockExteriorEnvelope K)) := by
-  ext ψ
+  apply LinearMap.ext
+  intro ψ
   rw [Module.End.mul_apply, paraKahlerCliffordEnd_sq_apply g K hK v ψ,
     hPK.g_symm (paraProjectorMinus K v) (paraProjectorPlus K v)]
   rfl

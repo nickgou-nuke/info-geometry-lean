@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Projective.SplitCompositionProjectiveSpace
 
 open InfoGeometry.Projective.SplitComposition
@@ -18,4 +23,3 @@ open InfoGeometry.Projective.SplitComposition
 #print axioms affine_projector_idempotent
 #print axioms affine_projector_matrix_trace
 #print axioms affine_projector_hermitian
-#print axioms compile_split_composition_projective_space

@@ -113,6 +113,31 @@ Then classify the strongest result honestly as one of:
 - stale/seed-missing retrieval artifact
 - missing after deep retrieval
 
+#### Optional Prior-Art Literature Retrieval (Alexandria, `retrieval_context_only`)
+
+When background mathematical literature, theorem statements, or external paper citations help frame the topic or locate standard definitions, query the isolated Alexandria PDF-to-DAG brain (see `skills/alexandria-pipeline/SKILL.md`, `docs/alexandria/README.md`, and `tools/alexandria/README.md`):
+
+```bash
+# BM25 + multi-hop acyclic DAG neighborhood
+python3 tools/alexandria/retrieve_context.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "${TOPIC}" --top-k 5 --hops 2 --format text
+
+# Personalized PageRank across cross-document concept/DAG edges (requires networkx)
+.venv/bin/python3 tools/alexandria/graph_context_rank.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "${TOPIC}" --top-k 5 --seed-k 5 --hops 2 --format text
+
+# Combined Lean + docs + Alexandria provenance packet
+python3 tools/infra/ask_repo.py "${TOPIC}" \
+  --scope lean,docs,alexandria \
+  --alexandria-endpoint http://127.0.0.1:8538 \
+  --alexandria-database alexandria_dag_brain \
+  --top-k 5 --brief
+```
+
+**Boundary:** Alexandria results always carry `sourceAuthority: "retrieval_context_only"`. Record paper title, SHA-256, `documentKey`, and page numbers as literature evidence only — never promote a matrix row to `implemented` from Alexandria hits.
+
 ### 4) Debt/vacuity pass
 
 For topic-matched Lean files:

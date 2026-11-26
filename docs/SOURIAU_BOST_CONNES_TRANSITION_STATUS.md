@@ -151,3 +151,24 @@ python3 tools/infra/axiom_check.py InfoGeometry.Canonical.SouriauBostConnesTrans
 # 4. Zero-bypass scan for prohibited markers
 rg -n "sorry|admit|native_decide|axiom|unsafe" lean/InfoGeometry/Canonical/SouriauBostConnesTransition.lean
 ```
+
+---
+
+## 6. Companion KMS, Profinite Phase, Trace-Ideal & Souriau–Fisher Closure (`SouriauBostConnesKMSAndTraceIdeal`)
+
+The companion owner [`lean/InfoGeometry/Canonical/SouriauBostConnesKMSAndTraceIdeal.lean`](../lean/InfoGeometry/Canonical/SouriauBostConnesKMSAndTraceIdeal.lean) extends `SouriauBostConnesTransition.lean` with four concrete theorem clusters:
+
+1. **Profinite Galois Carrier & Explicit Low-Temperature $\mathrm{KMS}_\beta$ Phase States ($\widehat{\mathbb{Z}}^\times$)**:
+   `ProfiniteUnits` (`negOne_ne_one`), equivariant Bost–Connes phase characters `bcPhaseChar` (`bcPhaseChar_eq_iff_component_eq`), and concrete $\beta > 1$ phase states `bcKMSPhaseState` converging to `bcPhaseChar g k` as $\beta \to +\infty$ (`bcKMSPhaseState_tendsto_zeroTemp`) and separating distinct profinite units (`bcKMSPhaseState_ssb_witness`), contrasted with the unique high-temperature symmetric Gibbs profile `bcHighTempSymmetricState` and pole divergence `not_summable_rpow_neg_of_le_one`.
+2. **Infinite-Dimensional $\ell^2$ Sewn Boundary Trace-Ideal Subalgebra**:
+   `SewnOperatorSubalgebra` and `IsAntiSewn` establish a non-vacuous bimodule trace-ideal property on `H_lp ℝ`: closed under composition with left/right boundary-preserving operators (`isAntiSewn_comp_sewn`, `sewn_comp_isAntiSewn`), satisfied by the fundamental symmetry `epsilon_lp_clm` (`epsilon_lp_clm_isAntiSewn`), and yielding exact stitched expectation vanishing `infinite_hilbert_antiSewn_expectation_zero`.
+3. **Exact Finite Primon Souriau–Fisher Hessian & Strict Positivity**:
+   Proves the first and second log-partition cumulant derivatives `hasDerivAt_primonLogPartition` and `hasDerivAt_neg_primonMeanEnergy`, showing `primonSouriauFisherMetric` equals the energy variance and is strictly positive (`primonSouriauFisherMetric_pos`) whenever the finite prime set `S` is nonempty and $\beta > 0$.
+4. **Honest Non-Claims**:
+   This companion proves the finite/local primon Fisher Hessian, profinite projective-limit KMS phase separation, and $\ell^2$ sewn bimodule trace-ideal vanishing; full infinite-Euler-product $C^*$-algebraic $\mathrm{KMS}_\beta$ uniqueness and Riemann Hypothesis implications remain open frontiers.
+
+Latest 4-gate check on `InfoGeometry.Canonical.SouriauBostConnesKMSAndTraceIdeal`:
+- `opengauss_screener.py`: `0 traps detected`.
+- `run_locked_lake_build.py`: exited `0` (`9700 jobs`).
+- `axiom_check.lean`: `✓ all 156 declarations clean` (`PASS`).
+- `proof_proxy_staged_gate.py`: `ok`.

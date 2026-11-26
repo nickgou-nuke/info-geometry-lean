@@ -383,13 +383,16 @@ For the latest condensation sequence on the operatorial DIII lane, see
 18. [lean/DAG/README.md](lean/DAG/README.md)
 19. [tools/README.md](tools/README.md)
 20. [tools/infra/README.md](tools/infra/README.md)
-21. [tools/frontier/README.md](tools/frontier/README.md)
-22. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
-23. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
+21. [tools/alexandria/README.md](tools/alexandria/README.md)
+22. [docs/alexandria/README.md](docs/alexandria/README.md)
+23. [tools/frontier/README.md](tools/frontier/README.md)
+24. [FORMALIZATION_PROTOCOL.md](FORMALIZATION_PROTOCOL.md) for reference protocol history
+25. [BIBLIOGRAPHY.md](BIBLIOGRAPHY.md)
 
 If you are operating as an agent inside this repo, also use:
 - [skills/info-geometry-repo/SKILL.md](skills/info-geometry-repo/SKILL.md)
 - [skills/lean-canonicalization-policy/SKILL.md](skills/lean-canonicalization-policy/SKILL.md)
+- [skills/alexandria-pipeline/SKILL.md](skills/alexandria-pipeline/SKILL.md)
 - [docs/black_books/08_the_agentic_caretaker.md](docs/black_books/08_the_agentic_caretaker.md)
 
 ## Authoritative Surfaces
@@ -519,6 +522,7 @@ python3 tools/infra/generate_representation_depth_graph.py
 ## Documentation Policy
 
 - `README.md`, `lean/DAG/README.md`, `tools/README.md`, and `tools/infra/README.md` are operational docs.
+- `tools/alexandria/README.md` and `docs/alexandria/README.md` are the maintained guides for the isolated `retrieval_context_only` PDF-to-DAG-brain literature pipeline.
 - `tools/frontier/README.md` is the maintained operator guide for server-backed semantic snapshots and proof-print tooling.
 - [docs/RepositoryMemoryMap.md](docs/RepositoryMemoryMap.md) classifies which docs and tools are current, generated, compatibility-only, or reference memory.
 - [docs/MarkdownCorpusGovernance.md](docs/MarkdownCorpusGovernance.md) defines markdown classification/hygiene rules and excludes Black Books from cleanup rewrites.

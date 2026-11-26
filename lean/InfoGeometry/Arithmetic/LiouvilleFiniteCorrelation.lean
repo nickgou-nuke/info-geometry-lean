@@ -124,10 +124,9 @@ theorem liouville_correlation_count (samples : Finset ℕ+) (shift : ℕ) :
           (samples.card : ℤ) := by
   apply finite_sign_correlation (Index := ℕ+)
   · intro index member
-    exact liouville_sq index index.pos
+    exact liouville_sq index
   · intro index member
     exact liouville_sq (index.val + shift)
-      (by have positive := index.pos; omega)
 
 theorem liouville_self_correlation (samples : Finset ℕ+) :
     (∑ index ∈ samples, liouville index * liouville index) =
@@ -137,7 +136,7 @@ theorem liouville_self_correlation (samples : Finset ℕ+) :
         ∑ _index ∈ samples, (1 : ℤ) := by
       apply Finset.sum_congr rfl
       intro index member
-      exact liouville_sq index index.pos
+      exact liouville_sq index
     _ = _ := by simp
 
 theorem liouville_correlation_zero_iff (samples : Finset ℕ+) (shift : ℕ) :

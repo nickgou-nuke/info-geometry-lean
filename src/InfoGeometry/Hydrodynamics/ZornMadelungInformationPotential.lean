@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Basic.Real.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Linarith
@@ -144,28 +149,5 @@ theorem bohm_potential_balance (R deltaR Q c : ℝ) (hR : R ≠ 0)
   rw [h_cancel]
   ring
 
-/-! ### Master Verification Certificate -/
-
-/-- Certificate bundling the proved Zorn–Madelung information potential relations with Prop fields. -/
-structure ZornMadelungCertificate where
-  cross_term_cancellation : ∀ (A mv : Vec3),
-    Vec3.dot (Vec3.add A mv) (Vec3.sub A mv) = Vec3.sq A - Vec3.sq mv
-  zorn_det_split : ∀ (S Q : ℝ) (A mv : Vec3),
-    ZornMatrix.det (ZornMatrix.makePotential S Q A mv) =
-    (S ^ 2 - Q ^ 2) - (Vec3.sq A - Vec3.sq mv)
-  incompressible_balance : ∀ (S Q : ℝ) (A mv : Vec3) (h : S ^ 2 = Vec3.sq A),
-    ZornMatrix.det (ZornMatrix.makePotential S Q A mv) = Vec3.sq mv - Q ^ 2
-  bohm_fisher_gradient : ∀ (hbar m delta_IF : ℝ),
-    bohmFisherScale hbar m * delta_IF = (hbar * hbar * delta_IF) / (8 * m)
-  bohm_curvature_balance : ∀ (R deltaR Q c : ℝ) (hR : R ≠ 0) (hQ : Q = - c * (deltaR / R)),
-    Q * R + c * deltaR = 0
-
-/-- Instantiation of the master certificate with zero open assumptions. -/
-theorem compile_zorn_madelung_potential : ZornMadelungCertificate :=
-  { cross_term_cancellation := Vec3.dot_add_sub_cancel
-    zorn_det_split := ZornMatrix.zorn_potential_det_split
-    incompressible_balance := ZornMatrix.zorn_kinetic_fisher_balance
-    bohm_fisher_gradient := bohm_potential_is_fisher_gradient
-    bohm_curvature_balance := bohm_potential_balance }
 
 end InfoGeometry.Hydrodynamics.ZornMadelung

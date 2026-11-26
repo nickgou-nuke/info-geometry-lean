@@ -746,5 +746,6 @@ repository-wide build.
 
 - `external_refs/LeanMillenniumPrizeProblems/` mirror: searchable theorem corpus for the Clay problems.
 
-- `graph_rag_query.py` (unified natural-language GraphRAG explorer over Lean, docs, black books, handover material, and external mirrors)
-- `ask_repo.py` (thin user-facing wrapper for the GraphRAG explorer)
+- `graph_rag_query.py` (unified natural-language GraphRAG explorer over Lean, docs, black books, handover material, external mirrors, and opt-in `--scope alexandria` with `--alexandria-endpoint` / `--alexandria-database`; Alexandria results are `retrieval_context_only`)
+- `ask_repo.py` (thin user-facing wrapper for the GraphRAG explorer; supports `--scope alexandria`, `--brief`, and `--answer`)
+- See [tools/alexandria/README.md](../alexandria/README.md) for the isolated PDF-to-DAG-brain pipeline (`pdf_corpus_ingest.py`, `arango_ingest.py`, `retrieve_context.py`, `graph_context_rank.py`)

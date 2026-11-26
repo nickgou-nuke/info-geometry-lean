@@ -50,10 +50,6 @@ theorem split_octonion_null_norm_iff_zorn_determinant (x : SplitOctonion) :
         (splitOctonionCanonicalZornEquiv x) = 0 := by
   exact (isIsotropic_iff_normSQ x).symm.trans (isIsotropic_iff_detZ x)
 
-/-- Norm squared of an octonion -/
-def normSq (x : Octonion R) : R :=
-  x.re^2 + x.e1^2 + x.e2^2 + x.e3^2 + x.e4^2 + x.e5^2 + x.e6^2 + x.e7^2
-
 theorem octonionic_hopf_fibration_s8 (n1 n2 : ℝ) (h_sphere : n1 + n2 = 1) :
     4 * (n1 * n2) + (n1 - n2)^2 = 1 := by
   calc

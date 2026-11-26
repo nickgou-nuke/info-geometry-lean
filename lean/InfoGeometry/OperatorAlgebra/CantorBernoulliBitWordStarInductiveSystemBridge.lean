@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixStageTransportBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
@@ -84,7 +89,7 @@ theorem bitWordDyadicStarEmbedding_trace_compatible
   change matrixTraceState (n + 1)
       (concreteStep n (bitWordStageStarAlgEquiv n A)) =
     matrixTraceState n (bitWordStageStarAlgEquiv n A)
-  exact concreteData.trace_compatible n (bitWordStageStarAlgEquiv n A)
+  exact concrete_trace_compatible n (bitWordStageStarAlgEquiv n A)
 
 abbrev BitWordStarData :=
   ∀ n, BitWordMatrixStage n →⋆ₐ[ℂ] BitWordMatrixStage (n + 1)

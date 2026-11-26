@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.Clifford.WeylMoyalSuperGrassmannian
 
 open Experimental.Sandbox.Clifford.WeylMoyalSuperGrassmannian
@@ -36,4 +41,3 @@ open Experimental.Sandbox.Clifford.WeylMoyalSuperGrassmannian
 #print axioms ccr_q2_p1
 #print axioms phaseSpaceHessian_id
 #print axioms symplectic_complex_metric
-#print axioms compile_weyl_moyal_super_grassmannian

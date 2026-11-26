@@ -272,7 +272,4 @@ noncomputable def anomalyScale (S : SpectralHookDatum (E := E)) : ℝ :=
 
 end SpectralHooks
 
-
-def chiralPackage (S : SpectralHookDatum (E := E)) : CertifiedChiralSpectralTriple E := S
-
 end InfoGeometry.Canonical.PhysicsOfInformationCore

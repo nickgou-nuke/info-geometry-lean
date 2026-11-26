@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Real.Sqrt
@@ -13,11 +18,8 @@ def P_31 : Nucleus := ⟨15, 16⟩
 def S_31 : Nucleus := ⟨16, 15⟩
 
 /-- The A=31 Mirror Pair. -/
-def A31Pair : MirrorPair where
-  nuc1 := P_31
-  nuc2 := S_31
-  mirror_cond_Z := rfl
-  mirror_cond_N := rfl
+def A31Pair : MirrorPair :=
+  ⟨(P_31, S_31), rfl, rfl⟩
 
 /-- Experimental B(E1) value for S-31 in Weisskopf units (or relevant scaled units). -/
 def B_E1_S : ℝ := 7.2

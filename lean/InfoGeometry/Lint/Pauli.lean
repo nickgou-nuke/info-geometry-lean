@@ -8,6 +8,7 @@ import Lean.Linter.Basic
 import Std
 import InfoGeometry.Meta.Trust
 import InfoGeometry.Meta.Admission
+import InfoGeometry.Meta.ArchitectureAudit
 import InfoGeometry.Lint.WitnessLint
 import InfoGeometry.Lint.NonTriviality
 
@@ -248,7 +249,7 @@ def pauliLinter : Linter where
             let shortName := declShortString declName.eraseMacroScopes
             if physicalKeywords.any (fun kw => shortName.contains kw) then
               let hasFoundation :=
-                InfoGeometry.Meta.reachesNamespacePrefix queryEnv declName foundationalNamespaces
+                InfoGeometry.Meta.ArchitectureAudit.reachesNamespacePrefix queryEnv declName foundationalNamespaces
               if !hasFoundation then
                 logWarningAt idStx m!"[Pauli/No-Mask Mandate] {declName} uses a physically-loaded name but does not transitively depend on foundational Core or Algebra transformations. Ensure this is not symbolic inflation."
 

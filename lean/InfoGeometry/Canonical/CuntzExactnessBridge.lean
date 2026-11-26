@@ -122,14 +122,14 @@ theorem differentiableOn_ball_with_cuntz_vacuum_exact
   exact primitiveExactOn_with_cuntz_vacuum_exact
     Metric.isOpen_ball (differentiableOn_ball_to_isExactOn hf) C
 
-end InfoGeometry.Canonical.CuntzExactnessBridge
-
 theorem cuntzDerivative_add
-    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra (N := 2) Op)
+    (C : CuntzO2Carrier Op)
     (A B : Op) :
     cuntzDerivative C (A + B) = cuntzDerivative C A + cuntzDerivative C B := by
   unfold cuntzDerivative
   simp only [add_mul, mul_add]
   abel
+
+end InfoGeometry.Canonical.CuntzExactnessBridge
 
 end noncomputable section

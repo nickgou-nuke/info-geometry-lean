@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Algebra.Zorn.G2CASFactorizationCarrier
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Zorn.G2FlagOrbitPartitionCertificate
@@ -247,7 +252,7 @@ theorem flagRepresentative_factorization_of_cell_certificate
         rw [C.representative_step i hi hne,
           C.factorized_step i hi hne, hpred]
 
-/-/ The concrete certificate required to connect an orbit cell to the
+/-- The concrete certificate required to connect an orbit cell to the
 generic recursion.  Producing an inhabitant is the CAS-backed mathematical
 work; this structure does not hide it behind a proposition-valued theorem. -/
 structure G2OrbitFactorizationStep (k : Fin 12) (i : Fin 189) where
@@ -314,8 +319,10 @@ certificates.
 -/
 
 /-- Structural predecessor data for one Bruhat orbit cell.  The certificate
-contains no claim that `Fin.val` is related to the predecessor graph. -/
-structure G2CellPredecessorCertificate (k : Fin 12) where
+contains no claim that `Fin.val` is related to the predecessor graph.  This
+anchor-free variant pairs with
+`flagRepresentative_factorization_of_cell_depth_certificates`. -/
+structure G2CellDepthPredecessorCertificate (k : Fin 12) where
   depth : Fin 189 → ℕ
   predecessor :
     ∀ i : Fin 189, i ∈ orbitCells k → i ≠ orbitCellAnchor k → Fin 189
@@ -350,8 +357,8 @@ structure G2CellPredecessorCertificate (k : Fin 12) where
 for every representative in its certified orbit cell.  The proof is a strong
 induction on the certificate depth and is independent of the serialized flag
 index. -/
-theorem flagRepresentative_factorization_of_cell_certificate
-    (cert : ∀ k : Fin 12, G2CellPredecessorCertificate k)
+theorem flagRepresentative_factorization_of_cell_depth_certificates
+    (cert : ∀ k : Fin 12, G2CellDepthPredecessorCertificate k)
     (hbase : ∀ k : Fin 12,
       flagRepresentative (orbitCellAnchor k) =
         g2FlagFactorizationTarget.factorized k (orbitCellAnchor k)) :

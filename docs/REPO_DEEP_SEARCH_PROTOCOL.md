@@ -177,8 +177,11 @@ commit-conscious-knowledge.ts
 setup-db.ts
 scripts/index-external-repos.py
 scripts/harvest-knowledge.sh
+tools/alexandria/pdf_corpus_ingest.py
+tools/alexandria/arango_ingest.py
 tools/alexandria/semantic_ingest.py
 tools/alexandria/retrieve_context.py
+tools/alexandria/graph_context_rank.py
 tools/infra/graph_rag_query.py
 tools/infra/graphrag_context.py
 tools/infra/ask_repo.py
@@ -194,6 +197,8 @@ citation_edges
 literature_search_view
 knowledge_base.json fallback
 ```
+
+For PDF literature search, `ask_repo.py` and `graph_rag_query.py` expose opt-in `--scope alexandria` (excluded from `--scope all`, with `--alexandria-endpoint` / `--alexandria-database` overrides), while `retrieve_context.py` and `graph_context_rank.py` query Alexandria directly (`sourceAuthority: "retrieval_context_only"`).
 
 This brain answers "what context/literature/source text is known?" It does not
 answer "what has Lean proved?" without a Lean owner check.
@@ -211,13 +216,14 @@ Physical database defaults:
 |---|---|---|
 | `aiclaw_auto_rag` on `http://127.0.0.1:8540` | `tools/infra/aiclaw_auto_arango.py`, Pi extension files | isolated natural-language/proof-memory RAG |
 | `infogeometry` on `http://127.0.0.1:8530` | `src/igf/config/env_aliases.py` | repo DAG, InfoTree, graph overlays, scheduling sidecars |
-| `alexandria` | `tools/alexandria/arango_ingest.py`, `tools/alexandria/automathtext_arango_ingest.py` | literature and AutoMathText ingestion |
+| `alexandria` on `http://127.0.0.1:8532` (and isolated custom brains via `ALEXANDRIA_ARANGO_*`, e.g. observed `:8538` / `alexandria_dag_brain`) | `src/igf/config/env_aliases.py`, `configs/alexandria/docker-compose.pdf.yml`, `tools/alexandria/pdf_corpus_ingest.py`, `tools/alexandria/arango_ingest.py` | isolated PDF/literature & AutoMathText retrieval (`:8530` and `:8540` forbidden by `guard_alexandria_target`) |
 | `hive_live` on `http://127.0.0.1:8540` | `tools/infra/hive_arango_queue.py` and Hive workers | live Hive queue/packet memory, separate from the AST/AQL DAG |
 
 Important caveat: `arango_database(default)` returns `ARANGO_DATABASE` when it
 is set, even if a script passes a different legacy default. Hive workers use
 the explicit `HIVE_ARANGO_*` lane and must not be inferred from the AST/AQL
-`ARANGO_*` lane.
+`ARANGO_*` lane. Similarly, Alexandria tools use `ALEXANDRIA_ARANGO_*` via
+`load_alexandria_arango_env()` and must never point at `:8530` or `:8540`.
 Agents must report the resolved database from the run, not assume the default.
 
 Logical schema families:
@@ -225,7 +231,7 @@ Logical schema families:
 | # | Family | Main collections | Primary scripts |
 |---:|---|---|---|
 | 1 | aiClaw natural-language/proof-memory RAG | `literature_nodes`, `citation_edges`, `literature_search_view` | `tools/infra/aiclaw_auto_arango.py`, `setup-db.ts`, `arango-rag-tool.ts`, `commit-conscious-knowledge.ts` |
-| 2 | Alexandria classic literature graph | `alexandria_documents`, `alexandria_sections`, `alexandria_chunks`, `alexandria_entities`, `alexandria_*_edges` | `tools/alexandria/arango_ingest.py` |
+| 2 | Alexandria literature & PDF-to-DAG-brain graph | `alexandria_documents`, `alexandria_sections`, `alexandria_chunks`, `alexandria_entities`, `alexandria_*_edges` (incl. `alexandria_dag_edges`), BM25 view `alexandria_chunks_search`, `canonicalKey` concept linking | `tools/alexandria/pdf_corpus_ingest.py`, `tools/alexandria/arango_ingest.py`, `tools/alexandria/retrieve_context.py`, `tools/alexandria/graph_context_rank.py` |
 | 3 | AutoMathText-V2 ancestry/theorem graph | `automath_fragments`, `automath_chunks`, `automath_entities`, `automath_expr_nodes`, `automath_theorem_shapes`, `automath_overlay_nodes`, `automath_*_edges` | `tools/alexandria/automathtext_v2_ingest.py`, `tools/alexandria/automathtext_arango_ingest.py` |
 | 4 | txt2kg external-text KG and predigestion | `txt2kg_sources`, `txt2kg_chunks`, `txt2kg_triples`, `txt2kg_entities`, `txt2kg_relationships` | `tools/alexandria/txt2kg_hive_ingest.py` |
 | 5 | LeanTrail / expression base graph | `ig_nodes`, `ig_edges` | `tools/leantrail/arango_ingest.py`, `tools/infra/arango_expr_graph_ingest.py` |

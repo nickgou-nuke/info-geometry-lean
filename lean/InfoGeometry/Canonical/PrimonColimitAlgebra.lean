@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ColimitTraceFormula
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.FiniteCovarianceMajoranaBlock
@@ -37,7 +42,7 @@ noncomputable def primonBond (n : ℕ) :
 
 @[simp] theorem primonBond_trace (n : ℕ) (A : PrimonStage n) :
     matrixTraceState (n + 1) (primonBond n A) = matrixTraceState n A :=
-  concreteData.trace_compatible n A
+  concrete_trace_compatible n A
 
 theorem primonBond_injective (n : ℕ) :
     Function.Injective (primonBond n) := by

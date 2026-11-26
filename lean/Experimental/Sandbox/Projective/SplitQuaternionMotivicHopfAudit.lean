@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.Projective.SplitQuaternionMotivicHopf
 
 open Experimental.Sandbox.Projective.SplitQuaternionMotivicHopf
@@ -23,4 +28,3 @@ open Experimental.Sandbox.Projective.SplitQuaternionMotivicHopf
 #print axioms E11_add_E22
 #print axioms E11_mul_E11
 #print axioms E22_mul_E22
-#print axioms compile_split_quaternion_motivic_hopf

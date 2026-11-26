@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Basic.Real.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Tactic.Ring
@@ -160,29 +165,5 @@ theorem associator_of_associative {R : Type*} [Ring R] (x y z : R) :
   dsimp [associator]
   rw [mul_assoc]
   exact sub_self _
-
-/-! ### 5. Master Verification Certificate -/
-
-/-- Certificate bundling the proved Grassmannian gauge and Zorn triality theorems with Prop fields. -/
-structure GrassmannianGaugeZornTrialityCertificate where
-  incompressible_opposite : ∀ (M : Matrix2) (h : Matrix2.IsIncompressible M),
-    M.m11 = - M.m00
-  abelian_curvature_zero : ∀ (G : GaugePacket) (h : Matrix2.IsIncompressible G.dA),
-    GaugePacket.abelianCurvature G = 0
-  supergauge_split : ∀ (φ : ZornAutomorphism) (S Q : ℝ) (A mv : Vec3),
-    ZornMatrix.det (φ.toFun (ZornMatrix.makePotential S Q A mv)) =
-    (S ^ 2 - Q ^ 2) - (Vec3.sq A - Vec3.sq mv)
-  supergauge_kinetic_balance : ∀ (φ : ZornAutomorphism) (S Q : ℝ) (A mv : Vec3) (h : S ^ 2 = Vec3.sq A),
-    ZornMatrix.det (φ.toFun (ZornMatrix.makePotential S Q A mv)) = Vec3.sq mv - Q ^ 2
-  associative_defect_zero : ∀ {R : Type*} [Ring R] (x y z : R),
-    associator x y z = 0
-
-/-- Instantiation of the master certificate with zero open assumptions. -/
-theorem compile_grassmannian_gauge_zorn_triality : GrassmannianGaugeZornTrialityCertificate :=
-  { incompressible_opposite := Matrix2.incompressible_diagonal_opposite
-    abelian_curvature_zero := GaugePacket.abelian_curvature_zero
-    supergauge_split := ZornAutomorphism.zorn_potential_supergauge_split
-    supergauge_kinetic_balance := ZornAutomorphism.zorn_supergauge_kinetic_fisher_balance
-    associative_defect_zero := associator_of_associative }
 
 end InfoGeometry.Hydrodynamics.GrassmannianGauge

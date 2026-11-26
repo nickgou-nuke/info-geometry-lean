@@ -61,12 +61,37 @@ theorem modularFlowCl11_eq_id_or_conjugation {t : ℝ} (ht : Real.sin (2 * t) = 
 
 /-- Promotion of the existing additive equivalence at the exact admissible times. -/
 noncomputable def modularFlowCl11RingEquiv (t : ℝ) (ht : Real.sin (2 * t) = 0) :
-    Cl11 ≃+* Cl11 :=
-  { modularFlowCl11AddEquiv t with
-    map_mul' := (modularFlowCl11_multiplicative_iff t).mpr ht }
+    Cl11 ≃+* Cl11 where
+  toFun := modularFlowCl11 t
+  invFun := modularFlowCl11 (-t)
+  left_inv q := by
+    simpa [modularFlowCl11_zero, add_comm] using
+      (modularFlowCl11_group_property (-t) t q).symm
+  right_inv q := by
+    simpa [modularFlowCl11_zero, add_comm] using
+      (modularFlowCl11_group_property t (-t) q).symm
+  map_add' x y := by
+    change modularFlowCl11 t (add x y) =
+      add (modularFlowCl11 t x) (modularFlowCl11 t y)
+    ext <;> simp [modularFlowCl11, add] <;> ring
+  map_mul' := (modularFlowCl11_multiplicative_iff t).mpr ht
 
 @[simp] theorem modularFlowCl11RingEquiv_apply (t : ℝ)
     (ht : Real.sin (2 * t) = 0) (q : Cl11) :
     modularFlowCl11RingEquiv t ht q = modularFlowCl11 t q := rfl
+
+/-- The circular flow is not multiplicative at `t = π / 4`. -/
+theorem modularFlowCl11_not_mul_at_pi_div_four :
+    ¬ ∀ q r : Cl11, modularFlowCl11 (Real.pi / 4) (q * r) =
+      modularFlowCl11 (Real.pi / 4) q * modularFlowCl11 (Real.pi / 4) r := by
+  rw [modularFlowCl11_multiplicative_iff]
+  norm_num [show 2 * (Real.pi / 4) = Real.pi / 2 by ring]
+
+/-- The half-period flow flips `e2Basis`. -/
+theorem modularFlowCl11_e2Basis_pi_div_two :
+    modularFlowCl11 (Real.pi / 2) e2Basis = -e2Basis := by
+  change modularFlowCl11 (Real.pi / 2) e2Basis = neg e2Basis
+  ext <;> simp [modularFlowCl11, neg, e2Basis,
+    show 2 * (Real.pi / 2) = Real.pi by ring]
 
 end InfoGeometry.Physics.BostConnesThermalTime

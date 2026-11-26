@@ -25,4 +25,3 @@ open InfoGeometry.Epistemology.TomitaTakesakiConnes
 #print axioms connes_intertwining_pullback
 #print axioms trace_scaling_composition
 #print axioms trace_scaling_identity
-#print axioms compile_tomita_takesaki_connes

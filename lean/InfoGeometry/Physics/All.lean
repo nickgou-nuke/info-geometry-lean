@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import InfoGeometry.Physics.Cl11ChiralCARBridge
+import InfoGeometry.Physics.ArnoldFiniteGroupCore
 import InfoGeometry.Physics.CuprateFLStarFormalization
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.BoundaryMajoranaDefectBridge

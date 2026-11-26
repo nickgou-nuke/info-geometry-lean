@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.CockleCoquaternionPlanarTriad
 import InfoGeometry.Projective.SplitCompositionProjectiveSpace
 import InfoGeometry.Projective.SplitQuaternionMotivicHopf
@@ -26,7 +31,6 @@ Key Structures:
 3. Hermitian projector matrices $P(v) = v v^* \in \operatorname{Mat}_{n+1}(\mathbb{D})$, trace formula $\operatorname{Tr}(P(v)) = N(v) \cdot I$, projector scaling, and gauge invariance.
 4. Orthogonal basepoint projectors $E_{kk}$, pairwise orthogonality, idempotency, and partition of unity $\sum_{k=0}^n E_{kk} = I_{n+1}$.
 5. Motivic cell stratification: lower-dimensional inclusion $\mathbb{D}^n \hookrightarrow \mathbb{D}^{n+1}$, top cell affine chart $\mathbb{D}^n \hookrightarrow \mathbb{D}^{n+1}$ sending $z \mapsto (z, 1)$, and dimension formula $\dim_{\mathbb{A}^1} = 4n$.
-6. Master verification certificate `SplitQuaternionMotivicDPnCertificate` bundled and proved unconditionally.
 -/
 
 namespace Experimental.Sandbox.Projective.SplitQuaternionMotivicDPn
@@ -321,69 +325,5 @@ theorem motivicCellDim_zero : motivicCellDim 0 = 0 := rfl
 theorem motivicCellDim_succ (n : ℕ) : motivicCellDim (n + 1) = motivicCellDim n + 4 := by
   dsimp [motivicCellDim]
   ring
-
-/-! ### Section 5: Master Verification Certificate -/
-
-/-- Master verification certificate bundling all fundamental theorems of the split-quaternionic
-    projective spaces $\mathbb{D}\mathrm{P}^n$, split spheres $S^{(4n+3, 2n+1)}$, projector gauge
-    invariance, orthogonal partition of unity, and motivic cellular stratification. -/
-structure SplitQuaternionMotivicDPnCertificate : Prop where
-  -- Section 1: Split-Quaternionic Vector Space, Norm, and Sphere
-  normSqN_action_mult : ∀ (n : ℕ) (R : Type*) [CommRing R] (v : VectorD n R) (u : Coquaternion R),
-    normSqN (actionN v u) = normSqN v * normSq u
-  sphere_preservation : ∀ (n : ℕ) (R : Type*) [CommRing R] (v : VectorD n R) (u : Coquaternion R),
-    IsUnitSphere v → normSq u = 1 → IsUnitSphere (actionN v u)
-  actionN_identity : ∀ (n : ℕ) (R : Type*) [CommRing R] (v : VectorD n R),
-    actionN v 1 = v
-  actionN_composition : ∀ (n : ℕ) (R : Type*) [CommRing R] (v : VectorD n R) (u1 u2 : Coquaternion R),
-    actionN v (u1 * u2) = actionN (actionN v u1) u2
-
-  -- Section 2: Projector Representation and Gauge Invariance
-  projector_trace : ∀ (n : ℕ) (R : Type*) [CommRing R] (v : VectorD n R),
-    traceCoq (projectorN v) = algebraMap R (Coquaternion R) (normSqN v)
-  projector_action_scale : ∀ (n : ℕ) (R : Type*) [CommRing R] (v : VectorD n R) (u : Coquaternion R),
-    projectorN (actionN v u) = normSq u • projectorN v
-  projector_gauge_inv : ∀ (n : ℕ) (R : Type*) [CommRing R] (v : VectorD n R) (u : Coquaternion R),
-    normSq u = 1 → projectorN (actionN v u) = projectorN v
-
-  -- Section 3: Orthogonal Basepoint Projectors & Partition of Unity
-  basepoint_formula : ∀ (n : ℕ) (R : Type*) [CommRing R] (k : Fin (n + 1)) (i j : Fin (n + 1)),
-    basepointProj (R := R) k i j = if i = k ∧ j = k then 1 else 0
-  basepoint_ortho_mul : ∀ (n : ℕ) (R : Type*) [CommRing R] (k l : Fin (n + 1)),
-    basepointProj (R := R) k * basepointProj (R := R) l = if k = l then basepointProj (R := R) k else 0
-  basepoint_idempotency : ∀ (n : ℕ) (R : Type*) [CommRing R] (k : Fin (n + 1)),
-    basepointProj (R := R) k * basepointProj (R := R) k = basepointProj (R := R) k
-  basepoint_partition : ∀ (n : ℕ) (R : Type*) [CommRing R],
-    (∑ k : Fin (n + 1), basepointProj (R := R) k) = 1
-
-  -- Section 4: Inductive Motivic Cell Attachment & Suspension Stratification
-  embed_normSq : ∀ (n : ℕ) (R : Type*) [CommRing R] (v : Fin n → Coquaternion R),
-    (∑ i : Fin (n + 1), normSq (embedLower v i)) = ∑ i : Fin n, normSq (v i)
-  top_cell_last : ∀ (n : ℕ) (R : Type*) [CommRing R] (z : Fin n → Coquaternion R),
-    affineTopCell z (Fin.last n) = 1
-  top_cell_projector_boundary : ∀ (n : ℕ) (R : Type*) [CommRing R] (z : Fin n → Coquaternion R),
-    (projectorN (affineTopCell z)) (Fin.last n) (Fin.last n) = 1
-  dim_zero : motivicCellDim 0 = 0
-  dim_succ : ∀ (n : ℕ), motivicCellDim (n + 1) = motivicCellDim n + 4
-
-/-- Universal compilation theorem proving that the SplitQuaternionMotivicDPnCertificate holds unconditionally. -/
-theorem compile_split_quaternion_motivic_dpn :
-    SplitQuaternionMotivicDPnCertificate where
-  normSqN_action_mult := fun _ _ _ => normSqN_action
-  sphere_preservation := fun _ _ _ => sphere_action_preserves
-  actionN_identity := fun _ _ _ => actionN_one
-  actionN_composition := fun _ _ _ => actionN_mul
-  projector_trace := fun _ _ _ => projectorN_trace
-  projector_action_scale := fun _ _ _ => projectorN_action
-  projector_gauge_inv := fun _ _ _ => projectorN_gauge_invariance
-  basepoint_formula := fun _ _ _ => basepointProj_apply
-  basepoint_ortho_mul := fun _ _ _ => basepointProj_mul
-  basepoint_idempotency := fun _ _ _ => basepointProj_idempotent
-  basepoint_partition := fun _ _ _ => basepointProj_partition_of_unity
-  embed_normSq := fun _ _ _ => embedLower_normSq
-  top_cell_last := fun _ _ _ => affineTopCell_last
-  top_cell_projector_boundary := fun _ _ _ => affineTopCell_projector_last
-  dim_zero := motivicCellDim_zero
-  dim_succ := motivicCellDim_succ
 
 end Experimental.Sandbox.Projective.SplitQuaternionMotivicDPn

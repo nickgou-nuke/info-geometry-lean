@@ -86,6 +86,9 @@ reported as verification of the whole repository or a proposed physical theory.
 
 - [Tools overview](../tools/README.md)
 - [Infrastructure guide](../tools/infra/README.md)
+- [Alexandria PDF-to-DAG-brain pipeline](../tools/alexandria/README.md)
+- [Alexandria architecture & skill docs](alexandria/README.md)
+- [Alexandria Docker/env config](../configs/alexandria/README.md)
 - [Documentation tools](../tools/docs/README.md)
 - [LeanTrail guide](../leantrail/README.md)
 - [LeanTrail topic documentation](LeanTrail.md)

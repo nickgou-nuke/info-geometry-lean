@@ -642,6 +642,7 @@ theorem stageOneGNS_inner_unit_eq_topologicalColimitTrace
       Complex.ofReal
         (CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
           CuntzMatrixTraceTower.concreteData
+          CuntzMatrixTraceTower.concrete_trace_compatible
           (traceGNS_to_CuntzTopologicalColimit
             (Quotient.mk (gnsSetoid (cl11RepresentationState 1).state) X))) := by
   rw [cl11StageOneCStarGNSVector_inner_unit]

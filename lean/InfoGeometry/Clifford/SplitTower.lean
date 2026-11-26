@@ -41,7 +41,9 @@ noncomputable def Qsplit : (n : ℕ) → QuadraticForm ℝ (SplitSpace n)
 abbrev Clsplit (n : ℕ) := CliffordAlgebra (Qsplit n)
 
 noncomputable def clsplit_succ_equiv (n : ℕ) :
-    CliffordAlgebra (Qsplit (n + 1)) ≃ₐ[ℝ] (CliffordAlgebra.evenOdd Q11 ᵍ⊗[ℝ] CliffordAlgebra.evenOdd (Qsplit n)) := by
-  simpa [Qsplit] using (CliffordAlgebra.prodEquiv (Q₁ := Q11) (Q₂ := Qsplit n))
+    letI : CommSemiring ℝ := CommRing.toCommSemiring;
+      CliffordAlgebra (Qsplit (n + 1)) ≃ₐ[ℝ]
+        (CliffordAlgebra.evenOdd Q11 ᵍ⊗[ℝ] CliffordAlgebra.evenOdd (Qsplit n)) :=
+  CliffordAlgebra.prodEquiv (Q₁ := Q11) (Q₂ := Qsplit n)
 
 end InfoGeometry.CliffordTower

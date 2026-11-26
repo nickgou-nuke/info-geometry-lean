@@ -183,4 +183,147 @@ theorem compression_no_cyclic_factor :
   exact (hf _).symm.trans ((congrArg f
     (CyclicQuotient.cyclicClass_mul_comm ℤ Mat3Z enterCorner leaveCorner)).trans (hf _))
 
+section GeneralNonCommutativeRing
+
+variable {B M : Type*} [Ring B] [AddCommGroup M]
+
+/-- Over any non-commutative ring `B` equipped with an additive cyclic trace `τ : B →+ M`,
+the cyclicity defect of compression by an idempotent `P` (`P * P = P`) is `τ (X * (Y * P - P * Y))`. -/
+theorem compressed_cyclic_trace_defect_ring
+    (τ : B →+ M) (hcyc : ∀ a b : B, τ (a * b) = τ (b * a))
+    (P X Y : B) (hP : P * P = P) :
+    τ (P * (X * Y) * P) - τ (P * (Y * X) * P) =
+      τ (X * (Y * P - P * Y)) := by
+  have h₁ : τ (P * (X * Y) * P) = τ ((X * Y) * P) := by
+    calc
+      τ (P * (X * Y) * P) = τ (P * ((X * Y) * P)) := by simp only [mul_assoc]
+      _ = τ (((X * Y) * P) * P) := hcyc P ((X * Y) * P)
+      _ = τ ((X * Y) * P) := by rw [mul_assoc (X * Y) P P, hP]
+  have h₂ : τ (P * (Y * X) * P) = τ (X * (P * Y)) := by
+    calc
+      τ (P * (Y * X) * P) = τ (P * ((Y * X) * P)) := by simp only [mul_assoc]
+      _ = τ (((Y * X) * P) * P) := hcyc P ((Y * X) * P)
+      _ = τ ((Y * X) * P) := by rw [mul_assoc (Y * X) P P, hP]
+      _ = τ (Y * (X * P)) := by simp only [mul_assoc]
+      _ = τ ((X * P) * Y) := hcyc Y (X * P)
+      _ = τ (X * (P * Y)) := by simp only [mul_assoc]
+  calc
+    τ (P * (X * Y) * P) - τ (P * (Y * X) * P)
+      = τ ((X * Y) * P) - τ (X * (P * Y)) := by rw [h₁, h₂]
+    _ = τ ((X * Y) * P - X * (P * Y)) := (map_sub τ _ _).symm
+    _ = τ (X * (Y * P - P * Y)) := by
+        rw [mul_sub, ← mul_assoc X Y P]
+
+/-- Over any non-commutative ring `B` equipped with an additive cyclic trace `τ : B →+ M`,
+if `Y` commutes with `P`, then compressed trace is cyclic for `(X, Y)`. -/
+theorem compressed_cyclic_trace_of_commutes_ring
+    (τ : B →+ M) (hcyc : ∀ a b : B, τ (a * b) = τ (b * a))
+    (P X Y : B) (hP : P * P = P) (hcomm : Y * P = P * Y) :
+    τ (P * (X * Y) * P) = τ (P * (Y * X) * P) := by
+  have hdef := compressed_cyclic_trace_defect_ring τ hcyc P X Y hP
+  rw [hcomm, sub_self, mul_zero, map_zero] at hdef
+  exact sub_eq_zero.mp hdef
+
+end GeneralNonCommutativeRing
+
+section GeneralMatrix
+
+variable {R : Type*} [CommRing R]
+variable {ι : Type*} [Fintype ι]
+
+/-- For an arbitrary idempotent matrix, the cyclicity defect of compression
+is exactly the trace pairing with the commutator of the second input and the
+projector. The coefficient ring is commutative so that ordinary matrix trace
+is cyclic; the matrix algebra itself is generally noncommutative. -/
+theorem compressed_trace_defect (P X Y : Matrix ι ι R) (hP : P * P = P) :
+    Matrix.trace (P * (X * Y) * P) - Matrix.trace (P * (Y * X) * P) =
+      Matrix.trace (X * (Y * P - P * Y)) := by
+  have h₁ : Matrix.trace (P * (X * Y) * P) =
+      Matrix.trace ((X * Y) * P) := by
+    calc
+      Matrix.trace (P * (X * Y) * P) = Matrix.trace (P * ((X * Y) * P)) := by
+        simp only [mul_assoc]
+      _ = Matrix.trace (((X * Y) * P) * P) := Matrix.trace_mul_comm _ _
+      _ = Matrix.trace ((X * Y) * P) := by rw [mul_assoc (X * Y) P P, hP]
+  have h₂ : Matrix.trace (P * (Y * X) * P) = Matrix.trace (X * (P * Y)) := by
+    calc
+      Matrix.trace (P * (Y * X) * P) = Matrix.trace (P * ((Y * X) * P)) := by
+        simp only [mul_assoc]
+      _ = Matrix.trace (((Y * X) * P) * P) := Matrix.trace_mul_comm _ _
+      _ = Matrix.trace ((Y * X) * P) := by rw [mul_assoc (Y * X) P P, hP]
+      _ = Matrix.trace (Y * (X * P)) := by simp only [mul_assoc]
+      _ = Matrix.trace ((X * P) * Y) := Matrix.trace_mul_comm _ _
+      _ = Matrix.trace (X * (P * Y)) := by simp only [mul_assoc]
+  calc
+    _ = Matrix.trace ((X * Y) * P) - Matrix.trace (X * (P * Y)) := by
+      rw [h₁, h₂]
+    _ = Matrix.trace (X * (Y * P - P * Y)) := by
+      rw [mul_sub, Matrix.trace_sub]
+      simp only [mul_assoc]
+
+/-- Exact criterion for cyclicity of a compressed trace against a fixed right
+factor: it is cyclic for every left factor precisely when that right factor
+commutes with the idempotent defining the compression. -/
+theorem compressed_trace_cyclic_iff_commutes
+    (P Y : Matrix ι ι R) (hP : P * P = P) :
+    (∀ X : Matrix ι ι R,
+      Matrix.trace (P * (X * Y) * P) = Matrix.trace (P * (Y * X) * P)) ↔
+      Y * P = P * Y := by
+  constructor
+  · intro hcyclic
+    have hpair (X : Matrix ι ι R) :
+        Matrix.trace (X * (Y * P - P * Y)) = 0 := by
+      have hdef := compressed_trace_defect P X Y hP
+      rw [hcyclic X] at hdef
+      simpa using hdef.symm
+    have hzero : Y * P - P * Y = 0 := by
+      apply (Matrix.ext_iff_trace_mul_left).2
+      intro X
+      simpa using hpair X
+    exact sub_eq_zero.mp hzero
+  · intro hcomm X
+    have hdef := compressed_trace_defect P X Y hP
+    rw [hcomm, sub_self, mul_zero, Matrix.trace_zero] at hdef
+    exact sub_eq_zero.mp hdef
+
+/-- Compression preserves the ambient trace on every matrix exactly when
+the idempotent is the identity. This is stronger than agreement on its corner. -/
+theorem compressed_trace_preserving_iff [DecidableEq ι]
+    (P : Matrix ι ι R) (hP : P * P = P) :
+    (∀ X : Matrix ι ι R, Matrix.trace (P * X * P) = Matrix.trace X) ↔ P = 1 := by
+  have hcompression (X : Matrix ι ι R) :
+      Matrix.trace (P * X * P) = Matrix.trace (X * P) := by
+    calc
+      _ = Matrix.trace (P * (X * P)) := by rw [mul_assoc]
+      _ = Matrix.trace ((X * P) * P) := Matrix.trace_mul_comm _ _
+      _ = Matrix.trace (X * P) := by rw [mul_assoc, hP]
+  constructor
+  · intro h
+    apply (Matrix.ext_iff_trace_mul_left).2
+    intro X
+    simpa using (hcompression X).symm.trans (h X)
+  · intro h X
+    simp [h]
+
+end GeneralMatrix
+
+/-- The ordinary ambient matrix trace is cyclic and therefore descends to the
+additive commutator quotient, unlike the compressed functional above. -/
+def ambientTraceOnCyclicQuotient :
+    CyclicQuotient.CyclicModule ℤ Mat3Z →ₗ[ℤ] ℤ :=
+  CyclicQuotient.desc (Matrix.traceAddMonoidHom (Fin 3) ℤ) (by
+    intro X Y
+    exact Matrix.trace_mul_comm X Y)
+
+@[simp] theorem ambientTraceOnCyclicQuotient_class (X : Mat3Z) :
+    ambientTraceOnCyclicQuotient
+      (CyclicQuotient.cyclicClass ℤ Mat3Z X) = Matrix.trace X := rfl
+
+/-- On every element already supported in the projector corner, compression
+and ambient trace agree. -/
+theorem ambient_trace_extends_corner (X : Mat3Z)
+    (hX : projector * X * projector = X) :
+    Matrix.trace (projector * X * projector) = Matrix.trace X := by
+  rw [hX]
+
 end InfoGeometry.Algebra.CornerCompressionTraceCounterexample

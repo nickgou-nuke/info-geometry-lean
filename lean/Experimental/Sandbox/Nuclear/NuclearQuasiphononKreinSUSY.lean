@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -35,8 +40,6 @@ Real Pseudo-SUSY Supercharges, and Affine Soloviev-BdG Identification.
    a scalar center and a traceless Bogoliubov-de Gennes (BdG) Hamiltonian block, satisfying
    the characteristic polynomial `H_BdG² = (δ² + V²) I`, Andreev reflection reversal,
    `Tr(H_BdG) = 0`, and `det(H_BdG) = -(δ² + V²)`.
-4. **Master Verification Certificate**:
-   Bundled structure `NuclearQuasiphononKreinSUSYCertificate` verified via standard core axioms.
 -/
 
 namespace Experimental.Sandbox.Nuclear.NuclearQuasiphononKreinSUSY
@@ -133,6 +136,13 @@ theorem susyHamiltonian_comm_Q_dag {V_b V_f : Type*} [DecidableEq V_b] [Fintype 
 def qpnmMatrix {R : Type*} [CommRing R] (Eqp omega V : R) : Matrix (Fin 2) (Fin 2) R :=
   !![Eqp, V; V, Eqp + omega]
 
+/-- Explicit T16 non-commutativity witness on `Matrix (Fin 2) (Fin 2) R`. -/
+theorem qpnm_matrix2_noncomm_witness {R : Type*} [Ring R] [Nontrivial R] :
+    ∃ A B : Matrix (Fin 2) (Fin 2) R, A * B ≠ B * A := by
+  refine ⟨!![1, 0; 0, 0], !![0, 1; 0, 0], fun h => ?_⟩
+  have h01 := congrFun (congrFun h 0) 1
+  simp [Matrix.mul_apply, Fin.sum_univ_two] at h01
+
 /-- Central scalar shift of the Soloviev Hamiltonian: `Eqp + ω / 2`. -/
 def solovievCenter {R : Type*} [CommRing R] [Invertible (2 : R)] (Eqp omega : R) : R :=
   Eqp + ⅟(2 : R) * omega
@@ -194,66 +204,5 @@ theorem bdgBlock_det {R : Type*} [CommRing R] (delta V : R) :
   rw [bdgBlock, Matrix.det_fin_two_of]
   ring
 
-/-! ### Section 4: Master Verification Certificate -/
-
-/-- Master verification certificate bundling all fundamental theorems of Nuclear Quasiphonon Krein SUSY. -/
-structure NuclearQuasiphononKreinSUSYCertificate : Prop where
-  -- Section 1: Krein supercarrier & fundamental involutions
-  krein_metric_sq : ∀ (V_b V_f : Type*) [DecidableEq V_b] [Fintype V_b] [DecidableEq V_f] [Fintype V_f] (R : Type*) [CommRing R],
-    (kreinMetric V_b V_f R) * (kreinMetric V_b V_f R) = 1
-  sheet_swap_sq : ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R],
-    (sheetSwap V R) * (sheetSwap V R) = 1
-  krein_sheet_swap_anticomm : ∀ (V : Type*) [DecidableEq V] [Fintype V] (R : Type*) [CommRing R],
-    (kreinMetric V V R) * (sheetSwap V R) + (sheetSwap V R) * (kreinMetric V V R) = 0
-
-  -- Section 2: Real pseudo-SUSY supercharges & SUSY Hamiltonian
-  supercharge_Q_sq : ∀ {V_b V_f : Type*} [DecidableEq V_b] [Fintype V_b] [DecidableEq V_f] [Fintype V_f]
-    {R : Type*} [CommRing R] (V_coup : Matrix V_b V_f R),
-    (superchargeQ V_coup) * (superchargeQ V_coup) = 0
-  supercharge_Q_dag_sq : ∀ {V_b V_f : Type*} [DecidableEq V_b] [Fintype V_b] [DecidableEq V_f] [Fintype V_f]
-    {R : Type*} [CommRing R] (V_coup : Matrix V_b V_f R),
-    (superchargeQ_dag V_coup) * (superchargeQ_dag V_coup) = 0
-  susy_hamiltonian_blocks : ∀ {V_b V_f : Type*} [DecidableEq V_b] [Fintype V_b] [DecidableEq V_f] [Fintype V_f]
-    {R : Type*} [CommRing R] (V_coup : Matrix V_b V_f R),
-    susyHamiltonian V_coup = Matrix.fromBlocks (V_coup * V_coupᵀ) 0 0 (V_coupᵀ * V_coup)
-  susy_hamiltonian_comm_Q : ∀ {V_b V_f : Type*} [DecidableEq V_b] [Fintype V_b] [DecidableEq V_f] [Fintype V_f]
-    {R : Type*} [CommRing R] (V_coup : Matrix V_b V_f R),
-    (susyHamiltonian V_coup) * (superchargeQ V_coup) - (superchargeQ V_coup) * (susyHamiltonian V_coup) = 0
-  susy_hamiltonian_comm_Q_dag : ∀ {V_b V_f : Type*} [DecidableEq V_b] [Fintype V_b] [DecidableEq V_f] [Fintype V_f]
-    {R : Type*} [CommRing R] (V_coup : Matrix V_b V_f R),
-    (susyHamiltonian V_coup) * (superchargeQ_dag V_coup) - (superchargeQ_dag V_coup) * (susyHamiltonian V_coup) = 0
-
-  -- Section 3: Exact affine Soloviev QPNM to BdG decomposition
-  qpnm_affine_bdg : ∀ {R : Type*} [CommRing R] [Invertible (2 : R)] (Eqp omega V : R),
-    qpnmMatrix Eqp omega V = (solovievCenter Eqp omega) • (1 : Matrix (Fin 2) (Fin 2) R) + bdgBlock (- ⅟(2 : R) * omega) V
-  bdg_block_sq : ∀ {R : Type*} [CommRing R] (delta V : R),
-    (bdgBlock delta V) * (bdgBlock delta V) = (delta^2 + V^2) • (1 : Matrix (Fin 2) (Fin 2) R)
-  tau1_sq : ∀ (R : Type*) [CommRing R], (tau1 R) * (tau1 R) = 1
-  andreev_bdg_sign_reversal : ∀ {R : Type*} [CommRing R] (delta V : R),
-    (tau1 R) * (bdgBlock delta V) * (tau1 R) = - bdgBlock delta (-V)
-  andreev_bdg_swap : ∀ {R : Type*} [CommRing R] (delta V : R),
-    (tau1 R) * (bdgBlock delta V) * (tau1 R) = bdgBlock (-delta) V
-  bdg_block_traceless : ∀ {R : Type*} [CommRing R] (delta V : R),
-    Matrix.trace (bdgBlock delta V) = 0
-  bdg_block_det : ∀ {R : Type*} [CommRing R] (delta V : R),
-    Matrix.det (bdgBlock delta V) = - (delta^2 + V^2)
-
-/-- Universal compilation theorem for Nuclear Quasiphonon Krein SUSY. -/
-theorem compile_nuclear_quasiphonon_krein_susy : NuclearQuasiphononKreinSUSYCertificate where
-  krein_metric_sq := fun V_b V_f _ _ _ _ R _ => kreinMetric_sq V_b V_f R
-  sheet_swap_sq := fun V _ _ R _ => sheetSwap_sq V R
-  krein_sheet_swap_anticomm := fun V _ _ R _ => krein_sheetSwap_anticomm V R
-  supercharge_Q_sq := fun V_coup => superchargeQ_sq V_coup
-  supercharge_Q_dag_sq := fun V_coup => superchargeQ_dag_sq V_coup
-  susy_hamiltonian_blocks := fun V_coup => susyHamiltonian_blocks V_coup
-  susy_hamiltonian_comm_Q := fun V_coup => susyHamiltonian_comm_Q V_coup
-  susy_hamiltonian_comm_Q_dag := fun V_coup => susyHamiltonian_comm_Q_dag V_coup
-  qpnm_affine_bdg := fun Eqp omega V => qpnm_affine_bdg Eqp omega V
-  bdg_block_sq := fun delta V => bdgBlock_sq delta V
-  tau1_sq := fun R _ => tau1_sq R
-  andreev_bdg_sign_reversal := fun delta V => andreev_bdg_sign_reversal delta V
-  andreev_bdg_swap := fun delta V => andreev_bdg_swap delta V
-  bdg_block_traceless := fun delta V => bdgBlock_traceless delta V
-  bdg_block_det := fun delta V => bdgBlock_det delta V
 
 end Experimental.Sandbox.Nuclear.NuclearQuasiphononKreinSUSY

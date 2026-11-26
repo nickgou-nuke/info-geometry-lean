@@ -6,6 +6,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Canonical.CantorProjectiveLimitTopCat
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorBoundaryReadoutTopCat
+import InfoGeometry.Canonical.CantorBoundaryReadoutIntervalApproximation
 
 /-!
 # Readout transported to the coherent projective-limit carrier
@@ -64,7 +65,7 @@ theorem projectiveLimitReadout_range_eq_unitInterval :
   · rintro ⟨p, rfl⟩
     exact realBinaryReadout_mem_unitInterval (toCantor p)
   · intro hy
-    rw [← realBinaryReadout_range_eq_unitInterval] at hy
+    rw [← InfoGeometry.Canonical.CantorBoundaryReadoutIntervalApproximation.realBinaryReadout_range_eq_unitInterval] at hy
     obtain ⟨x, hx⟩ := hy
     refine ⟨ofCantor x, ?_⟩
     simpa [toCantor_ofCantor] using hx

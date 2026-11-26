@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CuntzMatrixCompatibleStateNet
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTowerGeneratorCompatibility
@@ -156,7 +161,7 @@ theorem densityCompatible_stageInjection
       have hstep :
           stageInjection (n + 1) (concreteStep n (D n)) =
             stageInjection n (D n) := by
-        rw [← concreteMap_succ_step n]
+        rw [← CuntzMatrixAlgebraicStarColimit.concreteMap_succ_step n]
         exact stageInjection_concrete_transition (Nat.le_succ n) (D n)
       exact hstep.trans (densityCompatible_stageInjection D hD n)
 

@@ -120,6 +120,11 @@ theorem softmaxAttentionKernel_row_sum [Fintype ι] [Nonempty ι]
 def softmaxAttentionMatrix [Fintype ι] (scores : ι → ι → ℝ) : Matrix ι ι ℝ :=
   fun i j => softmaxAttentionKernel scores i j
 
+@[simp] theorem softmaxAttentionMatrix_apply [Fintype ι]
+    (scores : ι → ι → ℝ) (i j : ι) :
+    softmaxAttentionMatrix scores i j = softmaxAttentionKernel scores i j :=
+  rfl
+
 /-- The score-built softmax matrix is a member of Mathlib's row-stochastic monoid. -/
 theorem softmaxAttentionMatrix_mem_rowStochastic [Fintype ι] [DecidableEq ι]
     [Nonempty ι] (scores : ι → ι → ℝ) :

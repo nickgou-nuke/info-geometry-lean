@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Cosmology.Cl11ParabolicVacuumQuotientBridge
 import InfoGeometry.Canonical.Cl11TensorInductiveLimitTopologicalTrace
 import InfoGeometry.Canonical.Cl11CuntzCoherentIndexTopologicalBridge
@@ -206,7 +211,7 @@ descended finite normalized-trace value. This is the readout compatibility
 for the composite map from the finite GNS carrier into the coherent Cuntz
 colimit. -/
 theorem traceGNS_CuntzColimit_realTrace (q : cl11RepresentationQuotient 1) :
-    realTraceTopologicalColimitMap concreteData
+    realTraceTopologicalColimitMap concreteData concrete_trace_compatible
       (traceGNS_to_CuntzTopologicalColimit q) = traceGNS_eval q := by
   refine Quotient.inductionOn q ?_
   intro X
@@ -219,7 +224,7 @@ theorem traceGNS_CuntzColimit_realTrace (q : cl11RepresentationQuotient 1) :
 /-- In standard matrix coordinates, the real trace on the Cuntz colimit
 recovers half the ordinary trace of the stage-one representative. -/
 theorem traceGNS_CuntzColimit_stageOne_matrix (A : RealMatrix2) :
-    realTraceTopologicalColimitMap concreteData
+    realTraceTopologicalColimitMap concreteData concrete_trace_compatible
       (traceGNS_to_CuntzTopologicalColimit
         (Quotient.mk (gnsSetoid (cl11RepresentationState 1).state)
           (matrixToCl11StageOne A))) = Matrix.trace A / 2 := by

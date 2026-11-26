@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.OperatorAlgebra.OperatorGrandCanonicalChiralGenerator
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ThermalBogoliubovCAR
@@ -39,7 +44,8 @@ theorem operator_grandCanonical_CAR_and_grading
         (operatorThermalCreator c b u v) = 1 := by
   refine ⟨?_, ?_⟩
   · exact grandCanonicalGenerator_isFullyEven
-      hH hPlus hMinus hμ hμχ
+      hH hPlus hMinus (hμ Γ_R) (hμ Γ_χ) (hμ Γ_N)
+      (hμχ Γ_R) (hμχ Γ_χ) (hμχ Γ_N)
   · exact operator_thermal_bogoliubov_car_preserved
       a c b d u v hu hv huv hac hbd hab hcd
 

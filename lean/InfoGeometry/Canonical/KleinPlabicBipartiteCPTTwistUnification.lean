@@ -493,8 +493,16 @@ theorem klein_plabic_bipartite_cpt_unification
     (hM : M ∈ InfoGeometry.Canonical.positiveGrassmannianInterior (k := 2) (n := 4)) :
     (G (G p) = T_x p) ∧
     (latticeColor (integralGlide q) = !(latticeColor q)) ∧
-    (∀ u v, squareLattice_unitFace_sign_product u v) ∧
-    (∀ e, integralGlideEdge_kasteleyn_gauge_law e) ∧
+    (∀ u v : ℤ,
+      squareLatticeKasteleynSign ⟨(u, v), false⟩ *
+        squareLatticeKasteleynSign ⟨(u + 1, v), true⟩ *
+        squareLatticeKasteleynSign ⟨(u, v), true⟩ *
+        squareLatticeKasteleynSign ⟨(u, v + 1), false⟩ = -1) ∧
+    (∀ e : SquareLatticeEdge,
+      squareLatticeKasteleynSign (integralGlideEdge e) =
+        squareLatticeSeamGauge (squareEdgeSource e) *
+          squareLatticeSeamGauge (squareEdgeTarget e) *
+            squareLatticeKasteleynSign e) ∧
     (kasteleynEdgeSigns 0 * kasteleynEdgeSigns 1 *
       kasteleynEdgeSigns 2 * kasteleynEdgeSigns 3 = -1) ∧
     (kasteleynDiracMat * kasteleynDiracMat = (2 : ℝ) • (1 : Matrix (Fin 4) (Fin 4) ℝ)) ∧

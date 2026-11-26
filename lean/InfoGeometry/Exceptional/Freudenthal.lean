@@ -102,7 +102,7 @@ variable {J : Type*} [AddCommGroup J] [Module ℝ J]
 /--
 The Freudenthal quartic polynomial
 
-`I₄(Q) = (αβ - ⟨X,Y⟩)² - 4(αN(X) + βN(Y) - ⟨X#,Y#⟩)`.
+`I₄(Q) = (αβ - ⟨X,Y⟩)² - 4(αN(X) + βN(Y) + ⟨X#,Y#⟩)`.
 -/
 def quarticInvariant
     (D : CubicJordanDatum J) (Q : FreudenthalCharge J) : ℝ :=
@@ -110,7 +110,7 @@ def quarticInvariant
   let term2 :=
     Q.alpha * D.normCubic Q.x
       + Q.beta * D.normCubic Q.y
-      - D.traceBilin (D.adjointQuad Q.x) (D.adjointQuad Q.y)
+      + D.traceBilin (D.adjointQuad Q.x) (D.adjointQuad Q.y)
   term1 ^ 2 - 4 * term2
 
 /--

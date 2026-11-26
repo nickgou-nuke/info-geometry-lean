@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CuntzMatrixTraceRealGNSBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixAlgebraicStarColimit
@@ -25,13 +30,13 @@ open InfoGeometry.Prequantum.AlgebraicGNSState
 
 /-- The normalized real matrix-trace state net for the concrete tower. -/
 def concreteStateNet :
-    CompatibleAlgebraicStateNet (realInductiveNet concreteData) :=
-compatibleRealStateNet concreteData
+    CompatibleAlgebraicStateNet (realInductiveNet concreteTraceCompatibleData) :=
+compatibleRealStateNet concreteTraceCompatibleData
 
 @[simp] theorem concreteStateNet_state (n : ℕ) (A : MatrixStage n) :
     (concreteStateNet.state n) A =
       (matrixTraceFunctional n A).re := by
-  exact compatibleRealStateNet_state concreteData n A
+  exact compatibleRealStateNet_state concreteTraceCompatibleData n A
 
 theorem concreteStateNet_normalized (n : ℕ) :
     concreteStateNet.state n 1 = 1 := by
@@ -51,7 +56,7 @@ theorem concreteStateNet_stable_map
     concreteStateNet.state n (concreteMap hmn A) =
       concreteStateNet.state m A := by
   have h_embed :
-      (realInductiveNet concreteData).embedMap m n hmn A =
+      (realInductiveNet concreteTraceCompatibleData).embedMap m n hmn A =
         concreteMap hmn A := by
     induction hmn with
     | refl =>
@@ -61,7 +66,7 @@ theorem concreteStateNet_stable_map
     | @step n h ih =>
         rw [InductiveAlgebraNet.embedMap_succ]
         change concreteStep n
-            ((realInductiveNet concreteData).embedMap m n h A) = _
+            ((realInductiveNet concreteTraceCompatibleData).embedMap m n h A) = _
         rw [ih]
         change concreteStep n (concreteMap h A) =
           map concreteData (Nat.le.step h) A

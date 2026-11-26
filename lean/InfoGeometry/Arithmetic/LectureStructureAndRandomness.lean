@@ -177,7 +177,7 @@ theorem quadratic_reciprocity_one_mod_four (firstPrime secondPrime : ℕ)
 
 theorem liouville_completely_multiplicative (first second : ℕ+) :
     liouville (first.val * second.val) = liouville first * liouville second :=
-  liouville_mul first second first.pos second.pos first.ne_zero second.ne_zero
+  liouville_mul first second first.ne_zero second.ne_zero
 
 theorem dilation_correlation (samples : Finset ℕ+) (multiplier : ℕ+) :
     (∑ index ∈ samples, liouville index * liouville (multiplier.val * index.val)) =
@@ -191,7 +191,7 @@ theorem dilation_correlation (samples : Finset ℕ+) (multiplier : ℕ+) :
       calc
         liouville index * (liouville multiplier * liouville index) =
             liouville multiplier * (liouville index * liouville index) := by ring
-        _ = liouville multiplier := by rw [liouville_sq index index.pos, mul_one]
+        _ = liouville multiplier := by rw [liouville_sq index, mul_one]
     _ = liouville multiplier * (samples.card : ℤ) := by simp [mul_comm]
 
 theorem prime_dilation_correlation (samples : Finset ℕ+) (prime : ℕ)

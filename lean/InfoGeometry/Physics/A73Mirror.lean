@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Rat.Defs
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Data.Rat.Lemmas
@@ -7,15 +12,12 @@ import InfoGeometry.Physics.IsospinMirrorDynamics
 namespace InfoGeometry.Physics
 
 /-- The A=73 mirror pair (Sr-73 and Br-73). -/
-def Sr73 : Nucleus := { Z := 38, N := 35 }
-def Br73 : Nucleus := { Z := 35, N := 38 }
+def Sr73 : Nucleus := (38, 35)
+def Br73 : Nucleus := (35, 38)
 
 /-- The A=73 MirrorPair instance for Sr-73 and Br-73. -/
-def A73Pair : MirrorPair where
-  nuc1 := Sr73
-  nuc2 := Br73
-  mirror_cond_Z := by rfl
-  mirror_cond_N := by rfl
+def A73Pair : MirrorPair :=
+  ⟨(Sr73, Br73), rfl, rfl⟩
 
 /-- Nuclear state properties including spin. -/
 structure A73State where

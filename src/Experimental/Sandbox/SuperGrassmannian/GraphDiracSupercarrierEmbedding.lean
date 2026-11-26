@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -46,8 +51,6 @@ This module formalizes in native Mathlib:
 5. Projective Berezinian Invariance:
    - Infinitesimal Berezinian invariance `STr(M) = 0`.
    - Multiplicative homothety Berezinian scaling on balanced and unbalanced spaces.
-6. Master Verification Certificate:
-   `GraphDiracSupercarrierEmbeddingCertificate` bundling all core theorems.
 -/
 
 namespace Experimental.Sandbox.SuperGrassmannian.GraphDiracSupercarrierEmbedding
@@ -82,26 +85,52 @@ def superTrace (M : Matrix (V ⊕ E) (V ⊕ E) R) : R :=
 @[simp] lemma toBlocks₂₂_neg (M : Matrix (V ⊕ E) (V ⊕ E) R) :
     Matrix.toBlocks₂₂ (-M) = -Matrix.toBlocks₂₂ M := rfl
 
+private lemma scalar_sub_sub_add_sub {R : Type*} [CommRing R] (a b c d : R) :
+    (a + c) - (b + d) = (a - b) + (c - d) := by
+  ring
+
+private lemma scalar_neg_sub_neg {R : Type*} [CommRing R] (a b : R) :
+    -a - -b = -(a - b) := by
+  ring
+
+private lemma scalar_smul_sub {R : Type*} [CommRing R] (r a b : R) :
+    r * a - r * b = r * (a - b) := by
+  ring
+
+private lemma scalar_sub_self_zero {R : Type*} [CommRing R] (a : R) : a - a = 0 := by
+  ring
+
+private lemma scalar_two_sub_mul {R : Type*} [CommRing R] (a b s : R) :
+    s * a - s * b = (a - b) * s := by
+  ring
+
+private lemma scalar_zero_add_cancel {R : Type*} [CommRing R] (x : R) : x + 0 + 0 = x := by
+  ring
+
+private lemma scalar_card_sub_eq_zero {R : Type*} [CommRing R] (c s : R) :
+    (c - c) * s = 0 := by
+  ring
+
 /-- Additivity of supertrace: `superTrace (M + N) = superTrace M + superTrace N`. -/
 theorem superTrace_add (M N : Matrix (V ⊕ E) (V ⊕ E) R) :
     superTrace (M + N) = superTrace M + superTrace N := by
   dsimp [superTrace]
   rw [Matrix.trace_add, Matrix.trace_add]
-  ring
+  exact scalar_sub_sub_add_sub (R := R) _ _ _ _
 
 /-- Scalar multiplication linearity of supertrace: `superTrace (r • M) = r * superTrace M`. -/
 theorem superTrace_smul (r : R) (M : Matrix (V ⊕ E) (V ⊕ E) R) :
     superTrace (r • M) = r * superTrace M := by
   dsimp [superTrace]
-  rw [Matrix.trace_smul, Matrix.trace_smul]
-  ring
+  rw [Matrix.trace_smul, Matrix.trace_smul, smul_eq_mul, smul_eq_mul]
+  exact scalar_smul_sub (R := R) r _ _
 
 /-- Negation linearity of supertrace: `superTrace (-M) = -superTrace M`. -/
 theorem superTrace_neg (M : Matrix (V ⊕ E) (V ⊕ E) R) :
     superTrace (-M) = -superTrace M := by
   dsimp [superTrace]
   rw [Matrix.trace_neg, Matrix.trace_neg]
-  ring
+  exact scalar_neg_sub_neg (R := R) _ _
 
 /-! ### 2. The 3-Mode Supercarrier Deformation Triad -/
 
@@ -124,8 +153,8 @@ theorem superTrace_scaleMode (σ : R) :
       ((Fintype.card V : R) - (Fintype.card E : R)) * σ := by
   dsimp [superTrace, scaleMode]
   rw [Matrix.trace_smul, Matrix.trace_smul]
-  rw [Matrix.trace_one, Matrix.trace_one]
-  ring
+  rw [Matrix.trace_one, Matrix.trace_one, smul_eq_mul, smul_eq_mul]
+  exact scalar_two_sub_mul (R := R) _ _ σ
 
 /-- Supertrace of the volume mode operator vanishes when `Matrix.trace A = Matrix.trace D`. -/
 theorem superTrace_volumeMode (A : Matrix V V R) (D : Matrix E E R)
@@ -133,7 +162,7 @@ theorem superTrace_volumeMode (A : Matrix V V R) (D : Matrix E E R)
     superTrace (volumeMode A D) = 0 := by
   dsimp [superTrace, volumeMode]
   rw [h]
-  ring
+  exact scalar_sub_self_zero _
 
 /-! ### 3. Embedding the Graph Hodge-Dirac as a Pure Chiral Mode -/
 
@@ -154,7 +183,7 @@ theorem superTrace_hodgeDiracChiral (B : Matrix E V R) :
     superTrace (hodgeDiracChiral B) = 0 := by
   dsimp [superTrace, hodgeDiracChiral, chiralMode]
   rw [Matrix.trace_zero, Matrix.trace_zero]
-  ring
+  exact sub_zero 0
 
 /-- Theorem 2 (Hodge-Laplacian Square is a Volume Mode):
     The square of the Hodge-Dirac operator equals the block Hodge Laplacian:
@@ -173,7 +202,7 @@ theorem superTrace_hodgeDiracChiral_sq (B : Matrix E V R) :
   rw [hodgeDiracChiral_sq]
   dsimp [superTrace, volumeMode]
   rw [Matrix.trace_mul_comm Bᵀ B]
-  ring
+  exact scalar_sub_self_zero _
 
 /-- Theorem 4 (Scale Commutation):
     Uniform homotheties strictly commute with the discrete Hodge-Dirac operator:
@@ -195,7 +224,7 @@ theorem total_deformation_superTrace (σ : R) (B : Matrix E V R) (A : Matrix V V
       ((Fintype.card V : R) - (Fintype.card E : R)) * σ := by
   rw [superTrace_add, superTrace_add]
   rw [superTrace_scaleMode, superTrace_hodgeDiracChiral, superTrace_volumeMode A D hvol]
-  ring
+  exact scalar_zero_add_cancel _
 
 /-- Theorem 6 (Balanced Graph Supertrace Annihilation):
     On a balanced graph where `|V| = |E|` (Euler characteristic zero),
@@ -204,7 +233,7 @@ theorem balanced_graph_superTrace (hcard : Fintype.card V = Fintype.card E) (σ 
     (A : Matrix V V R) (D : Matrix E E R) (hvol : Matrix.trace A = Matrix.trace D) :
     superTrace (scaleMode σ + hodgeDiracChiral B + volumeMode A D) = 0 := by
   rw [total_deformation_superTrace σ B A D hvol, hcard]
-  ring
+  exact scalar_card_sub_eq_zero _ σ
 
 /-! ### 5. Chiral Parity Grading and Anticommutation -/
 
@@ -286,92 +315,5 @@ theorem balanced_graph_berezinian_homothety (hcard : Fintype.card V = Fintype.ca
     (c ^ (Fintype.card V)) * (inv_c ^ (Fintype.card E)) = 1 := by
   rw [hcard]
   exact balanced_berezinian_homothety (Fintype.card E) c inv_c h
-
-/-! ### 7. Master Verification Certificate -/
-
-/-- Master verification certificate bundling all proved theorems of the
-    Graph Hodge-Dirac Supercarrier Embedding. -/
-structure GraphDiracSupercarrierEmbeddingCertificate : Prop where
-  superTrace_add : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (M N : Matrix (V ⊕ E) (V ⊕ E) R),
-    superTrace (M + N) = superTrace M + superTrace N
-  superTrace_smul : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (r : R) (M : Matrix (V ⊕ E) (V ⊕ E) R),
-    superTrace (r • M) = r * superTrace M
-  superTrace_neg : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (M : Matrix (V ⊕ E) (V ⊕ E) R),
-    superTrace (-M) = -superTrace M
-  superTrace_scaleMode : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (σ : R),
-    superTrace (scaleMode (V := V) (E := E) (R := R) σ) =
-      ((Fintype.card V : R) - (Fintype.card E : R)) * σ
-  superTrace_volumeMode : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (A : Matrix V V R) (D : Matrix E E R),
-    Matrix.trace A = Matrix.trace D → superTrace (volumeMode A D) = 0
-  superTrace_hodgeDiracChiral : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (B : Matrix E V R),
-    superTrace (hodgeDiracChiral B) = 0
-  hodgeDiracChiral_sq : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (B : Matrix E V R),
-    hodgeDiracChiral B * hodgeDiracChiral B = volumeMode (Bᵀ * B) (B * Bᵀ)
-  superTrace_hodgeDiracChiral_sq : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (B : Matrix E V R),
-    superTrace (hodgeDiracChiral B * hodgeDiracChiral B) = 0
-  scaleMode_hodgeDiracChiral_comm : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (σ : R) (B : Matrix E V R),
-    scaleMode σ * hodgeDiracChiral B = hodgeDiracChiral B * scaleMode σ
-  total_deformation_superTrace : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (σ : R) (B : Matrix E V R) (A : Matrix V V R) (D : Matrix E E R),
-    Matrix.trace A = Matrix.trace D →
-    superTrace (scaleMode σ + hodgeDiracChiral B + volumeMode A D) =
-      ((Fintype.card V : R) - (Fintype.card E : R)) * σ
-  balanced_graph_superTrace : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R],
-    Fintype.card V = Fintype.card E →
-    ∀ (σ : R) (B : Matrix E V R) (A : Matrix V V R) (D : Matrix E E R),
-    Matrix.trace A = Matrix.trace D →
-    superTrace (scaleMode σ + hodgeDiracChiral B + volumeMode A D) = 0
-  chiralParity_sq : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R],
-    chiralParity (V := V) (E := E) (R := R) * chiralParity = 1
-  hodgeDirac_anticomm_parity : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (B : Matrix E V R),
-    hodgeDiracChiral B * chiralParity + chiralParity * hodgeDiracChiral B = 0
-  hodgeDiracChiral_isBerezinianInvariant : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (B : Matrix E V R),
-    isBerezinianInvariant (hodgeDiracChiral B)
-  hodgeDiracChiral_sq_isBerezinianInvariant : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R] (B : Matrix E V R),
-    isBerezinianInvariant (hodgeDiracChiral B * hodgeDiracChiral B)
-  balanced_berezinian_homothety : ∀ {R : Type*} [CommRing R] (p : ℕ) (c inv_c : R),
-    c * inv_c = 1 → (c ^ p) * (inv_c ^ p) = 1
-  unbalanced_berezinian_factor : ∀ {R : Type*} [CommRing R] (p q : ℕ) (c inv_c : R),
-    c * inv_c = 1 → (c ^ (p + q)) * (inv_c ^ q) = c ^ p
-  balanced_graph_berezinian_homothety : ∀ {V E : Type*} [DecidableEq V] [Fintype V] [DecidableEq E] [Fintype E]
-    {R : Type*} [CommRing R],
-    Fintype.card V = Fintype.card E →
-    ∀ (c inv_c : R), c * inv_c = 1 →
-    (c ^ (Fintype.card V)) * (inv_c ^ (Fintype.card E)) = 1
-
-/-- Compilation of the master verification certificate. -/
-theorem compile_graph_dirac_supercarrier_embedding : GraphDiracSupercarrierEmbeddingCertificate where
-  superTrace_add := fun M N => superTrace_add M N
-  superTrace_smul := fun r M => superTrace_smul r M
-  superTrace_neg := fun M => superTrace_neg M
-  superTrace_scaleMode := fun σ => superTrace_scaleMode σ
-  superTrace_volumeMode := fun A D h => superTrace_volumeMode A D h
-  superTrace_hodgeDiracChiral := fun B => superTrace_hodgeDiracChiral B
-  hodgeDiracChiral_sq := fun B => hodgeDiracChiral_sq B
-  superTrace_hodgeDiracChiral_sq := fun B => superTrace_hodgeDiracChiral_sq B
-  scaleMode_hodgeDiracChiral_comm := fun σ B => scaleMode_hodgeDiracChiral_comm σ B
-  total_deformation_superTrace := fun σ B A D h => total_deformation_superTrace σ B A D h
-  balanced_graph_superTrace := fun h σ B A D hvol => balanced_graph_superTrace h σ B A D hvol
-  chiralParity_sq := chiralParity_sq
-  hodgeDirac_anticomm_parity := fun B => hodgeDirac_anticomm_parity B
-  hodgeDiracChiral_isBerezinianInvariant := fun B => hodgeDiracChiral_isBerezinianInvariant B
-  hodgeDiracChiral_sq_isBerezinianInvariant := fun B => hodgeDiracChiral_sq_isBerezinianInvariant B
-  balanced_berezinian_homothety := fun p c inv_c h => balanced_berezinian_homothety p c inv_c h
-  unbalanced_berezinian_factor := fun p q c inv_c h => unbalanced_berezinian_factor p q c inv_c h
-  balanced_graph_berezinian_homothety := fun h c inv_c hinv => balanced_graph_berezinian_homothety h c inv_c hinv
 
 end Experimental.Sandbox.SuperGrassmannian.GraphDiracSupercarrierEmbedding

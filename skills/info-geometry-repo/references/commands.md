@@ -71,3 +71,35 @@ Do not treat old prompt packets or older report snapshots as live frontier evide
 python3 tools/docs/generate_auto_docs.py
 python3 tools/docs/update_repo_docs.py
 ```
+
+## Alexandria PDF-to-DAG-Brain GraphRAG (`retrieval_context_only`)
+
+See `tools/alexandria/README.md`, `docs/alexandria/README.md`, and `skills/alexandria-pipeline/SKILL.md`. `:8530` and `:8540` are forbidden; target `:8532` (`alexandria`) or a dedicated isolated brain (e.g. observed `:8538` / `alexandria_dag_brain`):
+
+```bash
+# BM25 + searchTerms + 1-hop adjacent + multi-hop acyclic DAG BFS (stdlib python3 or .venv/bin/python3)
+python3 tools/alexandria/retrieve_context.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "Krein space fundamental symmetry Peirce decomposition" \
+  --top-k 5 --hops 2 --format text
+
+# Personalized PageRank subgraph ranking (requires networkx in selected Python env)
+.venv/bin/python3 tools/alexandria/graph_context_rank.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "Drazin inverse Riesz projector spectral decomposition" \
+  --top-k 5 --seed-k 5 --hops 2 --format text
+
+# Unified repo GraphRAG explorer with opt-in Alexandria scope
+python3 tools/infra/ask_repo.py "Krein space fundamental symmetry Peirce decomposition" \
+  --scope alexandria \
+  --alexandria-endpoint http://127.0.0.1:8538 \
+  --alexandria-database alexandria_dag_brain \
+  --top-k 5 --brief
+
+# PDF corpus ingestion -> JSONL + acyclic DAG + isolated ArangoDB
+python3 tools/alexandria/pdf_corpus_ingest.py \
+  --input-dir /path/to/pdfs --output-dir artifacts/alexandria_dag_brain \
+  --exclude-default-noise --resume --workers 4 \
+  --ingest-arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --replace-documents
+```

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.UHFBoundaryOperatorTopology
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Category.TopCat.Basic
@@ -118,7 +123,7 @@ theorem star_UHF_boundary_topCatHom_sq_zero (f : BoundaryFunction) :
     (star_UHF_boundary_topCatHom ≫ star_UHF_boundary_topCatHom) f = 0 := by
   rw [TopCat.comp_app]
   change star_UHF_boundary_op (star_UHF_boundary_op f) = 0
-  exact star_UHF_boundary_op_sq_zero f
+  exact UHFColimitRepresentationBridge.star_UHF_boundary_op_sq_zero f
 
 theorem star_UHF_boundary_topCatHom_comp_eq_zero :
     star_UHF_boundary_topCatHom ≫ star_UHF_boundary_topCatHom =
@@ -128,7 +133,7 @@ theorem star_UHF_boundary_topCatHom_comp_eq_zero :
   intro f
   rw [TopCat.comp_app]
   change star_UHF_boundary_op (star_UHF_boundary_op f) = 0
-  exact star_UHF_boundary_op_sq_zero f
+  exact UHFColimitRepresentationBridge.star_UHF_boundary_op_sq_zero f
 
 theorem UHF_laplacian_topCatHom_apply (f : BoundaryFunction) :
     UHF_laplacian_topCatHom f = f := by

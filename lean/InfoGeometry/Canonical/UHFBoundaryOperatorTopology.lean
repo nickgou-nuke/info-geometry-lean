@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Topology.Constructions
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Topology.Instances.Complex
@@ -100,7 +105,7 @@ theorem continuous_S_L_op_of_continuous
     {f : CantorBoundary → ℂ} (hf : Continuous f) :
     Continuous (S_L_op f) := by
   change Continuous (fun x => if x 0 = false then f (tail x) else 0)
-  apply Continuous.if _ (hf.comp continuous_tail) continuous_const
+  apply Continuous.if _ (hf.comp CuntzCantorBoundaryShift.continuous_tail) continuous_const
   intro x hx
   rw [branchSet_frontier_empty false] at hx
   exact False.elim (by exact hx)
@@ -109,7 +114,7 @@ theorem continuous_S_R_op_of_continuous
     {f : CantorBoundary → ℂ} (hf : Continuous f) :
     Continuous (S_R_op f) := by
   change Continuous (fun x => if x 0 = true then f (tail x) else 0)
-  apply Continuous.if _ (hf.comp continuous_tail) continuous_const
+  apply Continuous.if _ (hf.comp CuntzCantorBoundaryShift.continuous_tail) continuous_const
   intro x hx
   rw [branchSet_frontier_empty true] at hx
   exact False.elim (by exact hx)
@@ -117,12 +122,12 @@ theorem continuous_S_R_op_of_continuous
 theorem continuous_star_S_L_op_of_continuous
     {f : CantorBoundary → ℂ} (hf : Continuous f) :
     Continuous (star_S_L_op f) :=
-  hf.comp (continuous_prependBit false)
+  hf.comp (CuntzCantorBoundaryShift.continuous_prependBit false)
 
 theorem continuous_star_S_R_op_of_continuous
     {f : CantorBoundary → ℂ} (hf : Continuous f) :
     Continuous (star_S_R_op f) :=
-  hf.comp (continuous_prependBit true)
+  hf.comp (CuntzCantorBoundaryShift.continuous_prependBit true)
 
 theorem continuous_UHF_boundary_op_of_continuous
     {f : CantorBoundary → ℂ} (hf : Continuous f) :
@@ -238,7 +243,7 @@ theorem star_UHF_boundary_continuousMap_sq_zero
     (f : C(CantorBoundary, ℂ)) :
     star_UHF_boundary_continuousMap (star_UHF_boundary_continuousMap f) = 0 := by
   ext x
-  exact congrFun (star_UHF_boundary_op_sq_zero f) x
+  exact congrFun (UHFColimitRepresentationBridge.star_UHF_boundary_op_sq_zero f) x
 
 theorem UHF_Laplacian_continuousMap_eq_id
     (f : C(CantorBoundary, ℂ)) :
@@ -381,7 +386,7 @@ theorem UHF_boundary_cylinderMap_sq_zero (g : CylinderAlgebra) :
 theorem star_UHF_boundary_cylinderMap_sq_zero (g : CylinderAlgebra) :
     star_UHF_boundary_cylinderMap (star_UHF_boundary_cylinderMap g) = 0 := by
   apply Subtype.ext
-  exact star_UHF_boundary_op_sq_zero g
+  exact UHFColimitRepresentationBridge.star_UHF_boundary_op_sq_zero g
 
 theorem UHF_Laplacian_cylinderMap_eq_id (g : CylinderAlgebra) :
     UHF_Laplacian_cylinderMap g = g := by

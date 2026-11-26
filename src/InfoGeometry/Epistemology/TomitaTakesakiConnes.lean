@@ -44,10 +44,6 @@ cocycle flows within the epistemic architecture:
    - The dual flow `σ̂_θ` acts as a continuous scale transformation on the trace:
      `τ ∘ σ̂_θ = exp(-θ) τ`.
    - Verified group composition of trace scaling: `exp(-θ₁) * exp(-θ₂) = exp(-(θ₁ + θ₂))`.
-
-5. **Master Certificate**:
-   - Bundles all verified theorems into `TomitaTakesakiConnesCertificate` with zero
-     `sorry` and core Mathlib foundational axioms only.
 -/
 
 namespace InfoGeometry.Epistemology.TomitaTakesakiConnes
@@ -99,6 +95,9 @@ theorem split_quaternion_KJ (I_op J_op : V →ₗ[ℝ] V) (sq : SplitQuaternioni
   For any para-Hermitian compatible bilinear form `g(K v, K w) = -g(v, w)`,
   the eigenspace `T⁺ = ker(K - 1)` is strictly isotropic: `g(v, w) = 0`.
 -/
+private lemma scalar_eq_neg_self {a : ℝ} (h : a = -a) : a = 0 := by
+  linarith [h]
+
 theorem isotropic_Tplus (g : LinearMap.BilinForm ℝ V) (K_op : V →ₗ[ℝ] V)
     (h_compat : ∀ v w, g (K_op v) (K_op w) = - g v w)
     (v w : V) (hv : K_op v = v) (hw : K_op w = w) :
@@ -106,7 +105,7 @@ theorem isotropic_Tplus (g : LinearMap.BilinForm ℝ V) (K_op : V →ₗ[ℝ] V)
   have h1 : g (K_op v) (K_op w) = g v w := by rw [hv, hw]
   have h2 : g (K_op v) (K_op w) = - g v w := h_compat v w
   rw [h1] at h2
-  linarith
+  exact scalar_eq_neg_self h2
 
 /--
   Theorem (Maximal Isotropy of Retrocausal Sheet T⁻):
@@ -120,7 +119,7 @@ theorem isotropic_Tminus (g : LinearMap.BilinForm ℝ V) (K_op : V →ₗ[ℝ] V
   rw [LinearMap.BilinForm.neg_left, LinearMap.BilinForm.neg_right, neg_neg] at h1
   have h2 : g (K_op v) (K_op w) = - g v w := h_compat v w
   rw [h1] at h2
-  linarith
+  exact scalar_eq_neg_self h2
 
 /--
   Theorem (Modular Reflection Interchanges Twin Lagrangian Sheets):
@@ -150,7 +149,7 @@ variable {R : Type*} [Ring R]
   back losslessly by `u_adj * (u * σ_x * u_adj) * u = σ_x`.
 -/
 theorem connes_intertwining_pullback (u u_adj σ_x : R)
-    (h_left : u_adj * u = 1) (_h_right : u * u_adj = 1) :
+    (h_left : u_adj * u = 1) :
     u_adj * (u * σ_x * u_adj) * u = σ_x := by
   have h1 : u_adj * (u * σ_x * u_adj) * u = (u_adj * u) * σ_x * (u_adj * u) := by
     simp only [mul_assoc]
@@ -174,38 +173,6 @@ theorem trace_scaling_identity :
     Real.exp (-(0 : ℝ)) = 1 := by
   rw [neg_zero, Real.exp_zero]
 
-/-! ### 5. Master Certificate: Tomita–Takesaki–Connes Architecture -/
-
-/-- Master certificate bundling the 8 verified components of the modular framework. -/
-structure TomitaTakesakiConnesCertificate (V : Type*) [AddCommGroup V] [Module ℝ V] : Prop where
-  para_sq : ∀ {I_op J_op : V →ₗ[ℝ] V}, SplitQuaternionic I_op J_op → ∀ v,
-    (I_op ∘ₗ J_op) ((I_op ∘ₗ J_op) v) = v
-  jk_rel : ∀ (I_op J_op : V →ₗ[ℝ] V), SplitQuaternionic I_op J_op → ∀ v,
-    J_op (I_op (J_op v)) = - I_op v
-  kj_rel : ∀ (I_op J_op : V →ₗ[ℝ] V), SplitQuaternionic I_op J_op → ∀ v,
-    I_op (J_op (J_op v)) = I_op v
-  iso_plus : ∀ (g : LinearMap.BilinForm ℝ V) (K_op : V →ₗ[ℝ] V),
-    (∀ v w, g (K_op v) (K_op w) = - g v w) → ∀ v w, K_op v = v → K_op w = w → g v w = 0
-  iso_minus : ∀ (g : LinearMap.BilinForm ℝ V) (K_op : V →ₗ[ℝ] V),
-    (∀ v w, g (K_op v) (K_op w) = - g v w) → ∀ v w, K_op v = -v → K_op w = -w → g v w = 0
-  sheet_swap : ∀ (I_op J_op K_op : V →ₗ[ℝ] V),
-    (∀ v, K_op v = I_op (J_op v)) → (∀ v, J_op (J_op v) = v) → (∀ v, I_op (I_op v) = -v) →
-    ∀ v, K_op v = v → K_op (J_op v) = - J_op v
-  intertwining : ∀ {A : Type*} [Ring A] (u u_adj σ_x : A),
-    u_adj * u = 1 → u * u_adj = 1 → u_adj * (u * σ_x * u_adj) * u = σ_x
-  scaling_compose : ∀ theta1 theta2 : ℝ,
-    Real.exp (-theta1) * Real.exp (-theta2) = Real.exp (-(theta1 + theta2))
-
-theorem compile_tomita_takesaki_connes (V : Type*) [AddCommGroup V] [Module ℝ V] :
-    TomitaTakesakiConnesCertificate V where
-  para_sq := fun {_ _} => para_complex_sq
-  jk_rel := split_quaternion_JK
-  kj_rel := split_quaternion_KJ
-  iso_plus := isotropic_Tplus
-  iso_minus := isotropic_Tminus
-  sheet_swap := J_swaps_sheets
-  intertwining := connes_intertwining_pullback
-  scaling_compose := trace_scaling_composition
 
 end
 

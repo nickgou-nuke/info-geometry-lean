@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CantorProjectiveBernoulliMeasureTopCat
@@ -17,7 +22,6 @@ namespace InfoGeometry.Canonical.CantorReadoutMeasurePushforward
 
 open MeasureTheory
 open InfoGeometry.Canonical.CantorProjectiveBernoulliMeasure
-open InfoGeometry.Canonical.CantorProjectiveBernoulliMeasureTopCat
 open InfoGeometry.Canonical.CantorProjectiveLimit
 open InfoGeometry.Canonical.CantorProjectiveLimit.PrefixProjectiveLimit
 open InfoGeometry.Canonical.CantorBoundaryReadoutIntervalTarget

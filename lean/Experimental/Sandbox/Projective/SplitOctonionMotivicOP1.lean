@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.CockleCoquaternionPlanarTriad
 import InfoGeometry.Projective.SplitCompositionProjectiveSpace
 import InfoGeometry.Projective.SplitQuaternionMotivicDPn
@@ -34,7 +39,6 @@ Key Structures:
 5. Inductive motivic cell attachment $\mathbb{O}_s\mathrm{P}^1 = \mathbb{O}_s\mathrm{P}^0 \cup e^8$:
    basepoint inclusion, affine top cell chart $z \mapsto (z, 1)$, top cell norm identity $N_2(z, 1) = N(z) + 1$,
    and the 8-dimensional motivic cell step $\dim(e^8) = 8$.
-6. Master verification certificate `SplitOctonionMotivicOP1Certificate` proved unconditionally.
 -/
 
 namespace Experimental.Sandbox.Projective.SplitOctonionMotivicOP1
@@ -331,82 +335,5 @@ theorem motivicCellDimOct_succ (n : ℕ) : motivicCellDimOct (n + 1) = motivicCe
   dsimp [motivicCellDimOct]
   ring
 
-/-! ### Section 6: Master Verification Certificate -/
-
-/-- Master verification certificate bundling all fundamental theorems of the split-octonionic
-    projective line $\mathbb{O}_s\mathrm{P}^1$, split octonion sphere $S^{(7,3)}$, 2x2 diagonal
-    projectors, orthogonal partition of unity, and 8-dimensional motivic cell attachment. -/
-structure SplitOctonionMotivicOP1Certificate : Prop where
-  -- Section 1: Split-Octonion Cayley-Dickson Doubled Carrier
-  conjOct_involutive : ∀ (R : Type*) [CommRing R] (x : SplitOct R), conjOct (conjOct x) = x
-  conjOct_zero : ∀ (R : Type*) [CommRing R], conjOct (0 : SplitOct R) = 0
-  conjOct_one : ∀ (R : Type*) [CommRing R], conjOct ((1, 0) : SplitOct R) = (1, 0)
-  normOct_zero : ∀ (R : Type*) [CommRing R], normOct (0 : SplitOct R) = 0
-  normOct_one : ∀ (R : Type*) [CommRing R], normOct ((1, 0) : SplitOct R) = 1
-  isUnitSphereOct_one : ∀ (R : Type*) [CommRing R], IsUnitSphereOct ((1, 0) : SplitOct R)
-
-  -- Section 2: Split-Octonionic 2-Carrier and Total Norm
-  normSqOct2_zero : ∀ (R : Type*) [CommRing R], normSqOct2 (fun _ => (0, 0) : VectorOct2 R) = 0
-  basepoint0_normSq : ∀ (R : Type*) [CommRing R], normSqOct2 (basepoint0 : VectorOct2 R) = 1
-  basepoint1_normSq : ∀ (R : Type*) [CommRing R], normSqOct2 (basepoint1 : VectorOct2 R) = 1
-  basepoint0_sphere : ∀ (R : Type*) [CommRing R], IsUnitSphereOct2 (basepoint0 : VectorOct2 R)
-  basepoint1_sphere : ∀ (R : Type*) [CommRing R], IsUnitSphereOct2 (basepoint1 : VectorOct2 R)
-
-  -- Section 3: 2x2 Projector Representation
-  projOctDiag_trace : ∀ (R : Type*) [CommRing R] (v : VectorOct2 R),
-    Matrix.trace (projOctDiag v) = normSqOct2 v
-  projOctDiag_trace_on_sphere : ∀ (R : Type*) [CommRing R] (v : VectorOct2 R),
-    IsUnitSphereOct2 v → Matrix.trace (projOctDiag v) = 1
-  projOctDiag_basepoint0 : ∀ (R : Type*) [CommRing R],
-    projOctDiag (basepoint0 : VectorOct2 R) = E0 R
-  projOctDiag_basepoint1 : ∀ (R : Type*) [CommRing R],
-    projOctDiag (basepoint1 : VectorOct2 R) = E1 R
-
-  -- Section 4: Basepoint Orthogonal Projectors & Partition of Unity
-  E0_idempotent : ∀ (R : Type*) [CommRing R], E0 R * E0 R = E0 R
-  E1_idempotent : ∀ (R : Type*) [CommRing R], E1 R * E1 R = E1 R
-  E0_ortho_E1 : ∀ (R : Type*) [CommRing R], E0 R * E1 R = 0
-  E1_ortho_E0 : ∀ (R : Type*) [CommRing R], E1 R * E0 R = 0
-  partition_of_unity : ∀ (R : Type*) [CommRing R], E0 R + E1 R = 1
-
-  -- Section 5: Inductive Motivic Cell Attachment
-  affineTopCellOct_coord_zero : ∀ (R : Type*) [CommRing R] (z : SplitOct R),
-    affineTopCellOct z 0 = z
-  affineTopCellOct_coord_one : ∀ (R : Type*) [CommRing R] (z : SplitOct R),
-    affineTopCellOct z 1 = (1, 0)
-  affineTopCellOct_norm : ∀ (R : Type*) [CommRing R] (z : SplitOct R),
-    normSqOct2 (affineTopCellOct z) = normOct z + 1
-  cell_dim_zero : motivicCellDimOct 0 = 0
-  cell_dim_one : motivicCellDimOct 1 = 8
-  cell_dim_succ : ∀ (n : ℕ), motivicCellDimOct (n + 1) = motivicCellDimOct n + 8
-
-/-- Universal compilation theorem proving that the SplitOctonionMotivicOP1Certificate holds unconditionally. -/
-theorem compile_split_octonion_motivic_op1 : SplitOctonionMotivicOP1Certificate where
-  conjOct_involutive := fun _ _ => conjOct_conjOct
-  conjOct_zero := fun _ _ => conjOct_zero
-  conjOct_one := fun _ _ => conjOct_one
-  normOct_zero := fun _ _ => normOct_zero
-  normOct_one := fun _ _ => normOct_one
-  isUnitSphereOct_one := fun _ _ => isUnitSphereOct_one
-  normSqOct2_zero := fun _ _ => normSqOct2_zero
-  basepoint0_normSq := fun _ _ => basepoint0_normSq
-  basepoint1_normSq := fun _ _ => basepoint1_normSq
-  basepoint0_sphere := fun _ _ => basepoint0_on_sphere
-  basepoint1_sphere := fun _ _ => basepoint1_on_sphere
-  projOctDiag_trace := fun _ _ => projOctDiag_trace
-  projOctDiag_trace_on_sphere := fun _ _ => projOctDiag_trace_on_sphere
-  projOctDiag_basepoint0 := fun _ _ => projOctDiag_basepoint0
-  projOctDiag_basepoint1 := fun _ _ => projOctDiag_basepoint1
-  E0_idempotent := fun _ _ => E0_sq
-  E1_idempotent := fun _ _ => E1_sq
-  E0_ortho_E1 := fun _ _ => E0_mul_E1
-  E1_ortho_E0 := fun _ _ => E1_mul_E0
-  partition_of_unity := fun _ _ => E0_add_E1
-  affineTopCellOct_coord_zero := fun _ _ => affineTopCellOct_zero
-  affineTopCellOct_coord_one := fun _ _ => affineTopCellOct_one
-  affineTopCellOct_norm := fun _ _ => affineTopCellOct_norm
-  cell_dim_zero := motivicCellDimOct_zero
-  cell_dim_one := motivicCellDimOct_one
-  cell_dim_succ := motivicCellDimOct_succ
 
 end Experimental.Sandbox.Projective.SplitOctonionMotivicOP1

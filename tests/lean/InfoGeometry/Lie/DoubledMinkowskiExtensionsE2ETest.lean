@@ -3333,7 +3333,6 @@ theorem t5_07_krein_fiber_coord_equiv_and_plucker_completeness
       (Pi.single 0 1 - Pi.single 2 1) = -2 := by
     simp [fiberKreinPairing, chiralKreinForm, chiralFiberToKreinFrame,
       PiLp.inner_apply, Fin.sum_univ_four]
-    norm_num
   have hPluckerExt : η₁ = η₂ := by
     apply ContinuousAlternatingMap.ext
     intro w

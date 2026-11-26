@@ -35,7 +35,7 @@ Reuses `NoncommutativeCliffordPrimitives`, `TwoSheetDiracMassEntropy`, and
 open Matrix
 open InfoGeometry.Algebra.NoncommutativeCliffordPrimitives
 open InfoGeometry.Algebra.TwoSheetDiracMassEntropy
-open InfoGeometry.Algebra.NoncommutativeUnifiedDiracHiggsZornTower
+open InfoGeometry.Algebra.NoncommutativeUnifiedDiracHiggsZornTower hiding towerTrace towerTrace_add
 
 namespace InfoGeometry.Algebra.NoncommutativeDiracSheetMixingAndEntropyTower
 
@@ -228,7 +228,7 @@ theorem entropyTowerOp_extensive_trace (H : A) : ∀ (n : ℕ),
   | n + 1 => by
       have ih := entropyTowerOp_extensive_trace H n
       dsimp [entropyTowerOp, towerTrace]
-      rw [two_nsmul, towerTrace_add, towerTrace_towerScalar]
+      rw [two_nsmul, towerTrace_add n, towerTrace_towerScalar]
       have h_arith :
           (towerTrace (entropyTowerOp H n) + 2 ^ n • H + towerTrace (entropyTowerOp H n)) +
           (towerTrace (entropyTowerOp H n) + 2 ^ n • H + towerTrace (entropyTowerOp H n)) =

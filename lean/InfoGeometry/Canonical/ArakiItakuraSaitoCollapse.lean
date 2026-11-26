@@ -306,12 +306,4 @@ end RelativeModularExpectation
 
 end InfoGeometry.Canonical.ArakiItakuraSaitoCollapse
 
-structure NoncommutativeItakuraSaitoModel (Op : Type*) [AddGroup Op] where
-  /-- Product/readout interface: trace, KMS state, vector state, or regularized weight. -/
-  readout : OperatorPrimalDualData Op
-  /-- Operator Burg/log potential. -/
-  potential : Op → ℝ
-  /-- Operator gradient of the Burg/log potential. -/
-  gradient : Op → Op
-
 end noncomputable section

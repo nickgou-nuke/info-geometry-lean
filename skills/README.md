@@ -49,6 +49,14 @@ All castes are strictly bound by the top-priority mandate:
   explicitly requested Google AI Mode audits through the repo's
   browser-harness lane, including the Ubuntu ARM/Snap Chromium CDP setup.
 
+- [`alexandria-pipeline`](alexandria-pipeline/SKILL.md):
+  ingest PDF corpora and query the isolated Alexandria DAG brain
+  (`retrieve_context.py` BM25 + DAG traversal, `graph_context_rank.py`
+  Personalized PageRank, `ask_repo.py --scope alexandria`; documented in
+  [tools/alexandria/README.md](../tools/alexandria/README.md) and
+  [docs/alexandria/README.md](../docs/alexandria/README.md)). All hits carry
+  `sourceAuthority: "retrieval_context_only"` and never replace Lean proofs.
+
 - [`astaqlhash-concept-bridge`](astaqlhash-concept-bridge/SKILL.md): bounded,
   read-only cross-concept navigation over the compiler-backed `decls`/`edges`
   DAG. It never treats graph proximity or fingerprints as proof.

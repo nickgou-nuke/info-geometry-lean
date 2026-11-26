@@ -112,17 +112,16 @@ theorem sheetProbability_coarseGrainedState (ρ : Mat) {P : Mat}
     (hP : IsStarProjection P) (hP0 : P ≠ 0) :
     sheetProbability (coarseGrainedState ρ P) P = sheetProbability ρ P := by
   rw [sheetProbability, coarseGrainedState_mul_projection ρ hP]
-  simpa only [Matrix.trace_smul, RCLike.smul_re, traceMass] using
-    div_mul_cancel₀ (sheetProbability ρ P) (projection_traceMass_pos hP hP0).ne'
+  rw [Matrix.trace_smul, Complex.smul_re, traceMass]
+  exact div_mul_cancel₀ _ (projection_traceMass_pos hP hP0).ne'
 
 theorem sheetProbability_complement_coarseGrainedState (ρ : Mat) {P : Mat}
     (hP : IsStarProjection P) (hP1 : P ≠ 1) :
     sheetProbability (coarseGrainedState ρ P) (1 - P) =
       sheetProbability ρ (1 - P) := by
   rw [sheetProbability, coarseGrainedState_mul_complement ρ hP]
-  simpa only [Matrix.trace_smul, RCLike.smul_re, traceMass] using
-    div_mul_cancel₀ (sheetProbability ρ (1 - P))
-      (complement_traceMass_pos hP hP1).ne'
+  rw [Matrix.trace_smul, Complex.smul_re, traceMass]
+  exact div_mul_cancel₀ _ (complement_traceMass_pos hP hP1).ne'
 
 theorem traceMass_coarseGrainedState (ρ : Mat) {P : Mat}
     (hP : IsStarProjection P) (hP0 : P ≠ 0) (hP1 : P ≠ 1) :
@@ -132,7 +131,11 @@ theorem traceMass_coarseGrainedState (ρ : Mat) {P : Mat}
     traceMass (coarseGrainedState ρ P) =
         (sheetProbability ρ P / traceMass P) * traceMass P +
           (sheetProbability ρ (1 - P) / traceMass (1 - P)) * traceMass (1 - P) := by
-      simp [coarseGrainedState, twoSheet, traceMass, Matrix.trace_smul]
+      change (Matrix.trace (coarseGrainedState ρ P)).re = _
+      simp only [coarseGrainedState, twoSheet, Matrix.trace_add, Matrix.trace_smul,
+        Complex.add_re, Complex.real_smul, Complex.mul_re, Complex.ofReal_re,
+        Complex.ofReal_im, zero_mul, sub_zero]
+      rfl
     _ = _ := by
       rw [div_mul_cancel₀ _ (projection_traceMass_pos hP hP0).ne',
         div_mul_cancel₀ _ (complement_traceMass_pos hP hP1).ne']

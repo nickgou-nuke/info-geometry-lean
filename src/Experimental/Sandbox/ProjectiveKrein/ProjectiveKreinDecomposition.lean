@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.InnerProductSpace.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
@@ -271,26 +276,5 @@ theorem three_mode_pythagorean_decomposition {T : Type*}
   have hcb : @inner ℝ T _ c b = 0 := by rw [real_inner_comm, hbc]
   rw [hab, hac, hbc, hba, hca, hcb]
   ring
-
-/-! ## 7. Master Verification Certificate -/
-
-/-- Master certificate bundling the audited Projective Krein architecture. -/
-structure ProjectiveKreinCertificate : Type where
-  car_majorana_sq : ∀ {A : Type*} [Ring A] (C : CARRealization A),
-    majoranaPlus C * majoranaPlus C = 1
-  odd_parity_anticomm : ∀ {A : Type*} [Ring A] (F : FermionParitySystem A) (γ : A),
-    isOddUnderParity F γ → F.P * γ = - (γ * F.P)
-  ray_preserves_orientation : ∀ {V : Type*} [AddCommGroup V] [Module ℝ V] {u : V} (_hu : u ≠ 0),
-    ¬ RayEquiv V u (-u)
-  gl2N_dimension : ∀ (N : ℕ) (_hN : 1 ≤ N),
-    let D : GL2NDecomposition N := {}
-    D.scale_dim + D.volume_dim + D.boost_dim + D.twist_dim = 4 * N^2
-
-/-- Constructive witness proving that all theorems are verified without axioms. -/
-def compile_projective_krein_certificate : ProjectiveKreinCertificate where
-  car_majorana_sq := fun C => majoranaPlus_sq C
-  odd_parity_anticomm := fun _ _ h => h
-  ray_preserves_orientation := fun hu => rayEquiv_separates_antipodal hu
-  gl2N_dimension := fun N hN => gl2N_dimension_sum_exact N hN
 
 end InfoGeometry.ProjectiveKrein

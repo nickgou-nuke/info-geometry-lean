@@ -132,6 +132,38 @@ Then from MCP client tooling:
 - `dr_status` until `completed`
 - `dr_ingest_result_to_packet` to attach output into packet segment cards
 
+### Local Alexandria Literature Pre-Search & PDF Ingestion (`retrieval_context_only`)
+
+Before launching external web/deep-research runs, check the local isolated Alexandria PDF-to-DAG brain (see `skills/alexandria-pipeline/SKILL.md`, `docs/alexandria/README.md`, and `tools/alexandria/README.md`; `:8530` and `:8540` are blocked by `guard_alexandria_target()`):
+
+```bash
+# 1. BM25 + multi-hop acyclic DAG retrieval
+python3 tools/alexandria/retrieve_context.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "<topic>" --top-k 5 --hops 2 --format json
+
+# 2. Personalized PageRank cross-document subgraph (requires networkx)
+.venv/bin/python3 tools/alexandria/graph_context_rank.py \
+  --arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --query "<topic>" --top-k 5 --seed-k 5 --hops 2 --format text
+
+# 3. Unified explorer packet with opt-in Alexandria scope
+python3 tools/infra/ask_repo.py "<topic>" \
+  --scope lean,docs,alexandria \
+  --alexandria-endpoint http://127.0.0.1:8538 \
+  --alexandria-database alexandria_dag_brain \
+  --top-k 5 --brief
+
+# 4. Ingest newly downloaded PDFs into an isolated Alexandria brain
+python3 tools/alexandria/pdf_corpus_ingest.py \
+  --input-dir /path/to/pdfs --output-dir artifacts/alexandria_dag_brain \
+  --exclude-default-noise --resume --workers 4 \
+  --ingest-arango --endpoint http://127.0.0.1:8538 --database alexandria_dag_brain \
+  --skip-unchanged
+```
+
+Preserve `contentHash` (SHA-256), `documentKey`, `pageStart`/`pageEnd`, and `sourceAuthority: "retrieval_context_only"` when recording Alexandria hits inside `handover/injections/*` packets.
+
 ## Quality Checklist
 - Source dates verified
 - Contradictions noted

@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 
+import InfoGeometry.Clifford.Cl11TensorTower
 import InfoGeometry.Canonical.Cuntz2Isometries
 import InfoGeometry.Canonical.FiniteCantorBranchAmplification
 import InfoGeometry.Algebra.FiniteSpinAlgebra
@@ -133,6 +134,27 @@ theorem no_finite_matrix_cuntz_system {ι : Type*} [Fintype ι] [DecidableEq ι]
     {n : ℕ} (hn : 0 < n) (hcard : 2 ≤ Fintype.card ι)
     (C : InfoGeometry.NCG.CuntzSystem ι (Matrix (Fin n) (Fin n) ℂ)) : False := by
   have hdim := finite_matrix_cuntz_system_dimension_eq_zero hcard C
+  omega
+
+
+theorem no_cuntz2_real_cl11_stage (n : ℕ)
+    (C : InfoGeometry.Algebra.Cuntz.CuntzNAlgebra
+      (N := 2) (InfoGeometry.Clifford.Cl11TensorTower.MatStage n)) : False := by
+  have h₁ : Matrix.trace (CuntzAlgebra.S1 C * star (CuntzAlgebra.S1 C)) =
+      ((2 ^ n : ℕ) : ℝ) := by
+    rw [Matrix.trace_mul_comm, CuntzAlgebra.h_isometry1 C, Matrix.trace_one]
+    simpa only [InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two]
+  have h₂ : Matrix.trace (CuntzAlgebra.S2 C * star (CuntzAlgebra.S2 C)) =
+      ((2 ^ n : ℕ) : ℝ) := by
+    rw [Matrix.trace_mul_comm, CuntzAlgebra.h_isometry2 C, Matrix.trace_one]
+    simpa only [InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two]
+  have hsum := congrArg Matrix.trace (CuntzAlgebra.h_range_sum C)
+  rw [Matrix.trace_add, h₁, h₂, Matrix.trace_one,
+    InfoGeometry.Clifford.TowerMatrix.idx_card_pow_two] at hsum
+  have hnat : 2 ^ n + 2 ^ n = 2 ^ n := by
+    apply Nat.cast_injective (R := ℝ)
+    simpa [Nat.cast_add] using hsum
+  have hpos : 0 < 2 ^ n := pow_pos (by decide) n
   omega
 
 end InfoGeometry.Canonical.FiniteMatrixCuntzObstruction

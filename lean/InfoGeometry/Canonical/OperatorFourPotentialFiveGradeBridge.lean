@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.CircularOperatorFourPotentialRotorReadout
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Physics.OperatorFourVectorZornReadout
@@ -27,7 +32,9 @@ namespace InfoGeometry.Canonical.OperatorFourPotentialFiveGradeBridge
 
 open InfoGeometry.Physics
 open InfoGeometry.Physics.CircularOperatorFourPotentialRotorReadout
-open InfoGeometry.Physics.CircularChiralFockOperatorZornBridge
+open InfoGeometry.Physics.CircularChiralFockOperatorZornBridge hiding
+  RealOperatorFourPotential circularCompressedFourPotential realSplitFourSoldering
+  realSplitFourSoldering_eq_circularOperatorZorn
 open InfoGeometry.Physics.CircularChiralFockScalarPoleBridge
 open InfoGeometry.Physics.OperatorFourVectorZornReadout
 open InfoGeometry.Physics.OperatorZornMatrix
@@ -160,7 +167,8 @@ theorem transportOperatorFourVector_add
 
 /-! ## Four-vector soldering -/
 
-def operatorFourPotential (i : Fin 3) : RealOperatorFourPotential :=
+def operatorFourPotential (i : Fin 3) :
+    CircularOperatorFourPotentialRotorReadout.RealOperatorFourPotential :=
   circularCompressedFourPotential i
 
 def operatorZornFourPotential (i : Fin 3) : OperatorZornPotential :=

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 
 import InfoGeometry.Algebra.CuntzLeftRightCommutant
@@ -93,10 +98,10 @@ functional on every inclusion. -/
 theorem colimit_trace_restricts_to_stage
     (n : ℕ)
     (A : InfoGeometry.Canonical.CuntzMatrixTowerInstantiation.MatrixStage n) :
-    traceColimitFunctional concreteData
+    traceColimitFunctional concreteData concrete_trace_compatible
         (traceColimitInclusion concreteData n A) =
       InfoGeometry.Canonical.CuntzMatrixTowerInstantiation.matrixTraceFunctional n A :=
-  traceColimitFunctional_inclusion concreteData n A
+  traceColimitFunctional_inclusion concreteData concrete_trace_compatible n A
 
 /-! ## 3. Existing filtered GNS/Tomita colimit route -/
 

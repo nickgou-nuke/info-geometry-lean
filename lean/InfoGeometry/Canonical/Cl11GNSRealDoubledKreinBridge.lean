@@ -27,7 +27,7 @@ namespace InfoGeometry.Canonical.Cl11GNSRealDoubledKreinBridge
 open InfoGeometry.Canonical.Cl11TraceGNSHilbertColimitBridge
 open InfoGeometry.Canonical.CantorBernoulliCStarMatrixTraceState
 open FiniteHestenesHilbertSchmidtStandardForm
-open FiniteHestenesTomitaBridge
+open FiniteHestenesTomitaBridge hiding HS2
 open InfoGeometry.Krein
 open InfoGeometry.Canonical.RealDoubledBlockOperator
 open scoped ComplexOrder InnerProductSpace NNReal
@@ -629,7 +629,7 @@ matrix product. -/
 theorem realDoubledLeftAction_injective :
     Function.Injective realDoubledLeftAction := by
   intro A B h
-  have he := ContinuousLinearMap.congr_fun h (realDoubledReadout (1 : HS2))
+  have he := DFunLike.congr_fun h (realDoubledReadout (1 : HS2))
   rw [realDoubledLeftAction_readout, realDoubledLeftAction_readout] at he
   apply realDoubledReadout_injective
   simpa only [leftActionLinear_apply, mul_one] using he

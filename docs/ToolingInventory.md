@@ -416,20 +416,24 @@ This is the documentation maintenance lane.
 
 ### `tools/alexandria/`
 
-This is the literature/retrieval and context-ingestion lane.
+This is the isolated literature/PDF-to-DAG-brain retrieval and ingestion lane (`retrieval_context_only`). See [tools/alexandria/README.md](../tools/alexandria/README.md) and [configs/alexandria/README.md](../configs/alexandria/README.md).
 
-- `fetch_arxiv_corpus.py`
-  Fetches literature corpora.
-- `semantic_ingest.py`, `arango_ingest.py`
-  Ingestion into local semantic/Arango stores.
+- `pdf_corpus_ingest.py`
+  Resilient PDF corpus walk, SHA-256 dedup, chunk/archetype/DAG extraction, cross-doc citation & `canonicalKey` linking, Kahn-verified acyclic DAG, optional Ollama/`/v1` enrichment, and isolated ArangoDB ingestion.
+- `arango_ingest.py`
+  Stdlib HTTP ArangoDB JSONL importer (`--replace-documents`, `--skip-unchanged`) and `alexandria_chunks_search` BM25 view builder.
 - `retrieve_context.py`, `graph_context_rank.py`
-  Context retrieval and ranking.
-- `repair_lineage.py`
-  Repairs lineage/provenance structures.
-- `render_socratic_dossier.py`
-  Produces a Socratic dossier artifact.
+  Dual-mode (`--arango` / `--input-dir`) BM25 + `searchTerms` + DAG BFS retrieval and NetworkX Personalized PageRank subgraph ranking.
+- `semantic_ingest.py`, `math_paper_graphrag_ingest.py`, `fetch_arxiv_corpus.py`
+  Markdown/text/LaTeX semantic chunking and small arXiv corpus fetching.
+- `download_automathtext_v2.py`, `automathtext_v2_ingest.py`, `automathtext_arango_ingest.py`, `verify_automathtext_arango_descent.py`
+  AutoMathText-V2 shard download, conversion, Arango ingestion, and ancestry descent verification.
+- `txt2kg_hive_ingest.py`
+  Retrieval-only `txt2kg_*` triple digestion and optional Hive task emission.
+- `artifact_ast_lint.py`, `recover_pdf_source_fragments.py`, `batch_check_recovered_lean.py`, `conductive_context_to_lean_skeleton.py`, `materialize_coarse_scc_overlay.py`, `proof_synthesis_report.py`, `repair_lineage.py`, `render_socratic_dossier.py`
+  PDF fragment recovery, Lean snippet checks, SCC overlays, Socratic dossiers, and repair lineage tracking.
 - `structural_chunking.py`, `alexandria_algorithms.py`, `schema.py`
-  Chunking, ranking, and schema support.
+  Tokenization/chunking (`ident_terms`), local graph overlay diagnostics, and schema/key helpers.
 
 ### `tools/planner/`
 

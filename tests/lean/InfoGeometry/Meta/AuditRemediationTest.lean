@@ -90,7 +90,7 @@ run_cmd do
     throwError "Test 1 failed: expected REGRESSION violation for `.proj` dependency `ProjBox.val`"
 
   -- Test 2: `@[rep_depth projective]` structure container does not shield downstream thermo dependency.
-  if InfoGeometry.Meta.isTaggedArchSurface env ``TaggedShield then
+  if InfoGeometry.Meta.ArchitectureAudit.isTaggedArchSurface env ``TaggedShield then
     throwError "Test 2 failed: `isTaggedArchSurface` must be false for `.inductInfo` container `TaggedShield`"
   let shieldViolations := InfoGeometry.Meta.taggedDependencyViolations env ``shieldedCaller .count false
   if shieldViolations.isEmpty then

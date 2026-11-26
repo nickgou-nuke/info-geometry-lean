@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.SuperGrassmannian.ProjectiveKreinBerezinian
 
 /-!
@@ -17,7 +22,6 @@ Audits axiomatic purity for:
 9. balanced_homothety_berezinian_eq_one
 10. unbalanced_homothety_berezinian_factor
 11. unbalanced_homothety_berezinian
-12. compile_projective_krein_berezinian
 -/
 
 open Experimental.Sandbox.SuperGrassmannian.ProjectiveKreinBerezinian
@@ -33,4 +37,3 @@ open Experimental.Sandbox.SuperGrassmannian.ProjectiveKreinBerezinian
 #print axioms balanced_homothety_berezinian_eq_one
 #print axioms unbalanced_homothety_berezinian_factor
 #print axioms unbalanced_homothety_berezinian
-#print axioms compile_projective_krein_berezinian

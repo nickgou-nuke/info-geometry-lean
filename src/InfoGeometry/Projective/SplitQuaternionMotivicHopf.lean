@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.CockleCoquaternionPlanarTriad
 import InfoGeometry.Projective.SplitCompositionProjectiveSpace
 import Mathlib.Data.Matrix.Basic
@@ -52,9 +57,6 @@ This module formalizes Pillar 2 of the Voelkel Motivic Cells roadmap
    - Partition of unity: $E_{11} + E_{22} = I_2$.
    - Idempotency: $E_{11}^2 = E_{11}$, $E_{22}^2 = E_{22}$.
 
-5. **Master Verification Certificate**:
-   - Complete bundling of all 20 theorems into `SplitQuaternionMotivicHopfCertificate`.
-   - Provable unconditionally via `compile_split_quaternion_motivic_hopf`.
 -/
 
 namespace InfoGeometry.Projective.SplitQuaternionMotivicHopf
@@ -300,82 +302,5 @@ theorem E22_mul_E22 : (E22 : Mat2D R) * E22 = E22 := by
   fin_cases i <;> fin_cases j <;> {
     ext <;> simp [E22, Matrix.mul_apply, Fin.sum_univ_two]
   }
-
-/-! ### Section 5: Master Verification Certificate -/
-
-/-- Master verification certificate bundling the algebraic foundations of the split-quaternionic
-    motivic Hopf fibration, half-inverters, and DP^1 motivic Schubert cells. -/
-structure SplitQuaternionMotivicHopfCertificate : Prop where
-  -- Section 1: Motivic Split Hopf Fibration
-  normSq2_action_mult : ∀ (R : Type) [CommRing R] (v : SphereVector2 R) (u : Coquaternion R),
-    normSq2 (action v u) = normSq2 v * normSq u
-  action_sphere73_preservation : ∀ (R : Type) [CommRing R] (v : SphereVector2 R) (u : Coquaternion R),
-    IsUnitSphere73 v → IsUnitSphere31 u → IsUnitSphere73 (action v u)
-  action_id : ∀ (R : Type) [CommRing R] (v : SphereVector2 R),
-    action v 1 = v
-  action_assoc : ∀ (R : Type) [CommRing R] (v : SphereVector2 R) (u1 u2 : Coquaternion R),
-    action (action v u1) u2 = action v (u1 * u2)
-  projector_action_scale : ∀ (R : Type) [CommRing R] (v : SphereVector2 R) (u : Coquaternion R),
-    projector (action v u) = normSq u • projector v
-  projector_action_gauge : ∀ (R : Type) [CommRing R] (v : SphereVector2 R) (u : Coquaternion R),
-    IsUnitSphere31 u → projector (action v u) = projector v
-
-  -- Section 2: Fiber Over the Basepoint
-  fiber_normSq : ∀ (R : Type) [CommRing R] (u : Coquaternion R),
-    normSq2 (fiberInclusion u) = normSq u
-  fiber_projector_scale : ∀ (R : Type) [CommRing R] (u : Coquaternion R),
-    projector (fiberInclusion u) = normSq u • E11
-  fiber_basepoint : ∀ (R : Type) [CommRing R] (u : Coquaternion R),
-    IsUnitSphere31 u → projector (fiberInclusion u) = E11
-  fiber_char : ∀ (R : Type) [CommRing R] (v1 : Coquaternion R),
-    projector (⟨v1, 0⟩ : SphereVector2 R) = E11 ↔ v1 * conj v1 = 1
-
-  -- Section 3: Voelkel Half-Invertibility
-  half_coord_decomp : ∀ (R : Type) [CommRing R] (q : Coquaternion R),
-    half1 q + half2 q = 2 * q.s
-  half_inverter_rb : ∀ (R : Type) [CommRing R] (H : HalfInverterData R),
-    normSq H.x = 1 ∧ (H.y * H.x).s + (H.y * H.x).x = 1
-  half_inverter_shift : ∀ (R : Type) [CommRing R] (H : HalfInverterData R) (w : Coquaternion R),
-    (w * H.x).s + (w * H.x).x = 0 → ((H.y + w) * H.x).s + ((H.y + w) * H.x).x = 1
-
-  -- Section 4: Motivic Schubert Cell Decomposition of DP^1
-  affine_chart_formula : ∀ (R : Type) [CommRing R] (z : Coquaternion R),
-    affineChartProjector z = !![(1 : Coquaternion R), conj z; z, (normSq z) • (1 : Coquaternion R)]
-  affine_chart_separation : ∀ (R : Type) [CommRing R] [Nontrivial R] (z : Coquaternion R),
-    affineChartProjector z ≠ E22
-  basepoint_ortho_12 : ∀ (R : Type) [CommRing R],
-    (E11 : Mat2D R) * E22 = 0
-  basepoint_ortho_21 : ∀ (R : Type) [CommRing R],
-    (E22 : Mat2D R) * E11 = 0
-  basepoint_unity : ∀ (R : Type) [CommRing R],
-    (E11 : Mat2D R) + E22 = 1
-  basepoint_idempotent_1 : ∀ (R : Type) [CommRing R],
-    (E11 : Mat2D R) * E11 = E11
-  basepoint_idempotent_2 : ∀ (R : Type) [CommRing R],
-    (E22 : Mat2D R) * E22 = E22
-
-/-- Universal compilation theorem proving that the SplitQuaternionMotivicHopfCertificate holds unconditionally. -/
-theorem compile_split_quaternion_motivic_hopf :
-    SplitQuaternionMotivicHopfCertificate where
-  normSq2_action_mult := fun _ _ => normSq2_action
-  action_sphere73_preservation := fun _ _ => action_preserves_sphere73
-  action_id := fun _ _ => action_one
-  action_assoc := fun _ _ => action_mul
-  projector_action_scale := fun _ _ => projector_action_scaling
-  projector_action_gauge := fun _ _ => projector_action_gauge_invariant
-  fiber_normSq := fun _ _ => fiberInclusion_normSq
-  fiber_projector_scale := fun _ _ => fiberInclusion_projector
-  fiber_basepoint := fun _ _ => fiberInclusion_basepoint
-  fiber_char := fun _ _ => fiber_characterization
-  half_coord_decomp := fun _ _ => half_decomposition
-  half_inverter_rb := fun _ _ => half_inverter_readback
-  half_inverter_shift := fun _ _ => half_inverter_affine_shift
-  affine_chart_formula := fun _ _ => affineChartProjector_eq
-  affine_chart_separation := fun _ _ _ => affine_chart_ne_basepoint_infinity
-  basepoint_ortho_12 := fun _ _ => E11_mul_E22
-  basepoint_ortho_21 := fun _ _ => E22_mul_E11
-  basepoint_unity := fun _ _ => E11_add_E22
-  basepoint_idempotent_1 := fun _ _ => E11_mul_E11
-  basepoint_idempotent_2 := fun _ _ => E22_mul_E22
 
 end InfoGeometry.Projective.SplitQuaternionMotivicHopf

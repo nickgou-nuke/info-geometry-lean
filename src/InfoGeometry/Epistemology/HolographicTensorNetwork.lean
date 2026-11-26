@@ -52,10 +52,6 @@ quantum graph cuts, and the Ryu–Takayanagi (RT) formula across two contrasting
      `W† * O_A * W = O_bulk`.
    - When `𝒲(A)` is empty, the marginal state is maximally mixed and decoupled from the bulk,
      satisfying Knill–Laflamme error correction.
-
-6. **Master Certificate**:
-   - Bundles all verified properties into `HolographicTensorNetworkCertificate` with zero
-     `sorry` and core Mathlib axioms only.
 -/
 
 namespace InfoGeometry.Epistemology.HolographicTensorNetwork
@@ -182,34 +178,6 @@ theorem operator_reconstruction_fidelity (W W_adj O_bulk : R) (h_iso : W_adj * W
     simp only [mul_assoc]
   rw [h1, h_iso, one_mul, mul_one]
 
-/-! ### 6. Master Certificate: Holographic Tensor Network -/
-
-/-- Master certificate bundling the 8 verified components of the Holographic Tensor Network framework. -/
-structure HolographicTensorNetworkCertificate : Prop where
-  min_cut_bound : ∀ {chi : ℝ} (_hchi : 1 ≤ chi) {gamma_min gamma : ℕ}, gamma_min ≤ gamma →
-    minCutCapacity chi gamma_min ≤ bondEntropyCapacity chi gamma
-  deficit_nonneg : ∀ {S_A capacity : ℝ}, S_A ≤ capacity → 0 ≤ rtDeficit S_A capacity
-  flat_entropy_capacity : ∀ (k : ℕ) (chi : ℝ), Real.log (chi ^ k) = (k : ℝ) * Real.log chi
-  mera_bound : ∀ {S_A chi : ℝ} {gamma_min : ℕ}, S_A ≤ minCutCapacity chi gamma_min →
-    0 ≤ rtDeficit S_A (minCutCapacity chi gamma_min)
-  projector_idem : ∀ {A : Type*} [Ring A] (W W_adj : A), W_adj * W = 1 →
-    (W * W_adj) * (W * W_adj) = W * W_adj
-  projector_annihilate : ∀ {A : Type*} [Ring A] (W W_adj : A), W_adj * W = 1 →
-    (W * W_adj) * (1 - W * W_adj) = 0
-  happy_exact_sat : ∀ data : HappyGreedyData,
-    rtDeficit data.S_A (minCutCapacity data.chi data.gamma_min) = 0
-  reconstruction_fidelity : ∀ {A : Type*} [Ring A] (W W_adj O_bulk : A), W_adj * W = 1 →
-    W_adj * (W * O_bulk * W_adj) * W = O_bulk
-
-theorem compile_holographic_tensor_network : HolographicTensorNetworkCertificate where
-  min_cut_bound := min_cut_le_cut
-  deficit_nonneg := rtDeficit_nonneg
-  flat_entropy_capacity := flat_entropy_eq_capacity
-  mera_bound := mera_entropy_bound
-  projector_idem := code_projector_idempotent
-  projector_annihilate := code_projector_annihilates_complement
-  happy_exact_sat := happy_deficit_zero
-  reconstruction_fidelity := operator_reconstruction_fidelity
 
 end
 

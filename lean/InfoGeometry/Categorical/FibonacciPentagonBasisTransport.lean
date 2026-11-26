@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Categorical.FibonacciPentagonPathComposition
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -167,10 +172,10 @@ theorem transportedWord_eq_of_edgewise_eq
       rw [show transportedEdge C e qNeg4 q3 B =
           transportedEdge C e qNeg4 q3 B' by
         exact (transportedEdge_eq_iff C e qNeg4 q3 B B').2
-          (h e (by simp))]
+          (h e List.mem_cons_self)]
       congr 1
       apply ih
       intro e' he'
-      exact h e' (by simp [he'])
+      exact h e' (List.mem_cons_of_mem e he')
 
 end InfoGeometry.Categorical.FibonacciPentagonBasisTransport

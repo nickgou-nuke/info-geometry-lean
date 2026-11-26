@@ -36,8 +36,13 @@ noncomputable def regularDeterminant (a : A) : ℝ :=
 unit. -/
 theorem isUnit_regularDeterminant_iff (a : A) :
     IsUnit (regularDeterminant a) ↔ IsUnit a := by
-  rw [regularDeterminant, ← Algebra.lmul_isUnit_iff]
-  exact LinearMap.isUnit_iff_isUnit_det (leftRegularMap a)
+  calc
+    IsUnit (regularDeterminant a) ↔ IsUnit (leftRegularMap a) := by
+      rw [regularDeterminant]
+      exact (LinearMap.isUnit_iff_isUnit_det (leftRegularMap a)).symm
+    _ ↔ IsUnit a := by
+      change IsUnit (Algebra.lmul ℝ A a) ↔ IsUnit a
+      exact Algebra.lmul_isUnit_iff (R := ℝ) (A := A) (x := a)
 
 /-- Over `ℝ`, nonvanishing of the regular determinant is equivalent to
 invertibility of the algebra element. -/
@@ -54,15 +59,15 @@ noncomputable def inverseOfNonzeroRegularDeterminant
 theorem inverseOfNonzeroRegularDeterminant_mul
     (a : A) (h : regularDeterminant a ≠ 0) :
     inverseOfNonzeroRegularDeterminant a h * a = 1 := by
-  change (((regularDeterminant_ne_zero_iff a).mp h).unit⁻¹ : Aˣ) *
-    (((regularDeterminant_ne_zero_iff a).mp h).unit : Aˣ) = 1
-  simp
+  let ha := (regularDeterminant_ne_zero_iff a).mp h
+  have h1 : (((ha.unit⁻¹ * ha.unit : Aˣ) : Aˣ) : A) = 1 := by simp
+  simpa [inverseOfNonzeroRegularDeterminant, Units.val_mul, ha.unit_spec] using h1
 
 theorem mul_inverseOfNonzeroRegularDeterminant
     (a : A) (h : regularDeterminant a ≠ 0) :
     a * inverseOfNonzeroRegularDeterminant a h = 1 := by
-  change (((regularDeterminant_ne_zero_iff a).mp h).unit : Aˣ) *
-    (((regularDeterminant_ne_zero_iff a).mp h).unit⁻¹ : Aˣ) = 1
-  simp
+  let ha := (regularDeterminant_ne_zero_iff a).mp h
+  have h1 : (((ha.unit * ha.unit⁻¹ : Aˣ) : Aˣ) : A) = 1 := by simp
+  simpa [inverseOfNonzeroRegularDeterminant, Units.val_mul, ha.unit_spec] using h1
 
 end InfoGeometry.Clifford.RegularDeterminantInverse

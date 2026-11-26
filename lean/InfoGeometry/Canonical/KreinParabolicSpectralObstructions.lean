@@ -36,7 +36,7 @@ open scoped Matrix
 def kreinPolarity2 : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
 
 /-- `diag(1, -1)` is an involution with vanishing algebraic trace `0`, yet positive
-diagonal `ℓ¹` (nuclear) norm `2`. -/
+sum of absolute diagonal entries `2`.  This is not a claim about a nuclear norm. -/
 theorem kreinPolarity2_obstruction :
     kreinPolarity2 * kreinPolarity2 = 1 ∧
       Matrix.trace kreinPolarity2 = 0 ∧
@@ -47,6 +47,28 @@ theorem kreinPolarity2_obstruction :
       norm_num [kreinPolarity2, Matrix.mul_apply, Fin.sum_univ_two]
   · norm_num [kreinPolarity2, Matrix.trace, Fin.sum_univ_two]
   · norm_num [kreinPolarity2, Fin.sum_univ_two]
+
+/-- A diagonal signature matrix with entries squaring to one has absolute
+diagonal mass equal to its dimension, even when its algebraic trace cancels.
+This is the arbitrary-finite-dimensional version of the `diag(1, -1)` witness;
+the absolute diagonal sum is stated explicitly and is not called a trace norm. -/
+theorem diagonalSignature_trace_cancellation_and_abs_mass
+    {n : ℕ} (ε : Fin n → ℝ)
+    (hε : ∀ i, ε i ^ 2 = 1)
+    (htrace : Matrix.trace (Matrix.diagonal ε) = 0) :
+    Matrix.trace (Matrix.diagonal ε) = 0 ∧
+      (∑ i : Fin n, |(Matrix.diagonal ε) i i|) = (Fintype.card (Fin n) : ℝ) := by
+  refine ⟨htrace, ?_⟩
+  have hunit (i : Fin n) : |ε i| = 1 := by
+    rcases sq_eq_one_iff.mp (hε i) with h | h
+    · simp [h]
+    · simp [h]
+  calc
+    (∑ i : Fin n, |(Matrix.diagonal ε) i i|) = ∑ i : Fin n, (1 : ℝ) := by
+      apply Finset.sum_congr rfl
+      intro i hi
+      simp [hunit i]
+    _ = (Fintype.card (Fin n) : ℝ) := by simp
 
 /-- Oblique idempotent `Ω_θ = !![1, -cos θ / sin θ; 0, 0]` for the unit-norm tilted
 basis `e₁ = (1, 0)`, `e₂ = (cos θ, sin θ)`. -/
@@ -70,6 +92,25 @@ theorem obliqueProjector_properties (θ : ℝ) (hsin : Real.sin θ ≠ 0) :
     fin_cases i <;>
       simp [obliqueProjector, Matrix.mulVec, dotProduct, Fin.sum_univ_two,
         div_mul_cancel₀ _ hsin]
+
+/-- Quantitative conditioning bound for the oblique projector.  If the tilted
+vectors have transverse separation at most `δ`, while their longitudinal
+overlap is at least `c`, the off-diagonal coordinate of the projection is at
+least `c / δ`.  Thus any uniform bound on this family requires a uniform
+lower bound on the angle (or a compensating decay of the overlap). -/
+theorem obliqueProjector_shear_lower_bound
+    (θ c δ : ℝ) (hc : 0 < c) (hδ : 0 < δ)
+    (hsin : 0 < Real.sin θ) (hsinδ : Real.sin θ ≤ δ)
+    (hcos : c ≤ |Real.cos θ|) :
+    0 < c / δ ∧ c / δ ≤ |Real.cos θ / Real.sin θ| := by
+  refine ⟨div_pos hc hδ, ?_⟩
+  rw [abs_div, abs_of_pos hsin]
+  apply (div_le_div_iff₀ hδ hsin).2
+  calc
+    c * Real.sin θ ≤ |Real.cos θ| * Real.sin θ :=
+      mul_le_mul_of_nonneg_right hcos (le_of_lt hsin)
+    _ ≤ |Real.cos θ| * δ :=
+      mul_le_mul_of_nonneg_left hsinδ (abs_nonneg _)
 
 /-- Spectral projector `P₁ = !![1, (λ₁ - λ₂)⁻¹; 0, 0]` for `!![λ₁, 1; 0, λ₂]`
 with distinct eigenvalues `λ₁ ≠ λ₂`. -/
@@ -107,6 +148,20 @@ theorem parabolic_coalescence_obstruction (lam₁ lam₂ : ℝ) (hne : lam₁ �
   · ext i j
     fin_cases i <;> fin_cases j <;>
       norm_num [Matrix.mul_apply, Fin.sum_univ_two]
+
+/-- A small nonzero spectral separation forces the off-diagonal entry of the
+two-eigenvalue spectral projector to be large.  This is a quantitative
+condition bound; it does not assert convergence of projectors at collision. -/
+theorem coalescingSpectralProjector_shear_lower_bound
+    (lam₁ lam₂ δ : ℝ) (hgap : lam₁ ≠ lam₂)
+    (hδ : 0 < δ) (hsmall : |lam₁ - lam₂| ≤ δ) :
+    1 / δ ≤ |(lam₁ - lam₂)⁻¹| := by
+  have hgapAbs : 0 < |lam₁ - lam₂| := abs_pos.mpr (sub_ne_zero.mpr hgap)
+  have hbound : 1 / δ ≤ 1 / |lam₁ - lam₂| :=
+    (div_le_div_iff₀ hδ hgapAbs).2 (by simpa using hsmall)
+  calc
+    1 / δ ≤ 1 / |lam₁ - lam₂| := hbound
+    _ = |(lam₁ - lam₂)⁻¹| := by rw [abs_inv]; simp
 
 /-- Peirce cut projector `P₀ = diag(1, 0)` in `Matrix (Fin 2) (Fin 2) ℝ`. -/
 def peirceCut2 : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, 0]

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.Basic
 import Mathlib.Tactic.Ring
@@ -114,20 +119,5 @@ def dim_albert_traceless_coset : ℕ := 38
 theorem albert_derivation_dimension_g2_branch :
     dim_g2_split + dim_albert_traceless_coset = dim_F4 := by rfl
 
-/-! ### 4. Master Certificate -/
-
-structure AlbertDerivationCertificate : Prop where
-  dim_oct : dim_octonion = 8
-  dim_diag : dim_so44 = 28
-  dim_off : dim_off_diagonal_coset = 24
-  dim_total : dim_so44 + dim_off_diagonal_coset = 52
-  g2_branch : dim_g2_split + dim_albert_traceless_coset = 52
-
-theorem compile_albert_derivation_certificate : AlbertDerivationCertificate where
-  dim_oct := rfl
-  dim_diag := rfl
-  dim_off := rfl
-  dim_total := rfl
-  g2_branch := rfl
 
 end InfoGeometry.Exceptional.AlbertDerivations

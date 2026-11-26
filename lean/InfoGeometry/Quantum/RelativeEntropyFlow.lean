@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Dynamics.KanDecomposition
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.VerifiedTrace
@@ -185,7 +190,8 @@ theorem quantumShearSimilarity_trace
     Matrix.trace (quantumShearSimilarity ρ δ) = Matrix.trace ρ := by
   unfold quantumShearSimilarity
   exact InfoGeometry.OperatorAlgebra.VerifiedTrace.matrix_trace_conjugation_invariant
-    ρ (componentN δ) (componentN (-δ)) (componentN_mul_neg δ) (componentN_neg_mul δ)
+    ρ (componentN δ) (componentN (-δ))
+    (fun X Y => Matrix.trace_mul_comm X Y) (componentN_neg_mul δ)
 
 /-- The `n`-step similarity flow preserves finite matrix trace. -/
 theorem quantumShearSimilarityIter_trace
@@ -196,7 +202,7 @@ theorem quantumShearSimilarityIter_trace
     ρ
     (componentN ((n : ℂ) * δ))
     (componentN (-((n : ℂ) * δ)))
-    (componentN_mul_neg ((n : ℂ) * δ))
+    (fun X Y => Matrix.trace_mul_comm X Y)
     (componentN_neg_mul ((n : ℂ) * δ))
 
 /--

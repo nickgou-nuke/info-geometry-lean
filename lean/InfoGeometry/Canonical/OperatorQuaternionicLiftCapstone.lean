@@ -107,7 +107,8 @@ lemma operatorZorn_spin_half_packet :
       zornSpinPlusProjector * zornSpinPlusProjector = zornSpinPlusProjector ∧
       zornSpinMinusProjector * zornSpinMinusProjector = zornSpinMinusProjector ∧
       zornSpinPlusProjector * zornSpinMinusProjector = 0 ∧
-      InfoGeometry.Physics.OperatorZornMatrix.toMatrix zornSpinHalfCasimir =
+      InfoGeometry.Physics.OperatorZornMatrix.toMatrix
+        InfoGeometry.Canonical.OperatorZornSpinCasimirLift.zornSpinHalfCasimir =
         (3 / 4 : ℂ) • (1 : Mat2C) := by
   constructor
   · apply (InfoGeometry.Physics.OperatorZornMatrix.equivMatrix (A := ℂ)).injective
@@ -125,7 +126,7 @@ lemma operatorZorn_spin_half_packet :
   · apply (InfoGeometry.Physics.OperatorZornMatrix.equivMatrix (A := ℂ)).injective
     simp [zornSpinPlusProjector, zornSpinMinusProjector, zornLift,
       InfoGeometry.Optics.JonesPoincareSphere.JonesSpinor.circularProjectors_orthogonal_left]
-  · simpa [zornSpinHalfCasimir] using
+  · simpa [InfoGeometry.Canonical.OperatorZornSpinCasimirLift.zornSpinHalfCasimir] using
       InfoGeometry.Canonical.OperatorZornSpinCasimirLift.spinHalfCasimir_eq_three_quarters
 
 /-- The complete algebraic operator-lift packet on the finite Pauli/Dirac
@@ -164,7 +165,8 @@ theorem finite_operator_spin_casimir_packet :
       zornSpinPlusProjector * zornSpinPlusProjector = zornSpinPlusProjector ∧
       zornSpinMinusProjector * zornSpinMinusProjector = zornSpinMinusProjector ∧
       zornSpinPlusProjector * zornSpinMinusProjector = 0 ∧
-      InfoGeometry.Physics.OperatorZornMatrix.toMatrix zornSpinHalfCasimir =
+      InfoGeometry.Physics.OperatorZornMatrix.toMatrix
+        InfoGeometry.Canonical.OperatorZornSpinCasimirLift.zornSpinHalfCasimir =
         (3 / 4 : ℂ) • (1 : Mat2C) :=
   operatorZorn_spin_half_packet
 

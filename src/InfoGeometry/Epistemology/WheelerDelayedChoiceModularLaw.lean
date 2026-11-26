@@ -233,8 +233,7 @@ theorem modular_flow_refl (A : Carrier) :
 Two successive modular evolutions compose multiplicatively:
 $$\rho_1 (\rho_2 A \rho_2^{-1}) \rho_1^{-1} = (\rho_1 \rho_2) A (\rho_1 \rho_2)^{-1}$$
 -/
-theorem modular_flow_compose (rho1 rho1Inv rho2 rho2Inv A : Carrier)
-    (_h2 : rho2 * rho2Inv = 1) :
+theorem modular_flow_compose (rho1 rho1Inv rho2 rho2Inv A : Carrier) :
     rho1 * (rho2 * A * rho2Inv) * rho1Inv =
       (rho1 * rho2) * A * (rho2Inv * rho1Inv) := by
   simp only [mul_assoc]
@@ -244,7 +243,7 @@ theorem modular_flow_compose (rho1 rho1Inv rho2 rho2Inv A : Carrier)
 Evolving forward and then backward along the modular flow returns identically to $A$.
 -/
 theorem modular_flow_inv (rho rhoInv A : Carrier)
-    (_h_inv : rho * rhoInv = 1) (h_inv' : rhoInv * rho = 1) :
+    (h_inv' : rhoInv * rho = 1) :
     rhoInv * (rho * A * rhoInv) * rho = A := by
   have h1 : rhoInv * (rho * A * rhoInv) * rho = (rhoInv * rho) * A * (rhoInv * rho) := by
     simp only [mul_assoc]
@@ -383,57 +382,6 @@ theorem proof_boundary_is_nilpotent {Carrier : Type*} [Ring Carrier]
 
 end ProofStateCompiler
 
-/-! --------------------------------------------------------------------------
-    Section 5: Master Certificate & Compilation Constructor
-    -------------------------------------------------------------------------- -/
-
-/--
-The Master Certificate uniting Wheeler's Delayed-Choice Crosscap Evaluation
-and Connes' Modular "Law Without Law":
-1. Null observer sheet: $g(u, u) = 0$.
-2. Null past trajectory: $g(\alpha, \alpha) = 0$.
-3. Delayed-choice reality emergence: $g(v, v) = 2 g(P^+ v, P^- v)$.
-4. Uncontracted state vanishes: $g(P^+ v, P^- v) = 0 \implies g(v, v) = 0$.
-5. Modular flow group action and trace conservation: $\operatorname{Tr}(\sigma(A)) = \operatorname{Tr}(A)$.
-6. Möbius crosscap involution and anticommutation: $M^2 = \mathrm{id}, M K = - K M$.
-7. Nilpotent type-checking boundary: $d^2 = 0$.
--/
-structure WheelerDelayedChoiceModularLawCertificate (V : Type*) [AddCommGroup V] [Module ℝ V]
-    (E : Type*) [AddCommGroup E] [Module ℝ E] (Carrier : Type*) [Ring Carrier] : Prop where
-  observer_null : ∀ (sys : ParaKahlerSystem V) (u : V),
-    u ∈ sheetTPlus sys → sys.g u u = 0
-  past_null : ∀ (sys : ParaKahlerSystem V) (α : V),
-    α ∈ sheetTMinus sys → sys.g α α = 0
-  reality_emergence : ∀ (sys : ParaKahlerSystem V) (v : V),
-    sys.g v v = 2 * sys.g (projObserver sys v) (projOrigin sys v)
-  uncontracted_zero : ∀ (sys : ParaKahlerSystem V) (v : V),
-    sys.g (projObserver sys v) (projOrigin sys v) = 0 → sys.g v v = 0
-  modular_trace_conserved : ∀ (tr : Carrier → ℝ) (_tr_cyclic : ∀ X Y, tr (X * Y) = tr (Y * X))
-    (rho rhoInv A : Carrier) (_h_inv' : rhoInv * rho = 1),
-    tr (rho * A * rhoInv) = tr A
-  mobius_inv : ∀ (z : ProofSpace E),
-    mobiusTwist (mobiusTwist z) = z
-  mobius_anticomm : ∀ (z : ProofSpace E),
-    mobiusTwist (polarizationK z) = - (polarizationK (mobiusTwist z))
-  typechecker_nilpotent : ∀ (tc : NilpotentTypeChecker Carrier) (p : Carrier),
-    tc.d * (tc.d * p) = 0
-
-/--
-Master compilation constructor verifying that Wheeler's Delayed Choice and Modular Law
-framework is 100% mathematically closed in Lean 4 without custom axioms.
--/
-theorem compile_wheeler_delayed_choice_modular_law (V : Type*) [AddCommGroup V] [Module ℝ V]
-    (E : Type*) [AddCommGroup E] [Module ℝ E] (Carrier : Type*) [Ring Carrier] :
-    WheelerDelayedChoiceModularLawCertificate V E Carrier where
-  observer_null := fun sys u hu => observer_sheet_strictly_null sys u hu
-  past_null := fun sys α hα => cosmic_past_strictly_null sys α hα
-  reality_emergence := fun sys v => delayed_choice_reality_emergence sys v
-  uncontracted_zero := fun sys v hz => uncontracted_state_metric_zero sys v hz
-  modular_trace_conserved := fun tr tr_cyclic rho rhoInv A h_inv' =>
-    modular_flow_trace_conserved tr tr_cyclic rho rhoInv A h_inv'
-  mobius_inv := fun z => mobiusTwist_involutive z
-  mobius_anticomm := fun z => mobius_anticommutes_polarization z
-  typechecker_nilpotent := fun tc p => proof_boundary_is_nilpotent tc p
 
 /-!
 ### The Möbius twist exchanges two coordinate eigen-sheets

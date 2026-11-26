@@ -139,6 +139,7 @@ adapter. Do not claim recovery of hidden reasoning.
 | Task | Read before changing owners |
 |---|---|
 | DAG, namespace, or forwarding-module cleanup | [DAG wire-refactor workflow](skills/lean-dag-wire-refactor/SKILL.md) |
+| Alexandria PDF literature / GraphRAG pipeline | [Alexandria pipeline guide](tools/alexandria/README.md), [Alexandria docs](docs/alexandria/README.md), and [Alexandria pipeline skill](skills/alexandria-pipeline/SKILL.md) |
 | Categorical, tensor-tower, or colimit work | [Categorical infrastructure map](docs/CATEGORICAL_INFRASTRUCTURE_MAP.md) and [skill catalog](skills/lean-skill-library/) |
 | Peirce defects and two-sheet Yang–Mills claims | [Source-grounded framework progress](docs/TWO_SHEETED_YANG_MILLS_FRAMEWORK_PROGRESS.md) |
 | Souriau, Bost–Connes, or crystallization claims | [Transition status](docs/SOURIAU_BOST_CONNES_TRANSITION_STATUS.md) |

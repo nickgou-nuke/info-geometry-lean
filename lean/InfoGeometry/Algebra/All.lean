@@ -228,6 +228,25 @@ import InfoGeometry.Algebra.ReflectionPositivity
 import InfoGeometry.Algebra.PrefactorizationAlgebra
 import InfoGeometry.Algebra.StateSpaceTopology
 import InfoGeometry.Algebra.SphericalFusionCategory
+import InfoGeometry.Algebra.CompactOctonion
+import InfoGeometry.Algebra.H3Octonion
+import InfoGeometry.Algebra.H3OctonionStructureGroup
+import InfoGeometry.Algebra.H3OctonionLieAlgebra
+import InfoGeometry.Algebra.H3ZornE6SerreHom
+import InfoGeometry.Algebra.H3OctonionZornComplexification
+import InfoGeometry.Algebra.H3ZornF4Simplicity
+import InfoGeometry.Algebra.H3OctonionSimplicity
+import InfoGeometry.Algebra.H3ZornE6ChevalleyBruhat
+import InfoGeometry.Algebra.H3ZornMinusculeCFSGBridge
+import InfoGeometry.Algebra.JordanTKKLieAlgebra
+import InfoGeometry.Algebra.H3OctonionTKKLieAlgebra
+import InfoGeometry.Algebra.H3ZornE7RootSystem
+import InfoGeometry.Algebra.H3ZornE7Simplicity
+import InfoGeometry.Algebra.H3ZornFreudenthalLeviAction
+import InfoGeometry.Algebra.H3ZornFreudenthalE7Group
+import InfoGeometry.Algebra.MagicSquareTitsBracket
+import InfoGeometry.Algebra.SplitE8RootSystem
+import InfoGeometry.Algebra.SplitE8Simplicity
 /-!
 # InfoGeometry.Algebra.All
 

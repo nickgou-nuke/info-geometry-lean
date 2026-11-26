@@ -17,21 +17,22 @@ Alexandria **must never** write into or target the Lean AST/AQL declaration DAG 
 
 ### Starting a Dedicated ArangoDB Instance
 
-- **Standard Alexandria container (default port `8532`):**
+Use [`configs/alexandria/docker-compose.pdf.yml`](../../configs/alexandria/docker-compose.pdf.yml) for Alexandria PDF/DAG-brain deployments (avoid legacy [`configs/alexandria/docker-compose.yml`](../../configs/alexandria/docker-compose.yml), whose `container_name: arango_alexandria` holds the `:8530` Lean DAG container on this workstation):
+
+- **Default Alexandria PDF container (port `8532`, DB `alexandria`):**
   ```bash
   cp -n configs/alexandria/.env.example configs/alexandria/.env
-  docker compose -f configs/alexandria/docker-compose.yml up -d
+  docker compose -f configs/alexandria/docker-compose.pdf.yml up -d
   ```
 
 - **Parameterized PDF DAG-Brain container (custom port, container, and named volumes):**
-  `configs/alexandria/docker-compose.pdf.yml` parameterizes `ALEXANDRIA_ARANGO_CONTAINER`, `ALEXANDRIA_ARANGO_PORT`, `ALEXANDRIA_ARANGO_PASSWORD`, `ALEXANDRIA_ARANGO_DATA_VOLUME`, and `ALEXANDRIA_ARANGO_APPS_VOLUME`. For example, to run a dedicated PDF DAG-brain instance on port `8538` with database `alexandria_dag_brain`:
+  `configs/alexandria/docker-compose.pdf.yml` parameterizes `ALEXANDRIA_ARANGO_CONTAINER`, `ALEXANDRIA_ARANGO_PORT`, `ALEXANDRIA_ARANGO_PASSWORD`, `ALEXANDRIA_ARANGO_DATA_VOLUME`, and `ALEXANDRIA_ARANGO_APPS_VOLUME`. For example, to run a dedicated PDF DAG-brain instance on port `8538` with database `alexandria_dag_brain` (supply `ALEXANDRIA_ARANGO_PASSWORD` in local env or `.env` without echoing secrets):
   ```bash
   ALEXANDRIA_ARANGO_CONTAINER=arango_alexandria_dag \
   ALEXANDRIA_ARANGO_PORT=8538 \
-  ALEXANDRIA_ARANGO_PASSWORD=alexandria_root \
-  ALEXANDRIA_ARANGO_DATA_VOLUME=alexandria_dag_data \
-  ALEXANDRIA_ARANGO_APPS_VOLUME=alexandria_dag_apps \
-  docker compose -f configs/alexandria/docker-compose.pdf.yml up -d
+  ALEXANDRIA_ARANGO_DATA_VOLUME=alexandria_dag_brain_data \
+  ALEXANDRIA_ARANGO_APPS_VOLUME=alexandria_dag_brain_apps \
+  docker compose -p alexandria_dag_brain -f configs/alexandria/docker-compose.pdf.yml up -d
   ```
 
 Verify readiness before ingesting or querying:
@@ -124,7 +125,7 @@ python3 tools/alexandria/pdf_corpus_ingest.py \
   --skip-unchanged
 ```
 
-Optional API bearer auth can be passed via `--enrich-ollama-api-key` or `OPENAI_API_KEY` / `VLLM_API_KEY`.
+Optional API bearer auth can be passed via `--enrich-ollama-api-key` or `ALEXANDRIA_LLM_API_KEY` / `OPENAI_API_KEY`.
 
 ---
 
@@ -178,9 +179,9 @@ Both emit Alexandria JSONL collections compatible with `tools/alexandria/arango_
   ```
 
 - **Graph-expanded Personalized PageRank (`graph_context_rank.py`):**
-  Builds a directed graph up to 200 chunks combining adjacent chunks, directed `alexandria_dag_edges`, `entity_relation` edges, de Bruijn token sequences, and cross-document `shared_entity` edges linked by `canonicalKey` (with optional `--use-gpu` preferring NetworkX `cugraph` backend and automatic NetworkX fallback):
+  Builds a directed graph up to 200 chunks combining adjacent chunks, directed `alexandria_dag_edges`, `entity_relation` edges, de Bruijn token sequences, and cross-document `shared_entity` edges linked by `canonicalKey` (with optional `--use-gpu` preferring NetworkX `cugraph` backend and automatic NetworkX fallback). Requires `networkx` — use `.venv/bin/python3` or `/home/goutev/miniforge3/envs/sage/bin/python` (bare `python3` in `PATH` may lack `networkx`):
   ```bash
-  python3 tools/alexandria/graph_context_rank.py \
+  .venv/bin/python3 tools/alexandria/graph_context_rank.py \
     --arango \
     --endpoint http://127.0.0.1:8538 \
     --database alexandria_dag_brain \
@@ -191,6 +192,16 @@ Both emit Alexandria JSONL collections compatible with `tools/alexandria/arango_
     --format text
   ```
 
+- **Unified Repo Explorer (`ask_repo.py` / `graph_rag_query.py`, opt-in `--scope alexandria`):**
+  Alexandria is excluded from `--scope all`. Request it explicitly:
+  ```bash
+  python3 tools/infra/ask_repo.py "Krein space fundamental symmetry Peirce decomposition" \
+    --scope alexandria \
+    --alexandria-endpoint http://127.0.0.1:8538 \
+    --alexandria-database alexandria_dag_brain \
+    --top-k 5 --brief
+  ```
+
 - **Offline JSONL query mode (without ArangoDB):**
   Replace `--arango --endpoint ... --database ...` with `--input-dir artifacts/alexandria_dag_brain` on either tool.
 
@@ -199,7 +210,7 @@ Both emit Alexandria JSONL collections compatible with `tools/alexandria/arango_
   ```bash
   python3 tools/infra/blueprint_alexandria_bridge.py \
     --input-dir artifacts/alexandria_dag_brain \
-    --output artifacts/alexandria_dag_brain/blueprint_nodes.jsonl
+    --out artifacts/alexandria_dag_brain/blueprint_nodes.jsonl
   ```
 
 ---
@@ -212,4 +223,4 @@ PYTHONDONTWRITEBYTECODE=1 /home/goutev/miniforge3/envs/sage/bin/python -m pytest
   tests/alexandria tests/test_arango_env.py
 ```
 
-Further architectural detail is in [HYBRID_GRAPHRAG.md](HYBRID_GRAPHRAG.md), and copy-paste agent workflows are in [ALEXANDRIA_SKILL.md](ALEXANDRIA_SKILL.md) and [the repository skill](../../.agents/skills/alexandria-pipeline/SKILL.md).
+Further architectural detail is in [HYBRID_GRAPHRAG.md](HYBRID_GRAPHRAG.md), copy-paste agent workflows are in [ALEXANDRIA_SKILL.md](ALEXANDRIA_SKILL.md), [skills/alexandria-pipeline/SKILL.md](../../skills/alexandria-pipeline/SKILL.md), and [the repository skill](../../.agents/skills/alexandria-pipeline/SKILL.md), and the full module/CLI/Docker reference lives in [tools/alexandria/README.md](../../tools/alexandria/README.md) and [configs/alexandria/README.md](../../configs/alexandria/README.md).

@@ -2460,6 +2460,8 @@ import InfoGeometry.Canonical.SouriauMetriplecticAttentionLindblad
 import InfoGeometry.Canonical.SouriauMetriplecticAttentionMatrixInstance
 import InfoGeometry.Canonical.SouriauMetriplecticAttentionTrajectory
 import InfoGeometry.Canonical.VietaElementarySymmetricBridge
+import InfoGeometry.Canonical.H3ZornTKKLieAlgebra
+import InfoGeometry.Canonical.NativeTitsE8Carrier
 
 namespace InfoGeometry
 

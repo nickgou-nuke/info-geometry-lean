@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.H3ZornE6RootSystem
+import InfoGeometry.Algebra.H3ZornE6ChevalleyBruhat
 import InfoGeometry.Algebra.H3ZornStructureGroup
 import InfoGeometry.Exceptional.CFSGPort.ChevalleyWeyl
 import InfoGeometry.Exceptional.CFSGPort.ChevalleyRootGroupsTorus
@@ -289,153 +290,114 @@ theorem h3zornWeylElt_mem_chevalleyE6 (i : Fin 6) (t : ℝˣ) :
       (h3zornSimpleY_mem_chevalleyE6 i _))
     (h3zornSimpleX_mem_chevalleyE6 i t)
 
-private def sparseId27 : SparseMat27 :=
-  (List.finRange 27).map fun i => (i, i, 1)
+private def weylOneSparse (i : Fin 6) : SparseMat27 :=
+  match i.val with
+  | 0 => [(0, 19, 1), (1, 1, 1), (2, 26, -1), (3, 18, 1), (4, 12, -1), (5, 13, -1), (6, 14, -1), (7, 7, 1), (8, 8, 1), (9, 9, 1), (10, 10, 1), (11, 11, 1), (12, 4, 1), (13, 5, 1), (14, 6, 1), (15, 15, 1), (16, 16, 1), (17, 17, 1), (18, 3, -1), (19, 0, -1), (20, 20, 1), (21, 21, 1), (22, 22, 1), (23, 23, 1), (24, 24, 1), (25, 25, 1), (26, 2, 1)]
+  | 1 => [(0, 0, 1), (1, 1, 1), (2, 2, 1), (3, 3, 1), (4, 5, 1), (5, 4, -1), (6, 6, 1), (7, 8, 1), (8, 7, -1), (9, 9, 1), (10, 10, 1), (11, 11, 1), (12, 13, 1), (13, 12, -1), (14, 14, 1), (15, 16, 1), (16, 15, -1), (17, 17, 1), (18, 18, 1), (19, 19, 1), (20, 21, 1), (21, 20, -1), (22, 22, 1), (23, 24, 1), (24, 23, -1), (25, 25, 1), (26, 26, 1)]
+  | 2 => [(0, 9, -1), (1, 6, -1), (2, 2, 1), (3, 3, 1), (4, 4, 1), (5, 5, 1), (6, 1, 1), (7, 7, 1), (8, 8, 1), (9, 0, 1), (10, 10, 1), (11, 11, 1), (12, 24, 1), (13, 23, -1), (14, 14, 1), (15, 15, 1), (16, 16, 1), (17, 26, -1), (18, 22, 1), (19, 19, 1), (20, 20, 1), (21, 21, 1), (22, 18, -1), (23, 13, 1), (24, 12, -1), (25, 25, 1), (26, 17, 1)]
+  | 3 => [(0, 0, 1), (1, 1, 1), (2, 2, 1), (3, 3, 1), (4, 4, 1), (5, 6, 1), (6, 5, -1), (7, 7, 1), (8, 9, 1), (9, 8, -1), (10, 10, 1), (11, 11, 1), (12, 12, 1), (13, 14, 1), (14, 13, -1), (15, 15, 1), (16, 17, 1), (17, 16, -1), (18, 18, 1), (19, 19, 1), (20, 20, 1), (21, 22, 1), (22, 21, -1), (23, 23, 1), (24, 25, 1), (25, 24, -1), (26, 26, 1)]
+  | 4 => [(0, 6, -1), (1, 9, -1), (2, 2, 1), (3, 3, 1), (4, 4, 1), (5, 5, 1), (6, 0, 1), (7, 7, 1), (8, 8, 1), (9, 1, 1), (10, 10, 1), (11, 25, 1), (12, 12, 1), (13, 13, 1), (14, 19, -1), (15, 21, -1), (16, 20, 1), (17, 17, 1), (18, 18, 1), (19, 14, 1), (20, 16, -1), (21, 15, 1), (22, 22, 1), (23, 23, 1), (24, 24, 1), (25, 11, -1), (26, 26, 1)]
+  | _ => [(0, 26, -1), (1, 1, 1), (2, 19, 1), (3, 3, 1), (4, 4, 1), (5, 5, 1), (6, 6, 1), (7, 15, 1), (8, 16, 1), (9, 17, 1), (10, 11, -1), (11, 10, 1), (12, 12, 1), (13, 13, 1), (14, 14, 1), (15, 7, -1), (16, 8, -1), (17, 9, -1), (18, 18, 1), (19, 2, -1), (20, 20, 1), (21, 21, 1), (22, 22, 1), (23, 23, 1), (24, 24, 1), (25, 25, 1), (26, 0, 1)]
 
-private theorem sparseToMat_sparseId27 :
-    sparseToMat sparseId27 = (1 : Matrix (Fin 27) (Fin 27) ℤ) := by
-  ext i j
-  change sparseVal ((List.finRange 27).map fun k => (k, k, 1)) i j = if i = j then 1 else 0
-  have hsingle : ∀ (l : List (Fin 27)) (hl : l.Nodup),
-      sparseVal (l.map fun k => (k, k, 1)) i j =
-        if i = j ∧ i ∈ l then 1 else 0 := by
-    intro l hl
-    induction l with
-    | nil => simp [sparseVal]
-    | cons a l ih =>
-      rcases List.nodup_cons.mp hl with ⟨ha, hl'⟩
-      simp only [List.map_cons, sparseVal, ih hl', List.mem_cons]
-      by_cases hai : a = i <;> by_cases haj : a = j
-      · subst hai
-        subst haj
-        simp [ha]
-      · have hij : i ≠ j := fun h => haj (hai.trans h)
-        have hba : (a == i && a == j) = false := by simp [beq_false_of_ne haj]
-        simp [hba, hij]
-      · have hba : (a == i && a == j) = false := by simp [beq_false_of_ne hai]
-        have hni : i ≠ a := Ne.symm hai
-        simp [hba, hni]
-      · have hba : (a == i && a == j) = false := by simp [beq_false_of_ne hai]
-        have hni : i ≠ a := Ne.symm hai
-        simp [hba, hni]
-  simpa [List.mem_finRange] using hsingle (List.finRange 27) (List.nodup_finRange 27)
-
-private def insertEntry (r c : Fin 27) (v : ℤ) : SparseMat27 → SparseMat27
-  | [] => if v == 0 then [] else [(r, c, v)]
-  | (r', c', v') :: t =>
-      if r == r' && c == c' then
-        let s := v + v'
-        if s == 0 then t else (r', c', s) :: t
-      else (r', c', v') :: insertEntry r c v t
-
-private theorem sparseVal_nil (i j : Fin 27) : sparseVal [] i j = 0 := rfl
-
-private theorem sparseVal_cons (r c : Fin 27) (v : ℤ) (t : SparseMat27) (i j : Fin 27) :
-    sparseVal ((r, c, v) :: t) i j =
-      (if r == i && c == j then v else 0) + sparseVal t i j := rfl
-
-private theorem sparseVal_insertEntry (r c : Fin 27) (v : ℤ) (s : SparseMat27) (i j : Fin 27) :
-    sparseVal (insertEntry r c v s) i j =
-      (if r = i ∧ c = j then v else 0) + sparseVal s i j := by
-  induction s with
-  | nil =>
-    dsimp only [insertEntry]
-    by_cases hv : (v == 0) = true
-    · have hv0 : v = 0 := beq_iff_eq.mp hv
-      simp only [hv, ↓reduceIte, sparseVal_nil, add_zero]
-      split_ifs <;> simp [hv0]
-    · have hv' : (v == 0) = false := Bool.eq_false_iff.mpr hv
-      simp only [hv', Bool.false_eq_true, ↓reduceIte, sparseVal_cons, sparseVal_nil, add_zero]
-      by_cases hrc : r = i ∧ c = j
-      · rcases hrc with ⟨rfl, rfl⟩; simp
-      · have hne : (r == i && c == j) = false := by
-          simp only [Bool.and_eq_false_iff, beq_eq_false_iff_ne]
-          exact not_and_or.mp hrc
-        simp [hrc, hne]
-  | cons p t ih =>
-    rcases p with ⟨r', c', v'⟩
-    dsimp only [insertEntry]
-    by_cases hmatch : (r == r' && c == c') = true
-    · have hrc' : r = r' ∧ c = c' := by
-        simpa [Bool.and_eq_true, beq_iff_eq] using hmatch
-      rcases hrc' with ⟨rfl, rfl⟩
-      simp only [hmatch, ↓reduceIte]
-      by_cases hs : (v + v' == 0) = true
-      · have hs0 : v + v' = 0 := beq_iff_eq.mp hs
-        simp only [hs, ↓reduceIte, sparseVal_cons]
-        by_cases hri : r = i ∧ c = j
-        · rcases hri with ⟨rfl, rfl⟩
-          simp
-          omega
-        · have hne : (r == i && c == j) = false := by
-            simp only [Bool.and_eq_false_iff, beq_eq_false_iff_ne]
-            exact not_and_or.mp hri
-          simp [hri, hne]
-      · have hs' : (v + v' == 0) = false := Bool.eq_false_iff.mpr hs
-        simp only [hs', Bool.false_eq_true, ↓reduceIte, sparseVal_cons]
-        by_cases hri : r = i ∧ c = j
-        · rcases hri with ⟨rfl, rfl⟩
-          simp
-          omega
-        · have hne : (r == i && c == j) = false := by
-            simp only [Bool.and_eq_false_iff, beq_eq_false_iff_ne]
-            exact not_and_or.mp hri
-          simp [hri, hne]
-    · have hm' : (r == r' && c == c') = false := Bool.eq_false_iff.mpr hmatch
-      simp only [hm', Bool.false_eq_true, ↓reduceIte, sparseVal_cons, ih]
-      exact add_left_comm _ _ _
-
-private def sparseCoalesce : SparseMat27 → SparseMat27
-  | [] => []
-  | (r, c, v) :: t => insertEntry r c v (sparseCoalesce t)
-
-private theorem sparseVal_coalesce (s : SparseMat27) (i j : Fin 27) :
-    sparseVal (sparseCoalesce s) i j = sparseVal s i j := by
+private theorem sparseVal_eq_zero_of_not_mem (s : SparseMat27) (r c : Fin 27)
+    (h : ∀ p ∈ s, ¬(p.1 = r ∧ p.2.1 = c)) : sparseVal s r c = 0 := by
   induction s with
   | nil => rfl
   | cons p t ih =>
-    rcases p with ⟨r, c, v⟩
-    simp only [sparseCoalesce, sparseVal_insertEntry, sparseVal_cons, ih]
-    by_cases hrc : r = i ∧ c = j
-    · rcases hrc with ⟨rfl, rfl⟩; simp
-    · have hne : (r == i && c == j) = false := by
-        simp only [Bool.and_eq_false_iff, beq_eq_false_iff_ne]
-        exact not_and_or.mp hrc
-      simp [hrc, hne]
+    rcases p with ⟨pr, pc, pv⟩
+    rw [sparseVal_cons]
+    have hneq : (pr == r && pc == c) = false := by
+      simp only [Bool.and_eq_false_iff, beq_eq_false_iff_ne, ne_eq]
+      by_cases hr : pr = r
+      · right; exact fun hc => h (pr, pc, pv) List.mem_cons_self ⟨hr, hc⟩
+      · left; exact hr
+    simp only [hneq, Bool.false_eq_true, ↓reduceIte, zero_add]
+    exact ih (fun q hq => h q (List.mem_cons_of_mem _ hq))
 
-private theorem sparseToMat_coalesce (s : SparseMat27) :
-    sparseToMat (sparseCoalesce s) = sparseToMat s := by
-  ext i j
-  exact sparseVal_coalesce s i j
+private def sparseEqOneAdd (w d : SparseMat27) : Bool :=
+  (List.finRange 27).all (fun k => sparseVal w k k == 1 + sparseVal d k k) &&
+  w.all (fun p => sparseVal w p.1 p.2.1 == (if p.1 == p.2.1 then 1 else 0) + sparseVal d p.1 p.2.1) &&
+  d.all (fun p => sparseVal w p.1 p.2.1 == (if p.1 == p.2.1 then 1 else 0) + sparseVal d p.1 p.2.1)
 
-private def weylOneSparse (i : Fin 6) : SparseMat27 :=
-  sparseCoalesce (sparseMul (sparseAdd sparseId27 (e6SimpleESparse i))
-    (sparseCoalesce (sparseMul (sparseSub sparseId27 (e6SimpleFSparse i))
-      (sparseAdd sparseId27 (e6SimpleESparse i)))))
+private theorem sparseToMat_eq_one_add_of_check (w d : SparseMat27)
+    (h : sparseEqOneAdd w d = true) :
+    sparseToMat w = (1 : Matrix (Fin 27) (Fin 27) ℤ) + sparseToMat d := by
+  simp only [sparseEqOneAdd, Bool.and_eq_true, List.all_eq_true, List.mem_finRange,
+    true_implies, beq_iff_eq] at h
+  rcases h with ⟨⟨hdiag, hw⟩, hd⟩
+  ext r c
+  change sparseVal w r c = (1 : Matrix (Fin 27) (Fin 27) ℤ) r c + sparseVal d r c
+  by_cases hrc : r = c
+  · subst hrc
+    simpa [Matrix.one_apply] using hdiag r
+  · rw [Matrix.one_apply_ne hrc, zero_add]
+    by_cases hmw : ∃ p ∈ w, p.1 = r ∧ p.2.1 = c
+    · rcases hmw with ⟨p, hpw, rfl, rfl⟩
+      simpa [hrc] using hw p hpw
+    · by_cases hmd : ∃ p ∈ d, p.1 = r ∧ p.2.1 = c
+      · rcases hmd with ⟨p, hpd, rfl, rfl⟩
+        simpa [hrc] using hd p hpd
+      · have hw0 := sparseVal_eq_zero_of_not_mem w r c (fun p hp hpe => hmw ⟨p, hp, hpe⟩)
+        have hd0 := sparseVal_eq_zero_of_not_mem d r c (fun p hp hpe => hmd ⟨p, hp, hpe⟩)
+        rw [hw0, hd0]
+
+private def weylDeltaSparse (i : Fin 6) : SparseMat27 :=
+  let E := e6SimpleESparse i
+  let F := e6SimpleFSparse i
+  sparseSub (sparseSub (sparseSub E F) (sparseMul E F)) (sparseMul F E)
+
+private theorem weyl_expand_mat (E F : Matrix (Fin 27) (Fin 27) ℤ)
+    (hEE : E * E = 0) (hEFE : E * (F * E) = E) :
+    (1 + E) * ((1 - F) * (1 + E)) = 1 + E - F - E * F - F * E := by
+  simp only [mul_add, add_mul, mul_sub, sub_mul, one_mul, mul_one, hEE, hEFE]
+  abel
+
+private theorem e6SimpleESparse_mul_self (i : Fin 6) :
+    sparseToMat (e6SimpleESparse i) * sparseToMat (e6SimpleESparse i) = 0 := by
+  rw [← sparseToMat_mul]
+  fin_cases i <;> exact sparseToMat_eq_zero_of_sparseZeroCheck (by decide)
+
+private theorem e6SimpleESparse_mul_F_mul_E (i : Fin 6) :
+    sparseToMat (e6SimpleESparse i) *
+      (sparseToMat (e6SimpleFSparse i) * sparseToMat (e6SimpleESparse i)) =
+      sparseToMat (e6SimpleESparse i) := by
+  rw [← sparseToMat_mul, ← sparseToMat_mul]
+  fin_cases i <;> exact sparseToMat_eq_of_sparseEq (by decide)
+
+private theorem sparseToMat_weylOneSparse_eq (i : Fin 6) :
+    sparseToMat (weylOneSparse i) =
+      ((1 : Matrix (Fin 27) (Fin 27) ℤ) + sparseToMat (e6SimpleESparse i)) *
+        (((1 : Matrix (Fin 27) (Fin 27) ℤ) - sparseToMat (e6SimpleFSparse i)) *
+          ((1 : Matrix (Fin 27) (Fin 27) ℤ) + sparseToMat (e6SimpleESparse i))) := by
+  rw [weyl_expand_mat _ _ (e6SimpleESparse_mul_self i) (e6SimpleESparse_mul_F_mul_E i)]
+  have hwd : sparseToMat (weylOneSparse i) =
+      (1 : Matrix (Fin 27) (Fin 27) ℤ) + sparseToMat (weylDeltaSparse i) := by
+    fin_cases i <;> exact sparseToMat_eq_one_add_of_check _ _ (by decide)
+  rw [hwd]
+  simp only [weylDeltaSparse, sparseToMat_sub, sparseToMat_mul]
+  abel
 
 private theorem h3zornToMatrix_weylOne (i : Fin 6) :
     h3zornToMatrix (((h3zornWeylElt i 1).1 : H3Zorn ℝ ≃ₗ[ℝ] H3Zorn ℝ).toLinearMap) =
       (sparseToMat (weylOneSparse i)).map Int.cast := by
   have h1m : h3zornToMatrix (1 : Module.End ℝ (H3Zorn ℝ)) = 1 := _root_.map_one h3zornToMatrix
   have hx : h3zornToMatrix (h3zornSimpleX i 1).1.toLinearMap =
-      ((sparseToMat (sparseAdd sparseId27 (e6SimpleESparse i))).map Int.cast) := by
+      ((1 : Matrix (Fin 27) (Fin 27) ℤ) + sparseToMat (e6SimpleESparse i)).map Int.cast := by
     change h3zornToMatrix ((1 : Module.End ℝ (H3Zorn ℝ)) + (1 : ℝ) • (e6SimpleE i).1) = _
-    rw [one_smul, map_add, h1m, h3zornToMatrix_e6SimpleE, sparseToMat_add, sparseToMat_sparseId27]
+    rw [one_smul, map_add, h1m, h3zornToMatrix_e6SimpleE]
     ext r c
     by_cases h : r = c <;> simp [h]
   have hy : h3zornToMatrix (h3zornSimpleY i (-1)).1.toLinearMap =
-      ((sparseToMat (sparseSub sparseId27 (e6SimpleFSparse i))).map Int.cast) := by
+      ((1 : Matrix (Fin 27) (Fin 27) ℤ) - sparseToMat (e6SimpleFSparse i)).map Int.cast := by
     change h3zornToMatrix ((1 : Module.End ℝ (H3Zorn ℝ)) + (-1 : ℝ) • (e6SimpleF i).1) = _
-    rw [neg_one_smul, ← sub_eq_add_neg, map_sub, h1m,
-      h3zornToMatrix_e6SimpleF, sparseToMat_sub, sparseToMat_sparseId27]
+    rw [neg_one_smul, ← sub_eq_add_neg, map_sub, h1m, h3zornToMatrix_e6SimpleF]
     ext r c
     by_cases h : r = c <;> simp [h]
   have hm : ((h3zornWeylElt i 1).1 : H3Zorn ℝ ≃ₗ[ℝ] H3Zorn ℝ).toLinearMap =
       (h3zornSimpleX i 1).1.toLinearMap *
         ((h3zornSimpleY i (-1)).1.toLinearMap * (h3zornSimpleX i 1).1.toLinearMap) := by
     simp [h3zornWeylElt, mul_assoc]
-  rw [hm, map_mul, map_mul, hx, hy, weylOneSparse,
-    sparseToMat_coalesce, sparseToMat_mul, sparseToMat_coalesce, sparseToMat_mul]
+  rw [hm, map_mul, map_mul, hx, hy, sparseToMat_weylOneSparse_eq i]
   ext r c
   simp [Matrix.mul_apply]
 
@@ -457,8 +419,8 @@ private theorem weyl_comm_of_sparse {i j : Fin 6}
 
 private theorem weyl_braid_of_sparse {i j : Fin 6}
     (hsp : sparseEq
-      (sparseMul (weylOneSparse i) (sparseCoalesce (sparseMul (weylOneSparse j) (weylOneSparse i))))
-      (sparseMul (weylOneSparse j) (sparseCoalesce (sparseMul (weylOneSparse i) (weylOneSparse j)))) = true) :
+      (sparseMul (weylOneSparse i) (sparseMul (weylOneSparse j) (weylOneSparse i)))
+      (sparseMul (weylOneSparse j) (sparseMul (weylOneSparse i) (weylOneSparse j))) = true) :
     h3zornWeylElt i 1 * h3zornWeylElt j 1 * h3zornWeylElt i 1 =
       h3zornWeylElt j 1 * h3zornWeylElt i 1 * h3zornWeylElt j 1 := by
   have hm := sparseToMat_eq_of_sparseEq hsp
@@ -473,7 +435,7 @@ private theorem weyl_braid_of_sparse {i j : Fin 6}
     h3zornToMatrix_weylOne i, h3zornToMatrix_weylOne j]
   ext r c
   have hrc := congrFun (congrFun hm r) c
-  simp only [sparseToMat_mul, sparseToMat_coalesce] at hrc
+  simp only [sparseToMat_mul] at hrc
   simpa [Matrix.mul_apply, Matrix.mul_assoc] using congrArg (Int.cast : ℤ → ℝ) hrc
 
 /-- Explicit non-commutativity witness for `sparseToMat (weylOneSparse 0)` and `sparseToMat (weylOneSparse 2)`. -/
@@ -1137,5 +1099,168 @@ theorem h3zornAdjointAction_simpleX (i : Fin 6) (c : ℝ) (Y : h3zornCubicStabil
   exact hconj
 
 end Adjoint78DBridge
+
+section E6ChevalleyGenerationAndBruhat
+
+theorem h3zornRootSubgroupHom_eq_e6RootExp (r : Fin 72) (c : ℝ) :
+    h3zornRootSubgroupHom r (Multiplicative.ofAdd c) = e6RootExp r c :=
+  Subtype.ext (LinearEquiv.toLinearMap_injective rfl)
+
+theorem h3zornSimpleX_eq_e6SimpleX (i : Fin 6) (c : ℝ) :
+    h3zornSimpleX i c = e6SimpleX i c :=
+  Subtype.ext (LinearEquiv.toLinearMap_injective rfl)
+
+theorem h3zornSimpleY_eq_e6SimpleY (i : Fin 6) (c : ℝ) :
+    h3zornSimpleY i c = e6SimpleY i c :=
+  Subtype.ext (LinearEquiv.toLinearMap_injective rfl)
+
+theorem h3zornWeylElt_eq_e6WeylElt (i : Fin 6) (t : ℝˣ) :
+    h3zornWeylElt i t = e6WeylElt i t := by
+  simp only [h3zornWeylElt, e6WeylElt, h3zornSimpleX_eq_e6SimpleX, h3zornSimpleY_eq_e6SimpleY]
+
+theorem h3zornTorusElt_eq_e6TorusElt (i : Fin 6) (t : ℝˣ) :
+    h3zornTorusElt i t = e6TorusElt i t := by
+  simp only [h3zornTorusElt, e6TorusElt, h3zornWeylElt_eq_e6WeylElt]
+
+theorem h3zornChevalleyE6_eq_e6ChevalleySubgroup :
+    h3zornChevalleyE6 = e6ChevalleySubgroup := by
+  apply congrArg Subgroup.closure
+  ext x
+  constructor
+  · rintro ⟨⟨r, t⟩, h⟩
+    exact ⟨r, t, h.symm.trans (h3zornRootSubgroupHom_eq_e6RootExp r t)⟩
+  · rintro ⟨r, t, h⟩
+    exact ⟨(r, t), (h3zornRootSubgroupHom_eq_e6RootExp r t).trans h.symm⟩
+
+/-- Full group generation: `h3zornChevalleyE6 = ⊤` inside `Str₀(H₃(𝕆_s))`. -/
+theorem h3zornChevalleyE6_eq_top : h3zornChevalleyE6 = ⊤ := by
+  rw [h3zornChevalleyE6_eq_e6ChevalleySubgroup]
+  exact e6ChevalleySubgroup_eq_top
+
+/-- Transitivity of `h3zornChevalleyE6` moving any cubic-norm-1 element to `1`. -/
+theorem h3zornChevalleyE6_move_normCubic_one_to_one (X : H3Zorn ℝ) (hN : normCubic X = 1) :
+    ∃ h ∈ h3zornChevalleyE6, h.1 X = 1 := by
+  rw [h3zornChevalleyE6_eq_e6ChevalleySubgroup]
+  exact e6ChevalleySubgroup_move_normCubic_one_to_one X hN
+
+/-- Transitivity of `h3zornChevalleyE6` on cubic-norm-1 elements from `1`. -/
+theorem h3zornChevalleyE6_transitive_normCubic_one (X : H3Zorn ℝ) (hN : normCubic X = 1) :
+    ∃ h ∈ h3zornChevalleyE6, h.1 1 = X := by
+  rw [h3zornChevalleyE6_eq_e6ChevalleySubgroup]
+  exact e6ChevalleySubgroup_transitive_normCubic_one X hN
+
+/-- Transitivity of `h3zornChevalleyE6` on rank-1 primitive idempotents of `H₃(𝕆_s)`. -/
+theorem h3zornChevalleyE6_transitive_rankOneIdempotent (e₁ e₂ : H3Zorn ℝ)
+    (he₁ : isRankOneIdem e₁) (he₂ : isRankOneIdem e₂) :
+    ∃ g ∈ h3zornChevalleyE6, g.1 e₁ = e₂ := by
+  rw [h3zornChevalleyE6_eq_e6ChevalleySubgroup]
+  exact e6ChevalleySubgroup_transitive_rankOneIdempotent e₁ e₂ he₁ he₂
+
+/-- The 1-fixing subgroup `F₄(4) ⊂ Str₀(H₃(𝕆_s))` lies inside `h3zornChevalleyE6`. -/
+theorem h3zornReducedStructureFixOne_le_chevalleyE6
+    {f : h3zornReducedStructureGroup} (hf : f.1 1 = 1) : f ∈ h3zornChevalleyE6 := by
+  rw [h3zornChevalleyE6_eq_e6ChevalleySubgroup]
+  exact h3zornReducedStructureFixOne_le_e6ChevalleySubgroup hf
+
+/-- Every Jordan algebra automorphism `A : H3ZornJordanAut` lies in `h3zornChevalleyE6`. -/
+theorem h3zornJordanAut_mem_chevalleyE6 (A : H3ZornJordanAut) :
+    (⟨A.toLinearEquiv, A.mem_reducedStructureGroup⟩ : h3zornReducedStructureGroup) ∈
+      h3zornChevalleyE6 := by
+  rw [h3zornChevalleyE6_eq_e6ChevalleySubgroup]
+  exact h3zornJordanAut_mem_e6ChevalleySubgroup A
+
+/-- Quadratic Jordan operator `U(X)` for `normCubic X = ±1` lies in `h3zornChevalleyE6`. -/
+theorem h3zornULinearEquiv_mem_chevalleyE6 (X : H3Zorn ℝ)
+    (hN : normCubic X ≠ 0) (hpm : normCubic X = 1 ∨ normCubic X = -1) :
+    (⟨h3zornULinearEquiv X hN, h3zornULinearEquiv_mem_reducedStructureGroup X hN hpm⟩ :
+      h3zornReducedStructureGroup) ∈ h3zornChevalleyE6 := by
+  rw [h3zornChevalleyE6_eq_e6ChevalleySubgroup]
+  exact h3zornULinearEquiv_mem_e6ChevalleySubgroup X hN hpm
+
+/-- Quadratic Jordan operator `U(X)` for `normCubic X = 1` lies in `h3zornChevalleyE6`. -/
+theorem h3zornULinearEquiv_one_mem_chevalleyE6 (X : H3Zorn ℝ)
+    (hN : normCubic X ≠ 0) (h1 : normCubic X = 1) :
+    (⟨h3zornULinearEquiv X hN, h3zornULinearEquiv_mem_reducedStructureGroup X hN (Or.inl h1)⟩ :
+      h3zornReducedStructureGroup) ∈ h3zornChevalleyE6 :=
+  h3zornULinearEquiv_mem_chevalleyE6 X hN (Or.inl h1)
+
+/-- Native signed root subgroup `U_r` inside `Str₀(H₃(𝕆_s))`. -/
+def h3zornRootSubgroup (r : Fin 72) : Subgroup h3zornReducedStructureGroup :=
+  e6RootSubgroup r
+
+theorem h3zornRootSubgroup_eq_closure_hom (r : Fin 72) :
+    h3zornRootSubgroup r =
+      Subgroup.closure (Set.range fun c : ℝ => h3zornRootSubgroupHom r (Multiplicative.ofAdd c)) := by
+  rfl
+
+/-- Native signed positive unipotent subgroup `U⁺` inside `Str₀(H₃(𝕆_s))`. -/
+def h3zornPosUnipotent : Subgroup h3zornReducedStructureGroup := e6PosUnipotent
+
+/-- Native signed negative unipotent subgroup `U⁻` inside `Str₀(H₃(𝕆_s))`. -/
+def h3zornNegUnipotent : Subgroup h3zornReducedStructureGroup := e6NegUnipotent
+
+/-- Native signed split maximal torus `T` inside `Str₀(H₃(𝕆_s))`. -/
+def h3zornTorus : Subgroup h3zornReducedStructureGroup := e6Torus
+
+theorem h3zornTorus_eq_closure_torusElt :
+    h3zornTorus =
+      Subgroup.closure { g | ∃ (i : Fin 6) (t : ℝˣ), g = h3zornTorusElt i t } := by
+  rfl
+
+/-- Native signed Borel subgroup `B = ⟨T ∪ U⁺⟩` inside `Str₀(H₃(𝕆_s))`. -/
+def h3zornBorel : Subgroup h3zornReducedStructureGroup := e6Borel
+
+/-- Native signed Weyl subgroup `W = ⟨w_i(1) | i : Fin 6⟩` inside `Str₀(H₃(𝕆_s))`. -/
+def h3zornWeylSubgroup : Subgroup h3zornReducedStructureGroup := e6WeylSubgroup
+
+theorem h3zornWeylSubgroup_eq_closure_weylElt :
+    h3zornWeylSubgroup = Subgroup.closure (Set.range fun i : Fin 6 => h3zornWeylElt i 1) := by
+  rfl
+
+/-- Native signed simple-generator closure `⟨x_i(c), y_i(c)⟩` inside `Str₀(H₃(𝕆_s))`. -/
+def h3zornSimpleClosure : Subgroup h3zornReducedStructureGroup := e6SimpleClosure
+
+theorem h3zornSimpleClosure_eq_closure_simple :
+    h3zornSimpleClosure =
+      Subgroup.closure ({ g | ∃ (i : Fin 6) (c : ℝ), g = h3zornSimpleX i c } ∪
+        { g | ∃ (i : Fin 6) (c : ℝ), g = h3zornSimpleY i c }) := by
+  rfl
+
+/-- Injectivity of the 78D adjoint conjugation action `Str₀(H₃(𝕆_s)) → Aut(𝔢₆(6))`. -/
+theorem h3zornAdjointAction_injective : Function.Injective h3zornAdjointAction :=
+  h3zornCubicStabilizerLieEquiv_injective_of_normOne
+
+/-- Disjointness `T ∩ U⁺ = ⊥` in `Str₀(H₃(𝕆_s))`. -/
+theorem h3zornTorus_inf_posUnipotent_eq_bot :
+    h3zornTorus ⊓ h3zornPosUnipotent = ⊥ :=
+  e6Torus_inf_posUnipotent_eq_bot
+
+/-- Disjointness `B ∩ U⁻ = ⊥` in `Str₀(H₃(𝕆_s))`. -/
+theorem h3zornBorel_inf_negUnipotent_eq_bot :
+    h3zornBorel ⊓ h3zornNegUnipotent = ⊥ :=
+  e6Borel_inf_negUnipotent_eq_bot
+
+/-- Disjointness `U⁺ ∩ U⁻ = ⊥` in `Str₀(H₃(𝕆_s))`. -/
+theorem h3zornPosUnipotent_inf_negUnipotent_eq_bot :
+    h3zornPosUnipotent ⊓ h3zornNegUnipotent = ⊥ :=
+  e6PosUnipotent_inf_negUnipotent_eq_bot
+
+/-- Simple-generator closure equality `h3zornChevalleyE6 = ⟨x_i(c), y_i(c)⟩`. -/
+theorem h3zornChevalleyE6_eq_simpleClosure :
+    h3zornChevalleyE6 = h3zornSimpleClosure := by
+  rw [h3zornChevalleyE6_eq_e6ChevalleySubgroup]
+  exact e6ChevalleySubgroup_eq_simpleClosure
+
+/-- Borel factorization `B = T * U⁺` in `Str₀(H₃(𝕆_s))`. -/
+theorem h3zornBorel_eq_torus_mul_posUnipotent (g : h3zornReducedStructureGroup) :
+    g ∈ h3zornBorel ↔ ∃ t ∈ h3zornTorus, ∃ u ∈ h3zornPosUnipotent, g = t * u :=
+  e6Borel_eq_torus_mul_posUnipotent g
+
+/-- Native signed Bruhat decomposition `G = B * W * B` inside `Str₀(H₃(𝕆_s))`. -/
+theorem h3zornBruhat_decomposition (g : h3zornReducedStructureGroup) :
+    ∃ b₁ ∈ h3zornBorel, ∃ w ∈ h3zornWeylSubgroup, ∃ b₂ ∈ h3zornBorel, g = b₁ * w * b₂ :=
+  e6Bruhat_decomposition g
+
+end E6ChevalleyGenerationAndBruhat
 
 end InfoGeometry.Algebra

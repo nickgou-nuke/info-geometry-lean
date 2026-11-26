@@ -7,6 +7,7 @@ import InfoGeometry.CliffordWeyl.DiracBilinearChannels
 import InfoGeometry.CliffordWeyl.SpinorBilinearSoldering
 import InfoGeometry.Synthesis.ShirokovRecursiveInverse
 import InfoGeometry.Synthesis.FierzShirokovCoefficientBridge
+import InfoGeometry.Canonical.Drazin
 import Mathlib.LinearAlgebra.Matrix.Charpoly.Basic
 
 /-!
@@ -81,6 +82,101 @@ private theorem diracDyad_square (left right : DiracSpinor) :
   simpa [diracScalarPairing, diracDyad_eq_solder, solder,
     InfoGeometry.CliffordWeyl.SpinorBilinearSoldering.bilinear] using
     solder_fierz_product gamma0 right left right left
+
+/-- Structure constants for multiplication in the trace-dual 16-channel
+Dirac basis.  These are fixed complex scalars determined by the concrete
+matrix basis, independent of a spinor pair. -/
+def channelProductConstant (i j k : Fin 16) : ℂ :=
+  channelCoefficient (indexedChannel i * indexedChannel j) k
+
+/-- The channel readout is linear over finite sums. -/
+private theorem channelCoefficient_sum {ι : Type*} [Fintype ι]
+    (f : ι → DiracMatrix) (k : Fin 16) :
+    channelCoefficient (∑ i, f i) k = ∑ i, channelCoefficient (f i) k := by
+  classical
+  simp only [channelCoefficient, Matrix.mul_sum, Matrix.trace_sum]
+  rw [← Finset.sum_div]
+
+private theorem channelCoefficient_smul (c : ℂ) (M : DiracMatrix) (k : Fin 16) :
+    channelCoefficient (c • M) k = c * channelCoefficient M k := by
+  simp [channelCoefficient, Matrix.trace_smul, smul_eq_mul, div_eq_mul_inv,
+    mul_left_comm, mul_comm]
+
+/-- Multiplication transported to the full trace-dual coordinate space.
+The structure constants retain the noncommutative matrix product. -/
+theorem channelCoefficient_mul (A B : DiracMatrix) (k : Fin 16) :
+    channelCoefficient (A * B) k =
+      ∑ i : Fin 16, ∑ j : Fin 16,
+        channelCoefficient A i * channelCoefficient B j * channelProductConstant i j k := by
+  classical
+  let coordsA : DiracMatrix :=
+    ∑ i : Fin 16, channelCoefficient A i • indexedChannel i
+  let coordsB : DiracMatrix :=
+    ∑ j : Fin 16, channelCoefficient B j • indexedChannel j
+  have hA : A = coordsA := by
+    dsimp [coordsA]
+    exact (channel_reconstruction A).symm
+  have hB : B = coordsB := by
+    dsimp [coordsB]
+    exact (channel_reconstruction B).symm
+  have hmul :
+      coordsA * coordsB =
+        ∑ i : Fin 16, ∑ j : Fin 16,
+          (channelCoefficient A i * channelCoefficient B j) •
+            (indexedChannel i * indexedChannel j) := by
+    dsimp [coordsA, coordsB]
+    rw [Fintype.sum_mul_sum]
+    apply Finset.sum_congr rfl
+    intro i _
+    apply Finset.sum_congr rfl
+    intro j _
+    calc
+      (channelCoefficient A i • indexedChannel i) *
+          (channelCoefficient B j • indexedChannel j) =
+        channelCoefficient A i •
+          (indexedChannel i * (channelCoefficient B j • indexedChannel j)) :=
+            Algebra.smul_mul_assoc _ _ _
+      _ = channelCoefficient A i •
+          (channelCoefficient B j • (indexedChannel i * indexedChannel j)) := by
+            rw [Algebra.mul_smul_comm]
+      _ = (channelCoefficient A i * channelCoefficient B j) •
+          (indexedChannel i * indexedChannel j) := by rw [smul_smul]
+  calc
+    channelCoefficient (A * B) k = channelCoefficient (coordsA * coordsB) k := by
+      rw [hA, hB]
+    _ = channelCoefficient
+        (∑ i : Fin 16, ∑ j : Fin 16,
+          (channelCoefficient A i * channelCoefficient B j) •
+            (indexedChannel i * indexedChannel j)) k := by rw [hmul]
+    _ = ∑ i : Fin 16, ∑ j : Fin 16,
+          channelCoefficient A i * channelCoefficient B j *
+            channelProductConstant i j k := by
+          simp only [channelCoefficient_sum, channelCoefficient_smul]
+          simp [channelProductConstant, mul_assoc]
+
+
+/-- The full 16-channel Fierz coordinates obey the rank-one quadratic law:
+each coefficient of the squared dyad is the scalar Dirac pairing times the
+corresponding coefficient of the dyad.  This retains all channel constraints;
+the Shirokov scalar recurrence alone only reads their scalar spectral shadow. -/
+theorem diracDyad_fierz_channel_quadratic
+    (left right : DiracSpinor) (index : Fin 16) :
+    channelCoefficient (diracDyad left right * diracDyad left right) index =
+      diracScalarPairing left right * channelCoefficient (diracDyad left right) index := by
+  rw [diracDyad_square]
+  simp [channelCoefficient, Matrix.trace_smul, smul_eq_mul, div_eq_mul_inv,
+    mul_assoc, mul_comm]
+
+/-- In coordinates, the rank-one Dirac dyad lies on the quadratic locus cut
+out by the basis multiplication constants. -/
+theorem diracDyad_coordinate_quadratic_locus
+    (left right : DiracSpinor) (k : Fin 16) :
+    (∑ i : Fin 16, ∑ j : Fin 16,
+      channelCoefficient (diracDyad left right) i *
+        channelCoefficient (diracDyad left right) j * channelProductConstant i j k) =
+      diracScalarPairing left right * channelCoefficient (diracDyad left right) k := by
+  rw [← channelCoefficient_mul]
+  exact diracDyad_fierz_channel_quadratic left right k
 
 private theorem diracDyad_scalarPart (left right : DiracSpinor) :
     diracScalarPart (diracDyad left right) =
@@ -165,6 +261,108 @@ theorem exists_nonzero_nilpotent_diracDyad_with_zero_scalar :
   refine ⟨spinor, hpair, hnonzero, ?_⟩
   rw [diracDyad_square, hpair, zero_smul]
 
+/-- A zero-scalar Dirac dyad has the canonical zero Drazin inverse at index
+two.  This records the nilpotent spectral stratum that the Shirokov scalar
+coefficients alone fail to distinguish. -/
+theorem diracDyad_drazinZero_of_zero_scalar
+    (left right : DiracSpinor)
+    (hscalar : diracScalarPairing left right = 0) :
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse (diracDyad left right) 0 2 := by
+  have hsq : diracDyad left right * diracDyad left right = 0 := by
+    rw [diracDyad_square, hscalar]
+    simp
+  refine ⟨by simp, by simp, ?_⟩
+  rw [pow_succ]
+  simp [pow_two, hsq]
+
+/-- When the Dirac scalar pairing is nonzero, normalizing the rank-one dyad
+produces an idempotent.  Rescaling that idempotent gives the index-one
+Drazin inverse, so the nonzero spectral sector is retained instead of being
+collapsed into the nilpotent zero-scalar case. -/
+theorem diracDyad_drazin_of_nonzero_scalar
+    (left right : DiracSpinor)
+    (hscalar : diracScalarPairing left right ≠ 0) :
+    let d := (diracScalarPairing left right)⁻¹ •
+      ((diracScalarPairing left right)⁻¹ • diracDyad left right)
+    InfoGeometry.Canonical.Drazin.IsDrazinInverse (diracDyad left right) d 1 ∧
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection
+        (diracDyad left right) d =
+          (diracScalarPairing left right)⁻¹ • diracDyad left right ∧
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection
+        (diracDyad left right) d * diracDyad left right = 0 ∧
+      diracDyad left right *
+        InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection
+          (diracDyad left right) d = 0 := by
+  let s := diracScalarPairing left right
+  let e : DiracMatrix := s⁻¹ • diracDyad left right
+  have hs : s ≠ 0 := hscalar
+  have he : e * e = e := by
+    calc
+      e * e = s⁻¹ • (diracDyad left right * (s⁻¹ • diracDyad left right)) :=
+        Algebra.smul_mul_assoc _ _ _
+      _ = s⁻¹ • (s⁻¹ •
+          (diracDyad left right * diracDyad left right)) := by
+        rw [Algebra.mul_smul_comm]
+      _ = s⁻¹ • (s⁻¹ • (s • diracDyad left right)) := by
+        rw [diracDyad_square]
+      _ = e := by simp [e, smul_smul, hs]
+  have hScale (c d : ℂ) : (c • e) * (d • e) = (c * d) • e := by
+    calc
+      (c • e) * (d • e) = c • (e * (d • e)) := Algebra.smul_mul_assoc _ _ _
+      _ = c • (d • (e * e)) := by rw [Algebra.mul_smul_comm]
+      _ = (c * d) • e := by rw [smul_smul, he]
+  let d : DiracMatrix := s⁻¹ • e
+  have hD : InfoGeometry.Canonical.Drazin.IsDrazinInverse (s • e) d 1 := by
+    refine ⟨?_, ?_, ?_⟩
+    · dsimp [d]
+      rw [hScale s s⁻¹, hScale s⁻¹ s]
+      simp [mul_comm]
+    · dsimp [d]
+      rw [hScale s⁻¹ s, hScale (s⁻¹ * s) s⁻¹]
+      simp [hs]
+    · dsimp [d]
+      simp only [pow_one]
+      rw [pow_two, hScale s s, hScale (s * s) s⁻¹]
+      simp [hs]
+  have hInput : s • e = diracDyad left right := by
+    simp [e, smul_smul, hs]
+  have hD' : InfoGeometry.Canonical.Drazin.IsDrazinInverse (diracDyad left right) d 1 := by
+    simpa [d, e, smul_smul, hs] using hD
+  refine ⟨hD', ?_, ?_, ?_⟩
+  · change diracDyad left right * d = s⁻¹ • diracDyad left right
+    calc
+      diracDyad left right * d = (s • e) * (s⁻¹ • e) := by rw [hInput]
+      _ = (s * s⁻¹) • e := hScale s s⁻¹
+      _ = s⁻¹ • diracDyad left right := by simp [e, hs]
+  · simpa [pow_one] using
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse.complementaryProjection_mul_power_eq_zero hD'
+  · simpa [pow_one] using
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_mul_complementaryProjection_eq_zero hD'
+
+/-- One concrete nonzero Fierz aggregate simultaneously exhibits the two
+complementary readouts: its degree-four Shirokov coefficients match zero,
+while its Drazin inverse is zero with nilpotency index at most two. -/
+theorem exists_nonzero_diracDyad_with_shirokov_collapse_and_drazin_data :
+    ∃ spinor : DiracSpinor,
+      diracDyad spinor spinor ≠ 0 ∧
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse
+        (diracDyad spinor spinor) 0 2 ∧
+      ∀ k : Fin 4,
+        shirokovC diracScalarPart 4 (diracDyad spinor spinor) k.val =
+          shirokovC diracScalarPart 4 (0 : DiracMatrix) k.val := by
+  rcases exists_nonzero_nilpotent_diracDyad_with_zero_scalar with
+    ⟨spinor, hscalar, hnonzero, _⟩
+  have hD := diracDyad_drazinZero_of_zero_scalar spinor spinor hscalar
+  rcases diracDyad_shirokov_rank_one_sequence spinor spinor with
+    ⟨hc₁, _, hc₂, _, hc₃, _, hc₄⟩
+  refine ⟨spinor, hnonzero, hD, ?_⟩
+  intro k
+  fin_cases k
+  · rw [hc₁, hscalar, diracShirokovC_zero]
+  · rw [hc₂, diracShirokovC_zero]
+  · rw [hc₃, diracShirokovC_zero]
+  · rw [hc₄, diracShirokovC_zero]
+
 /-- A concrete nonzero nilpotent Dirac dyad has characteristic polynomial
 `X^4`; thus the zero characteristic coefficients do not imply that the
 operator itself vanishes. -/
@@ -218,5 +416,39 @@ theorem exists_nonzero_fierz_channel_of_diracDyad_ne_zero
     simp
   have hzero := coefficients_injective hcoeff
   exact hDyad (by simpa using hzero)
+
+/-- Completeness of the trace-dual basis makes at least one coefficient
+nonzero for every nonzero operator. -/
+private theorem exists_nonzero_channelCoefficient_of_ne_zero
+    (A : DiracMatrix) (hA : A ≠ 0) :
+    ∃ index : Fin 16, channelCoefficient A index ≠ 0 := by
+  classical
+  by_contra hnone
+  push Not at hnone
+  have hcoeff : channelCoefficient A = channelCoefficient 0 := by
+    funext index
+    calc
+      channelCoefficient A index = 0 := hnone index
+      _ = channelCoefficient 0 index := by simp [channelCoefficient]
+  exact hA (coefficients_injective hcoeff)
+
+/-- The nilpotent counterexample retains information in the full Fierz
+coordinate vector although both its finite Shirokov readout and Drazin inverse
+collapse to zero. -/
+theorem shirokov_drazin_fierz_separation :
+    ∃ spinor : DiracSpinor,
+      diracDyad spinor spinor ≠ 0 ∧
+      InfoGeometry.Canonical.Drazin.IsDrazinInverse
+        (diracDyad spinor spinor) 0 2 ∧
+      (∀ k : Fin 4,
+        shirokovC diracScalarPart 4 (diracDyad spinor spinor) k.val =
+          shirokovC diracScalarPart 4 (0 : DiracMatrix) k.val) ∧
+      (∃ index : Fin 16,
+        channelCoefficient (diracDyad spinor spinor) index ≠ 0) := by
+  rcases exists_nonzero_diracDyad_with_shirokov_collapse_and_drazin_data with
+    ⟨spinor, hnonzero, hDrazin, hShirokov⟩
+  obtain ⟨index, hindex⟩ :=
+    exists_nonzero_channelCoefficient_of_ne_zero (diracDyad spinor spinor) hnonzero
+  exact ⟨spinor, hnonzero, hDrazin, hShirokov, ⟨index, hindex⟩⟩
 
 end InfoGeometry.CliffordWeyl.DiracFierzShirokovBridge

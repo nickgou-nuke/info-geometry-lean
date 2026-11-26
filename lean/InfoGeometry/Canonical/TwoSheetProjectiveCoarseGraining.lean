@@ -71,7 +71,8 @@ theorem trace_projection_mul_eq_probability {ρ P : Mat} (hρ : ρ.PosSemidef)
     (hP : IsStarProjection P) :
     Matrix.trace (P * ρ) = (sheetProbability ρ P : ℂ) := by
   apply Complex.ext
-  · exact congrArg Complex.re (Matrix.trace_mul_comm P ρ)
+  · change (Matrix.trace (P * ρ)).re = (Matrix.trace (ρ * P)).re
+    exact congrArg Complex.re (Matrix.trace_mul_comm P ρ)
   · exact (Complex.nonneg_iff.mp (trace_projection_mul_nonneg P ρ hP hρ)).2.symm
 
 theorem trace_projection_eq_traceMass {P : Mat} (hP : IsStarProjection P) :

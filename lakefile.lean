@@ -992,7 +992,16 @@ lean_lib InfoGeometryTestSuite where
     .one `PeirceGradingTransportAxioms,
     .one `RawInfoTreeProjectionTests,
     .one `WheelerEpilogueAudit,
-    .one `sandbox_hestenes
+    .one `sandbox_hestenes,
+    .one `JordanE6CompleteTests,
+    .one `JordanE6CompleteAxiomAudit,
+    .one `JordanE6StructureGroupTests,
+    .one `JordanE6StructureGroupAxiomAudit,
+    .one `E6ClosureTests,
+    .one `E7TKKFreudenthalTests,
+    .one `E8MagicSquareTests,
+    .one `E6E7E8CrossFeatureTests,
+    .one `E6E7E8AxiomAudit
   ]
 
 lean_lib AuditNativeScoped where

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.ZMod.Basic
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
@@ -193,31 +198,5 @@ theorem orientable_iff_cocycle_one (n q : ℕ) :
 theorem crosscap_iff_cocycle_neg_one (n q : ℕ) :
     IsCrosscapNonOrientable n q ↔ cechCocycleSign n q = -1 := by
   rw [non_orientable_iff_odd_mismatch, cech_cocycle_eq_neg_one_iff]
-
-/-! ### Section 4: Master Verification Certificate -/
-
-/-- Master certificate bundling all cohomological Berezinian orientation theorems. -/
-structure BerezinianSheafStiefelWhitneyCertificate (n q : ℕ) : Prop where
-  parity_square       : (-1 : ℤ) ^ ((gradedParity n q) ^ 2) = cechCocycleSign n q
-  cocycle_dichotomy   : cechCocycleSign n q = 1 ∨ cechCocycleSign n q = -1
-  orientable_even     : IsOrientableBerezinianSheaf n q ↔ (n + q) % 2 = 0
-  crosscap_odd        : IsCrosscapNonOrientable n q ↔ (n + q) % 2 = 1
-  topology_dichotomy  : IsOrientableBerezinianSheaf n q ∨ IsCrosscapNonOrientable n q
-  topology_exclusive  : ¬ (IsOrientableBerezinianSheaf n q ∧ IsCrosscapNonOrientable n q)
-  orientable_cocycle  : IsOrientableBerezinianSheaf n q ↔ cechCocycleSign n q = 1
-  crosscap_cocycle    : IsCrosscapNonOrientable n q ↔ cechCocycleSign n q = -1
-
-/-- Constructor for the master certificate with zero unresolved assumptions. -/
-theorem compile_berezinian_sheaf_stiefel_whitney (n q : ℕ) :
-    BerezinianSheafStiefelWhitneyCertificate n q := {
-  parity_square      := berezinian_parity_square_law n q
-  cocycle_dichotomy  := cech_cocycle_sign_values n q
-  orientable_even    := orientable_iff_even_mismatch n q
-  crosscap_odd       := non_orientable_iff_odd_mismatch n q
-  topology_dichotomy := orientable_or_crosscap n q
-  topology_exclusive := not_orientable_and_crosscap n q
-  orientable_cocycle := orientable_iff_cocycle_one n q
-  crosscap_cocycle   := crosscap_iff_cocycle_neg_one n q
-}
 
 end InfoGeometry.SuperGrassmannian.BerezinianSheaf

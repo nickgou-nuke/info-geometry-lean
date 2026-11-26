@@ -1,6 +1,6 @@
 # Alexandria Skill Guide (Agent Workflow)
 
-Use Alexandria when a Lean 4 formalization task, mathematical design review, or proof search needs literature definitions, theorem statements, archetype analogs across papers, or structural provenance from the PDF/LaTeX corpus.
+Use Alexandria when a Lean 4 formalization task, mathematical design review, or proof search needs literature definitions, theorem statements, archetype analogs across papers, or structural provenance from the PDF/LaTeX corpus. See also [docs/alexandria/README.md](README.md), [tools/alexandria/README.md](../../tools/alexandria/README.md), [configs/alexandria/README.md](../../configs/alexandria/README.md), and [skills/alexandria-pipeline/SKILL.md](../../skills/alexandria-pipeline/SKILL.md).
 
 > **Authority rule:** All Alexandria hits carry `sourceAuthority: "retrieval_context_only"`. Never cite an Alexandria hit as Lean proof evidence. Always verify candidate definitions and theorem statements in the source `.lean` owner files using `tools/infra/run_locked_lean.py`, `tools/infra/run_locked_lake_build.py`, and `axiom_check.lean`.
 
@@ -73,13 +73,13 @@ python3 tools/infra/ask_repo.py "Krein space fundamental symmetry Peirce decompo
 ## 3. Digesting or Updating a PDF Corpus (`pdf_corpus_ingest.py`)
 
 ### Starting an Isolated ArangoDB Instance on Custom Port (`docker-compose.pdf.yml`)
+Set `ALEXANDRIA_ARANGO_PASSWORD` in local env or `configs/alexandria/.env` without echoing secrets:
 ```bash
 ALEXANDRIA_ARANGO_CONTAINER=arango_alexandria_dag \
 ALEXANDRIA_ARANGO_PORT=8538 \
-ALEXANDRIA_ARANGO_PASSWORD=alexandria_root \
-ALEXANDRIA_ARANGO_DATA_VOLUME=alexandria_dag_data \
-ALEXANDRIA_ARANGO_APPS_VOLUME=alexandria_dag_apps \
-docker compose -f configs/alexandria/docker-compose.pdf.yml up -d
+ALEXANDRIA_ARANGO_DATA_VOLUME=alexandria_dag_brain_data \
+ALEXANDRIA_ARANGO_APPS_VOLUME=alexandria_dag_brain_apps \
+docker compose -p alexandria_dag_brain -f configs/alexandria/docker-compose.pdf.yml up -d
 ```
 
 ### Deterministic PDF Extraction + DAG Verification + ArangoDB Load
@@ -118,7 +118,7 @@ python3 tools/alexandria/pdf_corpus_ingest.py \
   --enrich-ollama-max-chunks 200
 ```
 - `/v1` endpoints automatically probe `<endpoint>/models`, call `<endpoint>/chat/completions` with `response_format: {"type": "json_object"}`, and disable thinking tokens by default via `chat_template_kwargs: {"enable_thinking": false}` (override with `--allow-thinking`).
-- Pass `--enrich-ollama-api-key` or set `OPENAI_API_KEY` / `VLLM_API_KEY` if the endpoint requires bearer authentication.
+- Pass `--enrich-ollama-api-key` or set `ALEXANDRIA_LLM_API_KEY` / `OPENAI_API_KEY` if the endpoint requires bearer authentication.
 
 ---
 
@@ -148,7 +148,7 @@ To connect retrieved theorem/definition chunks to candidate Lean declarations:
 ```bash
 python3 tools/infra/blueprint_alexandria_bridge.py \
   --input-dir artifacts/alexandria_dag_brain \
-  --output artifacts/alexandria_dag_brain/blueprint_nodes.jsonl
+  --out artifacts/alexandria_dag_brain/blueprint_nodes.jsonl
 ```
 Then inspect the target Lean owner files directly (`AGENTS.md` mathematical acceptance rules), formalize theorem-by-theorem with no `sorry`/`admit`/axioms, and verify via:
 ```bash

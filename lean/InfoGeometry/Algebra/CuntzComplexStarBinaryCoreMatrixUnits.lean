@@ -91,7 +91,8 @@ theorem wordPair_level_sum (n : ℕ) :
           complexStarWordPair (List.ofFn w) (List.ofFn w) := by
         intro w
         change (∑ b : Bool, complexStarWordPair
-          (List.ofFn (extendBitWord n w b)) (List.ofFn (extendBitWord n w b))) = _
+          (List.ofFn (InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n w b))
+          (List.ofFn (InfoGeometry.OperatorAlgebra.CantorBernoulliFiniteMatrixUnitBridge.extendBitWord n w b))) = _
         simp_rw [list_ofFn_extendBitWord]
         exact wordPair_refinement _ _
       simpa only [h] using ih

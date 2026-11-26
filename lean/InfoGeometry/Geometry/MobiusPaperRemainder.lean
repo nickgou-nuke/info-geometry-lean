@@ -139,7 +139,7 @@ theorem vectorField_im (X : sl2C) (x y : ℝ) :
 
 /-- Real reduction, Pólya convention `f̃ = u - i v`: eq. (16). -/
 theorem vectorField_polya_real_reduction (p q r x y : ℝ) :
-    let X : sl2C := ⟨p, q, r⟩
+    let X : sl2C := sl2C.ofCoords p q r
     star (X.vectorField (Complex.mk x y)) =
       Complex.mk (-r * x ^ 2 + r * y ^ 2 + 2 * p * x + q)
                  (2 * r * x * y - 2 * p * y) := by
@@ -150,9 +150,9 @@ theorem vectorField_polya_real_reduction (p q r x y : ℝ) :
     · simp [pow_two]
       ring
   apply Complex.ext
-  · simp [sl2C.vectorField, hsq]
+  · simp [sl2C.vectorField, sl2C.ofCoords, sl2C.a, sl2C.b, sl2C.c, hsq]
     ring
-  · simp [sl2C.vectorField, hsq]
+  · simp [sl2C.vectorField, sl2C.ofCoords, sl2C.a, sl2C.b, sl2C.c, hsq]
     ring
 
 end InfoGeometry.Geometry.MobiusPaperRemainder

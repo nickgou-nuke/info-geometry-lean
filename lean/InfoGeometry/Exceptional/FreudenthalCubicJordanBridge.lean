@@ -46,7 +46,7 @@ theorem normTrilin_swap₁₃ (D : CubicJordanDatum J) (x y z : J) :
 theorem quartic_invariant_poly (D : CubicJordanDatum J) (Q : FreudenthalCharge J) :
     quarticInvariant D Q =
       (Q.alpha * Q.beta - D.traceBilin Q.x Q.y) ^ 2 -
-        4 * (Q.alpha * D.normCubic Q.x + Q.beta * D.normCubic Q.y -
+        4 * (Q.alpha * D.normCubic Q.x + Q.beta * D.normCubic Q.y +
               D.traceBilin (D.adjointQuad Q.x) (D.adjointQuad Q.y)) := by
   rfl
 

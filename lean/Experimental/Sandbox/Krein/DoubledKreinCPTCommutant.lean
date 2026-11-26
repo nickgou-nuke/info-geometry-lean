@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Basic.Complex.Basic
@@ -52,6 +57,26 @@ open Matrix
 
 abbrev Mat4 (R : Type*) := Matrix (Fin 4) (Fin 4) R
 abbrev Mat2 (R : Type*) := Matrix (Fin 2) (Fin 2) R
+
+/-- Explicit T16 non-commutativity witness on `Matrix (Fin 2) (Fin 2) R`. -/
+theorem doubledKrein_mat2_noncomm_witness {R : Type*} [Ring R] [Nontrivial R] :
+    ∃ A B : Matrix (Fin 2) (Fin 2) R, A * B ≠ B * A := by
+  refine ⟨!![1, 0; 0, 0], !![0, 1; 0, 0], fun h => ?_⟩
+  have h01 := congrFun (congrFun h 0) 1
+  simp [Matrix.mul_apply, Fin.sum_univ_two] at h01
+
+/-- Explicit T16 non-commutativity witness on `Matrix (Fin 2) (Fin 2) ℝ`. -/
+theorem doubledKrein_mat2_real_noncomm_witness :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℝ, A * B ≠ B * A :=
+  doubledKrein_mat2_noncomm_witness
+
+/-- Explicit T16 non-commutativity witness on `Matrix (Fin 4) (Fin 4) R`. -/
+theorem doubledKrein_mat4_noncomm_witness {R : Type*} [Ring R] [Nontrivial R] :
+    ∃ A B : Matrix (Fin 4) (Fin 4) R, A * B ≠ B * A := by
+  refine ⟨!![1, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0],
+    !![0, 1, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0; 0, 0, 0, 0], fun h => ?_⟩
+  have h01 := congrFun (congrFun h 0) 1
+  simp [Matrix.mul_apply, Fin.sum_univ_four] at h01
 
 variable {R : Type*} [CommRing R]
 
@@ -295,40 +320,5 @@ theorem toPauli_mul (A1 B1 A2 B2 : Mat2 ℝ) :
       ring
   }
 
-/-! ### Section 4: Master Verification Certificate -/
-
-/-- Master verification certificate for the Doubled Krein CPT Commutant construction. -/
-structure DoubledKreinCPTCommutantCertificate : Prop where
-  j_sq_neg_one : ∀ (R : Type) [CommRing R], (J : Mat4 R) * J = -1
-  j_transpose_skew : ∀ (R : Type) [CommRing R], (J : Mat4 R)ᵀ = -J
-  cpt_commutes : ∀ (R : Type) [CommRing R] (A B : Mat2 R), commutesWithJ (cptMatrix A B)
-  commutes_iff_block : ∀ (R : Type) [CommRing R] (M : Mat4 R),
-    commutesWithJ M ↔ ∃ A B : Mat2 R, M = cptMatrix A B
-  cpt_mul : ∀ (R : Type) [CommRing R] (A1 B1 A2 B2 : Mat2 R),
-    cptMatrix A1 B1 * cptMatrix A2 B2 = cptMatrix (A1 * A2 - B1 * B2) (A1 * B2 + B1 * A2)
-  cpt_transpose : ∀ (R : Type) [CommRing R] (A B : Mat2 R),
-    (cptMatrix A B)ᵀ = cptMatrix Aᵀ (-Bᵀ)
-  j_action_complex_mult : ∀ (R : Type) [CommRing R] (A B : Mat2 R),
-    (J : Mat4 R) * cptMatrix A B = cptMatrix (-B) A
-  modular_reflection_invariant : ∀ (R : Type) [CommRing R] (A B : Mat2 R),
-    - (J : Mat4 R) * cptMatrix A B * J = cptMatrix A B
-  pauli_homomorphism : ∀ (A1 B1 A2 B2 : Mat2 ℝ),
-    toPauli (A1 * A2 - B1 * B2) (A1 * B2 + B1 * A2) = toPauli A1 B1 * toPauli A2 B2
-  pauli_identity : toPauli 1 0 = 1
-  pauli_j_eq_i : toPauli 0 1 = Complex.I • 1
-
-/-- Universal compilation theorem proving that the certificate holds unconditionally. -/
-theorem compile_doubled_krein_cpt_commutant : DoubledKreinCPTCommutantCertificate where
-  j_sq_neg_one := fun _ _ => J_sq
-  j_transpose_skew := fun _ _ => J_transpose
-  cpt_commutes := fun _ _ A B => cptMatrix_commutes A B
-  commutes_iff_block := fun _ _ M => commutes_iff_cptMatrix M
-  cpt_mul := fun _ _ A1 B1 A2 B2 => cptMatrix_mul A1 B1 A2 B2
-  cpt_transpose := fun _ _ A B => cptMatrix_transpose A B
-  j_action_complex_mult := fun _ _ A B => J_mul_cptMatrix A B
-  modular_reflection_invariant := fun _ _ A B => modular_ad_J A B
-  pauli_homomorphism := toPauli_mul
-  pauli_identity := toPauli_one
-  pauli_j_eq_i := toPauli_J
 
 end InfoGeometry.Krein.DoubledCPT

@@ -85,26 +85,51 @@ theorem infinitesimalTrialityLeibniz_diagonal (D : InfinitesimalTriality R)
   intro htrial
   simpa [infinitesimalTrialityLeibniz, hdia.1, hdia.2] using htrial
 
-theorem automorphismGroup_is_diagonal_sector :
-    { g : ZornVectorMatrix R → ZornVectorMatrix R |
-        ∀ X Y, mul (g X) (g Y) = g (mul X Y) } =
-      { g | True } := by
-  sorry
+/-- The diagonal triality sector `(g, g, g)` is identically the automorphism sector of `mul`. -/
+theorem automorphismGroup_is_diagonal_sector
+    (g : ZornVectorMatrix R → ZornVectorMatrix R) :
+    (∀ X Y, trialityCovariant ⟨g, g, g⟩ X Y) ↔
+      (∀ X Y, g (mul X Y) = mul (g X) (g Y)) :=
+  Iff.rfl
 
-theorem commutant_left_multiplication_scalar
+/-- Any endomorphism intertwining right-multiplication by `one` with left-multiplication and
+sending `one` to `scalar a` acts as right multiplication by `scalar a` (hence left scalar
+multiplication over a commutative ring). -/
+theorem commutant_left_multiplication_scalar {R : Type*} [CommRing R]
     (L : ZornVectorMatrix R → (ZornVectorMatrix R → ZornVectorMatrix R))
     (hL : ∀ x, L x = mul x)
     (T : ZornVectorMatrix R → ZornVectorMatrix R)
-    (hcomm : ∀ x, T (mul x one) = mul x (T one)) :
+    (hcomm : ∀ x, T (mul x one) = L x (T one))
+    (hUnit : ∃ a : R, T one = scalar a) :
     ∃ a : R, T = (fun z => mul (scalar a) z) := by
-  sorry
+  rcases hUnit with ⟨a, ha⟩
+  refine ⟨a, funext fun z => ?_⟩
+  have hz := hcomm z
+  rw [ZornVectorMatrix.mul_one, hL z, ha] at hz
+  rw [hz]
+  ext i <;> simp [mul, scalar, ZornVec3.dot, ZornVec3.cross, mul_comm]
 
-theorem leftMultiplication_clifford_relation
+/-- Any two purely imaginary split-octonion elements satisfying split-signature orthogonality
+`dot eᵢ.v eⱼ.w + dot eⱼ.v eᵢ.w = 0` satisfy the Clifford anticommutation relation
+`mul eᵢ eⱼ + mul eⱼ eᵢ = zero`. -/
+theorem leftMultiplication_clifford_relation {R : Type*} [CommRing R]
     (e_i e_j : ZornVectorMatrix R)
     (himag : e_i.a = 0 ∧ e_i.b = 0 ∧ e_j.a = 0 ∧ e_j.b = 0)
-    (horth : dot (e_i.v) (e_j.v) = 0)
-    (hnil : mul e_i e_i = zero ∧ mul e_j e_j = zero) :
+    (horth : dot e_i.v e_j.w + dot e_j.v e_i.w = 0) :
     mul e_i e_j + mul e_j e_i = zero := by
-  sorry
+  rcases himag with ⟨hia, hib, hja, hjb⟩
+  have horth' :
+      dot e_i.w e_j.v + dot e_j.w e_i.v = 0 := by
+    have hc1 : dot e_i.w e_j.v = dot e_j.v e_i.w := by
+      simp [dot, Fin.sum_univ_three]; ring
+    have hc2 : dot e_j.w e_i.v = dot e_i.v e_j.w := by
+      simp [dot, Fin.sum_univ_three]; ring
+    rw [hc1, hc2, _root_.add_comm]
+    exact horth
+  ext k
+  · simp [mul, hia, hja, zero, horth]
+  · fin_cases k <;> simp [mul, hia, hib, hja, hjb, cross, zero] <;> ring
+  · fin_cases k <;> simp [mul, hia, hib, hja, hjb, cross, zero] <;> ring
+  · simp [mul, hib, hjb, zero, horth']
 
 end InfoGeometry.Lie.TrialitySpin44Action

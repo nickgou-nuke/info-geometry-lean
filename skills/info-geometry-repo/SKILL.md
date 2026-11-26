@@ -138,6 +138,13 @@ surfaces before concluding that a claim is absent:
 If any of these carriers are stale, missing, or fail conformance, say so
 explicitly in the audit instead of silently falling back to a shallow search.
 
+## Alexandria PDF-to-DAG-Brain Retrieval (`retrieval_context_only`)
+
+For prior-art literature, theorem/proof/definition excerpts, and cross-document citation chains from mathematical PDFs, use the isolated Alexandria lane (`skills/alexandria-pipeline/SKILL.md`, `tools/alexandria/README.md`, `docs/alexandria/README.md`):
+- Physical isolation: default `:8532` (`alexandria`) or dedicated isolated instances (e.g., observed `:8538` / `alexandria_dag_brain`); `:8530` and `:8540` are blocked by `guard_alexandria_target()`.
+- Dual retrieval: BM25 + multi-hop `alexandria_dag_edges` BFS via `tools/alexandria/retrieve_context.py`, Personalized PageRank subgraph ranking via `tools/alexandria/graph_context_rank.py` (requires `networkx`, e.g. `.venv/bin/python3` or `/home/goutev/miniforge3/envs/sage/bin/python`), and unified opt-in `tools/infra/ask_repo.py --scope alexandria`.
+- Every Alexandria record carries `sourceAuthority: "retrieval_context_only"`. Literature hits guide discovery only and never prove Lean theorems or mark concepts `implemented`.
+
 ## Trust Order
 
 If surfaces disagree, trust in this order:

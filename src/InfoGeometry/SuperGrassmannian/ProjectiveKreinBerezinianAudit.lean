@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperGrassmannian.ProjectiveKreinBerezinian
 
 open InfoGeometry.SuperGrassmannian.ProjectiveKreinBerezinian
@@ -13,4 +18,3 @@ open InfoGeometry.SuperGrassmannian.ProjectiveKreinBerezinian
 #print axioms balanced_homothety_berezinian_eq_one
 #print axioms unbalanced_homothety_berezinian_factor
 #print axioms unbalanced_homothety_berezinian
-#print axioms compile_projective_krein_berezinian

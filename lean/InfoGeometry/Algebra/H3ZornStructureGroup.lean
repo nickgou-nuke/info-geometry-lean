@@ -930,6 +930,142 @@ def h3zornStructureGroupMultiplier :
     StructureGroup ℝ (H3Zorn ℝ) →* ℝˣ :=
   h3zornStructureMultiplier.comp h3zornStructureGroupMulEquiv.toMonoidHom
 
+/-- Scalar changes of variables give a canonical homomorphism from nonzero real
+scalars into the full Albert structure group. -/
+def h3zornScalarStructureGroup : ℝˣ →* StructureGroup ℝ (H3Zorn ℝ) where
+  toFun u := by
+    let e : H3Zorn ℝ ≃ₗ[ℝ] H3Zorn ℝ := LinearEquiv.smulOfUnit u
+    have hsim : ∀ x : H3Zorn ℝ,
+        normCubic (e x) = ((u ^ 3 : ℝˣ) : ℝ) * normCubic x := by
+      intro x
+      change normCubic ((u : ℝ) • x) = _
+      rw [normCubic_smul]
+      norm_num
+    exact ⟨e, h3zorn_similitude_imp_mem_StructureGroup e (u ^ 3) hsim⟩
+  map_one' := by
+    apply Subtype.ext
+    apply LinearEquiv.ext
+    intro x
+    change (1 : ℝ) • x = x
+    simp
+  map_mul' u v := by
+    apply Subtype.ext
+    apply LinearEquiv.ext
+    intro x
+    change ((u * v : ℝˣ) : ℝ) • x = (u : ℝ) • ((v : ℝ) • x)
+    rw [Units.val_mul, ← mul_smul]
+
+@[simp] theorem h3zornStructureGroupMultiplier_scalar (u : ℝˣ) :
+    h3zornStructureGroupMultiplier (h3zornScalarStructureGroup u) = u ^ 3 := by
+  apply Units.ext
+  change normCubic ((h3zornScalarStructureGroup u).1 1) = _
+  change normCubic ((u : ℝ) • (1 : H3Zorn ℝ)) = _
+  rw [normCubic_smul, normCubic_one]
+  norm_num
+
+theorem h3zornScalarStructureGroup_injective :
+    Function.Injective h3zornScalarStructureGroup := by
+  intro u v huv
+  have hmul := congrArg h3zornStructureGroupMultiplier huv
+  rw [h3zornStructureGroupMultiplier_scalar,
+    h3zornStructureGroupMultiplier_scalar] at hmul
+  have hval : (u : ℝ) ^ 3 = (v : ℝ) ^ 3 := congrArg Units.val hmul
+  apply Units.ext
+  exact (Odd.pow_injective (n := 3) ⟨1, rfl⟩) hval
+
+/-- Scalar structure-group elements are central because the ambient action is
+linear over the same real scalars. -/
+theorem h3zornScalarStructureGroup_central (u : ℝˣ)
+    (g : StructureGroup ℝ (H3Zorn ℝ)) :
+    h3zornScalarStructureGroup u * g = g * h3zornScalarStructureGroup u := by
+  apply Subtype.ext
+  apply LinearEquiv.ext
+  intro x
+  change (u : ℝ) • g.1 x = g.1 ((u : ℝ) • x)
+  exact (map_smul (g.1) (u : ℝ) x).symm
+
+/-- The unique real cube root, packaged as a nonzero real when the input is a
+nonzero real. -/
+theorem exists_real_cube_root (x : ℝ) : ∃ r : ℝ, r ^ 3 = x := by
+  have hnonneg (y : ℝ) (hy : 0 ≤ y) : ∃ r : ℝ, r ^ 3 = y := by
+    refine ⟨y ^ (1 / 3 : ℝ), ?_⟩
+    calc
+      (y ^ (1 / 3 : ℝ)) ^ 3 = y ^ ((1 / 3 : ℝ) * 3) := by
+        rw [← Real.rpow_natCast, ← Real.rpow_mul hy]
+        norm_num
+      _ = y := by norm_num [Real.rpow_one]
+  by_cases hx : 0 ≤ x
+  · exact hnonneg x hx
+  · have hx' : x < 0 := lt_of_not_ge hx
+    obtain ⟨r, hr⟩ := hnonneg (-x) (le_of_lt (neg_pos.mpr hx'))
+    refine ⟨-r, ?_⟩
+    rw [neg_pow, hr]
+    ring
+
+noncomputable def h3zornRealUnitCubeRoot (u : ℝˣ) : ℝˣ := by
+  let r := Classical.choose (exists_real_cube_root (u : ℝ))
+  have hr : r ^ 3 = (u : ℝ) := Classical.choose_spec
+    (exists_real_cube_root (u : ℝ))
+  have hr0 : r ≠ 0 := by
+    intro hz
+    rw [hz] at hr
+    have hu0 : (u : ℝ) = 0 := by simpa using hr.symm
+    exact u.ne_zero hu0
+  exact Units.mk0 r hr0
+
+theorem h3zornRealUnitCubeRoot_cube (u : ℝˣ) :
+    (h3zornRealUnitCubeRoot u : ℝ) ^ 3 = (u : ℝ) := by
+  rw [h3zornRealUnitCubeRoot]
+  exact Classical.choose_spec (exists_real_cube_root (u : ℝ))
+
+/-- Real cube root is multiplicative on units, giving an algebraic splitting
+of the Albert multiplier map. -/
+noncomputable def h3zornRealUnitCubeRootHom : ℝˣ →* ℝˣ where
+  toFun := h3zornRealUnitCubeRoot
+  map_one' := by
+    apply Units.ext
+    apply (Odd.pow_injective (n := 3) ⟨1, rfl⟩)
+    change (h3zornRealUnitCubeRoot 1 : ℝ) ^ 3 = (1 : ℝ) ^ 3
+    rw [h3zornRealUnitCubeRoot_cube]
+    norm_num
+  map_mul' u v := by
+    have hval : (h3zornRealUnitCubeRoot (u * v) : ℝ) =
+        ((h3zornRealUnitCubeRoot u * h3zornRealUnitCubeRoot v : ℝˣ) : ℝ) :=
+      (Odd.pow_injective (n := 3) ⟨1, rfl⟩) <| by
+        calc
+          (h3zornRealUnitCubeRoot (u * v) : ℝ) ^ 3 = (u * v : ℝ) :=
+            h3zornRealUnitCubeRoot_cube (u * v)
+          _ = (u : ℝ) * (v : ℝ) := Units.val_mul u v
+          _ = (h3zornRealUnitCubeRoot u : ℝ) ^ 3 *
+              (h3zornRealUnitCubeRoot v : ℝ) ^ 3 := by
+                rw [h3zornRealUnitCubeRoot_cube u,
+                  h3zornRealUnitCubeRoot_cube v]
+          _ = ((h3zornRealUnitCubeRoot u * h3zornRealUnitCubeRoot v : ℝˣ) : ℝ) ^ 3 := by
+                rw [Units.val_mul, mul_pow]
+    apply Units.ext
+    exact hval
+
+/-- A group-homomorphic section of the full structure-group multiplier map. -/
+noncomputable def h3zornStructureGroupScalarSection :
+    ℝˣ →* StructureGroup ℝ (H3Zorn ℝ) :=
+  h3zornScalarStructureGroup.comp h3zornRealUnitCubeRootHom
+
+@[simp] theorem h3zornStructureGroupMultiplier_scalarSection (u : ℝˣ) :
+    h3zornStructureGroupMultiplier (h3zornStructureGroupScalarSection u) = u := by
+  change h3zornStructureGroupMultiplier
+    (h3zornScalarStructureGroup (h3zornRealUnitCubeRoot u)) = u
+  rw [h3zornStructureGroupMultiplier_scalar]
+  apply Units.ext
+  exact h3zornRealUnitCubeRoot_cube u
+
+/-- The split scalar image remains central in the full structure group. -/
+theorem h3zornStructureGroupScalarSection_central (u : ℝˣ)
+    (g : StructureGroup ℝ (H3Zorn ℝ)) :
+    h3zornStructureGroupScalarSection u * g =
+      g * h3zornStructureGroupScalarSection u :=
+  h3zornScalarStructureGroup_central
+    (h3zornRealUnitCubeRoot u) g
+
 @[simp] theorem h3zornStructureGroupMultiplier_val
     (g : StructureGroup ℝ (H3Zorn ℝ)) :
     (h3zornStructureGroupMultiplier g : ℝ) = normCubic (g.1 1) := rfl
@@ -941,6 +1077,40 @@ theorem h3zornStructureGroupMultiplier_ker_iff
   change (h3zornStructureGroupMulEquiv g) ∈ h3zornStructureMultiplier.ker ↔ _
   rw [h3zornStructureMultiplier_ker_carrier]
   rfl
+
+/-- The split-Albert structure-group multiplier is onto: scalar multiplication by a
+real cube root realizes each nonzero real multiplier on the cubic norm. -/
+theorem h3zornStructureGroupMultiplier_surjective :
+    Function.Surjective h3zornStructureGroupMultiplier := by
+  intro u
+  obtain ⟨r, hr⟩ := exists_real_cube_root (u : ℝ)
+  have hr0 : r ≠ 0 := by
+    intro hz
+    subst r
+    have hu0 : (u : ℝ) = 0 := by simpa using hr.symm
+    exact u.ne_zero hu0
+  let e : H3Zorn ℝ ≃ₗ[ℝ] H3Zorn ℝ :=
+    LinearEquiv.smulOfUnit (Units.mk0 r hr0)
+  have hsim : ∀ x : H3Zorn ℝ,
+      normCubic (e x) = (u : ℝ) * normCubic x := by
+    intro x
+    change normCubic (r • x) = (u : ℝ) * normCubic x
+    rw [normCubic_smul, hr]
+  let g : StructureGroup ℝ (H3Zorn ℝ) :=
+    ⟨e, h3zorn_similitude_imp_mem_StructureGroup e u hsim⟩
+  refine ⟨g, ?_⟩
+  apply Units.ext
+  change normCubic (e 1) = (u : ℝ)
+  change normCubic (r • (1 : H3Zorn ℝ)) = (u : ℝ)
+  rw [normCubic_smul, normCubic_one, hr]
+  norm_num
+
+/-- The quotient of the split-Albert structure group by the reduced subgroup is
+isomorphic to the multiplier group of nonzero real scalars. -/
+noncomputable def h3zornStructureGroupQuotientKernelEquivMultiplier :
+    StructureGroup ℝ (H3Zorn ℝ) ⧸ h3zornStructureGroupMultiplier.ker ≃* ℝˣ :=
+  QuotientGroup.quotientKerEquivOfSurjective h3zornStructureGroupMultiplier
+    h3zornStructureGroupMultiplier_surjective
 
 /-- Alias exposing the reduced structure group `Str₀(H₃(𝕆_s))` alongside `Str(H₃(𝕆_s))`. -/
 abbrev H3ZornReducedStructureGroup := h3zornReducedStructureGroup
@@ -966,6 +1136,66 @@ def h3zornReducedStructureGroupMulEquivStructureKer :
     apply Subtype.ext
     apply Subtype.ext
     rfl
+
+/-- The reduced structure group embeds into the full Mathlib structure group. -/
+def h3zornReducedStructureGroupToStructureGroup :
+    h3zornReducedStructureGroup →* StructureGroup ℝ (H3Zorn ℝ) :=
+  MonoidHom.comp (Subgroup.subtype h3zornStructureGroupMultiplier.ker)
+    h3zornReducedStructureGroupMulEquivStructureKer.toMonoidHom
+
+/-- Every split-Albert structure-group element factors as a reduced
+structure-group element followed by the central scalar section of its multiplier.
+This is the elementwise splitting of the multiplier extension; it does not assert
+that the reduced factor is central. -/
+theorem h3zornStructureGroup_factor_reduced_scalar
+    (g : StructureGroup ℝ (H3Zorn ℝ)) :
+    ∃ r : h3zornReducedStructureGroup,
+      g = h3zornReducedStructureGroupToStructureGroup r *
+        h3zornStructureGroupScalarSection (h3zornStructureGroupMultiplier g) := by
+  let s := h3zornStructureGroupScalarSection (h3zornStructureGroupMultiplier g)
+  let k := g * s⁻¹
+  have hk : k ∈ h3zornStructureGroupMultiplier.ker := by
+    change h3zornStructureGroupMultiplier k = 1
+    dsimp [k, s]
+    simp
+  have hred : ∀ x : H3Zorn ℝ, normCubic (k.1 x) = normCubic x :=
+    (h3zornStructureGroupMultiplier_ker_iff k).mp hk
+  let r : h3zornReducedStructureGroup := ⟨k.1, hred⟩
+  refine ⟨r, ?_⟩
+  change g = (h3zornReducedStructureGroupToStructureGroup r) * s
+  dsimp [r, h3zornReducedStructureGroupToStructureGroup,
+    h3zornReducedStructureGroupMulEquivStructureKer]
+  apply Subtype.ext
+  simp [k, s]
+
+/-- The image of the reduced group inside `Str(J)` is exactly the multiplier kernel. -/
+theorem h3zornReducedStructureGroupToStructureGroup_range :
+    h3zornReducedStructureGroupToStructureGroup.range =
+      h3zornStructureGroupMultiplier.ker := by
+  ext g
+  constructor
+  · rintro ⟨r, rfl⟩
+    change (h3zornReducedStructureGroupMulEquivStructureKer r).1 ∈ _
+    exact (h3zornReducedStructureGroupMulEquivStructureKer r).2
+  · intro hg
+    obtain ⟨r, hr⟩ := h3zornReducedStructureGroupMulEquivStructureKer.surjective ⟨g, hg⟩
+    refine ⟨r, ?_⟩
+    change (h3zornReducedStructureGroupMulEquivStructureKer r).1 = g
+    exact congrArg Subtype.val hr
+
+instance h3zornReducedStructureGroupToStructureGroup_range_normal :
+    h3zornReducedStructureGroupToStructureGroup.range.Normal := by
+  rw [h3zornReducedStructureGroupToStructureGroup_range]
+  infer_instance
+
+/-- Quotienting the full structure group by the embedded reduced subgroup gives
+the real multiplier group. -/
+noncomputable def h3zornStructureGroupQuotientReducedEquivMultiplier :
+    StructureGroup ℝ (H3Zorn ℝ) ⧸
+      h3zornReducedStructureGroupToStructureGroup.range ≃* ℝˣ :=
+  (QuotientGroup.quotientMulEquivOfEq
+    h3zornReducedStructureGroupToStructureGroup_range).trans
+    h3zornStructureGroupQuotientKernelEquivMultiplier
 
 /-- Converse inclusion `Aut(H₃(𝕆_s)) ⊆ Str₀(H₃(𝕆_s))`: every Jordan automorphism
 preserves the split Albert cubic norm. -/

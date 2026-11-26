@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Basic.Real.Basic
 import Mathlib.Data.Fintype.Basic
 import Mathlib.Data.Finset.Basic
@@ -403,6 +408,13 @@ def P_plus : Matrix (Fin 2) (Fin 2) ℚ :=
 def P_minus : Matrix (Fin 2) (Fin 2) ℚ :=
   !![(0 : ℚ), 0; 0, 1]
 
+/-- Explicit T16 non-commutativity witness on `Matrix (Fin 2) (Fin 2) ℚ`. -/
+theorem madelung_chiral_noncomm_witness :
+    ∃ A B : Matrix (Fin 2) (Fin 2) ℚ, A * B ≠ B * A := by
+  refine ⟨!![(1 : ℚ), 0; 0, 0], !![(0 : ℚ), 1; 0, 0], fun h => ?_⟩
+  have h01 := congrFun (congrFun h 0) 1
+  norm_num [Matrix.mul_apply, Fin.sum_univ_two] at h01
+
 theorem P_plus_sq : P_plus * P_plus = P_plus := by
   ext i j
   fin_cases i <;> fin_cases j <;>
@@ -515,41 +527,6 @@ theorem normalized_trace_doubling_invariant (traceA : ℝ) (n : ℕ) :
   have h2 : (2 : ℝ) ≠ 0 := by norm_num
   field_simp
 
-/-! ### Section 6: Master Verification Certificate -/
-
-/-- Certificate bundling the five proved stages of the Madelung-Chiral framework with genuine Prop fields. -/
-structure MadelungChiralEvolutionCertificate where
-  antisymmetry : ∀ (H : Fin 2 → Fin 2 → HestenesBivectorPlane) (hH : IsSelfAdjoint H)
-    (psi : Fin 2 → HestenesBivectorPlane) (x y : Fin 2),
-    edgeCurrent H psi y x = - edgeCurrent H psi x y
-  continuity : ∀ (H : Fin 2 → Fin 2 → HestenesBivectorPlane) (hH : IsSelfAdjoint H)
-    (psi : Fin 2 → HestenesBivectorPlane) (x : Fin 2),
-    densityRate H psi x + divCurrent H psi x = 0
-  norm_conservation : ∀ (H : Fin 2 → Fin 2 → HestenesBivectorPlane) (hH : IsSelfAdjoint H)
-    (psi : Fin 2 → HestenesBivectorPlane),
-    ∑ x : Fin 2, densityRate H psi x = 0
-  fisher_rao_isometry : ∀ (rho d_rho R d_R : ℝ)
-    (h_pos : 0 < rho) (h_rho : rho = R ^ 2) (h_dot : d_rho = 2 * R * d_R),
-    4 * d_R ^ 2 = d_rho ^ 2 / rho
-  chiral_diagonal_zero : ∀ (Delta1 Delta2 : ℚ),
-    P_plus * offDiagonalBlock Delta1 Delta2 * P_plus = 0 ∧
-    P_minus * offDiagonalBlock Delta1 Delta2 * P_minus = 0
-  rotor_gauge_invariance : ∀ (R : HestenesBivectorPlane) (hR : IsRotor R)
-    (psi : Fin 2 → HestenesBivectorPlane) (x : Fin 2),
-    siteDensity (rotorGaugeTransform R psi) x = siteDensity psi x
-  colimit_invariance : ∀ (traceA : ℝ) (n : ℕ),
-    normalizedTraceScalar (traceA * 2) (n + 1) = normalizedTraceScalar traceA n
-
-/-- Instantiation of the master certificate with zero open assumptions. -/
-theorem compile_madelung_chiral_evolution : MadelungChiralEvolutionCertificate :=
-  { antisymmetry := fun H hH psi x y => edgeCurrent_antisymm H hH psi x y
-    continuity := fun H hH psi x => discrete_continuity_equation H hH psi x
-    norm_conservation := fun H hH psi => total_norm_conservation H hH psi
-    fisher_rao_isometry := fun rho d_rho R d_R h_pos h_rho h_dot =>
-      fisher_rao_amplitude_isometry rho d_rho R d_R h_pos h_rho h_dot
-    chiral_diagonal_zero := fun Delta1 Delta2 => chiral_odd_diagonal_corners_zero Delta1 Delta2
-    rotor_gauge_invariance := fun R hR psi x => density_rotor_gauge_invariant R hR psi x
-    colimit_invariance := fun traceA n => normalized_trace_doubling_invariant traceA n }
 
 end
 

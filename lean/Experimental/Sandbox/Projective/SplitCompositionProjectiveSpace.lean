@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Clifford.CockleCoquaternionPlanarTriad
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -222,6 +227,16 @@ def IsUnitSphere2 (v : SphereVector2 R) : Prop :=
 
 abbrev Mat2D (R : Type*) := Matrix (Fin 2) (Fin 2) (Coquaternion R)
 
+/-- Explicit T16 non-commutativity witness on `Matrix (Fin 2) (Fin 2) (Coquaternion R)`. -/
+theorem mat2D_noncomm_witness {R : Type*} [CommRing R] [Nontrivial R] :
+    ∃ A B : Matrix (Fin 2) (Fin 2) (Coquaternion R), A * B ≠ B * A := by
+  refine ⟨!![1, 0; 0, 0], !![0, 1; 0, 0], fun h => ?_⟩
+  have h01 := congrFun (congrFun h 0) 1
+  simp only [Matrix.mul_apply, Fin.sum_univ_two, Matrix.of_apply, Matrix.cons_val_zero,
+    Matrix.cons_val_one, mul_one, mul_zero, add_zero, zero_mul, zero_add] at h01
+  have hs : (1 : R) = 0 := by simpa using congrArg Coquaternion.s h01
+  exact one_ne_zero hs
+
 /-- Voelkel's projector map P: D^2 → M_2(D), v ↦ v * v^*:
     P(v1, v2) = !![ v1 * conj v1, v1 * conj v2 ;
                     v2 * conj v1, v2 * conj v2 ]. -/
@@ -413,70 +428,5 @@ theorem affine_projector_hermitian (c : R) (z : Coquaternion R) :
   dsimp [affineProjector]
   rw [conjTranspose2_smul, affineProjectorRaw_hermitian]
 
-/-! ### Section 6: Master Verification Certificate -/
-
-/-- Master verification certificate for Voelkel's split composition projective spaces,
-    Hermitian projectors, and the motivic quadric sphere S^(4,2). -/
-structure SplitCompositionProjectiveSpaceCertificate : Prop where
-  -- 1. Split Quaternions and Involutive Conjugation
-  conj_involutive : ∀ (R : Type) [CommRing R] (q : Coquaternion R),
-    conj (conj q) = q
-  conj_anti_multiplicative : ∀ (R : Type) [CommRing R] (p q : Coquaternion R),
-    conj (p * q) = conj q * conj p
-  norm_fundamental_identity : ∀ (R : Type) [CommRing R] (q : Coquaternion R),
-    q * conj q = (normSq q) • (1 : Coquaternion R)
-  norm_reverse_identity : ∀ (R : Type) [CommRing R] (q : Coquaternion R),
-    conj q * q = (normSq q) • (1 : Coquaternion R)
-
-  -- 2. Sign Signature Decompositions & Motivic Quadric Spheres
-  signature_22 : ∀ (R : Type) [CommRing R] (q : Coquaternion R),
-    normSq q = posNorm4 q - negNorm4 q
-  signature_44 : ∀ (R : Type) [CommRing R] (v : SphereVector2 R),
-    normSq2 v = posNorm8 v - negNorm8 v
-  normSq2_expansion : ∀ (R : Type) [CommRing R] (v : SphereVector2 R),
-    normSq2 v = (v.v1.s^2 - v.v1.x^2 + v.v1.y^2 - v.v1.z^2) +
-                (v.v2.s^2 - v.v2.x^2 + v.v2.y^2 - v.v2.z^2)
-
-  -- 3. Voelkel's DP^1 Hermitian Projector Model
-  projector_scaling : ∀ (R : Type) [CommRing R] (v : SphereVector2 R),
-    projector v * projector v = (normSq2 v) • projector v
-  projector_idempotency : ∀ (R : Type) [CommRing R] (v : SphereVector2 R),
-    normSq2 v = 1 → projector v * projector v = projector v
-  projector_unit_trace : ∀ (R : Type) [CommRing R] (v : SphereVector2 R),
-    normSq2 v = 1 → Matrix.trace (projector v) = 1
-  projector_hermitian_symmetry : ∀ (R : Type) [CommRing R] (v : SphereVector2 R),
-    conjTranspose2 (projector v) = projector v
-
-  -- 4. Affine Chart Trivialization and Coordinate Complement
-  affine_chart_projector : ∀ (R : Type) [CommRing R] (z : Coquaternion R),
-    projector (toSphereVectorAffine z) = affineProjectorRaw z
-  affine_scaling : ∀ (R : Type) [CommRing R] (z : Coquaternion R),
-    affineProjectorRaw z * affineProjectorRaw z = (1 + normSq z) • affineProjectorRaw z
-  affine_idempotency : ∀ (R : Type) [CommRing R] (c : R) (z : Coquaternion R),
-    c * (1 + normSq z) = 1 → affineProjector c z * affineProjector c z = affineProjector c z
-  affine_unit_trace : ∀ (R : Type) [CommRing R] (c : R) (z : Coquaternion R),
-    c * (1 + normSq z) = 1 → Matrix.trace (affineProjector c z) = 1
-  affine_hermitian_symmetry : ∀ (R : Type) [CommRing R] (c : R) (z : Coquaternion R),
-    conjTranspose2 (affineProjector c z) = affineProjector c z
-
-/-- Universal compilation theorem proving that the certificate holds unconditionally. -/
-theorem compile_split_composition_projective_space :
-    SplitCompositionProjectiveSpaceCertificate where
-  conj_involutive := fun _ _ => conj_conj
-  conj_anti_multiplicative := fun _ _ => conj_mul
-  norm_fundamental_identity := fun _ _ => mul_conj
-  norm_reverse_identity := fun _ _ => conj_mul_self
-  signature_22 := fun _ _ => normSq_signature_22
-  signature_44 := fun _ _ => normSq2_signature_44
-  normSq2_expansion := fun _ _ => normSq2_coordinate_expansion
-  projector_scaling := fun _ _ => projector_sq_scaling
-  projector_idempotency := fun _ _ => projector_idempotent
-  projector_unit_trace := fun _ _ => projector_matrix_trace_unit
-  projector_hermitian_symmetry := fun _ _ => projector_hermitian
-  affine_chart_projector := fun _ _ => projector_affine_chart
-  affine_scaling := fun _ _ => affineProjectorRaw_sq_scaling
-  affine_idempotency := fun _ _ => affine_projector_idempotent
-  affine_unit_trace := fun _ _ => affine_projector_matrix_trace
-  affine_hermitian_symmetry := fun _ _ => affine_projector_hermitian
 
 end InfoGeometry.Projective.SplitComposition

@@ -182,7 +182,7 @@ $$(T^* g_{\mathrm{Fisher}})(v, w) = g_{\mathrm{Fisher}}(v, w)$$
 -/
 theorem chentsov_congruent_metric_invariance
     (emb : CongruentEmbedding A B)
-    (p : A → ℝ) (_hp : ∀ a, 0 < p a)
+    (p : A → ℝ)
     (v w : A → ℝ) :
     let _inst : DecidableEq B := Classical.decEq B
     let p_emb : B → ℝ := fun b =>
@@ -506,7 +506,6 @@ theorem finite_kms_trace_cyclic {Carrier : Type*} [Ring Carrier]
     (tr : Carrier → ℝ)
     (tr_cyclic : ∀ X Y, tr (X * Y) = tr (Y * X))
     (rho A_op B rhoInv : Carrier)
-    (_h_inv : rho * rhoInv = 1)
     (h_inv' : rhoInv * rho = 1) :
     tr (rho * A_op * (rho * B * rhoInv)) = tr (rho * B * A_op) := by
   calc
@@ -595,68 +594,6 @@ theorem mobius_swaps_vacuum_to_observer (z : CarrierDoubled E)
 
 end Pillar5_MobiusTwist
 
-/-! --------------------------------------------------------------------------
-    Master Certificate: Wheeler's Ouroboros (The Self-Excited Circuit)
-    -------------------------------------------------------------------------- -/
-
-/--
-The Master Certificate uniting the five inevitabilities of the closed self-excited universe.
--/
-structure WheelersOuroborosCertificate (V : Type*) [AddCommGroup V] [Module ℝ V]
-    (E : Type*) [AddCommGroup E] [Module ℝ E] (Carrier : Type*) [Ring Carrier] : Prop where
-  -- Pillar 1: Chentsov Markov Monotonicity
-  markov_tv_monotone : ∀ {A B : Type*} [Fintype A] [Fintype B]
-    (K : MarkovKernel A B) (P Q : ProbDist A),
-    distTV (pushforward K P) (pushforward K Q) ≤ distTV P Q
-  -- Pillar 2: Cl(1,1) Nilpotent Lightcone
-  cell_e1_sq : ∀ (cell : Cl11Cell ℝ Carrier),
-    cl11_e1 cell * cl11_e1 cell = (2 : Carrier)
-  cell_e2_sq : ∀ (cell : Cl11Cell ℝ Carrier),
-    cl11_e2 cell * cl11_e2 cell = -(2 : Carrier)
-  cell_anticomm : ∀ (cell : Cl11Cell ℝ Carrier),
-    cl11_e1 cell * cl11_e2 cell + cl11_e2 cell * cl11_e1 cell = 0
-  -- Pillar 3: Null Space Isotropies & Off-Diagonal Metric
-  tplus_isotropic : ∀ (sys : ParaKahlerSystem V) (u : V),
-    u ∈ sheetTPlus sys → sys.g u u = 0
-  tminus_isotropic : ∀ (sys : ParaKahlerSystem V) (α : V),
-    α ∈ sheetTMinus sys → sys.g α α = 0
-  metric_off_diagonal : ∀ (sys : ParaKahlerSystem V) (v : V),
-    sys.g v v = 2 * sys.g (projPlus sys v) (projMinus sys v)
-  -- Pillar 4: Tomita CPT Invariance & Almost-Complex Structure
-  cpt_almost_complex : ∀ (z : CarrierDoubled E),
-    opJ (opJ z) = (-z.1, -z.2)
-  krein_cpt_anti : ∀ (pairing : E →ₗ[ℝ] E →ₗ[ℝ] ℝ) (z₁ z₂ : CarrierDoubled E),
-    kreinMetric pairing (opJ z₁) (opJ z₂) = - kreinMetric pairing z₁ z₂
-  symplectic_cpt : ∀ (pairing : E →ₗ[ℝ] E →ₗ[ℝ] ℝ) (z₁ z₂ : CarrierDoubled E),
-    symplecticForm pairing (opJ z₁) (opJ z₂) = symplecticForm pairing z₁ z₂
-  -- Pillar 5: Möbius Twist & Sheet Swapping
-  mobius_inv : ∀ (z : CarrierDoubled E),
-    opM (opM z) = z
-  mobius_anticomm : ∀ (z : CarrierDoubled E),
-    opM (opK z) = - (opK (opM z))
-  mobius_swaps_sheets : ∀ (z : CarrierDoubled E),
-    z ∈ primalSheet → opM z ∈ vacuumSheet
-
-/--
-Master compilation constructor verifying that Wheeler's Ouroboros architecture
-is 100% mathematically closed in Lean 4 without custom axioms.
--/
-theorem compile_wheelers_ouroboros_synthesis (V : Type*) [AddCommGroup V] [Module ℝ V]
-    (E : Type*) [AddCommGroup E] [Module ℝ E] (Carrier : Type*) [Ring Carrier] :
-    WheelersOuroborosCertificate V E Carrier where
-  markov_tv_monotone := fun K P Q => markov_tv_contraction K P Q
-  cell_e1_sq := fun cell => cl11_e1_sq cell
-  cell_e2_sq := fun cell => cl11_e2_sq cell
-  cell_anticomm := fun cell => cl11_e1_anticomm_e2 cell
-  tplus_isotropic := fun sys u hu => tplus_strictly_isotropic sys u hu
-  tminus_isotropic := fun sys α hα => tminus_strictly_isotropic sys α hα
-  metric_off_diagonal := fun sys v => physical_metric_strictly_off_diagonal sys v
-  cpt_almost_complex := fun z => opJ_sq_neg_one z
-  krein_cpt_anti := fun pairing z₁ z₂ => krein_cpt_anti_isometry pairing z₁ z₂
-  symplectic_cpt := fun pairing z₁ z₂ => symplectic_cpt_isometry pairing z₁ z₂
-  mobius_inv := fun z => opM_involutive z
-  mobius_anticomm := fun z => mobius_anticommutes_polarization z
-  mobius_swaps_sheets := fun z hz => mobius_swaps_observer_to_vacuum z hz
 
 end
 

@@ -513,6 +513,146 @@ private theorem highest_mem_ideal_imp_top (I : LieIdeal ℝ h3zornCubicStabilize
   · rw [e6ChevalleyBasis_inl]; exact hh_mem i
   · rw [e6ChevalleyBasis_inr]; exact hall_roots r
 
+private theorem smul_unit_sign_mem_submodule
+    {S : Submodule ℝ h3zornCubicStabilizer} {s : ℤ}
+    (hs : s = 1 ∨ s = -1) {x : h3zornCubicStabilizer}
+    (hx : (s : ℝ) • x ∈ S) : x ∈ S := by
+  have hsne : (s : ℝ) ≠ 0 := by
+    rcases hs with rfl | rfl <;> norm_num
+  have hsm := S.smul_mem (s : ℝ)⁻¹ hx
+  rw [smul_smul, inv_mul_cancel₀ hsne, one_smul] at hsm
+  exact hsm
+
+private theorem pos_root_mem_subalgebra_imp_highest
+    (S : LieSubalgebra ℝ h3zornCubicStabilizer)
+    (hE : ∀ i : Fin 6, e6SimpleE i ∈ S) :
+    ∀ n : ℕ, ∀ r : Fin 72, 0 < e6RootHeight r →
+      (11 - e6RootHeight r).toNat ≤ n → e6RootVec r ∈ S →
+      e6RootVec e6HighestRootIdx ∈ S := by
+  intro n
+  induction n with
+  | zero =>
+      intro r hpos hle hrS
+      have hhi : e6RootHeight r = 11 := by
+        have hb := (e6RootHeight_bounds r).2.2
+        omega
+      by_cases heq : r = e6HighestRootIdx
+      · simpa [heq] using hrS
+      · have hst := posRaiseStep_spec r hpos heq
+        have hb := (e6RootHeight_bounds (posRaiseStep r).2.1).2.2
+        omega
+  | succ n ih =>
+      intro r hpos hle hrS
+      by_cases heq : r = e6HighestRootIdx
+      · simpa [heq] using hrS
+      · have hst := posRaiseStep_spec r hpos heq
+        have hbr : ⁅e6SimpleE (posRaiseStep r).1, e6RootVec r⁆ ∈ S :=
+          S.lie_mem (hE _) hrS
+        rw [hst.1] at hbr
+        have hnext : e6RootVec (posRaiseStep r).2.1 ∈ S :=
+          smul_unit_sign_mem_submodule hst.2.2 hbr
+        have hb := (e6RootHeight_bounds (posRaiseStep r).2.1).2.2
+        exact ih (posRaiseStep r).2.1 (by omega) (by omega) hnext
+
+private theorem highest_mem_subalgebra_imp_pos_roots
+    (S : LieSubalgebra ℝ h3zornCubicStabilizer)
+    (hF : ∀ i : Fin 6, e6SimpleF i ∈ S)
+    (hhi : e6RootVec e6HighestRootIdx ∈ S) :
+    ∀ n : ℕ, ∀ r : Fin 72, 0 < e6RootHeight r →
+      (11 - e6RootHeight r).toNat ≤ n → e6RootVec r ∈ S := by
+  intro n
+  induction n with
+  | zero =>
+      intro r hpos hle
+      have h11 : e6RootHeight r = 11 := by
+        have hb := (e6RootHeight_bounds r).2.2
+        omega
+      have hspec := posLowerStep_spec r hpos
+      cases hst : posLowerStep r with
+      | none => rw [hspec.1 hst]; exact hhi
+      | some st =>
+          exfalso
+          have hlt := (hspec.2 st hst).2.1
+          have hb := (e6RootHeight_bounds st.2.1).2.2
+          omega
+  | succ n ih =>
+      intro r hpos hle
+      have hspec := posLowerStep_spec r hpos
+      cases hst : posLowerStep r with
+      | none => rw [hspec.1 hst]; exact hhi
+      | some st =>
+          have hm := hspec.2 st hst
+          have hb := (e6RootHeight_bounds st.2.1).2.2
+          have hpar : e6RootVec st.2.1 ∈ S := ih st.2.1 hm.2.2.1 (by omega)
+          have hbr : ⁅e6SimpleF st.1, e6RootVec st.2.1⁆ ∈ S :=
+            S.lie_mem (hF _) hpar
+          rw [hm.1] at hbr
+          exact smul_unit_sign_mem_submodule hm.2.2.2 hbr
+
+/-- The six simple `E`, `F`, and `H` generators generate the full split Albert
+`E₆` cubic-stabilizer Lie algebra. This is the finite root-chain bridge needed
+to prove surjectivity of the Serre-presentation map. -/
+theorem h3zornE6_simple_generators_generate
+    (S : LieSubalgebra ℝ h3zornCubicStabilizer)
+    (hH : ∀ i : Fin 6, e6SimpleH i ∈ S)
+    (hE : ∀ i : Fin 6, e6SimpleE i ∈ S)
+    (hF : ∀ i : Fin 6, e6SimpleF i ∈ S) : S = ⊤ := by
+  have hhi : e6RootVec e6HighestRootIdx ∈ S :=
+    pos_root_mem_subalgebra_imp_highest S hE 12 (eSimpleIdx 0)
+      (by
+        have hh : e6RootHeight (eSimpleIdx 0) = 1 := by decide
+        omega) (by
+        have hh : e6RootHeight (eSimpleIdx 0) = 1 := by decide
+        omega) (hE 0)
+  have hpos : ∀ r : Fin 72, 0 < e6RootHeight r → e6RootVec r ∈ S := by
+    intro r hr
+    exact highest_mem_subalgebra_imp_pos_roots S hF hhi 12 r hr (by
+      have hb := (e6RootHeight_bounds r).2.1
+      omega)
+  have hfRoot : ∀ i : Fin 6, e6RootVec (fSimpleIdx i) ∈ S := by
+    intro i
+    have hsign : fSimpleSign i = 1 ∨ fSimpleSign i = -1 := by
+      fin_cases i <;> simp [fSimpleSign]
+    have hscaled : (fSimpleSign i : ℝ) • e6RootVec (fSimpleIdx i) ∈ S := by
+      simpa [e6SimpleF] using hF i
+    exact smul_unit_sign_mem_submodule hsign hscaled
+  have hneg : ∀ n : ℕ, ∀ r : Fin 72, e6RootHeight r < 0 →
+      (e6RootHeight r).natAbs ≤ n → e6RootVec r ∈ S := by
+    intro n
+    induction n with
+    | zero =>
+        intro r hneg hle
+        omega
+    | succ n ih =>
+        intro r hneg hle
+        have hspec := negLowerStep_spec r hneg
+        cases hst : negLowerStep r with
+        | none =>
+            obtain ⟨i, rfl⟩ := hspec.1 hst
+            exact hfRoot i
+        | some st =>
+            have hm := hspec.2 st hst
+            have hpar : e6RootVec st.2.1 ∈ S := ih st.2.1 hm.2.2.1 (by omega)
+            have hbr : ⁅e6SimpleF st.1, e6RootVec st.2.1⁆ ∈ S :=
+              S.lie_mem (hF _) hpar
+            rw [hm.1] at hbr
+            exact smul_unit_sign_mem_submodule hm.2.2.2 hbr
+  have hroots : ∀ r : Fin 72, e6RootVec r ∈ S := by
+    intro r
+    have hnz := (e6RootHeight_bounds r).1
+    rcases lt_or_gt_of_ne hnz with hheightNeg | hheightPos
+    · exact hneg 12 r hheightNeg (by
+        have hb := (e6RootHeight_bounds r).2.1
+        omega)
+    · exact hpos r hheightPos
+  rw [eq_top_iff]
+  intro x _
+  have hrep := e6ChevalleyBasis.sum_repr x
+  rw [← hrep, Fintype.sum_sum_type]
+  simp only [e6ChevalleyBasis_inl, e6ChevalleyBasis_inr]
+  refine S.add_mem (S.sum_mem fun i _ => S.smul_mem _ (hH i))
+    (S.sum_mem fun r _ => S.smul_mem _ (hroots r))
+
 
 
 private theorem cartan_ne_zero_mem_ideal_imp_highest (I : LieIdeal ℝ h3zornCubicStabilizer)

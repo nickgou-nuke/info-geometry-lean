@@ -119,7 +119,4 @@ theorem modular_kms_limit_persistence
   -- Close with the local KMS condition
   exact h_local_kms n x y
 
-/-- Compatibility accessor for the native stage ring homomorphism. -/
-abbrev auto (σ : ModularAutomorphism n) : Stage n →+* Stage n := σ
-
 end InfoGeometry.Canonical.ColimitStateModularProperties

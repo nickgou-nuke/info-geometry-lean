@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Tactic
@@ -6,17 +11,14 @@ import InfoGeometry.Physics.IsospinMirrorDynamics
 namespace InfoGeometry.Physics
 
 /-- The Sr-75 Nucleus (Z=38, N=37) -/
-def Sr75 : Nucleus := { Z := 38, N := 37 }
+def Sr75 : Nucleus := (38, 37)
 
 /-- The Rb-75 Nucleus (Z=37, N=38) -/
-def Rb75 : Nucleus := { Z := 37, N := 38 }
+def Rb75 : Nucleus := (37, 38)
 
 /-- The A=75 Mirror Pair (Sr-75 and Rb-75). -/
-def A75Pair : MirrorPair where
-  nuc1 := Sr75
-  nuc2 := Rb75
-  mirror_cond_Z := rfl
-  mirror_cond_N := rfl
+def A75Pair : MirrorPair :=
+  ⟨(Sr75, Rb75), rfl, rfl⟩
 
 /-- Gamow-Teller decay properties for the A=75 mirror system (Huikari 2003). -/
 structure GamowTellerDecay where

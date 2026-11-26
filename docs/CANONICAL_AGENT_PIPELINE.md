@@ -172,13 +172,20 @@ the [aiClaw memory adapter](../tools/infra/aiclaw_auto_arango.py).
 | Declaration/InfoTree DAG | `infogeometry`, port 8530 | `ARANGO_*` |
 | Hive task queue | `hive_live`, port 8540 | `HIVE_ARANGO_*` and the documented aliases |
 | aiClaw proof/text memory | `aiclaw_auto_rag`, port 8540 | `AICLAW_ARANGO_*` |
-| Alexandria literature | `alexandria`, port 8532 in shared configuration | `ALEXANDRIA_ARANGO_*` |
+| Alexandria literature / PDF-to-DAG-brain | `alexandria`, port 8532 in shared configuration (`configs/alexandria/docker-compose.pdf.yml`); isolated dedicated brains via `ALEXANDRIA_ARANGO_*` (observed workstation instance `alexandria_dag_brain` on `:8538`) | `ALEXANDRIA_ARANGO_*`, `ALEXANDRIA_ARANGO_PORT` |
 
 These are defaults, not observed running services. Explicit environment values
-can override them. Do not print credentials, assume graph freshness, or claim
-complete transcript ingestion without an ingestion record. The
-[search protocol](REPO_DEEP_SEARCH_PROTOCOL.md#arangodb-schema-families)
-describes collection families; graph evidence remains navigation evidence.
+or CLI `--endpoint`/`--database` flags can override them. `guard_alexandria_target`
+rejects ports `8530` and `8540` as well as non-Alexandria databases (`infogeometry`,
+`darwin_commits`, `hive_live`, `aiclaw_auto_rag`). Do not print credentials,
+assume graph freshness, or claim complete transcript ingestion without an
+ingestion record. Alexandria records carry `sourceAuthority: "retrieval_context_only"`
+and never establish Lean proof truth. See the
+[Alexandria pipeline guide](../tools/alexandria/README.md),
+[Alexandria architecture docs](alexandria/README.md),
+[Alexandria pipeline skill](../skills/alexandria-pipeline/SKILL.md), and the
+[search protocol](REPO_DEEP_SEARCH_PROTOCOL.md#arangodb-schema-families) for
+collection families; graph evidence remains navigation evidence.
 
 ## Pi integration status
 

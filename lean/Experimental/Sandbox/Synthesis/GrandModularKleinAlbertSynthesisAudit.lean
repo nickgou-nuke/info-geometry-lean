@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.Synthesis.GrandModularKleinAlbertSynthesis
 
 open Experimental.Sandbox.Synthesis.GrandModularKleinAlbertSynthesis
@@ -27,4 +32,3 @@ Target: `lean/Experimental/Sandbox/Synthesis/GrandModularKleinAlbertSynthesisAud
 #print axioms rank2_candidate_adjoint_adjoint
 #print axioms chiralEntropy_identity
 #print axioms chiralEntropy_zero
-#print axioms compile_grand_modular_klein_albert_synthesis

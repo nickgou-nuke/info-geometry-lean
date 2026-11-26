@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.Grothendieck
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.Grothendieck
@@ -18,7 +23,7 @@ open InfoGeometry.Analysis.RotorCocycleBregmanBridge
 /-- The arithmetic parity squares to `1`. -/
 theorem liouville_sq (n : ℕ+) :
     BostConnesSystem.liouville n * BostConnesSystem.liouville n = 1 :=
-  BostConnesSystem.liouville_sq n n.property
+  BostConnesSystem.liouville_sq n
 
 /-- The modular remainder packet is exact at time `0`. -/
 @[simp] theorem exponentialRemainder_zero {n : ℕ}

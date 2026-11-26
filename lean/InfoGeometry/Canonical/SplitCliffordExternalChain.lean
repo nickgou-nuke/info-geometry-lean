@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CelikKocakSplitCliffordBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordDirectLimit
@@ -446,19 +451,19 @@ theorem splitClifford_zeroModeSeed_boundary_and_externalHeisenbergSugawara_chain
 /-- The finite Cantor/Krein sector lattice is complete. -/
 noncomputable instance splitClifford_finiteCantorKreinSectorSet_completeLattice
     (n : Nat) :
-    CompleteLattice (InfoGeometry.Topology.FiniteCantorKreinSectorSet n) := by
+    CompleteLattice (Set ((Fin n → InfoGeometry.OperatorAlgebra.ErlangenNet.BinarySector) × Bool)) := by
   infer_instance
 
 /-- The Cuntz projection sector lattice is complete. -/
 noncomputable instance splitClifford_CuntzProjectionSectorSet_completeLattice
     {Op : Type} [Ring Op] [StarRing Op] :
-    CompleteLattice (InfoGeometry.Topology.CuntzProjectionSectorSet (Op := Op)) := by
+    CompleteLattice (Set (InfoGeometry.Topology.CuntzO2Carrier.CuntzIdempotent (Op := Op))) := by
   infer_instance
 
 /-- The fixed-point sector lattice is complete. -/
 noncomputable instance splitClifford_selfSimilarSectors_completeLattice
     {L : Type} [CompleteLattice L] (R : L →o L) :
-    CompleteLattice (InfoGeometry.Topology.SelfSimilarSectors R) :=
+    CompleteLattice (Function.fixedPoints R) :=
   InfoGeometry.Topology.selfSimilarSectorsCompleteLattice R
 
 /-- The refinement/coarse-graining adjunction is the canonical Galois connection. -/

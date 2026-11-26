@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.Cl11CuntzStageComplexificationTopologicalBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CliffordCARAlgebraicTopologicalComparison
@@ -245,20 +250,23 @@ theorem coherentComplexificationColimit_star_readback
 theorem coherentComplexificationColimit_trace_factorization :
     Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap =
       coherentComplexificationColimitMap ≫
-        CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap concreteData ≫
+        CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap
+            concreteData concrete_trace_compatible ≫
           complexTraceToRealTopCatHom := by
   symm
   apply FilteredColimit.Native.Topological.topologicalDirectDescend_unique
     Cl11MarkovJonesTopologicalColimit.topologicalDiagram
     Cl11MarkovJonesTopologicalColimit.traceTopologicalCocone
     (coherentComplexificationColimitMap ≫
-      CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap concreteData ≫
+      CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap
+          concreteData concrete_trace_compatible ≫
         complexTraceToRealTopCatHom)
   intro n
   ext (A : ClStage n)
   rw [TopCat.comp_app, TopCat.comp_app]
   change Complex.re
-      (CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap concreteData
+      (CuntzMatrixTraceTopologicalColimit.traceTopologicalColimitMap
+        concreteData concrete_trace_compatible
         (coherentComplexificationColimitMap
           (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n A))) =
     normalizedTrace n A
@@ -271,12 +279,13 @@ theorem coherentComplexificationColimit_realTrace_factorization :
     Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap =
       coherentComplexificationColimitMap ≫
         CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
-          concreteData := by
+          concreteData concrete_trace_compatible := by
   rw [CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap_factorization]
   exact coherentComplexificationColimit_trace_factorization
 
 theorem coherentComplexificationColimit_realTrace_stage (n : ℕ) (A : ClStage n) :
-    CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap concreteData
+    CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
+      concreteData concrete_trace_compatible
       (coherentComplexificationColimitMap
         (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n A)) =
       normalizedTrace n A := by
@@ -292,7 +301,8 @@ theorem coherentComplexificationColimit_realTrace_unique
       f (Cl11MarkovJonesTopologicalColimit.topologicalInclusion n A) =
         normalizedTrace n A) :
     f = coherentComplexificationColimitMap ≫
-      CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap concreteData := by
+      CuntzMatrixTraceTopologicalGNSBridge.realTraceTopologicalColimitMap
+        concreteData concrete_trace_compatible := by
   rw [Cl11MarkovJonesTopologicalColimit.traceTopologicalColimitMap_unique f h,
     coherentComplexificationColimit_realTrace_factorization]
 

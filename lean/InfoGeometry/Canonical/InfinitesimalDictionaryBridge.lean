@@ -361,7 +361,7 @@ structure InfinitesimalDictionaryModel
   gauge : SouriauAmariGauge Alg Θ V X
   divergence : State → State → ℝ
   toOperator : State → Op
-  operatorPacket : NoncommutativeItakuraSaitoModel Op
+  operatorPacket : NoncommutativeItakuraSaitoPacket Op
   pathConstraint : Alg
   pathReadout : Alg → ℝ
   pathConstraintScalar : ℝ

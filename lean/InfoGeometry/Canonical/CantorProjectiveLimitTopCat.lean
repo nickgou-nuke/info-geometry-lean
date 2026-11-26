@@ -92,6 +92,7 @@ theorem topCat_hom_ext_of_projective_projections
   apply InfoGeometry.Canonical.CantorProjectiveLimit.ext_of_all_projections_eq
   intro n
   have hn := congrArg (fun k => k x) (h n)
-  simpa [TopCat.comp_app] using hn
+  rw [TopCat.comp_app, TopCat.comp_app] at hn
+  exact hn
 
 end InfoGeometry.Canonical.CantorProjectiveLimitTopCat

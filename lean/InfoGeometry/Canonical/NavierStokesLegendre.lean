@@ -178,7 +178,7 @@ theorem fenchel_gap_zero_imp_madelung_divergence_free
     (L : LegendreModel) (θ η : ℝ) (β : ℝ) (K : EndH)
     (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
     (hSmooth : IsThermodynamicallySmoothed β K)
-    (hd : HasDerivAt L.L (L.grad θ) θ)
+    (hd : HasDerivAt L.L.ψ (L.grad θ) θ)
     (hContact : η = L.grad θ ↔
       LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0)
     (hGap : L.fenchelGap θ η = 0) :
@@ -186,13 +186,13 @@ theorem fenchel_gap_zero_imp_madelung_divergence_free
   have h_contact : η = L.grad θ :=
     (fenchelGap_eq_zero_iff_contact L θ η hd).mp hGap
   rw [madelung_divergence_free_iff β K vac ω hSmooth]
-  exact Or.inr ((contact_iff_collapsed_trace_zero L θ η K hContact).mp h_contact)
+  exact Or.inr (hContact.mp h_contact)
 
 theorem fenchel_gap_zero_iff_madelung_divergence_free_of_trace_zero
     (L : LegendreModel) (θ η : ℝ) (β : ℝ) (K : EndH)
     (vac : ThermalVacuum (E := E) K) (ω : EndH →L[ℝ] ℝ)
     (hSmooth : IsThermodynamicallySmoothed β K)
-    (hd : HasDerivAt L.L (L.grad θ) θ)
+    (hd : HasDerivAt L.L.ψ (L.grad θ) θ)
     (hContact : η = L.grad θ ↔
       LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0)
     (hTrace : LinearMap.trace ℝ E (collapseToBaseVelocity K).toLinearMap = 0) :
@@ -204,7 +204,7 @@ theorem fenchel_gap_zero_iff_madelung_divergence_free_of_trace_zero
   · intro h_contact
     exact Or.inr hTrace
   · intro _
-    exact (contact_iff_collapsed_trace_zero L θ η K hContact).mpr hTrace
+    exact hContact.mpr hTrace
 
 end InfoGeometry.Capstone.NavierStokesLegendre
 

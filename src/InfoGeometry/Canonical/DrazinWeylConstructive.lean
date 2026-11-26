@@ -411,8 +411,31 @@ theorem exists_constructiveRieszWeylData_of_finiteDimensional_operator_symmetry
       (spectral_epsilon (E := E)).comp T) :
     ∃ D : ConstructiveRieszWeylData (E := E) T,
       IsWeylCompatible (E := E) (constructiveDrazinCandidate D.riesz) := by
-  rcases InfoGeometry.Canonical.DrazinInfiniteCore.exists_constructiveRieszDecompositionAtZero_endCLM
-      (E := H₂) T with ⟨R, _⟩
+  rcases InfoGeometry.Canonical.DrazinInfiniteCore.exists_rieszDrazinData_endCLM
+      (E := H₂) T with ⟨hR, hDraz⟩
+  let R : ConstructiveRieszDecompositionAtZero (𝕂 := ℝ) T :=
+    { k := hR.k
+      P := hR.P
+      P_idempotent := InfoGeometry.Canonical.DrazinInfiniteCore.projector_idempotent_of_riesz hR
+      PT_comm := by
+        rw [hR.hP]
+        exact (InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection_comm_self hDraz).symm
+      S := hR.D
+      left_inverse_on_regular := by
+        rw [hR.hP, InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection]
+        exact hDraz.1.symm
+      right_inverse_on_regular := by
+        rw [hR.hP]
+        rfl
+      S_supported_on_regular_left := by
+        rw [hR.hP, InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection]
+        exact hDraz.2.1
+      S_supported_on_regular_right := by
+        rw [hR.hP, InfoGeometry.Canonical.Drazin.IsDrazinInverse.projection, hDraz.1]
+        exact hDraz.2.1
+      nilpotent_on_complement := by
+        rw [hR.hP]
+        exact InfoGeometry.Canonical.Drazin.IsDrazinInverse.power_mul_complementaryProjection_eq_zero hDraz }
   let localData := constructiveRieszLocalWeylSymmetryData_of_operator_symmetry
     (E := E) R hT
   let D := constructiveRieszWeylData_of_localWeylSymmetry (E := E) localData

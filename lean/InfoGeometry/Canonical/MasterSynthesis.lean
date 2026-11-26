@@ -215,7 +215,7 @@ private theorem bridge_zpe_gravity
     0 < S.variance_limit ∧
     EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
       (anomalyStressEnergyAt Kgeo x CI.chiralScale) :=
-  ⟨zero_point_energy_topological_obstruction S hRankPos,
+  ⟨zero_point_energy_positive S hRankPos,
    CI.einsteinEquation_of_projectorObstruction_source c R Kgeo x Λ κ hEin⟩
 
 /--
@@ -235,13 +235,21 @@ private theorem bridge_zpe_gravity_of_certifiedInverseKernel
     0 < S.variance_limit ∧
     EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CIK.chiralScale)) Λ κ
       (anomalyStressEnergyAt Kgeo x CIK.chiralScale) := by
-  refine ⟨zero_point_energy_topological_obstruction S hRankPos, ?_⟩
+  refine ⟨zero_point_energy_positive S hRankPos, ?_⟩
   let CI : ConformalInference E := { toInverseKernel := CIK.toInverseKernel' }
   have hCI :
       EinsteinEquationAt R Kgeo x (2 * (c + Λ - κ * CI.chiralScale)) Λ κ
         (anomalyStressEnergyAt Kgeo x CI.chiralScale) :=
     CI.einsteinEquation_of_projectorObstruction_source c R Kgeo x Λ κ hEin
-  simpa [CI] using hCI
+  have hScale : CI.chiralScale = CIK.chiralScale := by
+    simp [CI, ConformalInference.chiralScale, ConformalInference.obstructionScale,
+      ConformalInference.projectorObstruction, ConformalInference.chiralAnomalyOperator,
+      ConformalInference.chiralAnomaly, ConformalInference.P_D, ConformalInference.P_MP,
+      CertifiedInverseKernel.chiralScale, InverseKernel.chiralScale,
+      InverseKernel.chiralAnomaly, InverseKernel.spectralProjector,
+      InverseKernel.metricProjector]
+  rw [hScale] at hCI
+  exact hCI
 
 private theorem bridge_fluid_helicity
     (A B_mp B_dr : VelocityField E)
@@ -254,7 +262,7 @@ private theorem bridge_fluid_helicity
     (∃ state : FluidState E,
       state.u = EinsteinAnomaly A B_mp B_dr
         ∧ state.ρ = 1
-        ∧ momentumResidual (E := E) state.u = 0) ∧
+        ∧ vorticityClosureResidual (E := E) state.u = 0) ∧
     (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
       helicityInvariant A ω' = twinWaveHelicity A Ω') :=
   by
@@ -265,10 +273,10 @@ private theorem bridge_fluid_helicity
         state.u = EinsteinAnomaly A B_mp B_dr ∧ state.ρ = 1 := by
       simp [state, anomalyFluidStateWithDensity]
     have hResidual :
-        momentumResidual (E := E) state.u = 0 := by
+        vorticityClosureResidual (E := E) state.u = 0 := by
       have hResidualEin :
-          momentumResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 :=
-        anomalyMomentumResidual_eq_zero_of_skew (E := E) A B_mp B_dr hAnomalySkew
+          vorticityClosureResidual (E := E) (EinsteinAnomaly A B_mp B_dr) = 0 :=
+        anomalyVorticityClosureResidual_eq_zero_of_skew (E := E) A B_mp B_dr hAnomalySkew
       simpa [hState.1] using hResidualEin
     exact ⟨⟨state, hState.1, hState.2, hResidual⟩, ⟨ω, Ω, hHelicity⟩⟩
 
@@ -284,7 +292,7 @@ private theorem anomalySkew_of_regularization
     (h_dr_star : star (A * B_dr) = A * B_dr) :
     ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
       = -EinsteinAnomaly A B_mp B_dr := by
-  simpa using
+  simpa only [ContinuousLinearMap.star_eq_adjoint] using
     (einsteinAnomaly_skew_adjoint (a := A) (b_mp := B_mp) (b_dr := B_dr)
       (k := k) h_mp h_dr h_dr_star)
 
@@ -314,7 +322,7 @@ private theorem bridge_fluid_helicity_of_regularizationWitness
     (∃ state : FluidState E,
       state.u = EinsteinAnomaly A B_mp B_dr
         ∧ state.ρ = 1
-        ∧ momentumResidual (E := E) state.u = 0) ∧
+        ∧ vorticityClosureResidual (E := E) state.u = 0) ∧
     (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
       helicityInvariant A ω' = twinWaveHelicity A Ω') := by
   have hAnomalySkew :
@@ -337,7 +345,7 @@ private theorem bridge_fluid_helicity_of_regularization
     (∃ state : FluidState E,
       state.u = EinsteinAnomaly A B_mp B_dr
         ∧ state.ρ = 1
-        ∧ momentumResidual (E := E) state.u = 0) ∧
+        ∧ vorticityClosureResidual (E := E) state.u = 0) ∧
     (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
       helicityInvariant A ω' = twinWaveHelicity A Ω') := by
   exact bridge_fluid_helicity_of_regularizationWitness
@@ -362,7 +370,7 @@ private theorem bridge_fluid_helicity_of_regularization_of_finiteDimensional
         ((∃ state : FluidState E,
             state.u = EinsteinAnomaly A B_mp B_dr
               ∧ state.ρ = 1
-              ∧ momentumResidual (E := E) state.u = 0) ∧
+              ∧ vorticityClosureResidual (E := E) state.u = 0) ∧
           (∃ (ω' : VelocityField E →L[ℝ] ℝ) (Ω' : AlgebraEnd E →L[ℝ] ℝ),
             helicityInvariant A ω' = twinWaveHelicity A Ω'))) := by
   refine ⟨
@@ -374,7 +382,12 @@ private theorem bridge_fluid_helicity_of_regularization_of_finiteDimensional
   intro h_dr_star
   exact bridge_fluid_helicity
     A B_mp (DrazinWitnessElimination.drazinInverse (E := E) A) ω Ω
-    (anomalySkew_of_regularization_auto (E := E) A B_mp h_mp h_dr_star)
+    (anomalySkew_of_regularization (A := A) (B_mp := B_mp)
+      (B_dr := DrazinWitnessElimination.drazinInverse (E := E) A)
+      h_mp
+      (DrazinWitnessElimination.drazinIndex (E := E) A)
+      (DrazinWitnessElimination.isDrazinInverse_drazinInverse (E := E) A)
+      h_dr_star)
     hHelicity
 
 omit [FiniteDimensional ℝ E] in
@@ -441,7 +454,7 @@ private theorem bits_to_gravity_to_fluid_capstone
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
     -- 4. Thermal Time identity holds (Connes-Rovelli)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
     -- 5. Lichnerowicz-balanced split Bott-Dirac square vanishes (Stability)
@@ -460,8 +473,8 @@ private theorem bits_to_gravity_to_fluid_capstone
     -- 11. Hestenes GA Weyl Scaling: exp(θ I) generates the volume scale.
       ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
     -- 12. Kitaev Tiling Identity: Total volume is the product of microscopic Pfaffians.
-      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+      ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
   have hBal : LichnerowiczBalancedCl11 (A := E) IST :=
     lichnerowiczBalancedCl11_of_transportCompatibility
       (E := E) (V := V) (IST := IST) hCompat
@@ -533,7 +546,7 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -545,8 +558,8 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
       ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod)) := by
+      ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod)) := by
   have hScaleEin :
       CI.chiralScale ≠ 0
         ∧
@@ -567,7 +580,7 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
         ∧ (∃ state : FluidState E,
             state.u = EinsteinAnomaly A B_mp B_dr
               ∧ state.ρ = 1
-              ∧ momentumResidual (E := E) state.u = 0)
+              ∧ vorticityClosureResidual (E := E) state.u = 0)
         ∧ Mod.ConnesRovelliThermalTimeIdentity
         ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
             (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -579,8 +592,8 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
         ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
         ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-            Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) :=
+        ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+            Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) :=
     bits_to_gravity_to_fluid_capstone
       (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
       (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
@@ -642,7 +655,7 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -654,8 +667,8 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_of_quasilat
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
       ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod)) := by
+      ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod)) := by
   have hCompatDefect :
       SuperchargeProjectorCompatibility
         (A := A₀) (B := B₀) (E := E)
@@ -752,7 +765,7 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_and_diii_tr
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -764,8 +777,8 @@ private theorem bits_to_gravity_to_fluid_capstone_with_nonzero_scale_and_diii_tr
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
       ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod)))
+      ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod)))
       ∧
     InfoGeometry.Canonical.BogoliubovTransport.transportCommutator
       V.connectionGenerator (spectral_epsilon (E := E)) ≠ 0 := by
@@ -831,7 +844,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -843,8 +856,8 @@ private theorem bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
       ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+      ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
   let CI : ConformalInference E := { toInverseKernel := CIK.toInverseKernel' }
   have hCap :
       0 < S.variance_limit
@@ -853,7 +866,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
         ∧ (∃ state : FluidState E,
             state.u = EinsteinAnomaly A B_mp B_dr
               ∧ state.ρ = 1
-              ∧ momentumResidual (E := E) state.u = 0)
+              ∧ vorticityClosureResidual (E := E) state.u = 0)
         ∧ Mod.ConnesRovelliThermalTimeIdentity
         ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
             (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -865,8 +878,8 @@ private theorem bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
         ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
         ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-            Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) :=
+        ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+            Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) :=
     bits_to_gravity_to_fluid_capstone
       (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
       (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
@@ -875,7 +888,15 @@ private theorem bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
       (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
       (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
       (n := n) (Tflow := Tflow) (γ := γ) (N := N)
-  simpa [CI] using hCap
+  have hScale : CI.chiralScale = CIK.chiralScale := by
+    simp [CI, ConformalInference.chiralScale, ConformalInference.obstructionScale,
+      ConformalInference.projectorObstruction, ConformalInference.chiralAnomalyOperator,
+      ConformalInference.chiralAnomaly, ConformalInference.P_D, ConformalInference.P_MP,
+      CertifiedInverseKernel.chiralScale, InverseKernel.chiralScale,
+      InverseKernel.chiralAnomaly, InverseKernel.spectralProjector,
+      InverseKernel.metricProjector]
+  rw [hScale] at hCap
+  exact hCap
 
 /--
 Regularization-sourced capstone wrapper:
@@ -911,7 +932,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularizationWitness
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -923,8 +944,8 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularizationWitness
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
       ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+      ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
   have hAnomalySkew :
       ContinuousLinearMap.adjoint (EinsteinAnomaly A B_mp B_dr)
         = -EinsteinAnomaly A B_mp B_dr :=
@@ -975,7 +996,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -987,8 +1008,8 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
       ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-      ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+      ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
   exact bits_to_gravity_to_fluid_capstone_of_regularizationWitness
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
     (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
@@ -1017,8 +1038,8 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization_canonical_dr
     (A B_mp : VelocityField E)
     (h_mp : IsMoorePenroseInverse A B_mp)
     (h_dr_star_canonical :
-      star (A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
-        = A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+      star (A * DrazinWitnessElimination.drazinInverse (E := E) A)
+        = A * DrazinWitnessElimination.drazinInverse (E := E) A)
     (hHelicity : HelicityPairingWitness A)
     (Mod : ModularRadonNikodymData E)
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
@@ -1035,7 +1056,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization_canonical_dr
         ∧ (∃ state : FluidState E,
             state.u = EinsteinAnomaly A B_mp B_dr
               ∧ state.ρ = 1
-              ∧ momentumResidual (E := E) state.u = 0)
+              ∧ vorticityClosureResidual (E := E) state.u = 0)
         ∧ Mod.ConnesRovelliThermalTimeIdentity
         ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
             (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -1047,19 +1068,19 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization_canonical_dr
         ∧ (∀ k' : Nat, 0 ≤ trajectoryRNBarrier n Tflow k')
         ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-            Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
-  refine ⟨DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A, ?_⟩
+        ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+            Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
+  refine ⟨DrazinWitnessElimination.drazinInverse (E := E) A, ?_⟩
   exact bits_to_gravity_to_fluid_capstone_of_regularizationWitness
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
     (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
     (hEin := hEin)
     (A := A) (B_mp := B_mp)
-    (B_dr := DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+    (B_dr := DrazinWitnessElimination.drazinInverse (E := E) A)
     (h_mp := h_mp)
     (hReg := {
-      k := DrazinInfiniteCore.canonicalDrazinIndex_endCLM (E := E) A
-      h_drazin := DrazinInfiniteCore.canonicalDrazinInverse_endCLM_spec (E := E) A
+      k := DrazinWitnessElimination.drazinIndex (E := E) A
+      h_drazin := DrazinWitnessElimination.isDrazinInverse_drazinInverse (E := E) A
       h_star := h_dr_star_canonical })
     (hHelicity := hHelicity)
     (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
@@ -1083,8 +1104,8 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization_canonical_dr
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
     (h_mp : IsMoorePenroseInverse A B_mp)
     (h_dr_star_canonical :
-      star (A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
-        = A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+      star (A * DrazinWitnessElimination.drazinInverse (E := E) A)
+        = A * DrazinWitnessElimination.drazinInverse (E := E) A)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
@@ -1101,7 +1122,7 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization_canonical_dr
         ∧ (∃ state : FluidState E,
             state.u = EinsteinAnomaly A B_mp B_dr
               ∧ state.ρ = 1
-              ∧ momentumResidual (E := E) state.u = 0)
+              ∧ vorticityClosureResidual (E := E) state.u = 0)
         ∧ Mod.ConnesRovelliThermalTimeIdentity
         ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
             (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -1113,8 +1134,8 @@ private theorem bits_to_gravity_to_fluid_capstone_of_regularization_canonical_dr
         ∧ (∀ k' : Nat, 0 ≤ trajectoryRNBarrier n Tflow k')
         ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-            Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+        ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+            Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
   exact bits_to_gravity_to_fluid_capstone_of_regularization_canonical_drazin_pairingWitness
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c)
     (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
@@ -1168,7 +1189,7 @@ private theorem squeezingLogShear_bound_of_capstone_conjunction
         ∧ (∃ state : FluidState E,
             state.u = EinsteinAnomaly A B_mp B_dr
               ∧ state.ρ = 1
-              ∧ momentumResidual (E := E) state.u = 0)
+              ∧ vorticityClosureResidual (E := E) state.u = 0)
         ∧ Mod.ConnesRovelliThermalTimeIdentity
         ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
             (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -1180,8 +1201,8 @@ private theorem squeezingLogShear_bound_of_capstone_conjunction
         ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
         ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod))
+        ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod))
     (k : Nat)
     (t : ℝ)
     (hTime : |t| ≤ trajectoryRNBarrier n Tflow k) :
@@ -1285,7 +1306,7 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
         ∧ (∃ state : FluidState E,
             state.u = EinsteinAnomaly A B_mp B_dr
               ∧ state.ρ = 1
-              ∧ momentumResidual (E := E) state.u = 0)
+              ∧ vorticityClosureResidual (E := E) state.u = 0)
         ∧ Mod.ConnesRovelliThermalTimeIdentity
         ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
             (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -1297,9 +1318,9 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
         ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
         ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-            Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
-    simpa [CI] using
+        ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+            Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
+    have hCapInner :=
       (bits_to_gravity_to_fluid_capstone_of_certifiedInverseKernel
         (S := S) (hRankPos := hRankPos) (CIK := CIK) (c := c)
         (R := R) (Kgeo := Kgeo) (x := x) (Λ := Λ) (κ := κ)
@@ -1308,6 +1329,15 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
         (hAnomalySkew := hAnomalySkew) (hHelicity := hHelicity)
         (Mod := Mod) (V := V) (IST := IST) (hCompat := hCompat)
         (n := n) (Tflow := Tflow) (γ := γ) (N := N))
+    have hScale : CI.chiralScale = CIK.chiralScale := by
+      simp [CI, ConformalInference.chiralScale, ConformalInference.obstructionScale,
+        ConformalInference.projectorObstruction, ConformalInference.chiralAnomalyOperator,
+        ConformalInference.chiralAnomaly, ConformalInference.P_D, ConformalInference.P_MP,
+        CertifiedInverseKernel.chiralScale, InverseKernel.chiralScale,
+        InverseKernel.chiralAnomaly, InverseKernel.spectralProjector,
+        InverseKernel.metricProjector]
+    rw [hScale]
+    exact hCapInner
   exact squeezingLogShear_bound_of_capstone_conjunction
     (S := S) (CI := CI) (c := c)
     (R := R) (Kgeo := Kgeo) (x := x)
@@ -1336,8 +1366,8 @@ private theorem squeezingLogShear_bound_of_bits_to_gravity_to_fluid_capstone_of_
     (Ω : AlgebraEnd E →L[ℝ] ℝ)
     (h_mp : IsMoorePenroseInverse A B_mp)
     (h_dr_star_canonical :
-      star (A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
-        = A * DrazinInfiniteCore.canonicalDrazinInverse_endCLM (E := E) A)
+      star (A * DrazinWitnessElimination.drazinInverse (E := E) A)
+        = A * DrazinWitnessElimination.drazinInverse (E := E) A)
     (hHelicity : helicityInvariant A ω = twinWaveHelicity A Ω)
     (Mod : ModularRadonNikodymData E)
     (V : BogoliubovVielbein.BogoliubovVielbeinBundle (E := E))
@@ -1414,7 +1444,7 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -1426,8 +1456,8 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+        ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
   rcases bits_to_gravity_to_fluid_capstone
       (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
       (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
@@ -1612,7 +1642,7 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced_natMatch
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -1624,8 +1654,8 @@ private theorem bits_to_gravity_to_fluid_capstone_cocycle_sourced_natMatch
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+        ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
   exact bits_to_gravity_to_fluid_capstone_cocycle_sourced
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
     (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
@@ -1689,7 +1719,7 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -1701,8 +1731,8 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+        ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
   exact bits_to_gravity_to_fluid_capstone_cocycle_sourced
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
     (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)
@@ -1764,7 +1794,7 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced_natMatc
       ∧ (∃ state : FluidState E,
           state.u = EinsteinAnomaly A B_mp B_dr
             ∧ state.ρ = 1
-            ∧ momentumResidual (E := E) state.u = 0)
+            ∧ vorticityClosureResidual (E := E) state.u = 0)
       ∧ Mod.ConnesRovelliThermalTimeIdentity
       ∧ (cl11BottDirac (E := E) (spectralDiracLinear IST)).comp
           (cl11BottDirac (E := E) (spectralDiracLinear IST)) = 0
@@ -1776,8 +1806,8 @@ private theorem bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced_natMatc
       ∧ (∀ k : Nat, 0 ≤ trajectoryRNBarrier n Tflow k)
       ∧ (∃ (H : HessianGeometry E) (γ : ℕ → E) (N : ℕ), bayesianAction H γ N ≥ 0)
         ∧ (∀ θ : ℝ, expPseudoscalar θ = Real.exp θ)
-        ∧ (∀ chain : List (KitaevCell.{0}), ∃ Vol : ℝ,
-          Vol = (chain.map (fun c : KitaevCell.{0} => c.pfaffian)).prod) := by
+        ∧ (∀ chain : List (KitaevCell), ∃ Vol : ℝ,
+          Vol = (chain.map (fun c : KitaevCell => c.pfaffian)).prod) := by
   exact bits_to_gravity_to_fluid_capstone_tomita_cocycle_sourced
     (S := S) (hRankPos := hRankPos) (CI := CI) (c := c) (R := R) (Kgeo := Kgeo)
     (x := x) (Λ := Λ) (κ := κ) (hEin := hEin)

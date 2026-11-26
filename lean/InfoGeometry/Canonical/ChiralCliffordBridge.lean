@@ -122,6 +122,4 @@ theorem anomaly_as_structure_constant (CI : ConformalInference E) :
   simp [ConformalInference.chiralAnomaly, ConformalInference.spectralChiralProjector,
     ConformalInference.metricChiralProjector]
 
-omit [FiniteDimensional ℝ E] in
-
 end InfoGeometry.Canonical.ChiralCliffordBridge

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.PrimeHurwitzLimit
@@ -96,7 +101,7 @@ theorem cayley_partition_invariant_under_reflection
     (hs0 : s ≠ 0)
     (hs1 : s ≠ 1) :
     Z (PrimeHurwitzLimit.cayley (1 - s)) = Z (PrimeHurwitzLimit.cayley s) := by
-  rw [PrimeHurwitzLimit.CayleyCriticalWitness.cayley_reflection_to_inversion s hs0 hs1]
+  rw [PrimeHurwitzLimit.CayleyCriticalWitness.cayley_reflection_to_inversion s hs0]
   exact hZ (PrimeHurwitzLimit.cayley s)
 
 end InfoGeometry.Canonical.CayleyMobiusPowerLaws

@@ -122,6 +122,7 @@ theorem determinantUnmixedInvariant_eq_one : determinantUnmixedInvariant = 1 := 
 
 end CKMAeonColimit
 
+open CKMAeonColimit hiding Generation
 
 abbrev Q := ℚ
 
@@ -312,6 +313,8 @@ theorem d2Bidegree_zero_one : d2Bidegree 0 1 = (2, 0) := rfl
 
 theorem d2Map_comp_toNat_zero (p : ℕ) : (d2Map (d2Map (p : ℤ))).toNat = 0 := rfl
 
+namespace CKMAeonColimit
+
 inductive Concept where
   | Aeon_Three_Colimit | CKM_Matrix | SU3_Color | SU2_Weak | U1_Hypercharge | Three_Generation_SM | Anomaly_Cancelled
   deriving DecidableEq, Repr
@@ -353,5 +356,7 @@ theorem edge_three_generation_sm_carries_u1_hypercharge :
 
 theorem edge_three_generation_sm_cancels_anomaly :
     edgeHolds Concept.Three_Generation_SM Edge.cancels Concept.Anomaly_Cancelled = true := rfl
+
+end CKMAeonColimit
 
 end noncomputable section

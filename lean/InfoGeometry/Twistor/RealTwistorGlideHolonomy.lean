@@ -31,7 +31,7 @@ open InfoGeometry.Canonical.Cl55InfinityWittBoundary
 open RealTwistorBlockInversion RealPluckerCl55Reflection
 
 /-- Integer winding of the actual real twistor automorphism. -/
-def spinHolonomy (g : KleinDeckGroup) : TwistorSpace ≃ₗ[ℝ] TwistorSpace :=
+def spinHolonomy (g : KleinDeckGroup) : RealTwistorBlockInversion.TwistorSpace ≃ₗ[ℝ] RealTwistorBlockInversion.TwistorSpace :=
   blockRotation ^ g.n
 
 @[simp] theorem spinHolonomy_one : spinHolonomy KleinDeckGroup.one = 1 := by
@@ -42,33 +42,33 @@ theorem spinHolonomy_mul (g h : KleinDeckGroup) :
   exact zpow_add blockRotation g.n h.n
 
 /-- The translation remains in the base component of the total action. -/
-def totalSpinAction (g : KleinDeckGroup) (s : PlanePoint × TwistorSpace) :
-    PlanePoint × TwistorSpace :=
+def totalSpinAction (g : KleinDeckGroup) (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) :
+    PlanePoint × RealTwistorBlockInversion.TwistorSpace :=
   (deckAction g s.1, spinHolonomy g s.2)
 
-@[simp] theorem totalSpinAction_one (s : PlanePoint × TwistorSpace) :
+@[simp] theorem totalSpinAction_one (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) :
     totalSpinAction KleinDeckGroup.one s = s := by
   simp [totalSpinAction, spinHolonomy_one, deckAction_one]
 
-theorem totalSpinAction_mul (g h : KleinDeckGroup) (s : PlanePoint × TwistorSpace) :
+theorem totalSpinAction_mul (g h : KleinDeckGroup) (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) :
     totalSpinAction (KleinDeckGroup.mul g h) s =
       totalSpinAction g (totalSpinAction h s) := by
   simp only [totalSpinAction, deckAction_mul, spinHolonomy_mul, LinearEquiv.mul_apply]
 
-def totalSpinGlide (s : PlanePoint × TwistorSpace) : PlanePoint × TwistorSpace :=
+def totalSpinGlide (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) : PlanePoint × RealTwistorBlockInversion.TwistorSpace :=
   totalSpinAction KleinDeckGroup.b s
 
-@[simp] theorem totalSpinGlide_apply (s : PlanePoint × TwistorSpace) :
+@[simp] theorem totalSpinGlide_apply (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) :
     totalSpinGlide s = (deckB s.1, blockRotation s.2) := by
   simp [totalSpinGlide, totalSpinAction, spinHolonomy, KleinDeckGroup.b,
     deckAction, deckB, signR, signZ]
 
 /-- Squaring the glide retains translation and the twistor's central minus sign. -/
-theorem totalSpinGlide_sq (s : PlanePoint × TwistorSpace) :
+theorem totalSpinGlide_sq (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) :
     totalSpinGlide (totalSpinGlide s) = ((s.1.1, s.1.2 + 2), -s.2) := by
   simp only [totalSpinGlide_apply, deckB_sq, blockRotation_sq]
 
-theorem totalSpinGlide_four (s : PlanePoint × TwistorSpace) :
+theorem totalSpinGlide_four (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) :
     totalSpinGlide (totalSpinGlide (totalSpinGlide (totalSpinGlide s))) =
       ((s.1.1, s.1.2 + 4), s.2) := by
   simp only [totalSpinGlide_sq, neg_neg]
@@ -83,22 +83,22 @@ theorem glideFiber_no_fixed {F : Type*} (f : F → F) (s : PlanePoint × F) :
   change s.1.2 + 1 = s.1.2 at hy
   linarith
 
-theorem totalSpinGlide_no_fixed (s : PlanePoint × TwistorSpace) : totalSpinGlide s ≠ s := by
+theorem totalSpinGlide_no_fixed (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) : totalSpinGlide s ≠ s := by
   simpa only [totalSpinGlide_apply] using glideFiber_no_fixed blockRotation s
 
 /-- The same base rescaling works for any real fiber carrier. -/
 def scaleBase {F : Type*} (s : PlanePoint × F) : PlanePoint × F :=
   (halfShiftScale s.1, s.2)
 
-def halfSpinGlide (s : PlanePoint × TwistorSpace) : PlanePoint × TwistorSpace :=
+def halfSpinGlide (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) : PlanePoint × RealTwistorBlockInversion.TwistorSpace :=
   (halfShiftGlide s.1, blockRotation s.2)
 
-theorem scaleBase_halfSpinGlide (s : PlanePoint × TwistorSpace) :
+theorem scaleBase_halfSpinGlide (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) :
     scaleBase (halfSpinGlide s) = totalSpinGlide (scaleBase s) := by
   rw [totalSpinGlide_apply]
   exact Prod.ext (halfShiftScale_glide s.1) rfl
 
-theorem halfSpinGlide_sq (s : PlanePoint × TwistorSpace) :
+theorem halfSpinGlide_sq (s : PlanePoint × RealTwistorBlockInversion.TwistorSpace) :
     halfSpinGlide (halfSpinGlide s) = ((s.1.1, s.1.2 + 1), -s.2) := by
   simp only [halfSpinGlide, halfShiftGlide_sq, blockRotation_sq]
 
@@ -166,7 +166,7 @@ theorem partialReflectionAlg_infinityGrading55 :
     map_sub, map_mul, partialReflectionAlg_infinity, partialReflectionAlg_origin, neg_sub]
 
 /-- The translated fiber action retains the exact native Plücker intertwiner. -/
-theorem totalCliffordGlide_plucker (p : PlanePoint) (z w : TwistorSpace) :
+theorem totalCliffordGlide_plucker (p : PlanePoint) (z w : RealTwistorBlockInversion.TwistorSpace) :
     totalCliffordGlide (p, ι55 (pluckerToV55 (twistorPlucker z w))) =
       (deckB p, ι55 (pluckerToV55
         (twistorPlucker (blockRotation z) (blockRotation w)))) := by

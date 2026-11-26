@@ -242,26 +242,4 @@ theorem cellToCanonical_j (i : Fin 3) :
   change paperCanonicalLinearEquiv (cellToPaper (j i)) = _
   rw [cellToPaper_j]
 
-
-theorem cellToPaper_oneZ :
-    cellToPaper InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ =
-      paperOne := by
-  apply InfoGeometry.Algebra.ZornMatrix.ext
-  · simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ,
-      paperOne,
-      InfoGeometry.Algebra.ZornMatrix.I]
-  · funext i
-    fin_cases i <;>
-      simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ,
-        paperOne,
-        InfoGeometry.Algebra.ZornMatrix.I]
-  · funext i
-    fin_cases i <;>
-      simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ,
-        paperOne,
-        InfoGeometry.Algebra.ZornMatrix.I]
-  · simp [cellToPaper, InfoGeometry.Clifford.GogberashviliSplitOctonionBasis.oneZ,
-      paperOne,
-      InfoGeometry.Algebra.ZornMatrix.I]
-
 end InfoGeometry.Canonical.SplitOctonionGogberashviliCarrierBridge

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Exceptional.FreudenthalAction
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Exceptional.STUFreudenthalIdentity
@@ -100,7 +105,7 @@ def stuQuarticPolynomial (Q : FreudenthalCharge STUCarrier) : ℝ :=
   (Q.alpha * Q.beta -
       (Q.x 0 * Q.y 0 + Q.x 1 * Q.y 1 + Q.x 2 * Q.y 2)) ^ 2 -
     4 * (Q.alpha * (Q.x 0 * Q.x 1 * Q.x 2) +
-      Q.beta * (Q.y 0 * Q.y 1 * Q.y 2) -
+      Q.beta * (Q.y 0 * Q.y 1 * Q.y 2) +
       ((Q.x 1 * Q.x 2) * (Q.y 1 * Q.y 2) +
         (Q.x 0 * Q.x 2) * (Q.y 0 * Q.y 2) +
         (Q.x 0 * Q.x 1) * (Q.y 0 * Q.y 1)))

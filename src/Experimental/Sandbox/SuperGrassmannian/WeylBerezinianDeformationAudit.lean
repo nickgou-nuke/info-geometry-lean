@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.SuperGrassmannian.WeylBerezinianDeformation
 
 /-!
@@ -19,4 +24,3 @@ open Experimental.Sandbox.SuperGrassmannian.WeylBerezinian
 #print axioms superTrace_chiralOperator
 #print axioms superTrace_volumeOperator
 #print axioms total_deformation_superTrace
-#print axioms compile_weyl_berezinian_deformation

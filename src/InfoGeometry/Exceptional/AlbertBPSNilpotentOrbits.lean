@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Real.Sqrt
 import Mathlib.Analysis.SpecialFunctions.Pow.Real
 import Mathlib.Tactic.Ring
@@ -36,7 +41,6 @@ Formalizes:
    - bps_entropy_rank3_pos : det₃(X) ≠ 0 → 0 < S(X)
    - bps_entropy_identity : S(1) = π
 4. Disjointness of the BPS strata.
-5. Master verification certificate `AlbertBPSNilpotentOrbitsCertificate`.
 -/
 
 namespace InfoGeometry.Exceptional.AlbertBPSNilpotentOrbits
@@ -145,35 +149,5 @@ theorem rank_disjoint_1_3 (X : H3Zorn ℝ) (h1 : IsRank1 X) (h3 : IsRank3 X) : F
   have hd := rank1_implies_det_zero X h1.2
   exact h3 hd
 
-/-! ### 5. Master Verification Certificate -/
-
-structure AlbertBPSNilpotentOrbitsCertificate : Prop where
-  rank1_det : ∀ (X : H3Zorn ℝ), adjointQuad X = 0 → normCubic X = 0
-  rank2_adj_adj : ∀ (X : H3Zorn ℝ), normCubic X = 0 → adjointQuad (adjointQuad X) = 0
-  rank2_adj_is_rank1 : ∀ (X : H3Zorn ℝ), IsRank2 X → IsRank1 (adjointQuad X)
-  jordan_inverse : ∀ (X : H3Zorn ℝ), normCubic X ≠ 0 →
-    candidateJordanMul X ((1 / normCubic X) • adjointQuad X) = 1
-  entropy_rank1 : ∀ (X : H3Zorn ℝ), adjointQuad X = 0 → bpsEntropy X = 0
-  entropy_rank2 : ∀ (X : H3Zorn ℝ), normCubic X = 0 → bpsEntropy X = 0
-  entropy_rank3_pos : ∀ (X : H3Zorn ℝ), normCubic X ≠ 0 → 0 < bpsEntropy X
-  entropy_one : bpsEntropy (1 : H3Zorn ℝ) = Real.pi
-  disjoint_0_1 : ∀ (X : H3Zorn ℝ), IsRank0 X → IsRank1 X → False
-  disjoint_1_2 : ∀ (X : H3Zorn ℝ), IsRank1 X → IsRank2 X → False
-  disjoint_2_3 : ∀ (X : H3Zorn ℝ), IsRank2 X → IsRank3 X → False
-  disjoint_1_3 : ∀ (X : H3Zorn ℝ), IsRank1 X → IsRank3 X → False
-
-theorem compile_albert_bps_nilpotent_orbits : AlbertBPSNilpotentOrbitsCertificate where
-  rank1_det := fun X => rank1_implies_det_zero X
-  rank2_adj_adj := fun X => rank2_adjoint_is_rank1_adjoint X
-  rank2_adj_is_rank1 := fun X => rank2_adjoint_stratification X
-  jordan_inverse := fun X => jordan_inverse_formula X
-  entropy_rank1 := fun X => bps_entropy_rank1 X
-  entropy_rank2 := fun X => bps_entropy_rank2 X
-  entropy_rank3_pos := fun X => bps_entropy_rank3_pos X
-  entropy_one := bps_entropy_identity
-  disjoint_0_1 := fun X => rank_disjoint_0_1 X
-  disjoint_1_2 := fun X => rank_disjoint_1_2 X
-  disjoint_2_3 := fun X => rank_disjoint_2_3 X
-  disjoint_1_3 := fun X => rank_disjoint_1_3 X
 
 end InfoGeometry.Exceptional.AlbertBPSNilpotentOrbits

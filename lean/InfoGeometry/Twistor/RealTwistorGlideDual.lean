@@ -26,7 +26,7 @@ namespace InfoGeometry.Twistor.RealTwistorGlideDual
 open InfoGeometry.Topology.KleinQuotientDeckInvariants
 open RealDualTwistor RealTwistorBlockInversion RealTwistorGlideHolonomy
 
-abbrev DualTwistorSpace := RealDualTwistor.Carrier TwistorSpace
+abbrev DualTwistorSpace := RealDualTwistor.Carrier RealTwistorBlockInversion.TwistorSpace
 
 section FrameFunctor
 

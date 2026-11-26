@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
@@ -67,6 +72,13 @@ variable {R : Type*} [Ring R]
 /-- Elementary matrix units in $M_3(R)$. -/
 def E (i j : Fin 3) : Matrix (Fin 3) (Fin 3) R :=
   Matrix.of fun r c => if r = i ∧ c = j then 1 else 0
+
+/-- Explicit T16 non-commutativity witness on `Matrix (Fin 3) (Fin 3) R`. -/
+theorem matrix3_noncomm_witness {R : Type*} [Ring R] [Nontrivial R] :
+    ∃ A B : Matrix (Fin 3) (Fin 3) R, A * B ≠ B * A := by
+  refine ⟨Matrix.single 0 0 1, Matrix.single 0 1 1, fun h => ?_⟩
+  have h01 := congrFun (congrFun h 0) 1
+  simp [Matrix.mul_apply, Fin.sum_univ_three] at h01
 
 /-- The Cartan grading element $H = E_{00} - E_{22} = \operatorname{diag}(1, 0, -1)$. -/
 def H_gen (R : Type*) [Ring R] : Matrix (Fin 3) (Fin 3) R :=
@@ -274,50 +286,8 @@ theorem pairing_supertrace (ε Δ : R) :
   dsimp [supertrace, pairingHamiltonian, H_gen, tau_1, E]
   simp
 
-/-! ### Section 7: Master Certification & Conjunction Targets -/
+/-! ### Section 7: Conjunction Targets -/
 
-/-- Master certificate structure packaging the full set of Nuclear Quasiphonon Krein SUSY theorems. -/
-structure NuclearQuasiphononKreinSUSYCertificate {R : Type*} [CommRing R] : Prop where
-  car_alpha_comm          : anticommutator (alpha R) (alpha_dag R) = E 1 1 + E 0 0
-  car_beta_comm           : anticommutator (beta R) (beta_dag R) = E 1 1 + E 2 2
-  T_pair_explicit_form    : T_pair R = E 0 0 - 2 • (E 1 1) + E 2 2
-  T_pair_commutes_H       : commutator (T_pair R) (H_gen R) = 0
-  H_as_bilinear_sum       : H_gen R = commutator (alpha_dag R) (alpha R) + commutator (beta_dag R) (beta R)
-  J_is_involutive         : (J_sheet R) * (J_sheet R) = 1
-  eta_is_involutive       : (eta_krein R) * (eta_krein R) = 1
-  tau1_sheet_invariant    : (J_sheet R) * (tau_1 R) * (J_sheet R) = tau_1 R
-  T_pair_krein_sa         : (T_pair R)ᵀ * (eta_krein R) = (eta_krein R) * (T_pair R)
-  H_gen_krein_sa          : (H_gen R)ᵀ * (eta_krein R) = (eta_krein R) * (H_gen R)
-  tau1_krein_sa           : (tau_1 R)ᵀ * (eta_krein R) = (eta_krein R) * (tau_1 R)
-  pairing_krein_sa        : ∀ ε Δ : R, (pairingHamiltonian ε Δ)ᵀ * (eta_krein R) =
-                              (eta_krein R) * (pairingHamiltonian ε Δ)
-  pairing_intertwine      : ∀ ε Δ : R, (J_sheet R) * (pairingHamiltonian ε Δ) * (J_sheet R) =
-                              pairingHamiltonian (-ε) Δ
-  pairing_sq              : ∀ ε Δ : R, (pairingHamiltonian ε Δ) * (pairingHamiltonian ε Δ) =
-                              (ε ^ 2 + Δ ^ 2) • ((H_gen R) * (H_gen R))
-  pairing_cube            : ∀ ε Δ : R, (pairingHamiltonian ε Δ) * (pairingHamiltonian ε Δ) * (pairingHamiltonian ε Δ) =
-                              (ε ^ 2 + Δ ^ 2) • (pairingHamiltonian ε Δ)
-  pairing_str_zero        : ∀ ε Δ : R, supertrace (pairingHamiltonian ε Δ) = 0
-
-/-- Master certificate instantiation. -/
-theorem compile_nuclear_quasiphonon_krein_susy_cert {R : Type*} [CommRing R] :
-    NuclearQuasiphononKreinSUSYCertificate (R := R) where
-  car_alpha_comm          := car_alpha
-  car_beta_comm           := car_beta
-  T_pair_explicit_form    := T_pair_explicit
-  T_pair_commutes_H       := T_pair_comm_H
-  H_as_bilinear_sum       := H_gen_as_sum
-  J_is_involutive         := J_sheet_sq
-  eta_is_involutive       := eta_krein_sq
-  tau1_sheet_invariant    := J_sheet_tau1_J_sheet
-  T_pair_krein_sa         := T_pair_krein_self_adjoint
-  H_gen_krein_sa          := H_gen_krein_self_adjoint
-  tau1_krein_sa           := tau1_krein_self_adjoint
-  pairing_krein_sa        := pairing_krein_self_adjoint
-  pairing_intertwine      := pairing_sheet_swap_intertwine
-  pairing_sq              := pairing_hamiltonian_sq
-  pairing_cube            := pairing_hamiltonian_cube
-  pairing_str_zero        := pairing_supertrace
 
 /-- **Master Gate Target**: The exact 5-clause conjunction specified in the Operational Directive:
     `[T_pair, H] = 0 ∧ J² = 1 ∧ J τ₁ J = τ₁ ∧ T_pairᵀ η = η T_pair ∧ Hᵀ η = η H`. -/

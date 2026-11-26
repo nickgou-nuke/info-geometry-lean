@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.H3ZornJordanIdentity
@@ -58,7 +63,7 @@ theorem quarticInvariant_expanded (Q : Charge) :
         4 *
           (Q.alpha * H3Zorn.normCubic Q.x
             + Q.beta * H3Zorn.normCubic Q.y
-            - H3Zorn.traceBilin
+            + H3Zorn.traceBilin
                 (H3Zorn.adjointQuad Q.x)
                 (H3Zorn.adjointQuad Q.y)) := by
   rfl
@@ -115,11 +120,11 @@ theorem quarticInvariant_scalarCharge (α β : ℝ) :
     quarticInvariant (scalarCharge α β) = (α * β) ^ 2 := by
   rw [quarticInvariant_expanded]
   change (α * β - H3Zorn.traceBilin (0 : H3Zorn ℝ) 0) ^ 2 -
-      4 * (α * H3Zorn.normCubic 0 + β * H3Zorn.normCubic 0 -
+      4 * (α * H3Zorn.normCubic 0 + β * H3Zorn.normCubic 0 +
         H3Zorn.traceBilin (H3Zorn.adjointQuad 0) (H3Zorn.adjointQuad 0)) =
     (α * β) ^ 2
   have hmain : (α * β - H3Zorn.traceBilin (0 : H3Zorn ℝ) 0) ^ 2 -
-      4 * (α * H3Zorn.normCubic 0 + β * H3Zorn.normCubic 0 -
+      4 * (α * H3Zorn.normCubic 0 + β * H3Zorn.normCubic 0 +
         H3Zorn.traceBilin (H3Zorn.adjointQuad 0) (H3Zorn.adjointQuad 0)) =
       (α * β) ^ 2 := by
     rw [H3Zorn.traceBilin_zero_left, H3Zorn.normCubic_zero,
@@ -133,7 +138,7 @@ theorem quarticInvariant_electricCharge (α : ℝ) (X : H3Zorn ℝ) :
       -4 * (α * H3Zorn.normCubic X) := by
   rw [quarticInvariant_expanded]
   change (α * 0 - H3Zorn.traceBilin X 0) ^ 2 -
-      4 * (α * H3Zorn.normCubic X + 0 * H3Zorn.normCubic 0 -
+      4 * (α * H3Zorn.normCubic X + 0 * H3Zorn.normCubic 0 +
         H3Zorn.traceBilin (H3Zorn.adjointQuad X) (H3Zorn.adjointQuad 0)) =
     -4 * (α * H3Zorn.normCubic X)
   have hq : H3Zorn.adjointQuad (0 : H3Zorn ℝ) = 0 := adjointQuad_zero
@@ -150,7 +155,7 @@ theorem quarticInvariant_magneticCharge (β : ℝ) (Y : H3Zorn ℝ) :
       -4 * (β * H3Zorn.normCubic Y) := by
   rw [quarticInvariant_expanded]
   change (0 * β - H3Zorn.traceBilin 0 Y) ^ 2 -
-      4 * (0 * H3Zorn.normCubic 0 + β * H3Zorn.normCubic Y -
+      4 * (0 * H3Zorn.normCubic 0 + β * H3Zorn.normCubic Y +
         H3Zorn.traceBilin (H3Zorn.adjointQuad 0) (H3Zorn.adjointQuad Y)) =
     -4 * (β * H3Zorn.normCubic Y)
   have hq : H3Zorn.adjointQuad (0 : H3Zorn ℝ) = 0 := adjointQuad_zero

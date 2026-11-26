@@ -74,8 +74,11 @@ theorem centeredObservable_apply (psi : H₂) (A : EndH) (u : H₂) :
 theorem hilbertExpectationAt_centeredObservable_eq_zero
     (psi : H₂) (A : EndH) (hpsi : ‖psi‖ = 1) :
     hilbertExpectationAt (E := E) psi (centeredObservable (E := E) psi A) = 0 := by
-  simp [hilbertExpectationAt, centeredObservable, inner_sub_right,
-    real_inner_smul_right, real_inner_self_eq_norm_sq, hpsi]
+  have hUnit : ⟪psi, psi⟫_ℝ = 1 := by
+    rw [real_inner_self_eq_norm_sq, hpsi, one_pow]
+  change ⟪psi, A psi - hilbertExpectationAt (E := E) psi A • psi⟫_ℝ = 0
+  rw [inner_sub_right, real_inner_smul_right, hUnit]
+  simp [hilbertExpectationAt]
 
 /-- The centered observable remains Hilbert self-adjoint. -/
 @[rep_depth operator]
@@ -88,7 +91,10 @@ theorem centeredObservable_isSelfAdjoint
     ⟪A u - hilbertExpectationAt (E := E) psi A • u, v⟫_ℝ
       = ⟪u, A v - hilbertExpectationAt (E := E) psi A • v⟫_ℝ
   rw [inner_sub_left, inner_sub_right, real_inner_smul_left,
-    real_inner_smul_right, hA.isSymmetric u v]
+    real_inner_smul_right]
+  have hSym : ⟪A u, v⟫_ℝ = ⟪u, A v⟫_ℝ := by
+    simpa only [ContinuousLinearMap.coe_coe] using hA.isSymmetric u v
+  rw [hSym]
 
 /-- A real identity shift preserves commutation with any phase operator. -/
 @[rep_depth operator]
@@ -155,9 +161,12 @@ theorem hilbertVarianceAt_eq_norm_sq_sub_sq
     (psi : H₂) (A : EndH) (hpsi : ‖psi‖ = 1) :
     hilbertVarianceAt (E := E) psi A
       = ‖A psi‖ ^ 2 - (hilbertExpectationAt (E := E) psi A) ^ 2 := by
-  rw [hilbertVarianceAt, centeredObservable_apply, norm_sub_sq_real,
-    real_inner_smul_right, real_inner_comm (A psi) psi,
-    norm_smul, hpsi, mul_one, Real.norm_eq_abs, sq_abs]
+  rw [hilbertVarianceAt, centeredObservable_apply, norm_sub_sq_real]
+  have hMean : ⟪A psi, psi⟫_ℝ = hilbertExpectationAt (E := E) psi A := by
+    change ⟪A psi, psi⟫_ℝ = ⟪psi, A psi⟫_ℝ
+    exact real_inner_comm _ _
+  rw [real_inner_smul_right, norm_smul, hpsi, mul_one,
+    Real.norm_eq_abs, sq_abs, hMean]
   unfold hilbertExpectationAt
   ring
 
@@ -197,8 +206,12 @@ theorem hilbertCovarianceAt_eq_inner_sub_mul
     rw [real_inner_self_eq_norm_sq, hpsi, one_pow]
   unfold hilbertCovarianceAt
   simp only [centeredObservable_apply, inner_sub_left, inner_sub_right,
-    real_inner_smul_left, real_inner_smul_right, hUnit,
-    real_inner_comm (A psi) psi]
+    real_inner_smul_left, real_inner_smul_right, hUnit]
+  have hAmean : ⟪A psi, psi⟫_ℝ = hilbertExpectationAt (E := E) psi A := by
+    change ⟪A psi, psi⟫_ℝ = ⟪psi, A psi⟫_ℝ
+    exact real_inner_comm _ _
+  have hBmean : ⟪psi, B psi⟫_ℝ = hilbertExpectationAt (E := E) psi B := rfl
+  rw [hAmean, hBmean]
   unfold hilbertExpectationAt
   ring
 
@@ -209,8 +222,11 @@ theorem hilbertExpectationAt_transportCommutator_eq_zero
     hilbertExpectationAt (E := E) psi (transportCommutator (E := E) A B) = 0 := by
   unfold hilbertExpectationAt transportCommutator
   simp only [ContinuousLinearMap.sub_apply, ContinuousLinearMap.comp_apply, inner_sub_right]
-  rw [← hA.isSymmetric psi (B psi), ← hB.isSymmetric psi (A psi),
-    real_inner_comm (A psi) (B psi), sub_self]
+  have hAB : ⟪psi, A (B psi)⟫_ℝ = ⟪A psi, B psi⟫_ℝ :=
+    (hA.isSymmetric psi (B psi)).symm
+  have hBA : ⟪psi, B (A psi)⟫_ℝ = ⟪B psi, A psi⟫_ℝ :=
+    (hB.isSymmetric psi (A psi)).symm
+  rw [hAB, hBA, real_inner_comm (B psi) (A psi), sub_self]
 
 /-- The anticommutator gives twice the Hilbert pairing of the two observable vectors. -/
 @[rep_depth operator]
@@ -220,8 +236,11 @@ theorem hilbertExpectationAt_anticommutator_eq_two_inner
       = 2 * ⟪A psi, B psi⟫_ℝ := by
   unfold hilbertExpectationAt
   simp only [ContinuousLinearMap.add_apply, ContinuousLinearMap.comp_apply, inner_add_right]
-  rw [← hA.isSymmetric psi (B psi), ← hB.isSymmetric psi (A psi),
-    real_inner_comm (B psi) (A psi)]
+  have hAB : ⟪psi, A (B psi)⟫_ℝ = ⟪A psi, B psi⟫_ℝ :=
+    (hA.isSymmetric psi (B psi)).symm
+  have hBA : ⟪psi, B (A psi)⟫_ℝ = ⟪B psi, A psi⟫_ℝ :=
+    (hB.isSymmetric psi (A psi)).symm
+  rw [hAB, hBA, real_inner_comm (B psi) (A psi)]
   ring
 
 /-- Centered covariance is the half-anticommutator readout. -/
@@ -314,6 +333,18 @@ theorem hilbertCovariance_sq_add_phaseAxisK_commutator_sq_div_four_le
     (hilbertCovarianceAt (E := E) psi A B) ^ 2
         + (phaseCommutatorAt (E := E) (OperatorDictionary.phaseAxisK (E := E)) psi A B) ^ 2 / 4
       ≤ hilbertVarianceAt (E := E) psi A * hilbertVarianceAt (E := E) psi B := by
+  have hK : OperatorDictionary.phaseAxisK (E := E) = complex_i (E := E) := by
+    calc
+      OperatorDictionary.phaseAxisK (E := E) =
+          (modular_j (E := E)).comp (spectral_epsilon (E := E)) :=
+        OperatorDictionary.phaseAxisK_eq_modular_j_comp_spectral_epsilon
+      _ = InfoGeometry.Canonical.TomitaTakesaki.clockAxis (E := E) :=
+        InfoGeometry.Canonical.TomitaTakesaki.clockAxis_eq_modular_j_comp_spectral_epsilon.symm
+      _ = InfoGeometry.Canonical.TomitaTakesaki.modularComplexI (E := E) :=
+        InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_clockAxis
+      _ = complex_i (E := E) :=
+        InfoGeometry.Canonical.TomitaTakesaki.modularComplexI_eq_complex_i
+  rw [hK]
   simpa only [hilbertCovarianceAt, hilbertVarianceAt, centeredObservable_apply,
     phaseCommutatorAt, transportCommutator, PhaseLinearObservableCommutator.centeredVector,
     div_eq_mul_inv, one_mul, mul_comm] using

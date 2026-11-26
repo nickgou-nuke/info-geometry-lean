@@ -2692,6 +2692,9 @@ import InfoGeometry.Canonical.DiracKahlerMultiplication
 import InfoGeometry.Canonical.DiracKahlerPalatiniBridge
 import InfoGeometry.Canonical.DiracLaplacianSquareRootBridge
 import InfoGeometry.Canonical.DiracNullPeirce
+import InfoGeometry.Canonical.DoubledMinkowskiBdGColimitBridge
+import InfoGeometry.Canonical.DoubledMinkowskiConcreteTowerGap
+import InfoGeometry.Canonical.DoubledMinkowskiSheetSoldering
 import InfoGeometry.Canonical.DirectPoincareSupercharge
 import InfoGeometry.Canonical.DiscreteColorCochainSectors
 import InfoGeometry.Canonical.DiscreteContinuousTimeBridge
@@ -5779,6 +5782,7 @@ import InfoGeometry.Epistemology.WheelersOuroborosSynthesis
 import InfoGeometry.Epistemology.WheelersOuroborosSynthesisAudit
 import InfoGeometry.Epistemology.WheelersSelfObservingUniverse
 import InfoGeometry.Erlangen.InvariantGeometry
+import InfoGeometry.Erlangen.ErlangenTwoZeroOperatorRing
 import InfoGeometry.Erlangen.KillingFisher
 import InfoGeometry.Erlangen.ProjectiveLineGeometry
 import InfoGeometry.ErlangenCoordinateless
@@ -8272,6 +8276,7 @@ import InfoGeometry.Physics.AtiyahBottEquivariantLocalizationIndex
 import InfoGeometry.Physics.AtiyahBottEquivariantLocalizationIndexAudit
 import InfoGeometry.Physics.BayesianTuringCantor
 import InfoGeometry.Physics.BdGChiralBlockMatrix
+import InfoGeometry.Physics.BdGColimitGapTransport
 import InfoGeometry.Physics.BdGGradedInnerOneForms
 import InfoGeometry.Physics.BdGMatrixCoefficientZorn
 import InfoGeometry.Physics.BdGOperatorCalculus

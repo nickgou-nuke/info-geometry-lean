@@ -35,7 +35,7 @@ open InfoGeometry.Twistor.RealInfinityMatrixPencil
 open scoped Matrix
 
 /-- The lower native matrix represents the existing map into the genuine dual. -/
-theorem infinityLowerMatrix_pairing (z w : TwistorSpace) :
+theorem infinityLowerMatrix_pairing (z w : RealTwistorBlockInversion.TwistorSpace) :
     dotProduct (Sum.elim z.1 z.2)
         (infinityLowerMatrix *ᵥ Sum.elim w.1 w.2) =
       infinityTwistor z w := by
@@ -43,7 +43,7 @@ theorem infinityLowerMatrix_pairing (z w : TwistorSpace) :
     Fintype.sum_sum_type, Fin.sum_univ_two, sub_eq_add_neg] <;> ring
 
 /-- The upper matrix is the existing real infinity form after block rotation. -/
-theorem infinityUpperMatrix_pairing (z w : TwistorSpace) :
+theorem infinityUpperMatrix_pairing (z w : RealTwistorBlockInversion.TwistorSpace) :
     dotProduct (Sum.elim z.1 z.2)
         (infinityUpperMatrix *ᵥ Sum.elim w.1 w.2) =
       infinityTwistor (blockRotation z) (blockRotation w) := by
@@ -52,7 +52,7 @@ theorem infinityUpperMatrix_pairing (z w : TwistorSpace) :
     sub_eq_add_neg] <;> ring
 
 /-- The pencil is a sum of the two specified bilinear forms. -/
-theorem infinityMatrixPencil_pairing (Λ : ℝ) (z w : TwistorSpace) :
+theorem infinityMatrixPencil_pairing (Λ : ℝ) (z w : RealTwistorBlockInversion.TwistorSpace) :
     dotProduct (Sum.elim z.1 z.2)
         (infinityMatrixPencil Λ *ᵥ Sum.elim w.1 w.2) =
       infinityTwistor z w +
@@ -63,7 +63,7 @@ theorem infinityMatrixPencil_pairing (Λ : ℝ) (z w : TwistorSpace) :
 
 /-- This is the explicit duality identity justifying metric raising in the
 second argument. It is independent of any Hermitian or spacetime interpretation. -/
-theorem raisedInfinityMatrix_pairing (Λ : ℝ) (z w : TwistorSpace) :
+theorem raisedInfinityMatrix_pairing (Λ : ℝ) (z w : RealTwistorBlockInversion.TwistorSpace) :
     dotProduct (Sum.elim z.1 z.2)
         (kreinMetric 2 *ᵥ (raisedInfinityMatrix Λ *ᵥ Sum.elim w.1 w.2)) =
       infinityTwistor z w +
@@ -73,7 +73,7 @@ theorem raisedInfinityMatrix_pairing (Λ : ℝ) (z w : TwistorSpace) :
 
 /-- The existing dual-valued form curries its first argument. Its metric dual
 representative is `-OΛ z`; alternation accounts for this sign. -/
-theorem raisedInfinityMatrix_curried_pairing (Λ : ℝ) (z w : TwistorSpace) :
+theorem raisedInfinityMatrix_curried_pairing (Λ : ℝ) (z w : RealTwistorBlockInversion.TwistorSpace) :
     dotProduct (Sum.elim w.1 w.2)
         (kreinMetric 2 *ᵥ ((-raisedInfinityMatrix Λ) *ᵥ Sum.elim z.1 z.2)) =
       infinityTwistor z w +

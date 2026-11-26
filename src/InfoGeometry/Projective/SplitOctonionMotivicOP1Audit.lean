@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Projective.SplitOctonionMotivicOP1
 
 open InfoGeometry.Projective.SplitOctonionMotivicOP1
@@ -28,4 +33,3 @@ open InfoGeometry.Projective.SplitOctonionMotivicOP1
 #print axioms motivicCellDimOct_zero
 #print axioms motivicCellDimOct_one
 #print axioms motivicCellDimOct_succ
-#print axioms compile_split_octonion_motivic_op1

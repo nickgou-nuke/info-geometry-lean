@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.AsanoRuelle.TopologicalEndpoint
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Normed.Field.Lemmas
@@ -56,15 +61,6 @@ theorem poleScale_inv (p z : ℂ) {lam : ℝ} (hlam : lam ≠ 0) :
 /-- The point at scale `λ` in direction `v` from the Möbius pole `-C / D`. -/
 def poleScalePoint (C D : ℂ) (lam : ℝ) (v : ℂ) : ℂ :=
   -(C / D) + (lam : ℂ) * v
-
-/-- The exact pole-coordinate identity for a fractional-linear map. -/
-theorem mobius_pole_identity
-    (A B C D ε : ℂ) (hD : D ≠ 0) (hε : ε ≠ 0) :
-    -(A + B * (-C / D + ε)) /
-        (C + D * (-C / D + ε)) =
-      -(A * D - B * C) / (D ^ 2 * ε) - B / D := by
-  field_simp [hD, hε]
-  ring
 
 theorem poleScalePoint_mul_direction
     (C D : ℂ) (lam mu : ℝ) (v : ℂ) :

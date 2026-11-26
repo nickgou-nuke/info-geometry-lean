@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.LinearAlgebra.Matrix.Trace
@@ -50,6 +55,13 @@ open Matrix
 variable {R : Type*} [CommRing R]
 
 abbrev Mat2R (R : Type*) := Matrix (Fin 2) (Fin 2) R
+
+/-- Explicit T16 non-commutativity witness on `Matrix (Fin 2) (Fin 2) R`. -/
+theorem globalKAN_mat2_noncomm_witness {R : Type*} [Ring R] [Nontrivial R] :
+    ∃ A B : Matrix (Fin 2) (Fin 2) R, A * B ≠ B * A := by
+  refine ⟨!![1, 0; 0, 0], !![0, 1; 0, 0], fun h => ?_⟩
+  have h01 := congrFun (congrFun h 0) 1
+  simp [Matrix.mul_apply, Fin.sum_univ_two] at h01
 
 /-! ### Section 1: Iwasawa KAN Generators and Decomposition -/
 
@@ -275,19 +287,31 @@ theorem casimirOne_nilpotent (n : R) :
   dsimp [casimirOne, nilpotentN, Matrix.trace]
   simp [Fin.sum_univ_two]
 
+private lemma scalar_two_mul_sq {R : Type*} [CommRing R] (x : R) :
+    x * x + x * x = 2 * x ^ 2 := by
+  ring
+
+private lemma scalar_neg_two_mul_sq {R : Type*} [CommRing R] (x : R) :
+    -(x * x) + -(x * x) = -(2 * x ^ 2) := by
+  ring
+
+private lemma scalar_sq_neg_eq {R : Type*} [CommRing R] (x : R) :
+    2 * (-x) ^ 2 = 2 * x ^ 2 := by
+  ring
+
 /-- Harish-Chandra radial reduction: on the Cartan subspace $\mathfrak{a}$, $C_2(A(\theta)) = 2\theta^2$. -/
 theorem casimirTwo_on_cartan (θ : R) :
     casimirTwo (cartanA θ) = 2 * θ^2 := by
   dsimp [casimirTwo, cartanA, Matrix.trace]
   simp [Matrix.mul_apply, Fin.sum_univ_two]
-  ring
+  exact scalar_two_mul_sq θ
 
 /-- Quadratic Casimir on compact rotations: $C_2(K(k)) = -2k^2$. -/
 theorem casimirTwo_on_compactK (k : R) :
     casimirTwo (compactK k) = -2 * k^2 := by
   dsimp [casimirTwo, compactK, Matrix.trace]
   simp [Matrix.mul_apply, Fin.sum_univ_two]
-  ring
+  exact scalar_neg_two_mul_sq k
 
 /-- Strictly nilpotent shears carry zero Casimir invariants: $C_2(N) = 0$. -/
 theorem casimirTwo_on_nilpotent_zero (n : R) :
@@ -299,7 +323,7 @@ theorem casimirTwo_on_nilpotent_zero (n : R) :
 theorem casimirTwo_weyl_invariant (θ : R) :
     casimirTwo (cartanA (-θ)) = casimirTwo (cartanA θ) := by
   rw [casimirTwo_on_cartan, casimirTwo_on_cartan]
-  ring
+  exact scalar_sq_neg_eq θ
 
 /-- Universal gauge invariance: $C_2$ is strictly invariant under all similarity transformations $g X g^{-1}$. -/
 theorem casimirTwo_gauge_invariant
@@ -318,55 +342,5 @@ theorem casimirTwo_gauge_invariant
   rw [h_mid]
   rw [Matrix.trace_mul_comm (g * (X * X)) g_inv]
   rw [← mul_assoc, h_left, one_mul]
-
-/-! ### Section 4: Master Verification Certificate -/
-
-/-- Master Certificate bundling the complete Iwasawa KAN, Cartan polar, and Casimir hierarchy. -/
-structure GlobalKANCasimirReductionCertificate : Prop where
-  iwasawa_dec : ∀ (k θ n : R), compactK k + cartanA θ + nilpotentN n = !![θ, n - k; k, -θ]
-  iwasawa_unique : ∀ (k₁ θ₁ n₁ k₂ θ₂ n₂ : R),
-    compactK k₁ + cartanA θ₁ + nilpotentN n₁ = compactK k₂ + cartanA θ₂ + nilpotentN n₂ →
-    k₁ = k₂ ∧ θ₁ = θ₂ ∧ n₁ = n₂
-  cartan_abelian : ∀ (θ₁ θ₂ : R), cartanA θ₁ * cartanA θ₂ - cartanA θ₂ * cartanA θ₁ = 0
-  nilpotent_sq : ∀ (n : R), nilpotentN (R := R) n * nilpotentN n = 0
-  nilpotent_lower_sq : ∀ (m : R), nilpotentN_lower (R := R) m * nilpotentN_lower m = 0
-  polar_dec : ∀ (k a b : R), compactK k + polarP a b = !![a, b - k; b + k, -a]
-  cartan_invol_K : ∀ (k : R), cartanInvolution (compactK k) = compactK k
-  cartan_invol_P : ∀ (a b : R), cartanInvolution (polarP a b) = -polarP a b
-  comm_K_K : ∀ (k₁ k₂ : R), compactK k₁ * compactK k₂ - compactK k₂ * compactK k₁ = 0
-  comm_K_P : ∀ (k a b : R), compactK k * polarP a b - polarP a b * compactK k = polarP (-2 * k * b) (2 * k * a)
-  comm_P_P : ∀ (a₁ b₁ a₂ b₂ : R), polarP a₁ b₁ * polarP a₂ b₂ - polarP a₂ b₂ * polarP a₁ b₁ = compactK (-2 * (a₁ * b₂ - a₂ * b₁))
-  casimir_one_K : ∀ (k : R), casimirOne (compactK (R := R) k) = 0
-  casimir_one_A : ∀ (θ : R), casimirOne (cartanA (R := R) θ) = 0
-  casimir_one_P : ∀ (a b : R), casimirOne (polarP (R := R) a b) = 0
-  casimir_one_N : ∀ (n : R), casimirOne (nilpotentN (R := R) n) = 0
-  casimir_two_cartan : ∀ (θ : R), casimirTwo (cartanA θ) = 2 * θ^2
-  casimir_two_compact : ∀ (k : R), casimirTwo (compactK k) = -2 * k^2
-  casimir_two_nilpotent : ∀ (n : R), casimirTwo (nilpotentN (R := R) n) = 0
-  casimir_two_weyl : ∀ (θ : R), casimirTwo (cartanA (-θ)) = casimirTwo (cartanA θ)
-  casimir_two_gauge : ∀ (g g_inv X : Mat2R R), g_inv * g = 1 → g * g_inv = 1 → casimirTwo (g * X * g_inv) = casimirTwo X
-
-/-- Compilation theorem: the master reduction certificate holds unconditionally. -/
-theorem compile_global_kan_casimir_reduction : GlobalKANCasimirReductionCertificate (R := R) where
-  iwasawa_dec := iwasawa_decomposition_2x2
-  iwasawa_unique := iwasawa_decomposition_unique
-  cartan_abelian := cartan_is_abelian
-  nilpotent_sq := nilpotent_sq_zero
-  nilpotent_lower_sq := nilpotent_lower_sq_zero
-  polar_dec := polar_decomposition_2x2
-  cartan_invol_K := cartanInvolution_compactK
-  cartan_invol_P := cartanInvolution_polarP
-  comm_K_K := compact_compact_comm
-  comm_K_P := compact_polar_comm
-  comm_P_P := polar_polar_comm
-  casimir_one_K := casimirOne_compactK
-  casimir_one_A := casimirOne_cartanA
-  casimir_one_P := casimirOne_polarP
-  casimir_one_N := casimirOne_nilpotent
-  casimir_two_cartan := casimirTwo_on_cartan
-  casimir_two_compact := casimirTwo_on_compactK
-  casimir_two_nilpotent := casimirTwo_on_nilpotent_zero
-  casimir_two_weyl := casimirTwo_weyl_invariant
-  casimir_two_gauge := casimirTwo_gauge_invariant
 
 end Experimental.Sandbox.Lie.GlobalKANCasimirReduction

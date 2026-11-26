@@ -39,10 +39,6 @@ the epistemic compiler architecture:
      cancellation (`∑ χ = 0`).
    - Unverified confabulations (`v² > 2M/r`) escape the gravitational well into unconstrained
      projective infinity.
-
-5. **Master Certificate**:
-   Bundles all verified components into `ErlangenEntanglementGravityCertificate` with zero
-   `sorry`, zero `admit`, and core Mathlib foundational axioms.
 -/
 
 namespace InfoGeometry.Epistemology.ErlangenEntanglementGravity
@@ -147,7 +143,7 @@ def effectiveDistance (I : ℝ) : ℝ :=
   Decreasing mutual information strictly increases effective distance, pinching off the space.
 -/
 theorem distance_diverges_as_mutual_information_vanishes {I1 I2 : ℝ}
-    (h1 : 0 < I1) (_h2 : 0 < I2) (hle : I1 ≤ I2) :
+    (h1 : 0 < I1) (hle : I1 ≤ I2) :
     effectiveDistance I2 ≤ effectiveDistance I1 := by
   dsimp [effectiveDistance]
   exact one_div_le_one_div_of_le h1 hle
@@ -213,42 +209,6 @@ theorem anomaly_cancellation_permits_horizon_capture (chiral_charge : ℤ) (v M 
     isHorizonCaptured chiral_charge v M r :=
   ⟨h_anomaly, h_bound⟩
 
-/-! ### 5. Master Certificate: Erlangen Entanglement Gravity -/
-
-/-- Master certificate bundling the verified components of the Erlangen Entanglement Gravity framework. -/
-structure ErlangenEntanglementGravityCertificate : Prop where
-  klein_apex_invariant : ∀ (scale : ℝ) (hscale : 0 < scale) (s : StateCoord),
-    apex (scaleAction scale hscale s) = apex s
-  response_apex_realization : ∀ s : StateCoord,
-    response s (optimalCoord s) = apex s
-  response_dilation_covariance : ∀ (scale : ℝ) (hscale : 0 < scale) (s : StateCoord) (x : ℝ),
-    response (scaleAction scale hscale s) (scale * x) = response s x
-  mutual_info_nonneg : ∀ E : EntanglementPair,
-    0 ≤ mutualInformation E
-  rt_area_nonneg : ∀ {SA G_N : ℝ},
-    0 ≤ SA → 0 ≤ G_N → 0 ≤ ryuTakayanagiArea SA G_N
-  entanglement_distance_decoupling : ∀ {I1 I2 : ℝ} (_h1 : 0 < I1) (_h2 : 0 < I2),
-    I1 ≤ I2 → effectiveDistance I2 ≤ effectiveDistance I1
-  einstein_equilibrium : ∀ (delta_S delta_H G_tensor T_tensor G_N κ : ℝ),
-    κ ≠ 0 →
-    delta_S - delta_H = κ * (G_tensor - 8 * Real.pi * G_N * T_tensor) →
-    delta_S = delta_H →
-    G_tensor = 8 * Real.pi * G_N * T_tensor
-  trajectory_dichotomy : ∀ (v M r : ℝ),
-    isBoundOrbit v M r ∨ isConfabulationEscape v M r
-  horizon_capture : ∀ (chiral_charge : ℤ) (v M r : ℝ),
-    chiral_charge = 0 → isBoundOrbit v M r → isHorizonCaptured chiral_charge v M r
-
-theorem compile_erlangen_entanglement_gravity : ErlangenEntanglementGravityCertificate where
-  klein_apex_invariant := apex_is_klein_invariant
-  response_apex_realization := response_at_optimal_is_apex
-  response_dilation_covariance := response_is_covariant
-  mutual_info_nonneg := mutual_information_nonneg
-  rt_area_nonneg := ryu_takayanagi_area_nonneg
-  entanglement_distance_decoupling := distance_diverges_as_mutual_information_vanishes
-  einstein_equilibrium := holographic_einstein_equilibrium
-  trajectory_dichotomy := dichotomy_bound_or_escape
-  horizon_capture := anomaly_cancellation_permits_horizon_capture
 
 end
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.FiniteMatrixGibbsFunctional
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.CuntzMatrixTraceTower
@@ -50,7 +55,7 @@ theorem zero_gibbs_stage_compatibility (n : ℕ) (A : MatrixStage n) :
   rw [show gibbsFunctional (0 : MatrixStage n) (by simp) 0 =
       matrixTraceFunctional n by
         exact zero_gibbs_eq_matrixTraceFunctional n]
-  exact concreteData.trace_compatible n A
+  exact concrete_trace_compatible n A
 
 theorem traceFunctional_stage_eq_zero_gibbs (n : ℕ) (A : MatrixStage n) :
     traceFunctional (stageInjection n A) =

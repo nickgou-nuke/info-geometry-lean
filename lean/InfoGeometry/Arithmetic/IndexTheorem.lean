@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Arithmetic.BostConnesSystem
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Geometry.SpectralDivisors
@@ -87,12 +92,12 @@ theorem totalPrimeFactors_prime (p : ℕ+) (hp : Nat.Prime p.val) :
 /-- The Liouville grading always squares to `1`. -/
 theorem liouville_sq (n : ℕ+) :
     liouville n * liouville n = 1 :=
-  InfoGeometry.Arithmetic.BostConnesSystem.liouville_sq n n.pos
+  InfoGeometry.Arithmetic.BostConnesSystem.liouville_sq n
 
 /-- The Liouville grading is multiplicative. -/
 theorem liouville_mul (m n : ℕ+) :
     liouville (m * n) = liouville m * liouville n :=
-  InfoGeometry.Arithmetic.BostConnesSystem.liouville_mul m n m.pos n.pos m.ne_zero n.ne_zero
+  InfoGeometry.Arithmetic.BostConnesSystem.liouville_mul m n m.ne_zero n.ne_zero
 
 /-- On a prime, the Liouville grading is `-1`. -/
 theorem liouville_prime (p : ℕ+) (hp : Nat.Prime p.val) :

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.SuperGrassmannian.BerezinianSheafStiefelWhitney
 
 /-!
@@ -11,7 +16,6 @@ namespace InfoGeometry.SuperGrassmannian.BerezinianSheaf.Audit
 
 open InfoGeometry.SuperGrassmannian.BerezinianSheaf
 
-#check @compile_berezinian_sheaf_stiefel_whitney
 #check @berezinian_parity_square_law
 #check @cech_cocycle_eq_one_iff
 #check @cech_cocycle_eq_neg_one_iff
@@ -22,7 +26,6 @@ open InfoGeometry.SuperGrassmannian.BerezinianSheaf
 #check @orientable_or_crosscap
 #check @not_orientable_and_crosscap
 
-#print axioms compile_berezinian_sheaf_stiefel_whitney
 #print axioms berezinian_parity_square_law
 #print axioms cech_cocycle_eq_one_iff
 #print axioms stiefelWhitney_eq_zero_iff

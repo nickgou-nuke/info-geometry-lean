@@ -43,9 +43,14 @@ section SparseMatrixLayer
 
 abbrev SparseMat27 := List (Fin 27 × Fin 27 × ℤ)
 
-def sparseVal : SparseMat27 → Fin 27 → Fin 27 → ℤ
-  | [], _, _ => 0
-  | (r, c, v) :: t, i, j => (if r == i && c == j then v else 0) + sparseVal t i j
+def sparseVal (s : SparseMat27) (i j : Fin 27) : ℤ :=
+  s.foldr (fun p acc => (if p.1 == i && p.2.1 == j then p.2.2 else 0) + acc) 0
+
+@[simp] theorem sparseVal_nil (i j : Fin 27) : sparseVal [] i j = 0 := rfl
+
+@[simp] theorem sparseVal_cons (r c : Fin 27) (v : ℤ) (t : SparseMat27) (i j : Fin 27) :
+    sparseVal ((r, c, v) :: t) i j =
+      (if r == i && c == j then v else 0) + sparseVal t i j := rfl
 
 def sparseToMat (s : SparseMat27) : Matrix (Fin 27) (Fin 27) ℤ :=
   fun i j => sparseVal s i j
@@ -76,10 +81,10 @@ def sparseEq (s t : SparseMat27) : Bool :=
 private theorem sparseVal_append (s t : SparseMat27) (i j : Fin 27) :
     sparseVal (s ++ t) i j = sparseVal s i j + sparseVal t i j := by
   induction s with
-  | nil => simp [sparseVal]
+  | nil => simp
   | cons p s ih =>
     rcases p with ⟨r, c, v⟩
-    simp only [List.cons_append, sparseVal, ih, add_assoc]
+    simp only [List.cons_append, sparseVal_cons, ih, add_assoc]
 
 theorem sparseVal_add (s t : SparseMat27) (i j : Fin 27) :
     sparseVal (sparseAdd s t) i j = sparseVal s i j + sparseVal t i j :=
@@ -93,10 +98,10 @@ theorem sparseToMat_add (s t : SparseMat27) :
 private theorem sparseVal_map_neg (s : SparseMat27) (i j : Fin 27) :
     sparseVal (s.map fun (r, c, v) => (r, c, -v)) i j = -sparseVal s i j := by
   induction s with
-  | nil => simp [sparseVal]
+  | nil => simp
   | cons p s ih =>
     rcases p with ⟨r, c, v⟩
-    simp only [List.map_cons, sparseVal]
+    simp only [List.map_cons, sparseVal_cons]
     rw [ih]
     split_ifs <;> ring
 
@@ -122,10 +127,10 @@ theorem sparseToMat_sub (s t : SparseMat27) :
 private theorem sparseVal_map_smul (c : ℤ) (s : SparseMat27) (i j : Fin 27) :
     sparseVal (s.map fun (r, col, v) => (r, col, c * v)) i j = c * sparseVal s i j := by
   induction s with
-  | nil => simp [sparseVal]
+  | nil => simp
   | cons p s ih =>
     rcases p with ⟨r, col, v⟩
-    simp only [List.map_cons, sparseVal]
+    simp only [List.map_cons, sparseVal_cons]
     rw [ih]
     split_ifs <;> ring
 
@@ -143,12 +148,12 @@ private theorem sparseVal_filterMap_mul_row (a i k₀ : Fin 27) (v : ℤ) (t : S
     sparseVal (t.filterMap fun (k', c, w) => if k₀ == k' then some (a, c, v * w) else none) i j =
       (if a == i then v * sparseVal t k₀ j else 0) := by
   induction t with
-  | nil => simp [sparseVal]
+  | nil => simp
   | cons p t ih =>
     rcases p with ⟨k', c, w⟩
     by_cases hk : k₀ == k'
     · have hk' : k' == k₀ := by rw [beq_iff_eq] at hk ⊢; exact hk.symm
-      simp only [List.filterMap_cons, hk, ↓reduceIte, sparseVal, hk', Bool.true_and, ih]
+      simp only [List.filterMap_cons, hk, ↓reduceIte, sparseVal_cons, hk', Bool.true_and, ih]
       by_cases hai : a == i <;> by_cases hcj : c == j <;> simp [hai, hcj]
       ring
     · have hkf : (k₀ == k') = false := Bool.eq_false_iff.mpr hk
@@ -156,13 +161,13 @@ private theorem sparseVal_filterMap_mul_row (a i k₀ : Fin 27) (v : ℤ) (t : S
         rw [Bool.eq_false_iff, ne_eq, beq_iff_eq]
         rw [beq_iff_eq] at hk
         exact fun h => hk h.symm
-      simp only [List.filterMap_cons, hkf, Bool.false_eq_true, ↓reduceIte, sparseVal, hk',
+      simp only [List.filterMap_cons, hkf, Bool.false_eq_true, ↓reduceIte, sparseVal_cons, hk',
         Bool.false_and, zero_add, ih]
 
 theorem sparseVal_mul (s t : SparseMat27) (i j : Fin 27) :
     sparseVal (sparseMul s t) i j = ∑ k : Fin 27, sparseVal s i k * sparseVal t k j := by
   induction s with
-  | nil => simp [sparseMul, sparseVal]
+  | nil => simp [sparseMul]
   | cons p s ih =>
     rcases p with ⟨a, k₀, v⟩
     change sparseVal (sparseAdd
@@ -205,7 +210,7 @@ private theorem sparseVal_eq_zero_of_not_mem (s : SparseMat27) (i j : Fin 27)
     have hrc : (r == i && c == j) = false := by
       rw [Bool.eq_false_iff, ne_eq, Bool.and_eq_true, beq_iff_eq, beq_iff_eq]
       exact hp
-    simp only [sparseVal, hrc, Bool.false_eq_true, ↓reduceIte, zero_add, ih hs]
+    simp only [sparseVal_cons, hrc, Bool.false_eq_true, ↓reduceIte, zero_add, ih hs]
 
 theorem sparseToMat_eq_zero_of_sparseZeroCheck {s : SparseMat27}
     (h : sparseZeroCheck s = true) : sparseToMat s = 0 := by

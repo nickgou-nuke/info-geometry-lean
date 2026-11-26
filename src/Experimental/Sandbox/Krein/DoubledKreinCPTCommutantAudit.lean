@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.Krein.DoubledKreinCPTCommutant
 
 open InfoGeometry.Krein.DoubledCPT
@@ -13,4 +18,3 @@ open InfoGeometry.Krein.DoubledCPT
 #print axioms toPauli_mul
 #print axioms toPauli_one
 #print axioms toPauli_J
-#print axioms compile_doubled_krein_cpt_commutant

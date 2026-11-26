@@ -24,6 +24,7 @@ are relevant to Lean 4 theorem proving and this codebase.
 | `closure-debt-proof` | Proof debt closure workflow |
 | `lean-setup` | Lean environment bootstrap |
 | `lean-sandbox` | Isolated Lean execution |
+| `alexandria-pipeline` | PDF-to-DAG-brain literature ingestion and BM25/PPR GraphRAG retrieval (`retrieval_context_only`) |
 
 ## Public external Lean/proof tooling
 

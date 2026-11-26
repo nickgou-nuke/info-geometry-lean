@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.Projective.SplitQuaternionMotivicDPn
 
 open Experimental.Sandbox.Projective.SplitQuaternionMotivicDPn
@@ -18,4 +23,3 @@ open Experimental.Sandbox.Projective.SplitQuaternionMotivicDPn
 #print axioms affineTopCell_projector_last
 #print axioms motivicCellDim_zero
 #print axioms motivicCellDim_succ
-#print axioms compile_split_quaternion_motivic_dpn

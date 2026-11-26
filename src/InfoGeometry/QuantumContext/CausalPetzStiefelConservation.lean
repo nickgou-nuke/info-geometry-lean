@@ -90,27 +90,4 @@ theorem future_dominance_forces_past_annihilation (K L : R)
     _ = 1 - 1 := by rw [h_stiefel, h_future]
     _ = 0 := sub_self 1
 
-/-! ### 3. Master Verification Certificate -/
-
-/-- Certificate bundling the proved Stiefel conservation theorems with Prop fields. -/
-structure CausalPetzStiefelCertificate where
-  gram_operator : ∀ {R : Type*} [Ring R] (K L : R),
-    (blockIntertwiner K L)ᵀ * blockIntertwiner K L = !![K^2 + L^2, 0; 0, 0]
-  stiefel_iff : ∀ {R : Type*} [Ring R] (K L : R),
-    (blockIntertwiner K L)ᵀ * blockIntertwiner K L = !![1, 0; 0, 0] ↔ K^2 + L^2 = 1
-  trace_preservation : ∀ {R : Type*} [CommRing R] (K L s : R) (h : K^2 + L^2 = 1),
-    trace2 (petzBlockReconstruct K L s) = s
-  past_forces_future_zero : ∀ {R : Type*} [Ring R] (K L : R) (h1 : K^2 + L^2 = 1) (h2 : K^2 = 1),
-    L^2 = 0
-  future_forces_past_zero : ∀ {R : Type*} [Ring R] (K L : R) (h1 : K^2 + L^2 = 1) (h2 : L^2 = 1),
-    K^2 = 0
-
-/-- Instantiation of the master certificate with zero open assumptions. -/
-theorem compile_causal_petz_stiefel : CausalPetzStiefelCertificate :=
-  { gram_operator := blockIntertwiner_gram
-    stiefel_iff := gram_isometry_iff_stiefel
-    trace_preservation := petz_trace_preservation
-    past_forces_future_zero := past_preservation_forces_future_quiescence
-    future_forces_past_zero := future_dominance_forces_past_annihilation }
-
 end InfoGeometry.QuantumContext.CausalPetz

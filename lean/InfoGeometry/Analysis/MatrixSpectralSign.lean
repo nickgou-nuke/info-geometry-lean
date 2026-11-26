@@ -104,7 +104,7 @@ theorem spectralSign_eq_self_of_mul_self {H : Matrix n n 𝕜}
     spectralSign H = cfc (fun x : ℝ => x) H := by
       apply cfc_congr
       intro x hx
-      rcases sq_eq_one_iff.mp (hspectrum x hx) with hxone | hxneg
+      rcases sq_eq_one_iff.mp (hspectrum hx) with hxone | hxneg
       · rw [hxone, Real.sign_one]
       · rw [hxneg, Real.sign_neg, Real.sign_one]
     _ = H := cfc_id' ℝ H hH.isSelfAdjoint

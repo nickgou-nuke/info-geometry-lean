@@ -140,8 +140,6 @@ theorem subluminal_group_velocity (p mass : ℝ) (h_mass : mass ≠ 0) :
   rw [div_lt_one₀ hden]
   linarith
 
-end
-
 /-- Pointer state with mean coordinate and momentum. -/
 structure PointerState where
   q : ℝ
@@ -172,6 +170,7 @@ def isModularHorizon (p : SpacetimePoint) : Prop :=
 
 theorem modular_horizon_on_klein_seam (p : SpacetimePoint) (h_mod : isModularHorizon p) :
     isKleinSeam p := by
+  unfold isKleinSeam
   rw [klein_seam_iff_t_zero]
   exact h_mod.1
 
@@ -192,10 +191,12 @@ theorem aav_weak_klein_seam_synthesis :
     spacetimeGlideReflection_time_sq, linearGlideMatrix_det,
     klein_seam_iff_t_zero, modular_horizon_on_klein_seam,
     weak_amplification_bound, bdg_mass_gap_positive,
-    subluminal_group_velocity⟩
+    fun p mass _ h_mass => subluminal_group_velocity p mass h_mass⟩
 
 /-- Grand certificate: The AAV weak measurement Klein bottle modular seam packet is fully certified. -/
 theorem aav_weak_klein_seam_certified :
     linearGlideMatrix.det = -1 := linearGlideMatrix_det
+
+end
 
 end InfoGeometry.Canonical.AAVWeakMeasurementKleinSeam

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.Data.Matrix.Block
 import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
@@ -41,9 +46,6 @@ Berezinian homothety invariance:
      The scaling factor is $c^{p+q} \cdot (c^{-1})^q = c^p$, necessitating the
      projective quotient leaf $\mathbb{P}(V)$ to absorb residual scale curvature.
 
-5. **Master Verification Certificate**:
-   Bundles all core theorems into `ProjectiveKreinBerezinianCertificate` proven
-   with 100% axiomatic purity (zero `sorry`, zero `admit`, zero custom axioms).
 -/
 
 namespace Experimental.Sandbox.SuperGrassmannian.ProjectiveKreinBerezinian
@@ -169,52 +171,5 @@ theorem unbalanced_homothety_berezinian (p q : ℕ) (c inv_c : R) (h : c * inv_c
   rw [unbalanced_homothety_berezinian_factor, h, one_pow, mul_one]
 
 end Berezinian
-
-/-! ### 4. Master Verification Certificate -/
-
-/-- Master verification certificate bundling all projective Krein and Berezinian invariants:
-    - Split Krein metric involutivity ($\eta^2 = 1$)
-    - Split Krein metric symmetry ($\eta^T = \eta$)
-    - Almost para-complex structure involutivity ($K^2 = 1$)
-    - Split hyperbolic anticommutation ($\{\eta, K\} = 0$)
-    - Chiral canonical relation ($X(1) \cdot K = 1$)
-    - Chiral sheet swap on positive vectors ($K (u, 0) = (0, u)$)
-    - Chiral sheet swap on negative vectors ($K (0, v) = (v, 0)$)
-    - Balanced Berezinian scale invariance ($c^p \cdot (c^{-1})^p = 1$)
-    - Unbalanced Berezinian projective scaling ($c^{p+q} \cdot (c^{-1})^q = c^p$) -/
-structure ProjectiveKreinBerezinianCertificate : Prop where
-  krein_sq : ∀ (ι₁ ι₂ : Type*) [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    (R : Type*) [CommRing R],
-    kreinMetric ι₁ ι₂ R * kreinMetric ι₁ ι₂ R = 1
-  krein_transpose : ∀ (ι₁ ι₂ : Type*) [DecidableEq ι₁] [Fintype ι₁] [DecidableEq ι₂] [Fintype ι₂]
-    (R : Type*) [CommRing R],
-    (kreinMetric ι₁ ι₂ R)ᵀ = kreinMetric ι₁ ι₂ R
-  paraComplex_sq : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R],
-    paraComplexK ι R * paraComplexK ι R = 1
-  krein_paraComplex_anticomm : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R],
-    kreinMetric (ι₁ := ι) (ι₂ := ι) R * paraComplexK ι R +
-    paraComplexK ι R * kreinMetric (ι₁ := ι) (ι₂ := ι) R = 0
-  chiral_comm : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R],
-    chiralMode (1 : Matrix ι ι R) * paraComplexK ι R = 1
-  sheet_swap_pos : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R] (u : ι → R),
-    paraComplexK ι R *ᵥ Sum.elim u (0 : ι → R) = Sum.elim (0 : ι → R) u
-  sheet_swap_neg : ∀ (ι : Type*) [DecidableEq ι] [Fintype ι] (R : Type*) [CommRing R] (v : ι → R),
-    paraComplexK ι R *ᵥ Sum.elim (0 : ι → R) v = Sum.elim v (0 : ι → R)
-  balanced_berezinian : ∀ {R : Type*} [CommRing R] (p : ℕ) (c inv_c : R),
-    c * inv_c = 1 → (c ^ p) * (inv_c ^ p) = 1
-  unbalanced_berezinian : ∀ {R : Type*} [CommRing R] (p q : ℕ) (c inv_c : R),
-    c * inv_c = 1 → (c ^ (p + q)) * (inv_c ^ q) = c ^ p
-
-/-- Verification theorem constructing the master certificate. -/
-theorem compile_projective_krein_berezinian : ProjectiveKreinBerezinianCertificate where
-  krein_sq := fun ι₁ ι₂ _ _ _ _ R _ => kreinMetric_sq_eq_one ι₁ ι₂ R
-  krein_transpose := fun ι₁ ι₂ _ _ _ _ R _ => kreinMetric_transpose ι₁ ι₂ R
-  paraComplex_sq := fun ι _ _ R _ => paraComplexK_sq_eq_one ι R
-  krein_paraComplex_anticomm := fun ι _ _ R _ => krein_paraComplex_anticomm ι R
-  chiral_comm := fun ι _ _ R _ => chiral_paraComplex_comm ι R
-  sheet_swap_pos := fun ι _ _ R _ u => chiral_sheet_swap_pos ι R u
-  sheet_swap_neg := fun ι _ _ R _ v => chiral_sheet_swap_neg ι R v
-  balanced_berezinian := fun p c inv_c h => balanced_homothety_berezinian_eq_one p c inv_c h
-  unbalanced_berezinian := fun p q c inv_c h => unbalanced_homothety_berezinian p q c inv_c h
 
 end Experimental.Sandbox.SuperGrassmannian.ProjectiveKreinBerezinian

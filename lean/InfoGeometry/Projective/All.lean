@@ -7,6 +7,8 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Projective.MobiusDual
 import InfoGeometry.Projective.FisherCauchySchwarzCramerRao
 import InfoGeometry.Projective.LegendreProjectiveDuality
+import InfoGeometry.Projective.ProjectiveFenchelLegendreBridge
+import InfoGeometry.Projective.ProjectiveIncidenceDefect
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Projective.KuzminCuntzPath
 import InfoGeometry.Projective.KuzminInductiveLimitBridge

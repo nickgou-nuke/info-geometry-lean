@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Analysis.BregmanAnalyticBound
 import InfoGeometry.Volume.ConnesCocycle
 import DAG.GraphHodge
@@ -52,29 +57,19 @@ def Harmonic1Chain {α : Type} [BEq α] [Hashable α]
 /-! ## Matrix-valued boundary operators -/
 
 /-- Boundary operator d1 as Matrix (edges x vertices). -/
-def boundary1Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
+abbrev boundary1Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
     Matrix (Fin tc.edges.size) (Fin tc.base.toGraph.nodes.size) ℚ :=
-  λ i j =>
-    let (u, v) := tc.edges[i.val]
-    if j.val = u then (-1 : ℚ) else if j.val = v then 1 else 0
+  DAG.boundary1Matrix tc
 
 /-- Boundary operator d2 as Matrix (faces x edges). -/
-def boundary2Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
+abbrev boundary2Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
     Matrix (Fin (tc.faces.size + tc.digons.size)) (Fin tc.edges.size) ℚ :=
-  λ i j =>
-    if h : i.val < tc.faces.size then
-      let (e1, e2, e3) := tc.faces[i.val]
-      if j.val = e1 then 1 else if j.val = e2 then 1 else if j.val = e3 then (-1) else 0
-    else
-      let (eU, eV) := tc.digons[i.val - tc.faces.size]
-      if j.val = eU then 1 else if j.val = eV then 1 else 0
+  DAG.boundary2Matrix tc
 
 /-- Hodge Laplacian = d1*d1^T + d2^T*d2 as Matrix. -/
-def laplacian1Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
+abbrev laplacian1Matrix {α} [BEq α] [Hashable α] (tc : TwoComplex α) :
     Matrix (Fin tc.edges.size) (Fin tc.edges.size) ℚ :=
-  let d1 := boundary1Matrix tc
-  let d2 := boundary2Matrix tc
-  d1 * d1ᵀ + d2ᵀ * d2
+  DAG.laplacian1Matrix tc
 
 /-! ## det != 0 implies trivial kernel (fully proved, 0 sorries) -/
 
@@ -143,7 +138,6 @@ lemma laplacian1_entrywise_agree {α} [BEq α] [Hashable α] (tc : TwoComplex α
     ((laplacian1 tc)[i.val]!)[j.val]! = (laplacian1Matrix tc) i j := by
   dsimp [laplacian1]
   simp
-  rfl
 
 lemma array_dotProduct_eq {n : ℕ} (f : Fin n → Rat) (v : Array Rat) (hv : v.size = n) :
     Array.foldl (fun x1 x2 => x1 + x2) 0
@@ -286,7 +280,6 @@ theorem betti1ZeroKernel_concrete
     {α : Type} [BEq α] [Hashable α]
     (tc : TwoComplex α)
     (h_det : (laplacian1Matrix tc).det ≠ 0)
-    (_h_betti1_zero : (betti1 tc).toNat = 0)
     (ψ : Array Rat) (hψ_size : ψ.size = tc.edges.size)
     (h_harmonic : Harmonic1Chain tc ψ) :
     ψ = zeroVectorLike ψ := by

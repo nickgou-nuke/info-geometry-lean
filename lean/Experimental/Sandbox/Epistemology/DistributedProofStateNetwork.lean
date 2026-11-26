@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Epistemology.PropositionalDerivation
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Tactic.Ring
@@ -307,70 +312,5 @@ theorem caching_soundness {Hash : Type*} [DecidableEq Hash]
     rw [← h_cache, h_verified]
   exact kernel_soundness p t h_ver
 
-/-! ### Section 5: Master Verification Certificate -/
-
-/-- Master certificate bundling all foundational theorems of the Distributed Epistemic
-    State Machine under QMS-SOP-IAA-001. -/
-structure DistributedProofStateNetworkCertificate : Prop where
-  -- Section 1: CAS & Merkle AST Tree
-  content_hash_eq : ∀ {α : Type*} (h1 h2 : ContentHash α), h1 = h2 ↔ h1.node = h2.node
-  anti_reflexive_causality : ∀ {α : Type*} (h : ContentHash α), ¬ IsCausalDependency h h
-  transitive_causality : ∀ {α : Type*} {a b c : ContentHash α},
-    IsCausalDependency a b → IsCausalDependency b c → IsCausalDependency a c
-  -- Section 2: RIPs & Causal Intertwiner Cocycle
-  intertwiner_assoc : ∀ {State Hash : Type*}
-    (p1 p2 p3 : RelationalInvariantPacket State Hash)
-    (h12 : p1.tgt = p2.src) (h23 : p2.tgt = p3.src),
-    composeRIP (composeRIP p1 p2 h12) p3 h23 = composeRIP p1 (composeRIP p2 p3 h23) h12
-  intertwiner_id_left : ∀ {State Hash : Type*} (p : RelationalInvariantPacket State Hash),
-    (composeRIP (idRIP p.src) p rfl).intertwiner = p.intertwiner
-  intertwiner_id_right : ∀ {State Hash : Type*} (p : RelationalInvariantPacket State Hash),
-    (composeRIP p (idRIP p.tgt) rfl).intertwiner = p.intertwiner
-  gauge_invariance : ∀ {State Hash : Type*} (p : RelationalInvariantPacket State Hash)
-    (g : State → State) (s : State),
-    (∀ x, p.intertwiner (g x) = g (p.intertwiner x)) → g s = s → g (p.intertwiner s) = p.intertwiner s
-  -- Section 3: 15-Trap Gatekeeper & Residue Quarantine
-  clean_idempotent : ∀ (trapId : Nat) (R : Type*) [Ring R],
-    P_clean trapId R * P_clean trapId R = P_clean trapId R
-  residue_idempotent : ∀ (trapId : Nat) (R : Type*) [Ring R],
-    P_residue trapId R * P_residue trapId R = P_residue trapId R
-  clean_annihilates_residue_proj : ∀ (trapId : Nat) (R : Type*) [Ring R],
-    P_clean trapId R * P_residue trapId R = 0
-  residue_annihilates_clean_proj : ∀ (trapId : Nat) (R : Type*) [Ring R],
-    P_residue trapId R * P_clean trapId R = 0
-  screener_complete : ∀ (trapId : Nat) (R : Type*) [Ring R],
-    P_clean trapId R + P_residue trapId R = 1
-  quarantine_reject : ∀ {Hash : Type*} (obs : TypedObstructionPacket Hash) (R : Type*) [Ring R],
-    obs.trapId > 0 → P_clean obs.trapId R = 0
-  -- Section 4: Propositional certificate transport
-  soundness : ∀ {Hash : Type*} [DecidableEq Hash] (p : ProofTerm Hash) (t : TheoremTarget Hash),
-    verifyProof p t = true → Provable t
-  consensus_invariance : ∀ {Hash : Type*} [DecidableEq Hash] (peer1 peer2 : PeerID)
-    (p : ProofTerm Hash) (t : TheoremTarget Hash),
-    peerVerify peer1 p t = peerVerify peer2 p t
-  caching_validity : ∀ {Hash : Type*} [DecidableEq Hash] (cache : Hash → Bool)
-    (p : ProofTerm Hash) (t : TheoremTarget Hash),
-    cache t.id = verifyProof p t → cache t.id = true → Provable t
-
-/-- Compilation of the Distributed Epistemic State Machine Master Certificate. -/
-theorem compile_distributed_proof_state_network :
-    DistributedProofStateNetworkCertificate := {
-  content_hash_eq := content_hash_eq_iff
-  anti_reflexive_causality := not_causal_self
-  transitive_causality := causal_trans
-  intertwiner_assoc := composeRIP_assoc
-  intertwiner_id_left := fun p => idRIP_compose p rfl
-  intertwiner_id_right := fun p => compose_idRIP p rfl
-  gauge_invariance := gauge_invariance_preserved
-  clean_idempotent := P_clean_idempotent
-  residue_idempotent := P_residue_idempotent
-  clean_annihilates_residue_proj := clean_annihilates_residue
-  residue_annihilates_clean_proj := residue_annihilates_clean
-  screener_complete := screener_completeness
-  quarantine_reject := quarantine_exclusion
-  soundness := kernel_soundness
-  consensus_invariance := trustless_p2p_consensus
-  caching_validity := caching_soundness
-}
 
 end Experimental.Sandbox.Epistemology.DistributedProofStateNetwork

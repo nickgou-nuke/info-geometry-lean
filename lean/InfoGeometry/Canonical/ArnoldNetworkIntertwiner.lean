@@ -102,11 +102,11 @@ theorem arnoldToDoubledKrein_readoutPreservation_of_pointwise_eq
   refine ⟨?_, ?_⟩
   · intro s
     simpa [arnoldToDoubledKreinIntertwiner_of_expertsFix,
-      ArnoldNetworkPresentation.toQuantumPresentation, doubledFierzReadout,
-      FierzChannelReadout.toQuantumPresentation] using hMetric s
+      ArnoldNetworkPresentation.toQuantumPresentation, toQuantumPresentationWith,
+      doubledFierzReadout, FierzChannelReadout.toQuantumPresentation] using hMetric s
   · intro s
     simpa [arnoldToDoubledKreinIntertwiner_of_expertsFix,
-      ArnoldNetworkPresentation.toQuantumPresentation, doubledFierzReadout,
-      FierzChannelReadout.toQuantumPresentation] using hPhase s
+      ArnoldNetworkPresentation.toQuantumPresentation, toQuantumPresentationWith,
+      doubledFierzReadout, FierzChannelReadout.toQuantumPresentation] using hPhase s
 
 end InfoGeometry.Canonical.ArnoldNetworkIntertwiner

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.MadelungChiralEvolutionBridge
 
 /-!
@@ -39,8 +44,6 @@ open InfoGeometry.Canonical.MadelungChiral
 -- Section 5
 #print axioms normalized_trace_doubling_invariant
 
--- Section 6
-#print axioms compile_madelung_chiral_evolution
 
 end InfoGeometry.Canonical.MadelungChiral.Audit
 

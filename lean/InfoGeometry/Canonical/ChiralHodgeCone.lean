@@ -120,7 +120,7 @@ theorem chiralTrace_vanishes_of_sewn {n : ℕ} (γ ρ : Mat n)
       (2 : ℂ) * chiralTrace γ ρ = 0 := by
     calc
       (2 : ℂ) * chiralTrace γ ρ
-          = chiralTrace γ ρ + chiralTrace γ ρ := by ring
+          = chiralTrace γ ρ + chiralTrace γ ρ := by rw [two_mul]
       _ = chiralTrace γ ρ + (-chiralTrace γ ρ) := by nth_rw 2 [hneg]
       _ = 0 := by simp
   have htwo_ne : (2 : ℂ) ≠ 0 := by norm_num
@@ -139,7 +139,7 @@ theorem chiralTrace_vanishes_of_anticommute {n : ℕ} (γ ρ : Mat n)
   have htwo : (2 : ℂ) * Matrix.trace (γ * ρ) = 0 := by
     calc
       (2 : ℂ) * Matrix.trace (γ * ρ) =
-          Matrix.trace (γ * ρ) + Matrix.trace (γ * ρ) := by ring
+          Matrix.trace (γ * ρ) + Matrix.trace (γ * ρ) := by rw [two_mul]
       _ = Matrix.trace (γ * ρ) + (-Matrix.trace (γ * ρ)) := by
         nth_rw 2 [hneg]
       _ = 0 := by simp

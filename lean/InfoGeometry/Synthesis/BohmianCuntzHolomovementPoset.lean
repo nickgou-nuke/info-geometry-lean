@@ -409,7 +409,7 @@ theorem uhf_tower_enfold_and_state_coherence_bridge
   have hstep :
       InfoGeometry.Canonical.CuntzMatrixTraceTower.concreteStep k x =
         InfoGeometry.Canonical.CuntzMatrixTraceTower.concreteMap (Nat.le.step (le_refl k)) x := by
-    change InfoGeometry.Canonical.CuntzMatrixTraceTower.concreteData.step k x =
+    change InfoGeometry.Canonical.CuntzMatrixTraceTower.concreteData k x =
       InfoGeometry.Canonical.CuntzMatrixTraceTower.map
         InfoGeometry.Canonical.CuntzMatrixTraceTower.concreteData (Nat.le.step (le_refl k)) x
     rw [InfoGeometry.Canonical.CuntzMatrixTraceTower.map_succ

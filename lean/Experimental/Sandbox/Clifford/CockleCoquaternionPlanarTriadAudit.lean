@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.Clifford.CockleCoquaternionPlanarTriad
 
 open InfoGeometry.Clifford.Coquaternion.Coquaternion
@@ -14,4 +19,3 @@ open InfoGeometry.Clifford.Coquaternion.Coquaternion
 #print axioms lightcone_ladder_nilpotent
 #print axioms toMatrix_mul
 #print axioms toMatrix_det
-#print axioms compile_cockle_coquaternion_planar_triad

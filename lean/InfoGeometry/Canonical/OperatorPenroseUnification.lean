@@ -342,7 +342,7 @@ theorem operator_penrose_unification_closed
       CoherentClosure Φ := by
   exact
     operator_penrose_unification_of_capstone
-      S cap.toCapstoneWitness cap.finiteWitness
+      S cap.toCapstoneWitness
 
 /--
 Translation queue for later unbounded modular closure.

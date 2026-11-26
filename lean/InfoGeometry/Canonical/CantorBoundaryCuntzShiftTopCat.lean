@@ -84,8 +84,18 @@ theorem prefixBitTopCat_targets_partition :
     simp [prefixBit] at hhead
   · apply Set.eq_univ_of_forall
     intro x
-    rcases prefixBit_range_cover x with hx | hx
-    · exact Set.mem_union_left _ hx
-    · exact Set.mem_union_right _ hx
+    cases hx0 : x 0 with
+    | false =>
+      refine Set.mem_union_left _ ⟨fun k => x (k + 1), ?_⟩
+      funext k
+      cases k with
+      | zero => exact hx0.symm
+      | succ m => rfl
+    | true =>
+      refine Set.mem_union_right _ ⟨fun k => x (k + 1), ?_⟩
+      funext k
+      cases k with
+      | zero => exact hx0.symm
+      | succ m => rfl
 
 end InfoGeometry.Canonical.CantorBoundaryCuntzShift

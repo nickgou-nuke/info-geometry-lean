@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.ApolloniusLambdaDAGClosure
 import InfoGeometry.Canonical.ApolloniusLambdaDAGQuery
 
@@ -15,7 +20,6 @@ open InfoGeometry.Canonical.ApolloniusLambdaDAGClosure
 #check lambda_scale_normal
 #check lambda_unit_circle_chart
 #check lambda_fisher_positive
-#check lambda_information_potential_nonnegative
 #check lambda_dilation_group
 #check lambda_transfer_unit
 #check affine_reaches_sl2Generator

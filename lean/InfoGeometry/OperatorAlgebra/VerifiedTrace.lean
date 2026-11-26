@@ -80,6 +80,8 @@ theorem matrix_trace_conjugation_defect {R : Type*} [Ring R]
     rw [← mul_assoc, h_left, one_mul]
   rw [hA, ← Matrix.trace_sub]
 
+section NonCommMatrixTrace
+
 variable {R : Type*} [Ring R]
 
 /-- A cyclic matrix trace over a possibly noncommutative coefficient ring is
@@ -105,6 +107,8 @@ theorem matrix_trace_conjugation_invariant
             rw [h_left]
     _ = Matrix.trace A := by
             simp
+
+end NonCommMatrixTrace
 
 /-! ## 2. The ordinary matrix trace need not be cyclic over noncommutative coefficients -/
 
@@ -142,11 +146,17 @@ theorem cyclic_trace_invariant_under_transport_ring {B M : Type*} [Ring B]
     _ = τ ((↑U⁻¹ * (U : B)) * A) := by rw [mul_assoc]
     _ = τ A := by rw [Units.inv_mul U, one_mul]
 
+section CommutativeMatrixTrace
+
+variable {R : Type*} [CommRing R]
+
 theorem matrix_trace_invariant_under_transport
     (A : Matrix n n R)
     (U : InvertibleTransport (Matrix n n R)) :
     Matrix.trace (U.conjugate A) = Matrix.trace A := by
   simpa [InvertibleTransport.conjugate] using Matrix.trace_units_conj U A
+
+end CommutativeMatrixTrace
 
 def VerifiedTrace
     (Op Scalar : Type*) [Monoid Op] :=
@@ -154,6 +164,14 @@ def VerifiedTrace
     ∀ (A : Op) (U : InvertibleTransport Op),
       tr (U.conjugate A) = tr A}
 
+section
+
+set_option linter.dupNamespace false
+
+namespace VerifiedTrace
+
+variable {Op Scalar : Type*} [Monoid Op]
+variable (T : VerifiedTrace Op Scalar)
 
 abbrev tr : Op → Scalar :=
   T.1
@@ -169,6 +187,10 @@ theorem conjugation_invariant
     (U : InvertibleTransport Op) :
     T.tr (U.conjugate A) = T.tr A :=
   T.invariant A U
+
+end VerifiedTrace
+
+end
 
 def matrixVerifiedTrace
     (n R : Type*) [Fintype n] [DecidableEq n] [CommRing R] :

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.TraceFormula.FiniteISColimitInverseLimitSearch
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Clifford.InductiveColimitCrystal
@@ -216,7 +221,7 @@ theorem bkm_realMatrixOperator_readout
         (1 : SouriauOnsagerBKM.FiniteOperatorAlgebra (2 ^ n)) s
         (realMatrixOperator n A) =
       Complex.ofReal (normalizedTrace n A) := by
-  rw [maximallyMixed_bkm_kernel_eq_normalized_trace,
+  rw [InfoGeometry.Canonical.CuntzMatrixTraceTower.maximallyMixed_bkm_kernel_eq_normalized_trace,
     finiteOperatorTrace_realMatrixOperator]
   have htrace : Matrix.trace
       ((InfoGeometry.Algebra.CliffordBitWordEquivalence.bitWordStageEquivFin n).toFun A) =
@@ -317,12 +322,13 @@ def operatorToMatrixLinearMap (n : ℕ) :
 
 theorem traceColimitFunctional_inclusion_bkm
     (n : ℕ) (s : ℝ) (B : SouriauOnsagerBKM.FiniteOperatorAlgebra (2 ^ n)) :
-    traceColimitFunctional concreteData
+    traceColimitFunctional concreteData concrete_trace_compatible
         (traceColimitInclusion concreteData n (CblinfunMatrix.matrixOfOp B)) =
       (maximallyMixedFaithfulDensityPowTwo n).kuboMoriKernelFunctional
         (1 : SouriauOnsagerBKM.FiniteOperatorAlgebra (2 ^ n)) s B := by
-  rw [traceColimitFunctional_inclusion concreteData n (CblinfunMatrix.matrixOfOp B),
-    maximallyMixed_bkm_kernel_eq_normalized_trace]
+  rw [traceColimitFunctional_inclusion concreteData concrete_trace_compatible n
+      (CblinfunMatrix.matrixOfOp B),
+    InfoGeometry.Canonical.CuntzMatrixTraceTower.maximallyMixed_bkm_kernel_eq_normalized_trace]
   rfl
 
 /- The existing operator-coordinate filtered colimit reads the real BitWord
@@ -332,11 +338,11 @@ theorem traceColimitFunctional_inclusion_bkm
     introducing a second descent construction. -/
 theorem concreteOperator_colimit_realMatrixOperator_readout
     (n : ℕ) (s : ℝ) (A : InfoGeometry.Algebra.PrimonColimitAlgebra.MatrixStage n) :
-    traceColimitFunctional concreteData
+    traceColimitFunctional concreteData concrete_trace_compatible
         (traceColimitInclusion concreteData n
           (operatorToMatrixLinearMap n (realMatrixOperator n A))) =
       Complex.ofReal (normalizedTrace n A) := by
-  change traceColimitFunctional concreteData
+  change traceColimitFunctional concreteData concrete_trace_compatible
       (traceColimitInclusion concreteData n
         (CblinfunMatrix.matrixOfOp (realMatrixOperator n A))) = _
   rw [traceColimitFunctional_inclusion_bkm]
@@ -350,7 +356,7 @@ theorem concreteOperator_colimit_realMatrixOperator_readout
 theorem concreteOperator_colimit_tracePairingNative_readout
     (n : ℕ) (s : ℝ)
     (X Y : InfoGeometry.Physics.TraceOperatorSpace (BitWord n)) :
-    traceColimitFunctional concreteData
+    traceColimitFunctional concreteData concrete_trace_compatible
         (traceColimitInclusion concreteData n
           (operatorToMatrixLinearMap n
             ((realMatrixOperator n
@@ -359,7 +365,7 @@ theorem concreteOperator_colimit_tracePairingNative_readout
                 (traceOperatorSpaceMatrixStageEquiv n Y))))) =
       Complex.ofReal
         ((1 / (2 ^ n : ℝ)) * InfoGeometry.Physics.tracePairingNative X Y) := by
-  change traceColimitFunctional concreteData
+  change traceColimitFunctional concreteData concrete_trace_compatible
       (traceColimitInclusion concreteData n
         (CblinfunMatrix.matrixOfOp
           ((realMatrixOperator n

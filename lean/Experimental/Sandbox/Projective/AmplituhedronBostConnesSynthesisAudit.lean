@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Experimental.Sandbox.Projective.AmplituhedronBostConnesSynthesis
 
 open Experimental.Sandbox.Projective.AmplituhedronBostConnesSynthesis
@@ -14,4 +19,3 @@ open Experimental.Sandbox.Projective.AmplituhedronBostConnesSynthesis
 #print axioms gibbs_weights_normalized
 #print axioms socket_boundary_readout
 #print axioms socket_plucker_exact
-#print axioms compile_amplituhedron_bost_connes_synthesis

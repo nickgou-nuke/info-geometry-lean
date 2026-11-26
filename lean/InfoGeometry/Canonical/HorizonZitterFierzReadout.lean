@@ -80,6 +80,6 @@ theorem horizonZitter_fierz_quadric_from_property
     (K : HorizonZitterFierzCompatibilityAssumption Obs)
     (Z : HorizonZitterMode Obs) :
     K.residual.residual (horizonZitterFierzVector K.state K.channels Z) = 0 :=
-  K.compatibility_property Z
+  K.compatibility_assumption Z
 
 end InfoGeometry.Canonical.HorizonZitterFierzReadout

@@ -34,6 +34,7 @@ installed locally.
 9. `categorical-infrastructure-projection` and `virasoro-finite-to-infinite-transition` for bridge work.
 10. `sympy-lean-handoff` for exact symbolic verification followed by Lean 4 translation.
 11. `mission-loop`, `closure-mission-loop`, and `closure-debt-proof` for repeated debt burn-down.
+12. `alexandria-pipeline` (optional prior-art literature retrieval from isolated PDF DAG brains; strictly `retrieval_context_only`, never proof authority).
 
 ## External candidates
 

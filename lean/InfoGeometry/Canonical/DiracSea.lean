@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.ModularNilpotentAutomorphism
@@ -152,5 +157,8 @@ theorem diracSeaStep_only_interface (w w' : DiracSeaBoundary)
 theorem diracSeaStep_eq_none_iff
     (w : DiracSeaBoundary) : diracSeaStep w = none ↔ ¬ (w (-1) = true ∧ w 0 = false) := by
   simp [diracSeaStep]
+
+/-- Combinatorial free-energy functional in the same sector: `A_info = N - N`. -/
+def informationFreeEnergy : M2R := step - step
 
 end InfoGeometry.Canonical.DiracSea

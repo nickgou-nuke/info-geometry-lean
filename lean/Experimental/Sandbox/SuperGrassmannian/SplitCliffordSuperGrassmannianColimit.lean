@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Nat.Basic
 import Mathlib.Data.Int.Basic
 import Mathlib.Basic.Real.Basic
@@ -35,8 +40,6 @@ This module formalizes:
    - Normalized identity trace: $\tau_n(\mathbf{1}) = 1$.
 5. **The Sato Super-Infinite Grassmannian**:
    - Invariance of the Fredholm virtual chiral index under inductive colimit bonding.
-6. **Master Verification Certificate**:
-   - Bundles all theorems with 0 sorry, 0 admit, and 0 custom axioms.
 -/
 
 namespace InfoGeometry.SuperGrassmannian.SplitCliffordColimit
@@ -245,31 +248,5 @@ theorem sato_virtual_index_invariant (n : ℕ) (b : SatoBonding n) :
   rw [b.h_plus, b.h_minus]
   push_cast
   ring
-
-/-! ### 6. Master Verification Certificate -/
-
-/-- Master certificate bundling all proved Clifford tower and colimit theorems. -/
-structure SplitCliffordSuperGrassmannianColimitCertificate : Prop where
-  clifford_dim_sq : ∀ n : ℕ, (spinorDim n) ^ 2 = cliffordDim n
-  chiral_sum : ∀ n : ℕ, 1 ≤ n → chiralHalfDim n + chiralHalfDim n = spinorDim n
-  triality_sweet_spot : vectorDim 4 = chiralHalfDim 4 ∧ chiralHalfDim 4 = 8
-  bott_period_closure : spinorDim 8 = 256 ∧ (spinorDim 8) ^ 2 = cliffordDim 8 ∧ cliffordDim 8 = 65536
-  balanced_berezinian_orientable : ∀ n : ℕ, 2 ≤ n → (-1 : ℤ) ^ (chiralHalfDim n) = 1
-  colimit_trace_invariant : ∀ (n : ℕ) (data : AlgebraBondingData n),
-    normalizedAlgebraTrace (n + 1) data.tr_level_succ = normalizedAlgebraTrace n data.tr_level_n
-  normalized_identity_trace_one : ∀ n : ℕ, normalizedAlgebraTrace n (rawIdentityTrace n) = 1
-  sato_index_invariant : ∀ (n : ℕ) (b : SatoBonding n),
-    virtualChiralIndex b.state_succ = virtualChiralIndex b.state_n
-
-/-- Instantiation of the master certificate with zero open assumptions. -/
-theorem compile_split_clifford_colimit : SplitCliffordSuperGrassmannianColimitCertificate where
-  clifford_dim_sq := spinor_sq_eq_clifford
-  chiral_sum := chiral_split_sum
-  triality_sweet_spot := triality_sweet_spot
-  bott_period_closure := bott_period_closure
-  balanced_berezinian_orientable := balanced_berezinian_orientable
-  colimit_trace_invariant := colimit_algebra_trace_invariant
-  normalized_identity_trace_one := normalized_identity_trace_eq_one
-  sato_index_invariant := sato_virtual_index_invariant
 
 end InfoGeometry.SuperGrassmannian.SplitCliffordColimit

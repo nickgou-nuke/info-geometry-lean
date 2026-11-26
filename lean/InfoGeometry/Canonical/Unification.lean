@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.Singular
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RicciMongeAmpere
@@ -159,43 +164,6 @@ section Cl11LatticeRosetta
 open InfoGeometry.Quantum.ModularAnomaly.Cl11LatticeBridge
 
 variable {n : ℕ}
-
-noncomputable local instance : NormedAddCommGroup (cl11DoubledCore (FinModel (N := n))) := by
-  change NormedAddCommGroup (InfoGeometry.Krein.DoubledSpace (FinModel (N := n)))
-  infer_instance
-
-noncomputable local instance : NormedSpace ℝ (cl11DoubledCore (FinModel (N := n))) := by
-  change NormedSpace ℝ (InfoGeometry.Krein.DoubledSpace (FinModel (N := n)))
-  infer_instance
-
-noncomputable local instance : InnerProductSpace ℝ (cl11DoubledCore (FinModel (N := n))) := by
-  change InnerProductSpace ℝ (InfoGeometry.Krein.DoubledSpace (FinModel (N := n)))
-  infer_instance
-
-noncomputable local instance : CompleteSpace (cl11DoubledCore (FinModel (N := n))) := by
-  change CompleteSpace (InfoGeometry.Krein.DoubledSpace (FinModel (N := n)))
-  infer_instance
-
-noncomputable local instance : KreinSpace (cl11DoubledCore (FinModel (N := n))) := by
-  change KreinSpace (InfoGeometry.Krein.DoubledSpace (FinModel (N := n)))
-  infer_instance
-
-noncomputable local instance :
-    NormedRing
-      (ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)) := inferInstance
-
-noncomputable local instance :
-    NormedAlgebra ℝ
-      (ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)) := inferInstance
-
-noncomputable local instance :
-    CompleteSpace
-      (ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)) := by
-  infer_instance
-
-local instance :
-    IsTopologicalRing
-      (ContinuousCarrier (N := n) →L[ℝ] ContinuousCarrier (N := n)) := inferInstance
 
 /--
 Finite-dimensional `Cl(1,1)` Rosetta package:

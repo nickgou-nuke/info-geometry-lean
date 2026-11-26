@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CanonicalZornNullProjectiveBoundaryBridge
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -39,7 +44,7 @@ theorem projectiveRepresentative_null {X : Imaginary}
 theorem projectiveRepresentative_nonzero {X : Imaginary}
     (Y : NonzeroAnnihilator (X := X)) :
     (annihilatorProjectiveRepresentative Y.1).1 ≠
-      pacSplit55Zero :=
+      CanonicalZornNullProjectiveBoundaryBridge.pacSplit55Zero :=
   (annihilatorProjectiveRepresentative Y.1).2.1
 
 end InfoGeometry.Canonical.CanonicalZornProjectiveNullRepresentative

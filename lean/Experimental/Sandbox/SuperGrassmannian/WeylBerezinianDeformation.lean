@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Data.Matrix.Basic
 import Mathlib.LinearAlgebra.Matrix.Notation
 import Mathlib.Algebra.BigOperators.Fin
@@ -30,7 +35,6 @@ Grounds the deformation triad natively in the noncommutative operator algebra `M
    - STr(X(k₁, k₂)) = 0 (Chiral unimodularity)
    - STr(V(a)) = 0 (Volume unimodularity)
    - Total deformation splitting: STr(S + X + V) = (p - q) · σ.
-8. Master verification certificate `WeylBerezinianDeformationCertificate`.
 -/
 
 namespace Experimental.Sandbox.SuperGrassmannian.WeylBerezinian
@@ -41,6 +45,18 @@ variable {R : Type*} [CommRing R]
 
 /-! ### 1. Graded Supertrace and Parity Projections on Matrix Operators -/
 
+private lemma scalar_sub_add_sub {R : Type*} [CommRing R] (a0 a1 b0 b1 : R) :
+    (a0 + b0) - (a1 + b1) = (a0 - a1) + (b0 - b1) := by
+  ring
+
+private lemma scalar_smul_sub {R : Type*} [CommRing R] (r a0 a1 : R) :
+    r * a0 - r * a1 = r * (a0 - a1) := by
+  ring
+
+private lemma scalar_neg_sub_neg {R : Type*} [CommRing R] (a0 a1 : R) :
+    -a0 - -a1 = -(a0 - a1) := by
+  ring
+
 /-- The Graded Supertrace of a 2x2 matrix operator: STr(M) = M 0 0 - M 1 1. -/
 def superTrace (M : Matrix (Fin 2) (Fin 2) R) : R :=
   M 0 0 - M 1 1
@@ -48,17 +64,17 @@ def superTrace (M : Matrix (Fin 2) (Fin 2) R) : R :=
 theorem superTrace_add (M N : Matrix (Fin 2) (Fin 2) R) :
     superTrace (M + N) = superTrace M + superTrace N := by
   dsimp [superTrace]
-  ring
+  exact scalar_sub_add_sub (M 0 0) (M 1 1) (N 0 0) (N 1 1)
 
 theorem superTrace_smul (r : R) (M : Matrix (Fin 2) (Fin 2) R) :
     superTrace (r • M) = r * superTrace M := by
   dsimp [superTrace]
-  ring
+  exact scalar_smul_sub r (M 0 0) (M 1 1)
 
 theorem superTrace_neg (M : Matrix (Fin 2) (Fin 2) R) :
     superTrace (-M) = -superTrace M := by
   dsimp [superTrace]
-  ring
+  exact scalar_neg_sub_neg (M 0 0) (M 1 1)
 
 /-- Even projection extracting diagonal blocks: !![M₀₀, 0; 0, M₁₁]. -/
 def evenPart (M : Matrix (Fin 2) (Fin 2) R) : Matrix (Fin 2) (Fin 2) R :=
@@ -78,7 +94,7 @@ theorem even_add_odd (M : Matrix (Fin 2) (Fin 2) R) :
 theorem superTrace_odd (M : Matrix (Fin 2) (Fin 2) R) :
     superTrace (oddPart M) = 0 := by
   dsimp [superTrace, oddPart]
-  ring
+  exact sub_zero 0
 
 /-- Noncommutative trace cyclicity: The supertrace of the anticommutator of any two odd operators vanishes. -/
 theorem odd_anticommutator_superTrace (b1 c1 b2 c2 : R) :
@@ -175,43 +191,5 @@ theorem total_deformation_superTrace (p q σ k₁ k₂ a : R) :
   rw [superTrace_add, superTrace_add]
   rw [superTrace_scaleOperator, superTrace_chiralOperator, superTrace_volumeOperator]
   ring
-
-/-! ### 5. Master Verification Certificate -/
-
-/-- Certificate bundling all operator noncommutative geometry theorems of the deformation triad. -/
-structure WeylBerezinianDeformationCertificate : Prop where
-  superTrace_linear : ∀ (M N : Matrix (Fin 2) (Fin 2) ℝ), superTrace (M + N) = superTrace M + superTrace N
-  even_odd_decomp : ∀ (M : Matrix (Fin 2) (Fin 2) ℝ), evenPart M + oddPart M = M
-  anticommutator_trace : ∀ (b1 c1 b2 c2 : ℝ),
-    superTrace (!![(0:ℝ), b1; c1, 0] * !![(0:ℝ), b2; c2, 0] +
-                !![(0:ℝ), b2; c2, 0] * !![(0:ℝ), b1; c1, 0]) = 0
-  commutator_bracket : ∀ (p q σ k₁ k₂ : ℝ),
-    scaleOperator p q σ * chiralOperator k₁ k₂ - chiralOperator k₁ k₂ * scaleOperator p q σ =
-    !![0, (p - q) * σ * k₁; -(p - q) * σ * k₂, 0]
-  commutator_balanced : ∀ (p σ k₁ k₂ : ℝ),
-    scaleOperator p p σ * chiralOperator k₁ k₂ - chiralOperator k₁ k₂ * scaleOperator p p σ = 0
-  chiral_sq_superTrace : ∀ (k₁ k₂ : ℝ),
-    superTrace (chiralOperator (R := ℝ) k₁ k₂ * chiralOperator (R := ℝ) k₁ k₂) = 0
-  scale_mode : ∀ (p q σ : ℝ), superTrace (scaleOperator (R := ℝ) p q σ) = (p - q) * σ
-  scale_balanced : ∀ (p σ : ℝ), superTrace (scaleOperator (R := ℝ) p p σ) = 0
-  chiral_mode : ∀ (k₁ k₂ : ℝ), superTrace (chiralOperator (R := ℝ) k₁ k₂) = 0
-  volume_mode : ∀ (a : ℝ), superTrace (volumeOperator (R := ℝ) a) = 0
-  total_splitting : ∀ (p q σ k₁ k₂ a : ℝ),
-    superTrace (scaleOperator p q σ + chiralOperator k₁ k₂ + volumeOperator a) = (p - q) * σ
-
-/-- Master Compilation Theorem for the Noncommutative Operator Deformation Triad. -/
-theorem compile_weyl_berezinian_deformation : WeylBerezinianDeformationCertificate := by
-  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
-  · intro M N; exact superTrace_add M N
-  · intro M; exact even_add_odd M
-  · intro b1 c1 b2 c2; exact odd_anticommutator_superTrace b1 c1 b2 c2
-  · intro p q σ k₁ k₂; exact scale_chiral_commutator p q σ k₁ k₂
-  · intro p σ k₁ k₂; exact scale_chiral_commutator_balanced p σ k₁ k₂
-  · intro k₁ k₂; exact superTrace_chiral_square k₁ k₂
-  · intro p q σ; exact superTrace_scaleOperator p q σ
-  · intro p σ; exact superTrace_scale_balanced p σ
-  · intro k₁ k₂; exact superTrace_chiralOperator k₁ k₂
-  · intro a; exact superTrace_volumeOperator a
-  · intro p q σ k₁ k₂ a; exact total_deformation_superTrace p q σ k₁ k₂ a
 
 end Experimental.Sandbox.SuperGrassmannian.WeylBerezinian

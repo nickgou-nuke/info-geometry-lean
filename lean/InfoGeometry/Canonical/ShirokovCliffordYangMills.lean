@@ -31,7 +31,7 @@ namespace InfoGeometry.Canonical.ShirokovCliffordYangMills
 
 open InfoGeometry.Canonical.KahlerAtiyahCartanForms
 open InfoGeometry.Canonical.KahlerAtiyahSpinConnection
-open InfoGeometry.Canonical.ShirokovYangMillsTransfer
+open InfoGeometry.Canonical.ShirokovYangMillsTransfer hiding covariantDerivative
 open InfoGeometry.Algebra
 open InfoGeometry.Algebra.DerivationLieLane
 open InfoGeometry.OperatorAlgebra.DerivationDifferentialForms
@@ -627,6 +627,49 @@ theorem shirokov_linearIndependent_of_dual_scalar_readouts
       exact (hi (Finset.mem_univ i)).elim
   rw [hf] at hreadout
   exact hreadout
+
+/-- Unit conjugations that negate each off-diagonal inverse-product readout
+construct the dual scalar readouts needed for linear independence.  This
+isolates the algebraic separation step; a Clifford-frame application must
+still produce the separating units, including the odd-volume case. -/
+theorem shirokov_linearIndependent_of_conjugation_separation
+    {ι B : Type*} [Fintype ι] [DecidableEq ι]
+    [Ring B] [Algebra ℝ B]
+    (τ : B →ₗ[ℝ] ℝ) (hτone : τ 1 = 1)
+    (hτconj : ∀ (u : Bˣ) (x : B),
+      τ (((u⁻¹ : Bˣ) : B) * x * (u : B)) = τ x)
+    (u : ι → Bˣ)
+    (hsep : ∀ i j, i ≠ j → ∃ w : Bˣ,
+      ((w⁻¹ : Bˣ) : B) *
+        (((u i)⁻¹ : Bˣ) : B) * (u j : B) * (w : B) =
+          -((((u i)⁻¹ : Bˣ) : B) * (u j : B))) :
+    LinearIndependent ℝ (fun i => (u i : B)) := by
+  let readout : ι → B →ₗ[ℝ] ℝ := fun i =>
+    { toFun := fun x => τ (((u i)⁻¹ : Bˣ) * x)
+      map_add' := fun x y => by simp [mul_add, map_add]
+      map_smul' := fun r x => by
+        rw [Algebra.mul_smul_comm, map_smul]
+        rfl }
+  apply shirokov_linearIndependent_of_dual_scalar_readouts
+    (fun i => (u i : B)) readout
+  intro i j
+  by_cases hij : i = j
+  · subst j
+    simp [readout, hτone]
+  · obtain ⟨w, hw⟩ := hsep i j hij
+    have htrace := hτconj w
+      ((((u i)⁻¹ : Bˣ) : B) * (u j : B))
+    have htrace' : τ
+        (((w⁻¹ : Bˣ) : B) * ((u i)⁻¹ : Bˣ) * (u j : B) * (w : B)) =
+        τ ((((u i)⁻¹ : Bˣ) : B) * (u j : B)) := by
+      simpa [mul_assoc] using htrace
+    rw [hw] at htrace'
+    have htraceNeg : τ (-((((u i)⁻¹ : Bˣ) : B) * (u j : B))) =
+        -τ ((((u i)⁻¹ : Bˣ) : B) * (u j : B)) := map_neg τ _
+    rw [htraceNeg] at htrace'
+    have hzero : τ ((((u i)⁻¹ : Bˣ) : B) * (u j : B)) = 0 := by
+      linarith [htrace']
+    simp [readout, hij, hzero]
 
 /-- The real-linear map underlying conjugation by a unit, used to transport a
 connection one-form without commuting its coefficient algebra. -/
@@ -3100,6 +3143,23 @@ noncomputable def shirokovIsometryInverseBladeUnit (n : ℕ)
       (CliffordAlgebra (cliffordNegSqForm ℝ n))ˣ) :
         CliffordAlgebra (cliffordNegSqForm ℝ n))) = _
   rw [shirokovInverseBladeUnit_inv_val, shirokov_isometry_map_blade]
+
+/-- The scalar readout of an isometry-transported frame product is computed
+after pulling the product back to the canonical Clifford coordinates. -/
+theorem shirokov_isometry_inverse_blade_scalar_readout (n : ℕ)
+    (e : (cliffordNegSqForm ℝ n).IsometryEquiv (cliffordNegSqForm ℝ n))
+    (S T : Finset (Fin n)) :
+    bladeRepr ℝ n ((CliffordAlgebra.equivOfIsometry e).symm
+      (((shirokovIsometryInverseBladeUnit n e S :
+        CliffordAlgebra (cliffordNegSqForm ℝ n)) *
+        shirokovIsometryFrameBlade n e T))) ∅ = if S = T then 1 else 0 := by
+  let φ := CliffordAlgebra.equivOfIsometry e
+  rw [shirokovIsometryInverseBladeUnit_val,
+    ← shirokov_isometry_map_blade n e S,
+    ← shirokov_isometry_map_blade n e T]
+  rw [smul_mul_assoc, ← map_mul φ, ← map_smul φ, φ.symm_apply_apply]
+  simpa only [shirokovInverseBladeUnit_val, smul_mul_assoc] using
+    shirokov_inverse_blade_scalar_readout n S T
 
 /-- Theorem 2.2 for an automorphism-transported standard frame. The connection
 coefficient is assumed grade two after pulling it back to the standard frame. -/

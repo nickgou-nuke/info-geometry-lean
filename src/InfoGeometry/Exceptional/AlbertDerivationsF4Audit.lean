@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Exceptional.AlbertDerivationsF4
 
 open InfoGeometry.Exceptional.AlbertDerivations
@@ -15,5 +20,3 @@ Owner Module: `InfoGeometry.Exceptional.AlbertDerivationsF4`
 #print axioms dim_off_diagonal_coset_eq_24
 #print axioms albert_derivation_dimension_split
 #print axioms albert_derivation_dimension_g2_branch
-#print axioms AlbertDerivationCertificate
-#print axioms compile_albert_derivation_certificate

@@ -123,7 +123,7 @@ theorem doubledMinkowski_anticomm :
   unfold doubledMinkowskiDiag doubledMinkowskiNull
   rw [← Matrix.mul_kronecker_mul, ← Matrix.mul_kronecker_mul, hAnti2, hSq4]
   ext ⟨a, i⟩ ⟨b, j⟩
-  simp [Matrix.kronecker]
+  simp
 
 theorem exists_noncomm_mat2x4_real :
     ∃ A B : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ, A * B ≠ B * A := by
@@ -132,7 +132,7 @@ theorem exists_noncomm_mat2x4_real :
   have h00 := congrArg
     (fun M : Matrix (Fin 2 × Fin 4) (Fin 2 × Fin 4) ℝ => M (0, 0) (1, 0)) h
   simp [doubledMinkowskiDiag, doubledMinkowskiNull, zCut2, xMir2, minkowski4,
-    Matrix.mul_apply, Matrix.kronecker, Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_four]
+    Matrix.mul_apply, Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_four]
     at h00
   norm_num at h00
 
@@ -150,12 +150,12 @@ theorem hadamardDoubled_intertwines_diag_null :
     unfold hadamard2
     rw [smul_mul_assoc, mul_smul_comm, smul_smul, hScaleSq]
     ext i j; fin_cases i <;> fin_cases j <;>
-      simp [Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num
+      simp <;> norm_num
   have hH_rot : hadamard2 * zCut2 * hadamard2 = xMir2 := by
     unfold hadamard2
     rw [smul_mul_assoc, smul_mul_assoc, mul_smul_comm, smul_smul, hScaleSq]
     ext i j; fin_cases i <;> fin_cases j <;>
-      simp [zCut2, xMir2, Matrix.mul_apply, Fin.sum_univ_two] <;> norm_num
+      simp [zCut2, xMir2] <;> norm_num
   refine ⟨?_, ?_, ?_⟩
   · unfold hadamardDoubled
     rw [transpose_kronecker_real, hH_sym, Matrix.transpose_one]
@@ -204,14 +204,14 @@ theorem doubled_minkowski_krein_metrics_spec (v : Fin 2 × Fin 4 → ℝ) (u₁ 
   refine ⟨⟨?_, hDiagSq, ?_⟩, ⟨?_, hNullSq, ?_⟩, ?_, ?_, ?_⟩
   · unfold doubledMinkowskiDiag; rw [transpose_kronecker_real, hZ_sym, hM_sym]
   · simp [doubledMinkowskiDiag, zCut2, minkowski4, Matrix.trace, Matrix.diag,
-      Matrix.kronecker, Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_four]
+      Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_four]
   · unfold doubledMinkowskiNull; rw [transpose_kronecker_real, hX_sym, hM_sym]
   · simp [doubledMinkowskiNull, xMir2, minkowski4, Matrix.trace, Matrix.diag,
-      Matrix.kronecker, Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_four]
-  · simp [doubledMinkowskiNull, xMir2, minkowski4, Matrix.kronecker,
-      Matrix.mulVec, dotProduct, Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_four]
-  · simp [doubledMinkowskiNull, xMir2, minkowski4, Matrix.kronecker,
-      Matrix.mulVec, dotProduct, Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_four]
+      Fintype.sum_prod_type, Fin.sum_univ_two, Fin.sum_univ_four]
+  · simp [doubledMinkowskiNull, xMir2, minkowski4,
+      Matrix.mulVec, dotProduct, Fintype.sum_prod_type, Fin.sum_univ_four]
+  · simp [doubledMinkowskiNull, xMir2, minkowski4,
+      Matrix.mulVec, dotProduct, Fintype.sum_prod_type, Fin.sum_univ_four]
   · rw [hDiagSq, Matrix.one_mulVec]
 
 /-! ### Part 2: Gapped Bogoliubov–de Gennes (BdG) Hamiltonian on the Doubled Carrier -/
@@ -281,8 +281,8 @@ theorem bdg_gapped_spectrum_and_particle_hole_symmetry {n : ℕ}
       Matrix.fromBlocks (ξ * ξ + (m ^ 2) • 1) 0 0 (ξ * ξ + (m ^ 2) • 1) := by
     unfold bdgHamiltonian
     rw [Matrix.fromBlocks_multiply]
-    ext i j <;> cases i <;> cases j <;>
-      simp [Matrix.mul_apply, Fin.sum_univ_two, sq] <;> ring
+    ext i j
+    cases i <;> cases j <;> simp [Matrix.mul_apply, sq] <;> ring
   have hNormSq : dotProduct ψ ((bdgHamiltonian ξ m * bdgHamiltonian ξ m).mulVec ψ) =
       dotProduct ((bdgHamiltonian ξ m).mulVec ψ) ((bdgHamiltonian ξ m).mulVec ψ) := by
     rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec, ← Matrix.mulVec_transpose, hSym]

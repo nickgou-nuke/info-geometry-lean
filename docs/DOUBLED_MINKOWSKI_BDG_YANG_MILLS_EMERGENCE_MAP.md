@@ -28,6 +28,7 @@ Those stay explicit open frontiers.
 | C5 | A concrete doubled-Minkowski matrix-valued connection has nonzero Yang–Mills curvature, satisfies Bianchi, and a displayed form solves the Yang–Mills PDE | `lean/InfoGeometry/Lie/DoubledMinkowskiManifoldYangMillsPDE.lean:591` (`ymCurvature`), `:767` (`bianchi_identity_ymCurvature`), `:1351` (`YangMillsPDE`), `:1536` (`circularGaugeForm_solves_yangMillsPDE`), `:2076` (Minkowski wave solution) | BUCKET 1, kernel-verified | Explicit classical solutions on a concrete `Mat4(ℂ)`-form carrier; not existence for arbitrary initial data. |
 | C6 | Lattice covariant derivative, Wilson curvature, and plaquette action converge locally as mesh `a → 0` under smoothness hypotheses | `lean/InfoGeometry/Lie/DoubledMinkowskiLatticeContinuumLimit.lean:158`, `:395`, `:541`, `:721` (`circularColimit_continuum_transport`) | BUCKET 2, conditional | Needs `ContDiff`/`C²` regularity; gives local lattice-to-continuum limits, not a full constructive continuum QFT. |
 | C7 | Two-sheeted Yang–Mills operator identities transport through an inductive star-colimit cone | `lean/InfoGeometry/Canonical/TwoSheetedYangMillsInductiveColimit.lean:161` (`starRingHom_intertwines_two_sheeted_operators`), `:206` (`star_hom_two_sheeted_operator_identities`), `:312` (`StarRingHom`), `:332` (`InductiveStarColimitCone`) | BUCKET 1, kernel-verified | Algebraic colimit of operator identities; not an analytic manifold or QFT limit. |
+| C7a | The commuting-mass BdG square identity survives any unital ring homomorphism, hence each `StarRingHom` cone map | `lean/InfoGeometry/Physics/BdGColimitGapTransport.lean:43` (`massiveBdGHamiltonian_sq_map`), `:55` (`massiveBdGHamiltonian_sq_cone_transport`) | BUCKET 1, kernel-verified | Finite-stage transport of `H² = D² + M²` on the diagonal. It does not transport a scalar singular-value gap or prove continuum positivity. |
 | C8 | The Mannheim-type typed bridge gathers the doubled-Minkowski Yang–Mills suite across layers 0–3 | `lean/InfoGeometry/Synthesis/MannheimDoubledMinkowskiYangMillsBridge.lean:22–38` (layer map), `:2163` (`archMannheimDoubledMinkowskiYangMillsBridge`) | BUCKET 1, kernel-verified | Typed archetype over already-proved layers; not a physical continuum emergence theorem. |
 | C9 | A gapped BdG system emerges as a continuum 4D Yang–Mills manifold with a strictly positive Wightman/Osterwalder–Schrader mass gap | No native owner proves this | BUCKET 3, OPEN | Explicitly excluded by `docs/OPEN_DEBT_PROBLEMS.md:145`, `docs/YANG_MILLS_UNIFICATION_PLAN.md:1448`, and `docs/DRIVE_CDE_AISTUDIO_1VUS_EPISTEMIC_COMPILATION.md:253`. Do not package as a structure field or conjunction. |
 
@@ -83,21 +84,23 @@ Bounded `lake build` runs under the shared scratch lock at the stated HEAD:
 | `InfoGeometry.Lie.DoubledMinkowskiCircularChiralYangMillsBridge` | exit 0, 0 errors, `Build completed successfully (9086 jobs)` |
 | `InfoGeometry.CliffordWeyl.IndefiniteMetricModulePauliBridge` | exit 0, 0 errors, `Build completed successfully (8976 jobs)` |
 | `InfoGeometry.Krein.MajoranaBdGSheetBridge` | exit 0, 0 errors, `Build completed successfully (9146 jobs)` |
+| `InfoGeometry.Physics.BdGColimitGapTransport` | exit 0, 0 errors, `Build completed successfully (1255 jobs)` |
 | `InfoGeometry.Synthesis.MannheimDoubledMinkowskiYangMillsBridge` | exit 0, 0 errors, `Build completed successfully (10013 jobs)` |
 
 A six-declaration `#print axioms` probe covering C1, C2, C4, C5, C6 and C7
 reported only `[propext, Classical.choice, Quot.sound]` and `sorryAx = 0`.
-This is a sampled axiom check, not a claim about every declaration in the
-listed modules.
+A separate three-declaration probe for C7a likewise reported only standard
+axioms and `sorryAx = 0`. These are sampled axiom checks, not claims about
+every declaration in the listed modules.
 
 ## Roadmap for a future honest closure
 
 1. Name the missing analytic theorem precisely: a net of BdG Hamiltonians
    whose continuum limit satisfies OS/Wightman axioms and a uniform positive
    mass gap. Keep it as BUCKET 3 until proved.
-2. Prove finite-stage transport of the BdG gap under the existing
-   `StarRingHom`/colimit cone first; this is a plausible BUCKET 1/2 target and
-   would not close the continuum frontier.
+2. Finite-stage transport of the BdG square identity is now kernel-checked in
+   `BdGColimitGapTransport` (C7a). Transport of the scalar singular-value gap
+   remains open; do not conflate the algebraic square identity with positivity.
 3. Only after (1) and (2), relate the colimit gap to the doubled-Minkowski
    classical curvature/PDE layer via an explicit, theorem-bearing map.
 4. Reject any proposed closure that packages C9 as a field, a certificate, or

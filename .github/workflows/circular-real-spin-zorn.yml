@@ -37,10 +37,17 @@ jobs:
         InfoGeometry.Clifford.RealChiralWeyl
         InfoGeometry.Algebra.Zorn.CircularSpinBridge
     steps:
-      - uses: actions/checkout@v4
-        with:
-          path: project
-          persist-credentials: false
+      - name: Fetch exact public source without traversing external submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPO}.git"
+          git -C project -c protocol.version=2 fetch --depth=1 --no-tags --no-recurse-submodules origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
       - name: Read exact Mathlib revision
         id: pins
         run: |

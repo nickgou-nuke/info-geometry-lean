@@ -1,0 +1,133 @@
+name: Circular real spin and Zorn channels
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/Clifford/RealCircularSpin.lean'
+      - 'lean/InfoGeometry/Clifford/RealChiralWeyl.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/CircularSpinBridge.lean'
+      - 'lean/InfoGeometry/Clifford/GullDoranPseudoscalarBridge.lean'
+      - 'lean/InfoGeometry/Clifford/Cl11KleinTwist.lean'
+      - 'lean/InfoGeometry/Clifford/SplitAtomDoubling/Basic.lean'
+      - 'lean/InfoGeometry/Canonical/LocalZornCl11Slice.lean'
+      - 'lean/InfoGeometry/Algebra/Zorn/CanonicalVectorMatrixBridge.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/circular-real-spin-zorn.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: circular-real-spin-zorn-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SPIN_TARGETS: >-
+        InfoGeometry.Clifford.RealCircularSpin
+        InfoGeometry.Clifford.RealChiralWeyl
+        InfoGeometry.Algebra.Zorn.CircularSpinBridge
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: project
+          persist-credentials: false
+      - name: Read exact Mathlib revision
+        id: pins
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: circular-real-spin-zorn-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Hydrate exact native imports under the build lock
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          _, _, native = closure(Path('project'), os.environ['SPIN_TARGETS'].split())
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'circular-spin-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Compile exact source closure and audit every new declaration
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          targets = os.environ['SPIN_TARGETS'].split()
+          command = ['python3', 'project/tools/quality/check_clifford_dirac.py',
+              '--mathlib-root', 'mathlib', '--output', 'circular-spin-report']
+          for target in targets:
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+      - name: Require zero warnings in every new owner
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          report = json.loads(Path('circular-spin-report/report.json').read_text())
+          targets = os.environ['SPIN_TARGETS'].split()
+          assert report['status'] == 'passed' and report['audit_required']
+          assert report['targets'] == targets
+          modules = {row['module']: row for row in report['modules']}
+          for target in targets:
+              row = modules[target]
+              assert row['returncode'] == 0 and row['warnings'] == 0 and not row['reused'], row
+              assert report['declaration_counts'][target] > 0
+          print('All selected owners compiled without warnings; transitive axiom audit passed.')
+          PY
+      - name: Screen the mathematical source
+        working-directory: project
+        run: |
+          python3 tools/quality/semantic_vacuity_gate.py \
+            lean/InfoGeometry/Clifford/RealCircularSpin.lean \
+            lean/InfoGeometry/Clifford/RealChiralWeyl.lean \
+            lean/InfoGeometry/Algebra/Zorn/CircularSpinBridge.lean --fail-on error
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: circular-real-spin-zorn-evidence
+          path: |
+            circular-spin-report/report.json
+            circular-spin-report/evidence-sha256.json
+            circular-spin-report/src/CliffordDiracAudit.lean
+            circular-spin-report/*.log
+          if-no-files-found: warn

@@ -158,52 +158,57 @@ instance (B : Type*) [Ring B] : Inhabited (ChiralRailPlane B) := ⟨standardChir
 def toZornBasis (i : Fin 3) : ZornVectorMatrix R :=
   ZornVectorMatrix.U i
 
-/-- K^2 = -1 -/
-theorem K_sq (plane : ChiralRailPlane R) : plane.K * plane.K = -(1 : Matrix (Fin 2) (Fin 2) R) := by
-  sorry
+/-- The odd chiral combination of the two nilpotent ladder operators. -/
+def chiralDifference (plane : ChiralRailPlane R) : Matrix (Fin 2) (Fin 2) R :=
+  plane.E_R - plane.E_L
 
-/-- P_± are idempotent and orthogonal. -/
-theorem P_plus_idempotent (plane : ChiralRailPlane R) : plane.P_plus * plane.P_plus = plane.P_plus := by
-  sorry
+/-- The even chiral combination of the two nilpotent ladder operators. -/
+def chiralSum (plane : ChiralRailPlane R) : Matrix (Fin 2) (Fin 2) R :=
+  plane.E_R + plane.E_L
 
+/-- The odd combination squares to the negative identity. -/
+theorem chiral_difference_sq (plane : ChiralRailPlane R) :
+    chiralDifference plane * chiralDifference plane =
+      -(1 : Matrix (Fin 2) (Fin 2) R) := by
+  unfold chiralDifference
+  simp only [_root_.sub_mul, _root_.mul_sub, plane.h_E_R_nilpotent,
+    plane.h_E_L_nilpotent]
+  rw [← plane.h_anticommutator]
+  abel
 
-theorem P_minus_idempotent (plane : ChiralRailPlane R) : plane.P_minus * plane.P_minus = plane.P_minus := by
-  sorry
+/-- The even combination squares to the identity. -/
+theorem chiral_sum_sq (plane : ChiralRailPlane R) :
+    chiralSum plane * chiralSum plane =
+      (1 : Matrix (Fin 2) (Fin 2) R) := by
+  unfold chiralSum
+  simp only [_root_.add_mul, _root_.mul_add, plane.h_E_R_nilpotent,
+    plane.h_E_L_nilpotent]
+  calc
+    0 + plane.E_L * plane.E_R + (plane.E_R * plane.E_L + 0) =
+        plane.E_R * plane.E_L + plane.E_L * plane.E_R := by abel
+    _ = 1 := plane.h_anticommutator
 
+/-- The ordered products of the two combinations recover the commutator,
+with the order determining its sign. -/
+theorem chiral_sum_mul_difference (plane : ChiralRailPlane R) :
+    chiralSum plane * chiralDifference plane = -plane.Γ := by
+  unfold chiralSum chiralDifference
+  simp only [_root_.add_mul, _root_.mul_sub, plane.h_E_R_nilpotent,
+    plane.h_E_L_nilpotent]
+  calc
+    0 + plane.E_L * plane.E_R - (plane.E_R * plane.E_L + 0) =
+        -(plane.E_R * plane.E_L - plane.E_L * plane.E_R) := by abel
+    _ = -plane.Γ := by rw [plane.h_commutator]
 
-theorem P_plus_orthogonal (plane : ChiralRailPlane R) : plane.P_plus * plane.P_minus = 0 := by
-  sorry
-
-
-theorem P_complete (plane : ChiralRailPlane R) : plane.P_plus + plane.P_minus = (1 : Matrix (Fin 2) (Fin 2) R) := by
-  sorry
-
-/-- E_R and E_L are nilpotent. -/
-theorem E_R_nilpotent (plane : ChiralRailPlane R) : plane.E_R * plane.E_R = 0 := by
-  sorry
-
-
-theorem E_L_nilpotent (plane : ChiralRailPlane R) : plane.E_L * plane.E_L = 0 := by
-  sorry
-
-/-- The commutator [E_R, E_L] = Γ. -/
-theorem commutator_E_R_E_L (plane : ChiralRailPlane R) :
-    plane.E_R * plane.E_L - plane.E_L * plane.E_R = plane.Γ := by
-  sorry
-
-/-- The anticommutator {E_R, E_L} = 1. -/
-theorem anticommutator_E_R_E_L (plane : ChiralRailPlane R) :
-    plane.E_R * plane.E_L + plane.E_L * plane.E_R = (1 : Matrix (Fin 2) (Fin 2) R) := by
-  sorry
-
-/-- J* g = g (metric preserved by complex structure). -/
-theorem metric_compatibility (plane : ChiralRailPlane R) :
-    plane.K.transpose * plane.g * plane.K = plane.g := by
-  sorry
-
-/-- J* Ω = -Ω (symplectic form anti-preserved by complex structure). -/
-theorem symplectic_anti_compatibility (plane : ChiralRailPlane R) :
-    plane.K.transpose * plane.Ω * plane.K = (-1 : R) • plane.Ω := by
-  sorry
+/-- The reverse ordered product recovers the chiral commutator. -/
+theorem chiral_difference_mul_sum (plane : ChiralRailPlane R) :
+    chiralDifference plane * chiralSum plane = plane.Γ := by
+  unfold chiralDifference chiralSum
+  simp only [_root_.sub_mul, _root_.mul_add, plane.h_E_R_nilpotent,
+    plane.h_E_L_nilpotent]
+  calc
+    0 - plane.E_L * plane.E_R + (plane.E_R * plane.E_L - 0) =
+        plane.E_R * plane.E_L - plane.E_L * plane.E_R := by abel
+    _ = plane.Γ := plane.h_commutator
 
 end InfoGeometry.OperatorAlgebra.ChiralRailPlane

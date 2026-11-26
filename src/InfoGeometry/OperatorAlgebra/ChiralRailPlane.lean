@@ -158,4 +158,57 @@ instance (B : Type*) [Ring B] : Inhabited (ChiralRailPlane B) := ⟨standardChir
 def toZornBasis (i : Fin 3) : ZornVectorMatrix R :=
   ZornVectorMatrix.U i
 
+/-- The odd chiral combination of the two nilpotent ladder operators. -/
+def chiralDifference (plane : ChiralRailPlane R) : Matrix (Fin 2) (Fin 2) R :=
+  plane.E_R - plane.E_L
+
+/-- The even chiral combination of the two nilpotent ladder operators. -/
+def chiralSum (plane : ChiralRailPlane R) : Matrix (Fin 2) (Fin 2) R :=
+  plane.E_R + plane.E_L
+
+/-- The odd combination squares to the negative identity. -/
+theorem chiral_difference_sq (plane : ChiralRailPlane R) :
+    chiralDifference plane * chiralDifference plane =
+      -(1 : Matrix (Fin 2) (Fin 2) R) := by
+  unfold chiralDifference
+  simp only [_root_.sub_mul, _root_.mul_sub, plane.h_E_R_nilpotent,
+    plane.h_E_L_nilpotent]
+  rw [← plane.h_anticommutator]
+  abel
+
+/-- The even combination squares to the identity. -/
+theorem chiral_sum_sq (plane : ChiralRailPlane R) :
+    chiralSum plane * chiralSum plane =
+      (1 : Matrix (Fin 2) (Fin 2) R) := by
+  unfold chiralSum
+  simp only [_root_.add_mul, _root_.mul_add, plane.h_E_R_nilpotent,
+    plane.h_E_L_nilpotent]
+  calc
+    0 + plane.E_L * plane.E_R + (plane.E_R * plane.E_L + 0) =
+        plane.E_R * plane.E_L + plane.E_L * plane.E_R := by abel
+    _ = 1 := plane.h_anticommutator
+
+/-- The ordered products of the two combinations recover the commutator,
+with the order determining its sign. -/
+theorem chiral_sum_mul_difference (plane : ChiralRailPlane R) :
+    chiralSum plane * chiralDifference plane = -plane.Γ := by
+  unfold chiralSum chiralDifference
+  simp only [_root_.add_mul, _root_.mul_sub, plane.h_E_R_nilpotent,
+    plane.h_E_L_nilpotent]
+  calc
+    0 + plane.E_L * plane.E_R - (plane.E_R * plane.E_L + 0) =
+        -(plane.E_R * plane.E_L - plane.E_L * plane.E_R) := by abel
+    _ = -plane.Γ := by rw [plane.h_commutator]
+
+/-- The reverse ordered product recovers the chiral commutator. -/
+theorem chiral_difference_mul_sum (plane : ChiralRailPlane R) :
+    chiralDifference plane * chiralSum plane = plane.Γ := by
+  unfold chiralDifference chiralSum
+  simp only [_root_.sub_mul, _root_.mul_add, plane.h_E_R_nilpotent,
+    plane.h_E_L_nilpotent]
+  calc
+    0 - plane.E_L * plane.E_R + (plane.E_R * plane.E_L - 0) =
+        plane.E_R * plane.E_L - plane.E_L * plane.E_R := by abel
+    _ = plane.Γ := plane.h_commutator
+
 end InfoGeometry.OperatorAlgebra.ChiralRailPlane

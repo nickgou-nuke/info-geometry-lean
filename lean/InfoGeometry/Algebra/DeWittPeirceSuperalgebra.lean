@@ -25,6 +25,21 @@ class ChiralPeirceSystem (A : Type*) [Ring A] where
   h_sum   : PL + PR = 1
   h_PL_PR : PL * PR = 0
 
+/-- Constructive non-degenerate two-sheet witness of `ChiralPeirceSystem` on `ℤ × ℤ`. -/
+@[instance_reducible]
+def prodChiralPeirceSystem : ChiralPeirceSystem (ℤ × ℤ) where
+  PL := (1, 0)
+  PR := (0, 1)
+  h_PL_sq := rfl
+  h_PR_sq := rfl
+  h_sum := rfl
+  h_PL_PR := rfl
+
+theorem prodChiralPeirceSystem_nontrivial :
+    prodChiralPeirceSystem.PL ≠ 0 ∧ prodChiralPeirceSystem.PR ≠ 0 ∧
+      prodChiralPeirceSystem.PL ≠ prodChiralPeirceSystem.PR := by
+  decide
+
 variable {A : Type*} [Ring A] [S : ChiralPeirceSystem A]
 
 /-- Lemma 1: Complementary Orthogonality.
@@ -472,5 +487,352 @@ theorem G_soul_LR_fixed_two_nsmul_zero (X : A)
   exact htwo
 
 end ChiralGradingParity
+
+/-!
+# Higher Grades from Noncommutativity Obstructions
+
+When `P_L` fails to commute with an operator `X`, the commutator `[P_L, X]`
+does not vanish or collapse to a scalar: it automatically isolates the odd
+bimodule corners (`soul_LR X - soul_RL X`), while the iterated commutator
+`[P_L, [P_L, X]]` recovers the total `soul X` without requiring `1/2`.
+Similarly, the Halmos obstruction `[P_L, P']` of two noncommuting idempotents
+lies purely in the odd `soul`, and its square `[P_L, P']²` drops back into the
+even `body` and commutes with both `P_L` and `P'`. Finally, the anticommutation
+obstruction between chiral grading `G` and sheet swap `R` (`G * R + R * G = 0`)
+generates the grade-2 bivector `G * R` satisfying `(G * R)² = -(R²)` and
+anticommuting with both generators.
+-/
+section NoncommutativityHigherGrades
+
+/-- The ring commutator `[x, y] = x * y - y * x` measuring noncommutativity obstruction. -/
+def comm (x y : A) : A := x * y - y * x
+
+private lemma G_mul_G : G (A := A) * G (A := A) = 1 := by
+  dsimp [G]
+  have h_ortho := PR_PL_ortho (A := A)
+  calc (S.PL - S.PR) * (S.PL - S.PR)
+    _ = S.PL * S.PL - S.PL * S.PR - (S.PR * S.PL - S.PR * S.PR) := by noncomm_ring
+    _ = S.PL - 0 - (0 - S.PR) := by rw [S.h_PL_sq, S.h_PL_PR, h_ortho, S.h_PR_sq]
+    _ = S.PL + S.PR := by abel
+    _ = 1 := S.h_sum
+
+/-- First-order noncommutativity obstruction with `P_L` isolates the graded chiral soul corners:
+`[P_L, X] = soul_LR X - soul_RL X`. -/
+theorem comm_PL_eq_soul_LR_sub_soul_RL (X : A) :
+    comm S.PL X = soul_LR X - soul_RL X := by
+  dsimp [comm, soul_LR, soul_RL]
+  calc S.PL * X - X * S.PL
+    _ = S.PL * X * (S.PL + S.PR) - (S.PL + S.PR) * X * S.PL := by
+        rw [S.h_sum, mul_one, one_mul]
+    _ = (S.PL * X * S.PL + S.PL * X * S.PR) - (S.PL * X * S.PL + S.PR * X * S.PL) := by
+        noncomm_ring
+    _ = S.PL * X * S.PR - S.PR * X * S.PL := by abel
+
+/-- First-order noncommutativity `[P_L, X]` equals the chiral grading applied to the odd soul:
+`[P_L, X] = G * soul X`. -/
+theorem comm_PL_eq_G_mul_soul (X : A) :
+    comm S.PL X = G (A := A) * soul X := by
+  rw [comm_PL_eq_soul_LR_sub_soul_RL]
+  dsimp [soul, soul_LR, soul_RL]
+  calc S.PL * X * S.PR - S.PR * X * S.PL
+    _ = S.PL * X * S.PR + (-S.PR) * X * S.PL := by
+        rw [neg_mul, neg_mul, ← sub_eq_add_neg]
+    _ = (G (A := A) * S.PL) * X * S.PR + (G (A := A) * S.PR) * X * S.PL := by
+        rw [G_mul_PL, G_mul_PR]
+    _ = G (A := A) * (S.PL * X * S.PR + S.PR * X * S.PL) := by
+        rw [mul_add]
+        repeat rw [mul_assoc]
+
+/-- Double commutator `[P_L, [P_L, X]]` recovers the total odd `soul X` in any associative ring
+without requiring division by `2`. -/
+theorem comm_PL_iter_sq_eq_soul (X : A) :
+    comm S.PL (comm S.PL X) = soul X := by
+  rw [comm_PL_eq_soul_LR_sub_soul_RL X]
+  dsimp [comm, soul, soul_LR, soul_RL]
+  have h_ortho := PR_PL_ortho (A := A)
+  calc S.PL * (S.PL * X * S.PR - S.PR * X * S.PL) -
+        (S.PL * X * S.PR - S.PR * X * S.PL) * S.PL
+      = ((S.PL * S.PL) * X * S.PR - (S.PL * S.PR) * X * S.PL) -
+          (S.PL * X * (S.PR * S.PL) - S.PR * X * (S.PL * S.PL)) := by
+          noncomm_ring
+    _ = (S.PL * X * S.PR - 0) - (0 - S.PR * X * S.PL) := by
+          rw [S.h_PL_sq, S.h_PL_PR, h_ortho]
+          simp
+    _ = S.PL * X * S.PR + S.PR * X * S.PL := by
+          noncomm_ring
+
+/-- Triple commutator `[P_L, [P_L, [P_L, X]]]` stabilizes identically to `[P_L, X]`. -/
+theorem comm_PL_iter_cube_eq_comm_PL (X : A) :
+    comm S.PL (comm S.PL (comm S.PL X)) = comm S.PL X := by
+  have hLR : soul_LR (soul X) = soul_LR X := by
+    unfold soul
+    rw [soul_LR_add, soul_LR_is_idempotent, soul_LR_soul_RL_eq_zero, add_zero]
+  have hRL : soul_RL (soul X) = soul_RL X := by
+    unfold soul
+    rw [soul_RL_add, soul_RL_soul_LR_eq_zero, soul_RL_is_idempotent, zero_add]
+  calc
+    comm S.PL (comm S.PL (comm S.PL X)) = comm S.PL (soul X) := by
+      rw [comm_PL_iter_sq_eq_soul X]
+    _ = soul_LR (soul X) - soul_RL (soul X) :=
+      comm_PL_eq_soul_LR_sub_soul_RL (soul X)
+    _ = soul_LR X - soul_RL X := by rw [hLR, hRL]
+    _ = comm S.PL X := (comm_PL_eq_soul_LR_sub_soul_RL X).symm
+
+/-- `X` commutes with `P_L` if and only if its odd `soul` vanishes. -/
+theorem comm_PL_eq_zero_iff_soul_eq_zero (X : A) :
+    comm S.PL X = 0 ↔ soul X = 0 := by
+  constructor
+  · intro h
+    calc soul X = comm S.PL (comm S.PL X) := (comm_PL_iter_sq_eq_soul X).symm
+      _ = comm S.PL 0 := by rw [h]
+      _ = 0 := by simp [comm]
+  · intro h
+    rw [comm_PL_eq_G_mul_soul, h, mul_zero]
+
+/-- `X` commutes with `P_L` if and only if `X` lies entirely in the even `body`. -/
+theorem comm_PL_eq_zero_iff_eq_body (X : A) :
+    comm S.PL X = 0 ↔ X = body X := by
+  rw [comm_PL_eq_zero_iff_soul_eq_zero]
+  constructor
+  · intro h
+    calc X = body X + soul X := dewitt_split X
+      _ = body X + 0 := by rw [h]
+      _ = body X := add_zero _
+  · intro h
+    calc soul X = soul (body X) := by rw [← h]
+      _ = 0 := (body_soul_orthogonal X).2
+
+/-- The commutator `[P_L, P']` with any second element `P'` (such as a second idempotent)
+lies purely in the odd `soul` (zero `body` projection). -/
+theorem two_idempotent_comm_is_pure_soul (P' : A) :
+    body (comm S.PL P') = 0 ∧ soul (comm S.PL P') = comm S.PL P' := by
+  have h_ortho := PR_PL_ortho (A := A)
+  rw [comm_PL_eq_soul_LR_sub_soul_RL]
+  constructor
+  · dsimp [body, soul_LR, soul_RL]
+    calc S.PL * (S.PL * P' * S.PR - S.PR * P' * S.PL) * S.PL +
+          S.PR * (S.PL * P' * S.PR - S.PR * P' * S.PL) * S.PR
+      _ = ((S.PL * S.PL) * P' * (S.PR * S.PL) - (S.PL * S.PR) * P' * (S.PL * S.PL)) +
+            ((S.PR * S.PL) * P' * (S.PR * S.PR) - (S.PR * S.PR) * P' * (S.PL * S.PR)) := by
+            noncomm_ring
+      _ = ((S.PL * P' * 0) - (0 * P' * S.PL)) + ((0 * P' * S.PR) - (S.PR * P' * 0)) := by
+            rw [S.h_PL_sq, S.h_PR_sq, S.h_PL_PR, h_ortho]
+      _ = 0 := by simp
+  · dsimp [soul, soul_LR, soul_RL]
+    calc (S.PL * (S.PL * P' * S.PR - S.PR * P' * S.PL) * S.PR +
+            S.PR * (S.PL * P' * S.PR - S.PR * P' * S.PL) * S.PL)
+      _ = ((S.PL * S.PL) * P' * (S.PR * S.PR) - (S.PL * S.PR) * P' * (S.PL * S.PR)) +
+            ((S.PR * S.PL) * P' * (S.PR * S.PL) - (S.PR * S.PR) * P' * (S.PL * S.PL)) := by
+            noncomm_ring
+      _ = (S.PL * P' * S.PR - 0 * P' * 0) + (0 * P' * 0 - S.PR * P' * S.PL) := by
+            rw [S.h_PL_sq, S.h_PR_sq, S.h_PL_PR, h_ortho]
+      _ = S.PL * P' * S.PR - S.PR * P' * S.PL := by
+            simp only [zero_mul, mul_zero, sub_zero, zero_sub]
+            abel
+
+/-- The Halmos commutator `[P_L, P']` anticommutes with the chiral grading `G`. -/
+theorem two_idempotent_comm_anticomm_G (P' : A) :
+    G (A := A) * comm S.PL P' = -(comm S.PL P' * G (A := A)) := by
+  have hSoul := (two_idempotent_comm_is_pure_soul (A := A) P').2
+  have hOdd := G_soul_parity_odd (A := A) (comm S.PL P')
+  rw [hSoul] at hOdd
+  calc G (A := A) * comm S.PL P'
+    _ = (G (A := A) * comm S.PL P') * (G (A := A) * G (A := A)) := by rw [G_mul_G, mul_one]
+    _ = (G (A := A) * comm S.PL P' * G (A := A)) * G (A := A) := by simp only [mul_assoc]
+    _ = (-comm S.PL P') * G (A := A) := by rw [hOdd]
+    _ = -(comm S.PL P' * G (A := A)) := by rw [neg_mul]
+
+/-- The squared commutator `[P_L, P']²` drops back into the even `body` subalgebra. -/
+theorem two_idempotent_comm_sq_is_body (P' : A) :
+    body (comm S.PL P' * comm S.PL P') = comm S.PL P' * comm S.PL P' := by
+  have hSoul := (two_idempotent_comm_is_pure_soul (A := A) P').2
+  calc body (comm S.PL P' * comm S.PL P')
+    _ = body (soul (comm S.PL P') * soul (comm S.PL P')) := by rw [hSoul]
+    _ = soul (comm S.PL P') * soul (comm S.PL P') := soul_squared_is_body (comm S.PL P')
+    _ = comm S.PL P' * comm S.PL P' := by rw [hSoul]
+
+/-- The squared commutator `[P_L, P']²` commutes with the first idempotent `P_L`. -/
+theorem two_idempotent_comm_sq_comm_PL (P' : A) :
+    comm S.PL (comm S.PL P' * comm S.PL P') = 0 :=
+  (comm_PL_eq_zero_iff_eq_body _).mpr (two_idempotent_comm_sq_is_body P').symm
+
+/-- For any second idempotent `P'` (`P' * P' = P'`), the squared Halmos obstruction
+`[P_L, P']²` also commutes with `P'` (generating central curvature invariants). -/
+theorem two_idempotent_comm_sq_comm_second (P' : A) (hP' : P' * P' = P') :
+    comm P' (comm S.PL P' * comm S.PL P') = 0 := by
+  have h1 : P' * comm S.PL P' = comm S.PL P' * (1 - P') := by
+    dsimp [comm]
+    calc P' * (S.PL * P' - P' * S.PL)
+      _ = P' * S.PL * P' - (P' * P') * S.PL := by noncomm_ring
+      _ = P' * S.PL * P' - P' * S.PL := by rw [hP']
+      _ = S.PL * P' - S.PL * (P' * P') - P' * S.PL + P' * S.PL * P' := by rw [hP']; abel
+      _ = (S.PL * P' - P' * S.PL) * (1 - P') := by noncomm_ring
+  have h2 : (1 - P') * comm S.PL P' = comm S.PL P' * P' := by
+    dsimp [comm]
+    calc (1 - P') * (S.PL * P' - P' * S.PL)
+      _ = S.PL * P' - P' * S.PL - P' * S.PL * P' + (P' * P') * S.PL := by noncomm_ring
+      _ = S.PL * P' - P' * S.PL * P' := by rw [hP']; abel
+      _ = S.PL * (P' * P') - P' * S.PL * P' := by rw [hP']
+      _ = (S.PL * P' - P' * S.PL) * P' := by noncomm_ring
+  dsimp [comm]
+  apply sub_eq_zero.mpr
+  calc P' * (comm S.PL P' * comm S.PL P')
+    _ = (P' * comm S.PL P') * comm S.PL P' := by rw [mul_assoc]
+    _ = (comm S.PL P' * (1 - P')) * comm S.PL P' := by rw [h1]
+    _ = comm S.PL P' * ((1 - P') * comm S.PL P') := by rw [mul_assoc]
+    _ = comm S.PL P' * (comm S.PL P' * P') := by rw [h2]
+    _ = (comm S.PL P' * comm S.PL P') * P' := by rw [← mul_assoc]
+
+/-- **Emergent Grade-2 Bivector from Anticommuting Involution Obstruction**:
+Given `R` anticommuting with the chiral grading `G` (`G * R + R * G = 0`), their commutator
+equals `2 * (G * R)`, while the grade-2 product `B = G * R` satisfies `B² = -(R²)` and
+anticommutes with both `G` and `R`. -/
+theorem bivector_from_noncomm_obstruction (R : A)
+    (hAnti : G (A := A) * R + R * G (A := A) = 0) :
+    comm (G (A := A)) R = (2 : A) * (G (A := A) * R) ∧
+    (G (A := A) * R) * (G (A := A) * R) = -(R * R) ∧
+    G (A := A) * (G (A := A) * R) + (G (A := A) * R) * G (A := A) = 0 ∧
+    (G (A := A) * R) * R + R * (G (A := A) * R) = 0 := by
+  have hRG : R * G (A := A) = -(G (A := A) * R) := eq_neg_of_add_eq_zero_right hAnti
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · dsimp [comm]
+    calc G (A := A) * R - R * G (A := A)
+      _ = G (A := A) * R - (-(G (A := A) * R)) := by rw [hRG]
+      _ = G (A := A) * R + G (A := A) * R := sub_neg_eq_add _ _
+      _ = (2 : A) * (G (A := A) * R) := (two_mul _).symm
+  · calc (G (A := A) * R) * (G (A := A) * R)
+      _ = G (A := A) * (R * G (A := A)) * R := by simp only [mul_assoc]
+      _ = G (A := A) * (-(G (A := A) * R)) * R := by rw [hRG]
+      _ = -((G (A := A) * G (A := A)) * (R * R)) := by noncomm_ring
+      _ = -(R * R) := by rw [G_mul_G, one_mul]
+  · calc G (A := A) * (G (A := A) * R) + (G (A := A) * R) * G (A := A)
+      _ = (G (A := A) * G (A := A)) * R + G (A := A) * (R * G (A := A)) := by simp only [mul_assoc]
+      _ = R + G (A := A) * (-(G (A := A) * R)) := by rw [G_mul_G, one_mul, hRG]
+      _ = R - (G (A := A) * G (A := A)) * R := by noncomm_ring
+      _ = R - R := by rw [G_mul_G, one_mul]
+      _ = 0 := sub_self R
+  · calc (G (A := A) * R) * R + R * (G (A := A) * R)
+      _ = G (A := A) * (R * R) + (R * G (A := A)) * R := by simp only [mul_assoc]
+      _ = G (A := A) * (R * R) + (-(G (A := A) * R)) * R := by rw [hRG]
+      _ = G (A := A) * (R * R) - G (A := A) * (R * R) := by noncomm_ring
+      _ = 0 := sub_self _
+
+/-- Conjugation by the emergent grade-2 bivector `B = G * R` (with two-sided inverse
+`B⁻¹ = R⁻¹ * G` for any invertible sheet-swap `R`) preserves both the even `body` and odd
+`soul` subalgebras while swapping the chiral sheets `P_L ↔ P_R`. -/
+theorem bivector_preserves_body_and_soul (R Rinv : A)
+    (hRL : R * Rinv = 1) (hLR : Rinv * R = 1)
+    (hSwapL : R * S.PL * Rinv = S.PR) (X : A) :
+    body ((G (A := A) * R) * body X * (Rinv * G (A := A))) =
+      (G (A := A) * R) * body X * (Rinv * G (A := A)) ∧
+    soul ((G (A := A) * R) * soul X * (Rinv * G (A := A))) =
+      (G (A := A) * R) * soul X * (Rinv * G (A := A)) := by
+  have hSwapR : R * S.PR * Rinv = S.PL := by
+    have h_PR : S.PR = 1 - S.PL := by
+      calc S.PR = (S.PL + S.PR) - S.PL := by abel
+        _ = 1 - S.PL := by rw [S.h_sum]
+    calc R * S.PR * Rinv
+      _ = R * (1 - S.PL) * Rinv := by rw [h_PR]
+      _ = R * Rinv - R * S.PL * Rinv := by noncomm_ring
+      _ = 1 - S.PR := by rw [hRL, hSwapL]
+      _ = S.PL := by
+          calc 1 - S.PR = (S.PL + S.PR) - S.PR := by rw [S.h_sum]
+            _ = S.PL := by abel
+  have hBPL : (G (A := A) * R) * S.PL * (Rinv * G (A := A)) = S.PR := by
+    calc (G (A := A) * R) * S.PL * (Rinv * G (A := A))
+      _ = G (A := A) * (R * S.PL * Rinv) * G (A := A) := by simp only [mul_assoc]
+      _ = G (A := A) * S.PR * G (A := A) := by rw [hSwapL]
+      _ = (-S.PR) * G (A := A) := by rw [G_mul_PR]
+      _ = -(S.PR * G (A := A)) := by rw [neg_mul]
+      _ = -(-S.PR) := by rw [PR_mul_G]
+      _ = S.PR := neg_neg _
+  have hBPR : (G (A := A) * R) * S.PR * (Rinv * G (A := A)) = S.PL := by
+    calc (G (A := A) * R) * S.PR * (Rinv * G (A := A))
+      _ = G (A := A) * (R * S.PR * Rinv) * G (A := A) := by simp only [mul_assoc]
+      _ = G (A := A) * S.PL * G (A := A) := by rw [hSwapR]
+      _ = S.PL * G (A := A) := by rw [G_mul_PL]
+      _ = S.PL := PL_mul_G
+  have hBBinv : (G (A := A) * R) * (Rinv * G (A := A)) = 1 := by
+    calc (G (A := A) * R) * (Rinv * G (A := A))
+      _ = G (A := A) * (R * Rinv) * G (A := A) := by simp only [mul_assoc]
+      _ = G (A := A) * G (A := A) := by rw [hRL, mul_one]
+      _ = 1 := G_mul_G
+  have hBinvB : (Rinv * G (A := A)) * (G (A := A) * R) = 1 := by
+    calc (Rinv * G (A := A)) * (G (A := A) * R)
+      _ = Rinv * (G (A := A) * G (A := A)) * R := by simp only [mul_assoc]
+      _ = Rinv * R := by rw [G_mul_G, mul_one]
+      _ = 1 := hLR
+  have hBodyConj : (G (A := A) * R) * body X * (Rinv * G (A := A)) =
+      body ((G (A := A) * R) * X * (Rinv * G (A := A))) := by
+    dsimp [body]
+    calc (G (A := A) * R) * (S.PL * X * S.PL + S.PR * X * S.PR) * (Rinv * G (A := A))
+      _ = ((G (A := A) * R) * S.PL * (Rinv * G (A := A))) *
+            ((G (A := A) * R) * X * (Rinv * G (A := A))) *
+            ((G (A := A) * R) * S.PL * (Rinv * G (A := A))) +
+          ((G (A := A) * R) * S.PR * (Rinv * G (A := A))) *
+            ((G (A := A) * R) * X * (Rinv * G (A := A))) *
+            ((G (A := A) * R) * S.PR * (Rinv * G (A := A))) := by
+            simp only [mul_add, add_mul]
+            have t1 : (G (A := A) * R) * S.PL * (Rinv * G (A := A)) *
+                ((G (A := A) * R) * X * (Rinv * G (A := A))) *
+                ((G (A := A) * R) * S.PL * (Rinv * G (A := A))) =
+                (G (A := A) * R) * (S.PL * X * S.PL) * (Rinv * G (A := A)) := by
+              calc _
+                _ = (G (A := A) * R) * S.PL * ((Rinv * G (A := A)) * (G (A := A) * R)) *
+                      X * ((Rinv * G (A := A)) * (G (A := A) * R)) * S.PL * (Rinv * G (A := A)) := by
+                    simp only [mul_assoc]
+                _ = (G (A := A) * R) * (S.PL * X * S.PL) * (Rinv * G (A := A)) := by
+                    rw [hBinvB]; simp [mul_assoc]
+            have t2 : (G (A := A) * R) * S.PR * (Rinv * G (A := A)) *
+                ((G (A := A) * R) * X * (Rinv * G (A := A))) *
+                ((G (A := A) * R) * S.PR * (Rinv * G (A := A))) =
+                (G (A := A) * R) * (S.PR * X * S.PR) * (Rinv * G (A := A)) := by
+              calc _
+                _ = (G (A := A) * R) * S.PR * ((Rinv * G (A := A)) * (G (A := A) * R)) *
+                      X * ((Rinv * G (A := A)) * (G (A := A) * R)) * S.PR * (Rinv * G (A := A)) := by
+                    simp only [mul_assoc]
+                _ = (G (A := A) * R) * (S.PR * X * S.PR) * (Rinv * G (A := A)) := by
+                    rw [hBinvB]; simp [mul_assoc]
+            rw [t1, t2]
+      _ = S.PR * ((G (A := A) * R) * X * (Rinv * G (A := A))) * S.PR +
+          S.PL * ((G (A := A) * R) * X * (Rinv * G (A := A))) * S.PL := by
+            rw [hBPL, hBPR]
+      _ = _ := add_comm _ _
+  have hSoulConj : (G (A := A) * R) * soul X * (Rinv * G (A := A)) =
+      soul ((G (A := A) * R) * X * (Rinv * G (A := A))) := by
+    dsimp [soul, soul_LR, soul_RL]
+    have t1 : (G (A := A) * R) * S.PL * (Rinv * G (A := A)) *
+        ((G (A := A) * R) * X * (Rinv * G (A := A))) *
+        ((G (A := A) * R) * S.PR * (Rinv * G (A := A))) =
+        (G (A := A) * R) * (S.PL * X * S.PR) * (Rinv * G (A := A)) := by
+      calc _
+        _ = (G (A := A) * R) * S.PL * ((Rinv * G (A := A)) * (G (A := A) * R)) *
+              X * ((Rinv * G (A := A)) * (G (A := A) * R)) * S.PR * (Rinv * G (A := A)) := by
+            simp only [mul_assoc]
+        _ = (G (A := A) * R) * (S.PL * X * S.PR) * (Rinv * G (A := A)) := by
+            rw [hBinvB]; simp [mul_assoc]
+    have t2 : (G (A := A) * R) * S.PR * (Rinv * G (A := A)) *
+        ((G (A := A) * R) * X * (Rinv * G (A := A))) *
+        ((G (A := A) * R) * S.PL * (Rinv * G (A := A))) =
+        (G (A := A) * R) * (S.PR * X * S.PL) * (Rinv * G (A := A)) := by
+      calc _
+        _ = (G (A := A) * R) * S.PR * ((Rinv * G (A := A)) * (G (A := A) * R)) *
+              X * ((Rinv * G (A := A)) * (G (A := A) * R)) * S.PL * (Rinv * G (A := A)) := by
+            simp only [mul_assoc]
+        _ = (G (A := A) * R) * (S.PR * X * S.PL) * (Rinv * G (A := A)) := by
+            rw [hBinvB]; simp [mul_assoc]
+    calc (G (A := A) * R) * (S.PL * X * S.PR + S.PR * X * S.PL) * (Rinv * G (A := A))
+      _ = (G (A := A) * R) * (S.PL * X * S.PR) * (Rinv * G (A := A)) +
+          (G (A := A) * R) * (S.PR * X * S.PL) * (Rinv * G (A := A)) := by
+            simp only [mul_add, add_mul]
+      _ = S.PR * ((G (A := A) * R) * X * (Rinv * G (A := A))) * S.PL +
+          S.PL * ((G (A := A) * R) * X * (Rinv * G (A := A))) * S.PR := by
+            rw [← t1, ← t2, hBPL, hBPR]
+      _ = _ := add_comm _ _
+  refine ⟨?_, ?_⟩
+  · rw [hBodyConj, body_is_idempotent]
+  · rw [hSoulConj, soul_is_idempotent]
+
+end NoncommutativityHigherGrades
 
 end InfoGeometry.Algebra.DeWittPeirceSuperalgebra

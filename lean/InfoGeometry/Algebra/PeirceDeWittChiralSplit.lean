@@ -365,6 +365,79 @@ theorem grading_conjugates_oddPart (hp : IsIdempotent p) (x : A) :
     _ = -(oddPart p x * (grading p * grading p)) := by rw [neg_mul, mul_assoc]
     _ = - oddPart p x := by rw [grading_sq p hp, mul_one]
 
+/-- Grading conjugation is multiplicative on products in the original ring.
+This is the mechanism by which the Peirce parity sectors close under
+multiplication without replacing the noncommutative carrier. -/
+theorem grading_conjugates_mul (hp : IsIdempotent p) (x y : A) :
+    grading p * (x * y) * grading p =
+      (grading p * x * grading p) * (grading p * y * grading p) := by
+  calc
+    grading p * (x * y) * grading p =
+        grading p * x * y * grading p := by noncomm_ring
+    _ = grading p * x * (grading p * grading p) * y * grading p := by
+      rw [grading_sq p hp]
+      noncomm_ring
+    _ = (grading p * x * grading p) *
+        (grading p * y * grading p) := by noncomm_ring
+
+/-- Even times even remains grading-even. -/
+theorem grading_conjugates_evenPart_mul_evenPart (hp : IsIdempotent p)
+    (x y : A) :
+    grading p * (evenPart p x * evenPart p y) * grading p =
+      evenPart p x * evenPart p y := by
+  calc
+    grading p * (evenPart p x * evenPart p y) * grading p =
+        (grading p * evenPart p x * grading p) *
+          (grading p * evenPart p y * grading p) :=
+      grading_conjugates_mul p hp _ _
+    _ = evenPart p x * evenPart p y := by
+      rw [grading_conjugates_evenPart p hp x,
+        grading_conjugates_evenPart p hp y]
+
+/-- Even times odd remains grading-odd. -/
+theorem grading_conjugates_evenPart_mul_oddPart (hp : IsIdempotent p)
+    (x y : A) :
+    grading p * (evenPart p x * oddPart p y) * grading p =
+      -(evenPart p x * oddPart p y) := by
+  calc
+    grading p * (evenPart p x * oddPart p y) * grading p =
+        (grading p * evenPart p x * grading p) *
+          (grading p * oddPart p y * grading p) :=
+      grading_conjugates_mul p hp _ _
+    _ = -(evenPart p x * oddPart p y) := by
+      rw [grading_conjugates_evenPart p hp x,
+        grading_conjugates_oddPart p hp y, mul_neg]
+
+/-- Odd times even remains grading-odd. -/
+theorem grading_conjugates_oddPart_mul_evenPart (hp : IsIdempotent p)
+    (x y : A) :
+    grading p * (oddPart p x * evenPart p y) * grading p =
+      -(oddPart p x * evenPart p y) := by
+  calc
+    grading p * (oddPart p x * evenPart p y) * grading p =
+        (grading p * oddPart p x * grading p) *
+          (grading p * evenPart p y * grading p) :=
+      grading_conjugates_mul p hp _ _
+    _ = -(oddPart p x * evenPart p y) := by
+      rw [grading_conjugates_oddPart p hp x,
+        grading_conjugates_evenPart p hp y, neg_mul]
+
+/-- Odd times odd returns grading-even; the stronger Peirce projection result
+`oddPart_mul_oddPart_is_even` identifies the resulting diagonal component. -/
+theorem grading_conjugates_oddPart_mul_oddPart (hp : IsIdempotent p)
+    (x y : A) :
+    grading p * (oddPart p x * oddPart p y) * grading p =
+      oddPart p x * oddPart p y := by
+  calc
+    grading p * (oddPart p x * oddPart p y) * grading p =
+        (grading p * oddPart p x * grading p) *
+          (grading p * oddPart p y * grading p) :=
+      grading_conjugates_mul p hp _ _
+    _ = oddPart p x * oddPart p y := by
+      rw [grading_conjugates_oddPart p hp x,
+        grading_conjugates_oddPart p hp y]
+      noncomm_ring
+
 /-- A conditional dispersion-style square identity: an odd element whose
 square is the scalar `mSq` contributes no mixed term to `(q G + M)^2`. -/
 theorem scalar_grading_square_add_odd (hp : IsIdempotent p)

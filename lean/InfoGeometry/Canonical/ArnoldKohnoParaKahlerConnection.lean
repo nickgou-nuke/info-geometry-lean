@@ -5,18 +5,17 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import Mathlib.Algebra.Lie.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.TensorProduct.Basic
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
-import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 
 /-!
 # Arnold--Kohno / para-Kähler connection interface
 
-This owner is deliberately an interface between the repository's native
-Arnold--Cohen relations and its finite para-Kähler datum.  It does not
-identify an arbitrary KZ connection with a metric, nor does it assert a
-general configuration-space theorem without an indexed residue carrier.
+This owner proves the quadratic KZ curvature cancellation from native
+Arnold--Cohen exterior relations and Lie-algebraic Kohno relations. The
+reciprocal-difference application constructs the degree-one exterior forms.
+Differential closedness, a configuration-space connection, and parallel
+transport require separate analytic constructions.
 -/
 
 noncomputable section
@@ -24,7 +23,6 @@ noncomputable section
 namespace InfoGeometry.Canonical.ArnoldKohnoParaKahlerConnection
 
 open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
-open InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 
 /-- A finite commutator connection is flat when its coefficient values
 commute.  The exterior/formal differential part is kept separate from this
@@ -105,5 +103,28 @@ theorem arnold_kohno_triangle_flat (x y z : L) (a b c : ExteriorAlgebra R M)
   simp only [TensorProduct.tmul_zero]
 
 end Triangle
+
+
+/-! ## Constructed logarithmic differences -/
+
+section ReciprocalDifference
+
+variable {K V L : Type*} [Field K] [AddCommGroup V] [Module K V]
+  [LieRing L] [LieAlgebra K L]
+
+/-- The constructed reciprocal-difference exterior forms instantiate the
+noncommutative Arnold--Kohno cancellation. The conclusion is the quadratic
+algebraic curvature term; it makes no differential-closedness assertion. -/
+theorem reciprocalDifference_kohno_triangle_flat
+    (dz : ℕ → V) (z : ℕ → K) (hz : Function.Injective z) (i j k : ℕ)
+    (x y t : L) (hx : ⁅x, t + y⁆ = 0) (hy : ⁅y, x + t⁆ = 0) :
+    triangleCurvature x y t
+      ((LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz i j)
+      ((LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz j k)
+      ((LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz k i) = 0 := by
+  exact arnold_kohno_triangle_flat x y t _ _ _
+    (reciprocalDifference_exterior_arnold dz z hz i j k) hx hy
+
+end ReciprocalDifference
 
 end InfoGeometry.Canonical.ArnoldKohnoParaKahlerConnection

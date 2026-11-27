@@ -1,0 +1,137 @@
+{
+  "task": "real-clifford-wavelet-uncertainty",
+  "date": "2026-11-26",
+  "status": "accepted_limited_scope",
+  "base_revision": "fe24e350b08fdea04f74c0748ef9fd9417c47529",
+  "lean_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "scope": "Exact source closure of five selected owners; full root workspace and all-scale SIM(n) realization are outside this acceptance.",
+  "targets": [
+    "InfoGeometry.Krein.InternalPhaseGram",
+    "InfoGeometry.Krein.PhaseLinearObservableCommutator",
+    "InfoGeometry.Canonical.PhaseObservableUncertainty",
+    "InfoGeometry.Analysis.RealSchwartzUncertainty",
+    "InfoGeometry.Analysis.RealWaveletUncertaintyTransport"
+  ],
+  "modules": [
+    {
+      "module": "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.GrandUnification.ArchetypeDictionary",
+      "returncode": 0,
+      "warnings": 3
+    },
+    {
+      "module": "InfoGeometry.Krein.KreinSpace",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Cartan.Involution",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Krein.DoubledSpace",
+      "returncode": 0,
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.Krein.InternalPhaseGram",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Krein.HilbertBridge",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Krein.DoubledAdjoint",
+      "returncode": 0,
+      "warnings": 1
+    },
+    {
+      "module": "InfoGeometry.Krein.PhaseLinearObservableCommutator",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Canonical.PhaseObservableUncertainty",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.RealSchwartzUncertainty",
+      "returncode": 0,
+      "warnings": 0
+    },
+    {
+      "module": "InfoGeometry.Analysis.RealWaveletUncertaintyTransport",
+      "returncode": 0,
+      "warnings": 0
+    }
+  ],
+  "declaration_counts": {
+    "InfoGeometry.Krein.InternalPhaseGram": 16,
+    "InfoGeometry.Krein.PhaseLinearObservableCommutator": 16,
+    "InfoGeometry.Canonical.PhaseObservableUncertainty": 12,
+    "InfoGeometry.Analysis.RealSchwartzUncertainty": 12,
+    "InfoGeometry.Analysis.RealWaveletUncertaintyTransport": 2
+  },
+  "axioms": [
+    "[propext, Classical.choice, Quot.sound]"
+  ],
+  "source_sha256": {
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.GrandUnification.ArchetypeDictionary": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+    "InfoGeometry.Krein.KreinSpace": "dd9c9cb6a0574dab35a99fc6f5e48dfc0584bd616f84f0d8242f8b5afec8afd9",
+    "InfoGeometry.Cartan.Involution": "d407100337b0684f5dac751bc5372155fb1a86315395a05347419f26d855729c",
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier": "71a2dcad64a19921e86d5297a7039ad64af7aa1b7cf762f950861a26fa1fecd6",
+    "InfoGeometry.Krein.DoubledSpace": "99e1b7cb89c06dce8b6fc1364ccbd3d8d89cb7ffc847fffac2fbb0d5b670be01",
+    "InfoGeometry.Krein.InternalPhaseGram": "4781f93be87694f816ec10db3672f9966e450df49b84f61585e4b001fc2d0eb6",
+    "InfoGeometry.Krein.HilbertBridge": "ac4b4b3fc3647f59f40ead7ccd42fbb0b1a45db9c4695d2748e59508cb4e4493",
+    "InfoGeometry.Krein.DoubledAdjoint": "908343adeb006059d5c7eb319084ffa4305975a122d1a756c9ee27dc4d6d311e",
+    "InfoGeometry.Krein.PhaseLinearObservableCommutator": "9ac472ccdfffadfbfdcd494c7595860bf3a02ef58cf3c1396199c2c40e89be7a",
+    "InfoGeometry.Canonical.PhaseObservableUncertainty": "a5f137fbea9bd1ac2d54765cd99760b3e47008191c017f0e9f8fbd8da132ca3b",
+    "InfoGeometry.Analysis.RealSchwartzUncertainty": "27ea8fda9441aa4ed955af64292405aa6c4e50ff09e45a1cbbda14e6c8217323",
+    "InfoGeometry.Analysis.RealWaveletUncertaintyTransport": "27a1eb3b49c6d68430ea42b58fe92e936fe0ee54eca727af305795a4d892c958"
+  },
+  "verification_source_sha256": {
+    "tools/quality/check_clifford_dirac.py": "fcf6fbb9845e0ee2a85bdb3778c5fe74345a9ae7a2e97e871d0a89d3e98e7db0",
+    "tools/quality/check_reviewed_prs.py": "ddcd656bf93db21238748a1fef6d1a557f5ac3289eb439299fda3088deac19ba",
+    "tools/quality/reviewed_audit_source.py": "a976c910f5efb4611b1626d714e3197310d92648ffae56513e94a49ae5f0f206",
+    "tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45"
+  },
+  "checks": {
+    "native_source_closure": "passed",
+    "native_owned_declaration_axiom_audit": "passed",
+    "target_compiler_warnings": 0,
+    "placeholder_findings": 0,
+    "semantic_vacuity_findings": 0,
+    "independent_semantic_review": "PASS",
+    "workflow_and_contract_review": "PASS"
+  },
+  "commands": [
+    "python3 tools/quality/check_clifford_dirac.py --mathlib-root ../mathlib --output ../real-wavelet-report --lean /home/agent/.elan/bin/lean --incremental --target InfoGeometry.Krein.InternalPhaseGram --target InfoGeometry.Krein.PhaseLinearObservableCommutator --target InfoGeometry.Canonical.PhaseObservableUncertainty --target InfoGeometry.Analysis.RealSchwartzUncertainty --target InfoGeometry.Analysis.RealWaveletUncertaintyTransport",
+    "python3 tools/quality/placeholder_audit.py --root <each of the five owner files> --strict",
+    "python3 tools/quality/semantic_vacuity_gate.py <the five owner files> --fail-on warning"
+  ],
+  "remaining_scope": [
+    "Full SIM(n) integral transform and Haar measure construction",
+    "Concrete wavelet admissibility and scalar tightness",
+    "Proof of required coefficient regularity or extension to weak derivative/moment domains",
+    "Phase-reversing transport variant",
+    "Fourier spectral identification and physical momentum specialization",
+    "Full root workspace build"
+  ]
+}

@@ -1,0 +1,153 @@
+name: Real Clifford wavelet uncertainty (scoped)
+
+on:
+  pull_request:
+    paths:
+      - 'lean/InfoGeometry/All.lean'
+      - 'lean/InfoGeometry/Analysis/RealSchwartzUncertainty.lean'
+      - 'lean/InfoGeometry/Analysis/RealWaveletUncertaintyTransport.lean'
+      - 'lean/InfoGeometry/Krein/InternalPhaseGram.lean'
+      - 'lean/InfoGeometry/Krein/PhaseLinearObservableCommutator.lean'
+      - 'lean/InfoGeometry/Canonical/PhaseObservableUncertainty.lean'
+      - 'lean/InfoGeometry/Krein/DoubledSpace.lean'
+      - 'lean/InfoGeometry/Krein/DoubledAdjoint.lean'
+      - 'lean/InfoGeometry/Krein/KreinSpace.lean'
+      - 'lean/InfoGeometry/Krein/InvolutiveSelfDualCarrier.lean'
+      - 'lean/InfoGeometry/Krein/HilbertBridge.lean'
+      - 'lean/InfoGeometry/Cartan/Involution.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/GrandUnification/ArchetypeDictionary.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/real-wavelet-uncertainty.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: real-wavelet-uncertainty-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  REAL_WAVELET_TARGETS: >-
+    InfoGeometry.Krein.InternalPhaseGram
+    InfoGeometry.Krein.PhaseLinearObservableCommutator
+    InfoGeometry.Canonical.PhaseObservableUncertainty
+    InfoGeometry.Analysis.RealSchwartzUncertainty
+    InfoGeometry.Analysis.RealWaveletUncertaintyTransport
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Fetch exact source without unrelated submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPOSITORY}.git"
+          git -C project fetch --no-recurse-submodules --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+          test "$(git -C project rev-parse HEAD)" = "$SOURCE_REV"
+      - name: Read exact Mathlib pin
+        id: pins
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          manifest = json.loads(Path('project/lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+      - uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          persist-credentials: false
+      - uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: real-wavelet-uncertainty-${{ runner.os }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+      - name: Install pinned Lean
+        shell: bash
+        run: |
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+      - name: Fetch native import cache under the shared lock
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, str(Path('project').resolve()))
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          _, _, native = closure(Path('project'), os.environ['REAL_WAVELET_TARGETS'].split())
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'real-wavelet-uncertainty-cache') as lock:
+              subprocess.run(['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd='mathlib', check=True, pass_fds=(lock.fileno(),))
+          PY
+      - name: Compile exact source closure and audit every owned declaration
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          targets = os.environ['REAL_WAVELET_TARGETS'].split()
+          command = ['python3', 'tools/quality/check_clifford_dirac.py',
+              '--mathlib-root', '../mathlib', '--output', '../real-wavelet-report']
+          for target in targets:
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          report = json.loads(Path('../real-wavelet-report/report.json').read_text())
+          checked = {item['module']: item for item in report['modules']}
+          assert report['status'] == 'passed'
+          for target in targets:
+              item = checked[target]
+              assert item['returncode'] == 0 and item['warnings'] == 0, item
+          PY
+      - name: Check changed owners for placeholders and semantic vacuity
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          files = ['lean/' + name.replace('.', '/') + '.lean'
+              for name in os.environ['REAL_WAVELET_TARGETS'].split()]
+          for path in files:
+              subprocess.run(['python3', 'tools/quality/placeholder_audit.py',
+                  '--root', path, '--strict'], check=True)
+          subprocess.run(['python3', 'tools/quality/semantic_vacuity_gate.py',
+              *files, '--fail-on', 'warning'], check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: real-wavelet-uncertainty-kernel-evidence
+          path: |
+            real-wavelet-report/report.json
+            real-wavelet-report/evidence-sha256.json
+            real-wavelet-report/environment.json
+            real-wavelet-report/src/CliffordDiracAudit.lean
+            real-wavelet-report/*.log
+          if-no-files-found: warn

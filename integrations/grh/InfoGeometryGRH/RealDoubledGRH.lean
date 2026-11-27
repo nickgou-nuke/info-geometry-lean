@@ -74,7 +74,7 @@ theorem realZetaReadout_zero_re
   · rintro ⟨n, hn⟩
     have hreal := congrArg Complex.re hn
     norm_num at hreal
-    nlinarith [Nat.cast_nonneg (R := ℝ) n]
+    nlinarith [Nat.cast_nonneg (α := ℝ) n]
   · intro hs
     have hreal := congrArg Complex.re hs
     norm_num at hreal

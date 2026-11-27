@@ -1,4 +1,11 @@
-import Mathlib
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import Mathlib.LinearAlgebra.Trace
+import Mathlib.LinearAlgebra.Dimension.Finite
+import Mathlib.Basic.Real.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
 /-!
@@ -54,15 +61,13 @@ theorem pairedTrace_smul_id (kplus kminus : ℝ) :
     pairedTrace (kplus • (LinearMap.id : Module.End ℝ H))
         (kminus • (LinearMap.id : Module.End ℝ H)) =
       (kplus + kminus) * (Module.finrank ℝ H : ℝ) := by
-  simp [pairedTrace, trace_smul_id (H := H)]
-  ring
+  simp only [pairedTrace, trace_smul_id, add_mul]
 
 theorem pairedSupertrace_smul_id (kplus kminus : ℝ) :
     pairedSupertrace (kplus • (LinearMap.id : Module.End ℝ H))
         (kminus • (LinearMap.id : Module.End ℝ H)) =
       (kplus - kminus) * (Module.finrank ℝ H : ℝ) := by
-  simp [pairedSupertrace, trace_smul_id (H := H)]
-  ring
+  simp only [pairedSupertrace, trace_smul_id, sub_mul]
 
 theorem pairedSupertrace_common_smul (k : ℝ) :
     pairedSupertrace (k • (LinearMap.id : Module.End ℝ H))

@@ -1,6 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Projective.Projective
 import InfoGeometry.Algebra.FiniteSpinAlgebra
-import Mathlib
+import Mathlib.Analysis.Normed.Group.Constructions
+import Mathlib.Analysis.SpecialFunctions.Log.Basic
 
 /-!
 # Expectation ratios and a metric on the existing positive-ray quotient
@@ -39,7 +45,7 @@ def ratio (q : Ray ι) : ι → ι → ℝ :=
       rcases h with ⟨c, rfl⟩
       funext i j
       change w i / w j = (c.val * w i) / (c.val * w j)
-      field_simp [c.property.ne', (w.pos j).ne'] <;> ring) q
+      field_simp [c.property.ne', (w.pos j).ne']) q
 
 @[simp] theorem ratio_ray (w : Weight ι) (i j : ι) :
     ratio (ray w) i j = w i / w j := rfl
@@ -59,7 +65,7 @@ theorem ratio_cocycle (q : Ray ι) (i j k : ι) :
   refine Quotient.inductionOn q ?_
   intro w
   change (w i / w j) * (w j / w k) = w i / w k
-  field_simp [(w.pos j).ne', (w.pos k).ne'] <;> ring
+  field_simp [(w.pos j).ne', (w.pos k).ne']
 
 /-- Two-state comparison: both state representative scales cancel. -/
 def crossRatio (q r : Ray ι) (i j : ι) : ℝ := ratio q i j / ratio r i j
@@ -67,7 +73,7 @@ def crossRatio (q r : Ray ι) (i j : ι) : ℝ := ratio q i j / ratio r i j
 theorem crossRatio_ray (w v : Weight ι) (i j : ι) :
     crossRatio (ray w) (ray v) i j = (w i * v j) / (w j * v i) := by
   dsimp [crossRatio, ratio, ray]
-  field_simp [(w.pos j).ne', (v.pos i).ne', (v.pos j).ne'] <;> ring
+  field_simp [(w.pos j).ne', (v.pos i).ne', (v.pos j).ne']
 
 theorem crossRatio_independent_scales (w v : Weight ι) (c d : ℝ)
     (hc : 0 < c) (hd : 0 < d) (i j : ι) :
@@ -125,23 +131,29 @@ section Finite
 variable [Fintype ι] [Nonempty ι]
 
 /-- Native metric data on the existing ray type; not a replacement state carrier. -/
+@[instance_reducible]
 def ratioMetricSpace : MetricSpace (Ray ι) :=
   MetricSpace.induced logCoordinates logCoordinates_injective inferInstance
 
 def projectiveDistance (q r : Ray ι) : ℝ := dist (logCoordinates q) (logCoordinates r)
 
+omit [Nonempty ι] in
 theorem projectiveDistance_eq_norm (q r : Ray ι) :
     projectiveDistance q r = ‖logCoordinates q - logCoordinates r‖ := dist_eq_norm _ _
 
+omit [Nonempty ι] in
 theorem projectiveDistance_nonneg (q r : Ray ι) : 0 ≤ projectiveDistance q r :=
   dist_nonneg
 
+omit [Nonempty ι] in
 @[simp] theorem projectiveDistance_self (q : Ray ι) : projectiveDistance q q = 0 :=
   dist_self _
 
+omit [Nonempty ι] in
 theorem projectiveDistance_symm (q r : Ray ι) :
     projectiveDistance q r = projectiveDistance r q := dist_comm _ _
 
+omit [Nonempty ι] in
 theorem projectiveDistance_triangle (q r s : Ray ι) :
     projectiveDistance q s ≤ projectiveDistance q r + projectiveDistance r s :=
   dist_triangle _ _ _
@@ -152,6 +164,7 @@ theorem projectiveDistance_triangle (q r s : Ray ι) :
   rw [dist_eq_zero]
   exact logCoordinates_injective.eq_iff
 
+omit [Nonempty ι] in
 theorem projectiveDistance_independent_scales (w v : Weight ι) (c d : ℝ)
     (hc : 0 < c) (hd : 0 < d) :
     projectiveDistance (ray (PositiveMeasure.scale c hc w))
@@ -163,15 +176,17 @@ def weightedSum (w : Weight ι) (f : ι → ℝ) : ℝ := ∑ i, w i * f i
 
 def mean (w : Weight ι) (f : ι → ℝ) : ℝ := weightedSum w f / PositiveMeasure.Z w
 
+omit [Nonempty ι] in
 theorem weightedSum_scale (w : Weight ι) (f : ι → ℝ) (c : ℝ) (hc : 0 < c) :
     weightedSum (PositiveMeasure.scale c hc w) f = c * weightedSum w f := by
   simp [weightedSum, PositiveMeasure.scale_apply, Finset.mul_sum, mul_assoc]
 
+omit [Nonempty ι] in
 theorem mean_scale (w : Weight ι) (f : ι → ℝ) (c : ℝ) (hc : 0 < c) :
     mean (PositiveMeasure.scale c hc w) f = mean w f := by
   unfold mean
   rw [weightedSum_scale, PositiveMeasure.Z_scale]
-  field_simp [hc.ne', PositiveMeasure.Z_ne_zero w] <;> ring
+  field_simp [hc.ne']
 
 def rayMean (q : Ray ι) (f : ι → ℝ) : ℝ :=
   Quotient.lift (fun w : Weight ι => mean w f)
@@ -180,6 +195,7 @@ def rayMean (q : Ray ι) (f : ι → ℝ) : ℝ :=
       rcases h with ⟨c, rfl⟩
       exact (mean_scale w f c.val c.property).symm) q
 
+omit [Nonempty ι] in
 @[simp] theorem rayMean_ray (w : Weight ι) (f : ι → ℝ) :
     rayMean (ray w) f = mean w f := rfl
 
@@ -190,6 +206,7 @@ theorem mean_eq_sum (w : Weight ι) (f : ι → ℝ) :
   intro i _
   ring
 
+omit [Nonempty ι] in
 theorem rayMean_add (q : Ray ι) (f g : ι → ℝ) :
     rayMean q (fun i => f i + g i) = rayMean q f + rayMean q g := by
   refine Quotient.inductionOn q ?_
@@ -202,6 +219,7 @@ theorem rayMean_add (q : Ray ι) (f g : ι → ℝ) :
         simp only [mul_add, Finset.sum_add_distrib]]
   ring
 
+omit [Nonempty ι] in
 theorem rayMean_smul (q : Ray ι) (c : ℝ) (f : ι → ℝ) :
     rayMean q (fun i => c * f i) = c * rayMean q f := by
   refine Quotient.inductionOn q ?_

@@ -88,7 +88,7 @@ theorem eventually_centeredSmoothing_le_rpow {q : ℕ} [NeZero q]
     x * New.primeRemainder d q x ≤ x * x ^ (-1 / 2 + ε) :=
       mul_le_mul_of_nonneg_left hbound hx.le
     _ = x ^ ((1 : ℝ) + (-1 / 2 + ε)) := by
-      rw [Real.rpow_add hx, Real.rpow_one]
+      rw [Real.rpow_add hx 1 (-1 / 2 + ε), Real.rpow_one]
     _ = x ^ (1 / 2 + ε) := by congr 1; ring
 
 /-- The external estimate discharges the native real-cutoff growth predicate
@@ -138,7 +138,7 @@ private theorem exp_smul_mellin_kernel (G : ℝ → ℝ) (s : ℂ) (v : ℝ) :
     Complex.real_smul, Complex.ofReal_div]
   rw [show (1 - s) * (v : ℂ) = (v : ℂ) + (-s * (v : ℂ)) by ring,
     Complex.exp_add, ← Complex.ofReal_exp]
-  field_simp [hx] <;> ring
+  field_simp [hx]
 
 /-- The `x = exp v` change of variables fixes the Mellin normalization.
 Integrability is supplied separately for the arithmetic specialization below. -/

@@ -1,6 +1,20 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Lie.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.BilinearForm.Basic
+
+/-!
+# KKS pairing with supplied isotropy data
+
+The declarations in this compatibility owner evaluate the pairing on the
+original Lie algebra. They prove invariance under a supplied null submodule;
+they do not construct a quotient or a smooth symplectic reduction. The actual
+radical quotient and its nondegenerate form are constructed separately in
+`SouriauKKSRadicalQuotient`.
+-/
 
 set_option linter.unusedSectionVars false
 set_option linter.unnecessarySeqFocus false
@@ -18,7 +32,7 @@ structure CoadjointIsotropyData where
   mu : L →ₗ[R] R
   isotropySubmodule : Submodule R L
 
-/-- 🏆 THEOREM 1: Skew-Symmetry of Isotropy Action Nullity -/
+/-- Nullity in the second argument follows from nullity in the first. -/
 theorem isotropy_coad_null_skew (data : CoadjointIsotropyData (R := R) (L := L))
     (X Y : L) (hX : X ∈ data.isotropySubmodule)
     (h_coad_null : ∀ Z : L, Z ∈ data.isotropySubmodule →
@@ -34,11 +48,11 @@ theorem isotropy_coad_null_skew (data : CoadjointIsotropyData (R := R) (L := L))
       rw [hskew, map_neg]
     _ = 0 := by rw [h, neg_zero]
 
-/-- 3. Marsden-Weinstein Reduced Symplectic Form ω_red on Reduced Orbit Quotient Space 𝔤* / 𝔥_μ -/
+/-- Compatibility name for the KKS pairing on representatives in `L`. -/
 def reducedKKSForm (data : CoadjointIsotropyData (R := R) (L := L)) (X Y : L) : R :=
   kksForm data.mu X Y
 
-/-- 🏆 THEOREM 2: Well-Definedness of Reduced Form under Gauge Transformations (Addition of Isotropy Elements) -/
+/-- Invariance under addition of an element of a supplied null submodule. -/
 theorem reducedKKSForm_well_defined
     (data : CoadjointIsotropyData (R := R) (L := L)) (X Y Z : L)
     (hZ : Z ∈ data.isotropySubmodule)
@@ -52,7 +66,7 @@ theorem reducedKKSForm_well_defined
     simpa [kksForm] using h
   rw [h', add_zero]
 
-/-- 🏆 THEOREM 3: Skew-Symmetry of the Marsden-Weinstein Reduced Symplectic 2-Form -/
+/-- Skewness of the pairing on representatives. -/
 theorem reducedKKSForm_skew
     (data : CoadjointIsotropyData (R := R) (L := L)) (X Y : L) :
     reducedKKSForm data X Y = - reducedKKSForm data Y X := by
@@ -63,7 +77,8 @@ theorem reducedKKSForm_skew
   rw [hskew, map_neg]
   simp
 
-/-- 🏆 THEOREM 4: Marsden-Weinstein Pullback Identity: π* ω_red = i* ω_KKS -/
+/-- Compatibility identity on representatives. This does not assert a smooth
+Marsden--Weinstein reduction. -/
 theorem marsden_weinstein_pullback_identity
     (data : CoadjointIsotropyData (R := R) (L := L)) (X Y : L) :
     reducedKKSForm data X Y = kksForm data.mu X Y := rfl

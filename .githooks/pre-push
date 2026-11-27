@@ -124,7 +124,7 @@ elif [[ "$has_new_ref" == true ]]; then
         bash scripts/quality/post_build_gate.sh --incremental --base="$base_ref" --head="$current_head"
     done
     echo "[pre-push] running full root-package quality gate"
-    bash scripts/quality/post_build_gate.sh
+    bash scripts/quality/post_build_gate.sh --full
 else
     for base_ref in "${!checked_bases[@]}"; do
         echo "[pre-push] running quality gate for $base_ref..$current_head"

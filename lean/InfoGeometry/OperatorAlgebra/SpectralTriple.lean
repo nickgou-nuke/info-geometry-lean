@@ -25,7 +25,8 @@ Key point:
 `J K = - K J`.
 -/
 
-import Mathlib
+import Mathlib.Analysis.Normed.Operator.Compact.Basic
+import Mathlib.Tactic.NthRewrite
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.OperatorAlgebra.ModularWeightTrace
 import InfoGeometry.Geometry.PhaseErlanger

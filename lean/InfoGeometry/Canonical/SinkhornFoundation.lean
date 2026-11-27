@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.GrandCanonical.Core
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MixtureOfExperts
@@ -350,8 +355,9 @@ section KahlerPotential
 variable (n : Nat)
 
 /--
-Kahler-potential model from Sinkhorn Radon-Nikodym barriers:
-negative log-density (relative-volume) contributions from row and column sectors.
+Compatibility name for the sum of negative log row and column masses.
+It vanishes when both marginals are one; it is not an intrinsic positive
+definite Kähler metric on the bistochastic locus.
 -/
 noncomputable def kahlerPotentialRN (M : SinkhornMatrix n) : ℝ :=
   rowBarrierPotential n M + colBarrierPotential n M
@@ -365,7 +371,14 @@ lemma kahlerPotentialRN_eq_neg_logJacobian
     kahlerPotentialRN n M
       = -(rowRadonNikodymGenerator n M + colRadonNikodymGenerator n M) := by
   unfold kahlerPotentialRN rowBarrierPotential colBarrierPotential
-  ring
+  exact (neg_add _ _).symm
+
+/-- This marginal barrier vanishes identically on the normalized locus. -/
+theorem kahlerPotentialRN_eq_zero_of_normalized (M : SinkhornMatrix n)
+    (hrow : ∀ i, rowSum n M i = 1) (hcol : ∀ j, colSum n M j = 1) :
+    kahlerPotentialRN n M = 0 := by
+  simp [kahlerPotentialRN, rowBarrierPotential, colBarrierPotential,
+    rowRadonNikodymGenerator, colRadonNikodymGenerator, hrow, hcol]
 
 /--
 Relative-volume change induced by the RN Kahler potential.
@@ -495,7 +508,8 @@ lemma phaseRNBarrierAfter_nonneg (phase : SinkhornPhase) (M : SinkhornMatrix n) 
     simp [phaseRNBarrierAfter, rowRNBarrier_nonneg, colRNBarrier_nonneg]
 
 /--
-Sinkhorn one-step Lyapunov contraction in the phase-aligned objective.
+The normalized axis has zero post-step residual, bounded by the nonnegative
+pre-step residual on the other axis.
 -/
 lemma sinkhornStep_phaseLyapunov_monotone
     {phase : SinkhornPhase} {M M' : SinkhornMatrix n}
@@ -516,7 +530,8 @@ lemma sinkhornStep_phaseLyapunov_monotone
       exact phaseLyapunovBefore_nonneg (n := n) SinkhornPhase.col M
 
 /--
-Radon-Nikodym barrier contraction lemma.
+The normalized axis has zero post-step logarithmic residual, bounded by the
+nonnegative pre-step logarithmic residual on the other axis.
 -/
 lemma sinkhornStep_phaseRNBarrier_monotone
     {phase : SinkhornPhase} {M M' : SinkhornMatrix n}
@@ -622,8 +637,9 @@ theorem trajectoryRNBarrierNext_eq_zero (T : SinkhornTrajectory n) (k : Nat) :
   exact sinkhornStep_phaseRNBarrierAfter_eq_zero (n := n) (hstep := T.step k)
 
 /--
-Monotonic Lyapunov inequality along the Sinkhorn trajectory.
-This is the genuine convergence theorem: imbalance on the uncontrolled axis decreases.
+This compares the zero post-step residual on the normalized axis with the
+nonnegative pre-step residual on the other axis. It does not assert
+monotonicity of a single sequence or convergence of the matrices.
 -/
 theorem trajectoryLyapunov_monotone (T : SinkhornTrajectory n) (k : Nat) :
     trajectoryLyapunovNext n T k ≤ trajectoryLyapunov n T k := by
@@ -639,8 +655,8 @@ theorem rn_barrier_row_step_eq_zero (M : SinkhornMatrix n) (hpos : HasPositiveRo
   rowRNBarrier_rowNormalize_eq_zero (n := n) M hpos
 
 /--
-Monotonic Radon-Nikodym barrier inequality along the Sinkhorn trajectory.
-The logarithmic imbalance contracts after each alternating normalization.
+The logarithmic residual of the axis normalized by this step drops to zero.
+This statement alone does not control the other axis or establish convergence.
 -/
 theorem trajectoryRNBarrier_monotone (T : SinkhornTrajectory n) (k : Nat) :
     trajectoryRNBarrierNext n T k ≤ trajectoryRNBarrier n T k := by
@@ -799,7 +815,8 @@ lemma sinkhornTwoStep_eq_schroedingerBridgeGauge
     (sinkhornTwoStep_eq_twoSidedGauge (n := n) M hrow hcol)
 
 /--
-Phase-aligned Lyapunov monotonicity for one Sinkhorn step, in OT language.
+Compatibility alias for a phase residual inequality. The statement does not
+contain the entropic transport objective or assert its monotonicity.
 -/
 lemma sinkhornStep_regularizedObjective_monotone
     {phase : SinkhornPhase} {M M' : Coupling n}
@@ -808,7 +825,7 @@ lemma sinkhornStep_regularizedObjective_monotone
   sinkhornStep_phaseLyapunov_monotone (n := n) hstep
 
 /--
-Entropic OT step monotonicity alias (via the same phase Lyapunov functional).
+Compatibility alias for the same phase residual inequality.
 -/
 lemma sinkhornStep_entropicOT_monotone
     {phase : SinkhornPhase} {M M' : Coupling n}
@@ -817,7 +834,8 @@ lemma sinkhornStep_entropicOT_monotone
   sinkhornStep_regularizedObjective_monotone (n := n) hstep
 
 /--
-Bayesian free-energy step monotonicity alias (same statement in Bayesian language).
+Compatibility alias for the phase residual inequality; no free-energy
+functional occurs in the theorem type.
 -/
 lemma sinkhornStep_bayesianFreeEnergy_monotone
     {phase : SinkhornPhase} {M M' : Coupling n}
@@ -826,8 +844,7 @@ lemma sinkhornStep_bayesianFreeEnergy_monotone
   sinkhornStep_regularizedObjective_monotone (n := n) hstep
 
 /--
-Radon-Nikodym barrier monotonicity alias:
-the negative-log Jacobian generator contracts to the normalized axis after each step.
+Compatibility alias for the normalized axis's absolute log-mass residual.
 -/
 lemma sinkhornStep_radonNikodymBarrier_monotone
     {phase : SinkhornPhase} {M M' : Coupling n}
@@ -835,7 +852,7 @@ lemma sinkhornStep_radonNikodymBarrier_monotone
     phaseRNBarrierAfter n phase M' ≤ phaseRNBarrierBefore n phase M :=
   sinkhornStep_phaseRNBarrier_monotone (n := n) hstep
 
-/-- Schrödinger bridge step monotonicity alias. -/
+/-- Compatibility alias for the phase residual inequality. -/
 lemma schroedingerBridgeStep_monotone
     {phase : SinkhornPhase} {M M' : Coupling n}
     (hstep : SinkhornStep n phase M M') :

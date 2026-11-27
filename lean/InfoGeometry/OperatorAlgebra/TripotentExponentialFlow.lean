@@ -7,6 +7,7 @@ import InfoGeometry.Core.TripotentAdjointRigidity
 import InfoGeometry.Core.TripotentEigenspaces
 import InfoGeometry.Core.TripotentGradeTransport
 import InfoGeometry.OperatorAlgebra.ConservedOperatorFlow
+import Mathlib.Analysis.Calculus.Deriv.Add
 
 /-!
 # Tripotent grades under actual exponential conjugation

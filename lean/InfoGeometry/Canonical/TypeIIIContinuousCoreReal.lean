@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.RealTomitaCore
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.YangMillsContinuum
@@ -11,15 +16,25 @@ open scoped InnerProductSpace
 /-!
 # InfoGeometry.Canonical.TypeIIIContinuousCoreReal
 
-Type-III continuous-core interface in the repo-native real doubled language.
+Legacy modular-flow and invariant-readout interface in the real doubled language.
 
-This file does not construct crossed products internally. It provides a strict,
-compiled interface layer that packages:
+This file does not construct crossed products internally. Its interface packages:
 
 - base Type-III modular data,
 - modular-flow/additive-flow laws,
 - bridge hook into the real Tomita `δ = log Δ` lane,
-- an abstract continuous-core API (dual action + trace invariance).
+- an action on an abstract carrier with an invariant real-valued readout.
+
+The compatibility fields named `coreTrace` and `trace_dualAction_invariant`
+do not provide the canonical semifinite trace of a continuous crossed product.
+For that trace the dual-action law is nontrivial exponential scaling; its sign
+depends on the dual-character convention. Its natural positive-cone codomain
+permits infinity. See Houdayer, *Von Neumann algebras with unique Cartan
+decomposition* (2013), Lecture 5, p. 15, for the `exp (t)` convention with
+`θ_t(λ(s)) = exp(its) λ(s)`:
+https://cyrilhoudayer.com/wp-content/uploads/2014/09/copenhagen-2013.pdf
+No crossed-product algebra, normal
+faithful semifinite trace, or Type-III classification is constructed here.
 -/
 
 namespace InfoGeometry.Canonical.TypeIIIContinuousCoreReal
@@ -187,8 +202,9 @@ theorem exists_boltzmannEntropyPotential_of_cocycle
 end RealTypeIIIModularData
 
 /--
-Abstract real continuous-core interface:
-`Core` + dual action + trace invariant under the dual action.
+Legacy action with an invariant scalar readout. Field names are retained for
+source compatibility; this is not a construction of a continuous core or its
+canonical semifinite trace.
 -/
 @[rep_depth transport]
 structure RealContinuousCoreInterface where
@@ -256,7 +272,7 @@ theorem trace_constant_on_dualFixed
     (_hfix : C.IsDualFixed x)
     (t : ℝ) :
     C.coreTrace (C.dualAction t x) = C.coreTrace x := by
-  simpa using C.trace_dualAction_invariant t x
+  exact congrArg C.coreTrace (_hfix t)
 
 /--
 Downstream CP-003 consumer on the Type-III core lane:

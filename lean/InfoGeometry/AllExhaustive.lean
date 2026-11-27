@@ -1550,6 +1550,7 @@ import InfoGeometry.AsanoRuelle.TopologicalEndpoint
 import InfoGeometry.AsanoRuelle.UnrestrictedFalse
 import InfoGeometry.Assumptions
 import InfoGeometry.Assumptions.Determinant
+import InfoGeometry.Canonical.EpistemicGapImplementation
 import InfoGeometry.Canonical.DualConnectionsCore
 import InfoGeometry.Canonical.LLNCore
 import InfoGeometry.Canonical.ManifoldDegreeCore

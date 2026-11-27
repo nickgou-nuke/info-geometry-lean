@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.CertifiedInverseKernel
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.InverseKernelAlgebra
@@ -51,12 +56,20 @@ theorem metricProjectorOf_idempotent
   cases s <;> simp [metricProjectorOf, CIK.metricProjector_idempotent, CIK.mpRangeProjector_idempotent]
 
 /--
-Certified modular reduction package for projector-controlled logarithmic lane
+Legacy ambient-carrier interface for projector-controlled logarithmic lane
 execution.
 
-This is an interface object: support and anomaly laws are carried as certified
-fields so downstream modules cannot apply `log`/`inverse`/entropy formulas to a
-bare operator.
+This interface supplies analytic hooks and certified execution laws; it does
+not construct an operator logarithm. Every hook input and output remains an
+endomorphism of the ambient carrier `E`, including `compress Preg Δ`.
+
+For a finite-dimensional positive real operator, the constructed logarithm on
+the actual retained carrier is provided by
+`InfoGeometry.Analysis.RealSupportLogarithm.supportLog`. That owner proves
+strict spectral positivity of the restricted operator, its exponential inverse,
+and the compressed ambient identity after extension by zero. Identifying its
+orthogonal metric support with a Drazin projector requires a separate theorem;
+no such identification is part of this interface.
 -/
 @[rep_depth operator]
 structure CertifiedModularReduction where
@@ -127,11 +140,13 @@ def Pzero : EndH := c.cik.spectralComplementaryProjector
 @[rep_depth operator]
 def Pmetric : EndH := metricProjectorOf (E := E) c.metricSide c.cik
 
-/-- Regular compression of `Δ` on the Drazin support. -/
+/-- Ambient compression of `Δ` by the Drazin projector. Its carrier remains
+`E`; this definition is not the restriction to the range of `Preg`. -/
 @[rep_depth operator]
 def Δreg : EndH := compress (Preg c) c.Δ
 
-/-- Regular logarithmic generator (analytic hook). -/
+/-- Legacy ambient logarithmic generator supplied by the analytic hook.
+Its definition does not invoke the constructed restricted real logarithm. -/
 @[rep_depth operator]
 def Kreg : EndH := -(c.logOn c.logDomain)
 
@@ -170,17 +185,27 @@ theorem log_defined_on_Δreg :
   simpa [Δreg, Preg] using c.logDomain
 
 /--
-Owner surface for regular-lane spectral positivity:
-the spectrum of `Δreg` lies on the positive real axis.
+Legacy ambient spectral-positivity condition for `Δreg`.
+
+The spectrum here is computed in the full endomorphism algebra of `E`, not on
+the range of `Preg`. If the ambient compression has a nonzero discarded kernel,
+zero lies in this spectrum and the condition cannot hold. The finite positive
+real support theorem is instead
+`RealSupportLogarithm.supportOperator_spectrum_positive`, on the actual carrier
+`Support T`. Its `exp_supportLog` and
+`compressed_exp_neg_modularHamiltonian` provide the corresponding constructed
+logarithm and reconstruction laws.
 -/
 @[rep_depth operator]
 def RegularSpectrumPositive : Prop :=
   spectrum ℝ (Δreg c) ⊆ Set.Ioi (0 : ℝ)
 
 /--
-Functional-calculus bridge law (owner form):
-if regular-lane spectral positivity implies log-admissibility for this analytic
-hook, then `Δreg` is log-admissible.
+Legacy hook implication for the ambient spectral-positivity condition.
+
+This theorem applies the supplied
+`hRegularSpectrumPositive_to_logDomain` field. It preserves that interface
+contract and does not construct a logarithm on a proper retained carrier.
 -/
 @[rep_depth operator]
 theorem log_defined_on_Δreg_of_regularSpectrumPositive

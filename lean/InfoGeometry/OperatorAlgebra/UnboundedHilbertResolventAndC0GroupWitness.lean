@@ -14,6 +14,23 @@ import Mathlib.Analysis.SpecialFunctions.Trigonometric.Deriv
 import Mathlib.Topology.Algebra.InfiniteSum.Real
 import Mathlib.LinearAlgebra.Matrix.Notation
 
+/-!
+# Real ℓ² block rotations and their maximal-domain operator
+
+This owner constructs the actual continuous linear maps `R_unb` and `U_unb`,
+the dense maximal domain `D_max`, and the unbounded real operator `K_max`.
+`K_max_skew_symmetric` proves the real inner-product pairing identity on that
+domain. The legacy name `K_unb_block_skew_adjoint` denotes a scalar identity
+on a coordinate pair; no native partial-adjoint equality is proved here.
+
+The companion `UnboundedHilbertStrongGenerator` owner proves strong continuity
+of `U_unb` on every Hilbert vector, its Hilbert-norm derivative at zero equal
+to `K_max` on `D_max`, and the converse that differentiability at zero forces
+membership in `D_max`. Thus its generator-domain characterization uses the
+full maximal domain. That owner also derives domain intertwining from bounded
+operator commutation with the flow.
+-/
+
 namespace InfoGeometry.OperatorAlgebra.UnboundedHilbertResolventAndC0GroupWitness
 
 open scoped ENNReal
@@ -505,7 +522,7 @@ theorem U_unb_isometry (t : ℝ) (x : H_lp) : ‖U_unb t x‖ = ‖x‖ := by
 
 /-! ### Section 3: Submodules, Generator and Operator-Norm Unboundedness -/
 
-/-- Dense core domain of finitely supported sequences in ℓ²(ℕ, ℝ). -/
+/-- Finitely supported real ℓ² sequences; `D_fin_dense` proves ambient density. -/
 def D_fin : Submodule ℝ H_lp where
   carrier := {x | ∃ N : ℕ, ∀ n ≥ N, (x : ℕ → ℝ) n = 0}
   zero_mem' := ⟨0, fun _ _ => rfl⟩
@@ -544,7 +561,7 @@ theorem D_fin_dense : Dense (D_fin : Set H_lp) := by
       _ = 0 := Finset.sum_const_zero
   exact mem_closure_of_tendsto h_tendsto (Filter.Eventually.of_forall h_mem)
 
-/-- Unbounded skew-adjoint generator K_unb on coordinate pairs. -/
+/-- Coordinate formula for the weighted real rotation operator, realized on `D_max` by `K_max`. -/
 def K_unb_fun (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   if n % 2 = 0 then
     -(((n / 2 : ℕ) + 1 : ℝ) * x (n + 1))
@@ -569,6 +586,7 @@ theorem K_unb_odd (m : ℕ) (x : ℕ → ℝ) :
       omega
     rw [hdiv]
 
+/-- Pairwise skew-symmetry identity, retaining its historical public name. -/
 theorem K_unb_block_skew_adjoint (m : ℕ) (x y : ℕ → ℝ) :
     x (2 * m) * K_unb_fun y (2 * m) + x (2 * m + 1) * K_unb_fun y (2 * m + 1) +
     K_unb_fun x (2 * m) * y (2 * m) + K_unb_fun x (2 * m + 1) * y (2 * m + 1) = 0 := by
@@ -632,7 +650,7 @@ theorem D_fin_le_D_max : D_fin ≤ D_max := by
     (Finset.finite_toSet (Finset.range (2 * N + 2))).subset h_supp
   exact summable_of_hasFiniteSupport h_fin
 
-/-- Unbounded generator K_max as a linear map from D_max into H_lp. -/
+/-- The weighted rotation operator on its actual maximal square-summable-image domain. -/
 def K_max : D_max →ₗ[ℝ] H_lp where
   toFun x := ⟨K_unb_fun (x.1 : ℕ → ℝ), x.2⟩
   map_add' x y := by
@@ -777,7 +795,10 @@ structure ResolventData (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] w
   sub_K_R_apply : ∀ x : H, (R x : H) - K ⟨R x, R_in_domain x⟩ = x
   R_sub_K_apply : ∀ (x : H) (hx : x ∈ D_K), R (x - K ⟨x, hx⟩) = x
 
-/-- Abstract C₀-group generator data package on a Hilbert space H. -/
+/-- Isometric-group and densely defined skew-symmetric operator data.
+The historical type name is retained. This record has no continuity or derivative
+fields; the concrete strong generator identification is proved separately in
+`UnboundedHilbertStrongGenerator`. -/
 structure C0GroupGenerator (H : Type*) [NormedAddCommGroup H] [InnerProductSpace ℝ H] where
   U : ℝ → (H →L[ℝ] H)
   U_zero : U 0 = ContinuousLinearMap.id ℝ H
@@ -952,7 +973,9 @@ noncomputable def unboundedResolventData : ResolventData H_lp where
   sub_K_R_apply := R_unb_sub_K_apply
   R_sub_K_apply := R_unb_sub_K_apply'
 
-/-- Concrete non-trivial C₀-group generator data for the unbounded operator K_max on H_lp. -/
+/-- Concrete isometric-group, dense-domain and skew-symmetry data for `K_max`.
+Its strong continuity and exact generator domain are established in the companion
+`UnboundedHilbertStrongGenerator` owner. -/
 noncomputable def unboundedC0Group : C0GroupGenerator H_lp where
   U := U_unb
   U_zero := U_unb_zero

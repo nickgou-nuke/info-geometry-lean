@@ -3,6 +3,7 @@ Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
+import InfoGeometry.OperatorAlgebra.C0GroupGenerator
 import InfoGeometry.Core.TripotentIntegerGrading
 import InfoGeometry.OperatorAlgebra.TripotentGradeTransport
 import InfoGeometry.OperatorAlgebra.TripotentExponentialFlow
@@ -18,15 +19,23 @@ import Mathlib.LinearAlgebra.Matrix.Notation
 
 This module formalizes Archetype 7:
 1. Algebraic resolvent and Cayley transform 5-grade preservation.
-2. Dense-domain unbounded skew-adjoint generator ↔ bounded resolvent Kato–Trotter equivalence.
-3. C₀-group strong derivative commutation, domain intertwining, and eigenspace invariance.
-4. Concrete provably unbounded witness on `ℓ²(ℕ, ℝ)`:
-   - Tripotent `S_lp` constant on `(2m, 2m+1)` pairs.
-   - Dense domain `D_fin` of finitely supported sequences.
-   - Unbounded skew-adjoint generator `K_unb` acting on coordinate pairs.
-   - Bounded resolvent `R_unb` inverting `I - K_unb`.
-   - Isometric flow `U_unb t` preserving pair Euclidean norm.
+2. Domain intertwining equivalent to commutation with a bounded two-sided resolvent.
+3. Derivative-based domain intertwining and eigenspace invariance through the
+   imported `C0GroupGenerator` interface.
+4. Coordinate sequence formulas for the real `ℓ²` block model:
+   - Pairwise constant tripotent coefficients.
+   - The finitely supported sequence submodule `D_fin`.
+   - Weighted skew-symmetric rotation blocks and their pairwise resolvent identity.
+   - Rotation formulas preserving the Euclidean norm of each pair.
 5. OpenGauss Trap T16 non-commutativity witness.
+
+The actual Hilbert-space density, maximal domain `D_max`, unbounded operator
+`K_max`, bounded resolvent and isometric group are proved in
+`UnboundedHilbertResolventAndC0GroupWitness`. The companion
+`UnboundedHilbertStrongGenerator` proves strong continuity and identifies
+`D_max` exactly with the domain of the Hilbert-norm derivative at zero, whose
+value is `K_max`. A native partial-adjoint identity is not inferred from the
+legacy name of the pairwise skew-symmetry lemma.
 -/
 
 namespace InfoGeometry.OperatorAlgebra.TripotentUnboundedResolventFlow
@@ -105,7 +114,7 @@ theorem resolvent_and_cayley_commute_and_preserve_fiveGrades
 
 end Algebraic
 
-/-! ### Section 2: Kato–Trotter Unbounded Generator ↔ Bounded Resolvent Equivalence -/
+/-! ### Section 2: Domain Intertwining and Bounded Resolvent Commutation -/
 
 section KatoTrotter
 
@@ -197,7 +206,8 @@ theorem unbounded_commute_of_resolvent_commute
         abel
   exact h_eq.symm
 
-/-- Kato–Trotter equivalence: an unbounded generator commutes with S if and only if its bounded resolvent does. -/
+/-- Under the displayed two-sided resolvent identities, domain intertwining
+for `K` is equivalent to commutation with its bounded resolvent. -/
 theorem unbounded_generator_commute_iff_resolvent_commute
     (res : ResolventData H) (S : H →L[ℝ] H) :
     (∃ (h_inv : PreservesDomain S res.D_K),
@@ -212,99 +222,22 @@ theorem unbounded_generator_commute_iff_resolvent_commute
 
 end KatoTrotter
 
-/-! ### Section 3: C₀-Group Strong HasDerivAt Commutation -/
+/-! ### Section 3: Strong generator API
 
-section C0Group
+The unchanged `C0GroupGenerator` interface and domain-intertwining theorems
+are imported from `InfoGeometry.OperatorAlgebra.C0GroupGenerator`.
+The record stores group and generator-domain/derivative laws, with no separate
+strong-continuity field. The concrete real ℓ² continuity theorem belongs to
+`UnboundedHilbertStrongGenerator`.
+-/
 
-variable {H : Type*} [NormedAddCommGroup H] [NormedSpace ℝ H]
-
-structure C0GroupGenerator (H : Type*) [NormedAddCommGroup H] [NormedSpace ℝ H] where
-  U : ℝ → (H →L[ℝ] H)
-  U_zero : U 0 = ContinuousLinearMap.id ℝ H
-  U_add : ∀ s t : ℝ, U (s + t) = (U s).comp (U t)
-  D_K : Submodule ℝ H
-  K : D_K →ₗ[ℝ] H
-  hasDerivAt_gen : ∀ x : D_K, HasDerivAt (fun t => U t x.1) (K x) 0
-  mem_domain_of_hasDerivAt : ∀ (x : H) (v : H), HasDerivAt (fun t => U t x) v 0 → x ∈ D_K
-  gen_eq_of_hasDerivAt : ∀ (x : D_K) (v : H), HasDerivAt (fun t => U t x.1) v 0 → K x = v
-
-instance : Inhabited (C0GroupGenerator H) where
-  default := {
-    U := fun _ => ContinuousLinearMap.id ℝ H
-    U_zero := rfl
-    U_add := by
-      intro s t
-      ext x
-      rfl
-    D_K := ⊤
-    K := 0
-    hasDerivAt_gen := by
-      intro x
-      simpa using hasDerivAt_const (0 : ℝ) x.1
-    mem_domain_of_hasDerivAt := by
-      intro x v _
-      exact Submodule.mem_top
-    gen_eq_of_hasDerivAt := by
-      intro x v hv
-      have h0 : HasDerivAt (fun _ : ℝ => x.1) 0 0 := hasDerivAt_const 0 x.1
-      have heq : v = 0 := hv.unique h0
-      simp [heq]
-  }
-
-theorem c0_group_commute_implies_domain_intertwining
-    (G : C0GroupGenerator H) (S : H →L[ℝ] H)
-    (hS : ∀ t : ℝ, S.comp (G.U t) = (G.U t).comp S) :
-    (∀ ⦃x : H⦄, x ∈ G.D_K → S x ∈ G.D_K) ∧
-    ∀ (h_inv : ∀ ⦃x : H⦄, x ∈ G.D_K → S x ∈ G.D_K) (x : G.D_K),
-      S (G.K x) = G.K ⟨S x.1, h_inv x.2⟩ := by
-  have hS_apply (t : ℝ) (x : H) : S (G.U t x) = G.U t (S x) := by
-    have h := ContinuousLinearMap.ext_iff.mp (hS t) x
-    simpa only [ContinuousLinearMap.coe_comp, Function.comp_apply] using h
-  have h_inv : ∀ ⦃x : H⦄, x ∈ G.D_K → S x ∈ G.D_K := by
-    intro x hx
-    have hderiv := G.hasDerivAt_gen ⟨x, hx⟩
-    have hderiv_comp : HasDerivAt (fun t => S (G.U t x)) (S (G.K ⟨x, hx⟩)) 0 :=
-      S.hasFDerivAt.comp_hasDerivAt 0 hderiv
-    have hderiv_eq : HasDerivAt (fun t => G.U t (S x)) (S (G.K ⟨x, hx⟩)) 0 := by
-      refine hderiv_comp.congr_of_eventuallyEq ?_
-      filter_upwards with t
-      exact (hS_apply t x).symm
-    exact G.mem_domain_of_hasDerivAt (S x) (S (G.K ⟨x, hx⟩)) hderiv_eq
-  refine ⟨h_inv, fun _ x => ?_⟩
-  have hderiv := G.hasDerivAt_gen x
-  have hderiv_comp : HasDerivAt (fun t => S (G.U t x.1)) (S (G.K x)) 0 :=
-    S.hasFDerivAt.comp_hasDerivAt 0 hderiv
-  have hderiv_eq : HasDerivAt (fun t => G.U t (S x.1)) (S (G.K x)) 0 := by
-    refine hderiv_comp.congr_of_eventuallyEq ?_
-    filter_upwards with t
-    exact (hS_apply t x.1).symm
-  have hK := G.gen_eq_of_hasDerivAt ⟨S x.1, h_inv x.2⟩ (S (G.K x)) hderiv_eq
-  exact hK.symm
-
-/-- Commutation with a C₀-group forces domain intertwining and eigenspace invariance. -/
-theorem c0_group_commute_implies_domain_intertwining_and_fiveGrade_invariance
-    (G : C0GroupGenerator H) (S : H →L[ℝ] H)
-    (hS : ∀ t : ℝ, S.comp (G.U t) = (G.U t).comp S) :
-    ((∀ ⦃x : H⦄, x ∈ G.D_K → S x ∈ G.D_K) ∧
-      ∀ (h_inv : ∀ ⦃x : H⦄, x ∈ G.D_K → S x ∈ G.D_K) (x : G.D_K),
-        S (G.K x) = G.K ⟨S x.1, h_inv x.2⟩) ∧
-    (∀ (lam : ℝ) (v : H), S v = lam • v → ∀ t : ℝ, S (G.U t v) = lam • (G.U t v)) := by
-  refine ⟨c0_group_commute_implies_domain_intertwining G S hS, ?_⟩
-  intro lam v hv t
-  have hS_apply : S (G.U t v) = G.U t (S v) := by
-    have h := ContinuousLinearMap.ext_iff.mp (hS t) v
-    simpa only [ContinuousLinearMap.coe_comp, Function.comp_apply] using h
-  rw [hS_apply, hv, map_smul]
-
-end C0Group
-
-/-! ### Section 4: Concrete Provably Unbounded Witness on ℓ²(ℕ, ℝ) -/
+/-! ### Section 4: Coordinate Formulas for the Real ℓ² Block Model -/
 
 section ConcreteWitness
 
 abbrev H_lp := lp (fun _ : ℕ => ℝ) 2
 
-/-- Dense core domain of finitely supported sequences in ℓ²(ℕ, ℝ). -/
+/-- The submodule of finitely supported sequences in real ℓ². -/
 def D_fin : Submodule ℝ H_lp where
   carrier := {x | ∃ N : ℕ, ∀ n ≥ N, x n = 0}
   zero_mem' := ⟨0, fun _ _ => rfl⟩
@@ -354,7 +287,7 @@ theorem S_lp_tripotent (x : ℕ → ℝ) (n : ℕ) :
     _ = s_lp_coeff (n / 2) * x n := by
       rw [h3]
 
-/-- Unbounded skew-adjoint generator K_unb on coordinate pairs. -/
+/-- Coordinate formula for the weighted skew-symmetric rotation blocks. -/
 def K_unb_fun (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   if n % 2 = 0 then
     -(((n / 2 : ℕ) + 1 : ℝ) * x (n + 1))
@@ -388,13 +321,14 @@ theorem S_lp_K_unb_commute_on_pairs (m : ℕ) (x : ℕ → ℝ) :
   · rw [hS1, K_unb_odd, K_unb_odd, hSx0]
     ring
 
+/-- Pairwise skew-symmetry identity, retaining its historical public name. -/
 theorem K_unb_block_skew_adjoint (m : ℕ) (x y : ℕ → ℝ) :
     x (2 * m) * K_unb_fun y (2 * m) + x (2 * m + 1) * K_unb_fun y (2 * m + 1) +
     K_unb_fun x (2 * m) * y (2 * m) + K_unb_fun x (2 * m + 1) * y (2 * m + 1) = 0 := by
   rw [K_unb_even, K_unb_odd, K_unb_even, K_unb_odd]
   ring
 
-/-- Bounded resolvent R_unb inverting I - K_unb. -/
+/-- Coordinate resolvent formula; `R_unb_inverts_I_sub_K` proves its pairwise inverse identity. -/
 noncomputable def R_unb_fun (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   let m := n / 2
   let d := 1 + (m + 1 : ℝ)^2
@@ -435,7 +369,7 @@ theorem R_unb_inverts_I_sub_K (m : ℕ) (x : ℕ → ℝ) :
     field_simp [hd]
     ring
 
-/-- Isometric flow U_unb(t) on coordinate pairs. -/
+/-- Coordinate rotations, with pairwise Euclidean norm preservation proved below. -/
 noncomputable def U_unb_fun (t : ℝ) (x : ℕ → ℝ) (n : ℕ) : ℝ :=
   let m := n / 2
   let theta := (m + 1 : ℝ) * t
@@ -479,7 +413,7 @@ theorem U_unb_preserves_pair_norm_sq (m : ℕ) (t : ℝ) (x : ℕ → ℝ) :
     _ = u^2 + v^2 := by
       ring
 
-/-- Test vectors e_{2m} in D_fin with norm 1. -/
+/-- Standard coordinate test vectors `e_{2m}` in the real ℓ² carrier. -/
 def basisTestVec (m : ℕ) : H_lp :=
   lp.single 2 (2 * m) 1
 
@@ -489,7 +423,9 @@ theorem basisTestVec_mem_D_fin (m : ℕ) : basisTestVec m ∈ D_fin := by
   rw [lp.single_apply_ne]
   omega
 
-/-- The operator K_unb is provably unbounded: no scalar C bounds ‖K x‖ / ‖x‖. -/
+/-- Arithmetic unboundedness of the natural frequencies, retaining the
+historical theorem name. The actual Hilbert norm-unboundedness statement is
+`UnboundedHilbertResolventAndC0GroupWitness.K_max_is_unbounded`. -/
 theorem K_unb_is_unbounded :
     ¬ ∃ C : ℝ, ∀ m : ℕ, (m : ℝ) ≤ C := by
   rintro ⟨C, hC⟩

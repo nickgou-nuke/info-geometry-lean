@@ -1,0 +1,270 @@
+name: Real phase observable uncertainty
+
+# Scope: the three selected real owners and their complete repository source
+# closure. This is not a certificate for the high-level OperatorialUncertainty
+# consumer, the repository default targets, or analytic wavelet theorems.
+on:
+  pull_request:
+    branches: ['main']
+    paths:
+      - 'lean/InfoGeometry/Krein/InternalPhaseGram.lean'
+      - 'lean/InfoGeometry/Krein/PhaseLinearObservableCommutator.lean'
+      - 'lean/InfoGeometry/Canonical/PhaseObservableUncertainty.lean'
+      - 'lean/InfoGeometry/Krein/DoubledAdjoint.lean'
+      - 'lean/InfoGeometry/Krein/HilbertBridge.lean'
+      - 'lean/InfoGeometry/Krein/DoubledSpace.lean'
+      - 'lean/InfoGeometry/Krein/InvolutiveSelfDualCarrier.lean'
+      - 'lean/InfoGeometry/Krein/KreinSpace.lean'
+      - 'lean/InfoGeometry/Cartan/Involution.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/GrandUnification/ArchetypeDictionary.lean'
+      - 'lean/InfoGeometry/Canonical/OperatorialUncertainty.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/phase-observable-uncertainty.yml'
+  push:
+    branches: ['main']
+    paths:
+      - 'lean/InfoGeometry/Krein/InternalPhaseGram.lean'
+      - 'lean/InfoGeometry/Krein/PhaseLinearObservableCommutator.lean'
+      - 'lean/InfoGeometry/Canonical/PhaseObservableUncertainty.lean'
+      - 'lean/InfoGeometry/Krein/DoubledAdjoint.lean'
+      - 'lean/InfoGeometry/Krein/HilbertBridge.lean'
+      - 'lean/InfoGeometry/Krein/DoubledSpace.lean'
+      - 'lean/InfoGeometry/Krein/InvolutiveSelfDualCarrier.lean'
+      - 'lean/InfoGeometry/Krein/KreinSpace.lean'
+      - 'lean/InfoGeometry/Cartan/Involution.lean'
+      - 'lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean'
+      - 'lean/InfoGeometry/GrandUnification/ArchetypeDictionary.lean'
+      - 'lean/InfoGeometry/Canonical/OperatorialUncertainty.lean'
+      - 'tools/quality/check_clifford_dirac.py'
+      - 'tools/quality/check_reviewed_prs.py'
+      - 'tools/quality/reviewed_audit_source.py'
+      - 'tools/quality/placeholder_audit.py'
+      - 'tools/quality/semantic_vacuity_gate.py'
+      - 'tools/build_lock.py'
+      - 'lean-toolchain'
+      - 'lake-manifest.json'
+      - '.github/workflows/phase-observable-uncertainty.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: phase-observable-uncertainty-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: false
+
+env:
+  PHASE_OBSERVABLE_TARGETS: >-
+    InfoGeometry.Krein.InternalPhaseGram
+    InfoGeometry.Krein.PhaseLinearObservableCommutator
+    InfoGeometry.Canonical.PhaseObservableUncertainty
+
+jobs:
+  kernel-and-axioms:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      # Public source fetch avoids checkout-action credential cleanup traversing
+      # unrelated gitlinks with missing URLs in the repository's .gitmodules.
+      - name: Fetch the exact public source without traversing submodules
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+          SOURCE_REPOSITORY: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          git init project
+          git -C project remote add origin "https://github.com/${SOURCE_REPOSITORY}.git"
+          git -C project -c protocol.version=2 fetch --no-tags --depth=1 origin "$SOURCE_REV"
+          git -C project checkout --detach FETCH_HEAD
+
+      - name: Read the exact dependency pin and verify source revision
+        id: pins
+        shell: bash
+        env:
+          SOURCE_REV: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          import json, os, subprocess
+          from pathlib import Path
+          project = Path('project')
+          actual = subprocess.check_output(
+              ['git', '-C', str(project), 'rev-parse', 'HEAD'], text=True).strip()
+          if actual != os.environ['SOURCE_REV']:
+              raise SystemExit('Project checkout differs from the selected workflow revision')
+          manifest = json.loads((project / 'lake-manifest.json').read_text())
+          revision = next(p['rev'] for p in manifest['packages'] if p['name'] == 'mathlib')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
+              output.write(f'mathlib={revision}\n')
+          PY
+
+      - name: Check out the pinned Mathlib independently
+        uses: actions/checkout@v4
+        with:
+          repository: leanprover-community/mathlib4
+          ref: ${{ steps.pins.outputs.mathlib }}
+          path: mathlib
+          submodules: false
+          persist-credentials: false
+
+      # PRs restore caches but never save them. Trusted events may save below.
+      - name: Restore pinned compiler and dependency artifacts
+        id: cache
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: phase-observable-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+
+      - name: Install the exact Lean toolchain
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -fsSL https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+            sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install "$(tr -d '\r\n' < project/lean-toolchain)"
+
+      - name: Hydrate the exact native import cache under the shared lock
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          from pathlib import Path
+          from tools.build_lock import BuildLock, DEFAULT_BUILD_LOCK_PATH
+          from tools.quality.check_reviewed_prs import closure
+          project = Path.cwd()
+          targets = os.environ['PHASE_OBSERVABLE_TARGETS'].split()
+          _, _, native = closure(project, targets)
+          with BuildLock(DEFAULT_BUILD_LOCK_PATH, 'phase-observable-cache', block=True) as lock:
+              active = subprocess.check_output(
+                  ['ps', '-eo', 'comm='], text=True, pass_fds=(lock.fileno(),)).splitlines()
+              if any(p.strip() in {'lean', 'lake', 'leanc'} for p in active):
+                  raise SystemExit('Another Lean/Lake compiler is active')
+              subprocess.run(
+                  ['lake', 'exe', 'cache', 'get', *sorted(native)],
+                  cwd=project.parent / 'mathlib', check=True,
+                  pass_fds=(lock.fileno(),))
+          PY
+
+      - name: Compile the complete source closure and audit every selected declaration
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          command = [
+              'python3', 'tools/quality/check_clifford_dirac.py',
+              '--mathlib-root', '../mathlib', '--output', '../phase-observable-report',
+          ]
+          for target in os.environ['PHASE_OBSERVABLE_TARGETS'].split():
+              command.extend(['--target', target])
+          subprocess.run(command, check=True)
+          PY
+
+      - name: Require a complete audit and zero warnings in the three selected owners
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, os
+          from pathlib import Path
+          report = json.loads(Path('../phase-observable-report/report.json').read_text())
+          targets = set(os.environ['PHASE_OBSERVABLE_TARGETS'].split())
+          if report.get('status') != 'passed' or report.get('audit_required') is not True:
+              raise SystemExit('The complete kernel and axiom audit did not pass')
+          selected = [entry for entry in report['modules'] if entry['module'] in targets]
+          if len(selected) != len(targets) or {entry['module'] for entry in selected} != targets:
+              raise SystemExit('Missing or duplicate selected-owner compilation results')
+          bad = [entry for entry in selected
+                 if entry.get('returncode') != 0 or entry.get('warnings') != 0]
+          if bad:
+              raise SystemExit('Selected-owner compilation or warning failure: ' + repr(bad))
+          counts = report.get('declaration_counts', {})
+          if set(counts) != targets or any(counts[target] <= 0 for target in targets):
+              raise SystemExit('Missing selected-owner declaration audit coverage')
+          lines = [
+              '### Real phase observable uncertainty',
+              '',
+              f"Revision checked: `{report['local_revision']}`.",
+              f"Toolchain: `{report['toolchain']}`.",
+              f"Mathlib: `{report['mathlib']}`.",
+              '',
+              f"Compiled {len(report['modules'])} repository source modules in the selected import closure.",
+              f"Audited {sum(counts.values())} declarations owned by the three selected modules.",
+              'Allowed axiom dependencies: `propext`, `Classical.choice`, and `Quot.sound`.',
+              '',
+              '| Selected owner | Audited declarations | Warnings |',
+              '| --- | ---: | ---: |',
+          ]
+          for target in sorted(targets):
+              lines.append(f'| `{target}` | {counts[target]} | 0 |')
+          lines += [
+              '',
+              'Scope excludes the high-level `Canonical.OperatorialUncertainty` consumer,',
+              'repository default targets, and analytic Fourier/wavelet uncertainty theorems.',
+              'Placeholder and semantic-vacuity checks run in the following step.',
+          ]
+          summary = '\n'.join(lines) + '\n'
+          print(summary)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as output:
+              output.write(summary)
+          PY
+
+      - name: Check selected sources for placeholders and semantic vacuity
+        working-directory: project
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os, subprocess
+          files = ['lean/' + target.replace('.', '/') + '.lean'
+                   for target in os.environ['PHASE_OBSERVABLE_TARGETS'].split()]
+          for path in files:
+              subprocess.run([
+                  'python3', 'tools/quality/placeholder_audit.py',
+                  '--root', path, '--strict',
+              ], check=True)
+          subprocess.run([
+              'python3', 'tools/quality/semantic_vacuity_gate.py',
+              *files, '--fail-on', 'warning',
+          ], check=True)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as output:
+              output.write('\nSelected-source placeholder and semantic-vacuity checks passed.\n')
+          PY
+
+      - name: Save caches only on trusted events
+        uses: actions/cache/save@v4
+        if: >-
+          success() && steps.cache.outputs.cache-hit != 'true' &&
+          (github.event_name == 'workflow_dispatch' ||
+          (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+        with:
+          path: |
+            ~/.elan
+            mathlib/.lake
+          key: phase-observable-${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('project/lean-toolchain', 'project/lake-manifest.json') }}
+
+      - name: Retain kernel and axiom-audit evidence
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: phase-observable-uncertainty-evidence
+          path: |
+            phase-observable-report/report.json
+            phase-observable-report/evidence-sha256.json
+            phase-observable-report/environment.json
+            phase-observable-report/src/CliffordDiracAudit.lean
+            phase-observable-report/*.log
+          if-no-files-found: warn

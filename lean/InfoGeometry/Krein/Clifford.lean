@@ -1,3 +1,9 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.CliffordAlgebra.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Krein.KreinSpace
@@ -581,7 +587,8 @@ noncomputable instance instKreinGradedModuleNeutral :
 /-- Conjugation by the 45-degree bridge on endomorphisms. -/
 private noncomputable def rot45Conj :
     (NeutralSpace E →L[ℝ] NeutralSpace E) ≃ₐ[ℝ] (HilbertDoubled E →L[ℝ] HilbertDoubled E) :=
-  (NeutralSpace.rotation45ToHilbertContinuousLinearEquiv (E := E)).conjContinuousAlgEquiv
+  AlgEquiv.ofClass
+    ((NeutralSpace.rotation45ToHilbertContinuousLinearEquiv (E := E)).conjContinuousAlgEquiv)
 
 /-- `Cl(1,1)` action on `NeutralSpace E`, transported from the diagonal action. -/
 private noncomputable def cl11RepNeutral :

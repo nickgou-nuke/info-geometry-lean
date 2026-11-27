@@ -1,0 +1,4 @@
+.lake/
+validation-local/
+artifacts/
+__pycache__/

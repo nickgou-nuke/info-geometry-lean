@@ -1,0 +1,19 @@
+name = "infogeometry_grh"
+defaultTargets = ["InfoGeometryGRH"]
+moreLeanArgs = ["--tstack=400000"]
+
+[leanOptions]
+maxHeartbeats = 4000000
+
+[[require]]
+name = "GRH"
+git = "https://github.com/lsernau/grh-lean"
+rev = "72fead102f663d5c7a407964a13dc0cf9d977207"
+subDir = "grh"
+
+[[lean_lib]]
+name = "InfoGeometry"
+srcDir = "../../lean"
+
+[[lean_lib]]
+name = "InfoGeometryGRH"

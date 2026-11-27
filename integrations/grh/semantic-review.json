@@ -1,0 +1,191 @@
+{
+  "schema": "infogeometry-grh-semantic-review-v1",
+  "recorded_at_utc": "2026-11-27T15:50:00.919004+00:00",
+  "reviewer": "/root/our_spectral",
+  "role": "independent semantic reviewer of arithmetic and external integration owners",
+  "status": "SOURCE_REVIEW_PASS",
+  "compiled_by_reviewer": false,
+  "axiom_audit_run_by_reviewer": false,
+  "base_commit": "fe24e350b08fdea04f74c0748ef9fd9417c47529",
+  "reviewed_files": [
+    {
+      "path": "lean/InfoGeometry/Arithmetic/WeightedMangoldtSmoothing.lean",
+      "sha256": "fd7bd62a40924fedaa597fc4ba7f5e4f3068e4006a5bdc8c5f5a033131a97883",
+      "bytes": 19443
+    },
+    {
+      "path": "integrations/grh/InfoGeometryGRH/VerifiedGRH.lean",
+      "sha256": "1687ec1e34a3efcd1ea09521bf5d446465dda421f0a45ef0cb32456206789963",
+      "bytes": 2322
+    },
+    {
+      "path": "integrations/grh/InfoGeometryGRH/PrimeRemainderBridge.lean",
+      "sha256": "19a4c5f2ba487d7c506dbea7e66aafe381441045748281f1a537d8c68345e9d6",
+      "bytes": 11233
+    }
+  ],
+  "native_context": [
+    {
+      "path": "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean",
+      "sha256": "9615191aa9a52bd554c2a201fab76bb7b6439f113ac31edcfc0301ca7ceef99d",
+      "bytes": 5624
+    },
+    {
+      "path": "lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean",
+      "sha256": "47edcd38c5924176dfa2c2862f4aa628def3ec476776ffb342bfe93243254288",
+      "bytes": 5539
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean",
+      "sha256": "3b600b6980f9f89252a1f4bc5b6070bc39cbb32231b42476203ec136f7792f84",
+      "bytes": 7260
+    }
+  ],
+  "external_context": {
+    "repository": "https://github.com/lsernau/grh-lean",
+    "commit": "72fead102f663d5c7a407964a13dc0cf9d977207",
+    "files": [
+      {
+        "path": "grh/src/New/Main.lean",
+        "sha256": "0a0108d5beb6d534c71d710c2dcd7c6756705bdac2335492da2657be756428ca",
+        "bytes": 3254
+      },
+      {
+        "path": "grh/src/New/Reduction/Zeros/PrimeError.lean",
+        "sha256": "4166476903b23fd0cdd099edc8f9b561e02952f21a9ad91fe930605ddf086f1a",
+        "bytes": 27403
+      },
+      {
+        "path": "grh/src/New/Reduction/OneSidedBound.lean",
+        "sha256": "125f8fca0ff5e6e10da9a61c4ce0ad00b8ab42d7ebbafb9853ab4e6c22ba1004",
+        "bytes": 16528
+      }
+    ]
+  },
+  "claims": [
+    {
+      "owner": "WeightedMangoldtSmoothing",
+      "verdict": "PASS",
+      "claim": "For arbitrary real arithmetic coefficients, finite real-cutoff smoothing interpolates affinely, centering adds the exact scaled logarithmic chord error, and division by the positive cutoff shifts the power exponent by one.",
+      "hypotheses_preserved": [
+        "Coefficient signs are unrestricted.",
+        "Nonnegative logarithmic coefficient is required by the interpolation inequality.",
+        "Cutoff positivity is retained for normalization of inequalities.",
+        "The sign is fixed before quantification over epsilon.",
+        "Growth bounds are explicit hypotheses in this native owner."
+      ],
+      "not_established": [
+        "Arithmetic cancellation estimate",
+        "Independent zero exclusion",
+        "Full GRH"
+      ]
+    },
+    {
+      "owner": "VerifiedGRH",
+      "verdict": "PASS",
+      "claim": "The pinned concrete New.grh discharges the existing native actual Dirichlet L-function half-plane predicate; the existing native reduction gives Mathlib RiemannHypothesis.",
+      "hypotheses_preserved": [
+        "Positive modulus through NeZero N.",
+        "Principal-character pole exception χ ≠ 1 or s ≠ 1.",
+        "Critical-strip hypotheses in dirichletL_zeros_on_line."
+      ],
+      "not_established": [
+        "Independent proof separate from the external theorem",
+        "Hilbert-Polya construction",
+        "GRH for arbitrary automorphic L-functions"
+      ]
+    },
+    {
+      "owner": "PrimeRemainderBridge",
+      "verdict": "PASS",
+      "claim": "The exact native coefficients lambdaKResidueClass, density inverse totient, and offset negative real logDerivMean at one identify the centered smoothing divided by x with New.primeRemainder. The proved external upper estimate and actual Mellin/polar identities are transported through this equality.",
+      "hypotheses_preserved": [
+        "q is nonzero and d is prime.",
+        "Normalization identities retain x ≠ 0; bound transport uses positive x.",
+        "Upper estimate requires 18480 dividing q and d congruent to q/2-1 modulo q.",
+        "Mellin identity requires d ≠ 2, q.Coprime d, and Re s > 2.",
+        "Polar statement requires d mod 8 = 7 and q.Coprime d.",
+        "The arithmetic integrability theorem is separate from the totalized integral equality."
+      ],
+      "normalization": {
+        "coefficients": "lambdaKResidueClass d q",
+        "kappa": "(Nat.totient q : R)^(-1)",
+        "beta": "-(New.logDerivMean d q 1).re",
+        "identity": "G(x)/x = R_q(x)",
+        "mellin_kernel": "G(x) * x^(-s-1)",
+        "laplace_kernel": "R_q(exp v) * exp((1-s)*v)"
+      },
+      "not_established": [
+        "Two-sided remainder estimate",
+        "Untwisted coefficients in place of the actual residue-class quadratic-twist coefficients",
+        "Fresh complete mathematical audit of the external 300000-line proof"
+      ]
+    }
+  ],
+  "findings": [],
+  "pending_acceptance": [
+    "Compile the selected native owner closure at the root Lean/Mathlib pins.",
+    "Compile the optional integration against the exact external revision and Lean 4.35 pins.",
+    "Run both fresh native and integration declaration audits and reject nonstandard transitive axioms.",
+    "Run the independent fail-closed audit-parser regression tests.",
+    "Recheck source hashes after compiler-driven edits; this review applies to the recorded snapshots."
+  ],
+  "compiler_repair_source_review": {
+    "owner": "WeightedMangoldtSmoothing",
+    "verdict": "PASS",
+    "changes": [
+      "Removed trailing ring calls after field_simp had already closed normalization goals.",
+      "Used mul_le_mul_iff_left₀ for the displayed common positive left factor."
+    ],
+    "semantic_effect": "No goal, hypothesis, sign, coefficient, or growth-quantifier changes."
+  },
+  "authored_owner_validation": {
+    "role": "author validation; this block is not independent semantic approval",
+    "recorded_at_utc": "2026-11-27T15:59:44.676105+00:00",
+    "environment": {
+      "lean_version_observed": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+      "mathlib_commit": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+      "package": "integrations/grh",
+      "scope": "native owners checked for compatibility at the optional Lean 4.35 pins",
+      "native_lean_4_34_1_certificate": false,
+      "external_grh_compiled_by_validator": false
+    },
+    "source_snapshots": [
+      {
+        "path": "lean/InfoGeometry/Arithmetic/RealDoubledDirichletReadout.lean",
+        "sha256": "e5fff0c6f76d220c39ab588d3f9ae43a99bc38b15b4fae4c1ffcf957dd982039",
+        "bytes": 4229
+      },
+      {
+        "path": "lean/InfoGeometry/Arithmetic/RealDoubledCenteredXiReadout.lean",
+        "sha256": "3dbce2a48a86d5fbd3a1a1b24180d476f7ad0c68424cab707cad35f82669e099",
+        "bytes": 3500
+      },
+      {
+        "path": "lean/InfoGeometry/Krein/Clifford.lean",
+        "sha256": "1867821484136927f05230b1b10dd9fe7973c1692dfde093bd8effc7f5710550",
+        "bytes": 31614
+      }
+    ],
+    "status": "BUILD_AND_NATIVE_OWNER_AXIOM_AUDIT_PASS_AT_LEAN_4_35",
+    "fresh_warning_as_error_checks": [
+      "RealDoubledDirichletReadout",
+      "RealDoubledCenteredXiReadout"
+    ],
+    "axiom_audit_scope": "all declarations in eleven selected native owners, including private and generated declarations",
+    "declarations": 328,
+    "theorems": 257,
+    "used_axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "mathematical_changes": [
+      "Removed an unnecessary CompleteSpace assumption from real readout declarations; conclusions and Nontrivial requirements are unchanged.",
+      "Used continuous-linear-map extensionality in the zero scalar case.",
+      "Used exact real/imaginary projections and the existing Schwarz theorem instead of broad simplification.",
+      "Parent-integrated Clifford conversion uses AlgEquiv.ofClass on the same continuous algebra equivalence; the maps and hypotheses are unchanged."
+    ],
+    "independent_acceptance": "Reserved for parent and sibling reviews; not asserted by this block."
+  }
+}

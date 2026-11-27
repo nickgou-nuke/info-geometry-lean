@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Pow
 import Mathlib.Analysis.SpecialFunctions.Integrals.Basic
@@ -125,5 +132,84 @@ theorem scaling_generator_integration_by_parts (f g : ℝ → ℝ)
       f 1 * g 1 := by
   simpa using scaling_generator_boundary_pairing f g 0 1 hf hg
     (h_cont.intervalIntegrable 0 1)
+
+/-! ### Logarithmic Radial-Time Pullback & Fractional Power Eigenvalues -/
+
+/-- Berry-Keating symmetric differential expression `(H f)(x) = x f'(x) + ½ f(x)`. -/
+def bkOp (f : ℝ → ℝ) (x : ℝ) : ℝ :=
+  x * deriv f x + (1 / 2 : ℝ) * f x
+
+/-- Half-density logarithmic pullback `x^(-1/2) g(log x)` turning `x d/dx + 1/2` into `d/du`. -/
+def halfDensityPullback (g : ℝ → ℝ) (x : ℝ) : ℝ :=
+  Real.exp (-(1 / 2 : ℝ) * Real.log x) * g (Real.log x)
+
+/-- Pulling back the scaling vector field `x d/dx` by `u = log x` gives `d/du`. -/
+theorem scaling_log_pullback (g : ℝ → ℝ) {x : ℝ} (hx : 0 < x)
+    (hg : DifferentiableAt ℝ g (Real.log x)) :
+    x * deriv (fun y => g (Real.log y)) x = deriv g (Real.log x) := by
+  have hcomp : HasDerivAt (fun y => g (Real.log y)) (deriv g (Real.log x) * x⁻¹) x :=
+    hg.hasDerivAt.comp x (Real.hasDerivAt_log (ne_of_gt hx))
+  rw [hcomp.deriv]
+  field_simp [ne_of_gt hx]
+
+/-- Logarithmic-time pullback of the Berry-Keating symmetric operator `x d/dx + 1/2`. -/
+theorem berry_keating_log_pullback (g : ℝ → ℝ) {x : ℝ} (hx : 0 < x)
+    (hg : DifferentiableAt ℝ g (Real.log x)) :
+    bkOp (fun y => g (Real.log y)) x = deriv g (Real.log x) + (1 / 2 : ℝ) * g (Real.log x) := by
+  dsimp [bkOp]
+  rw [scaling_log_pullback g hx hg]
+
+/-- The half-density pullback `x^(-1/2) g(log x)` intertwines `bkOp` directly with `d/du`. -/
+theorem berry_keating_halfDensity_intertwines_deriv (g : ℝ → ℝ) {x : ℝ} (hx : 0 < x)
+    (hg : DifferentiableAt ℝ g (Real.log x)) :
+    bkOp (halfDensityPullback g) x = Real.exp (-(1 / 2 : ℝ) * Real.log x) * deriv g (Real.log x) := by
+  have hlog : HasDerivAt Real.log x⁻¹ x := Real.hasDerivAt_log (ne_of_gt hx)
+  have hexp : HasDerivAt (fun y => Real.exp (-(1 / 2 : ℝ) * Real.log y))
+      (Real.exp (-(1 / 2 : ℝ) * Real.log x) * (-(1 / 2 : ℝ) * x⁻¹)) x :=
+    (hlog.const_mul (-(1 / 2 : ℝ))).exp
+  have hgcomp : HasDerivAt (fun y => g (Real.log y)) (deriv g (Real.log x) * x⁻¹) x :=
+    hg.hasDerivAt.comp x hlog
+  have hprod := hexp.mul hgcomp
+  have hderiv : deriv (halfDensityPullback g) x =
+      Real.exp (-(1 / 2 : ℝ) * Real.log x) * (-(1 / 2 : ℝ) * x⁻¹) * g (Real.log x) +
+        Real.exp (-(1 / 2 : ℝ) * Real.log x) * (deriv g (Real.log x) * x⁻¹) :=
+    hprod.deriv
+  dsimp [bkOp, halfDensityPullback]
+  rw [hderiv]
+  field_simp [ne_of_gt hx]
+  ring
+
+/-- Möbius inversion `x ↦ x⁻¹` negates the scaling generator `x d/dx`. -/
+theorem scaling_op_inversion_antiparity (f : ℝ → ℝ) {x : ℝ} (hx : 0 < x)
+    (hf : DifferentiableAt ℝ f x⁻¹) :
+    x * deriv (fun y => f y⁻¹) x = -(x⁻¹ * deriv f x⁻¹) := by
+  have hcomp : HasDerivAt (fun y => f y⁻¹) (deriv f x⁻¹ * (-(x ^ 2)⁻¹)) x :=
+    hf.hasDerivAt.comp x (hasDerivAt_inv (ne_of_gt hx))
+  rw [hcomp.deriv]
+  field_simp [ne_of_gt hx]
+
+/-- Arbitrary real power eigenvalue `H(x^s) = (s + 1/2) x^s` on `x > 0`. -/
+theorem berry_keating_rpow_eigenvalue (s : ℝ) {x : ℝ} (hx : 0 < x) :
+    bkOp (fun y => y ^ s) x = (s + 1 / 2) * x ^ s := by
+  have hpow : HasDerivAt (fun y : ℝ => y ^ s) (s * x ^ (s - 1)) x :=
+    Real.hasDerivAt_rpow_const (Or.inl (ne_of_gt hx))
+  have hmul : x * x ^ (s - 1) = x ^ s := by
+    calc
+      x * x ^ (s - 1) = x ^ (1 : ℝ) * x ^ (s - 1) := by rw [Real.rpow_one]
+      _ = x ^ (1 + (s - 1)) := (Real.rpow_add hx 1 (s - 1)).symm
+      _ = x ^ s := by ring_nf
+  dsimp [bkOp]
+  rw [hpow.deriv]
+  calc
+    x * (s * x ^ (s - 1)) + (1 / 2 : ℝ) * x ^ s
+        = s * (x * x ^ (s - 1)) + (1 / 2 : ℝ) * x ^ s := by ring
+    _ = s * x ^ s + (1 / 2 : ℝ) * x ^ s := by rw [hmul]
+    _ = (s + 1 / 2) * x ^ s := by ring
+
+/-- The critical half-density mode `x^(-1/2)` is in the kernel of the Berry-Keating operator. -/
+theorem berry_keating_critical_halfDensity_zero {x : ℝ} (hx : 0 < x) :
+    bkOp (fun y => y ^ (-(1 / 2 : ℝ))) x = 0 := by
+  rw [berry_keating_rpow_eigenvalue (-(1 / 2 : ℝ)) hx]
+  norm_num
 
 end InfoGeometry.Canonical.BerryKeating

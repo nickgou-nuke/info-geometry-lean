@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Algebra.AlternativeDerivations
 import InfoGeometry.Algebra.ZornVectorMatrix
+import Mathlib.LinearAlgebra.Matrix.Trace
 
 /-!
 # Bridge: ZornVectorMatrix.Derivation ↔ NonAssocDerivation
@@ -282,6 +283,264 @@ theorem map_E22_mul_E22 (D : NonAssocDerivation R (ZornVectorMatrix R)) :
   have h : D (E22 * E22) = D E22 * E22 + E22 * D E22 := D.leibniz E22 E22
   have H : (E22 : ZornVectorMatrix R) * E22 = E22 := by rw [zvm_mul_def, E22_mul_E22]
   rwa [H] at h
+
+/-!
+### Step 4: Commutator Bracket and `sl₃(R) ↪ Der_R(𝕆_s)` Including McKinstrie–Kozlov `su(1,1)`
+-/
+
+section SL3AndSU11
+
+open Matrix
+
+/-- Commutator `[D, E]` of two non-associative derivations is a non-associative derivation. -/
+noncomputable def zornDerBracket (D E : NonAssocDerivation R (ZornVectorMatrix R)) :
+    NonAssocDerivation R (ZornVectorMatrix R) where
+  toLinearMap := D.toLinearMap.comp E.toLinearMap - E.toLinearMap.comp D.toLinearMap
+  leibniz' x y := by
+    change D (E (x * y)) - E (D (x * y)) =
+      (D (E x) - E (D x)) * y + x * (D (E y) - E (D y))
+    rw [NonAssocDerivation.leibniz E x y, NonAssocDerivation.map_add D,
+      NonAssocDerivation.leibniz D x y, NonAssocDerivation.map_add E,
+      NonAssocDerivation.leibniz D (E x) y, NonAssocDerivation.leibniz D x (E y),
+      NonAssocDerivation.leibniz E (D x) y, NonAssocDerivation.leibniz E x (D y),
+      _root_.sub_mul, _root_.mul_sub]
+    abel
+
+@[simp] theorem zornDerBracket_apply
+    (D E : NonAssocDerivation R (ZornVectorMatrix R)) (X : ZornVectorMatrix R) :
+    zornDerBracket D E X = D (E X) - E (D X) :=
+  rfl
+
+/-- Infinitesimal `gl₃(R)` cross-product identity:
+`A(u × v) + (Aᵀ u) × v + u × (Aᵀ v) = Tr(A) • (u × v)`. -/
+theorem mulVec_cross_add_transpose
+    (A : Matrix (Fin 3) (Fin 3) R) (u v : ZornVec3 R) :
+    A.mulVec (ZornVec3.cross u v) + ZornVec3.cross (Aᵀ.mulVec u) v +
+        ZornVec3.cross u (Aᵀ.mulVec v) =
+      (Matrix.trace A) • ZornVec3.cross u v := by
+  ext i
+  fin_cases i <;>
+    simp [Matrix.mulVec, dotProduct, ZornVec3.cross, Matrix.trace, Matrix.diag,
+      Fin.sum_univ_three] <;>
+    ring
+
+private theorem dot_mulVec_eq_transpose
+    (A : Matrix (Fin 3) (Fin 3) R) (u w : ZornVec3 R) :
+    ZornVec3.dot (A.mulVec u) w = ZornVec3.dot u (Aᵀ.mulVec w) := by
+  simp only [ZornVec3.dot, Matrix.mulVec, dotProduct, Matrix.transpose_apply,
+    Fin.sum_univ_three, _root_.add_mul, _root_.mul_add, _root_.mul_assoc]
+  ac_rfl
+
+/-- Canonical `sl₃(R)` derivation on `ZornVectorMatrix R` preserving `E11` and `E22`. -/
+def zornSL3Der (A : Matrix (Fin 3) (Fin 3) R) (hTr : Matrix.trace A = 0) :
+    NonAssocDerivation R (ZornVectorMatrix R) where
+  toFun X := ⟨0, A.mulVec X.v, fun i => -(Aᵀ.mulVec X.w i), 0⟩
+  map_add' X Y := by
+    ext i <;>
+      simp [ZornVectorMatrix.add, Matrix.mulVec, dotProduct, Fin.sum_univ_three] <;>
+      ring
+  map_smul' r X := by
+    ext i <;>
+      simp [ZornVectorMatrix.smul, Matrix.mulVec, dotProduct, Fin.sum_univ_three] <;>
+      ring
+  leibniz' X Y := by
+    have hCrossV := congrFun (mulVec_cross_add_transpose A X.w Y.w)
+    have hTrT : Matrix.trace Aᵀ = 0 := by simp [Matrix.trace_transpose, hTr]
+    have hCrossW := congrFun (mulVec_cross_add_transpose Aᵀ X.v Y.v)
+    ext i
+    · change 0 = (0 * Y.a + ZornVec3.dot (A.mulVec X.v) Y.w) +
+        (X.a * 0 + ZornVec3.dot X.v (fun j => -(Aᵀ.mulVec Y.w j)))
+      rw [ZornVec3.dot_neg_right, dot_mulVec_eq_transpose]
+      ring
+    · have hc := hCrossV i
+      simp only [hTr, _root_.zero_smul, Pi.add_apply, Pi.zero_apply] at hc
+      have hv : A.mulVec (fun j => X.a * Y.v j + Y.b * X.v j - ZornVec3.cross X.w Y.w j) i =
+          X.a * A.mulVec Y.v i + Y.b * A.mulVec X.v i - A.mulVec (ZornVec3.cross X.w Y.w) i := by
+        simp [Matrix.mulVec, dotProduct, Fin.sum_univ_three]; ring
+      change A.mulVec (fun j => X.a * Y.v j + Y.b * X.v j - ZornVec3.cross X.w Y.w j) i =
+        (0 * Y.v i + Y.b * A.mulVec X.v i -
+          ZornVec3.cross (fun j => -(Aᵀ.mulVec X.w j)) Y.w i) +
+        (X.a * A.mulVec Y.v i + 0 * X.v i -
+          ZornVec3.cross X.w (fun j => -(Aᵀ.mulVec Y.w j)) i)
+      have hcr1 : ZornVec3.cross (fun j => -(Aᵀ.mulVec X.w j)) Y.w i =
+          -(ZornVec3.cross (Aᵀ.mulVec X.w) Y.w i) := by
+        fin_cases i <;> simp [ZornVec3.cross] <;> ring
+      have hcr2 : ZornVec3.cross X.w (fun j => -(Aᵀ.mulVec Y.w j)) i =
+          -(ZornVec3.cross X.w (Aᵀ.mulVec Y.w) i) := by
+        fin_cases i <;> simp [ZornVec3.cross] <;> ring
+      rw [hv, hcr1, hcr2]
+      change X.a * A.mulVec Y.v i + Y.b * A.mulVec X.v i - A.mulVec (ZornVec3.cross X.w Y.w) i =
+        (0 * Y.v i + Y.b * A.mulVec X.v i - -(ZornVec3.cross (Aᵀ.mulVec X.w) Y.w i)) +
+          (X.a * A.mulVec Y.v i + 0 * X.v i - -(ZornVec3.cross X.w (Aᵀ.mulVec Y.w) i))
+      linear_combination -hc
+    · have hc := hCrossW i
+      simp only [Matrix.transpose_transpose, hTrT, _root_.zero_smul, Pi.add_apply, Pi.zero_apply] at hc
+      have hw : Aᵀ.mulVec (fun j => Y.a * X.w j + X.b * Y.w j + ZornVec3.cross X.v Y.v j) i =
+          Y.a * Aᵀ.mulVec X.w i + X.b * Aᵀ.mulVec Y.w i + Aᵀ.mulVec (ZornVec3.cross X.v Y.v) i := by
+        simp [Matrix.mulVec, dotProduct, Fin.sum_univ_three]; ring
+      change -(Aᵀ.mulVec (fun j => Y.a * X.w j + X.b * Y.w j + ZornVec3.cross X.v Y.v j) i) =
+        (Y.a * -(Aᵀ.mulVec X.w i) + 0 * Y.w i + ZornVec3.cross (A.mulVec X.v) Y.v i) +
+        (0 * X.w i + X.b * -(Aᵀ.mulVec Y.w i) + ZornVec3.cross X.v (A.mulVec Y.v) i)
+      rw [hw]
+      linear_combination -hc
+    · change 0 = (ZornVec3.dot (fun j => -(Aᵀ.mulVec X.w j)) Y.v + 0 * Y.b) +
+        (ZornVec3.dot X.w (A.mulVec Y.v) + X.b * 0)
+      rw [ZornVec3.dot_neg_left, dot_mulVec_eq_transpose,
+        Matrix.transpose_transpose, ZornVec3.dot_comm X.w]
+      ring
+
+/-- `zornSL3Der` is a Lie algebra homomorphism `sl₃(R) → Der_R(ZornVectorMatrix R)`. -/
+theorem zornDerBracket_zornSL3Der
+    (A B : Matrix (Fin 3) (Fin 3) R) (hA : Matrix.trace A = 0) (hB : Matrix.trace B = 0) :
+    zornDerBracket (zornSL3Der A hA) (zornSL3Der B hB) =
+      zornSL3Der (A * B - B * A) (by rw [Matrix.trace_sub, Matrix.trace_mul_comm]; exact _root_.sub_self _) := by
+  apply NonAssocDerivation.ext
+  intro X
+  dsimp [zornDerBracket, zornSL3Der]
+  rw [_root_.sub_eq_add_neg]
+  simp only [zvm_add_def, zvm_neg_def, ZornVectorMatrix.add, ZornVectorMatrix.neg]
+  ext i
+  · change (0 : R) + -0 = 0; ring
+  · change A.mulVec (B.mulVec X.v) i + -(B.mulVec (A.mulVec X.v) i) =
+      (A * B - B * A).mulVec X.v i
+    rw [← _root_.sub_eq_add_neg]
+    simp [Matrix.sub_mulVec, Matrix.mulVec_mulVec]
+  · change -(Aᵀ.mulVec (fun j => -(Bᵀ.mulVec X.w j)) i) +
+        -(-(Bᵀ.mulVec (fun j => -(Aᵀ.mulVec X.w j)) i)) =
+      -(((A * B - B * A)ᵀ).mulVec X.w i)
+    simp [Matrix.mulVec, dotProduct, Matrix.mul_apply, Fin.sum_univ_three]
+    ring
+  · change (0 : R) + -0 = 0; ring
+
+/-- First non-compact `su(1,1) ⊂ sl₃(R)` generator acting on the `(0, 1)` color doublet. -/
+def g22MatG1 : Matrix (Fin 3) (Fin 3) R := !![0, 1, 0; 1, 0, 0; 0, 0, 0]
+/-- Second non-compact `su(1,1) ⊂ sl₃(R)` generator acting on the `(0, 1)` color doublet. -/
+def g22MatG2 : Matrix (Fin 3) (Fin 3) R := !![1, 0, 0; 0, -1, 0; 0, 0, 0]
+/-- Compact `su(1,1) ⊂ sl₃(R)` Wigner rotation generator acting on the `(0, 1)` color doublet. -/
+def g22MatG3 : Matrix (Fin 3) (Fin 3) R := !![0, 1, 0; -1, 0, 0; 0, 0, 0]
+
+theorem trace_g22MatG1 : Matrix.trace (g22MatG1 (R := R)) = 0 := by
+  simp [g22MatG1, Matrix.trace, Matrix.diag, Fin.sum_univ_three]
+
+theorem trace_g22MatG2 : Matrix.trace (g22MatG2 (R := R)) = 0 := by
+  simp [g22MatG2, Matrix.trace, Matrix.diag, Fin.sum_univ_three]
+
+theorem trace_g22MatG3 : Matrix.trace (g22MatG3 (R := R)) = 0 := by
+  simp [g22MatG3, Matrix.trace, Matrix.diag, Fin.sum_univ_three]
+
+/-- Exact split-octonion derivation `G₁ ∈ Der_R(𝕆_s)` (non-compact boost). -/
+def zornG22DerG1 : NonAssocDerivation R (ZornVectorMatrix R) :=
+  zornSL3Der g22MatG1 trace_g22MatG1
+
+/-- Exact split-octonion derivation `G₂ ∈ Der_R(𝕆_s)` (non-compact boost). -/
+def zornG22DerG2 : NonAssocDerivation R (ZornVectorMatrix R) :=
+  zornSL3Der g22MatG2 trace_g22MatG2
+
+/-- Exact split-octonion derivation `G₃ ∈ Der_R(𝕆_s)` (compact Wigner rotation). -/
+def zornG22DerG3 : NonAssocDerivation R (ZornVectorMatrix R) :=
+  zornSL3Der g22MatG3 trace_g22MatG3
+
+private theorem zornSL3Der_eq_smul
+    (A B : Matrix (Fin 3) (Fin 3) R)
+    (hA : Matrix.trace A = 0) (hB : Matrix.trace B = 0) (c : R)
+    (hEq : A = c • B) :
+    zornSL3Der A hA = c • zornSL3Der B hB := by
+  apply NonAssocDerivation.ext
+  intro X
+  ext i
+  · change (0 : R) = c * 0; ring
+  · change A.mulVec X.v i = c * B.mulVec X.v i
+    rw [hEq, Matrix.smul_mulVec]; rfl
+  · change -(Aᵀ.mulVec X.w i) = c * -(Bᵀ.mulVec X.w i)
+    rw [hEq, Matrix.transpose_smul, Matrix.smul_mulVec]
+    change -(c * Bᵀ.mulVec X.w i) = c * -(Bᵀ.mulVec X.w i)
+    ring
+  · change (0 : R) = c * 0; ring
+
+/-- Exact McKinstrie-Kozlov `su(1,1) ≅ sl₂(R)` derivation subalgebra inside
+`Der_R(ZornVectorMatrix R) = g_{2(2)}(R)` with structure constants `(-2, +2, +2)`. -/
+theorem zornG22_su11_derivation_subalgebra :
+    zornDerBracket (zornG22DerG1 (R := R)) zornG22DerG2 = (-2 : R) • zornG22DerG3 ∧
+    zornDerBracket (zornG22DerG2 (R := R)) zornG22DerG3 = (2 : R) • zornG22DerG1 ∧
+    zornDerBracket (zornG22DerG3 (R := R)) zornG22DerG1 = (2 : R) • zornG22DerG2 := by
+  refine ⟨?_, ?_, ?_⟩
+  · rw [zornG22DerG1, zornG22DerG2, zornDerBracket_zornSL3Der]
+    apply zornSL3Der_eq_smul
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [g22MatG1, g22MatG2, g22MatG3] <;> ring
+  · rw [zornG22DerG2, zornG22DerG3, zornDerBracket_zornSL3Der]
+    apply zornSL3Der_eq_smul
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [g22MatG1, g22MatG2, g22MatG3] <;> ring
+  · rw [zornG22DerG3, zornG22DerG1, zornDerBracket_zornSL3Der]
+    apply zornSL3Der_eq_smul
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [g22MatG1, g22MatG2, g22MatG3] <;> ring
+
+/-- The `su(1,1) ⊂ g_{2(2)}` derivations fix the 4D split-quaternion slice `(E₁₁, E₂₂, U₂, V₂)`
+pointwise, acting nontrivially on the orthogonal `(0, 1)` color doublet. -/
+theorem zornG22_su11_annihilates_split_quaternion_slice :
+    (zornG22DerG1 (R := R) E11 = 0 ∧ zornG22DerG1 (R := R) E22 = 0 ∧
+     zornG22DerG1 (R := R) (U 2) = 0 ∧ zornG22DerG1 (R := R) (V 2) = 0) ∧
+    (zornG22DerG2 (R := R) E11 = 0 ∧ zornG22DerG2 (R := R) E22 = 0 ∧
+     zornG22DerG2 (R := R) (U 2) = 0 ∧ zornG22DerG2 (R := R) (V 2) = 0) ∧
+    (zornG22DerG3 (R := R) E11 = 0 ∧ zornG22DerG3 (R := R) E22 = 0 ∧
+     zornG22DerG3 (R := R) (U 2) = 0 ∧ zornG22DerG3 (R := R) (V 2) = 0) := by
+  refine ⟨⟨?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_, ?_⟩, ⟨?_, ?_, ?_, ?_⟩⟩ <;>
+    { ext i <;> (try fin_cases i) <;>
+        simp [zornG22DerG1, zornG22DerG2, zornG22DerG3, zornSL3Der,
+          g22MatG1, g22MatG2, g22MatG3, E11, E22, U, V, ZornVec3.basis,
+          Matrix.mulVec, dotProduct, Fin.sum_univ_three] }
+
+/-- On the `(0, 1)` color doublet `{U 0, U 1, V 0, V 1}`, the `su(1,1) ⊂ g_{2(2)}` derivations
+satisfy `G₁² = +id`, `G₂² = +id`, and `G₃² = -id`. -/
+theorem zornG22_su11_squares_on_color_doublet :
+    ∀ X ∈ ([(U 0 : ZornVectorMatrix R), U 1, V 0, V 1] : List (ZornVectorMatrix R)),
+      zornG22DerG1 (zornG22DerG1 X) = X ∧
+      zornG22DerG2 (zornG22DerG2 X) = X ∧
+      zornG22DerG3 (zornG22DerG3 X) = -X := by
+  intro X hX
+  simp only [List.mem_cons, List.not_mem_nil, or_false] at hX
+  rcases hX with rfl | rfl | rfl | rfl <;>
+    refine ⟨?_, ?_, ?_⟩ <;>
+    { ext i <;> (try fin_cases i) <;>
+        simp [zornG22DerG1, zornG22DerG2, zornG22DerG3, zornSL3Der,
+          g22MatG1, g22MatG2, g22MatG3, U, V, ZornVec3.basis,
+          Matrix.mulVec, dotProduct, Fin.sum_univ_three, InfoGeometry.Algebra.zvm_neg_def,
+          ZornVectorMatrix.neg] }
+
+/-- Explicit non-commutativity witness in `sl₃(ℝ)`: `G₁ * G₂ ≠ G₂ * G₁`. -/
+theorem g22MatG1_mul_g22MatG2_ne_comm :
+    (g22MatG1 (R := ℝ)) * g22MatG2 ≠ g22MatG2 * g22MatG1 := by
+  intro h
+  have h01 := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℝ => M 0 1) h
+  simp [g22MatG1, g22MatG2, Matrix.mul_apply, Fin.sum_univ_three] at h01
+  norm_num at h01
+
+/-- Explicit non-commutativity witness for the `su(1,1) ⊂ Der_ℝ(𝕆_s)` derivations. -/
+theorem zornG22DerG1_bracket_zornG22DerG2_ne_zero :
+    zornDerBracket (zornG22DerG1 (R := ℝ)) zornG22DerG2 ≠ 0 := by
+  intro h
+  have hU0 := congrArg (fun D : NonAssocDerivation ℝ (ZornVectorMatrix ℝ) => (D (U 0)).v 1) h
+  have hBracket := congrArg (fun D : NonAssocDerivation ℝ (ZornVectorMatrix ℝ) => (D (U 0)).v 1)
+    (zornG22_su11_derivation_subalgebra (R := ℝ)).1
+  rw [hU0] at hBracket
+  change (0 : ℝ) = (-2 : ℝ) * (zornG22DerG3 (R := ℝ) (U 0)).v 1 at hBracket
+  simp [zornG22DerG3, zornSL3Der, g22MatG3, U, ZornVec3.basis, dotProduct,
+    Fin.sum_univ_three] at hBracket
+
+def g22MatE01 : Matrix (Fin 3) (Fin 3) R := !![0, 1, 0; 0, 0, 0; 0, 0, 0]
+def g22MatE10 : Matrix (Fin 3) (Fin 3) R := !![0, 0, 0; 1, 0, 0; 0, 0, 0]
+
+/-- Explicit polymorphic non-commutativity witness on `Matrix (Fin 3) (Fin 3) R` (`sl₃(R)`). -/
+theorem sl3_matrix_noncommutativity_witness [Nontrivial R] :
+    ∃ A B : Matrix (Fin 3) (Fin 3) R, A * B ≠ B * A := by
+  refine ⟨g22MatE01, g22MatE10, ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 0) h
+  simp [g22MatE01, g22MatE10, Matrix.mul_apply, Fin.sum_univ_three] at h00
+
+end SL3AndSU11
 
 end CommRing
 

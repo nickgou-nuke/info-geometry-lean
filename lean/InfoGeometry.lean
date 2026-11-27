@@ -3451,6 +3451,7 @@ import InfoGeometry.Canonical.LegacyKrDualityCascade
 import InfoGeometry.Canonical.LieDerivativeCohomologyTopologicalBridge
 import InfoGeometry.Canonical.LieFenchelQuadratic
 import InfoGeometry.Canonical.LieFlowLogJacobianBridge
+import InfoGeometry.Canonical.LieFlowDilatonSymFactorization
 import InfoGeometry.Canonical.LieJordanBoundaryColimit
 import InfoGeometry.Canonical.LieJordanBoundaryExamples
 import InfoGeometry.Canonical.LieJordanBoundarySynthesis

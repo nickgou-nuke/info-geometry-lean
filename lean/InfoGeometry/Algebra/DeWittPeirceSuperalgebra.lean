@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.Module.Basic
 import Mathlib.Basic.Real.Basic
@@ -59,10 +64,7 @@ theorem soul_LR_sq_zero (X : A) : soul_LR X * soul_LR X = 0 := by
   have h_ortho := PR_PL_ortho (A := A)
   calc (S.PL * X * S.PR) * (S.PL * X * S.PR)
     _ = S.PL * X * (S.PR * (S.PL * X * S.PR)) := by rw [mul_assoc]
-    _ = S.PL * X * ((S.PR * S.PL) * (X * S.PR)) := by
-        have : S.PR * (S.PL * X * S.PR) = (S.PR * S.PL) * (X * S.PR) := by
-          simp only [mul_assoc]
-        rw [this]
+    _ = S.PL * X * ((S.PR * S.PL) * (X * S.PR)) := by simp only [mul_assoc]
     _ = S.PL * X * (0 * (X * S.PR)) := by rw [h_ortho]
     _ = 0 := by simp only [zero_mul, mul_zero]
 
@@ -72,10 +74,7 @@ theorem soul_RL_sq_zero (X : A) : soul_RL X * soul_RL X = 0 := by
   dsimp [soul_RL]
   calc (S.PR * X * S.PL) * (S.PR * X * S.PL)
     _ = S.PR * X * (S.PL * (S.PR * X * S.PL)) := by rw [mul_assoc]
-    _ = S.PR * X * ((S.PL * S.PR) * (X * S.PL)) := by
-        have : S.PL * (S.PR * X * S.PL) = (S.PL * S.PR) * (X * S.PL) := by
-          simp only [mul_assoc]
-        rw [this]
+    _ = S.PR * X * ((S.PL * S.PR) * (X * S.PL)) := by simp only [mul_assoc]
     _ = S.PR * X * (0 * (X * S.PL)) := by rw [S.h_PL_PR]
     _ = 0 := by simp only [zero_mul, mul_zero]
 
@@ -99,13 +98,18 @@ def body (X : A) : A :=
 def soul (X : A) : A :=
   soul_LR X + soul_RL X
 
+/-- Additivity of the two Peirce soul-corner projections. -/
+theorem soul_LR_add (X Y : A) : soul_LR (X + Y) = soul_LR X + soul_LR Y := by
+  simp [soul_LR, add_mul, mul_add]
+
+theorem soul_RL_add (X Y : A) : soul_RL (X + Y) = soul_RL X + soul_RL Y := by
+  simp [soul_RL, add_mul, mul_add]
+
 /-- Master Theorem 3: The DeWitt Body-Soul Split.
     Every operator X decomposes uniquely into Body(X) + Soul(X). -/
 theorem dewitt_split (X : A) : X = body X + soul X := by
   dsimp [body, soul, soul_LR, soul_RL]
-  have h1 : X = (S.PL + S.PR) * X * (S.PL + S.PR) := by
-    rw [S.h_sum, one_mul, mul_one]
-  calc X = (S.PL + S.PR) * X * (S.PL + S.PR) := h1
+  calc X = (S.PL + S.PR) * X * (S.PL + S.PR) := by rw [S.h_sum, one_mul, mul_one]
     _ = (S.PL * X + S.PR * X) * (S.PL + S.PR) := by rw [add_mul]
     _ = (S.PL * X * S.PL + S.PL * X * S.PR) + (S.PR * X * S.PL + S.PR * X * S.PR) := by
         noncomm_ring
@@ -144,6 +148,117 @@ theorem body_is_idempotent (X : A) : body (body X) = body X := by
     S.PL * X * S.PL + S.PR * X * S.PR
   rw [PL_body_PL X, PR_body_PR X]
 
+/-- The left-to-right corner projection is idempotent. -/
+theorem soul_LR_is_idempotent (X : A) :
+    soul_LR (soul_LR X) = soul_LR X := by
+  dsimp [soul_LR]
+  calc
+    S.PL * (S.PL * X * S.PR) * S.PR =
+        (S.PL * S.PL) * X * (S.PR * S.PR) := by noncomm_ring
+    _ = S.PL * X * S.PR := by rw [S.h_PL_sq, S.h_PR_sq]
+
+/-- The right-to-left corner projection is idempotent. -/
+theorem soul_RL_is_idempotent (X : A) :
+    soul_RL (soul_RL X) = soul_RL X := by
+  dsimp [soul_RL]
+  calc
+    S.PR * (S.PR * X * S.PL) * S.PL =
+        (S.PR * S.PR) * X * (S.PL * S.PL) := by noncomm_ring
+    _ = S.PR * X * S.PL := by rw [S.h_PR_sq, S.h_PL_sq]
+
+/-- Opposite Peirce corners annihilate under the soul projections. -/
+theorem soul_LR_soul_RL_eq_zero (X : A) :
+    soul_LR (soul_RL X) = 0 := by
+  dsimp [soul_LR, soul_RL]
+  calc
+    S.PL * (S.PR * X * S.PL) * S.PR =
+        (S.PL * S.PR) * X * (S.PL * S.PR) := by noncomm_ring
+    _ = 0 := by rw [S.h_PL_PR]; simp
+
+theorem soul_RL_soul_LR_eq_zero (X : A) :
+    soul_RL (soul_LR X) = 0 := by
+  dsimp [soul_RL, soul_LR]
+  have hPRPL := PR_PL_ortho (A := A)
+  calc
+    S.PR * (S.PL * X * S.PR) * S.PL =
+        (S.PR * S.PL) * X * (S.PR * S.PL) := by noncomm_ring
+    _ = 0 := by rw [hPRPL]; simp
+
+/-- The total DeWitt soul is an idempotent linear projection onto the odd
+Peirce corners. -/
+theorem soul_is_idempotent (X : A) : soul (soul X) = soul X := by
+  unfold soul
+  rw [soul_LR_add, soul_RL_add, soul_LR_is_idempotent, soul_LR_soul_RL_eq_zero,
+    soul_RL_soul_LR_eq_zero, soul_RL_is_idempotent]
+  simp
+
+/-- The DeWitt body and soul projections are mutually annihilating.  This is
+the ring-general Peirce orthogonality underlying their complementary
+idempotence. -/
+theorem body_soul_orthogonal (X : A) :
+    body (soul X) = 0 ∧ soul (body X) = 0 := by
+  have hPRPL := PR_PL_ortho (A := A)
+  have h11LR : S.PL * soul_LR X * S.PL = 0 := by
+    dsimp [soul_LR]
+    calc
+      S.PL * (S.PL * X * S.PR) * S.PL =
+          (S.PL * S.PL) * X * (S.PR * S.PL) := by noncomm_ring
+      _ = 0 := by rw [S.h_PL_sq, hPRPL]; simp
+  have h11RL : S.PL * soul_RL X * S.PL = 0 := by
+    dsimp [soul_RL]
+    calc
+      S.PL * (S.PR * X * S.PL) * S.PL =
+          (S.PL * S.PR) * X * (S.PL * S.PL) := by noncomm_ring
+      _ = 0 := by rw [S.h_PL_PR, S.h_PL_sq]; simp
+  have h00LR : S.PR * soul_LR X * S.PR = 0 := by
+    dsimp [soul_LR]
+    calc
+      S.PR * (S.PL * X * S.PR) * S.PR =
+          (S.PR * S.PL) * X * (S.PR * S.PR) := by noncomm_ring
+      _ = 0 := by rw [hPRPL, S.h_PR_sq]; simp
+  have h00RL : S.PR * soul_RL X * S.PR = 0 := by
+    dsimp [soul_RL]
+    calc
+      S.PR * (S.PR * X * S.PL) * S.PR =
+          (S.PR * S.PR) * X * (S.PL * S.PR) := by noncomm_ring
+      _ = 0 := by rw [S.h_PR_sq, S.h_PL_PR]; simp
+  have hLR11 : soul_LR (S.PL * X * S.PL) = 0 := by
+    dsimp [soul_LR]
+    calc
+      S.PL * (S.PL * X * S.PL) * S.PR =
+          (S.PL * S.PL) * X * (S.PL * S.PR) := by noncomm_ring
+      _ = 0 := by rw [S.h_PL_sq, S.h_PL_PR]; simp
+  have hLR00 : soul_LR (S.PR * X * S.PR) = 0 := by
+    dsimp [soul_LR]
+    calc
+      S.PL * (S.PR * X * S.PR) * S.PR =
+          (S.PL * S.PR) * X * (S.PR * S.PR) := by noncomm_ring
+      _ = 0 := by rw [S.h_PL_PR, S.h_PR_sq]; simp
+  have hRL11 : soul_RL (S.PL * X * S.PL) = 0 := by
+    dsimp [soul_RL]
+    calc
+      S.PR * (S.PL * X * S.PL) * S.PL =
+          (S.PR * S.PL) * X * (S.PL * S.PL) := by noncomm_ring
+      _ = 0 := by rw [hPRPL, S.h_PL_sq]; simp
+  have hRL00 : soul_RL (S.PR * X * S.PR) = 0 := by
+    dsimp [soul_RL]
+    calc
+      S.PR * (S.PR * X * S.PR) * S.PL =
+          (S.PR * S.PR) * X * (S.PR * S.PL) := by noncomm_ring
+      _ = 0 := by rw [S.h_PR_sq, hPRPL]; simp
+  constructor
+  · change S.PL * (soul_LR X + soul_RL X) * S.PL +
+      S.PR * (soul_LR X + soul_RL X) * S.PR = 0
+    simp only [mul_add, add_mul, h11LR, h11RL, h00LR, h00RL, add_zero]
+  · calc
+      soul (body X) =
+          soul_LR (S.PL * X * S.PL) + soul_LR (S.PR * X * S.PR) +
+            soul_RL (S.PL * X * S.PL) + soul_RL (S.PR * X * S.PR) := by
+              unfold soul body
+              rw [soul_LR_add, soul_RL_add]
+              ac_rfl
+      _ = 0 := by rw [hLR11, hLR00, hRL11, hRL00]; simp
+
 /-- Master Theorem 5: The Superalgebra Closure ({Soul, Soul} ⊆ Body).
     The square of the DeWitt Soul is strictly invariant under Body projection:
     Body(Soul(X)²) = Soul(X)².
@@ -172,7 +287,7 @@ theorem soul_squared_is_body (X : A) :
   have h_PL_UV_PL : S.PL * (soul_LR X * soul_RL X + soul_RL X * soul_LR X) * S.PL = soul_LR X * soul_RL X := by
     dsimp [soul_LR, soul_RL]
     have h1 : S.PL * (S.PL * X * S.PR * (S.PR * X * S.PL)) * S.PL = S.PL * X * S.PR * (S.PR * X * S.PL) := by
-      simp only [mul_assoc, S.h_PL_sq, S.h_PR_sq]
+      simp only [mul_assoc, S.h_PL_sq]
       rw [← mul_assoc, S.h_PL_sq]
     have h2 : S.PL * (S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PL = 0 := by
       calc S.PL * (S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PL
@@ -193,7 +308,7 @@ theorem soul_squared_is_body (X : A) :
         _ = 0 * (X * S.PR * (S.PR * X * S.PL) * S.PR) := by rw [h_ortho]
         _ = 0 := zero_mul _
     have h2 : S.PR * (S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PR = S.PR * X * S.PL * (S.PL * X * S.PR) := by
-      simp only [mul_assoc, S.h_PL_sq, S.h_PR_sq]
+      simp only [mul_assoc, S.h_PR_sq]
       rw [← mul_assoc, S.h_PR_sq]
     calc S.PR * (S.PL * X * S.PR * (S.PR * X * S.PL) + S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PR
       _ = S.PR * (S.PL * X * S.PR * (S.PR * X * S.PL)) * S.PR + S.PR * (S.PR * X * S.PL * (S.PL * X * S.PR)) * S.PR := by
@@ -299,6 +414,30 @@ theorem G_soul_parity_odd (X : A) :
           _ = -(S.PR * X * S.PL) := by rw [neg_mul]
   rw [h1, h2]
   abel
+
+/-- The left-to-right DeWitt corner is itself odd under the chiral grading. -/
+theorem G_soul_LR_parity_odd (X : A) :
+    G (A := A) * soul_LR X * G = - soul_LR X := by
+  dsimp [soul_LR]
+  calc
+    G * (S.PL * X * S.PR) * G
+        = (G * S.PL) * X * (S.PR * G) := by repeat rw [mul_assoc]
+    _ = S.PL * X * (-S.PR) := by rw [G_mul_PL, PR_mul_G]
+    _ = -(S.PL * X * S.PR) := by rw [mul_neg]
+
+/-- A left-to-right corner fixed by the chiral grading has additive order
+dividing two. This form needs no characteristic or torsion-freeness assumption. -/
+theorem G_soul_LR_fixed_two_nsmul_zero (X : A)
+    (hfix : G (A := A) * soul_LR X * G = soul_LR X) :
+    (2 : ℕ) • soul_LR X = 0 := by
+  have hodd := G_soul_LR_parity_odd X
+  have hneg : -soul_LR X = soul_LR X := by rw [← hodd, hfix]
+  have htwo : soul_LR X + soul_LR X = 0 := by
+    calc
+      soul_LR X + soul_LR X = -soul_LR X + soul_LR X := by rw [hneg]
+      _ = 0 := neg_add_cancel _
+  rw [two_nsmul]
+  exact htwo
 
 end ChiralGradingParity
 

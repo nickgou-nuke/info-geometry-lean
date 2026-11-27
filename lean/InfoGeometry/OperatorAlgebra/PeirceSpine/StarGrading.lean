@@ -352,6 +352,54 @@ theorem antiMultSheetSwap_corners {P : B} (τ : B → B)
   · rw [hτ_mul, hτ_mul, hτQ, hτP, ← mul_assoc]
   · rw [hτ_mul, hτ_mul, hτP, hτQ, ← mul_assoc]
 
+/-- **Multiplicative/anti-multiplicative sheet-swap obstruction**: if a multiplicative
+sheet swap and an anti-multiplicative sheet swap agree on an element in either single
+off-diagonal Peirce corner, that corner element is zero. The two maps send the same
+corner into opposite corners; injectivity and zero preservation of the multiplicative
+map then force the original element to vanish. -/
+theorem multAntiMultSheetSwap_fixed_singleCorner_eq_zero {P : B}
+    (hP : P * P = P) (φ τ : B → B)
+    (hφ_mul : ∀ a b : B, φ (a * b) = φ a * φ b)
+    (hφ_zero : φ 0 = 0) (hφ_inj : Function.Injective φ)
+    (hφP : φ P = 1 - P) (hφQ : φ (1 - P) = P)
+    (hτ_mul : ∀ a b : B, τ (a * b) = τ b * τ a)
+    (hτP : τ P = 1 - P) (hτQ : τ (1 - P) = P) (X : B) :
+    (φ (conePlus P X) = τ (conePlus P X) → conePlus P X = 0) ∧
+    (φ (coneMinus P X) = τ (coneMinus P X) → coneMinus P X = 0) := by
+  have hφCorners := multSheetSwap_corners φ hφ_mul hφP hφQ X
+  have hτCorners := antiMultSheetSwap_corners τ hτ_mul hτP hτQ X
+  refine ⟨?_, ?_⟩
+  · intro hAgree
+    have hCross : coneMinus P (φ X) = conePlus P (τ X) := by
+      calc
+        coneMinus P (φ X) = φ (conePlus P X) := hφCorners.2.2.1.symm
+        _ = τ (conePlus P X) := hAgree
+        _ = conePlus P (τ X) := hτCorners.2.2.1
+    have hProj := congrArg (fun z : B => P * z) hCross
+    rw [P_mul_coneMinus hP, P_mul_conePlus hP] at hProj
+    have hImageZero : φ (conePlus P X) = 0 := by
+      calc
+        φ (conePlus P X) = coneMinus P (φ X) := hφCorners.2.2.1
+        _ = conePlus P (τ X) := hCross
+        _ = 0 := hProj.symm
+    apply hφ_inj
+    simpa [hφ_zero] using hImageZero
+  · intro hAgree
+    have hCross : conePlus P (φ X) = coneMinus P (τ X) := by
+      calc
+        conePlus P (φ X) = φ (coneMinus P X) := hφCorners.2.2.2.symm
+        _ = τ (coneMinus P X) := hAgree
+        _ = coneMinus P (τ X) := hτCorners.2.2.2
+    have hProj := congrArg (fun z : B => z * P) hCross
+    rw [conePlus_mul_P hP, coneMinus_mul_P hP] at hProj
+    have hImageZero : φ (coneMinus P X) = 0 := by
+      calc
+        φ (coneMinus P X) = conePlus P (φ X) := hφCorners.2.2.2
+        _ = coneMinus P (τ X) := hCross
+        _ = 0 := hProj.symm
+    apply hφ_inj
+    simpa [hφ_zero] using hImageZero
+
 /-- **Row 4 × Row 3 = Row 2 Coupling**: composing `*` (Row 3) with an anti-multiplicative
 sheet swap `τ` (Row 4) yields a multiplicative sheet swap `* ∘ τ` (Row 2) that exchanges `conePlus ↔ coneMinus`
 and forces any fixed single-corner element to vanish. -/

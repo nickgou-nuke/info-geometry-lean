@@ -157,4 +157,196 @@ theorem peirce_bruhat_g2_coxeter_representation (a c : A)
     Nonempty ((CoxeterMatrix.G₂).Group →* Equiv.Perm (A × A)) := by
   exact ⟨peirceBruhatG2Rep a c hV⟩
 
+/-! ### Peirce–DeWitt sheet-swap holonomy and Pin^± antiperiodicity obstruction -/
+
+section PinSheetSwapHolonomy
+
+/-- Adjoint transport by a lift element `(R, Rinv)` on the common associative ring `A`. -/
+def sheetSwapAd (R Rinv X : A) : A := R * X * Rinv
+
+/-- Conjugation swapping `P_L` to `P_R` automatically swaps `P_R` back to `P_L`. -/
+theorem sheetSwap_PR (R Rinv : A) (hRL : R * Rinv = 1) (hSwapL : R * S.PL * Rinv = S.PR) :
+    R * S.PR * Rinv = S.PL := by
+  calc
+    R * S.PR * Rinv = R * (1 - S.PL) * Rinv := by rw [right_is_complement]; rfl
+    _ = R * Rinv - R * S.PL * Rinv := by noncomm_ring
+    _ = 1 - S.PR := by rw [hRL, hSwapL]
+    _ = (S.PL + S.PR) - S.PR := by rw [S.h_sum]
+    _ = S.PL := by abel
+
+/-- Sheet-swap adjoint negates the DeWitt chiral grading `G = P_L - P_R`. -/
+theorem sheetSwap_chiralGrading (R Rinv : A) (hRL : R * Rinv = 1)
+    (hSwapL : R * S.PL * Rinv = S.PR) :
+    sheetSwapAd R Rinv (G (A := A)) = -(G (A := A)) := by
+  have hSwapR := sheetSwap_PR R Rinv hRL hSwapL
+  dsimp [sheetSwapAd, G]
+  calc
+    R * (S.PL - S.PR) * Rinv = R * S.PL * Rinv - R * S.PR * Rinv := by noncomm_ring
+    _ = S.PR - S.PL := by rw [hSwapL, hSwapR]
+    _ = -(S.PL - S.PR) := by abel
+
+private lemma sheetSwap_intertwines_left (R Rinv : A) (hLR : Rinv * R = 1)
+    (hSwapL : R * S.PL * Rinv = S.PR) :
+    R * S.PL = S.PR * R := by
+  calc
+    R * S.PL = R * S.PL * (Rinv * R) := by rw [hLR, mul_one]
+    _ = (R * S.PL * Rinv) * R := by simp only [mul_assoc]
+    _ = S.PR * R := by rw [hSwapL]
+
+private lemma sheetSwap_intertwines_right (R Rinv : A) (hLR : Rinv * R = 1)
+    (hSwapL : R * S.PL * Rinv = S.PR) :
+    S.PL * Rinv = Rinv * S.PR := by
+  calc
+    S.PL * Rinv = (Rinv * R) * S.PL * Rinv := by rw [hLR, one_mul]
+    _ = Rinv * (R * S.PL * Rinv) := by simp only [mul_assoc]
+    _ = Rinv * S.PR := by rw [hSwapL]
+
+private lemma sheetSwap_PR_intertwines_left (R Rinv : A) (hRL : R * Rinv = 1)
+    (hLR : Rinv * R = 1) (hSwapL : R * S.PL * Rinv = S.PR) :
+    R * S.PR = S.PL * R := by
+  have hSwapR := sheetSwap_PR R Rinv hRL hSwapL
+  calc
+    R * S.PR = R * S.PR * (Rinv * R) := by rw [hLR, mul_one]
+    _ = (R * S.PR * Rinv) * R := by simp only [mul_assoc]
+    _ = S.PL * R := by rw [hSwapR]
+
+private lemma sheetSwap_PR_intertwines_right (R Rinv : A) (hRL : R * Rinv = 1)
+    (hLR : Rinv * R = 1) (hSwapL : R * S.PL * Rinv = S.PR) :
+    S.PR * Rinv = Rinv * S.PL := by
+  have hSwapR := sheetSwap_PR R Rinv hRL hSwapL
+  calc
+    S.PR * Rinv = (Rinv * R) * S.PR * Rinv := by rw [hLR, one_mul]
+    _ = Rinv * (R * S.PR * Rinv) := by simp only [mul_assoc]
+    _ = Rinv * S.PL := by rw [hSwapR]
+
+/-- Sheet-swap adjoint preserves the even DeWitt `body` subspace (`body(Ad_R X) = Ad_R(body X)`). -/
+theorem sheetSwap_body (R Rinv : A) (hRL : R * Rinv = 1) (hLR : Rinv * R = 1)
+    (hSwapL : R * S.PL * Rinv = S.PR) (X : A) :
+    sheetSwapAd R Rinv (body X) = body (sheetSwapAd R Rinv X) := by
+  have hL1 := sheetSwap_intertwines_left R Rinv hLR hSwapL
+  have hL2 := sheetSwap_intertwines_right R Rinv hLR hSwapL
+  have hR1 := sheetSwap_PR_intertwines_left R Rinv hRL hLR hSwapL
+  have hR2 := sheetSwap_PR_intertwines_right R Rinv hRL hLR hSwapL
+  dsimp [sheetSwapAd, body]
+  calc
+    R * (S.PL * X * S.PL + S.PR * X * S.PR) * Rinv
+        = (R * S.PL) * X * (S.PL * Rinv) + (R * S.PR) * X * (S.PR * Rinv) := by
+          simp only [mul_add, add_mul, mul_assoc]
+    _ = (S.PR * R) * X * (Rinv * S.PR) + (S.PL * R) * X * (Rinv * S.PL) := by
+          rw [hL1, hL2, hR1, hR2]
+    _ = S.PL * (R * X * Rinv) * S.PL + S.PR * (R * X * Rinv) * S.PR := by
+          simp only [mul_assoc]; exact add_comm _ _
+
+/-- Sheet-swap adjoint exchanges the two odd nilpotent Peirce–DeWitt soul corners `soul_LR ↔ soul_RL`. -/
+theorem sheetSwap_soul_corners (R Rinv : A) (hRL : R * Rinv = 1) (hLR : Rinv * R = 1)
+    (hSwapL : R * S.PL * Rinv = S.PR) (X : A) :
+    sheetSwapAd R Rinv (soul_LR X) = soul_RL (sheetSwapAd R Rinv X) ∧
+    sheetSwapAd R Rinv (soul_RL X) = soul_LR (sheetSwapAd R Rinv X) := by
+  have hL1 := sheetSwap_intertwines_left R Rinv hLR hSwapL
+  have hL2 := sheetSwap_intertwines_right R Rinv hLR hSwapL
+  have hR1 := sheetSwap_PR_intertwines_left R Rinv hRL hLR hSwapL
+  have hR2 := sheetSwap_PR_intertwines_right R Rinv hRL hLR hSwapL
+  dsimp [sheetSwapAd, soul_LR, soul_RL]
+  refine ⟨?_, ?_⟩
+  · calc
+      R * (S.PL * X * S.PR) * Rinv = (R * S.PL) * X * (S.PR * Rinv) := by simp only [mul_assoc]
+      _ = (S.PR * R) * X * (Rinv * S.PL) := by rw [hL1, hR2]
+      _ = S.PR * (R * X * Rinv) * S.PL := by simp only [mul_assoc]
+  · calc
+      R * (S.PR * X * S.PL) * Rinv = (R * S.PR) * X * (S.PL * Rinv) := by simp only [mul_assoc]
+      _ = (S.PL * R) * X * (Rinv * S.PR) := by rw [hR1, hL2]
+      _ = S.PL * (R * X * Rinv) * S.PR := by simp only [mul_assoc]
+
+/-- Sheet-swap adjoint preserves the odd DeWitt `soul` bimodule (`soul(Ad_R X) = Ad_R(soul X)`). -/
+theorem sheetSwap_soul (R Rinv : A) (hRL : R * Rinv = 1) (hLR : Rinv * R = 1)
+    (hSwapL : R * S.PL * Rinv = S.PR) (X : A) :
+    sheetSwapAd R Rinv (soul X) = soul (sheetSwapAd R Rinv X) := by
+  have hc := sheetSwap_soul_corners R Rinv hRL hLR hSwapL X
+  dsimp [sheetSwapAd, soul] at *
+  calc
+    R * (soul_LR X + soul_RL X) * Rinv
+        = R * soul_LR X * Rinv + R * soul_RL X * Rinv := by noncomm_ring
+    _ = soul_RL (R * X * Rinv) + soul_LR (R * X * Rinv) := by rw [hc.1, hc.2]
+    _ = soul_LR (R * X * Rinv) + soul_RL (R * X * Rinv) := add_comm _ _
+
+omit S in
+/-- Both `Pin⁺` (`R² = +1`) and `Pin⁻` (`R² = -1`) induce periodic adjoint holonomy on observables. -/
+theorem sheetSwapAd_sq_periodic_of_pin_plus (R Rinv : A)
+    (hLR : Rinv * R = 1) (hSq : R * R = 1) (X : A) :
+    sheetSwapAd R Rinv (sheetSwapAd R Rinv X) = X := by
+  have hInv : Rinv = R := by
+    calc
+      Rinv = Rinv * (R * R) := by rw [hSq, mul_one]
+      _ = (Rinv * R) * R := by rw [mul_assoc]
+      _ = R := by rw [hLR, one_mul]
+  dsimp [sheetSwapAd]
+  calc
+    R * (R * X * Rinv) * Rinv = (R * R) * X * (Rinv * Rinv) := by simp only [mul_assoc]
+    _ = 1 * X * 1 := by simp only [hInv, hSq]
+    _ = X := by rw [one_mul, mul_one]
+
+omit S in
+/-- On `Pin⁻` (`R² = -1`), the double-glide minus signs cancel on the bilinear/adjoint observable sector. -/
+theorem sheetSwapAd_sq_periodic_of_pin_minus (R Rinv : A)
+    (hLR : Rinv * R = 1) (hSq : R * R = -1) (X : A) :
+    sheetSwapAd R Rinv (sheetSwapAd R Rinv X) = X := by
+  have hInv : Rinv = -R := by
+    calc
+      Rinv = -(Rinv * (-1)) := by rw [mul_neg, mul_one, neg_neg]
+      _ = -(Rinv * (R * R)) := by rw [hSq]
+      _ = -((Rinv * R) * R) := by rw [mul_assoc]
+      _ = -R := by rw [hLR, one_mul]
+  have hInvSq : Rinv * Rinv = -1 := by
+    rw [hInv, neg_mul_neg, hSq]
+  dsimp [sheetSwapAd]
+  calc
+    R * (R * X * Rinv) * Rinv = (R * R) * X * (Rinv * Rinv) := by simp only [mul_assoc]
+    _ = (-1) * X * (-1) := by rw [hSq, hInvSq]
+    _ = X := by noncomm_ring
+
+omit S in
+/-- Under a `Pin⁻` (`R² = -1`) equivariant glide law, linear fields `u, v` acquire double-glide
+antiperiodicity `-1` while the coupled bilinear `u * v` transforms by `sheetSwapAd` and is strictly periodic. -/
+theorem pin_minus_left_antiperiodic_and_bilinear_body_periodic {Base : Type*} (g : Base → Base)
+    (R Rinv : A) (hLR : Rinv * R = 1) (hSq : R * R = -1)
+    (u v : Base → A) (hu : ∀ x, u (g x) = R * u x) (hv : ∀ x, v (g x) = v x * Rinv) (x : Base) :
+    u (g (g x)) = -u x ∧
+    v (g (g x)) = -v x ∧
+    (u (g x) * v (g x) = sheetSwapAd R Rinv (u x * v x)) ∧
+    (u (g (g x)) * v (g (g x)) = u x * v x) := by
+  have hInv : Rinv = -R := by
+    calc
+      Rinv = -(Rinv * (-1)) := by rw [mul_neg, mul_one, neg_neg]
+      _ = -(Rinv * (R * R)) := by rw [hSq]
+      _ = -((Rinv * R) * R) := by rw [mul_assoc]
+      _ = -R := by rw [hLR, one_mul]
+  have hInvSq : Rinv * Rinv = -1 := by rw [hInv, neg_mul_neg, hSq]
+  have hu2 : u (g (g x)) = -u x := by
+    rw [hu (g x), hu x, ← mul_assoc, hSq, neg_one_mul]
+  have hv2 : v (g (g x)) = -v x := by
+    rw [hv (g x), hv x, mul_assoc, hInvSq, mul_neg_one]
+  refine ⟨hu2, hv2, ?_, ?_⟩
+  · rw [hu x, hv x]
+    dsimp [sheetSwapAd]
+    simp only [mul_assoc]
+  · rw [hu2, hv2, neg_mul_neg]
+
+omit S in
+/-- A `Pin⁻` (`R² = -1`) equivariant field cannot satisfy ordinary torus periodicity unless it vanishes identically. -/
+theorem pin_minus_periodic_obstruction {Base : Type*} (g : Base → Base) (R : A)
+    (hSq : R * R = -1) (hTwo : ∀ a : A, a + a = 0 → a = 0)
+    (u : Base → A) (hu : ∀ x, u (g x) = R * u x) (hper : ∀ x, u (g (g x)) = u x) :
+    u = 0 := by
+  funext x
+  have hAnti : u (g (g x)) = -u x := by
+    rw [hu (g x), hu x, ← mul_assoc, hSq, neg_one_mul]
+  have hEq : -(u x) = u x := hAnti.symm.trans (hper x)
+  have hSum : u x + u x = 0 := by
+    calc
+      u x + u x = u x + -(u x) := by conv_rhs => rw [hEq]
+      _ = 0 := add_neg_cancel _
+  exact hTwo (u x) hSum
+
+end PinSheetSwapHolonomy
+
 end InfoGeometry.Algebra.DeWittPeirceChiralBridge

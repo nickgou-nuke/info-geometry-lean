@@ -7,6 +7,7 @@ import InfoGeometry.Canonical.TwoSheetedYangMillsInductiveColimit
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent
 import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
 import InfoGeometry.OperatorAlgebra.PeirceSpine.CyclotomicGaloisNilpotentSylvesterSynthesis
+import Mathlib.LinearAlgebra.Matrix.PosDef
 
 /-!
 # Two-Sheeted Yang–Mills: Nilpotent-to-Unipotent Condensate, Ordered Möbius–Bruhat / Steinberg Braid Vortices, Vortex Mass `m² = 4V`, and Operator Cyclotomic Locking (`YM₁ ≺ YM₂ ≺ YM₃ ≺ YM₄ ≺ YM₅ ≺ YM₆ ≺ YM₇`)
@@ -880,5 +881,349 @@ theorem two_sheeted_nilpotent_condensate_vortex_mass_master_synthesis
     ⟨hYM4.1, hYM4.2.1, hYM4.2.2.1, hYM4.2.2.2.1⟩,
     ⟨cyclotomic_phi12_on_axial hP A C, hYM5.1, hYM5.2.1⟩,
     ⟨hYM7.2.2.1, hYM7.2.2.2.2.2.1⟩⟩
+
+/-! ## 8. Star-Algebra Positivity, Hilbert-Space Matrix Specialization, & `2 × 2` Nambu Gap Realization -/
+
+section StarPositivity
+
+variable {B : Type*} [Ring B] [StarRing B]
+
+theorem coneMinus_star_eq {P : B} (hPs : star P = P) (A : B) :
+    coneMinus P (star A) = star (conePlus P A) := by
+  unfold coneMinus conePlus
+  simp only [star_mul, star_sub, star_one, hPs, mul_assoc]
+
+theorem qgtPlus_star_eq {P : B} (hPs : star P = P) (A : B) :
+    qgtPlus P A (star A) = conePlus P A * star (conePlus P A) := by
+  unfold qgtPlus
+  rw [coneMinus_star_eq hPs]
+
+theorem qgtMinus_star_eq {P : B} (hPs : star P = P) (A : B) :
+    qgtMinus P A (star A) = star (conePlus P A) * conePlus P A := by
+  unfold qgtMinus
+  rw [coneMinus_star_eq hPs]
+
+theorem genV_star_eq {P : B} (hPs : star P = P) (A : B) :
+    genV P A (star A) =
+      conePlus P A * star (conePlus P A) + star (conePlus P A) * conePlus P A := by
+  change anticomm (conePlus P A) (coneMinus P (star A)) = _
+  unfold anticomm
+  rw [coneMinus_star_eq hPs]
+
+theorem opVortexMassSq_star_eq {P : B} (hPs : star P = P) (A : B) :
+    opVortexMassSq P A (star A) =
+      (4 : ℤ) • (conePlus P A * star (conePlus P A) + star (conePlus P A) * conePlus P A) := by
+  unfold opVortexMassSq opQuadraticCoupling
+  rw [genV_star_eq hPs]
+
+theorem upper_peirce_vortexMassSq_star_eq {P : B} (hP : P * P = P) (hPs : star P = P) (A : B) :
+    P * opVortexMassSq P A (star A) * P = (4 : ℤ) • (conePlus P A * star (conePlus P A)) := by
+  unfold opVortexMassSq opQuadraticCoupling
+  rw [genV_star_eq hPs]
+  have h1 : P * (conePlus P A * star (conePlus P A)) * P = conePlus P A * star (conePlus P A) := by
+    rw [← coneMinus_star_eq hPs]
+    peirce_nf hP
+  have h2 : P * (star (conePlus P A) * conePlus P A) * P = 0 := by
+    rw [← coneMinus_star_eq hPs]
+    peirce_nf hP
+  rw [mul_smul_comm, smul_mul_assoc, mul_add, add_mul, h1, h2, add_zero]
+
+end StarPositivity
+
+section MatrixHilbertPositivity
+
+open scoped ComplexOrder
+
+private lemma matrix_real_star_eq_conjTranspose {n : ℕ} (M : Matrix (Fin n) (Fin n) ℝ) :
+    star M = Mᴴ := rfl
+
+private lemma matrix_complex_star_eq_conjTranspose {n : ℕ} (M : Matrix (Fin n) (Fin n) ℂ) :
+    star M = Mᴴ := rfl
+
+private lemma real_dot_self_pos_of_ne_zero {n : ℕ} (w : Fin n → ℝ) (hw : w ≠ 0) :
+    0 < dotProduct w w := by
+  have hnn : 0 ≤ dotProduct w w := Finset.sum_nonneg fun _ _ => mul_self_nonneg _
+  refine lt_of_le_of_ne hnn fun heq => hw ?_
+  ext i
+  have hAll := (Finset.sum_eq_zero_iff_of_nonneg (fun j _ => mul_self_nonneg (w j))).mp heq.symm
+  exact mul_self_eq_zero.mp (hAll i (Finset.mem_univ i))
+
+private lemma real_trace_conjTranspose_mul_self_nonneg {n : ℕ} (Y : Matrix (Fin n) (Fin n) ℝ) :
+    0 ≤ Matrix.trace (Yᴴ * Y) := by
+  simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.conjTranspose_apply, star_trivial]
+  refine Finset.sum_nonneg fun i _ => Finset.sum_nonneg fun j _ => ?_
+  exact mul_self_nonneg (Y j i)
+
+/-- **Real Hilbert-Space Matrix Positivity of Vortex Mass (`C = star A = Aᵀ`)**:
+For any real orthogonal projector `P` (`P * P = P`, `Pᴴ = P`) and generator `A` in `Mₙ(ℝ)`:
+1. Both `opVortexMassSq P A (star A)` and its upper-sheet projection `P * opVortexMassSq P A (star A) * P`
+   are positive semidefinite (`PosSemidef`),
+2. `0 ≤ Matrix.trace (Xᴴ * opVortexMassSq P A (star A) * X)` for all `X`,
+3. `0 ≤ star v ⬝ᵥ (opVortexMassSq P A (star A)).mulVec v` for all `v`, with **strict positivity**
+   `0 < star v ⬝ᵥ ...` whenever `(conePlus P A).mulVec v ≠ 0` or `(star (conePlus P A)).mulVec v ≠ 0`. -/
+theorem real_matrix_vortexMassSq_posSemidef_and_strict {n : ℕ}
+    (P A : Matrix (Fin n) (Fin n) ℝ) (hP : P * P = P) (hPs : star P = P) :
+    let V4 := opVortexMassSq P A (star A)
+    V4.PosSemidef ∧
+    (P * V4 * P).PosSemidef ∧
+    (∀ X : Matrix (Fin n) (Fin n) ℝ, 0 ≤ Matrix.trace (Xᴴ * V4 * X)) ∧
+    (∀ v : Fin n → ℝ, 0 ≤ star v ⬝ᵥ V4.mulVec v) ∧
+    (∀ v : Fin n → ℝ, (conePlus P A).mulVec v ≠ 0 → 0 < star v ⬝ᵥ V4.mulVec v) ∧
+    (∀ v : Fin n → ℝ, (star (conePlus P A)).mulVec v ≠ 0 →
+      0 < star v ⬝ᵥ V4.mulVec v ∧ 0 < star v ⬝ᵥ (P * V4 * P).mulVec v) := by
+  intro V4
+  let N := conePlus P A
+  have hEq : V4 = (4 : ℝ) • (N * Nᴴ + Nᴴ * N) := by
+    change opVortexMassSq P A (star A) = (4 : ℝ) • (N * star N + star N * N)
+    rw [opVortexMassSq_star_eq hPs A]
+    norm_cast
+  have hUpper : P * V4 * P = (4 : ℝ) • (N * Nᴴ) := by
+    change P * opVortexMassSq P A (star A) * P = (4 : ℝ) • (N * star N)
+    rw [upper_peirce_vortexMassSq_star_eq hP hPs A]
+    norm_cast
+  have hPSD1 : (N * Nᴴ).PosSemidef := Matrix.posSemidef_self_mul_conjTranspose N
+  have hPSD2 : (Nᴴ * N).PosSemidef := Matrix.posSemidef_conjTranspose_mul_self N
+  have hPSDV : V4.PosSemidef := by
+    rw [hEq]
+    exact (hPSD1.add hPSD2).smul (by norm_num : (0 : ℝ) ≤ 4)
+  have hPSDU : (P * V4 * P).PosSemidef := by
+    rw [hUpper]
+    exact hPSD1.smul (by norm_num : (0 : ℝ) ≤ 4)
+  have hQuad : ∀ v : Fin n → ℝ,
+      star v ⬝ᵥ V4.mulVec v =
+        4 * (dotProduct (Nᴴ.mulVec v) (Nᴴ.mulVec v) + dotProduct (N.mulVec v) (N.mulVec v)) := by
+    intro v
+    rw [hEq, Matrix.smul_mulVec, dotProduct_smul, smul_eq_mul,
+      Matrix.add_mulVec, dotProduct_add]
+    have hA : star v ⬝ᵥ (N * Nᴴ).mulVec v = dotProduct (Nᴴ.mulVec v) (Nᴴ.mulVec v) := by
+      rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec]
+      congr 1
+      ext j
+      simp [Matrix.vecMul, Matrix.mulVec, dotProduct, Matrix.conjTranspose_apply, mul_comm]
+    have hB : star v ⬝ᵥ (Nᴴ * N).mulVec v = dotProduct (N.mulVec v) (N.mulVec v) := by
+      rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec]
+      congr 1
+      ext j
+      simp [Matrix.vecMul, Matrix.mulVec, dotProduct, Matrix.conjTranspose_apply, mul_comm]
+    rw [hA, hB]
+  have hQuadUpper : ∀ v : Fin n → ℝ,
+      star v ⬝ᵥ (P * V4 * P).mulVec v =
+        4 * dotProduct (Nᴴ.mulVec v) (Nᴴ.mulVec v) := by
+    intro v
+    rw [hUpper, Matrix.smul_mulVec, dotProduct_smul, smul_eq_mul]
+    have hA : star v ⬝ᵥ (N * Nᴴ).mulVec v = dotProduct (Nᴴ.mulVec v) (Nᴴ.mulVec v) := by
+      rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec]
+      congr 1
+      ext j
+      simp [Matrix.vecMul, Matrix.mulVec, dotProduct, Matrix.conjTranspose_apply, mul_comm]
+    rw [hA]
+  refine ⟨hPSDV, hPSDU, ?_, ?_, ?_, ?_⟩
+  · intro X
+    rw [hEq, Matrix.mul_smul, Matrix.smul_mul, Matrix.trace_smul, smul_eq_mul]
+    refine mul_nonneg (by norm_num) ?_
+    have hTr : Xᴴ * (N * Nᴴ + Nᴴ * N) * X =
+        (Nᴴ * X)ᴴ * (Nᴴ * X) + (N * X)ᴴ * (N * X) := by
+      simp only [Matrix.mul_add, Matrix.add_mul, Matrix.conjTranspose_mul,
+        Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
+    rw [hTr, Matrix.trace_add]
+    exact add_nonneg (real_trace_conjTranspose_mul_self_nonneg _)
+      (real_trace_conjTranspose_mul_self_nonneg _)
+  · intro v
+    rw [hQuad v]
+    exact mul_nonneg (by norm_num)
+      (add_nonneg (Finset.sum_nonneg fun _ _ => mul_self_nonneg _)
+        (Finset.sum_nonneg fun _ _ => mul_self_nonneg _))
+  · intro v hv
+    rw [hQuad v]
+    have h1 : 0 ≤ dotProduct (Nᴴ.mulVec v) (Nᴴ.mulVec v) :=
+      Finset.sum_nonneg fun _ _ => mul_self_nonneg _
+    have h2 : 0 < dotProduct (N.mulVec v) (N.mulVec v) := real_dot_self_pos_of_ne_zero _ hv
+    linarith
+  · intro v hv
+    have hv' : Nᴴ.mulVec v ≠ 0 := hv
+    have h1 : 0 < dotProduct (Nᴴ.mulVec v) (Nᴴ.mulVec v) := real_dot_self_pos_of_ne_zero _ hv'
+    have h2 : 0 ≤ dotProduct (N.mulVec v) (N.mulVec v) :=
+      Finset.sum_nonneg fun _ _ => mul_self_nonneg _
+    constructor
+    · rw [hQuad v]; linarith
+    · rw [hQuadUpper v]; linarith
+
+/-- **Complex Hilbert-Space Matrix Positivity of Vortex Mass (`C = star A = Aᴴ`)**:
+For any complex orthogonal projector `P` (`P * P = P`, `Pᴴ = P`) and generator `A` in `Mₙ(ℂ)`:
+both `opVortexMassSq P A (star A)` and `P * opVortexMassSq P A (star A) * P` are `PosSemidef`,
+`0 ≤ (Matrix.trace (Xᴴ * opVortexMassSq P A (star A) * X)).re`, and `0 < (star v ⬝ᵥ ...).re`
+on every vector with `(conePlus P A).mulVec v ≠ 0`. -/
+theorem complex_matrix_vortexMassSq_posSemidef_and_strict {n : ℕ}
+    (P A : Matrix (Fin n) (Fin n) ℂ) (hP : P * P = P) (hPs : star P = P) :
+    let V4 := opVortexMassSq P A (star A)
+    V4.PosSemidef ∧
+    (P * V4 * P).PosSemidef ∧
+    (∀ X : Matrix (Fin n) (Fin n) ℂ, 0 ≤ (Matrix.trace (Xᴴ * V4 * X)).re) ∧
+    (∀ v : Fin n → ℂ, 0 ≤ (star v ⬝ᵥ V4.mulVec v).re) ∧
+    (∀ v : Fin n → ℂ, (conePlus P A).mulVec v ≠ 0 → 0 < (star v ⬝ᵥ V4.mulVec v).re) := by
+  intro V4
+  let N := conePlus P A
+  have hEq : V4 = (4 : ℂ) • (N * Nᴴ + Nᴴ * N) := by
+    change opVortexMassSq P A (star A) = (4 : ℂ) • (N * star N + star N * N)
+    rw [opVortexMassSq_star_eq hPs A]
+    ext i j
+    dsimp [N]
+    simp [zsmul_eq_mul, mul_add]
+  have hUpper : P * V4 * P = (4 : ℂ) • (N * Nᴴ) := by
+    change P * opVortexMassSq P A (star A) * P = (4 : ℂ) • (N * star N)
+    rw [upper_peirce_vortexMassSq_star_eq hP hPs A]
+    ext i j
+    dsimp [N]
+    simp [zsmul_eq_mul]
+  have hPSD1 : (N * Nᴴ).PosSemidef := Matrix.posSemidef_self_mul_conjTranspose N
+  have hPSD2 : (Nᴴ * N).PosSemidef := Matrix.posSemidef_conjTranspose_mul_self N
+  have hPSDV : V4.PosSemidef := by
+    rw [hEq]
+    have h4 : (0 : ℂ) ≤ 4 := by norm_num
+    exact (hPSD1.add hPSD2).smul h4
+  have hPSDU : (P * V4 * P).PosSemidef := by
+    rw [hUpper]
+    have h4 : (0 : ℂ) ≤ 4 := by norm_num
+    exact hPSD1.smul h4
+  have hVecDot : ∀ w : Fin n → ℂ,
+      (star w ⬝ᵥ w).re = ∑ i : Fin n, Complex.normSq (w i) := by
+    intro w
+    simp only [dotProduct, Complex.re_sum]
+    refine Finset.sum_congr rfl fun i _ => ?_
+    simp [Complex.normSq_apply]
+  have hVecDotPos : ∀ w : Fin n → ℂ, w ≠ 0 → 0 < (star w ⬝ᵥ w).re := by
+    intro w hw
+    rw [hVecDot]
+    have hnn : 0 ≤ ∑ i : Fin n, Complex.normSq (w i) :=
+      Finset.sum_nonneg fun _ _ => Complex.normSq_nonneg _
+    refine lt_of_le_of_ne hnn fun heq => hw ?_
+    ext i
+    have hAll := (Finset.sum_eq_zero_iff_of_nonneg
+      (fun j _ => Complex.normSq_nonneg (w j))).mp heq.symm
+    exact Complex.normSq_eq_zero.mp (hAll i (Finset.mem_univ i))
+  have hQuad : ∀ v : Fin n → ℂ,
+      (star v ⬝ᵥ V4.mulVec v).re =
+        4 * ((star (Nᴴ.mulVec v) ⬝ᵥ Nᴴ.mulVec v).re +
+          (star (N.mulVec v) ⬝ᵥ N.mulVec v).re) := by
+    intro v
+    rw [hEq, Matrix.smul_mulVec, dotProduct_smul, smul_eq_mul,
+      Matrix.add_mulVec, dotProduct_add]
+    have hA : star v ⬝ᵥ (N * Nᴴ).mulVec v = star (Nᴴ.mulVec v) ⬝ᵥ Nᴴ.mulVec v := by
+      rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec]
+      congr 1
+      ext j
+      simp [Matrix.vecMul, Matrix.mulVec, dotProduct, Matrix.conjTranspose_apply, mul_comm]
+    have hB : star v ⬝ᵥ (Nᴴ * N).mulVec v = star (N.mulVec v) ⬝ᵥ N.mulVec v := by
+      rw [← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec]
+      congr 1
+      ext j
+      simp [Matrix.vecMul, Matrix.mulVec, dotProduct, Matrix.conjTranspose_apply, mul_comm]
+    rw [hA, hB]
+    simp
+  refine ⟨hPSDV, hPSDU, ?_, ?_, ?_⟩
+  · intro X
+    rw [hEq, Matrix.mul_smul, Matrix.smul_mul, Matrix.trace_smul, smul_eq_mul]
+    have hTr : Xᴴ * (N * Nᴴ + Nᴴ * N) * X =
+        (Nᴴ * X)ᴴ * (Nᴴ * X) + (N * X)ᴴ * (N * X) := by
+      simp only [Matrix.mul_add, Matrix.add_mul, Matrix.conjTranspose_mul,
+        Matrix.conjTranspose_conjTranspose, Matrix.mul_assoc]
+    rw [hTr, Matrix.trace_add]
+    have hTrNonneg : ∀ Y : Matrix (Fin n) (Fin n) ℂ, 0 ≤ (Matrix.trace (Yᴴ * Y)).re := by
+      intro Y
+      simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.conjTranspose_apply,
+        Complex.re_sum]
+      refine Finset.sum_nonneg fun i _ => Finset.sum_nonneg fun j _ => ?_
+      have hc : (star (Y j i) * Y j i).re = Complex.normSq (Y j i) := by
+        simp [Complex.normSq_apply]
+      rw [hc]
+      exact Complex.normSq_nonneg _
+    have hRe4 : ((4 : ℂ) * (Matrix.trace ((Nᴴ * X)ᴴ * (Nᴴ * X)) +
+        Matrix.trace ((N * X)ᴴ * (N * X)))).re =
+        4 * ((Matrix.trace ((Nᴴ * X)ᴴ * (Nᴴ * X))).re +
+          (Matrix.trace ((N * X)ᴴ * (N * X))).re) := by
+      simp
+    rw [hRe4]
+    exact mul_nonneg (by norm_num) (add_nonneg (hTrNonneg _) (hTrNonneg _))
+  · intro v
+    rw [hQuad v, hVecDot, hVecDot]
+    exact mul_nonneg (by norm_num)
+      (add_nonneg (Finset.sum_nonneg fun _ _ => Complex.normSq_nonneg _)
+        (Finset.sum_nonneg fun _ _ => Complex.normSq_nonneg _))
+  · intro v hv
+    rw [hQuad v]
+    have h1 : 0 ≤ (star (Nᴴ.mulVec v) ⬝ᵥ Nᴴ.mulVec v).re := by
+      rw [hVecDot]; exact Finset.sum_nonneg fun _ _ => Complex.normSq_nonneg _
+    have h2 : 0 < (star (N.mulVec v) ⬝ᵥ N.mulVec v).re := hVecDotPos _ hv
+    linarith
+
+end MatrixHilbertPositivity
+
+section NambuParticleHoleRealization
+
+/-- `2 × 2` Nambu particle–hole Krein projector `P = !![1, 0; 0, 0]`. -/
+def nambuProj : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, 0]
+
+/-- `2 × 2` off-diagonal Nambu pairing generator `A(Δ) = !![0, Δ; 0, 0]`. -/
+def nambuGapGen (Δ : ℝ) : Matrix (Fin 2) (Fin 2) ℝ := !![0, Δ; 0, 0]
+
+/-- **2×2 Nambu Particle–Hole Realization (`opVortexMassSq = 4 Δ² • 1`, upper-sheet `(4 Δ²) • P`)**:
+Links the Peirce defect `genV = Φ²` directly to the squared pairing gap `Δ²` on `P = !![1, 0; 0, 0]`. -/
+theorem nambu_particle_hole_vortex_mass_realization (Δ : ℝ) :
+    nambuProj * nambuProj = nambuProj ∧
+    star nambuProj = nambuProj ∧
+    conePlus nambuProj (nambuGapGen Δ) = !![0, Δ; 0, 0] ∧
+    coneMinus nambuProj (star (nambuGapGen Δ)) = !![0, 0; Δ, 0] ∧
+    opCondensateDisplacement nambuProj (nambuGapGen Δ) (star (nambuGapGen Δ)) =
+      !![-(Δ ^ 2), Δ; -Δ, 0] ∧
+    genV nambuProj (nambuGapGen Δ) (star (nambuGapGen Δ)) =
+      (Δ ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) ∧
+    opVortexMassSq nambuProj (nambuGapGen Δ) (star (nambuGapGen Δ)) =
+      (4 * Δ ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) ∧
+    nambuProj * opVortexMassSq nambuProj (nambuGapGen Δ) (star (nambuGapGen Δ)) * nambuProj =
+      (4 * Δ ^ 2) • nambuProj ∧
+    (Δ ≠ 0 → ∀ v : Fin 2 → ℝ, v ≠ 0 →
+      0 < star v ⬝ᵥ (opVortexMassSq nambuProj (nambuGapGen Δ) (star (nambuGapGen Δ))).mulVec v) := by
+  have hP2 : nambuProj * nambuProj = nambuProj := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [nambuProj, Matrix.mul_apply, Fin.sum_univ_two]
+  have hPs : star nambuProj = nambuProj := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [nambuProj]
+  have hNplus : conePlus nambuProj (nambuGapGen Δ) = !![0, Δ; 0, 0] := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [conePlus, nambuProj, nambuGapGen, Matrix.mul_apply, Fin.sum_univ_two]
+  have hNminus : coneMinus nambuProj (star (nambuGapGen Δ)) = !![0, 0; Δ, 0] := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [coneMinus, nambuProj, nambuGapGen, Matrix.mul_apply, Fin.sum_univ_two]
+  have hDisp : opCondensateDisplacement nambuProj (nambuGapGen Δ) (star (nambuGapGen Δ)) =
+      !![-(Δ ^ 2), Δ; -Δ, 0] := by
+    unfold opCondensateDisplacement opUnipotentPlus opUnipotentMinus
+    rw [hNplus, hNminus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      (simp [Matrix.mul_apply, Fin.sum_univ_two]; try ring)
+  have hV : genV nambuProj (nambuGapGen Δ) (star (nambuGapGen Δ)) =
+      (Δ ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+    change anticomm (conePlus nambuProj (nambuGapGen Δ))
+        (coneMinus nambuProj (star (nambuGapGen Δ))) = _
+    unfold anticomm
+    rw [hNplus, hNminus]
+    ext i j; fin_cases i <;> fin_cases j <;>
+      (simp; try ring)
+  have hM4 : opVortexMassSq nambuProj (nambuGapGen Δ) (star (nambuGapGen Δ)) =
+      (4 * Δ ^ 2) • (1 : Matrix (Fin 2) (Fin 2) ℝ) := by
+    unfold opVortexMassSq opQuadraticCoupling
+    rw [hV]
+    ext i j; fin_cases i <;> fin_cases j <;> simp [zsmul_eq_mul]
+  have hUpper :
+      nambuProj * opVortexMassSq nambuProj (nambuGapGen Δ) (star (nambuGapGen Δ)) * nambuProj =
+        (4 * Δ ^ 2) • nambuProj := by
+    rw [hM4, Matrix.mul_smul, Matrix.smul_mul, Matrix.mul_one, hP2]
+  refine ⟨hP2, hPs, hNplus, hNminus, hDisp, hV, hM4, hUpper, ?_⟩
+  intro hΔ v hv
+  rw [hM4, Matrix.smul_mulVec, Matrix.one_mulVec, dotProduct_smul, smul_eq_mul]
+  have hPos : 0 < 4 * Δ ^ 2 := by positivity
+  have hDot : 0 < star v ⬝ᵥ v := real_dot_self_pos_of_ne_zero v hv
+  exact mul_pos hPos hDot
+
+end NambuParticleHoleRealization
 
 end InfoGeometry.Canonical.TwoSheetedNilpotentCondensateVortexMass

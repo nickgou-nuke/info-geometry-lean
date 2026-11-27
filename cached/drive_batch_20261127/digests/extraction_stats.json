@@ -1,0 +1,105 @@
+[
+  {
+    "id": "1-PQj0N989Wx3S5Pu-CWXd5k6K5Oe9rcN",
+    "type": "pdf",
+    "pages": 31,
+    "empty_or_sparse_pages": 0,
+    "total_chars": 53183,
+    "avg_chars_per_page": 1715.6,
+    "line_count": 1488,
+    "pdf_title": "",
+    "pdf_author": "",
+    "digest_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/digests/1-PQj0N989Wx3S5Pu-CWXd5k6K5Oe9rcN.extracted.txt"
+  },
+  {
+    "id": "1-W2vcjZD1zhr9VUGB_nR1WqFe-pJEiff",
+    "type": "pdf",
+    "pages": 8,
+    "empty_or_sparse_pages": 0,
+    "total_chars": 11917,
+    "avg_chars_per_page": 1489.6,
+    "line_count": 438,
+    "pdf_title": "Supersymmetry and the Witten Index",
+    "pdf_author": "Arjun Kudinoor",
+    "digest_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/digests/1-W2vcjZD1zhr9VUGB_nR1WqFe-pJEiff.extracted.txt"
+  },
+  {
+    "id": "11OFqY5C0Xw2d3WBb_zK5F5OcORKmynz1",
+    "type": "pdf",
+    "pages": 14,
+    "empty_or_sparse_pages": 0,
+    "total_chars": 37055,
+    "avg_chars_per_page": 2646.8,
+    "line_count": 883,
+    "pdf_title": "Subject:",
+    "pdf_author": "Creator:         ABBYY FineReader",
+    "digest_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/digests/11OFqY5C0Xw2d3WBb_zK5F5OcORKmynz1.extracted.txt"
+  },
+  {
+    "id": "17mkfYPgWT_U6Rl0cCXlaKvDHqF7tlTaG",
+    "type": "aistudio_json",
+    "digest_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/digests/17mkfYPgWT_U6Rl0cCXlaKvDHqF7tlTaG__Yang-Baxter Proof Lean Formalization"
+  },
+  {
+    "id": "1A8UjB6R0iI3O3XZ-bCBPfibUMAsMDWU_",
+    "type": "pdf",
+    "pages": 14,
+    "empty_or_sparse_pages": 0,
+    "total_chars": 35146,
+    "avg_chars_per_page": 2510.4,
+    "line_count": 1109,
+    "pdf_title": "Subject:",
+    "pdf_author": "Creator:         LaTeX with hyperref",
+    "digest_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/digests/1A8UjB6R0iI3O3XZ-bCBPfibUMAsMDWU_.extracted.txt"
+  },
+  {
+    "id": "1FZW0sG5p1K92h-fUBiRsAmbZHvXSyeIv",
+    "type": "pdf",
+    "pages": 57,
+    "empty_or_sparse_pages": 0,
+    "total_chars": 172828,
+    "avg_chars_per_page": 3032.1,
+    "line_count": 3210,
+    "pdf_title": "",
+    "pdf_author": "",
+    "digest_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/digests/1FZW0sG5p1K92h-fUBiRsAmbZHvXSyeIv.extracted.txt"
+  },
+  {
+    "id": "1J4qNMVgwBiyAlOGBqlhhq788nOHJkXFa",
+    "type": "text",
+    "line_count": 193,
+    "total_chars": 35521,
+    "digest_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/digests/1J4qNMVgwBiyAlOGBqlhhq788nOHJkXFa.txt"
+  },
+  {
+    "id": "1JAxmRZBYqawnMzoLIti2WO161oiBNVr2",
+    "type": "pdf",
+    "pages": 395,
+    "empty_or_sparse_pages": 0,
+    "total_chars": 808051,
+    "avg_chars_per_page": 2045.7,
+    "line_count": 32374,
+    "pdf_title": "Notes on Seiberg-Witten Theory",
+    "pdf_author": "Liviu I. Nicolaescu",
+    "digest_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/digests/1JAxmRZBYqawnMzoLIti2WO161oiBNVr2.extracted.txt"
+  },
+  {
+    "id": "1YJh1_WVLfLEeQNqir8uHQwc7wlTEHxq6",
+    "type": "pdf",
+    "pages": 16,
+    "empty_or_sparse_pages": 0,
+    "total_chars": 36099,
+    "avg_chars_per_page": 2256.2,
+    "line_count": 1067,
+    "pdf_title": "",
+    "pdf_author": "",
+    "digest_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/digests/1YJh1_WVLfLEeQNqir8uHQwc7wlTEHxq6.extracted.txt"
+  },
+  {
+    "id": "1qvwokzs7vrRadDxopUMugP-zyThMqXnX",
+    "type": "text",
+    "line_count": 866,
+    "total_chars": 48914,
+    "digest_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/digests/1qvwokzs7vrRadDxopUMugP-zyThMqXnX.txt"
+  }
+]

@@ -12,9 +12,9 @@ import Mathlib.Tactic
 # Nambu–Lie 3-Algebra Matrix Obstructions (Sochichiu `arXiv:0806.3520v2`)
 
 Formalizes the matrix Nambu–Lie 3-commutator `[A, B, C]_N`, its reduction on a constant
-eigenspace of `T_D` and via the deformed Lie bracket (Sochichiu §2.2 & §2.4),
-the 3-algebra Schur's Lemma (Lemma 1: zero central/Casimir elements in any non-abelian
-representation), the constant-`T₄` quartic obstruction `t₄⁴ = -c₂` for Euclidean `A₄`,
+eigenspace of `T_D` and the universal deformed-bracket expansion (Sochichiu §2.2 & §2.4),
+the scalar-central consequence of the 3-algebra Schur argument (Lemma 1), the
+constant-`T₄` quartic obstruction `t₄⁴ = -c₂` for Euclidean `A₄`,
 the universal all-dimension `n × n` Hermitian no-go theorem proving every finite-dimensional
 Hermitian representation of Euclidean `A₄` is identically zero, and an explicit nonzero
 `2 × 2` Hermitian Pauli representation of Lorentzian `A_{3,1}` showing sharpness.
@@ -60,6 +60,21 @@ theorem nambu3_cyclic {R : Type*} [Ring R] (A B C : R) :
     nambu3 A B C = nambu3 B C A := by
   unfold nambu3
   noncomm_ring
+
+/-- Degenerate Euclidean `A₄` boundary in every finite matrix dimension:
+when the three generators of the induced `su(2)` sector vanish, the remaining
+Nambu equation `[T₁,T₂,T₃]_N = i T₄` holds exactly when `T₄` also vanishes.
+This isolates the trivial representation that is excluded by the nonzero-spin
+quartic obstruction. -/
+theorem euclidean_A4_zero_triple_forces_zero_fourth {n : ℕ}
+    (T₄ : Matrix (Fin n) (Fin n) ℂ) :
+    (nambu3 (0 : Matrix (Fin n) (Fin n) ℂ) 0 0 = I • T₄) ↔ T₄ = 0 := by
+  constructor
+  · intro h
+    have hI : I • T₄ = 0 := by simpa [nambu3] using h.symm
+    exact (smul_eq_zero.mp hI).resolve_left I_ne_zero
+  · intro hT₄
+    simp [hT₄, nambu3]
 
 /-- Sochichiu Eq. (2.7): on a scalar subspace `T_D = t • 1`, `[t • 1, X, Y]_N = t • [X, Y]`. -/
 theorem nambu3_smul_one_left {R A : Type*} [CommRing R] [Ring A] [Algebra R A]
@@ -115,9 +130,10 @@ theorem sochichiu_lemma1_central_mul {R : Type*} [Ring R] (A B X : R)
     _ = A * (B * X) - B * (A * X) := by rw [hXB, hXA]
     _ = (A * B - B * A) * X := by noncomm_ring
 
-/-- **Sochichiu Lemma 1 (3-Algebra Schur's Lemma)**:
-In any nontrivial algebra over a field `K`, any scalar central element `X = c • 1` that
-Nambu-commutes with a non-commuting pair `[A, B] ≠ 0` must vanish (`c = 0`). -/
+/-- Scalar-central consequence used in Sochichiu Lemma 1:
+if `X = c • 1` Nambu-commutes with a pair whose ordinary commutator is nonzero, then `c = 0`.
+This theorem formalizes that consequence after scalarity is assumed; it does not formalize the
+preceding representation-theoretic step that derives scalarity from irreducibility. -/
 theorem sochichiu_lemma1_scalar_zero {K A : Type*} [Field K] [Ring A] [Algebra K A]
     (c : K) (A₁ A₂ : A) (hNonAbelian : lieComm A₁ A₂ ≠ 0)
     (hCent : nambu3 A₁ A₂ (c • (1 : A)) = 0) :
@@ -194,6 +210,161 @@ theorem sochichiu_A4_no_real_eigenvalue (t₄ : ℂ) (c₂ : ℝ) (hc₂ : 0 < c
     rw [this]
     exact sq_nonneg (r ^ 2)
   linarith [hr4, hc₂, hre]
+
+/-- Exact real-sector signature and degenerate-case table for the quartic equation
+`(r : ℂ)^4 = -(c₂ : ℂ)`: the degenerate Casimir row is exactly `r = 0`, while
+every nonzero real sector has strictly negative `c₂`. This scalar consequence is
+applicable to the real-eigenvalue specialization of the `A₄` quartic obstruction. -/
+theorem sochichiu_A4_real_quartic_signature (r c₂ : ℝ)
+    (hq : (r : ℂ) ^ 4 = -(c₂ : ℂ)) :
+    (r = 0 ↔ c₂ = 0) ∧ (r ≠ 0 ↔ c₂ < 0) := by
+  have hqR : r ^ 4 = -c₂ := by exact_mod_cast hq
+  constructor
+  · constructor
+    · intro hr
+      rw [hr] at hqR
+      norm_num at hqR
+      exact hqR
+    · intro hc
+      rw [hc] at hqR
+      have hpow : (r ^ 2) * (r ^ 2) = 0 := by nlinarith [hqR]
+      rcases mul_eq_zero.mp hpow with h | h
+      · nlinarith [sq_nonneg r]
+      · nlinarith [sq_nonneg r]
+  · constructor
+    · intro hr
+      have hr2 : r ^ 2 ≠ 0 := pow_ne_zero 2 hr
+      have hr4pos : 0 < (r ^ 2) ^ 2 := sq_pos_of_ne_zero hr2
+      have hr4 : 0 < r ^ 4 := by nlinarith [hr4pos]
+      linarith
+    · intro hc hr
+      subst r
+      rw [zero_pow (by decide : 4 ≠ 0)] at hqR
+      linarith
+
+/-- Complete real sign classification for the scalar quartic constraint
+`k * r^4 = -c`.  If `k` is nonzero, the degenerate row is exactly `r = c = 0`,
+and every nonzero solution has `k * c < 0`; conversely that strict sign condition
+forces `r ≠ 0`.  The zero-coefficient row forces `c = 0` and leaves `r` unconstrained.
+This packages the Euclidean (`k = 1`) and sign-reversed (`k = -1`) scalar sectors
+without asserting a classification of arbitrary matrix representations. -/
+theorem real_quartic_coefficient_signature (r c k : ℝ) (h : k * r ^ 4 = -c) :
+    (k = 0 → c = 0) ∧
+    (k ≠ 0 → ((r = 0 ↔ c = 0) ∧ (r ≠ 0 ↔ k * c < 0))) := by
+  constructor
+  · intro hk
+    simp [hk] at h
+    linarith
+  · intro hk
+    constructor
+    · constructor
+      · intro hr
+        rw [hr] at h
+        norm_num at h ⊢
+        linarith
+      · intro hc
+        subst c
+        have hr4 : r ^ 4 = 0 :=
+          (mul_eq_zero.mp (by simpa using h)).resolve_left hk
+        have hr2 : r ^ 2 = 0 := by nlinarith [sq_nonneg (r ^ 2), hr4]
+        nlinarith [sq_nonneg r, hr2]
+    · constructor
+      · intro hr
+        have hr4pos : 0 < r ^ 4 := by
+          have hr2 : r ^ 2 ≠ 0 := pow_ne_zero 2 hr
+          have : 0 < (r ^ 2) ^ 2 := sq_pos_of_ne_zero hr2
+          nlinarith
+        have hkSq : 0 < k ^ 2 := sq_pos_of_ne_zero hk
+        have hprod : 0 < k ^ 2 * r ^ 4 := mul_pos hkSq hr4pos
+        have hc : c = -(k * r ^ 4) := by linarith [h]
+        calc
+          k * c = -(k ^ 2 * r ^ 4) := by rw [hc]; ring
+          _ < 0 := neg_neg_of_pos hprod
+      · intro hkc
+        intro hr
+        subst r
+        have hc : c = 0 := by simpa using h
+        subst c
+        simp at hkc
+
+/-- Spin-label classification of the real-eigenvalue branch of Sochichiu's
+Euclidean `A₄` quartic.  For an irreducible `su(2)` representation of dimension
+`d = 2j + 1`, its Casimir is `j(j+1) = (d^2 - 1)/4`; the equation
+`r^4 = -j(j+1)` has a real solution exactly in the trivial representation
+`d = 1` (`j = 0`), where the unique real solution is `r = 0`.  This classifies
+the scalar quartic constraint by spin label; it does not assert that every
+Nambu representation arises from this construction. -/
+theorem sochichiu_euclidean_spin_label_real_root_iff_trivial
+    (d : ℕ) (hd : 0 < d) :
+    (∃ r : ℝ,
+      (r : ℂ) ^ 4 = -((((d : ℝ) ^ 2 - 1) / 4 : ℝ) : ℂ)) ↔ d = 1 := by
+  constructor
+  · rintro ⟨r, hroot⟩
+    have hrootR : r ^ 4 = -(((d : ℝ) ^ 2 - 1) / 4) := by
+      exact_mod_cast hroot
+    by_contra hne
+    have hd2 : 2 ≤ d := by omega
+    have hdR : (2 : ℝ) ≤ (d : ℝ) := by exact_mod_cast hd2
+    have hcas : 0 < ((d : ℝ) ^ 2 - 1) / 4 := by nlinarith
+    have hr4 : 0 ≤ r ^ 4 := by positivity
+    linarith
+  · intro hd1
+    subst d
+    refine ⟨0, ?_⟩
+    norm_num
+
+/-- Every nonnegative real Casimir scalar admits a complex solution of the
+Euclidean quartic constraint.  Together with
+`sochichiu_A4_no_real_eigenvalue`, this gives the scalar-level signature split:
+positive Casimir requires a non-real fourth generator, while zero Casimir has
+the degenerate root zero. -/
+theorem exists_complex_euclidean_quartic_root (c : ℝ) (hc : 0 ≤ c) :
+    ∃ t : ℂ, t ^ 4 = -(c : ℂ) := by
+  let a : ℝ := Real.sqrt (Real.sqrt (c / 4))
+  have hc4 : 0 ≤ c / 4 := by positivity
+  have ha2 : a ^ 2 = Real.sqrt (c / 4) := by
+    dsimp [a]
+    exact Real.sq_sqrt (Real.sqrt_nonneg _)
+  have ha4 : a ^ 4 = c / 4 := by
+    have hsqrt : (Real.sqrt (c / 4)) ^ 2 = c / 4 := Real.sq_sqrt hc4
+    nlinarith [ha2, hsqrt]
+  have hI2 : (1 + Complex.I) ^ 2 = (2 : ℂ) * Complex.I := by
+    calc
+      (1 + Complex.I) ^ 2 = 1 + 2 * Complex.I + Complex.I * Complex.I := by ring
+      _ = (2 : ℂ) * Complex.I := by rw [Complex.I_mul_I]; ring
+  have hI4 : (1 + Complex.I) ^ 4 = (-4 : ℂ) := by
+    calc
+      (1 + Complex.I) ^ 4 = ((1 + Complex.I) ^ 2) ^ 2 := by ring
+      _ = ((2 : ℂ) * Complex.I) ^ 2 := by rw [hI2]
+      _ = -4 := by
+        calc
+          ((2 : ℂ) * Complex.I) ^ 2 = 4 * (Complex.I * Complex.I) := by ring
+          _ = -4 := by rw [Complex.I_mul_I]; norm_num
+  refine ⟨(a : ℂ) * (1 + Complex.I), ?_⟩
+  calc
+    ((a : ℂ) * (1 + Complex.I)) ^ 4 = (a : ℂ) ^ 4 * (1 + Complex.I) ^ 4 := by ring
+    _ = ((a ^ 4 : ℝ) : ℂ) * (1 + Complex.I) ^ 4 := by rw [← Complex.ofReal_pow]
+    _ = -((c : ℂ)) := by rw [ha4, hI4]; push_cast; ring
+
+/-- Exact real-root criterion for the sign-reversed quartic appearing after
+the Lorentzian sign flip: `r^4 = c` has a real solution precisely when
+`c` is nonnegative.  In particular every positive Casimir has a real scalar
+root in this scalar constraint. -/
+theorem exists_real_fourth_root_iff_nonneg (c : ℝ) :
+    (∃ r : ℝ, r ^ 4 = c) ↔ 0 ≤ c := by
+  constructor
+  · rintro ⟨r, hr⟩
+    rw [← hr]
+    positivity
+  · intro hc
+    let r : ℝ := Real.sqrt (Real.sqrt c)
+    have hr2 : r ^ 2 = Real.sqrt c := by
+      dsimp [r]
+      exact Real.sq_sqrt (Real.sqrt_nonneg c)
+    have hr4 : r ^ 4 = c := by
+      have hsqrt : (Real.sqrt c) ^ 2 = c := Real.sq_sqrt hc
+      nlinarith [hr2, hsqrt]
+    exact ⟨r, hr4⟩
 
 /-- **Universal Matrix Trace Identity for Alternating Nambu Brackets**:
 For arbitrary matrices `T₁, T₂, T₃, T₄` of any finite dimension `n`,

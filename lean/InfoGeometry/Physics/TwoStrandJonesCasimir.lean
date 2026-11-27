@@ -5,6 +5,8 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Physics.ChiralTensorRecoupling
+import InfoGeometry.Physics.ChiralMatrixRepresentation
 
 /-!
 # Two-strand Jones projector and spin Casimir
@@ -744,5 +746,464 @@ theorem pairingCompetitionHam_commutes_casimirs (g0 g1 : ℂ) :
       Algebra.mul_smul_comm, Algebra.mul_smul_comm, comm_ex_S0T1, comm_ex_S1T0]
 
 end TwoNucleonSpinIsospin
+
+section GeneralizedNStrandTL
+
+/-- Generalized `n`-strand spin-1/2 state space `(Fin n → Fin 2) → R` over any `[CommRing R]`. -/
+abbrev NStrandState (n : ℕ) (R : Type*) := (Fin n → Fin 2) → R
+
+/-- Endomorphism algebra on `NStrandState n R`. -/
+abbrev NStrandOperator (n : ℕ) (R : Type*) [CommRing R] :=
+  Module.End R (NStrandState n R)
+
+/-- Swap the values at two indices `a` and `b` of a bitstring `f : Fin n → Fin 2`. -/
+def swapStrandBits {n : ℕ} (a b : Fin n) (f : Fin n → Fin 2) : Fin n → Fin 2 :=
+  fun i => if i = a then f b else if i = b then f a else f i
+
+theorem swapStrandBits_involutive {n : ℕ} (a b : Fin n) (f : Fin n → Fin 2) :
+    swapStrandBits a b (swapStrandBits a b f) = f := by
+  funext i
+  by_cases hia : i = a
+  · subst hia
+    by_cases hab : i = b
+    · subst hab; simp [swapStrandBits]
+    · simp [swapStrandBits, Ne.symm hab]
+  · by_cases hib : i = b
+    · subst hib
+      simp [swapStrandBits, hia]
+    · simp [swapStrandBits, hia, hib]
+
+theorem swapStrandBits_eq_self_of_eq {n : ℕ} {a b : Fin n} (f : Fin n → Fin 2)
+    (heq : f a = f b) : swapStrandBits a b f = f := by
+  funext i
+  dsimp [swapStrandBits]
+  split_ifs with hia hib
+  · rw [hia, heq]
+  · rw [hib, heq]
+  · rfl
+
+theorem swapStrandBits_apply_left {n : ℕ} (a b : Fin n) (f : Fin n → Fin 2) :
+    swapStrandBits a b f a = f b := by
+  simp [swapStrandBits]
+
+theorem swapStrandBits_apply_right {n : ℕ} {a b : Fin n} (hab : a ≠ b)
+    (f : Fin n → Fin 2) : swapStrandBits a b f b = f a := by
+  simp [swapStrandBits, Ne.symm hab]
+
+theorem swapStrandBits_apply_other {n : ℕ} {a b i : Fin n} (hia : i ≠ a) (hib : i ≠ b)
+    (f : Fin n → Fin 2) : swapStrandBits a b f i = f i := by
+  simp [swapStrandBits, hia, hib]
+
+/-- Two-site swap operator `S_{ab}` on `NStrandState n R`. -/
+def strandSwap {n : ℕ} (R : Type*) [CommRing R] (a b : Fin n) : NStrandOperator n R where
+  toFun ψ f := ψ (swapStrandBits a b f)
+  map_add' ψ φ := by funext f; simp
+  map_smul' r ψ := by funext f; simp
+
+/-- Normalized `n`-strand singlet projector `P_{ab} = ⅟2 (1 - S_{ab})` over any
+`[CommRing R]` with `[Invertible (2 : R)]`. -/
+def strandSingletProj {n : ℕ} (R : Type*) [CommRing R] [Invertible (2 : R)]
+    (a b : Fin n) : NStrandOperator n R :=
+  ⅟(2 : R) • ((1 : NStrandOperator n R) - strandSwap R a b)
+
+/-- Temperley–Lieb generator `e_{ab} = 1 - S_{ab}` (`d = 2`) on `NStrandState n R`. -/
+def strandTLGen {n : ℕ} (R : Type*) [CommRing R] (a b : Fin n) : NStrandOperator n R :=
+  (1 : NStrandOperator n R) - strandSwap R a b
+
+/-- Triplet projector `1 - P_{ab}` on `NStrandState n R`. -/
+def strandTripletProj {n : ℕ} (R : Type*) [CommRing R] [Invertible (2 : R)]
+    (a b : Fin n) : NStrandOperator n R :=
+  (1 : NStrandOperator n R) - strandSingletProj R a b
+
+/-- Generalized two-site spin Casimir `S_{ab}^2 = 2 • 1 - e_{ab} = 2 • P_{trip}` on
+`NStrandState n R`. -/
+def strandSpinSquared {n : ℕ} (R : Type*) [CommRing R] (a b : Fin n) : NStrandOperator n R :=
+  (2 : R) • (1 : NStrandOperator n R) - strandTLGen R a b
+
+theorem strandSwap_sq {n : ℕ} (R : Type*) [CommRing R] (a b : Fin n) :
+    strandSwap R a b * strandSwap R a b = 1 := by
+  apply LinearMap.ext
+  intro ψ
+  funext f
+  change ψ (swapStrandBits a b (swapStrandBits a b f)) = ψ f
+  rw [swapStrandBits_involutive]
+
+theorem strandTLGen_sq {n : ℕ} (R : Type*) [CommRing R] (a b : Fin n) :
+    strandTLGen R a b * strandTLGen R a b = (2 : R) • strandTLGen R a b := by
+  unfold strandTLGen
+  simp only [sub_mul, mul_sub, one_mul, mul_one, strandSwap_sq, two_smul]
+  abel
+
+theorem strandSingletProj_idem {n : ℕ} (R : Type*) [CommRing R] [Invertible (2 : R)]
+    (a b : Fin n) :
+    strandSingletProj R a b * strandSingletProj R a b = strandSingletProj R a b := by
+  have htl : strandSingletProj R a b = ⅟(2 : R) • strandTLGen R a b := rfl
+  rw [htl, Algebra.mul_smul_comm, Algebra.smul_mul_assoc, strandTLGen_sq,
+    smul_smul, smul_smul, mul_assoc, invOf_mul_self, mul_one]
+
+theorem strandTripletProj_idem {n : ℕ} (R : Type*) [CommRing R] [Invertible (2 : R)]
+    (a b : Fin n) :
+    strandTripletProj R a b * strandTripletProj R a b = strandTripletProj R a b := by
+  unfold strandTripletProj
+  simp only [sub_mul, mul_sub, one_mul, mul_one, strandSingletProj_idem]
+  abel
+
+theorem strandSinglet_triplet_orthogonal {n : ℕ} (R : Type*) [CommRing R] [Invertible (2 : R)]
+    (a b : Fin n) :
+    strandSingletProj R a b * strandTripletProj R a b = 0 ∧
+      strandTripletProj R a b * strandSingletProj R a b = 0 := by
+  unfold strandTripletProj
+  constructor
+  · rw [mul_sub, mul_one, strandSingletProj_idem, sub_self]
+  · rw [sub_mul, one_mul, strandSingletProj_idem, sub_self]
+
+theorem strandSpinSquared_eq_two_triplet {n : ℕ} (R : Type*) [CommRing R] [Invertible (2 : R)]
+    (a b : Fin n) :
+    strandSpinSquared R a b = (2 : R) • strandTripletProj R a b := by
+  unfold strandSpinSquared strandTripletProj strandSingletProj strandTLGen
+  rw [smul_sub, smul_smul, mul_invOf_self, one_smul]
+
+theorem strandTLGen_apply {n : ℕ} (R : Type*) [CommRing R] {a b : Fin n}
+    (ψ : NStrandState n R) (f : Fin n → Fin 2) :
+    strandTLGen R a b ψ f = ψ f - ψ (swapStrandBits a b f) := by
+  unfold strandTLGen
+  rfl
+
+theorem strandTLGen_apply_eq {n : ℕ} (R : Type*) [CommRing R] {a b : Fin n}
+    (ψ : NStrandState n R) (f : Fin n → Fin 2) (h : f a = f b) :
+    strandTLGen R a b ψ f = 0 := by
+  rw [strandTLGen_apply, swapStrandBits_eq_self_of_eq f h, sub_self]
+
+/-- Generalized `TL_n(2)` contraction relation `e_{ab} * e_{bc} * e_{ab} = e_{ab}`
+for ANY three distinct strand indices `a, b, c : Fin n` over ANY `[CommRing R]`. -/
+theorem strandTLGen_contraction {n : ℕ} (R : Type*) [CommRing R]
+    {a b c : Fin n} (hab : a ≠ b) (hbc : b ≠ c) (hac : a ≠ c) :
+    strandTLGen R a b * strandTLGen R b c * strandTLGen R a b = strandTLGen R a b := by
+  apply LinearMap.ext
+  intro ψ
+  funext f
+  by_cases hfab : f a = f b
+  · have h1 : (strandTLGen R a b * strandTLGen R b c * strandTLGen R a b) ψ f =
+        strandTLGen R a b (strandTLGen R b c (strandTLGen R a b ψ)) f := rfl
+    rw [h1, strandTLGen_apply_eq R _ f hfab, strandTLGen_apply_eq R ψ f hfab]
+  · have hswap_ab : (swapStrandBits a b f) a ≠ (swapStrandBits a b f) b := by
+      rw [swapStrandBits_apply_left, swapStrandBits_apply_right hab]
+      exact Ne.symm hfab
+    have hf_two : ∀ x y : Fin 2, x ≠ y → (x = 0 ∧ y = 1) ∨ (x = 1 ∧ y = 0) := by
+      intro x y hxy; fin_cases x <;> fin_cases y <;> simp_all
+    have hbc_cases : (f c = f b) ∨ (f c = f a) := by
+      have ha2 := Fin.isLt (f a)
+      have hb2 := Fin.isLt (f b)
+      have hc2 := Fin.isLt (f c)
+      omega
+    have heval : ∀ g : Fin n → Fin 2, g a ≠ g b →
+        (strandTLGen R a b (strandTLGen R b c (strandTLGen R a b ψ))) g =
+          strandTLGen R a b ψ g := by
+      intro g hgab
+      have hgab_cases : g c = g b ∨ g c = g a := by
+        have hga := Fin.isLt (g a)
+        have hgb := Fin.isLt (g b)
+        have hgc := Fin.isLt (g c)
+        omega
+      change ((strandTLGen R b c (strandTLGen R a b ψ)) g -
+          (strandTLGen R b c (strandTLGen R a b ψ)) (swapStrandBits a b g)) =
+        ψ g - ψ (swapStrandBits a b g)
+      simp only [strandTLGen_apply]
+      rcases hgab_cases with hcb | hca
+      · have hgb_c : g b = g c := hcb.symm
+        rw [swapStrandBits_eq_self_of_eq g hgb_c, sub_self, zero_sub]
+        have hs2_eq : swapStrandBits b c (swapStrandBits a b g) a =
+            swapStrandBits b c (swapStrandBits a b g) b := by
+          rw [swapStrandBits_apply_other hab hac, swapStrandBits_apply_left,
+            swapStrandBits_apply_left, swapStrandBits_apply_other hac.symm hbc.symm, hgb_c]
+        have he_s2 : ψ (swapStrandBits b c (swapStrandBits a b g)) -
+            ψ (swapStrandBits a b (swapStrandBits b c (swapStrandBits a b g))) = 0 := by
+          rw [swapStrandBits_eq_self_of_eq _ hs2_eq, sub_self]
+        rw [he_s2, sub_zero, swapStrandBits_involutive]
+        abel
+      · have hs4_eq : swapStrandBits b c g a = swapStrandBits b c g b := by
+          rw [swapStrandBits_apply_other hab hac, swapStrandBits_apply_left, hca]
+        have he_s4 : ψ (swapStrandBits b c g) - ψ (swapStrandBits a b (swapStrandBits b c g)) = 0 := by
+          rw [swapStrandBits_eq_self_of_eq _ hs4_eq, sub_self]
+        have hs1_bc : swapStrandBits a b g b = swapStrandBits a b g c := by
+          rw [swapStrandBits_apply_right hab, swapStrandBits_apply_other hac.symm hbc.symm, hca]
+        rw [he_s4, sub_zero, swapStrandBits_eq_self_of_eq _ hs1_bc, sub_self, sub_zero]
+    exact heval f hfab
+
+/-- Generalized `TL_n(2)` far-commutativity: generators on disjoint pairs `{a, b}` and
+`{c, d}` commute over ANY `[CommRing R]`. -/
+theorem strandTLGen_comm_of_disjoint {n : ℕ} (R : Type*) [CommRing R]
+    {a b c d : Fin n} (hac : a ≠ c) (had : a ≠ d) (hbc : b ≠ c) (hbd : b ≠ d) :
+    strandTLGen R a b * strandTLGen R c d = strandTLGen R c d * strandTLGen R a b := by
+  have hswap_comm : ∀ f : Fin n → Fin 2,
+      swapStrandBits a b (swapStrandBits c d f) = swapStrandBits c d (swapStrandBits a b f) := by
+    intro f; funext i
+    dsimp [swapStrandBits]
+    by_cases hia : i = a
+    · subst hia
+      simp [hac, had, hbc, hbd]
+    · by_cases hib : i = b
+      · subst hib
+        simp [hia, hac, had, hbc, hbd]
+      · by_cases hic : i = c
+        · subst hic
+          simp [hia, hib, had.symm, hbd.symm]
+        · by_cases hid : i = d
+          · subst hid
+            simp [hia, hib, hic, hac.symm, hbc.symm]
+          · simp [hia, hib, hic, hid]
+  have hS_comm : strandSwap R a b * strandSwap R c d = strandSwap R c d * strandSwap R a b := by
+    apply LinearMap.ext
+    intro ψ
+    funext f
+    change ψ (swapStrandBits c d (swapStrandBits a b f)) =
+      ψ (swapStrandBits a b (swapStrandBits c d f))
+    rw [hswap_comm]
+  unfold strandTLGen
+  simp only [sub_mul, mul_sub, one_mul, mul_one, hS_comm]
+  abel
+
+end GeneralizedNStrandTL
+
+section ConcreteSpinPairTwoStrandBridge
+
+open ChiralTensorRecoupling
+open InfoGeometry.Physics.ChiralCausalCone
+
+private theorem leftAction_mul (A B : M2C) :
+    leftAction (A * B) = leftAction A * leftAction B := by
+  apply LinearMap.ext
+  intro ψ
+  funext i j
+  change ∑ k, (∑ m, A i m * B m k) * ψ k j = ∑ m, A i m * ∑ k, B m k * ψ k j
+  simp_rw [Finset.sum_mul, Finset.mul_sum, mul_assoc]
+  rw [Finset.sum_comm]
+
+private theorem leftAction_one : leftAction (1 : M2C) = 1 := by
+  apply LinearMap.ext
+  intro ψ
+  funext i j
+  change ∑ k, (1 : M2C) i k * ψ k j = ψ i j
+  simp [Matrix.one_apply]
+
+private theorem rightAction_mul (A B : M2C) :
+    rightAction (A * B) = rightAction A * rightAction B := by
+  apply LinearMap.ext
+  intro ψ
+  funext i j
+  change ∑ k, (∑ m, A j m * B m k) * ψ i k = ∑ m, A j m * ∑ k, B m k * ψ i k
+  simp_rw [Finset.sum_mul, Finset.mul_sum, mul_assoc]
+  rw [Finset.sum_comm]
+
+private theorem rightAction_one : rightAction (1 : M2C) = 1 := by
+  apply LinearMap.ext
+  intro ψ
+  funext i j
+  change ∑ k, (1 : M2C) j k * ψ i k = ψ i j
+  simp [Matrix.one_apply]
+
+private theorem leftAction_comm_rightAction (A B : M2C) :
+    leftAction A * rightAction B = rightAction B * leftAction A := by
+  apply LinearMap.ext
+  intro ψ
+  funext i j
+  change ∑ k, A i k * (∑ m, B j m * ψ k m) = ∑ m, B j m * (∑ k, A i k * ψ k m)
+  simp_rw [Finset.mul_sum]
+  rw [Finset.sum_comm]
+  refine Finset.sum_congr rfl fun m _ => Finset.sum_congr rfl fun k _ => ?_
+  ring
+
+/-- `M₂(ℂ) →ₐ[ℂ] TwoStrandOperator` via `leftAction`. -/
+def leftActionAlgHom : M2C →ₐ[ℂ] TwoStrandOperator where
+  toFun := leftAction
+  map_one' := leftAction_one
+  map_mul' := leftAction_mul
+  map_zero' := by
+    apply LinearMap.ext; intro ψ; funext i j
+    simp [leftAction]
+  map_add' A B := by
+    apply LinearMap.ext; intro ψ; funext i j
+    simp [leftAction, add_mul, Finset.sum_add_distrib]
+  commutes' r := by
+    rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one]
+    apply LinearMap.ext; intro ψ; funext i j
+    simp [leftAction, Matrix.one_apply]
+
+/-- `M₂(ℂ) →ₐ[ℂ] TwoStrandOperator` via `rightAction`. -/
+def rightActionAlgHom : M2C →ₐ[ℂ] TwoStrandOperator where
+  toFun := rightAction
+  map_one' := rightAction_one
+  map_mul' := rightAction_mul
+  map_zero' := by
+    apply LinearMap.ext; intro ψ; funext i j
+    simp [rightAction]
+  map_add' A B := by
+    apply LinearMap.ext; intro ψ; funext i j
+    simp [rightAction, add_mul, Finset.sum_add_distrib]
+  commutes' r := by
+    rw [Algebra.algebraMap_eq_smul_one, Algebra.algebraMap_eq_smul_one]
+    apply LinearMap.ext; intro ψ; funext i j
+    simp [rightAction, Matrix.one_apply]
+
+private def matUnit2 (a b : Fin 2) : M2C :=
+  fun i j => if i = a ∧ j = b then 1 else 0
+
+private lemma mat2c_eq_sum_matUnit2 (A : M2C) :
+    A = ∑ i : Fin 2, ∑ j : Fin 2, A i j • matUnit2 i j := by
+  ext p q
+  fin_cases p <;> fin_cases q <;> simp [matUnit2, Fin.sum_univ_two]
+
+private def basisTwoStrandState (k l : Fin 2) : TwoStrandState :=
+  fun i j => if i = k ∧ j = l then 1 else 0
+
+private lemma twoStrandState_eq_sum_basis (ψ : TwoStrandState) :
+    ψ = ∑ k : Fin 2, ∑ l : Fin 2, ψ k l • basisTwoStrandState k l := by
+  funext i j
+  fin_cases i <;> fin_cases j <;> simp [basisTwoStrandState, Fin.sum_univ_two]
+
+private def spinPairToTwoStrandHom :
+    ChiralTensorRecoupling.SpinPair →ₐ[ℂ] TwoStrandOperator :=
+  Algebra.TensorProduct.lift leftActionAlgHom rightActionAlgHom
+    leftAction_comm_rightAction
+
+private lemma spinPairToTwoStrandHom_tmul (A B : M2C) :
+    spinPairToTwoStrandHom (A ⊗ₜ[ℂ] B) = leftAction A * rightAction B :=
+  Algebra.TensorProduct.lift_tmul leftActionAlgHom rightActionAlgHom
+    leftAction_comm_rightAction A B
+
+private def twoStrandToSpinPair (T : TwoStrandOperator) : ChiralTensorRecoupling.SpinPair :=
+  ∑ i₁ : Fin 2, ∑ j₁ : Fin 2, ∑ i₂ : Fin 2, ∑ j₂ : Fin 2,
+    (T (basisTwoStrandState j₁ j₂) i₁ i₂) • (matUnit2 i₁ j₁ ⊗ₜ[ℂ] matUnit2 i₂ j₂)
+
+private def twoStrandToSpinPairLin : TwoStrandOperator →ₗ[ℂ] ChiralTensorRecoupling.SpinPair where
+  toFun := twoStrandToSpinPair
+  map_add' T₁ T₂ := by
+    simp [twoStrandToSpinPair, add_smul, Finset.sum_add_distrib]
+  map_smul' c T := by
+    simp [twoStrandToSpinPair, smul_smul]
+
+private lemma twoStrandToSpinPair_leftInv (x : ChiralTensorRecoupling.SpinPair) :
+    twoStrandToSpinPair (spinPairToTwoStrandHom x) = x := by
+  have hEq : twoStrandToSpinPairLin.comp spinPairToTwoStrandHom.toLinearMap =
+      (LinearMap.id : ChiralTensorRecoupling.SpinPair →ₗ[ℂ] ChiralTensorRecoupling.SpinPair) := by
+    apply TensorProduct.ext'
+    intro A B
+    change twoStrandToSpinPair (spinPairToTwoStrandHom (A ⊗ₜ[ℂ] B)) = A ⊗ₜ[ℂ] B
+    rw [spinPairToTwoStrandHom_tmul]
+    unfold twoStrandToSpinPair
+    have hEntry : ∀ i₁ j₁ i₂ j₂ : Fin 2,
+        (leftAction A * rightAction B) (basisTwoStrandState j₁ j₂) i₁ i₂ =
+          A i₁ j₁ * B i₂ j₂ := by
+      intro i₁ j₁ i₂ j₂
+      change ∑ k : Fin 2, A i₁ k * (∑ m : Fin 2, B i₂ m * basisTwoStrandState j₁ j₂ k m) =
+        A i₁ j₁ * B i₂ j₂
+      fin_cases j₁ <;> fin_cases j₂ <;>
+        simp [basisTwoStrandState, Fin.sum_univ_two]
+    simp_rw [hEntry]
+    have hFactor : ∀ i₁ j₁ i₂ j₂ : Fin 2,
+        (A i₁ j₁ * B i₂ j₂) • (matUnit2 i₁ j₁ ⊗ₜ[ℂ] matUnit2 i₂ j₂) =
+          (A i₁ j₁ • matUnit2 i₁ j₁) ⊗ₜ[ℂ] (B i₂ j₂ • matUnit2 i₂ j₂) := by
+      intro i₁ j₁ i₂ j₂
+      rw [TensorProduct.smul_tmul_smul]
+    simp_rw [hFactor]
+    have hSwap :
+        (∑ i₁ : Fin 2, ∑ j₁ : Fin 2, ∑ i₂ : Fin 2, ∑ j₂ : Fin 2,
+          (A i₁ j₁ • matUnit2 i₁ j₁) ⊗ₜ[ℂ] (B i₂ j₂ • matUnit2 i₂ j₂)) =
+          (∑ i₁ : Fin 2, ∑ j₁ : Fin 2, A i₁ j₁ • matUnit2 i₁ j₁) ⊗ₜ[ℂ]
+            (∑ i₂ : Fin 2, ∑ j₂ : Fin 2, B i₂ j₂ • matUnit2 i₂ j₂) := by
+      simp_rw [← TensorProduct.tmul_sum, ← TensorProduct.sum_tmul]
+    rw [hSwap, ← mat2c_eq_sum_matUnit2 A, ← mat2c_eq_sum_matUnit2 B]
+  exact congrArg (fun L : ChiralTensorRecoupling.SpinPair →ₗ[ℂ] ChiralTensorRecoupling.SpinPair => L x)
+    hEq
+
+private lemma twoStrandToSpinPair_rightInv (T : TwoStrandOperator) :
+    spinPairToTwoStrandHom (twoStrandToSpinPair T) = T := by
+  apply LinearMap.ext
+  intro ψ
+  funext l₁ l₂
+  unfold twoStrandToSpinPair
+  simp only [map_sum, map_smul, spinPairToTwoStrandHom_tmul, LinearMap.sum_apply,
+    LinearMap.smul_apply, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+  have hPsi : ψ = ∑ k₁ : Fin 2, ∑ k₂ : Fin 2, ψ k₁ k₂ • basisTwoStrandState k₁ k₂ :=
+    twoStrandState_eq_sum_basis ψ
+  have hBasis : ∀ i₁ j₁ i₂ j₂ : Fin 2,
+      (leftAction (matUnit2 i₁ j₁) * rightAction (matUnit2 i₂ j₂)) ψ l₁ l₂ =
+        if l₁ = i₁ ∧ l₂ = i₂ then ψ j₁ j₂ else 0 := by
+    intro i₁ j₁ i₂ j₂
+    change ∑ k : Fin 2, matUnit2 i₁ j₁ l₁ k * (∑ m : Fin 2, matUnit2 i₂ j₂ l₂ m * ψ k m) =
+      if l₁ = i₁ ∧ l₂ = i₂ then ψ j₁ j₂ else 0
+    fin_cases i₁ <;> fin_cases j₁ <;> fin_cases i₂ <;> fin_cases j₂ <;>
+      fin_cases l₁ <;> fin_cases l₂ <;>
+      simp [matUnit2]
+  simp_rw [hBasis]
+  have hSum : (∑ i₁ : Fin 2, ∑ j₁ : Fin 2, ∑ i₂ : Fin 2, ∑ j₂ : Fin 2,
+      T (basisTwoStrandState j₁ j₂) i₁ i₂ * (if l₁ = i₁ ∧ l₂ = i₂ then ψ j₁ j₂ else 0)) =
+      ∑ j₁ : Fin 2, ∑ j₂ : Fin 2, ψ j₁ j₂ * T (basisTwoStrandState j₁ j₂) l₁ l₂ := by
+    fin_cases l₁ <;> fin_cases l₂ <;>
+      simp [Fin.sum_univ_two] <;> ring
+  rw [hSum]
+  conv_rhs => rw [hPsi]
+  simp only [map_sum, map_smul, Finset.sum_apply, Pi.smul_apply, smul_eq_mul]
+
+/-- Exact `ℂ`-algebra isomorphism `ChiralTensorRecoupling.SpinPair ≃ₐ[ℂ] TwoStrandOperator`
+sending `A ⊗ₜ B ↦ leftAction A * rightAction B`. -/
+def spinPairEquivTwoStrandOperator :
+    ChiralTensorRecoupling.SpinPair ≃ₐ[ℂ] TwoStrandOperator :=
+  AlgEquiv.ofBijective spinPairToTwoStrandHom
+    ⟨Function.LeftInverse.injective twoStrandToSpinPair_leftInv,
+     Function.RightInverse.surjective twoStrandToSpinPair_rightInv⟩
+
+theorem spinPairEquivTwoStrandOperator_tmul (A B : M2C) :
+    spinPairEquivTwoStrandOperator (A ⊗ₜ[ℂ] B) = leftAction A * rightAction B := by
+  dsimp [spinPairEquivTwoStrandOperator]
+  exact spinPairToTwoStrandHom_tmul A B
+
+/-- Exact transport theorem: `singletProjSpinPair` (from `ChiralTensorRecoupling`, conjugated by
+`σ₃ ⊗ 1` from `e`) maps literally to `TwoStrandJonesCasimir.singletProjector`! -/
+theorem spinPairEquivTwoStrandOperator_singletProj :
+    spinPairEquivTwoStrandOperator singletProjSpinPair = singletProjector := by
+  apply LinearMap.ext
+  intro ψ
+  funext i j
+  unfold singletProjSpinPair singletDoubleSpinPair X Y Z
+  simp only [map_smul, map_add, map_sub, map_neg, spinPairEquivTwoStrandOperator_tmul]
+  fin_cases i <;> fin_cases j <;>
+    simp [singletProjector, leftAction, rightAction, σPlus, σMinus, σ3c,
+      Fin.sum_univ_two] <;> ring
+
+theorem spinPairEquivTwoStrandOperator_singletDouble :
+    spinPairEquivTwoStrandOperator singletDoubleSpinPair = (2 : ℂ) • singletProjector := by
+  rw [← spinPairEquivTwoStrandOperator_singletProj]
+  have h : singletDoubleSpinPair = (2 : ℂ) • singletProjSpinPair := by
+    unfold singletProjSpinPair
+    rw [smul_smul]; norm_num
+  rw [h, map_smul]
+
+theorem spinPairEquivTwoStrandOperator_e :
+    spinPairEquivTwoStrandOperator e =
+      leftAction σ3c * ((2 : ℂ) • singletProjector) * leftAction σ3c := by
+  have he : e = (σ3c ⊗ₜ[ℂ] (1 : M2C)) * singletDoubleSpinPair * (σ3c ⊗ₜ[ℂ] (1 : M2C)) := by
+    rw [← sigma3_conj_e_eq_singletDouble]
+    have hS : (σ3c ⊗ₜ[ℂ] (1 : M2C)) * (σ3c ⊗ₜ[ℂ] (1 : M2C)) = 1 := by
+      have h3 : σ3c * σ3c = 1 := by
+        ext i j; fin_cases i <;> fin_cases j <;> simp [σ3c, Matrix.mul_apply, Fin.sum_univ_two]
+      rw [Algebra.TensorProduct.tmul_mul_tmul, h3, mul_one]
+      exact Algebra.TensorProduct.one_def.symm
+    calc
+      e = 1 * e * 1 := by rw [one_mul, mul_one]
+      _ = ((σ3c ⊗ₜ[ℂ] (1 : M2C)) * (σ3c ⊗ₜ[ℂ] (1 : M2C))) * e *
+            ((σ3c ⊗ₜ[ℂ] (1 : M2C)) * (σ3c ⊗ₜ[ℂ] (1 : M2C))) := by rw [hS]
+      _ = (σ3c ⊗ₜ[ℂ] (1 : M2C)) *
+            ((σ3c ⊗ₜ[ℂ] (1 : M2C)) * e * (σ3c ⊗ₜ[ℂ] (1 : M2C))) *
+            (σ3c ⊗ₜ[ℂ] (1 : M2C)) := by simp only [mul_assoc]
+  rw [he, map_mul, map_mul, spinPairEquivTwoStrandOperator_tmul, rightAction_one, mul_one,
+    spinPairEquivTwoStrandOperator_singletDouble]
+
+theorem spinPairEquivTwoStrandOperator_zeroLoop_sq :
+    spinPairEquivTwoStrandOperator zeroLoopSpinPair *
+      spinPairEquivTwoStrandOperator zeroLoopSpinPair = 0 := by
+  rw [← map_mul, zeroLoopSpinPair_sq, map_zero]
+
+end ConcreteSpinPairTwoStrandBridge
 
 end InfoGeometry.Physics.TwoStrandJonesCasimir

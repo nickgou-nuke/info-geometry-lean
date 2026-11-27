@@ -41,6 +41,7 @@ from tools.infra.arango_env import (
     arango_password,
     load_repo_arango_env,
 )
+from tools.infra.decl_graph_generation import validate_generation_id, validate_generation_metadata
 from igf.graph.decl_schema import decl_key, edge_key
 
 
@@ -49,6 +50,9 @@ def stream_to_arango(
     generation_id: str | None = None, build_fingerprint: str | None = None,
 ) -> int:
     """Stream JSONL from dagIndexer directly to ArangoDB."""
+    if generation_id is not None:
+        validate_generation_id(generation_id)
+        validate_generation_metadata(build_fingerprint, import_root, namespace)
     load_repo_arango_env(root)
 
     # Build the streaming command
@@ -320,13 +324,14 @@ def main() -> int:
 def _run_refresh(args: argparse.Namespace, root: Path, build_lock: BuildLock) -> int:
     # Streaming mode: pipe directly to ArangoDB
     if args.stream:
-        if args.generation_id and not args.build_fingerprint:
-            raise SystemExit("--build-fingerprint is required with --generation-id")
-        if args.generation_id and (
-            len(args.generation_id) > 32
-            or not all(ch.isalnum() or ch in "_-" for ch in args.generation_id)
-        ):
-            raise SystemExit("--generation-id must be at most 32 letters, digits, '_' or '-'")
+        if args.generation_id is not None:
+            try:
+                validate_generation_id(args.generation_id)
+                validate_generation_metadata(
+                    args.build_fingerprint, args.import_root, args.namespace,
+                )
+            except ValueError as exc:
+                raise SystemExit(str(exc)) from exc
         return stream_to_arango(
             root, args.import_root, args.namespace, args.arango_db, args.run_mode,
             args.generation_id, args.build_fingerprint,

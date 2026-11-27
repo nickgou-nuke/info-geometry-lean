@@ -7,6 +7,7 @@ Authors: InfoGeometry Engine Contributors
 import InfoGeometry.Analysis.LieExponentialTraceDeterminant
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Algebra.NoncommutativeTetraktysFlows
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.BerryKeating
 import InfoGeometry.Canonical.RelativeSurprisalJacobianCocycleBridge
 
 /-!
@@ -230,5 +231,71 @@ theorem lieFlowJacobianSurprisal_neg_gram_nonneg
     0 ≤ lieFlowJacobianSurprisal (-(Aᵀ * A)) t := by
   rw [lieFlowJacobianSurprisal_eq_neg_trace, Matrix.trace_neg, mul_neg, neg_neg]
   exact mul_nonneg ht (trace_transpose_mul_self_nonneg A)
+
+/-! ### Symmetrized `xp` Dilaton vs. Antisymmetric Commutator Log-Jacobian Separation -/
+
+section XPDilatonLogJacobian
+
+open InfoGeometry.Arithmetic.MajoranaPolyaHilbert
+
+/-- The trace of `finiteSymmetrizedDilation x p` equals `Matrix.trace (x * p)` for all `n`. -/
+theorem trace_finiteSymmetrizedDilation (x p : Matrix (Fin n) (Fin n) ℝ) :
+    Matrix.trace (finiteSymmetrizedDilation x p) = Matrix.trace (x * p) := by
+  dsimp [finiteSymmetrizedDilation]
+  rw [Matrix.trace_smul, Matrix.trace_add, Matrix.trace_mul_comm p x, smul_eq_mul]
+  ring
+
+/-- The symmetric `xp` dilaton carries the full log-Jacobian rate `t * Matrix.trace (x * p)`. -/
+theorem lieFlowLogJacobian_finiteSymmetrizedDilation
+    (x p : Matrix (Fin n) (Fin n) ℝ) (t : ℝ) :
+    lieFlowLogJacobian (finiteSymmetrizedDilation x p) t = t * Matrix.trace (x * p) := by
+  rw [lieFlowLogJacobian_eq_trace, trace_finiteSymmetrizedDilation]
+
+/-- The log-Jacobian of `x * p` equals that of `finiteSymmetrizedDilation x p`. -/
+theorem lieFlowLogJacobian_xp_eq_finiteSymmetrizedDilation
+    (x p : Matrix (Fin n) (Fin n) ℝ) (t : ℝ) :
+    lieFlowLogJacobian (x * p) t = lieFlowLogJacobian (finiteSymmetrizedDilation x p) t := by
+  rw [lieFlowLogJacobian_eq_trace, lieFlowLogJacobian_finiteSymmetrizedDilation]
+
+/-- The antisymmetric commutator channel `antisymComm x p = x * p - p * x` is strictly isochoric. -/
+theorem lieFlowLogJacobian_antisymComm_eq_zero
+    (x p : Matrix (Fin n) (Fin n) ℝ) (t : ℝ) :
+    lieFlowLogJacobian (antisymComm x p) t = 0 := by
+  rw [lieFlowLogJacobian_eq_trace, antisymComm, Matrix.trace_sub,
+    Matrix.trace_mul_comm p x, sub_self, mul_zero]
+
+/-- For symmetric matrices `xᵀ = x` and `pᵀ = p`, `symPart (x * p)` matches
+`finiteSymmetrizedDilation x p`. -/
+theorem symPart_xp_eq_finiteSymmetrizedDilation
+    (x p : Matrix (Fin n) (Fin n) ℝ) (hx : xᵀ = x) (hp : pᵀ = p) :
+    symPart (x * p) = finiteSymmetrizedDilation x p := by
+  dsimp [symPart, finiteSymmetrizedDilation]
+  rw [Matrix.transpose_mul, hx, hp]
+
+/-- For symmetric matrices `xᵀ = x` and `pᵀ = p`, `antisymPart (x * p)` matches
+`(1 / 2 : ℝ) • antisymComm x p`. -/
+theorem antisymPart_xp_eq_half_antisymComm
+    (x p : Matrix (Fin n) (Fin n) ℝ) (hx : xᵀ = x) (hp : pᵀ = p) :
+    antisymPart (x * p) = (1 / 2 : ℝ) • antisymComm x p := by
+  dsimp [antisymPart, antisymComm]
+  rw [Matrix.transpose_mul, hx, hp]
+
+/-- The real Tetraktys generator built from `(symDilaton2 x p, antisymComm x p, cOmega)`
+preserves logarithmic volume identically. -/
+theorem tetraktys_xp_flowGen_lieFlowLogJacobian (x p cOmega t : ℝ) :
+    lieFlowLogJacobian (flowGen (symDilaton2 x p) (antisymComm x p) cOmega) t = 0 := by
+  rw [lieFlowLogJacobian_eq_trace, tetraktys_flowGen_trace_zero, mul_zero]
+
+/-- Adding the central scalar `Matrix.trace (finiteSymmetrizedDilation x p)` to the Tetraktys
+`xp` flow shifts its log-Jacobian rate by `2 * Matrix.trace (x * p)`. -/
+theorem tetraktys_xp_dilaton_lieFlowLogJacobian
+    (x p : Matrix (Fin n) (Fin n) ℝ) (c1 c2 cOmega t : ℝ) :
+    lieFlowLogJacobian
+        (fiberEmbed (Matrix.trace (finiteSymmetrizedDilation x p)) +
+          flowGen (symDilaton2 c1 c2) (antisymComm c1 c2) cOmega) t =
+      t * (2 * Matrix.trace (x * p)) := by
+  rw [tetraktys_dilaton_lieFlowLogJacobian, trace_finiteSymmetrizedDilation]
+
+end XPDilatonLogJacobian
 
 end InfoGeometry.Analysis.LieFlowLogJacobianBridge

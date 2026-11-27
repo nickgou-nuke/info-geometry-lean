@@ -154,7 +154,7 @@ def H (a : Fin 5) : MatStage 5 := E a a
 theorem H_eq_half_bracket (a : Fin 5) :
     H a = (1 / 2 : ℝ) • (e a * f a - f a * e a) := by
   dsimp [H, E, e, f]
-  simp only [if_true]
+  simp only [ite_true]
   have h_car : creation a * annihilation a + annihilation a * creation a = 1 :=
     creation_annihilation_same_site a
   have h_swap : annihilation a * creation a = 1 - creation a * annihilation a := by
@@ -382,9 +382,9 @@ theorem dihedralCartanReadout_creation (u : Fin 5 → ℝ) (b : Fin 5) :
   dsimp [dihedralCartanReadout]
   rw [bracket_sum_left]
   rw [Finset.sum_eq_single b]
-  · rw [H_creation b b, if_pos rfl]
+  · rw [H_creation b b]; simp only [↓reduceIte]
   · intro x _ hxb
-    rw [H_creation x b, if_neg hxb, smul_zero]
+    rw [H_creation x b]; simp only [hxb, ↓reduceIte, smul_zero]
   · intro hb
     exact (hb (Finset.mem_univ b)).elim
 
@@ -394,9 +394,9 @@ theorem dihedralCartanReadout_annihilation (u : Fin 5 → ℝ) (b : Fin 5) :
   dsimp [dihedralCartanReadout]
   rw [bracket_sum_left]
   rw [Finset.sum_eq_single b]
-  · rw [H_annihilation b b, if_pos rfl, smul_neg]
+  · rw [H_annihilation b b]; simp only [↓reduceIte, smul_neg]
   · intro x _ hxb
-    rw [H_annihilation x b, if_neg hxb, smul_zero]
+    rw [H_annihilation x b]; simp only [hxb, ↓reduceIte, smul_zero]
   · intro hb
     exact (hb (Finset.mem_univ b)).elim
 
@@ -2350,5 +2350,1096 @@ Proves simultaneously:
   · exact dihedralCartanReadout_comm u v
   · exact dihedralCartanReadout_creation u b
   · exact dihedralCartanReadout_annihilation u b -/
+
+/-! ## 16. Generalized `[Ring R]` 3-Color + 2-Weak CAR Architecture & Exact `MatStage 5` Traces -/
+
+section GeneralizedThreeColorTwoWeakFock
+
+/-- Abstract 5-mode Canonical Anticommutation Relations (`3` color + `2` weak/pairing modes)
+over an arbitrary associative ring `R`. -/
+structure ThreeColorTwoWeakCAR (R : Type*) [Ring R] where
+  e : Fin 5 → R
+  f : Fin 5 → R
+  e_sq : ∀ a : Fin 5, e a * e a = 0
+  f_sq : ∀ a : Fin 5, f a * f a = 0
+  e_anticomm : ∀ a b : Fin 5, e a * e b + e b * e a = 0
+  f_anticomm : ∀ a b : Fin 5, f a * f b + f b * f a = 0
+  ef_car : ∀ a b : Fin 5, e a * f b + f b * e a = if a = b then (1 : R) else 0
+
+namespace ThreeColorTwoWeakCAR
+
+variable {R : Type*} [Ring R] (C : ThreeColorTwoWeakCAR R)
+
+def numOp (a : Fin 5) : R := C.e a * C.f a
+def vacOp (a : Fin 5) : R := C.f a * C.e a
+
+theorem numOp_add_vacOp (a : Fin 5) : C.numOp a + C.vacOp a = 1 := by
+  simpa [numOp, vacOp] using C.ef_car a a
+
+theorem vacOp_eq_one_sub_numOp (a : Fin 5) : C.vacOp a = 1 - C.numOp a := by
+  have h := C.numOp_add_vacOp a
+  exact eq_sub_of_add_eq' h
+
+theorem numOp_idem (a : Fin 5) : C.numOp a * C.numOp a = C.numOp a := by
+  have hcar : C.f a * C.e a = 1 - C.numOp a := C.vacOp_eq_one_sub_numOp a
+  calc
+    C.numOp a * C.numOp a = C.e a * (C.f a * C.e a) * C.f a := by
+      dsimp [numOp]; simp only [mul_assoc]
+    _ = C.e a * (1 - C.numOp a) * C.f a := by rw [hcar]
+    _ = C.e a * C.f a - C.e a * C.e a * C.f a * C.f a := by
+      dsimp [numOp]; noncomm_ring
+    _ = C.numOp a := by rw [C.e_sq a]; simp [numOp]
+
+theorem numOp_mul_vacOp (a : Fin 5) : C.numOp a * C.vacOp a = 0 := by
+  rw [vacOp_eq_one_sub_numOp, mul_sub, mul_one, C.numOp_idem, sub_self]
+
+theorem vacOp_mul_numOp (a : Fin 5) : C.vacOp a * C.numOp a = 0 := by
+  rw [vacOp_eq_one_sub_numOp, sub_mul, one_mul, C.numOp_idem, sub_self]
+
+theorem vacOp_idem (a : Fin 5) : C.vacOp a * C.vacOp a = C.vacOp a := by
+  rw [vacOp_eq_one_sub_numOp]
+  calc
+    (1 - C.numOp a) * (1 - C.numOp a) = 1 - C.numOp a - C.numOp a + C.numOp a * C.numOp a := by
+      noncomm_ring
+    _ = 1 - C.numOp a := by rw [C.numOp_idem]; noncomm_ring
+
+theorem e_comm_f_ne {a b : Fin 5} (hab : a ≠ b) : C.e a * C.f b = - (C.f b * C.e a) := by
+  have h : C.e a * C.f b + C.f b * C.e a = 0 := by simpa [hab] using C.ef_car a b
+  exact eq_neg_of_add_eq_zero_left h
+
+theorem e_comm_e (a b : Fin 5) : C.e a * C.e b = - (C.e b * C.e a) := by
+  have h := C.e_anticomm a b
+  exact eq_neg_of_add_eq_zero_left h
+
+theorem f_comm_f (a b : Fin 5) : C.f a * C.f b = - (C.f b * C.f a) := by
+  have h := C.f_anticomm a b
+  exact eq_neg_of_add_eq_zero_left h
+
+theorem e_mul_numOp_same (a : Fin 5) : C.e a * C.numOp a = 0 := by
+  calc
+    C.e a * C.numOp a = (C.e a * C.e a) * C.f a := by simp only [numOp, mul_assoc]
+    _ = 0 := by rw [C.e_sq a, zero_mul]
+
+theorem numOp_mul_e_same (a : Fin 5) : C.numOp a * C.e a = C.e a := by
+  calc
+    C.numOp a * C.e a = C.e a * (C.f a * C.e a) := by simp only [numOp, mul_assoc]
+    _ = C.e a * (1 - C.numOp a) := by rw [← C.vacOp_eq_one_sub_numOp]; rfl
+    _ = C.e a - C.e a * C.numOp a := by noncomm_ring
+    _ = C.e a := by rw [C.e_mul_numOp_same, sub_zero]
+
+theorem e_mul_vacOp_same (a : Fin 5) : C.e a * C.vacOp a = C.e a := by
+  rw [vacOp_eq_one_sub_numOp, mul_sub, mul_one, C.e_mul_numOp_same, sub_zero]
+
+theorem vacOp_mul_e_same (a : Fin 5) : C.vacOp a * C.e a = 0 := by
+  calc
+    C.vacOp a * C.e a = C.f a * (C.e a * C.e a) := by simp only [vacOp, mul_assoc]
+    _ = 0 := by rw [C.e_sq a, mul_zero]
+
+theorem f_mul_vacOp_same (a : Fin 5) : C.f a * C.vacOp a = 0 := by
+  calc
+    C.f a * C.vacOp a = (C.f a * C.f a) * C.e a := by simp only [vacOp, mul_assoc]
+    _ = 0 := by rw [C.f_sq a, zero_mul]
+
+theorem vacOp_mul_f_same (a : Fin 5) : C.vacOp a * C.f a = C.f a := by
+  calc
+    C.vacOp a * C.f a = C.f a * (C.e a * C.f a) := by simp only [vacOp, mul_assoc]
+    _ = C.f a * C.numOp a := rfl
+    _ = C.f a * (1 - C.vacOp a) := by
+      have h : C.numOp a = 1 - C.vacOp a := eq_sub_of_add_eq (C.numOp_add_vacOp a)
+      rw [h]
+    _ = C.f a - C.f a * C.vacOp a := by noncomm_ring
+    _ = C.f a := by rw [C.f_mul_vacOp_same, sub_zero]
+
+theorem f_mul_numOp_same (a : Fin 5) : C.f a * C.numOp a = C.f a := by
+  have h : C.numOp a = 1 - C.vacOp a := eq_sub_of_add_eq (C.numOp_add_vacOp a)
+  rw [h, mul_sub, mul_one, C.f_mul_vacOp_same, sub_zero]
+
+theorem numOp_mul_f_same (a : Fin 5) : C.numOp a * C.f a = 0 := by
+  calc
+    C.numOp a * C.f a = C.e a * (C.f a * C.f a) := by simp only [numOp, mul_assoc]
+    _ = 0 := by rw [C.f_sq a, mul_zero]
+
+theorem numOp_comm_e_ne {a b : Fin 5} (hab : a ≠ b) : C.numOp a * C.e b = C.e b * C.numOp a := by
+  dsimp [numOp]
+  calc
+    (C.e a * C.f a) * C.e b = C.e a * (C.f a * C.e b) := mul_assoc _ _ _
+    _ = C.e a * (- (C.e b * C.f a)) := by rw [C.e_comm_f_ne hab.symm]; simp
+    _ = - ((C.e a * C.e b) * C.f a) := by noncomm_ring
+    _ = - ((- (C.e b * C.e a)) * C.f a) := by rw [C.e_comm_e a b]
+    _ = C.e b * (C.e a * C.f a) := by noncomm_ring
+
+theorem vacOp_comm_e_ne {a b : Fin 5} (hab : a ≠ b) : C.vacOp a * C.e b = C.e b * C.vacOp a := by
+  rw [vacOp_eq_one_sub_numOp, sub_mul, one_mul, mul_sub, mul_one, C.numOp_comm_e_ne hab]
+
+theorem numOp_comm_f_ne {a b : Fin 5} (hab : a ≠ b) : C.numOp a * C.f b = C.f b * C.numOp a := by
+  dsimp [numOp]
+  calc
+    (C.e a * C.f a) * C.f b = C.e a * (C.f a * C.f b) := mul_assoc _ _ _
+    _ = C.e a * (- (C.f b * C.f a)) := by rw [C.f_comm_f a b]
+    _ = - ((C.e a * C.f b) * C.f a) := by noncomm_ring
+    _ = - ((- (C.f b * C.e a)) * C.f a) := by rw [C.e_comm_f_ne hab]
+    _ = C.f b * (C.e a * C.f a) := by noncomm_ring
+
+theorem vacOp_comm_f_ne {a b : Fin 5} (hab : a ≠ b) : C.vacOp a * C.f b = C.f b * C.vacOp a := by
+  rw [vacOp_eq_one_sub_numOp, sub_mul, one_mul, mul_sub, mul_one, C.numOp_comm_f_ne hab]
+
+theorem numOp_comm (a b : Fin 5) : C.numOp a * C.numOp b = C.numOp b * C.numOp a := by
+  by_cases h : a = b
+  · subst b; rfl
+  · dsimp [numOp]
+    calc
+      (C.e a * C.f a) * (C.e b * C.f b)
+          = ((C.e a * C.f a) * C.e b) * C.f b := by simp only [mul_assoc]
+      _ = (C.e b * (C.e a * C.f a)) * C.f b := by rw [show C.e a * C.f a = C.numOp a from rfl, C.numOp_comm_e_ne h]
+      _ = C.e b * ((C.e a * C.f a) * C.f b) := by simp only [mul_assoc]
+      _ = C.e b * (C.f b * (C.e a * C.f a)) := by rw [show C.e a * C.f a = C.numOp a from rfl, C.numOp_comm_f_ne h]
+      _ = (C.e b * C.f b) * (C.e a * C.f a) := by simp only [mul_assoc]
+
+theorem vacOp_comm (a b : Fin 5) : C.vacOp a * C.vacOp b = C.vacOp b * C.vacOp a := by
+  rw [C.vacOp_eq_one_sub_numOp a, C.vacOp_eq_one_sub_numOp b]
+  calc
+    (1 - C.numOp a) * (1 - C.numOp b)
+        = 1 - C.numOp a - C.numOp b + C.numOp a * C.numOp b := by noncomm_ring
+    _ = 1 - C.numOp a - C.numOp b + C.numOp b * C.numOp a := by rw [C.numOp_comm a b]
+    _ = (1 - C.numOp b) * (1 - C.numOp a) := by noncomm_ring
+
+theorem numOp_comm_vacOp (a b : Fin 5) : C.numOp a * C.vacOp b = C.vacOp b * C.numOp a := by
+  rw [C.vacOp_eq_one_sub_numOp b]
+  calc
+    C.numOp a * (1 - C.numOp b) = C.numOp a - C.numOp a * C.numOp b := by noncomm_ring
+    _ = C.numOp a - C.numOp b * C.numOp a := by rw [C.numOp_comm a b]
+    _ = (1 - C.numOp b) * C.numOp a := by noncomm_ring
+
+private def modeProj (a : Fin 5) (b : Bool) : R :=
+  if b then C.numOp a else C.vacOp a
+
+private theorem modeProj_mul_same (a : Fin 5) (b c : Bool) :
+    C.modeProj a b * C.modeProj a c = if b = c then C.modeProj a b else 0 := by
+  cases b <;> cases c <;>
+    simp [modeProj, C.numOp_idem, C.vacOp_idem, C.numOp_mul_vacOp, C.vacOp_mul_numOp]
+
+private theorem modeProj_comm (a₁ a₂ : Fin 5) (b₁ b₂ : Bool) :
+    C.modeProj a₁ b₁ * C.modeProj a₂ b₂ = C.modeProj a₂ b₂ * C.modeProj a₁ b₁ := by
+  cases b₁ <;> cases b₂ <;> dsimp [modeProj]
+  · exact C.vacOp_comm a₁ a₂
+  · exact (C.numOp_comm_vacOp a₂ a₁).symm
+  · exact C.numOp_comm_vacOp a₁ a₂
+  · exact C.numOp_comm a₁ a₂
+
+private theorem modeProj_comm_e_ne {a c : Fin 5} (hac : a ≠ c) (b : Bool) :
+    C.modeProj a b * C.e c = C.e c * C.modeProj a b := by
+  cases b <;> simp [modeProj, C.numOp_comm_e_ne hac, C.vacOp_comm_e_ne hac]
+
+private theorem modeProj_comm_f_ne {a c : Fin 5} (hac : a ≠ c) (b : Bool) :
+    C.modeProj a b * C.f c = C.f c * C.modeProj a b := by
+  cases b <;> simp [modeProj, C.numOp_comm_f_ne hac, C.vacOp_comm_f_ne hac]
+
+private def colorAtom (b₀ b₁ b₂ : Bool) : R :=
+  C.modeProj 0 b₀ * C.modeProj 1 b₁ * C.modeProj 2 b₂
+
+private theorem colorAtom_mul (b₀ b₁ b₂ c₀ c₁ c₂ : Bool) :
+    C.colorAtom b₀ b₁ b₂ * C.colorAtom c₀ c₁ c₂ =
+      if (b₀ = c₀ ∧ b₁ = c₁ ∧ b₂ = c₂) then C.colorAtom b₀ b₁ b₂ else 0 := by
+  dsimp [colorAtom]
+  have hreorg :
+      (C.modeProj 0 b₀ * C.modeProj 1 b₁ * C.modeProj 2 b₂) *
+          (C.modeProj 0 c₀ * C.modeProj 1 c₁ * C.modeProj 2 c₂) =
+        (C.modeProj 0 b₀ * C.modeProj 0 c₀) *
+          (C.modeProj 1 b₁ * C.modeProj 1 c₁) *
+          (C.modeProj 2 b₂ * C.modeProj 2 c₂) := by
+    calc
+      (C.modeProj 0 b₀ * C.modeProj 1 b₁ * C.modeProj 2 b₂) *
+          (C.modeProj 0 c₀ * C.modeProj 1 c₁ * C.modeProj 2 c₂)
+        = C.modeProj 0 b₀ * (C.modeProj 1 b₁ * (C.modeProj 2 b₂ *
+            (C.modeProj 0 c₀ * (C.modeProj 1 c₁ * C.modeProj 2 c₂)))) := by
+          simp only [mul_assoc]
+      _ = C.modeProj 0 b₀ * (C.modeProj 1 b₁ * (C.modeProj 0 c₀ *
+            (C.modeProj 2 b₂ * (C.modeProj 1 c₁ * C.modeProj 2 c₂)))) := by
+          rw [← mul_assoc (C.modeProj 2 b₂) (C.modeProj 0 c₀), C.modeProj_comm 2 0, mul_assoc]
+      _ = C.modeProj 0 b₀ * (C.modeProj 0 c₀ * (C.modeProj 1 b₁ *
+            (C.modeProj 2 b₂ * (C.modeProj 1 c₁ * C.modeProj 2 c₂)))) := by
+          rw [← mul_assoc (C.modeProj 1 b₁) (C.modeProj 0 c₀), C.modeProj_comm 1 0, mul_assoc]
+      _ = C.modeProj 0 b₀ * (C.modeProj 0 c₀ * (C.modeProj 1 b₁ *
+            (C.modeProj 1 c₁ * (C.modeProj 2 b₂ * C.modeProj 2 c₂)))) := by
+          rw [← mul_assoc (C.modeProj 2 b₂) (C.modeProj 1 c₁), C.modeProj_comm 2 1, mul_assoc]
+      _ = (C.modeProj 0 b₀ * C.modeProj 0 c₀) * (C.modeProj 1 b₁ * C.modeProj 1 c₁) *
+            (C.modeProj 2 b₂ * C.modeProj 2 c₂) := by
+          simp only [mul_assoc]
+  rw [hreorg, C.modeProj_mul_same 0, C.modeProj_mul_same 1, C.modeProj_mul_same 2]
+  by_cases h0 : b₀ = c₀ <;> by_cases h1 : b₁ = c₁ <;> by_cases h2 : b₂ = c₂ <;>
+    simp [h0, h1, h2]
+
+def colorVacProj : R := C.colorAtom false false false
+def colorQuarkProj : R :=
+  C.colorAtom true false false + C.colorAtom false true false + C.colorAtom false false true
+def colorDiquarkProj : R :=
+  C.colorAtom true true false + C.colorAtom true false true + C.colorAtom false true true
+def colorBaryonProj : R := C.colorAtom true true true
+
+def colorGluonT3 : R := C.numOp 0 - C.numOp 1
+def colorGluon3Y : R := C.numOp 0 + C.numOp 1 - (2 : ℕ) • C.numOp 2
+
+def weakPairCarrier : R := C.numOp 3 * C.numOp 4 + C.vacOp 3 * C.vacOp 4
+def weakIsoCarrier : R := C.numOp 3 * C.vacOp 4 + C.vacOp 3 * C.numOp 4
+
+/-- **Generalized 4-Sector Color Partition, Orthogonality, Idempotency & Gluon Neutrality**
+over an arbitrary associative ring `R`. -/
+theorem color_four_sector_partition_idemp :
+    (C.colorVacProj + C.colorQuarkProj + C.colorDiquarkProj + C.colorBaryonProj = 1) ∧
+    (C.colorVacProj * C.colorVacProj = C.colorVacProj ∧
+     C.colorQuarkProj * C.colorQuarkProj = C.colorQuarkProj ∧
+     C.colorDiquarkProj * C.colorDiquarkProj = C.colorDiquarkProj ∧
+     C.colorBaryonProj * C.colorBaryonProj = C.colorBaryonProj) ∧
+    (C.colorVacProj * C.colorQuarkProj = 0 ∧
+     C.colorVacProj * C.colorDiquarkProj = 0 ∧
+     C.colorVacProj * C.colorBaryonProj = 0 ∧
+     C.colorQuarkProj * C.colorDiquarkProj = 0 ∧
+     C.colorQuarkProj * C.colorBaryonProj = 0 ∧
+     C.colorDiquarkProj * C.colorBaryonProj = 0) ∧
+    (C.colorGluonT3 * (C.colorVacProj + C.colorBaryonProj) = 0 ∧
+     C.colorGluon3Y * (C.colorVacProj + C.colorBaryonProj) = 0) := by
+  have hsum : C.colorVacProj + C.colorQuarkProj + C.colorDiquarkProj + C.colorBaryonProj = 1 := by
+    dsimp only [colorVacProj, colorQuarkProj, colorDiquarkProj, colorBaryonProj, colorAtom, modeProj]
+    simp only [Bool.false_eq_true, ↓reduceIte, C.vacOp_eq_one_sub_numOp]
+    noncomm_ring
+  have hidemp :
+      C.colorVacProj * C.colorVacProj = C.colorVacProj ∧
+      C.colorQuarkProj * C.colorQuarkProj = C.colorQuarkProj ∧
+      C.colorDiquarkProj * C.colorDiquarkProj = C.colorDiquarkProj ∧
+      C.colorBaryonProj * C.colorBaryonProj = C.colorBaryonProj := by
+    dsimp only [colorVacProj, colorQuarkProj, colorDiquarkProj, colorBaryonProj]
+    refine ⟨?_, ?_, ?_, ?_⟩ <;>
+      · simp only [mul_add, add_mul, C.colorAtom_mul]
+        simp [add_assoc]
+  have horth :
+      C.colorVacProj * C.colorQuarkProj = 0 ∧
+      C.colorVacProj * C.colorDiquarkProj = 0 ∧
+      C.colorVacProj * C.colorBaryonProj = 0 ∧
+      C.colorQuarkProj * C.colorDiquarkProj = 0 ∧
+      C.colorQuarkProj * C.colorBaryonProj = 0 ∧
+      C.colorDiquarkProj * C.colorBaryonProj = 0 := by
+    dsimp only [colorVacProj, colorQuarkProj, colorDiquarkProj, colorBaryonProj]
+    refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+      · simp only [mul_add, add_mul, C.colorAtom_mul]
+        simp
+  have hneut :
+      C.colorGluonT3 * (C.colorVacProj + C.colorBaryonProj) = 0 ∧
+      C.colorGluon3Y * (C.colorVacProj + C.colorBaryonProj) = 0 := by
+    dsimp only [colorGluonT3, colorGluon3Y, colorVacProj, colorBaryonProj, colorAtom, modeProj]
+    simp only [Bool.false_eq_true, ↓reduceIte]
+    have h0 : C.numOp 0 * (C.vacOp 0 * C.vacOp 1 * C.vacOp 2) = 0 := by
+      calc
+        C.numOp 0 * (C.vacOp 0 * C.vacOp 1 * C.vacOp 2)
+          = (C.numOp 0 * C.vacOp 0) * C.vacOp 1 * C.vacOp 2 := by simp only [mul_assoc]
+        _ = 0 := by rw [C.numOp_mul_vacOp 0, zero_mul, zero_mul]
+    have h1 : C.numOp 1 * (C.vacOp 0 * C.vacOp 1 * C.vacOp 2) = 0 := by
+      calc
+        C.numOp 1 * (C.vacOp 0 * C.vacOp 1 * C.vacOp 2)
+          = C.vacOp 0 * (C.numOp 1 * C.vacOp 1) * C.vacOp 2 := by
+              simp only [mul_assoc]
+              rw [← mul_assoc (C.numOp 1) (C.vacOp 0), C.numOp_comm_vacOp 1 0, mul_assoc]
+        _ = 0 := by rw [C.numOp_mul_vacOp 1, mul_zero, zero_mul]
+    have h2 : C.numOp 2 * (C.vacOp 0 * C.vacOp 1 * C.vacOp 2) = 0 := by
+      calc
+        C.numOp 2 * (C.vacOp 0 * C.vacOp 1 * C.vacOp 2)
+          = C.vacOp 0 * C.vacOp 1 * (C.numOp 2 * C.vacOp 2) := by
+              simp only [mul_assoc]
+              rw [← mul_assoc (C.numOp 2) (C.vacOp 0), C.numOp_comm_vacOp 2 0, mul_assoc,
+                  ← mul_assoc (C.numOp 2) (C.vacOp 1), C.numOp_comm_vacOp 2 1, mul_assoc]
+        _ = 0 := by rw [C.numOp_mul_vacOp 2, mul_zero]
+    have hb0 : C.numOp 0 * (C.numOp 0 * C.numOp 1 * C.numOp 2) = C.numOp 0 * C.numOp 1 * C.numOp 2 := by
+      simp only [mul_assoc]; rw [← mul_assoc (C.numOp 0) (C.numOp 0), C.numOp_idem 0]
+    have hb1 : C.numOp 1 * (C.numOp 0 * C.numOp 1 * C.numOp 2) = C.numOp 0 * C.numOp 1 * C.numOp 2 := by
+      simp only [mul_assoc]
+      rw [← mul_assoc (C.numOp 1) (C.numOp 0), C.numOp_comm 1 0, mul_assoc,
+          ← mul_assoc (C.numOp 1) (C.numOp 1), C.numOp_idem 1]
+    have hb2 : C.numOp 2 * (C.numOp 0 * C.numOp 1 * C.numOp 2) = C.numOp 0 * C.numOp 1 * C.numOp 2 := by
+      simp only [mul_assoc]
+      rw [← mul_assoc (C.numOp 2) (C.numOp 0), C.numOp_comm 2 0, mul_assoc,
+          ← mul_assoc (C.numOp 2) (C.numOp 1), C.numOp_comm 2 1, mul_assoc,
+          C.numOp_idem 2]
+    refine ⟨?_, ?_⟩
+    · rw [mul_add, sub_mul, sub_mul, h0, h1, sub_self, zero_add, hb0, hb1, sub_self]
+    · simp only [mul_assoc] at h0 h1 h2 hb0 hb1 hb2
+      rw [mul_add, sub_mul, add_mul, sub_mul, add_mul, nsmul_eq_mul]
+      simp only [mul_assoc]
+      rw [h0, h1, h2, hb0, hb1, hb2]
+      simp [two_mul]
+  exact ⟨hsum, hidemp, horth, hneut⟩
+
+private theorem e_mul_colorVac_0 :
+    C.e 0 * C.colorVacProj = C.colorAtom true false false * C.e 0 := by
+  dsimp [colorVacProj, colorAtom, modeProj]
+  have h0 : C.e 0 * C.vacOp 0 = C.numOp 0 * C.e 0 := by
+    rw [C.e_mul_vacOp_same 0, C.numOp_mul_e_same 0]
+  calc
+    C.e 0 * (C.vacOp 0 * C.vacOp 1 * C.vacOp 2)
+      = (C.e 0 * C.vacOp 0) * C.vacOp 1 * C.vacOp 2 := by simp only [mul_assoc]
+    _ = (C.numOp 0 * C.e 0) * C.vacOp 1 * C.vacOp 2 := by rw [h0]
+    _ = C.numOp 0 * (C.e 0 * C.vacOp 1) * C.vacOp 2 := by simp only [mul_assoc]
+    _ = C.numOp 0 * (C.vacOp 1 * C.e 0) * C.vacOp 2 := by
+          rw [← C.vacOp_comm_e_ne (by decide : (1 : Fin 5) ≠ 0)]
+    _ = C.numOp 0 * C.vacOp 1 * (C.e 0 * C.vacOp 2) := by simp only [mul_assoc]
+    _ = C.numOp 0 * C.vacOp 1 * C.vacOp 2 * C.e 0 := by
+          rw [← C.vacOp_comm_e_ne (by decide : (2 : Fin 5) ≠ 0)]; simp only [mul_assoc]
+
+private theorem e_mul_colorVac_1 :
+    C.e 1 * C.colorVacProj = C.colorAtom false true false * C.e 1 := by
+  dsimp [colorVacProj, colorAtom, modeProj]
+  have h1 : C.e 1 * C.vacOp 1 = C.numOp 1 * C.e 1 := by
+    rw [C.e_mul_vacOp_same 1, C.numOp_mul_e_same 1]
+  calc
+    C.e 1 * (C.vacOp 0 * C.vacOp 1 * C.vacOp 2)
+      = (C.e 1 * C.vacOp 0) * C.vacOp 1 * C.vacOp 2 := by simp only [mul_assoc]
+    _ = (C.vacOp 0 * C.e 1) * C.vacOp 1 * C.vacOp 2 := by
+          rw [← C.vacOp_comm_e_ne (by decide : (0 : Fin 5) ≠ 1)]
+    _ = C.vacOp 0 * (C.e 1 * C.vacOp 1) * C.vacOp 2 := by simp only [mul_assoc]
+    _ = C.vacOp 0 * (C.numOp 1 * C.e 1) * C.vacOp 2 := by rw [h1]
+    _ = C.vacOp 0 * C.numOp 1 * (C.e 1 * C.vacOp 2) := by simp only [mul_assoc]
+    _ = C.vacOp 0 * C.numOp 1 * C.vacOp 2 * C.e 1 := by
+          rw [← C.vacOp_comm_e_ne (by decide : (2 : Fin 5) ≠ 1)]; simp only [mul_assoc]
+
+private theorem e_mul_colorVac_2 :
+    C.e 2 * C.colorVacProj = C.colorAtom false false true * C.e 2 := by
+  dsimp [colorVacProj, colorAtom, modeProj]
+  have h2 : C.e 2 * C.vacOp 2 = C.numOp 2 * C.e 2 := by
+    rw [C.e_mul_vacOp_same 2, C.numOp_mul_e_same 2]
+  calc
+    C.e 2 * (C.vacOp 0 * C.vacOp 1 * C.vacOp 2)
+      = (C.e 2 * C.vacOp 0) * C.vacOp 1 * C.vacOp 2 := by simp only [mul_assoc]
+    _ = (C.vacOp 0 * C.e 2) * C.vacOp 1 * C.vacOp 2 := by
+          rw [← C.vacOp_comm_e_ne (by decide : (0 : Fin 5) ≠ 2)]
+    _ = C.vacOp 0 * (C.e 2 * C.vacOp 1) * C.vacOp 2 := by simp only [mul_assoc]
+    _ = C.vacOp 0 * (C.vacOp 1 * C.e 2) * C.vacOp 2 := by
+          rw [← C.vacOp_comm_e_ne (by decide : (1 : Fin 5) ≠ 2)]
+    _ = C.vacOp 0 * C.vacOp 1 * (C.e 2 * C.vacOp 2) := by simp only [mul_assoc]
+    _ = C.vacOp 0 * C.vacOp 1 * C.numOp 2 * C.e 2 := by rw [h2]; simp only [mul_assoc]
+
+private theorem f_mul_colorBaryon_0 :
+    C.f 0 * C.colorBaryonProj = C.colorAtom false true true * C.f 0 := by
+  dsimp [colorBaryonProj, colorAtom, modeProj]
+  have h0 : C.f 0 * C.numOp 0 = C.vacOp 0 * C.f 0 := by
+    rw [C.f_mul_numOp_same 0, C.vacOp_mul_f_same 0]
+  calc
+    C.f 0 * (C.numOp 0 * C.numOp 1 * C.numOp 2)
+      = (C.f 0 * C.numOp 0) * C.numOp 1 * C.numOp 2 := by simp only [mul_assoc]
+    _ = (C.vacOp 0 * C.f 0) * C.numOp 1 * C.numOp 2 := by rw [h0]
+    _ = C.vacOp 0 * (C.f 0 * C.numOp 1) * C.numOp 2 := by simp only [mul_assoc]
+    _ = C.vacOp 0 * (C.numOp 1 * C.f 0) * C.numOp 2 := by
+          rw [← C.numOp_comm_f_ne (by decide : (1 : Fin 5) ≠ 0)]
+    _ = C.vacOp 0 * C.numOp 1 * (C.f 0 * C.numOp 2) := by simp only [mul_assoc]
+    _ = C.vacOp 0 * C.numOp 1 * C.numOp 2 * C.f 0 := by
+          rw [← C.numOp_comm_f_ne (by decide : (2 : Fin 5) ≠ 0)]; simp only [mul_assoc]
+
+private theorem f_mul_colorBaryon_1 :
+    C.f 1 * C.colorBaryonProj = C.colorAtom true false true * C.f 1 := by
+  dsimp [colorBaryonProj, colorAtom, modeProj]
+  have h1 : C.f 1 * C.numOp 1 = C.vacOp 1 * C.f 1 := by
+    rw [C.f_mul_numOp_same 1, C.vacOp_mul_f_same 1]
+  calc
+    C.f 1 * (C.numOp 0 * C.numOp 1 * C.numOp 2)
+      = (C.f 1 * C.numOp 0) * C.numOp 1 * C.numOp 2 := by simp only [mul_assoc]
+    _ = (C.numOp 0 * C.f 1) * C.numOp 1 * C.numOp 2 := by
+          rw [← C.numOp_comm_f_ne (by decide : (0 : Fin 5) ≠ 1)]
+    _ = C.numOp 0 * (C.f 1 * C.numOp 1) * C.numOp 2 := by simp only [mul_assoc]
+    _ = C.numOp 0 * (C.vacOp 1 * C.f 1) * C.numOp 2 := by rw [h1]
+    _ = C.numOp 0 * C.vacOp 1 * (C.f 1 * C.numOp 2) := by simp only [mul_assoc]
+    _ = C.numOp 0 * C.vacOp 1 * C.numOp 2 * C.f 1 := by
+          rw [← C.numOp_comm_f_ne (by decide : (2 : Fin 5) ≠ 1)]; simp only [mul_assoc]
+
+private theorem f_mul_colorBaryon_2 :
+    C.f 2 * C.colorBaryonProj = C.colorAtom true true false * C.f 2 := by
+  dsimp [colorBaryonProj, colorAtom, modeProj]
+  have h2 : C.f 2 * C.numOp 2 = C.vacOp 2 * C.f 2 := by
+    rw [C.f_mul_numOp_same 2, C.vacOp_mul_f_same 2]
+  calc
+    C.f 2 * (C.numOp 0 * C.numOp 1 * C.numOp 2)
+      = (C.f 2 * C.numOp 0) * C.numOp 1 * C.numOp 2 := by simp only [mul_assoc]
+    _ = (C.numOp 0 * C.f 2) * C.numOp 1 * C.numOp 2 := by
+          rw [← C.numOp_comm_f_ne (by decide : (0 : Fin 5) ≠ 2)]
+    _ = C.numOp 0 * (C.f 2 * C.numOp 1) * C.numOp 2 := by simp only [mul_assoc]
+    _ = C.numOp 0 * (C.numOp 1 * C.f 2) * C.numOp 2 := by
+          rw [← C.numOp_comm_f_ne (by decide : (1 : Fin 5) ≠ 2)]
+    _ = C.numOp 0 * C.numOp 1 * (C.f 2 * C.numOp 2) := by simp only [mul_assoc]
+    _ = C.numOp 0 * C.numOp 1 * C.vacOp 2 * C.f 2 := by rw [h2]; simp only [mul_assoc]
+
+/-- **Catto Split-Octonion CAR Transition Theorem (`1₀ ↔ 3 ↔ 3̄ ↔ 1₃`)**:
+Over any associative ring `R`, Fermionic creation (`e 0, e 1, e 2`) and annihilation (`f 0, f 1, f 2`)
+step strictly through the 4 color sectors `colorVacProj (1₀) → colorQuarkProj (3) → colorDiquarkProj (3̄) → colorBaryonProj (1₃)`
+and back, with exact Pauli blocking at boundaries and same-color pairs. -/
+theorem catto_car_color_transitions :
+    (∀ c : Fin 3,
+      C.colorQuarkProj * (C.e (c.castLE (by omega)) * C.colorVacProj) =
+        C.e (c.castLE (by omega)) * C.colorVacProj ∧
+      C.colorVacProj * (C.e (c.castLE (by omega)) * C.colorVacProj) = 0) ∧
+    (C.colorDiquarkProj * (C.e 0 * C.e 1 * C.colorVacProj) = C.e 0 * C.e 1 * C.colorVacProj ∧
+     C.colorDiquarkProj * (C.e 0 * C.e 2 * C.colorVacProj) = C.e 0 * C.e 2 * C.colorVacProj ∧
+     C.colorDiquarkProj * (C.e 1 * C.e 2 * C.colorVacProj) = C.e 1 * C.e 2 * C.colorVacProj) ∧
+    (C.colorBaryonProj * (C.e 0 * C.e 1 * C.e 2 * C.colorVacProj) =
+      C.e 0 * C.e 1 * C.e 2 * C.colorVacProj) ∧
+    (∀ c : Fin 3,
+      C.colorDiquarkProj * (C.f (c.castLE (by omega)) * C.colorBaryonProj) =
+        C.f (c.castLE (by omega)) * C.colorBaryonProj ∧
+      C.colorBaryonProj * (C.f (c.castLE (by omega)) * C.colorBaryonProj) = 0) ∧
+    (∀ c : Fin 3,
+      C.e (c.castLE (by omega)) * C.e (c.castLE (by omega)) = 0 ∧
+      C.f (c.castLE (by omega)) * C.colorVacProj = 0 ∧
+      C.e (c.castLE (by omega)) * C.colorBaryonProj = 0) := by
+  have hstep_e0 : C.e 0 * C.colorVacProj = C.colorAtom true false false * C.e 0 := C.e_mul_colorVac_0
+  have hstep_e1 : C.e 1 * C.colorVacProj = C.colorAtom false true false * C.e 1 := C.e_mul_colorVac_1
+  have hstep_e2 : C.e 2 * C.colorVacProj = C.colorAtom false false true * C.e 2 := C.e_mul_colorVac_2
+  have hstep_f0 : C.f 0 * C.colorBaryonProj = C.colorAtom false true true * C.f 0 := C.f_mul_colorBaryon_0
+  have hstep_f1 : C.f 1 * C.colorBaryonProj = C.colorAtom true false true * C.f 1 := C.f_mul_colorBaryon_1
+  have hstep_f2 : C.f 2 * C.colorBaryonProj = C.colorAtom true true false * C.f 2 := C.f_mul_colorBaryon_2
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · intro c
+    fin_cases c
+    · change C.colorQuarkProj * (C.e 0 * C.colorVacProj) = C.e 0 * C.colorVacProj ∧
+          C.colorVacProj * (C.e 0 * C.colorVacProj) = 0
+      rw [hstep_e0, ← mul_assoc, ← mul_assoc]
+      dsimp only [colorQuarkProj, colorVacProj]
+      simp only [add_mul, C.colorAtom_mul]; simp
+    · change C.colorQuarkProj * (C.e 1 * C.colorVacProj) = C.e 1 * C.colorVacProj ∧
+          C.colorVacProj * (C.e 1 * C.colorVacProj) = 0
+      rw [hstep_e1, ← mul_assoc, ← mul_assoc]
+      dsimp only [colorQuarkProj, colorVacProj]
+      simp only [add_mul, C.colorAtom_mul]; simp
+    · change C.colorQuarkProj * (C.e 2 * C.colorVacProj) = C.e 2 * C.colorVacProj ∧
+          C.colorVacProj * (C.e 2 * C.colorVacProj) = 0
+      rw [hstep_e2, ← mul_assoc, ← mul_assoc]
+      dsimp only [colorQuarkProj, colorVacProj]
+      simp only [add_mul, C.colorAtom_mul]; simp
+  · have hd01 : C.e 0 * C.e 1 * C.colorVacProj = C.colorAtom true true false * (C.e 0 * C.e 1) := by
+      rw [mul_assoc, hstep_e1, ← mul_assoc]
+      dsimp only [colorAtom, modeProj]; simp only [↓reduceIte, Bool.false_eq_true]
+      calc
+        C.e 0 * (C.vacOp 0 * C.numOp 1 * C.vacOp 2) * C.e 1
+          = (C.e 0 * C.vacOp 0) * C.numOp 1 * C.vacOp 2 * C.e 1 := by simp only [mul_assoc]
+        _ = (C.numOp 0 * C.e 0) * C.numOp 1 * C.vacOp 2 * C.e 1 := by
+              rw [C.e_mul_vacOp_same 0, C.numOp_mul_e_same 0]
+        _ = C.numOp 0 * (C.e 0 * C.numOp 1) * C.vacOp 2 * C.e 1 := by simp only [mul_assoc]
+        _ = C.numOp 0 * C.numOp 1 * (C.e 0 * C.vacOp 2) * C.e 1 := by
+              rw [← C.numOp_comm_e_ne (by decide : (1 : Fin 5) ≠ 0)]; simp only [mul_assoc]
+        _ = (C.numOp 0 * C.numOp 1 * C.vacOp 2) * (C.e 0 * C.e 1) := by
+              rw [← C.vacOp_comm_e_ne (by decide : (2 : Fin 5) ≠ 0)]; simp only [mul_assoc]
+    have hd02 : C.e 0 * C.e 2 * C.colorVacProj = C.colorAtom true false true * (C.e 0 * C.e 2) := by
+      rw [mul_assoc, hstep_e2, ← mul_assoc]
+      dsimp only [colorAtom, modeProj]; simp only [↓reduceIte, Bool.false_eq_true]
+      calc
+        C.e 0 * (C.vacOp 0 * C.vacOp 1 * C.numOp 2) * C.e 2
+          = (C.e 0 * C.vacOp 0) * C.vacOp 1 * C.numOp 2 * C.e 2 := by simp only [mul_assoc]
+        _ = (C.numOp 0 * C.e 0) * C.vacOp 1 * C.numOp 2 * C.e 2 := by
+              rw [C.e_mul_vacOp_same 0, C.numOp_mul_e_same 0]
+        _ = C.numOp 0 * (C.e 0 * C.vacOp 1) * C.numOp 2 * C.e 2 := by simp only [mul_assoc]
+        _ = C.numOp 0 * C.vacOp 1 * (C.e 0 * C.numOp 2) * C.e 2 := by
+              rw [← C.vacOp_comm_e_ne (by decide : (1 : Fin 5) ≠ 0)]; simp only [mul_assoc]
+        _ = (C.numOp 0 * C.vacOp 1 * C.numOp 2) * (C.e 0 * C.e 2) := by
+              rw [← C.numOp_comm_e_ne (by decide : (2 : Fin 5) ≠ 0)]; simp only [mul_assoc]
+    have hd12 : C.e 1 * C.e 2 * C.colorVacProj = C.colorAtom false true true * (C.e 1 * C.e 2) := by
+      rw [mul_assoc, hstep_e2, ← mul_assoc]
+      dsimp only [colorAtom, modeProj]; simp only [↓reduceIte, Bool.false_eq_true]
+      calc
+        C.e 1 * (C.vacOp 0 * C.vacOp 1 * C.numOp 2) * C.e 2
+          = (C.e 1 * C.vacOp 0) * C.vacOp 1 * C.numOp 2 * C.e 2 := by simp only [mul_assoc]
+        _ = C.vacOp 0 * (C.e 1 * C.vacOp 1) * C.numOp 2 * C.e 2 := by
+              rw [← C.vacOp_comm_e_ne (by decide : (0 : Fin 5) ≠ 1)]; simp only [mul_assoc]
+        _ = C.vacOp 0 * (C.numOp 1 * C.e 1) * C.numOp 2 * C.e 2 := by
+              rw [C.e_mul_vacOp_same 1, C.numOp_mul_e_same 1]
+        _ = C.vacOp 0 * C.numOp 1 * (C.e 1 * C.numOp 2) * C.e 2 := by simp only [mul_assoc]
+        _ = (C.vacOp 0 * C.numOp 1 * C.numOp 2) * (C.e 1 * C.e 2) := by
+              rw [← C.numOp_comm_e_ne (by decide : (2 : Fin 5) ≠ 1)]; simp only [mul_assoc]
+    refine ⟨?_, ?_, ?_⟩
+    · rw [hd01, ← mul_assoc]; dsimp only [colorDiquarkProj]; simp only [add_mul, C.colorAtom_mul]; simp
+    · rw [hd02, ← mul_assoc]; dsimp only [colorDiquarkProj]; simp only [add_mul, C.colorAtom_mul]; simp
+    · rw [hd12, ← mul_assoc]; dsimp only [colorDiquarkProj]; simp only [add_mul, C.colorAtom_mul]; simp
+  · have hb : C.e 0 * C.e 1 * C.e 2 * C.colorVacProj =
+        C.colorBaryonProj * (C.e 0 * C.e 1 * C.e 2) := by
+      have hd12 : C.e 1 * C.e 2 * C.colorVacProj = C.colorAtom false true true * (C.e 1 * C.e 2) := by
+        rw [mul_assoc, hstep_e2, ← mul_assoc]
+        dsimp only [colorAtom, modeProj]; simp only [↓reduceIte, Bool.false_eq_true]
+        calc
+          C.e 1 * (C.vacOp 0 * C.vacOp 1 * C.numOp 2) * C.e 2
+            = (C.e 1 * C.vacOp 0) * C.vacOp 1 * C.numOp 2 * C.e 2 := by simp only [mul_assoc]
+          _ = C.vacOp 0 * (C.e 1 * C.vacOp 1) * C.numOp 2 * C.e 2 := by
+                rw [← C.vacOp_comm_e_ne (by decide : (0 : Fin 5) ≠ 1)]; simp only [mul_assoc]
+          _ = C.vacOp 0 * (C.numOp 1 * C.e 1) * C.numOp 2 * C.e 2 := by
+                rw [C.e_mul_vacOp_same 1, C.numOp_mul_e_same 1]
+          _ = C.vacOp 0 * C.numOp 1 * (C.e 1 * C.numOp 2) * C.e 2 := by simp only [mul_assoc]
+          _ = (C.vacOp 0 * C.numOp 1 * C.numOp 2) * (C.e 1 * C.e 2) := by
+                rw [← C.numOp_comm_e_ne (by decide : (2 : Fin 5) ≠ 1)]; simp only [mul_assoc]
+      calc
+        C.e 0 * C.e 1 * C.e 2 * C.colorVacProj
+          = C.e 0 * (C.e 1 * C.e 2 * C.colorVacProj) := by simp only [mul_assoc]
+        _ = C.e 0 * (C.colorAtom false true true * (C.e 1 * C.e 2)) := by rw [hd12]
+        _ = (C.e 0 * (C.vacOp 0 * C.numOp 1 * C.numOp 2)) * (C.e 1 * C.e 2) := by
+              dsimp only [colorAtom, modeProj]; simp only [↓reduceIte, Bool.false_eq_true, mul_assoc]
+        _ = C.colorBaryonProj * (C.e 0 * C.e 1 * C.e 2) := by
+              dsimp only [colorBaryonProj, colorAtom, modeProj]
+              simp only [↓reduceIte]
+              have he0 : C.e 0 * (C.vacOp 0 * C.numOp 1 * C.numOp 2) =
+                  C.numOp 0 * C.numOp 1 * C.numOp 2 * C.e 0 := by
+                calc
+                  C.e 0 * (C.vacOp 0 * C.numOp 1 * C.numOp 2)
+                    = (C.e 0 * C.vacOp 0) * C.numOp 1 * C.numOp 2 := by simp only [mul_assoc]
+                  _ = (C.numOp 0 * C.e 0) * C.numOp 1 * C.numOp 2 := by
+                        rw [C.e_mul_vacOp_same 0, C.numOp_mul_e_same 0]
+                  _ = C.numOp 0 * (C.e 0 * C.numOp 1) * C.numOp 2 := by simp only [mul_assoc]
+                  _ = C.numOp 0 * C.numOp 1 * (C.e 0 * C.numOp 2) := by
+                        rw [← C.numOp_comm_e_ne (by decide : (1 : Fin 5) ≠ 0)]; simp only [mul_assoc]
+                  _ = C.numOp 0 * C.numOp 1 * C.numOp 2 * C.e 0 := by
+                        rw [← C.numOp_comm_e_ne (by decide : (2 : Fin 5) ≠ 0)]; simp only [mul_assoc]
+              rw [he0]; simp only [mul_assoc]
+    rw [hb, ← mul_assoc]
+    dsimp only [colorBaryonProj]
+    rw [C.colorAtom_mul]; simp
+  · intro c
+    fin_cases c
+    · change C.colorDiquarkProj * (C.f 0 * C.colorBaryonProj) = C.f 0 * C.colorBaryonProj ∧
+          C.colorBaryonProj * (C.f 0 * C.colorBaryonProj) = 0
+      rw [hstep_f0, ← mul_assoc, ← mul_assoc]
+      dsimp only [colorDiquarkProj, colorBaryonProj]
+      simp only [add_mul, C.colorAtom_mul]; simp
+    · change C.colorDiquarkProj * (C.f 1 * C.colorBaryonProj) = C.f 1 * C.colorBaryonProj ∧
+          C.colorBaryonProj * (C.f 1 * C.colorBaryonProj) = 0
+      rw [hstep_f1, ← mul_assoc, ← mul_assoc]
+      dsimp only [colorDiquarkProj, colorBaryonProj]
+      simp only [add_mul, C.colorAtom_mul]; simp
+    · change C.colorDiquarkProj * (C.f 2 * C.colorBaryonProj) = C.f 2 * C.colorBaryonProj ∧
+          C.colorBaryonProj * (C.f 2 * C.colorBaryonProj) = 0
+      rw [hstep_f2, ← mul_assoc, ← mul_assoc]
+      dsimp only [colorDiquarkProj, colorBaryonProj]
+      simp only [add_mul, C.colorAtom_mul]; simp
+  · intro c
+    refine ⟨C.e_sq (c.castLE (by omega)), ?_, ?_⟩
+    · fin_cases c
+      · change C.f 0 * C.colorVacProj = 0
+        dsimp only [colorVacProj, colorAtom, modeProj]; simp only [Bool.false_eq_true, ↓reduceIte]
+        rw [← mul_assoc, ← mul_assoc, C.f_mul_vacOp_same 0, zero_mul, zero_mul]
+      · change C.f 1 * C.colorVacProj = 0
+        dsimp only [colorVacProj, colorAtom, modeProj]; simp only [Bool.false_eq_true, ↓reduceIte]
+        rw [← mul_assoc, ← mul_assoc, ← C.vacOp_comm_f_ne (by decide : (0 : Fin 5) ≠ 1),
+            mul_assoc, mul_assoc, ← mul_assoc (C.f 1), C.f_mul_vacOp_same 1, zero_mul, mul_zero]
+      · change C.f 2 * C.colorVacProj = 0
+        dsimp only [colorVacProj, colorAtom, modeProj]; simp only [Bool.false_eq_true, ↓reduceIte]
+        simp only [mul_assoc]
+        rw [← mul_assoc (C.f 2), ← C.vacOp_comm_f_ne (by decide : (0 : Fin 5) ≠ 2), mul_assoc,
+            ← mul_assoc (C.f 2), ← C.vacOp_comm_f_ne (by decide : (1 : Fin 5) ≠ 2),
+            mul_assoc, C.f_mul_vacOp_same 2, mul_zero, mul_zero]
+    · fin_cases c
+      · change C.e 0 * C.colorBaryonProj = 0
+        dsimp only [colorBaryonProj, colorAtom, modeProj]; simp only [↓reduceIte]
+        rw [← mul_assoc, ← mul_assoc, C.e_mul_numOp_same 0, zero_mul, zero_mul]
+      · change C.e 1 * C.colorBaryonProj = 0
+        dsimp only [colorBaryonProj, colorAtom, modeProj]; simp only [↓reduceIte]
+        rw [← mul_assoc, ← mul_assoc, ← C.numOp_comm_e_ne (by decide : (0 : Fin 5) ≠ 1),
+            mul_assoc, mul_assoc, ← mul_assoc (C.e 1), C.e_mul_numOp_same 1, zero_mul, mul_zero]
+      · change C.e 2 * C.colorBaryonProj = 0
+        dsimp only [colorBaryonProj, colorAtom, modeProj]; simp only [↓reduceIte]
+        simp only [mul_assoc]
+        rw [← mul_assoc (C.e 2), ← C.numOp_comm_e_ne (by decide : (0 : Fin 5) ≠ 2), mul_assoc,
+            ← mul_assoc (C.e 2), ← C.numOp_comm_e_ne (by decide : (1 : Fin 5) ≠ 2),
+            mul_assoc, C.e_mul_numOp_same 2, mul_zero, mul_zero]
+
+/-- Weak `pairing` and `isospin` carriers (modes `3, 4`) commute with all 4 color sectors
+over any associative ring `R`. -/
+theorem weakCarriers_commute_color :
+    (∀ P ∈ [C.colorVacProj, C.colorQuarkProj, C.colorDiquarkProj, C.colorBaryonProj],
+      P * C.weakPairCarrier = C.weakPairCarrier * P ∧
+      P * C.weakIsoCarrier = C.weakIsoCarrier * P) := by
+  have hcomm_atom_weak : ∀ (b₀ b₁ b₂ : Bool) (w : R)
+      (hw : ∀ a : Fin 5, ∀ b : Bool, C.modeProj a b * w = w * C.modeProj a b),
+      C.colorAtom b₀ b₁ b₂ * w = w * C.colorAtom b₀ b₁ b₂ := by
+    intro b₀ b₁ b₂ w hw
+    dsimp only [colorAtom]
+    calc
+      C.modeProj 0 b₀ * C.modeProj 1 b₁ * C.modeProj 2 b₂ * w
+        = C.modeProj 0 b₀ * C.modeProj 1 b₁ * (C.modeProj 2 b₂ * w) := by simp only [mul_assoc]
+      _ = C.modeProj 0 b₀ * C.modeProj 1 b₁ * (w * C.modeProj 2 b₂) := by rw [hw 2 b₂]
+      _ = C.modeProj 0 b₀ * (C.modeProj 1 b₁ * w) * C.modeProj 2 b₂ := by simp only [mul_assoc]
+      _ = C.modeProj 0 b₀ * (w * C.modeProj 1 b₁) * C.modeProj 2 b₂ := by rw [hw 1 b₁]
+      _ = (C.modeProj 0 b₀ * w) * C.modeProj 1 b₁ * C.modeProj 2 b₂ := by simp only [mul_assoc]
+      _ = w * (C.modeProj 0 b₀ * C.modeProj 1 b₁ * C.modeProj 2 b₂) := by rw [hw 0 b₀]; simp only [mul_assoc]
+  have hwPair : ∀ a : Fin 5, ∀ b : Bool,
+      C.modeProj a b * C.weakPairCarrier = C.weakPairCarrier * C.modeProj a b := by
+    intro a b
+    dsimp only [weakPairCarrier]
+    rw [mul_add, add_mul]
+    congr 1
+    · rw [← mul_assoc,
+          show C.modeProj a b * C.numOp 3 = C.numOp 3 * C.modeProj a b from C.modeProj_comm a 3 b true,
+          mul_assoc,
+          show C.modeProj a b * C.numOp 4 = C.numOp 4 * C.modeProj a b from C.modeProj_comm a 4 b true,
+          ← mul_assoc]
+    · rw [← mul_assoc,
+          show C.modeProj a b * C.vacOp 3 = C.vacOp 3 * C.modeProj a b from C.modeProj_comm a 3 b false,
+          mul_assoc,
+          show C.modeProj a b * C.vacOp 4 = C.vacOp 4 * C.modeProj a b from C.modeProj_comm a 4 b false,
+          ← mul_assoc]
+  have hwIso : ∀ a : Fin 5, ∀ b : Bool,
+      C.modeProj a b * C.weakIsoCarrier = C.weakIsoCarrier * C.modeProj a b := by
+    intro a b
+    dsimp only [weakIsoCarrier]
+    rw [mul_add, add_mul]
+    congr 1
+    · rw [← mul_assoc,
+          show C.modeProj a b * C.numOp 3 = C.numOp 3 * C.modeProj a b from C.modeProj_comm a 3 b true,
+          mul_assoc,
+          show C.modeProj a b * C.vacOp 4 = C.vacOp 4 * C.modeProj a b from C.modeProj_comm a 4 b false,
+          ← mul_assoc]
+    · rw [← mul_assoc,
+          show C.modeProj a b * C.vacOp 3 = C.vacOp 3 * C.modeProj a b from C.modeProj_comm a 3 b false,
+          mul_assoc,
+          show C.modeProj a b * C.numOp 4 = C.numOp 4 * C.modeProj a b from C.modeProj_comm a 4 b true,
+          ← mul_assoc]
+  intro P hP
+  simp only [List.mem_cons, List.not_mem_nil, or_false] at hP
+  rcases hP with rfl | rfl | rfl | rfl
+  · exact ⟨hcomm_atom_weak false false false _ hwPair, hcomm_atom_weak false false false _ hwIso⟩
+  · dsimp only [colorQuarkProj]
+    refine ⟨?_, ?_⟩
+    · simp only [add_mul, mul_add,
+        hcomm_atom_weak true false false _ hwPair,
+        hcomm_atom_weak false true false _ hwPair,
+        hcomm_atom_weak false false true _ hwPair]
+    · simp only [add_mul, mul_add,
+        hcomm_atom_weak true false false _ hwIso,
+        hcomm_atom_weak false true false _ hwIso,
+        hcomm_atom_weak false false true _ hwIso]
+  · dsimp only [colorDiquarkProj]
+    refine ⟨?_, ?_⟩
+    · simp only [add_mul, mul_add,
+        hcomm_atom_weak true true false _ hwPair,
+        hcomm_atom_weak true false true _ hwPair,
+        hcomm_atom_weak false true true _ hwPair]
+    · simp only [add_mul, mul_add,
+        hcomm_atom_weak true true false _ hwIso,
+        hcomm_atom_weak true false true _ hwIso,
+        hcomm_atom_weak false true true _ hwIso]
+  · exact ⟨hcomm_atom_weak true true true _ hwPair, hcomm_atom_weak true true true _ hwIso⟩
+
+end ThreeColorTwoWeakCAR
+
+end GeneralizedThreeColorTwoWeakFock
+
+section ConcreteCl55ColorTraceAndCatto
+
+/-- Concrete `Cl(5,5)` 5-mode CAR realization on `MatStage 5`. -/
+def cl55ThreeColorTwoWeakCAR : ThreeColorTwoWeakCAR (MatStage 5) where
+  e := e
+  f := f
+  e_sq := e_sq
+  f_sq := f_sq
+  e_anticomm := e_anticomm
+  f_anticomm := f_anticomm
+  ef_car := ef_car
+
+private theorem cl55_colorVac_eq :
+    cl55ThreeColorTwoWeakCAR.colorVacProj = colorVacuumSingletProj := by
+  dsimp [ThreeColorTwoWeakCAR.colorVacProj, ThreeColorTwoWeakCAR.colorAtom,
+    ThreeColorTwoWeakCAR.modeProj, ThreeColorTwoWeakCAR.vacOp, cl55ThreeColorTwoWeakCAR,
+    colorVacuumSingletProj, modeVacant]
+
+private theorem cl55_colorQuark_eq :
+    cl55ThreeColorTwoWeakCAR.colorQuarkProj = colorQuarkTripletProj := by
+  dsimp [ThreeColorTwoWeakCAR.colorQuarkProj, ThreeColorTwoWeakCAR.colorAtom,
+    ThreeColorTwoWeakCAR.modeProj, ThreeColorTwoWeakCAR.numOp, ThreeColorTwoWeakCAR.vacOp,
+    cl55ThreeColorTwoWeakCAR, colorQuarkTripletProj, modeOccupied, modeVacant]
+
+private theorem cl55_colorDiquark_eq :
+    cl55ThreeColorTwoWeakCAR.colorDiquarkProj = colorDiquarkAntitripletProj := by
+  dsimp [ThreeColorTwoWeakCAR.colorDiquarkProj, ThreeColorTwoWeakCAR.colorAtom,
+    ThreeColorTwoWeakCAR.modeProj, ThreeColorTwoWeakCAR.numOp, ThreeColorTwoWeakCAR.vacOp,
+    cl55ThreeColorTwoWeakCAR, colorDiquarkAntitripletProj, modeOccupied, modeVacant]
+  abel
+
+private theorem cl55_colorBaryon_eq :
+    cl55ThreeColorTwoWeakCAR.colorBaryonProj = colorBaryonSingletProj := by
+  dsimp [ThreeColorTwoWeakCAR.colorBaryonProj, ThreeColorTwoWeakCAR.colorAtom,
+    ThreeColorTwoWeakCAR.modeProj, ThreeColorTwoWeakCAR.numOp, cl55ThreeColorTwoWeakCAR,
+    colorBaryonSingletProj, modeOccupied]
+
+private theorem trace_conjugate_gammaPlus (a : Fin 5) (X : MatStage 5) :
+    Matrix.trace (gammaPlus a * X * gammaPlus a) = Matrix.trace X := by
+  rw [Matrix.trace_mul_comm (gammaPlus a * X) (gammaPlus a), ← mul_assoc, gammaPlus_sq a, one_mul]
+
+private theorem gammaPlus_mul_modeOccupied_mul_gammaPlus (a : Fin 5) :
+    gammaPlus a * modeOccupied a * gammaPlus a = modeVacant a := by
+  dsimp [gammaPlus, modeOccupied, modeVacant]
+  have hcar : f a * e a = 1 - e a * f a := eq_sub_of_add_eq' (by simpa using ef_car a a)
+  calc
+    (e a + f a) * (e a * f a) * (e a + f a)
+      = (e a * (e a * f a) + f a * (e a * f a)) * (e a + f a) := by noncomm_ring
+    _ = ((e a * e a) * f a + (f a * e a) * f a) * (e a + f a) := by simp only [mul_assoc]
+    _ = (0 + (1 - e a * f a) * f a) * (e a + f a) := by rw [e_sq a, zero_mul, hcar]
+    _ = (f a - e a * (f a * f a)) * (e a + f a) := by noncomm_ring
+    _ = f a * (e a + f a) := by rw [f_sq a, mul_zero, sub_zero]
+    _ = f a * e a + f a * f a := by noncomm_ring
+    _ = f a * e a := by rw [f_sq a, add_zero]
+
+private theorem gammaPlus_comm_modeOccupied_ne {a b : Fin 5} (hab : a ≠ b) :
+    gammaPlus a * modeOccupied b = modeOccupied b * gammaPlus a := by
+  dsimp [gammaPlus, modeOccupied]
+  rw [add_mul, mul_add]
+  have hee : e a * (e b * f b) = (e b * f b) * e a := by
+    simpa [cl55ThreeColorTwoWeakCAR, ThreeColorTwoWeakCAR.numOp] using
+      (cl55ThreeColorTwoWeakCAR.numOp_comm_e_ne hab.symm).symm
+  have hfe : f a * (e b * f b) = (e b * f b) * f a := by
+    simpa [cl55ThreeColorTwoWeakCAR, ThreeColorTwoWeakCAR.numOp] using
+      (cl55ThreeColorTwoWeakCAR.numOp_comm_f_ne hab.symm).symm
+  rw [hee, hfe]
+
+private theorem gammaPlus_comm_modeVacant_ne {a b : Fin 5} (hab : a ≠ b) :
+    gammaPlus a * modeVacant b = modeVacant b * gammaPlus a := by
+  rw [modeVacant_eq_one_sub_modeOccupied b, mul_sub, mul_one, sub_mul, one_mul,
+    gammaPlus_comm_modeOccupied_ne hab]
+
+private theorem trace_flip_vacant_at (a : Fin 5) (L R : MatStage 5)
+    (hL : gammaPlus a * L = L * gammaPlus a) (hR : gammaPlus a * R = R * gammaPlus a) :
+    Matrix.trace (L * modeVacant a * R) = Matrix.trace (L * modeOccupied a * R) := by
+  calc
+    Matrix.trace (L * modeVacant a * R)
+      = Matrix.trace (L * (gammaPlus a * modeOccupied a * gammaPlus a) * R) := by
+          rw [gammaPlus_mul_modeOccupied_mul_gammaPlus a]
+    _ = Matrix.trace (gammaPlus a * (L * modeOccupied a * R) * gammaPlus a) := by
+          congr 1
+          calc
+            L * (gammaPlus a * modeOccupied a * gammaPlus a) * R
+              = (L * gammaPlus a) * modeOccupied a * (gammaPlus a * R) := by simp only [mul_assoc]
+            _ = (gammaPlus a * L) * modeOccupied a * (R * gammaPlus a) := by rw [hL, hR]
+            _ = gammaPlus a * (L * modeOccupied a * R) * gammaPlus a := by simp only [mul_assoc]
+    _ = Matrix.trace (L * modeOccupied a * R) := trace_conjugate_gammaPlus a _
+
+private theorem trace_split_mode (a : Fin 5) (L R : MatStage 5)
+    (hL : gammaPlus a * L = L * gammaPlus a) (hR : gammaPlus a * R = R * gammaPlus a) :
+    Matrix.trace (L * R) = 2 * Matrix.trace (L * modeOccupied a * R) := by
+  calc
+    Matrix.trace (L * R)
+      = Matrix.trace (L * (modeOccupied a + modeVacant a) * R) := by
+          rw [modeOccupied_add_modeVacant a, mul_one]
+    _ = Matrix.trace (L * modeOccupied a * R + L * modeVacant a * R) := by
+          congr 1; noncomm_ring
+    _ = Matrix.trace (L * modeOccupied a * R) + Matrix.trace (L * modeVacant a * R) :=
+          Matrix.trace_add _ _
+    _ = 2 * Matrix.trace (L * modeOccupied a * R) := by
+          rw [trace_flip_vacant_at a L R hL hR, two_mul]
+
+private theorem trace_all_occupied_five_eq_one :
+    Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 *
+      modeOccupied 3 * modeOccupied 4) = 1 := by
+  have h1g : ∀ a : Fin 5, gammaPlus a * 1 = 1 * gammaPlus a := fun a => by simp only [mul_one, one_mul]
+  have h0 : Matrix.trace (1 : MatStage 5) = 2 * Matrix.trace (modeOccupied 0) := by
+    simpa using trace_split_mode 0 1 1 (h1g 0) (h1g 0)
+  have h1 : Matrix.trace (modeOccupied 0) = 2 * Matrix.trace (modeOccupied 0 * modeOccupied 1) := by
+    simpa using trace_split_mode 1 (modeOccupied 0) 1
+      (gammaPlus_comm_modeOccupied_ne (by decide)) (h1g 1)
+  have h2 : Matrix.trace (modeOccupied 0 * modeOccupied 1) =
+      2 * Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2) := by
+    have hc : gammaPlus 2 * (modeOccupied 0 * modeOccupied 1) =
+        (modeOccupied 0 * modeOccupied 1) * gammaPlus 2 := by
+      rw [← mul_assoc, gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+          gammaPlus_comm_modeOccupied_ne (by decide), ← mul_assoc]
+    simpa using trace_split_mode 2 (modeOccupied 0 * modeOccupied 1) 1 hc (h1g 2)
+  have h3 : Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2) =
+      2 * Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 * modeOccupied 3) := by
+    have hc : gammaPlus 3 * (modeOccupied 0 * modeOccupied 1 * modeOccupied 2) =
+        (modeOccupied 0 * modeOccupied 1 * modeOccupied 2) * gammaPlus 3 := by
+      simp only [mul_assoc]
+      rw [← mul_assoc (gammaPlus 3) (modeOccupied 0),
+          gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+          ← mul_assoc (gammaPlus 3) (modeOccupied 1),
+          gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+          gammaPlus_comm_modeOccupied_ne (by decide), ← mul_assoc, ← mul_assoc]
+    simpa using trace_split_mode 3 (modeOccupied 0 * modeOccupied 1 * modeOccupied 2) 1 hc (h1g 3)
+  have h4 : Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 * modeOccupied 3) =
+      2 * Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 * modeOccupied 3 * modeOccupied 4) := by
+    have hc : gammaPlus 4 * (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 * modeOccupied 3) =
+        (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 * modeOccupied 3) * gammaPlus 4 := by
+      simp only [mul_assoc]
+      rw [← mul_assoc (gammaPlus 4) (modeOccupied 0),
+          gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+          ← mul_assoc (gammaPlus 4) (modeOccupied 1),
+          gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+          ← mul_assoc (gammaPlus 4) (modeOccupied 2),
+          gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+          gammaPlus_comm_modeOccupied_ne (by decide), ← mul_assoc, ← mul_assoc, ← mul_assoc]
+    simpa using trace_split_mode 4 (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 * modeOccupied 3) 1 hc (h1g 4)
+  have htr1 : Matrix.trace (1 : MatStage 5) = (32 : ℝ) := by
+    rw [Matrix.trace_one, idx_card_pow_two 5]; norm_num
+  linarith
+
+private def cl55ModeOp (a : Fin 5) (b : Bool) : MatStage 5 :=
+  if b then modeOccupied a else modeVacant a
+
+private theorem gammaPlus_comm_cl55ModeOp_ne {a c : Fin 5} (hac : a ≠ c) (b : Bool) :
+    gammaPlus a * cl55ModeOp c b = cl55ModeOp c b * gammaPlus a := by
+  cases b <;> simp [cl55ModeOp, gammaPlus_comm_modeOccupied_ne hac, gammaPlus_comm_modeVacant_ne hac]
+
+private theorem trace_minimal5_eq_one (b₀ b₁ b₂ b₃ b₄ : Bool) :
+    Matrix.trace (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+      cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) = 1 := by
+  have step0 :
+      Matrix.trace (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+        cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) =
+      Matrix.trace (modeOccupied 0 * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+        cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) := by
+    cases b₀
+    · rw [show cl55ModeOp 0 false = modeVacant 0 from rfl]
+      have hR : gammaPlus 0 * (cl55ModeOp 1 b₁ * (cl55ModeOp 2 b₂ *
+          (cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄))) =
+          (cl55ModeOp 1 b₁ * (cl55ModeOp 2 b₂ * (cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄))) * gammaPlus 0 := by
+        simp only [mul_assoc]
+        rw [← mul_assoc (gammaPlus 0), gammaPlus_comm_cl55ModeOp_ne (by decide), mul_assoc,
+            ← mul_assoc (gammaPlus 0), gammaPlus_comm_cl55ModeOp_ne (by decide), mul_assoc,
+            ← mul_assoc (gammaPlus 0), gammaPlus_comm_cl55ModeOp_ne (by decide), mul_assoc,
+            gammaPlus_comm_cl55ModeOp_ne (by decide)]
+      simpa only [mul_assoc, one_mul] using trace_flip_vacant_at 0 1
+        (cl55ModeOp 1 b₁ * (cl55ModeOp 2 b₂ * (cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄)))
+        (by simp only [mul_one, one_mul]) hR
+    · rfl
+  have step1 :
+      Matrix.trace (modeOccupied 0 * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+        cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) =
+      Matrix.trace (modeOccupied 0 * modeOccupied 1 * cl55ModeOp 2 b₂ *
+        cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) := by
+    cases b₁
+    · rw [show cl55ModeOp 1 false = modeVacant 1 from rfl]
+      have hL : gammaPlus 1 * modeOccupied 0 = modeOccupied 0 * gammaPlus 1 :=
+        gammaPlus_comm_modeOccupied_ne (by decide)
+      have hR : gammaPlus 1 * (cl55ModeOp 2 b₂ * (cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄)) =
+          (cl55ModeOp 2 b₂ * (cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄)) * gammaPlus 1 := by
+        simp only [mul_assoc]
+        rw [← mul_assoc (gammaPlus 1), gammaPlus_comm_cl55ModeOp_ne (by decide), mul_assoc,
+            ← mul_assoc (gammaPlus 1), gammaPlus_comm_cl55ModeOp_ne (by decide), mul_assoc,
+            gammaPlus_comm_cl55ModeOp_ne (by decide)]
+      simpa only [mul_assoc] using trace_flip_vacant_at 1 (modeOccupied 0)
+        (cl55ModeOp 2 b₂ * (cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄)) hL hR
+    · rfl
+  have step2 :
+      Matrix.trace (modeOccupied 0 * modeOccupied 1 * cl55ModeOp 2 b₂ *
+        cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) =
+      Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 *
+        cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) := by
+    cases b₂
+    · rw [show cl55ModeOp 2 false = modeVacant 2 from rfl]
+      have hL : gammaPlus 2 * (modeOccupied 0 * modeOccupied 1) =
+          (modeOccupied 0 * modeOccupied 1) * gammaPlus 2 := by
+        rw [← mul_assoc, gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+            gammaPlus_comm_modeOccupied_ne (by decide), ← mul_assoc]
+      have hR : gammaPlus 2 * (cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) =
+          (cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) * gammaPlus 2 := by
+        rw [← mul_assoc, gammaPlus_comm_cl55ModeOp_ne (by decide), mul_assoc,
+            gammaPlus_comm_cl55ModeOp_ne (by decide), ← mul_assoc]
+      simpa only [mul_assoc] using trace_flip_vacant_at 2 (modeOccupied 0 * modeOccupied 1)
+        (cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) hL hR
+    · rfl
+  have step3 :
+      Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 *
+        cl55ModeOp 3 b₃ * cl55ModeOp 4 b₄) =
+      Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 *
+        modeOccupied 3 * cl55ModeOp 4 b₄) := by
+    cases b₃
+    · rw [show cl55ModeOp 3 false = modeVacant 3 from rfl]
+      have hL : gammaPlus 3 * (modeOccupied 0 * (modeOccupied 1 * modeOccupied 2)) =
+          (modeOccupied 0 * (modeOccupied 1 * modeOccupied 2)) * gammaPlus 3 := by
+        simp only [mul_assoc]
+        rw [← mul_assoc (gammaPlus 3), gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+            ← mul_assoc (gammaPlus 3), gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+            gammaPlus_comm_modeOccupied_ne (by decide)]
+      have hR : gammaPlus 3 * cl55ModeOp 4 b₄ = cl55ModeOp 4 b₄ * gammaPlus 3 :=
+        gammaPlus_comm_cl55ModeOp_ne (by decide) b₄
+      simpa only [mul_assoc] using trace_flip_vacant_at 3
+        (modeOccupied 0 * (modeOccupied 1 * modeOccupied 2)) (cl55ModeOp 4 b₄) hL hR
+    · rfl
+  have step4 :
+      Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 *
+        modeOccupied 3 * cl55ModeOp 4 b₄) =
+      Matrix.trace (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 *
+        modeOccupied 3 * modeOccupied 4) := by
+    cases b₄
+    · dsimp [cl55ModeOp]
+      have hL : gammaPlus 4 * (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 * modeOccupied 3) =
+          (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 * modeOccupied 3) * gammaPlus 4 := by
+        simp only [mul_assoc]
+        rw [← mul_assoc (gammaPlus 4), gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+            ← mul_assoc (gammaPlus 4), gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+            ← mul_assoc (gammaPlus 4), gammaPlus_comm_modeOccupied_ne (by decide), mul_assoc,
+            gammaPlus_comm_modeOccupied_ne (by decide), ← mul_assoc, ← mul_assoc, ← mul_assoc]
+      simpa only [mul_assoc, mul_one] using trace_flip_vacant_at 4
+        (modeOccupied 0 * modeOccupied 1 * modeOccupied 2 * modeOccupied 3) 1
+        hL (by simp only [mul_one, one_mul])
+    · rfl
+  rw [step0, step1, step2, step3, step4, trace_all_occupied_five_eq_one]
+
+private theorem trace_threeMode_eq_four (b₀ b₁ b₂ : Bool) :
+    Matrix.trace (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂) = 4 := by
+  have h1 : (1 : MatStage 5) =
+      (cl55ModeOp 3 true + cl55ModeOp 3 false) * (cl55ModeOp 4 true + cl55ModeOp 4 false) := by
+    dsimp [cl55ModeOp]
+    simp only [modeOccupied_add_modeVacant, mul_one]
+  calc
+    Matrix.trace (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂)
+      = Matrix.trace (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+          ((cl55ModeOp 3 true + cl55ModeOp 3 false) * (cl55ModeOp 4 true + cl55ModeOp 4 false))) := by
+          rw [← h1, mul_one]
+    _ = Matrix.trace (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+          cl55ModeOp 3 true * cl55ModeOp 4 true) +
+        Matrix.trace (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+          cl55ModeOp 3 true * cl55ModeOp 4 false) +
+        Matrix.trace (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+          cl55ModeOp 3 false * cl55ModeOp 4 true) +
+        Matrix.trace (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+          cl55ModeOp 3 false * cl55ModeOp 4 false) := by
+          have hexp :
+              cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+                  ((cl55ModeOp 3 true + cl55ModeOp 3 false) * (cl55ModeOp 4 true + cl55ModeOp 4 false)) =
+                (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+                  cl55ModeOp 3 true * cl55ModeOp 4 true) +
+                (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+                  cl55ModeOp 3 true * cl55ModeOp 4 false) +
+                (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+                  cl55ModeOp 3 false * cl55ModeOp 4 true) +
+                (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+                  cl55ModeOp 3 false * cl55ModeOp 4 false) := by
+            noncomm_ring
+          rw [hexp, Matrix.trace_add, Matrix.trace_add, Matrix.trace_add]
+    _ = 1 + 1 + 1 + 1 := by
+          rw [trace_minimal5_eq_one, trace_minimal5_eq_one,
+              trace_minimal5_eq_one, trace_minimal5_eq_one]
+    _ = 4 := by norm_num
+
+private theorem trace_threeMode_weak_eq_two (b₀ b₁ b₂ c₃ c₄ : Bool) :
+    Matrix.trace ((cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂) *
+      (cl55ModeOp 3 c₃ * cl55ModeOp 4 c₄ + cl55ModeOp 3 (!c₃) * cl55ModeOp 4 (!c₄))) = 2 := by
+  have hexp :
+      (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂) *
+          (cl55ModeOp 3 c₃ * cl55ModeOp 4 c₄ + cl55ModeOp 3 (!c₃) * cl55ModeOp 4 (!c₄)) =
+        (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+          cl55ModeOp 3 c₃ * cl55ModeOp 4 c₄) +
+        (cl55ModeOp 0 b₀ * cl55ModeOp 1 b₁ * cl55ModeOp 2 b₂ *
+          cl55ModeOp 3 (!c₃) * cl55ModeOp 4 (!c₄)) := by
+    noncomm_ring
+  rw [hexp, Matrix.trace_add, trace_minimal5_eq_one, trace_minimal5_eq_one]
+  norm_num
+
+/-- **Exact `32 = 4 + 12 + 12 + 4` Color Sector Traces in `MatStage 5`**:
+The 4 color-sector projectors decompose the 32-dimensional `Cl(5,5)` spinor space into
+`tr(Π_{vac}) = 4`, `tr(Π_{quark}) = 12`, `tr(Π_{diquark}) = 12`, `tr(Π_{baryon}) = 4`. -/
+theorem trace_colorFourSectors_cl55 :
+    Matrix.trace colorVacuumSingletProj = 4 ∧
+    Matrix.trace colorQuarkTripletProj = 12 ∧
+    Matrix.trace colorDiquarkAntitripletProj = 12 ∧
+    Matrix.trace colorBaryonSingletProj = 4 := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · simpa [colorVacuumSingletProj, cl55ModeOp] using trace_threeMode_eq_four false false false
+  · dsimp only [colorQuarkTripletProj]
+    rw [Matrix.trace_add, Matrix.trace_add]
+    have h1 := trace_threeMode_eq_four true false false
+    have h2 := trace_threeMode_eq_four false true false
+    have h3 := trace_threeMode_eq_four false false true
+    dsimp [cl55ModeOp] at h1 h2 h3
+    rw [h1, h2, h3]; norm_num
+  · dsimp only [colorDiquarkAntitripletProj]
+    rw [Matrix.trace_add, Matrix.trace_add]
+    have h1 := trace_threeMode_eq_four false true true
+    have h2 := trace_threeMode_eq_four true false true
+    have h3 := trace_threeMode_eq_four true true false
+    dsimp [cl55ModeOp] at h1 h2 h3
+    rw [h1, h2, h3]; norm_num
+  · simpa [colorBaryonSingletProj, cl55ModeOp] using trace_threeMode_eq_four true true true
+
+/-- **Exact `16`-Dimensional Chiral Half-Spinor Multiplet Traces (`16 = 2 + 6 + 2 + 6`)**:
+Pairing the 4 color sectors with the active isospin/pairing carriers yields exact integer trace
+multiplicities matching `tr(PMinus) = tr(PPlus) = 16`. -/
+theorem trace_chiralHalfSpinorMinus16_multiplets_cl55 :
+    Matrix.trace (colorBaryonSingletProj * isospinCarrier 3 4) = 2 ∧
+    Matrix.trace (colorQuarkTripletProj * isospinCarrier 3 4) = 6 ∧
+    Matrix.trace (colorVacuumSingletProj * pairingCarrier 3 4) = 2 ∧
+    Matrix.trace (colorDiquarkAntitripletProj * pairingCarrier 3 4) = 6 ∧
+    Matrix.trace PMinus = 16 ∧
+    Matrix.trace PPlus = 16 := by
+  have hiso_eq : isospinCarrier 3 4 =
+      cl55ModeOp 3 true * cl55ModeOp 4 false + cl55ModeOp 3 false * cl55ModeOp 4 true := by
+    dsimp [isospinCarrier, isoProjPlus, isoProjMinus, cl55ModeOp]
+  have hpair_eq : pairingCarrier 3 4 =
+      cl55ModeOp 3 true * cl55ModeOp 4 true + cl55ModeOp 3 false * cl55ModeOp 4 false := by
+    dsimp [pairingCarrier, pairProjPlus, pairProjMinus, cl55ModeOp]
+  have hgamma_tr : Matrix.trace gammaChiral = 0 := by
+    have hanti : gammaPlus 0 * gammaChiral = - (gammaChiral * gammaPlus 0) := by
+      dsimp [gammaPlus]
+      rw [add_mul, mul_add]
+      have he := eq_neg_of_add_eq_zero_right (globalChirality_anticomm_jwCreation 5 0)
+      have hf := eq_neg_of_add_eq_zero_right (globalChirality_anticomm_jwAnnihilation 5 0)
+      change e 0 * gammaChiral + f 0 * gammaChiral = -(gammaChiral * e 0 + gammaChiral * f 0)
+      have he' : e 0 * gammaChiral = -(gammaChiral * e 0) := by
+        simpa [gammaChiral, e] using he
+      have hf' : f 0 * gammaChiral = -(gammaChiral * f 0) := by
+        simpa [gammaChiral, f] using hf
+      rw [he', hf']; abel
+    have h1 : Matrix.trace (gammaPlus 0 * gammaChiral * gammaPlus 0) = Matrix.trace gammaChiral :=
+      trace_conjugate_gammaPlus 0 gammaChiral
+    have h2 : Matrix.trace (gammaPlus 0 * gammaChiral * gammaPlus 0) = - Matrix.trace gammaChiral := by
+      rw [hanti, neg_mul, mul_assoc, gammaPlus_sq 0, mul_one, Matrix.trace_neg]
+    linarith
+  have htr1 : Matrix.trace (1 : MatStage 5) = (32 : ℝ) := by
+    rw [Matrix.trace_one, idx_card_pow_two 5]; norm_num
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · rw [hiso_eq]
+    simpa [colorBaryonSingletProj, cl55ModeOp] using
+      trace_threeMode_weak_eq_two true true true true false
+  · rw [hiso_eq]
+    dsimp only [colorQuarkTripletProj]
+    rw [add_mul, add_mul, Matrix.trace_add, Matrix.trace_add]
+    have h1 := trace_threeMode_weak_eq_two true false false true false
+    have h2 := trace_threeMode_weak_eq_two false true false true false
+    have h3 := trace_threeMode_weak_eq_two false false true true false
+    dsimp [cl55ModeOp] at h1 h2 h3 ⊢
+    rw [h1, h2, h3]; norm_num
+  · rw [hpair_eq]
+    simpa [colorVacuumSingletProj, cl55ModeOp] using
+      trace_threeMode_weak_eq_two false false false true true
+  · rw [hpair_eq]
+    dsimp only [colorDiquarkAntitripletProj]
+    rw [add_mul, add_mul, Matrix.trace_add, Matrix.trace_add]
+    have h1 := trace_threeMode_weak_eq_two false true true true true
+    have h2 := trace_threeMode_weak_eq_two true false true true true
+    have h3 := trace_threeMode_weak_eq_two true true false true true
+    dsimp [cl55ModeOp] at h1 h2 h3 ⊢
+    rw [h1, h2, h3]; norm_num
+  · dsimp [PMinus]
+    rw [Matrix.trace_smul, Matrix.trace_sub, htr1, hgamma_tr, sub_zero, smul_eq_mul]
+    norm_num
+  · dsimp [PPlus]
+    rw [Matrix.trace_smul, Matrix.trace_add, htr1, hgamma_tr, add_zero, smul_eq_mul]
+    norm_num
+
+/-- **Concrete `Cl(5,5)` Catto CAR Transitions**:
+Instantiates `ThreeColorTwoWeakCAR.catto_car_color_transitions` directly on
+`colorVacuumSingletProj`, `colorQuarkTripletProj`, `colorDiquarkAntitripletProj`,
+and `colorBaryonSingletProj` in `MatStage 5`. -/
+theorem catto_car_color_transitions_cl55 :
+    (∀ c : Fin 3,
+      colorQuarkTripletProj * (e (c.castLE (by omega)) * colorVacuumSingletProj) =
+        e (c.castLE (by omega)) * colorVacuumSingletProj ∧
+      colorVacuumSingletProj * (e (c.castLE (by omega)) * colorVacuumSingletProj) = 0) ∧
+    (colorDiquarkAntitripletProj * (e 0 * e 1 * colorVacuumSingletProj) =
+        e 0 * e 1 * colorVacuumSingletProj ∧
+     colorDiquarkAntitripletProj * (e 0 * e 2 * colorVacuumSingletProj) =
+        e 0 * e 2 * colorVacuumSingletProj ∧
+     colorDiquarkAntitripletProj * (e 1 * e 2 * colorVacuumSingletProj) =
+        e 1 * e 2 * colorVacuumSingletProj) ∧
+    (colorBaryonSingletProj * (e 0 * e 1 * e 2 * colorVacuumSingletProj) =
+      e 0 * e 1 * e 2 * colorVacuumSingletProj) ∧
+    (∀ c : Fin 3,
+      colorDiquarkAntitripletProj * (f (c.castLE (by omega)) * colorBaryonSingletProj) =
+        f (c.castLE (by omega)) * colorBaryonSingletProj ∧
+      colorBaryonSingletProj * (f (c.castLE (by omega)) * colorBaryonSingletProj) = 0) ∧
+    (∀ c : Fin 3,
+      e (c.castLE (by omega)) * e (c.castLE (by omega)) = 0 ∧
+      f (c.castLE (by omega)) * colorVacuumSingletProj = 0 ∧
+      e (c.castLE (by omega)) * colorBaryonSingletProj = 0) := by
+  rw [← cl55_colorVac_eq, ← cl55_colorQuark_eq, ← cl55_colorDiquark_eq, ← cl55_colorBaryon_eq]
+  exact cl55ThreeColorTwoWeakCAR.catto_car_color_transitions
+
+end ConcreteCl55ColorTraceAndCatto
 
 end InfoGeometry.Physics.Cl55SpinorCartanFock

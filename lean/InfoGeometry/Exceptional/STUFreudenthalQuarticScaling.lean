@@ -26,7 +26,7 @@ theorem stuQuarticInvariant_smul
     FreudenthalCharge.quarticInvariant STU_Datum (r • Q) =
       r ^ 4 * FreudenthalCharge.quarticInvariant STU_Datum Q := by
   simp [FreudenthalCharge.quarticInvariant, STU_Datum,
-    stuNormCubic_smul, stuAdjointQuad_smul, Pi.smul_apply]
+    stuNormCubic_smul, stuAdjointQuad_smul]
   ring
 
 theorem stuQuarticInvariant_neg (Q : FreudenthalCharge STUCarrier) :

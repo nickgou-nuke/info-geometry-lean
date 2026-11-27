@@ -1,9 +1,9 @@
 # Module Map
 
-> Status: `current authority`
-> Audited: 2026-05-02
-> Note: Maintained against the live code surface.
-> See: [README.md](../README.md), [docs/README.md](README.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+> Status: `reference memory`
+> Audited: 2026-11-26 (note: partial curated map — consult [docs/README.md](README.md) for current authority and inspect `lean/InfoGeometry/` directly for exhaustive listings)
+> Note: Maintained as a discovery index; inspect actual Lean owners before claiming coverage.
+> See: [README.md](../README.md), [docs/README.md](README.md), [docs/rn_tomita_typeiii_coverage_matrix.md](rn_tomita_typeiii_coverage_matrix.md), [docs/CODEBASE_STATUS.md](CODEBASE_STATUS.md)
 
 This is the short practical map of the current codebase.
 
@@ -29,29 +29,42 @@ Python:
 
 ## Major Lean Families Present
 
-The current `lean/InfoGeometry/` tree includes major families such as:
+The following is a curated subset of the subdirectories under `lean/InfoGeometry/` (consult [docs/README.md](README.md) for current authority, [docs/rn_tomita_typeiii_coverage_matrix.md](rn_tomita_typeiii_coverage_matrix.md) for the Tomita–Takesaki / modular-flow / GNS ontology, and inspect `lean/InfoGeometry/` directly for exhaustive listings):
 
+- `Algebra`
 - `Algebraic`
+- `Analysis`
 - `Arithmetic`
 - `Automorphic`
 - `Canonical`
+- `Categorical`
+- `Clifford`
 - `Compatibility`
 - `Convex`
 - `Core`
 - `ExponentialFamily`
+- `Foundations`
 - `Geometry`
 - `GrandCanonical`
+- `InformationGeometry`
 - `Interpretation`
 - `Krein`
+- `Lie`
 - `LLM`
+- `Measure`
 - `Meta`
+- `Modular`
+- `NCG`
 - `OperatorAlgebra`
 - `Projective`
 - `Quantum`
+- `QuantumContext`
 - `SuperMetriplectic`
 - `Thermodynamics`
+- `Tomita`
 - `Topological`
 - `Twistor`
+- `Volume`
 
 Selected bridge surfaces that connect these families:
 
@@ -186,9 +199,10 @@ If you need tooling:
 
 If you need onboarding:
 
-- [../Installation.md](../Installation.md)
-- [../NEWCOMER_PATH.md](../NEWCOMER_PATH.md)
+- [GETTING_STARTED.md](GETTING_STARTED.md) (archived original: [root-archive/Installation.md](root-archive/Installation.md))
+- [root-archive/NEWCOMER_PATH.md](root-archive/NEWCOMER_PATH.md)
 
 If you need current status:
 
-- [CODEBASE_STATUS.md](CODEBASE_STATUS.md)
+- [README.md](README.md) (current authority and latest scoped verification records)
+- [CODEBASE_STATUS.md](CODEBASE_STATUS.md) (dated historical snapshot from `2026-08-28`)

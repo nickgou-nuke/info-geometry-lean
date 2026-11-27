@@ -2194,6 +2194,92 @@ theorem cliffordGradeProj_reverse (Q : QuadraticForm R M) (k : ℕ) (x : Cliffor
   rw [LinearEquiv.apply_symm_apply]
   exact exteriorPower_reverse k _ (exteriorGradeProj_mem R M k _)
 
+/-- Reversion commutes with homogeneous-grade projection up to the standard
+grade sign. This is the input-side counterpart of
+`cliffordGradeProj_reverse`. -/
+theorem cliffordGradeProj_reverse_input (Q : QuadraticForm R M) (k : ℕ)
+    (x : CliffordAlgebra Q) :
+    cliffordGradeProj Q k (CliffordAlgebra.reverse x) =
+      (-1 : R) ^ (k * (k - 1) / 2) • cliffordGradeProj Q k x := by
+  let y : ExteriorAlgebra R M := CliffordAlgebra.equivExterior Q x
+  have hExt : exteriorGradeProj R M k (CliffordAlgebra.reverse y) =
+      (-1 : R) ^ (k * (k - 1) / 2) • exteriorGradeProj R M k y := by
+    induction y using DirectSum.Decomposition.inductionOn (fun i : ℕ => ⋀[R]^i M) with
+    | zero => simp
+    | add a b ha hb => simp [ha, hb, smul_add]
+    | homogeneous hm =>
+        rename_i i
+        rcases hm with ⟨a, ha⟩
+        by_cases hik : i = k
+        · subst i
+          rw [exteriorPower_reverse k a ha, map_smul,
+            exteriorGradeProj_of_mem ha]
+        · rw [exteriorPower_reverse i a ha, map_smul,
+            exteriorGradeProj_of_mem_ne hik ha]
+          simp
+  change (CliffordAlgebra.equivExterior Q).symm
+      (exteriorGradeProj R M k
+        (CliffordAlgebra.equivExterior Q (CliffordAlgebra.reverse x))) =
+    (-1 : R) ^ (k * (k - 1) / 2) •
+      (CliffordAlgebra.equivExterior Q).symm
+        (exteriorGradeProj R M k (CliffordAlgebra.equivExterior Q x))
+  rw [equivExterior_reverse]
+  calc
+    (CliffordAlgebra.equivExterior Q).symm
+        (exteriorGradeProj R M k (CliffordAlgebra.reverse y)) =
+        (CliffordAlgebra.equivExterior Q).symm
+          ((-1 : R) ^ (k * (k - 1) / 2) • exteriorGradeProj R M k y) :=
+      congrArg (CliffordAlgebra.equivExterior Q).symm hExt
+    _ = (-1 : R) ^ (k * (k - 1) / 2) •
+        (CliffordAlgebra.equivExterior Q).symm (exteriorGradeProj R M k y) := by
+      exact map_smul _ _ _
+
+/-- Grade projection commutes with grade involution up to its homogeneous
+grade sign. This is the input-side form of the exterior-power involution law. -/
+theorem cliffordGradeProj_involute_input (Q : QuadraticForm R M) (k : ℕ)
+    (x : CliffordAlgebra Q) :
+    cliffordGradeProj Q k (CliffordAlgebra.involute x) =
+      (-1 : R) ^ k • cliffordGradeProj Q k x := by
+  change (CliffordAlgebra.equivExterior Q).symm
+      (exteriorGradeProj R M k
+        (CliffordAlgebra.equivExterior Q (CliffordAlgebra.involute x))) =
+    (-1 : R) ^ k •
+      (CliffordAlgebra.equivExterior Q).symm
+        (exteriorGradeProj R M k (CliffordAlgebra.equivExterior Q x))
+  rw [equivExterior_involute]
+  calc
+    (CliffordAlgebra.equivExterior Q).symm
+        (exteriorGradeProj R M k
+          (CliffordAlgebra.involute (CliffordAlgebra.equivExterior Q x))) =
+        (CliffordAlgebra.equivExterior Q).symm
+          ((-1 : R) ^ k • exteriorGradeProj R M k
+            (CliffordAlgebra.equivExterior Q x)) :=
+      congrArg (CliffordAlgebra.equivExterior Q).symm
+        (exteriorGradeProj_involute k _)
+    _ = (-1 : R) ^ k •
+        (CliffordAlgebra.equivExterior Q).symm
+          (exteriorGradeProj R M k (CliffordAlgebra.equivExterior Q x)) := by
+      exact map_smul _ _ _
+
+/-- Clifford conjugation acts on the input of homogeneous-grade projection
+with the standard sign `(-1)^(k(k+1)/2)`. -/
+theorem cliffordGradeProj_star_input (Q : QuadraticForm R M) (k : ℕ)
+    (x : CliffordAlgebra Q) :
+    cliffordGradeProj Q k (star x) =
+      (-1 : R) ^ (k * (k + 1) / 2) • cliffordGradeProj Q k x := by
+  rw [CliffordAlgebra.star_def, cliffordGradeProj_reverse_input,
+    cliffordGradeProj_involute_input, smul_smul, ← pow_add]
+  congr 1
+  have hpow : k * (k - 1) / 2 + k = (k + 1) * k / 2 := by
+    have hmul : (k + 1) * k = k * (k - 1) + 2 * k := by
+      cases k with
+      | zero => simp
+      | succ n => simp only [Nat.add_sub_cancel]; ring
+    rw [hmul, Nat.add_mul_div_left _ _ (by norm_num), add_comm]
+  have hpow' : (k + 1) * k / 2 = k * (k + 1) / 2 := by
+    rw [Nat.mul_comm]
+  rw [hpow, hpow']
+
 /-- `S2-14` (Riesz 1958 Ch. I §1.4; ABS §1 Def. (1.8)): General-`k` Clifford conjugation
 (`star x = reverse (involute x)`) law:
 `star (cliffordGradeProj Q k x) = (-1)^(k*(k+1)/2) • cliffordGradeProj Q k x`. -/

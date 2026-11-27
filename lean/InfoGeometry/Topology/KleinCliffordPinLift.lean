@@ -36,7 +36,7 @@ def negativeForm : QuadraticForm ℝ Tangent := -positiveForm
 
 def vectorPlus : Tangent →ₗ[ℝ] Mat where
   toFun v := !![(v 1:ℂ),(v 0:ℂ); (v 0:ℂ),-(v 1:ℂ)]
-  map_add' v w := by ext i j; fin_cases i <;> fin_cases j <;> simp <;> ring
+  map_add' v w := by ext i j; fin_cases i <;> fin_cases j <;> (simp; try ring)
   map_smul' r v := by ext i j; fin_cases i <;> fin_cases j <;> simp [smul_eq_mul]
 
 def vectorMinus : Tangent →ₗ[ℝ] Mat := Complex.I • vectorPlus
@@ -53,7 +53,7 @@ theorem vectorMinus_square (v : Tangent) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [vectorMinus,vectorPlus,Matrix.mul_apply,Fin.sum_univ_two,
-      Matrix.algebraMap_matrix_apply,positiveForm,negativeForm,smul_eq_mul,Complex.I_sq]
+      Matrix.algebraMap_matrix_apply,positiveForm,negativeForm,smul_eq_mul]
       <;> ring_nf <;> simp [Complex.I_sq] <;> ring
 
 def positiveRepresentation : CliffordAlgebra positiveForm →ₐ[ℝ] Mat :=
@@ -78,8 +78,7 @@ theorem reflectionPlus_square : reflectionPlus*reflectionPlus=1 := by
     norm_num [reflectionPlus,Matrix.mul_apply,Fin.sum_univ_two,Matrix.one_apply]
 
 theorem reflectionMinus_square : reflectionMinus*reflectionMinus=-1 := by
-  simp [reflectionMinus,smul_mul_assoc,mul_smul_comm,smul_smul,
-    reflectionPlus_square,Complex.I_sq]
+  simp [reflectionMinus,smul_smul,reflectionPlus_square]
 
 def plusUnit : Matˣ := ⟨reflectionPlus,reflectionPlus,reflectionPlus_square,reflectionPlus_square⟩
 def minusUnit : Matˣ := ⟨reflectionMinus,-reflectionMinus,
@@ -93,7 +92,7 @@ theorem plus_twisted_adjoint (v : Tangent) :
     -(plusUnit.val * vectorPlus v * plusUnit.inv)=vectorPlus (reflected v) := by
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [plusUnit,reflectionPlus,vectorPlus,reflected,Matrix.mul_apply,Fin.sum_univ_two]
+    simp [plusUnit,reflectionPlus,vectorPlus,reflected]
 
 /-- The negative Clifford lift has the same geometric reflection but different square. -/
 theorem minus_twisted_adjoint (v : Tangent) :
@@ -101,7 +100,7 @@ theorem minus_twisted_adjoint (v : Tangent) :
   ext i j
   fin_cases i <;> fin_cases j <;>
     simp [minusUnit,reflectionMinus,reflectionPlus,vectorMinus,vectorPlus,reflected,
-      Matrix.mul_apply,Fin.sum_univ_two,smul_eq_mul] <;> ring_nf <;> simp [Complex.I_sq]
+      smul_eq_mul] <;> ring_nf <;> simp
 
 /-- This is precisely the existing deck derivative, not an unrelated reflection. -/
 theorem reflected_eq_deck_linear (v : Tangent) :
@@ -199,7 +198,7 @@ theorem reflectionMinus_swaps_peirce_sheets :
     minusUnit.val * peircePL * minusUnit.inv = peircePR := by
   ext i j; fin_cases i <;> fin_cases j <;>
     simp [minusUnit, reflectionMinus, reflectionPlus, peircePL, peircePR,
-      Matrix.mul_apply, Fin.sum_univ_two, Complex.I_sq]
+      Matrix.mul_apply, Fin.sum_univ_two]
 
 /-- Both `Pin⁺` and `Pin⁻` double-glide lifts induce the identical adjoint sheet swap on `Mat`. -/
 theorem plus_and_minus_agree_on_peirce_adjoint (X : Mat) :
@@ -270,6 +269,113 @@ theorem klein_pin_minus_periodic_matrix_obstruction (U : PlanePoint → Mat)
       (2 : ℂ) * M i j = M i j + M i j := two_mul _
       _ = 0 := hij'
   exact (mul_eq_zero.mp h2).resolve_left (by norm_num)
+
+/-- The Clifford generator `e₀ = ![1, 0]` maps under `positiveRepresentation` to `reflectionPlus`. -/
+theorem positiveRepresentation_e0_eq_reflectionPlus :
+    positiveRepresentation (CliffordAlgebra.ι positiveForm ![1, 0]) = reflectionPlus := by
+  rw [positiveRepresentation_vector]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [vectorPlus, reflectionPlus]
+
+/-- The Clifford generator `e₀ = ![1, 0]` maps under `negativeRepresentation` to `reflectionMinus`. -/
+theorem negativeRepresentation_e0_eq_reflectionMinus :
+    negativeRepresentation (CliffordAlgebra.ι negativeForm ![1, 0]) = reflectionMinus := by
+  rw [negativeRepresentation_vector]
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [vectorMinus, vectorPlus, reflectionMinus, reflectionPlus]
+
+/-- The Clifford generator `e₁ = ![0, 1]` maps under `positiveRepresentation` to the DeWitt
+chiral grading `G = peircePL - peircePR` of `matChiralPeirceSystem`. -/
+theorem positiveRepresentation_e1_eq_chiralGrading :
+    positiveRepresentation (CliffordAlgebra.ι positiveForm ![0, 1]) = (G (A := Mat)) := by
+  rw [positiveRepresentation_vector]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [vectorPlus, G, ChiralPeirceSystem.PL, ChiralPeirceSystem.PR, peircePL, peircePR]
+
+/-- The Clifford generator `e₁ = ![0, 1]` maps under `negativeRepresentation` to `I • G`. -/
+theorem negativeRepresentation_e1_eq_I_chiralGrading :
+    negativeRepresentation (CliffordAlgebra.ι negativeForm ![0, 1]) =
+      Complex.I • (G (A := Mat)) := by
+  rw [negativeRepresentation_vector]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [vectorMinus, vectorPlus, G, ChiralPeirceSystem.PL, ChiralPeirceSystem.PR,
+      peircePL, peircePR]
+
+/-- Orthogonal basis generators `e₀ = ![1, 0]` and `e₁ = ![0, 1]` anticommute directly inside
+`CliffordAlgebra positiveForm`. -/
+theorem clifford_e0_e1_anticomm :
+    CliffordAlgebra.ι positiveForm ![0, 1] * CliffordAlgebra.ι positiveForm ![1, 0] +
+      CliffordAlgebra.ι positiveForm ![1, 0] * CliffordAlgebra.ι positiveForm ![0, 1] = 0 := by
+  let e0 : Tangent := ![1, 0]
+  let e1 : Tangent := ![0, 1]
+  have hsum : CliffordAlgebra.ι positiveForm (e1 + e0) *
+        CliffordAlgebra.ι positiveForm (e1 + e0) =
+      algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm (e1 + e0)) :=
+    CliffordAlgebra.ι_sq_scalar positiveForm (e1 + e0)
+  have h1 : CliffordAlgebra.ι positiveForm e1 * CliffordAlgebra.ι positiveForm e1 =
+      algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm e1) :=
+    CliffordAlgebra.ι_sq_scalar positiveForm e1
+  have h0 : CliffordAlgebra.ι positiveForm e0 * CliffordAlgebra.ι positiveForm e0 =
+      algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm e0) :=
+    CliffordAlgebra.ι_sq_scalar positiveForm e0
+  have hquad : positiveForm (e1 + e0) = positiveForm e1 + positiveForm e0 := by
+    simp [positiveForm, e0, e1]
+  rw [map_add] at hsum
+  rw [hquad, map_add] at hsum
+  have h_expand : (CliffordAlgebra.ι positiveForm e1 + CliffordAlgebra.ι positiveForm e0) *
+        (CliffordAlgebra.ι positiveForm e1 + CliffordAlgebra.ι positiveForm e0) =
+      CliffordAlgebra.ι positiveForm e1 * CliffordAlgebra.ι positiveForm e1 +
+        (CliffordAlgebra.ι positiveForm e1 * CliffordAlgebra.ι positiveForm e0 +
+          CliffordAlgebra.ι positiveForm e0 * CliffordAlgebra.ι positiveForm e1) +
+        CliffordAlgebra.ι positiveForm e0 * CliffordAlgebra.ι positiveForm e0 := by
+    noncomm_ring
+  rw [h_expand, h1, h0] at hsum
+  have hcancel : (algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm e1) +
+        (CliffordAlgebra.ι positiveForm e1 * CliffordAlgebra.ι positiveForm e0 +
+          CliffordAlgebra.ι positiveForm e0 * CliffordAlgebra.ι positiveForm e1)) +
+        algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm e0) =
+      (algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm e1) +
+        algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm e0)) +
+        (CliffordAlgebra.ι positiveForm e1 * CliffordAlgebra.ι positiveForm e0 +
+          CliffordAlgebra.ι positiveForm e0 * CliffordAlgebra.ι positiveForm e1) := by
+    abel
+  have hsum' : (algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm e1) +
+        algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm e0)) +
+        (CliffordAlgebra.ι positiveForm e1 * CliffordAlgebra.ι positiveForm e0 +
+          CliffordAlgebra.ι positiveForm e0 * CliffordAlgebra.ι positiveForm e1) =
+      (algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm e1) +
+        algebraMap ℝ (CliffordAlgebra positiveForm) (positiveForm e0)) + 0 := by
+    rw [add_zero]
+    rw [← hcancel]
+    exact hsum
+  exact add_left_cancel hsum'
+
+/-- Directly from the `CliffordAlgebra positiveForm` generators `e₀, e₁`, the chirality-dressed
+Klein reflection `G * reflectionPlus` squares to `-1` (`Pin⁻` lift). -/
+theorem clifford_chiral_reflection_pin_minus_sq :
+    (G (A := Mat) * reflectionPlus) * (G (A := Mat) * reflectionPlus) = -1 := by
+  have hAntiAlg := congrArg positiveRepresentation clifford_e0_e1_anticomm
+  rw [map_add, map_mul, map_mul, map_zero,
+    positiveRepresentation_e1_eq_chiralGrading,
+    positiveRepresentation_e0_eq_reflectionPlus] at hAntiAlg
+  have hAnti : reflectionPlus * (G (A := Mat)) = -((G (A := Mat)) * reflectionPlus) :=
+    eq_neg_of_add_eq_zero_right hAntiAlg
+  have hG_sq : (G (A := Mat)) * G (A := Mat) = 1 := by
+    have h1 := congrArg positiveRepresentation
+      (CliffordAlgebra.ι_sq_scalar positiveForm ![0, 1])
+    have hq1 : positiveForm ![0, 1] = 1 := by simp [positiveForm]
+    rw [map_mul, positiveRepresentation_e1_eq_chiralGrading, hq1, map_one, map_one] at h1
+    exact h1
+  calc ((G (A := Mat)) * reflectionPlus) * ((G (A := Mat)) * reflectionPlus)
+    _ = (G (A := Mat)) * (reflectionPlus * (G (A := Mat))) * reflectionPlus := by
+        simp only [mul_assoc]
+    _ = (G (A := Mat)) * (-((G (A := Mat)) * reflectionPlus)) * reflectionPlus := by
+        rw [hAnti]
+    _ = -(((G (A := Mat)) * (G (A := Mat))) * (reflectionPlus * reflectionPlus)) := by
+        noncomm_ring
+    _ = -1 := by rw [hG_sq, reflectionPlus_square, one_mul]
 
 end PeirceDeWittPinBridge
 

@@ -11,6 +11,9 @@ import InfoGeometry.Physics.NuclearOperatorSuperSoloviev
 import InfoGeometry.Physics.NuclearOperatorZornSuperSolovievBridge
 import InfoGeometry.Physics.Thermodynamics.ChiralGrandCanonicalFiniteKMS
 import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+import InfoGeometry.Physics.MengChPSelectionRules
+import InfoGeometry.Nuclear.NuclearChiralPRMBridge
+import InfoGeometry.Physics.NuclearInternalExternalParityFactorization
 
 /-!
 # A conservative formal bridge for nuclear chiral and quasiparticle models
@@ -244,5 +247,352 @@ theorem nuclearChiralMengArchetype_operator_identities
   refine ⟨?_, ?_, ?_, ?_, ?_⟩ <;> peirce_nf hP
 
 end NonCommutativeOperatorRealization
+
+/-! ## Bridge to `MengChPSelectionRules` & concrete triaxial PRM ChP realization -/
+
+namespace ChPInvolutions
+
+/-- Generalized spectral invariance for any Hamiltonian commuting with both involutions in `ChPInvolutions`. -/
+theorem chiplex_commutes_of_comm {A : Type*} [Ring A] (S : ChPInvolutions A) (H : A)
+    (hCh : S.chirality * H = H * S.chirality) (hP : S.parity * H = H * S.parity) :
+    S.chiplex * H = H * S.chiplex := by
+  unfold ChPInvolutions.chiplex
+  calc
+    (S.chirality * S.parity) * H = S.chirality * (S.parity * H) := mul_assoc _ _ _
+    _ = S.chirality * (H * S.parity) := by rw [hP]
+    _ = (S.chirality * H) * S.parity := (mul_assoc _ _ _).symm
+    _ = (H * S.chirality) * S.parity := by rw [hCh]
+    _ = H * (S.chirality * S.parity) := mul_assoc _ _ _
+
+/-- Construct a `ChPInvolutions` algebra directly from Meng's `chiture` and `parity` operators. -/
+def ofMeng {Space : Type*} [AddCommGroup Space] [Module ℂ Space]
+    (rotation exchange intrinsicParity parity : Module.End ℂ Space)
+    (hChiture : MengChPSelectionRules.chiture rotation exchange intrinsicParity *
+      MengChPSelectionRules.chiture rotation exchange intrinsicParity = 1)
+    (hParity : parity * parity = 1)
+    (hComm : MengChPSelectionRules.chiture rotation exchange intrinsicParity * parity =
+      parity * MengChPSelectionRules.chiture rotation exchange intrinsicParity) :
+    ChPInvolutions (Module.End ℂ Space) where
+  chirality := MengChPSelectionRules.chiture rotation exchange intrinsicParity
+  parity := parity
+  chirality_sq := hChiture
+  parity_sq := hParity
+  commute := hComm
+
+theorem ofMeng_chiplex_eq {Space : Type*} [AddCommGroup Space] [Module ℂ Space]
+    (rotation exchange intrinsicParity parity : Module.End ℂ Space)
+    (hChiture : MengChPSelectionRules.chiture rotation exchange intrinsicParity *
+      MengChPSelectionRules.chiture rotation exchange intrinsicParity = 1)
+    (hParity : parity * parity = 1)
+    (hComm : MengChPSelectionRules.chiture rotation exchange intrinsicParity * parity =
+      parity * MengChPSelectionRules.chiture rotation exchange intrinsicParity) :
+    (ofMeng rotation exchange intrinsicParity parity hChiture hParity hComm).chiplex =
+      MengChPSelectionRules.chiplex
+        (MengChPSelectionRules.chiture rotation exchange intrinsicParity) parity := by
+  unfold chiplex ofMeng MengChPSelectionRules.chiplex
+  rfl
+
+theorem same_chiplex_selection {Space : Type*} [AddCommGroup Space] [Module ℂ Space]
+    (m : MengChPSelectionRules.Multipole)
+    (chitureOp parity transition : Module.End ℂ Space)
+    (bra : Space →ₗ[ℂ] ℂ) (ket : Space) (value : ℂ) (value_ne : value ≠ 0)
+    (hChitureSq : chitureOp * chitureOp = 1)
+    (hParitySq : parity * parity = 1)
+    (hComm : chitureOp * parity = parity * chitureOp)
+    (ket_eigen : (⟨chitureOp, parity, hChitureSq, hParitySq, hComm⟩ :
+      ChPInvolutions (Module.End ℂ Space)).chiplex ket = value • ket)
+    (bra_eigen : ∀ s, bra ((⟨chitureOp, parity, hChitureSq, hParitySq, hComm⟩ :
+      ChPInvolutions (Module.End ℂ Space)).chiplex s) = value * bra s)
+    (hCovCh : chitureOp * transition =
+      MengChPSelectionRules.chitureCharacter m • (transition * chitureOp))
+    (hCovP : parity * transition =
+      MengChPSelectionRules.parityCharacter m • (transition * parity)) :
+    bra (transition ket) = 0 := by
+  let S : ChPInvolutions (Module.End ℂ Space) :=
+    ⟨chitureOp, parity, hChitureSq, hParitySq, hComm⟩
+  have hket : MengChPSelectionRules.chiplex chitureOp parity ket = value • ket := by
+    have hs := ket_eigen
+    change S.chiplex ket = value • ket at hs
+    simpa [S, ChPInvolutions.chiplex, MengChPSelectionRules.chiplex] using hs
+  have hbra : ∀ s, bra (MengChPSelectionRules.chiplex chitureOp parity s) = value * bra s := by
+    intro s
+    have hs := bra_eigen s
+    change bra (S.chiplex s) = value * bra s at hs
+    simpa [S, ChPInvolutions.chiplex, MengChPSelectionRules.chiplex] using hs
+  exact MengChPSelectionRules.same_chiplex_transition_vanishes
+    m chitureOp parity transition bra ket value value_ne hket hbra hCovCh hCovP
+
+end ChPInvolutions
+
+section TriaxialChPRealization
+
+open InfoGeometry.Nuclear
+
+/-- Concrete 4D chiral-doublet × intrinsic-parity carrier `(c, p) ∈ Fin 2 × Fin 2`:
+`c` indexes left/right triaxial orientation `{|L⟩, |R⟩}`, `p` indexes intrinsic parity `{|+⟩, |-⟩}`. -/
+abbrev ChiralParitySpace := Fin 2 × Fin 2 → ℂ
+
+/-- Triaxial `π`-rotation operator combining chiral orientation flip and intrinsic parity rotation sign. -/
+def triaxialRotationOp : Module.End ℂ ChiralParitySpace where
+  toFun ψ := fun cp => (if cp.2 = 0 then (1 : ℂ) else -1) * ψ (Equiv.swap 0 1 cp.1, cp.2)
+  map_add' ψ φ := by ext ⟨c, p⟩; fin_cases p <;> (simp; try abel)
+  map_smul' a ψ := by ext ⟨c, p⟩; fin_cases p <;> simp
+
+/-- Exchange symmetry operator on the triaxial chiral-doublet carrier. -/
+def triaxialExchangeOp : Module.End ℂ ChiralParitySpace := 1
+
+/-- Intrinsic spatial parity operator `P` acting on the second index `p : Fin 2`. -/
+def triaxialIntrinsicParityOp : Module.End ℂ ChiralParitySpace where
+  toFun ψ := fun cp => (if cp.2 = 0 then (1 : ℂ) else -1) * ψ cp
+  map_add' ψ φ := by ext ⟨c, p⟩; fin_cases p <;> (simp; try abel)
+  map_smul' a ψ := by ext ⟨c, p⟩; fin_cases p <;> simp
+
+/-- Meng chiture operator `A = R * X * P_int` on `ChiralParitySpace`. -/
+def triaxialChitureOp : Module.End ℂ ChiralParitySpace :=
+  MengChPSelectionRules.chiture triaxialRotationOp triaxialExchangeOp triaxialIntrinsicParityOp
+
+/-- Meng spatial parity operator on `ChiralParitySpace`. -/
+def triaxialParityOp : Module.End ℂ ChiralParitySpace := triaxialIntrinsicParityOp
+
+/-- Meng chiplex operator `B = A * P` on `ChiralParitySpace`. -/
+def triaxialChiplexOp : Module.End ℂ ChiralParitySpace :=
+  MengChPSelectionRules.chiplex triaxialChitureOp triaxialParityOp
+
+@[simp] theorem triaxialChitureOp_apply (ψ : ChiralParitySpace) (c p : Fin 2) :
+    triaxialChitureOp ψ (c, p) = ψ (Equiv.swap 0 1 c, p) := by
+  simp only [triaxialChitureOp, MengChPSelectionRules.chiture, triaxialExchangeOp, mul_one,
+    Module.End.mul_apply, triaxialRotationOp, triaxialIntrinsicParityOp, LinearMap.coe_mk,
+    AddHom.coe_mk]
+  fin_cases p <;> simp
+
+@[simp] theorem triaxialParityOp_apply (ψ : ChiralParitySpace) (c p : Fin 2) :
+    triaxialParityOp ψ (c, p) = (if p = 0 then (1 : ℂ) else -1) * ψ (c, p) := rfl
+
+@[simp] theorem triaxialChiplexOp_apply (ψ : ChiralParitySpace) (c p : Fin 2) :
+    triaxialChiplexOp ψ (c, p) = (if p = 0 then (1 : ℂ) else -1) * ψ (Equiv.swap 0 1 c, p) := by
+  simp [triaxialChiplexOp, MengChPSelectionRules.chiplex, Module.End.mul_apply]
+
+theorem triaxialChitureOp_sq : triaxialChitureOp * triaxialChitureOp = 1 := by
+  apply LinearMap.ext; intro ψ; ext ⟨c, p⟩
+  fin_cases c <;> simp [Module.End.mul_apply]
+
+theorem triaxialParityOp_sq : triaxialParityOp * triaxialParityOp = 1 := by
+  apply LinearMap.ext; intro ψ; ext ⟨c, p⟩
+  fin_cases p <;> simp [Module.End.mul_apply]
+
+theorem triaxialChitureOp_comm_parity :
+    triaxialChitureOp * triaxialParityOp = triaxialParityOp * triaxialChitureOp := by
+  apply LinearMap.ext; intro ψ; ext ⟨c, p⟩
+  fin_cases c <;> fin_cases p <;> simp [Module.End.mul_apply]
+
+/-- Concrete `ChPInvolutions` instance realizing `MengChPSelectionRules` on `ChiralParitySpace`. -/
+def triaxialChPInvolutions : ChPInvolutions (Module.End ℂ ChiralParitySpace) :=
+  ChPInvolutions.ofMeng triaxialRotationOp triaxialExchangeOp triaxialIntrinsicParityOp
+    triaxialParityOp
+    (by simpa [triaxialChitureOp] using triaxialChitureOp_sq)
+    triaxialParityOp_sq
+    (by simpa [triaxialChitureOp] using triaxialChitureOp_comm_parity)
+
+theorem triaxialChPInvolutions_chiplex_eq :
+    triaxialChPInvolutions.chiplex = triaxialChiplexOp := by
+  unfold triaxialChPInvolutions triaxialChiplexOp triaxialChitureOp
+  exact ChPInvolutions.ofMeng_chiplex_eq triaxialRotationOp triaxialExchangeOp
+    triaxialIntrinsicParityOp triaxialParityOp
+    (by simpa [triaxialChitureOp] using triaxialChitureOp_sq)
+    triaxialParityOp_sq
+    (by simpa [triaxialChitureOp] using triaxialChitureOp_comm_parity)
+
+/-- Lift `ChiralPRM.prmMatrix` onto `ChiralParitySpace`. -/
+def prmHamiltonianOp (state : ChiralPRM.ChiralDoubletState) :
+    Module.End ℂ ChiralParitySpace where
+  toFun ψ := fun cp =>
+    (ChiralPRM.prmMatrix state cp.1 0 : ℂ) * ψ (0, cp.2) +
+    (ChiralPRM.prmMatrix state cp.1 1 : ℂ) * ψ (1, cp.2)
+  map_add' ψ φ := by ext ⟨c, p⟩; simp; ring
+  map_smul' a ψ := by ext ⟨c, p⟩; simp; ring
+
+theorem prmHamiltonianOp_comm_chiture (state : ChiralPRM.ChiralDoubletState) :
+    triaxialChitureOp * prmHamiltonianOp state = prmHamiltonianOp state * triaxialChitureOp := by
+  apply LinearMap.ext; intro ψ; ext ⟨c, p⟩
+  fin_cases c <;>
+    simp [Module.End.mul_apply, prmHamiltonianOp, ChiralPRM.prmMatrix, add_comm]
+
+theorem prmHamiltonianOp_comm_parity (state : ChiralPRM.ChiralDoubletState) :
+    triaxialParityOp * prmHamiltonianOp state = prmHamiltonianOp state * triaxialParityOp := by
+  apply LinearMap.ext; intro ψ; ext ⟨c, p⟩
+  fin_cases p <;> (simp [Module.End.mul_apply, prmHamiltonianOp]; try ring)
+
+theorem prmHamiltonianOp_comm_chiplex (state : ChiralPRM.ChiralDoubletState) :
+    triaxialChiplexOp * prmHamiltonianOp state = prmHamiltonianOp state * triaxialChiplexOp := by
+  rw [← triaxialChPInvolutions_chiplex_eq]
+  exact ChPInvolutions.chiplex_commutes_of_comm triaxialChPInvolutions (prmHamiltonianOp state)
+    (by simpa [triaxialChPInvolutions, ChPInvolutions.ofMeng, triaxialChitureOp] using
+      prmHamiltonianOp_comm_chiture state)
+    (by simpa [triaxialChPInvolutions, ChPInvolutions.ofMeng] using
+      prmHamiltonianOp_comm_parity state)
+
+/-- Chiral-doublet simultaneous eigenstates indexed by chiture sign `χSign` and parity sign `πSign`. -/
+def chiralBandKet (χSign πSign : Fin 2) : ChiralParitySpace :=
+  fun cp => (if cp.2 = πSign then 1 else 0) * (if cp.1 = 0 then 1 else if χSign = 0 then 1 else -1)
+
+/-- Dual eigenfunctional corresponding to `chiralBandKet χSign πSign`. -/
+def chiralBandBra (χSign πSign : Fin 2) : ChiralParitySpace →ₗ[ℂ] ℂ where
+  toFun ψ := ψ (0, πSign) + (if χSign = 0 then (1 : ℂ) else -1) * ψ (1, πSign)
+  map_add' ψ φ := by fin_cases χSign <;> simp <;> ring
+  map_smul' a ψ := by fin_cases χSign <;> simp <;> ring
+
+theorem prmHamiltonianOp_eigen_plus (state : ChiralPRM.ChiralDoubletState) (πSign : Fin 2) :
+    prmHamiltonianOp state (chiralBandKet 0 πSign) =
+      (ChiralPRM.energyPlus state : ℂ) • chiralBandKet 0 πSign := by
+  ext ⟨c, p⟩
+  fin_cases c <;> fin_cases p <;> fin_cases πSign <;>
+    (simp [prmHamiltonianOp, chiralBandKet, ChiralPRM.prmMatrix, ChiralPRM.energyPlus]; try ring)
+
+theorem prmHamiltonianOp_eigen_minus (state : ChiralPRM.ChiralDoubletState) (πSign : Fin 2) :
+    prmHamiltonianOp state (chiralBandKet 1 πSign) =
+      (ChiralPRM.energyMinus state : ℂ) • chiralBandKet 1 πSign := by
+  ext ⟨c, p⟩
+  fin_cases c <;> fin_cases p <;> fin_cases πSign <;>
+    (simp [prmHamiltonianOp, chiralBandKet, ChiralPRM.prmMatrix, ChiralPRM.energyMinus]; try ring)
+
+theorem triaxialChitureOp_eigen (χSign πSign : Fin 2) :
+    triaxialChitureOp (chiralBandKet χSign πSign) =
+      (if χSign = 0 then (1 : ℂ) else -1) • chiralBandKet χSign πSign := by
+  ext ⟨c, p⟩
+  fin_cases c <;> fin_cases p <;> fin_cases χSign <;> fin_cases πSign <;>
+    simp [chiralBandKet]
+
+theorem triaxialParityOp_eigen (χSign πSign : Fin 2) :
+    triaxialParityOp (chiralBandKet χSign πSign) =
+      (if πSign = 0 then (1 : ℂ) else -1) • chiralBandKet χSign πSign := by
+  ext ⟨c, p⟩
+  fin_cases c <;> fin_cases p <;> fin_cases χSign <;> fin_cases πSign <;>
+    simp [chiralBandKet]
+
+theorem triaxialChiplexOp_eigen (χSign πSign : Fin 2) :
+    triaxialChiplexOp (chiralBandKet χSign πSign) =
+      ((if χSign = 0 then (1 : ℂ) else -1) * (if πSign = 0 then (1 : ℂ) else -1)) •
+        chiralBandKet χSign πSign := by
+  unfold triaxialChiplexOp
+  exact MengChPSelectionRules.chiplex_eigenvector triaxialChitureOp triaxialParityOp
+    (chiralBandKet χSign πSign) _ _
+    (triaxialChitureOp_eigen χSign πSign) (triaxialParityOp_eigen χSign πSign)
+
+theorem chiralBandBra_chiplex_eigen (χSign πSign : Fin 2) (ψ : ChiralParitySpace) :
+    chiralBandBra χSign πSign (triaxialChiplexOp ψ) =
+      ((if χSign = 0 then (1 : ℂ) else -1) * (if πSign = 0 then (1 : ℂ) else -1)) *
+        chiralBandBra χSign πSign ψ := by
+  fin_cases χSign <;> fin_cases πSign <;>
+    (simp [chiralBandBra]; try ring)
+
+/-- Concrete triaxial multipole transition operators for `E2`, `M1`, and `E3`. -/
+def triaxialMultipoleOp : MengChPSelectionRules.Multipole → Module.End ℂ ChiralParitySpace
+  | .electricTwo =>
+      { toFun := fun ψ cp => (if cp.1 = 0 then (1 : ℂ) else -1) * ψ cp
+        map_add' := fun ψ φ => by ext ⟨c, p⟩; fin_cases c <;> (simp; try abel)
+        map_smul' := fun a ψ => by ext ⟨c, p⟩; fin_cases c <;> simp }
+  | .magneticOne =>
+      { toFun := fun ψ cp =>
+          (if cp.1 = 0 then (1 : ℂ) else -1) * (if cp.2 = 0 then (1 : ℂ) else -1) * ψ cp
+        map_add' := fun ψ φ => by ext ⟨c, p⟩; fin_cases c <;> fin_cases p <;> (simp; try abel)
+        map_smul' := fun a ψ => by ext ⟨c, p⟩; fin_cases c <;> fin_cases p <;> simp }
+  | .electricThree =>
+      { toFun := fun ψ cp => ψ (cp.1, Equiv.swap 0 1 cp.2)
+        map_add' := fun ψ φ => by ext ⟨c, p⟩; simp
+        map_smul' := fun a ψ => by ext ⟨c, p⟩; simp }
+
+theorem triaxialMultipoleOp_chiture_cov (m : MengChPSelectionRules.Multipole) :
+    triaxialChitureOp * triaxialMultipoleOp m =
+      MengChPSelectionRules.chitureCharacter m • (triaxialMultipoleOp m * triaxialChitureOp) := by
+  apply LinearMap.ext; intro ψ; ext ⟨c, p⟩
+  cases m <;> fin_cases c <;> fin_cases p <;>
+    simp [triaxialMultipoleOp, MengChPSelectionRules.chitureCharacter, Module.End.mul_apply]
+
+theorem triaxialMultipoleOp_parity_cov (m : MengChPSelectionRules.Multipole) :
+    triaxialParityOp * triaxialMultipoleOp m =
+      MengChPSelectionRules.parityCharacter m • (triaxialMultipoleOp m * triaxialParityOp) := by
+  apply LinearMap.ext; intro ψ; ext ⟨c, p⟩
+  cases m <;> fin_cases c <;> fin_cases p <;>
+    simp [triaxialMultipoleOp, MengChPSelectionRules.parityCharacter, Module.End.mul_apply]
+
+/-- Non-commutativity witness on `ChiralParitySpace`. -/
+theorem triaxialChitureOp_e2_noncomm :
+    triaxialChitureOp * triaxialMultipoleOp .electricTwo ≠
+      triaxialMultipoleOp .electricTwo * triaxialChitureOp := by
+  intro h
+  have h1 := triaxialMultipoleOp_chiture_cov .electricTwo
+  rw [h] at h1
+  simp only [MengChPSelectionRules.chitureCharacter] at h1
+  have hv := congrFun (congrArg (fun op : Module.End ℂ ChiralParitySpace =>
+    op (Pi.single (0, 0) 1)) h1) (1, 0)
+  simp [triaxialMultipoleOp, Module.End.mul_apply] at hv
+  norm_num at hv
+
+/-- Same-chiplex transitions vanish identically for all `E2`, `M1`, and `E3` multipoles. -/
+theorem triaxial_same_chiplex_vanishes (m : MengChPSelectionRules.Multipole) :
+    chiralBandBra 1 1 (triaxialMultipoleOp m (chiralBandKet 0 0)) = 0 := by
+  apply MengChPSelectionRules.same_chiplex_transition_vanishes m triaxialChitureOp
+    triaxialParityOp (triaxialMultipoleOp m) (chiralBandBra 1 1) (chiralBandKet 0 0) 1
+    one_ne_zero
+  · change triaxialChiplexOp (chiralBandKet 0 0) = (1 : ℂ) • chiralBandKet 0 0
+    simpa using triaxialChiplexOp_eigen 0 0
+  · intro s
+    change chiralBandBra 1 1 (triaxialChiplexOp s) = (1 : ℂ) * chiralBandBra 1 1 s
+    simpa using chiralBandBra_chiplex_eigen 1 1 s
+  · exact triaxialMultipoleOp_chiture_cov m
+  · exact triaxialMultipoleOp_parity_cov m
+
+/-- Nonzero opposite-chiplex transition witnesses for `E2`, `M1`, and `E3`. -/
+theorem triaxial_opposite_chiplex_allowed_nonzero :
+    chiralBandBra 1 0 (triaxialMultipoleOp .electricTwo (chiralBandKet 0 0)) ≠ 0 ∧
+    chiralBandBra 1 0 (triaxialMultipoleOp .magneticOne (chiralBandKet 0 0)) ≠ 0 ∧
+    chiralBandBra 0 1 (triaxialMultipoleOp .electricThree (chiralBandKet 0 0)) ≠ 0 := by
+  refine ⟨?_, ?_, ?_⟩
+  · simp [chiralBandBra, chiralBandKet, triaxialMultipoleOp]
+  · simp [chiralBandBra, chiralBandKet, triaxialMultipoleOp]
+  · simp [chiralBandBra, chiralBandKet, triaxialMultipoleOp]
+
+/-- Obstruction-driven chiral shift: `E2` and `M1` anticommute with `triaxialChitureOp`,
+shifting `chiture` eigenvalue `+1 ↔ -1` across the doublet partners, while `E3` commutes
+with `triaxialChitureOp` and anticommutes with `triaxialParityOp`, shifting intrinsic parity. -/
+theorem triaxialMultipoleOp_chiture_shift (m : MengChPSelectionRules.Multipole)
+    (χSign πSign : Fin 2) :
+    triaxialChitureOp (triaxialMultipoleOp m (chiralBandKet χSign πSign)) =
+      (MengChPSelectionRules.chitureCharacter m * (if χSign = 0 then (1 : ℂ) else -1)) •
+        triaxialMultipoleOp m (chiralBandKet χSign πSign) ∧
+    triaxialParityOp (triaxialMultipoleOp m (chiralBandKet χSign πSign)) =
+      (MengChPSelectionRules.parityCharacter m * (if πSign = 0 then (1 : ℂ) else -1)) •
+        triaxialMultipoleOp m (chiralBandKet χSign πSign) := by
+  constructor
+  · have hc := congrArg (fun op : Module.End ℂ ChiralParitySpace => op (chiralBandKet χSign πSign))
+      (triaxialMultipoleOp_chiture_cov m)
+    simp only [Module.End.mul_apply, LinearMap.smul_apply, triaxialChitureOp_eigen, map_smul] at hc
+    rw [hc, smul_smul]
+  · have hp := congrArg (fun op : Module.End ℂ ChiralParitySpace => op (chiralBandKet χSign πSign))
+      (triaxialMultipoleOp_parity_cov m)
+    simp only [Module.End.mul_apply, LinearMap.smul_apply, triaxialParityOp_eigen, map_smul] at hp
+    rw [hp, smul_smul]
+
+theorem triaxialChitureOp_eq_chpChitureOp :
+    triaxialChitureOp = InfoGeometry.Physics.NuclearInternalExternalParityFactorization.chpChitureOp := by
+  ext ψ ⟨c, p⟩
+  fin_cases c <;> fin_cases p <;>
+    simp [triaxialChitureOp, MengChPSelectionRules.chiture, triaxialRotationOp,
+      triaxialExchangeOp, triaxialIntrinsicParityOp,
+      InfoGeometry.Physics.NuclearInternalExternalParityFactorization.chpChitureOp,
+      InfoGeometry.Physics.NuclearInternalExternalParityFactorization.chpRotationOp,
+      InfoGeometry.Physics.NuclearInternalExternalParityFactorization.chpExchangeOp,
+      InfoGeometry.Physics.NuclearInternalExternalParityFactorization.chpIntrinsicParityOp,
+      Module.End.mul_apply]
+
+theorem triaxialIntrinsicParityOp_eq_chpIntrinsicParityOp :
+    triaxialIntrinsicParityOp =
+      InfoGeometry.Physics.NuclearInternalExternalParityFactorization.chpIntrinsicParityOp := by
+  ext ψ ⟨c, p⟩
+  fin_cases p <;>
+    simp [triaxialIntrinsicParityOp,
+      InfoGeometry.Physics.NuclearInternalExternalParityFactorization.chpIntrinsicParityOp]
+
+end TriaxialChPRealization
 
 end InfoGeometry.Physics.NuclearChiralMengBridge

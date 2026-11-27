@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Meta.ArchetypePipeline
+import InfoGeometry.Conformal.MaxwellStressTensor
 import InfoGeometry.Conformal.MannheimWeylKazanasCosmology
 import InfoGeometry.Krein.BenderMannheimPTPaisUhlenbeckResonance
 import InfoGeometry.Algebra.ChiralFluidNLSLaxAndDynamicalVacuumMass
@@ -1057,53 +1058,6 @@ theorem local_dirac_weyl_covariance_and_traceless_conformal_stress_energy :
     ring
   · intro R S lam trMatter hzero
     linear_combination -hzero
-
-/-- Exact 4D Maxwell electromagnetic energy-momentum tensor
-`T^{(M)}_{μν} = ∑_α ε_α F_{μα} F_{να} - (1/4) g_{μν} ∑_{α,β} ε_α ε_β F_{αβ}²`. -/
-def maxwellStressTensor4 (ε : Fin 4 → ℝ) (F : Matrix (Fin 4) (Fin 4) ℝ) (μ ν : Fin 4) : ℝ :=
-  (∑ α : Fin 4, ε α * F μ α * F ν α) -
-    (1 / 4 : ℝ) * diagEntry4 ε μ ν * (∑ α : Fin 4, ∑ β : Fin 4, ε α * ε β * (F α β) ^ 2)
-
-/-- Exact symmetry and trace-freeness of `maxwellStressTensor4` across any 4D signature (`ε_μ² = 1`)
-and arbitrary field-strength matrix `F` (discharging the assumed `∑ μ, ε μ * emDiag μ = 0` premise). -/
-theorem maxwellStressTensor4_symm_and_trace_zero
-    (ε : Fin 4 → ℝ) (hε : ∀ μ : Fin 4, ε μ * ε μ = 1) (F : Matrix (Fin 4) (Fin 4) ℝ) :
-    (∀ μ ν : Fin 4, maxwellStressTensor4 ε F μ ν = maxwellStressTensor4 ε F ν μ) ∧
-    (∑ μ : Fin 4, ε μ * maxwellStressTensor4 ε F μ μ = 0) := by
-  have hsymm : ∀ μ ν : Fin 4, maxwellStressTensor4 ε F μ ν = maxwellStressTensor4 ε F ν μ := by
-    intro μ ν
-    unfold maxwellStressTensor4 diagEntry4
-    have hdiag_sym : (if μ = ν then ε μ else 0) = if ν = μ then ε ν else 0 := by
-      by_cases h : μ = ν
-      · subst h; simp
-      · simp [h, Ne.symm h]
-    rw [hdiag_sym]
-    have hsum_sym : (∑ α : Fin 4, ε α * F μ α * F ν α) = ∑ α : Fin 4, ε α * F ν α * F μ α :=
-      Finset.sum_congr rfl fun α _ => by ring
-    rw [hsum_sym]
-  have htr_g : ∑ μ : Fin 4, ε μ * diagEntry4 ε μ μ = 4 := by
-    calc
-      ∑ μ : Fin 4, ε μ * diagEntry4 ε μ μ = ∑ _μ : Fin 4, (1 : ℝ) :=
-        Finset.sum_congr rfl fun μ _ => by simp [diagEntry4, hε μ]
-      _ = 4 := by norm_num
-  have htr : ∑ μ : Fin 4, ε μ * maxwellStressTensor4 ε F μ μ = 0 := by
-    let F2 := ∑ α : Fin 4, ∑ β : Fin 4, ε α * ε β * (F α β) ^ 2
-    have hsplit : ∀ μ : Fin 4,
-        ε μ * maxwellStressTensor4 ε F μ μ =
-          (∑ α : Fin 4, ε μ * ε α * (F μ α) ^ 2) - (1 / 4 : ℝ) * (ε μ * diagEntry4 ε μ μ) * F2 := by
-      intro μ
-      unfold maxwellStressTensor4
-      have h1 : ε μ * (∑ α : Fin 4, ε α * F μ α * F μ α) = ∑ α : Fin 4, ε μ * ε α * (F μ α) ^ 2 := by
-        rw [Finset.mul_sum]
-        refine Finset.sum_congr rfl fun α _ => ?_
-        ring
-      dsimp only [F2]
-      rw [mul_sub, h1]
-      ring
-    simp only [hsplit, Finset.sum_sub_distrib, ← Finset.sum_mul, ← Finset.mul_sum, htr_g]
-    change F2 - 1 / 4 * 4 * F2 = 0
-    ring
-  exact ⟨hsymm, htr⟩
 
 /-- Symmetrized Belinfante Yukawa–Dirac stress-energy tensor
 `T^{(ψ)}_{μν} = (1/2)(K_{μν} + K_{νμ}) - (1/4) g_{μν} (tr(K) - h S ψ̄ψ)`. -/

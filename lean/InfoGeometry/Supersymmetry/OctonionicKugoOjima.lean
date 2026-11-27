@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.RadonNikodymFisherMetricBridge
@@ -45,5 +50,38 @@ theorem kugoOjima_confinement_of_hessian_barrier
     kugoOjimaConfinementCondition ω X A := by
   dsimp [kugoOjimaConfinementCondition, brstCharge]
   rw [← hHessian, hBarrier]
+
+omit [CompleteSpace E] in
+/-- The Heisenberg commutator is additive in the observable slot. -/
+private theorem transportCommutator_add_right (H A B : EndH) :
+    transportCommutator H (A + B) = transportCommutator H A + transportCommutator H B := by
+  apply ContinuousLinearMap.ext
+  intro x
+  simp [transportCommutator, sub_eq_add_neg, add_assoc, add_comm, add_left_comm]
+
+omit [CompleteSpace E] in
+/-- The algebraic Kugo--Ojima readout is additive in the observable: if two
+observables satisfy the Hessian-barrier condition, so does their sum.  This is
+a structural closure property of the confinement readout, not a physical
+confinement theorem. -/
+theorem kugoOjimaConfinementCondition_add (ω : EndH →L[ℝ] ℝ) (X A B : EndH)
+    (hA : kugoOjimaConfinementCondition ω X A)
+    (hB : kugoOjimaConfinementCondition ω X B) :
+    kugoOjimaConfinementCondition ω X (A + B) := by
+  dsimp [kugoOjimaConfinementCondition, brstCharge] at hA hB ⊢
+  rw [transportCommutator_add_right]
+  rw [transportCommutator_add_right]
+  simp [hA, hB]
+
+omit [CompleteSpace E] in
+/-- A vanishing BRST variation satisfies the confinement readout for any
+functional; the nontrivial content of the criterion is therefore carried by
+genuinely noncommuting observables. -/
+theorem kugoOjimaConfinementCondition_of_brst_zero (ω : EndH →L[ℝ] ℝ) (X A : EndH)
+    (h : brstCharge X A = 0) :
+    kugoOjimaConfinementCondition ω X A := by
+  dsimp [kugoOjimaConfinementCondition]
+  rw [h]
+  simp [transportCommutator]
 
 end InfoGeometry.Supersymmetry.OctonionicKugoOjima

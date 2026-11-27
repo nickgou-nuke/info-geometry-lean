@@ -1,9 +1,15 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.SpecialFunctions.Log.Basic
 import Mathlib.Analysis.SpecialFunctions.Complex.Log
 import Mathlib.Analysis.SpecialFunctions.Trigonometric.Complex
 import InfoGeometry.Krein.SplitBoost
+import InfoGeometry.Physics.DilatonWeylAnomalyInflowBridge
 
 /-!
 # Split-Octonion Projective Rapidity, Triad Flow and Monodromy Bridge
@@ -26,6 +32,7 @@ This module formalizes:
 noncomputable section
 
 open Real Complex
+open InfoGeometry.Physics.DilatonWeylAnomalyInflow
 
 namespace InfoGeometry.Lie.SplitOctonionProjectiveRapidityMonodromyBridge
 
@@ -134,5 +141,23 @@ theorem complex_phase_winding (θ : ℝ) :
     Complex.exp (Complex.I * ((θ : ℂ) + 2 * Real.pi)) = Complex.exp (Complex.I * (θ : ℂ)) := by
   have : Complex.I * ((θ : ℂ) + 2 * Real.pi) = Complex.I * (θ : ℂ) + (2 * Real.pi) * Complex.I := by ring
   rw [this, Complex.exp_add, Complex.exp_two_pi_mul_I, mul_one]
+
+/-- The rapidity is the half-dilaton of the projective chiral ratio.  This is
+the explicit map between the split-octonion projective flow and the Weyl
+dilaton chart; no identification of the two carriers is assumed. -/
+theorem rapidity_eq_half_dilaton (xp xm : ℝ) :
+    rapidity xp xm = (1 / 2 : ℝ) * dilatonField (projZ xp xm) := by
+  rfl
+
+/-- The loxodromic boost in rapidity is the same translation as the dilaton
+flow at parameter `2t` on the projective ratio.  Consequently the Lie flow and
+the conformal scale flow generate the same affine geometry on this chart. -/
+theorem rapidity_boost_via_dilaton_flow (xp xm t : ℝ) (hxp : 0 < xp) (hxm : 0 < xm) :
+    (1 / 2 : ℝ) * dilatonField (dilationFlow (2 * t) (projZ xp xm)) =
+      rapidity xp xm + t := by
+  have hz : 0 < projZ xp xm := div_pos hxp hxm
+  rw [dilaton_flow_additive (2 * t) (projZ xp xm) hz]
+  rw [rapidity_eq_half_dilaton]
+  ring
 
 end InfoGeometry.Lie.SplitOctonionProjectiveRapidityMonodromyBridge

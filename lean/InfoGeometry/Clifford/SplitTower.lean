@@ -11,7 +11,7 @@ import InfoGeometry.Clifford.SplitQ11
 Mathlib-native split `(1,1)` quadratic form and recursive product tower.
 -/
 
-namespace InfoGeometry.CliffordTower
+namespace InfoGeometry.CliffordTower.SplitTower
 
 open scoped TensorProduct
 
@@ -46,4 +46,4 @@ noncomputable def clsplit_succ_equiv (n : ℕ) :
         (CliffordAlgebra.evenOdd Q11 ᵍ⊗[ℝ] CliffordAlgebra.evenOdd (Qsplit n)) :=
   CliffordAlgebra.prodEquiv (Q₁ := Q11) (Q₂ := Qsplit n)
 
-end InfoGeometry.CliffordTower
+end InfoGeometry.CliffordTower.SplitTower

@@ -113,4 +113,27 @@ theorem arnold_kohno_triangle_flat (x y z : L) (a b c : ExteriorAlgebra R M)
 
 end Triangle
 
+section ReciprocalDifference
+
+variable {K V L : Type*} [Field K] [AddCommGroup V] [Module K V]
+  [LieRing L] [LieAlgebra K L]
+
+/-- Instantiates the tensor-valued three-channel curvature vanishing with
+constructed reciprocal-difference logarithmic forms. The proof combines Kohno's
+bracket relations with the exterior Arnold identity proved by
+`reciprocalDifference_exterior_arnold`. This still establishes the quadratic
+noncommutative Arnold--Kohno cancellation. The conclusion is the quadratic
+algebraic curvature term; it makes no differential-closedness assertion. -/
+theorem reciprocalDifference_kohno_triangle_flat
+    (dz : ℕ → V) (z : ℕ → K) (hz : Function.Injective z) (i j k : ℕ)
+    (x y t : L) (hx : ⁅x, t + y⁆ = 0) (hy : ⁅y, x + t⁆ = 0) :
+    triangleCurvature x y t
+      ((LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz i j)
+      ((LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz j k)
+      ((LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz k i) = 0 := by
+  exact arnold_kohno_triangle_flat x y t _ _ _
+    (reciprocalDifference_exterior_arnold dz z hz i j k) hx hy
+
+end ReciprocalDifference
+
 end InfoGeometry.Canonical.ArnoldKohnoParaKahlerConnection

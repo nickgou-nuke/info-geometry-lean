@@ -130,7 +130,7 @@ private def currentModuleDecls : CoreM (Array Name) := do
   let env ← getEnv
   let queryEnv := env.setExporting false
   let decls :=
-    InfoGeometry.Meta.foldCurrentModuleConsts queryEnv #[] fun acc declName info =>
+    InfoGeometry.Meta.ArchitectureAudit.foldCurrentModuleConsts queryEnv #[] fun acc declName info =>
       if isFilteredDeclName queryEnv declName then
         acc
       else if InfoGeometry.Meta.isAuditableDecl info then
@@ -144,9 +144,9 @@ private def namespaceDecls (ns : Name) : CoreM (Array Name) := do
   let queryEnv := env.setExporting false
   let nsRoot := ns.getRoot
   let decls :=
-    InfoGeometry.Meta.foldScopedModuleConsts queryEnv
+    InfoGeometry.Meta.ArchitectureAudit.foldScopedModuleConsts queryEnv
       (fun _ modName =>
-        !InfoGeometry.Meta.isExternalUpstreamModule modName || modName.getRoot == nsRoot)
+        !InfoGeometry.Meta.ArchitectureAudit.isExternalUpstreamModule modName || modName.getRoot == nsRoot)
       #[] fun acc declName info =>
         if isFilteredDeclName queryEnv declName then
           acc

@@ -533,6 +533,16 @@ theorem compression_square_eq_iff_commute
   rw [hxs] at h
   exact h.trans (selfAdjoint_transfer_zero_iff_commute p x hp hps hxs)
 
+/-- Noncommutation with the projection produces a nonzero square-compression
+defect: the obstruction itself is a new graded property of the operator. -/
+theorem compression_square_ne_zero_of_not_commute
+    (hproper : ∀ z : A, star z * z = 0 → z = 0)
+    (p x : A) (hp : p * p = p) (hps : star p = p) (hxs : star x = x)
+    (h : p * x ≠ x * p) :
+    p * (x * x) * p ≠ (p * x * p) * (p * x * p) := by
+  intro hzero
+  exact h ((compression_square_eq_iff_commute hproper p x hp hps hxs).mp hzero)
+
 /-- The adjoint reverses the two inputs of the polarized defect. -/
 theorem compression_adjoint_mul_defect_star (p x y : A) (hp : p * p = p)
     (hps : star p = p) :

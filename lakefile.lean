@@ -1001,7 +1001,31 @@ lean_lib InfoGeometryTestSuite where
     .one `E7TKKFreudenthalTests,
     .one `E8MagicSquareTests,
     .one `E6E7E8CrossFeatureTests,
-    .one `E6E7E8AxiomAudit
+    .one `E6E7E8Tier5AdversarialTests,
+    .one `E6E7E8AxiomAudit,
+    .one `E7E8Tier2Tests,
+    .one `DoubledMinkowskiKreinSpinInstabilityAxiomAudit,
+    .one `ErlangenTwoZeroOperatorRingAxiomAudit,
+    .one `TomitaFrontiersRoadmapAxiomAudit,
+    .one `TomitaFrontiersRoadmapTests,
+    .one `lean.InfoGeometry.Lie.SplitOctonionChiralCl33DaviauE2ETest,
+    .one `lean.InfoGeometry.Lie.SplitOctonionE2ETier1FeatureTest,
+    .one `lean.InfoGeometry.Lie.SplitOctonionE2ETier2BoundaryTest,
+    .one `lean.InfoGeometry.Lie.SplitOctonionE2ETier3CrossTest,
+    .one `lean.InfoGeometry.Lie.SplitOctonionE2ETier4AppsAxiomTest,
+    .one `lean.InfoGeometry.Synthesis.MannheimPart2E2ETest,
+    .one `polarized_z2_e2e.AxiomAuditHelper,
+    .one `polarized_z2_e2e.Tier1_R1,
+    .one `polarized_z2_e2e.Tier1_R2,
+    .one `polarized_z2_e2e.Tier1_R3,
+    .one `polarized_z2_e2e.Tier1_R4,
+    .one `polarized_z2_e2e.Tier2_R1,
+    .one `polarized_z2_e2e.Tier2_R2,
+    .one `polarized_z2_e2e.Tier2_R3,
+    .one `polarized_z2_e2e.Tier2_R4,
+    .one `polarized_z2_e2e.Tier3_CrossFeature,
+    .one `polarized_z2_e2e.Tier4_Applications,
+    .one `E7E8Tier2AxiomAudit
   ]
 
 lean_lib AuditNativeScoped where

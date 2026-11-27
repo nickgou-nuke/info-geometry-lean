@@ -7,6 +7,7 @@ import Mathlib.LinearAlgebra.Prod
 import Mathlib.Tactic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.Abel
+import InfoGeometry.Algebra.DeWittPeirceSuperalgebra
 
 /-!
 # Unoriented Super-Grassmannian: CPT Modular Symmetry & Möbius Twist
@@ -220,7 +221,6 @@ Krein Metric Invariance under Charge Conjugation $C$ (with symmetric pairing):
 If $\langle u, \alpha \rangle = \langle \alpha, u \rangle$, then $g_{\text{Krein}}(C(z_1), C(z_2)) = g_{\text{Krein}}(z_1, z_2)$.
 -/
 theorem kreinForm_charge_conjugation_invariant
-    (_h_symm : ∀ x y : E, pairing x y = pairing y x)
     (z₁ z₂ : DoubledCarrier E) :
     kreinForm pairing (C_op z₁) (C_op z₂) = kreinForm pairing z₁ z₂ := by
   dsimp [kreinForm]
@@ -238,5 +238,193 @@ theorem kreinForm_K_anti_invariant (z₁ z₂ : DoubledCarrier E) :
     rw [map_neg, LinearMap.neg_apply]
   rw [h1, h2]
   ring
+
+/-! ### 6. Peirce–DeWitt Four-Corner Split, Pin⁺/Pin⁻ Holonomy, & Antiperiodicity -/
+
+section PeirceDeWittPinCPTHolonomy
+
+open InfoGeometry.Algebra.DeWittPeirceSuperalgebra
+
+/-- Endomorphism ring on the doubled carrier `E × E`. -/
+abbrev EndDoubled (E : Type*) [AddCommGroup E] [Module ℝ E] :=
+  Module.End ℝ (DoubledCarrier E)
+
+/-- Primal sheet projector `PL(u, α) = (u, 0)` on `DoubledCarrier E`. -/
+def projPrimal : EndDoubled E :=
+  (LinearMap.fst ℝ E E).prod (0 : DoubledCarrier E →ₗ[ℝ] E)
+
+/-- Vacuum sheet projector `PR(u, α) = (0, α)` on `DoubledCarrier E`. -/
+def projVacuum : EndDoubled E :=
+  (0 : DoubledCarrier E →ₗ[ℝ] E).prod (LinearMap.snd ℝ E E)
+
+/-- Canonical `ChiralPeirceSystem` structure on `EndDoubled E`. -/
+@[instance_reducible]
+def endDoubledChiralPeirceSystem : ChiralPeirceSystem (EndDoubled E) where
+  PL := projPrimal
+  PR := projVacuum
+  h_PL_sq := by
+    ext x <;> rfl
+  h_PR_sq := by
+    ext x <;> rfl
+  h_sum := by
+    ext x <;> simp [projPrimal, projVacuum]
+  h_PL_PR := by
+    ext x <;> simp [projPrimal, projVacuum]
+
+local instance : ChiralPeirceSystem (EndDoubled E) := endDoubledChiralPeirceSystem
+
+/-- The DeWitt chiral grading `PL - PR` coincides identically with `K_op`. -/
+theorem peirceGrading_eq_K_op :
+    (G (A := EndDoubled E)) = K_op := by
+  change (projPrimal - projVacuum : EndDoubled E) = K_op
+  ext x <;> simp [projPrimal, projVacuum, K_op, T_op]
+
+/-- In `EndDoubled E`: `CPT = K ∘ M`, the Möbius twist is a `Pin⁺` involution (`M² = +1`),
+and `CPT` is a `Pin⁻` square-`-1` lift (`CPT² = -1`). -/
+theorem cpt_moebius_pin_signatures :
+    (CPT_op : EndDoubled E) = K_op * moebiusTwist ∧
+    (moebiusTwist : EndDoubled E) * moebiusTwist = 1 ∧
+    (CPT_op : EndDoubled E) * CPT_op = -1 ∧
+    (K_op : EndDoubled E) * moebiusTwist = -(moebiusTwist * K_op) := by
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · ext x <;> simp [CPT_op, K_op, moebiusTwist, T_op, P_op, C_op]
+  · ext x <;> simp [moebiusTwist, P_op, C_op]
+  · ext x <;> simp [CPT_op, T_op, P_op, C_op]
+  · ext x <;> simp [K_op, moebiusTwist, T_op, P_op, C_op]
+
+/-- Non-commutativity witness on `EndDoubled ℝ`: Möbius twist and `K_op` do not commute. -/
+theorem moebiusTwist_K_noncommutative_real :
+    (moebiusTwist : EndDoubled ℝ) * K_op ≠ K_op * moebiusTwist := by
+  intro h
+  have hv := congrArg (fun f : EndDoubled ℝ => (f ((0 : ℝ), (1 : ℝ))).1) h
+  simp [moebiusTwist, K_op, T_op, P_op, C_op] at hv
+  linarith
+
+/-- The `Pin⁺` Möbius twist exchanges the primal and vacuum Peirce sheet projectors. -/
+theorem moebiusTwist_swaps_sheets :
+    (moebiusTwist : EndDoubled E) * projPrimal = projVacuum * moebiusTwist ∧
+    (moebiusTwist : EndDoubled E) * projVacuum = projPrimal * moebiusTwist := by
+  constructor <;> ext x <;> simp [moebiusTwist, P_op, C_op, projPrimal, projVacuum]
+
+/-- Relative `Pin⁻` (`CPT_op`) vs. `Pin⁺` (`moebiusTwist`) adjoint holonomy on Peirce–DeWitt
+body and soul components: the even `body` receives `+1` relative holonomy, while the odd `soul`
+receives `-1` relative holonomy. -/
+theorem cpt_vs_moebius_body_soul_holonomy (X : EndDoubled E) :
+    (CPT_op : EndDoubled E) * X * (-CPT_op) =
+      K_op * (moebiusTwist * X * moebiusTwist) * K_op ∧
+    (CPT_op : EndDoubled E) * body X * (-CPT_op) =
+      moebiusTwist * body X * moebiusTwist ∧
+    (CPT_op : EndDoubled E) * soul X * (-CPT_op) =
+      -(moebiusTwist * soul X * moebiusTwist) := by
+  have hPin := cpt_moebius_pin_signatures (E := E)
+  have hSwap := moebiusTwist_swaps_sheets (E := E)
+  have hInv : -(CPT_op : EndDoubled E) = (moebiusTwist : EndDoubled E) * K_op := by
+    rw [hPin.1, hPin.2.2.2, neg_neg]
+  have hConj :
+      (CPT_op : EndDoubled E) * X * (-CPT_op) =
+        K_op * (moebiusTwist * X * moebiusTwist) * K_op := by
+    rw [hInv, hPin.1]
+    simp only [mul_assoc]
+  have hBodyM :
+      (moebiusTwist : EndDoubled E) * body X * moebiusTwist =
+        body (moebiusTwist * X * moebiusTwist) := by
+    have hPL : (moebiusTwist : EndDoubled E) * projPrimal = projVacuum * moebiusTwist := hSwap.1
+    have hPR : (moebiusTwist : EndDoubled E) * projVacuum = projPrimal * moebiusTwist := hSwap.2
+    have hPL' : projPrimal * (moebiusTwist : EndDoubled E) = moebiusTwist * projVacuum := hPR.symm
+    have hPR' : projVacuum * (moebiusTwist : EndDoubled E) = moebiusTwist * projPrimal := hPL.symm
+    change (moebiusTwist : EndDoubled E) * (projPrimal * X * projPrimal + projVacuum * X * projVacuum) * moebiusTwist =
+      projPrimal * (moebiusTwist * X * moebiusTwist) * projPrimal +
+        projVacuum * (moebiusTwist * X * moebiusTwist) * projVacuum
+    calc
+      (moebiusTwist : EndDoubled E) * (projPrimal * X * projPrimal + projVacuum * X * projVacuum) * moebiusTwist
+          = (moebiusTwist * projPrimal) * X * (projPrimal * moebiusTwist) +
+              (moebiusTwist * projVacuum) * X * (projVacuum * moebiusTwist) := by
+            simp only [mul_add, add_mul, mul_assoc]
+      _ = (projVacuum * moebiusTwist) * X * (moebiusTwist * projVacuum) +
+            (projPrimal * moebiusTwist) * X * (moebiusTwist * projPrimal) := by
+            rw [hPL, hPL', hPR, hPR']
+      _ = projPrimal * (moebiusTwist * X * moebiusTwist) * projPrimal +
+            projVacuum * (moebiusTwist * X * moebiusTwist) * projVacuum := by
+            simp only [mul_assoc]; exact add_comm _ _
+  have hSoulM :
+      (moebiusTwist : EndDoubled E) * soul X * moebiusTwist =
+        soul (moebiusTwist * X * moebiusTwist) := by
+    have hPL : (moebiusTwist : EndDoubled E) * projPrimal = projVacuum * moebiusTwist := hSwap.1
+    have hPR : (moebiusTwist : EndDoubled E) * projVacuum = projPrimal * moebiusTwist := hSwap.2
+    have hPL' : projPrimal * (moebiusTwist : EndDoubled E) = moebiusTwist * projVacuum := hPR.symm
+    have hPR' : projVacuum * (moebiusTwist : EndDoubled E) = moebiusTwist * projPrimal := hPL.symm
+    change (moebiusTwist : EndDoubled E) * (projPrimal * X * projVacuum + projVacuum * X * projPrimal) * moebiusTwist =
+      projPrimal * (moebiusTwist * X * moebiusTwist) * projVacuum +
+        projVacuum * (moebiusTwist * X * moebiusTwist) * projPrimal
+    calc
+      (moebiusTwist : EndDoubled E) * (projPrimal * X * projVacuum + projVacuum * X * projPrimal) * moebiusTwist
+          = (moebiusTwist * projPrimal) * X * (projVacuum * moebiusTwist) +
+              (moebiusTwist * projVacuum) * X * (projPrimal * moebiusTwist) := by
+            simp only [mul_add, add_mul, mul_assoc]
+      _ = (projVacuum * moebiusTwist) * X * (moebiusTwist * projPrimal) +
+            (projPrimal * moebiusTwist) * X * (moebiusTwist * projVacuum) := by
+            rw [hPL, hPR', hPR, hPL']
+      _ = projPrimal * (moebiusTwist * X * moebiusTwist) * projVacuum +
+            projVacuum * (moebiusTwist * X * moebiusTwist) * projPrimal := by
+            simp only [mul_assoc]; exact add_comm _ _
+  refine ⟨hConj, ?_, ?_⟩
+  · have hConjBody :
+        (CPT_op : EndDoubled E) * body X * (-CPT_op) =
+          K_op * (moebiusTwist * body X * moebiusTwist) * K_op := by
+      rw [hInv, hPin.1]
+      simp only [mul_assoc]
+    rw [hConjBody, hBodyM, ← peirceGrading_eq_K_op (E := E),
+      G_body_parity_even (moebiusTwist * X * moebiusTwist)]
+  · have hConjSoul :
+        (CPT_op : EndDoubled E) * soul X * (-CPT_op) =
+          K_op * (moebiusTwist * soul X * moebiusTwist) * K_op := by
+      rw [hInv, hPin.1]
+      simp only [mul_assoc]
+    rw [hConjSoul, hSoulM, ← peirceGrading_eq_K_op (E := E),
+      G_soul_parity_odd (moebiusTwist * X * moebiusTwist)]
+
+/-- A `Pin⁻` (`CPT_op² = -id`) equivariant section over any glide step `g` is double-glide
+antiperiodic (`-1`), while its symplectic and Krein bilinear forms are periodic across the double glide. -/
+theorem cpt_double_glide_antiperiodic_and_bilinear_periodic
+    {α : Type*} (g : α → α) (ψ φ : α → DoubledCarrier E)
+    (hψ : ∀ p, ψ (g p) = CPT_op (ψ p)) (hφ : ∀ p, φ (g p) = CPT_op (φ p)) (p : α) :
+    ψ (g (g p)) = -ψ p ∧
+    symplecticForm pairing (ψ (g p)) (φ (g p)) = symplecticForm pairing (ψ p) (φ p) ∧
+    kreinForm pairing (ψ (g p)) (φ (g p)) = -kreinForm pairing (ψ p) (φ p) ∧
+    symplecticForm pairing (ψ (g (g p))) (φ (g (g p))) = symplecticForm pairing (ψ p) (φ p) ∧
+    kreinForm pairing (ψ (g (g p))) (φ (g (g p))) = kreinForm pairing (ψ p) (φ p) := by
+  have hAnti : ψ (g (g p)) = -ψ p := by
+    rw [hψ (g p), hψ p]
+    exact Prod.ext (congrArg Prod.fst (CPT_sq_neg (ψ p)))
+      (congrArg Prod.snd (CPT_sq_neg (ψ p)))
+  have hSym1 :
+      symplecticForm pairing (ψ (g p)) (φ (g p)) = symplecticForm pairing (ψ p) (φ p) := by
+    rw [hψ p, hφ p, symplecticForm_cpt_invariant]
+  have hKr1 :
+      kreinForm pairing (ψ (g p)) (φ (g p)) = -kreinForm pairing (ψ p) (φ p) := by
+    rw [hψ p, hφ p, kreinForm_cpt_anti_invariant]
+  refine ⟨hAnti, hSym1, hKr1, ?_, ?_⟩
+  · rw [hψ (g p), hφ (g p), symplecticForm_cpt_invariant, hψ p, hφ p, symplecticForm_cpt_invariant]
+  · rw [hψ (g p), hφ (g p), kreinForm_cpt_anti_invariant, hψ p, hφ p, kreinForm_cpt_anti_invariant,
+      neg_neg]
+
+/-- Any `CPT_op`-equivariant section that is strictly periodic under the double glide must vanish identically. -/
+theorem cpt_periodic_section_eq_zero {α : Type*} (g : α → α) (ψ : α → DoubledCarrier E)
+    (hψ : ∀ p, ψ (g p) = CPT_op (ψ p)) (hper : ∀ p, ψ (g (g p)) = ψ p) :
+    ψ = 0 := by
+  funext p
+  have hAnti : ψ (g (g p)) = -ψ p := by
+    rw [hψ (g p), hψ p]
+    exact Prod.ext (congrArg Prod.fst (CPT_sq_neg (ψ p)))
+      (congrArg Prod.snd (CPT_sq_neg (ψ p)))
+  have hEq : -ψ p = ψ p := hAnti.symm.trans (hper p)
+  have hTwo : (2 : ℝ) • ψ p = 0 := by
+    calc
+      (2 : ℝ) • ψ p = ψ p + ψ p := two_smul ℝ (ψ p)
+      _ = ψ p + (-ψ p) := by conv_rhs => rw [hEq]
+      _ = 0 := add_neg_cancel (ψ p)
+  exact (smul_eq_zero.mp hTwo).resolve_left (by norm_num)
+
+end PeirceDeWittPinCPTHolonomy
 
 end InfoGeometry.SuperGrassmannian.ModularCPT

@@ -1,5 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.KZResidueBracket
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Projective.Conf3ConcreteDLog
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
@@ -35,9 +40,6 @@ section CYBE
 variable {K : Type*} [Ring K]
 
 /-! ## 1. Classical Yang-Baxter and Lie Casimir Data -/
-
-/-- The commutator bracket $[X, Y] = X Y - Y X$ in an associative algebra. -/
-def bracket {A : Type*} [Ring A] (X Y : A) : A := X * Y - Y * X
 
 /-- An associative Lie algebra or matrix algebra with 3-body Casimir exchange operators. -/
 structure CYBEExchangeData (A : Type*) [Ring A] [Module K A] where

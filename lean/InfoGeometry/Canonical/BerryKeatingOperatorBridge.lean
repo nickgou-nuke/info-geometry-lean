@@ -6,6 +6,8 @@ Authors: InfoGeometry Engine Contributors
 
 import Mathlib.Analysis.Calculus.Deriv.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Arithmetic.MajoranaPolyaHilbert.BerryKeating
+import InfoGeometry.Algebra.NoncommutativeTetraktysFlows
 import Mathlib.Analysis.SpecialFunctions.Log.Deriv
 import Mathlib.Analysis.Calculus.Deriv.Mul
 import Mathlib.Analysis.Calculus.Deriv.Pow
@@ -211,5 +213,136 @@ theorem berry_keating_critical_halfDensity_zero {x : ℝ} (hx : 0 < x) :
     bkOp (fun y => y ^ (-(1 / 2 : ℝ))) x = 0 := by
   rw [berry_keating_rpow_eigenvalue (-(1 / 2 : ℝ)) hx]
   norm_num
+
+/-! ### Differential Split & Noncommutative Matrix Tetraktys Embedding -/
+
+section DifferentialAndMatrixTetraktysSplit
+
+open InfoGeometry.Arithmetic.MajoranaPolyaHilbert
+open InfoGeometry.Algebra.NoncommutativeTetraktysFlows
+
+/-- Symmetrized differential split unifying `berry_keating_symmetric_form` and `bkOp`:
+`x f'(x) + (x f(x))' = 2 * bkOp f x`. -/
+theorem posOp_derivOp_add_derivOp_posOp (f : ℝ → ℝ) (x : ℝ) (hf : DifferentiableAt ℝ f x) :
+    posOp (derivOp f) x + derivOp (posOp f) x = 2 * bkOp f x := by
+  have hsym := berry_keating_symmetric_form f x hf
+  have h2 : 2 * ((1 / 2 : ℝ) * (x * deriv f x + deriv (posOp f) x)) =
+      2 * (x * deriv f x + (1 / 2 : ℝ) * f x) := by
+    change 2 * ((1 / 2 : ℝ) * (x * deriv f x + deriv (fun y => y * f y) x)) =
+      2 * (x * deriv f x + (1 / 2 : ℝ) * f x)
+    rw [hsym]
+  dsimp [posOp, derivOp, bkOp]
+  linarith
+
+/-- Unification of `bkOp` and `heisenberg_weyl_commutator`:
+`2 * derivOp (posOp f) x = 2 * bkOp f x + f x`. -/
+theorem two_mul_derivOp_posOp_eq_two_bkOp_add (f : ℝ → ℝ) (x : ℝ)
+    (hf : DifferentiableAt ℝ f x) :
+    2 * derivOp (posOp f) x = 2 * bkOp f x + f x := by
+  have hsum := posOp_derivOp_add_derivOp_posOp f x hf
+  have hcomm := heisenberg_weyl_commutator f x hf
+  linarith
+
+/-- Unification of `bkOp` and `heisenberg_weyl_commutator` on `posOp (derivOp f)`:
+`2 * posOp (derivOp f) x = 2 * bkOp f x - f x`. -/
+theorem two_mul_posOp_derivOp_eq_two_bkOp_sub (f : ℝ → ℝ) (x : ℝ)
+    (hf : DifferentiableAt ℝ f x) :
+    2 * posOp (derivOp f) x = 2 * bkOp f x - f x := by
+  have hsum := posOp_derivOp_add_derivOp_posOp f x hf
+  have hcomm := heisenberg_weyl_commutator f x hf
+  linarith
+
+section MatrixBridge
+
+variable {n : Type*} [Fintype n] [DecidableEq n]
+
+/-- On arbitrary real `n × n` matrices, `2 • finiteSymmetrizedDilation x p` equals `symDilaton2 x p`. -/
+theorem two_smul_finiteSymmetrizedDilation_eq_symDilaton2 (x p : Matrix n n ℝ) :
+    (2 : ℝ) • finiteSymmetrizedDilation x p = symDilaton2 x p := by
+  dsimp [finiteSymmetrizedDilation, symDilaton2]
+  rw [smul_smul]
+  norm_num
+
+/-- Matrix product `x * p` splits into the symmetric Berry-Keating dilation and half the commutator. -/
+theorem xp_eq_finiteSymmetrizedDilation_add_half_antisymComm (x p : Matrix n n ℝ) :
+    x * p = finiteSymmetrizedDilation x p + (1 / 2 : ℝ) • antisymComm x p := by
+  dsimp [finiteSymmetrizedDilation, antisymComm]
+  ext i j
+  simp only [Matrix.add_apply, Matrix.sub_apply, Matrix.smul_apply, smul_eq_mul]
+  ring
+
+/-- Reversed matrix product `p * x` splits into `finiteSymmetrizedDilation` minus half the commutator. -/
+theorem px_eq_finiteSymmetrizedDilation_sub_half_antisymComm (x p : Matrix n n ℝ) :
+    p * x = finiteSymmetrizedDilation x p - (1 / 2 : ℝ) • antisymComm x p := by
+  dsimp [finiteSymmetrizedDilation, antisymComm]
+  ext i j
+  simp only [Matrix.sub_apply, Matrix.smul_apply, Matrix.add_apply, smul_eq_mul]
+  ring
+
+/-- Commutator between `finiteSymmetrizedDilation x p` and `(1 / 2) • antisymComm x p`. -/
+theorem lie_finiteSymmetrizedDilation_half_antisymComm (x p : Matrix n n ℝ) :
+    ⁅finiteSymmetrizedDilation x p, (1 / 2 : ℝ) • antisymComm x p⁆ =
+      (1 / 2 : ℝ) • ⁅p * x, x * p⁆ := by
+  have h1 : finiteSymmetrizedDilation x p = (1 / 2 : ℝ) • symDilaton2 x p := rfl
+  rw [h1, Ring.lie_def]
+  have hlin : ((1 / 2 : ℝ) • symDilaton2 x p) * ((1 / 2 : ℝ) • antisymComm x p) -
+      ((1 / 2 : ℝ) • antisymComm x p) * ((1 / 2 : ℝ) • symDilaton2 x p) =
+      ((1 / 2 : ℝ) * (1 / 2 : ℝ)) • ⁅symDilaton2 x p, antisymComm x p⁆ := by
+    rw [Ring.lie_def]
+    simp only [Algebra.mul_smul_comm, Algebra.smul_mul_assoc, smul_smul, smul_sub]
+  rw [hlin, lie_symDilaton2_antisymComm]
+  have h2 : (2 : Matrix n n ℝ) * ⁅p * x, x * p⁆ = (2 : ℝ) • ⁅p * x, x * p⁆ := by
+    rw [two_mul, ← two_smul ℝ]
+  rw [h2, smul_smul]
+  norm_num
+
+/-- Embedding `(finiteSymmetrizedDilation x p, (1 / 2) • antisymComm x p, cOmega)` into
+`NoncommutativeTetraktysFlows.flowGen` and computing its exact Casimir + Lie obstruction square. -/
+theorem finiteSymmetrizedDilation_flowGen_square (x p cOmega : Matrix n n ℝ) :
+    flowGen (finiteSymmetrizedDilation x p) ((1 / 2 : ℝ) • antisymComm x p) cOmega *
+      flowGen (finiteSymmetrizedDilation x p) ((1 / 2 : ℝ) • antisymComm x p) cOmega =
+      fiberEmbed (finiteSymmetrizedDilation x p * finiteSymmetrizedDilation x p +
+        ((1 / 2 : ℝ) • antisymComm x p) * ((1 / 2 : ℝ) • antisymComm x p) -
+        cOmega * cOmega) * 1 +
+      fiberEmbed ⁅(1 / 2 : ℝ) • antisymComm x p, cOmega⁆ * gamma1Op +
+      fiberEmbed ⁅cOmega, finiteSymmetrizedDilation x p⁆ * sigmaOp -
+      fiberEmbed ((1 / 2 : ℝ) • ⁅p * x, x * p⁆) * omegaOp := by
+  rw [noncommutative_charpoly_casimir_and_lie_obstruction,
+    lie_finiteSymmetrizedDilation_half_antisymComm]
+
+/-- Hyperbolic Mellin focusing on `finiteSymmetrizedDilation` and `(1 / 2) • antisymComm`. -/
+theorem finiteSymmetrizedDilation_mellinFocus (u : (Matrix n n ℝ)ˣ) (x p : Matrix n n ℝ) :
+    mellinFocus u * (fiberEmbed (finiteSymmetrizedDilation x p) * F_plus) * mellinFocus u⁻¹ =
+      fiberEmbed ((u : Matrix n n ℝ) * finiteSymmetrizedDilation x p * (u : Matrix n n ℝ)) *
+        F_plus ∧
+    mellinFocus u * (fiberEmbed ((1 / 2 : ℝ) • antisymComm x p) * F_minus) * mellinFocus u⁻¹ =
+      fiberEmbed ((↑u⁻¹ : Matrix n n ℝ) * ((1 / 2 : ℝ) • antisymComm x p) *
+        (↑u⁻¹ : Matrix n n ℝ)) * F_minus ∧
+    (fiberEmbed ((u : Matrix n n ℝ) * finiteSymmetrizedDilation x p * (u : Matrix n n ℝ)) *
+        F_plus) *
+      (fiberEmbed ((↑u⁻¹ : Matrix n n ℝ) * ((1 / 2 : ℝ) • antisymComm x p) *
+        (↑u⁻¹ : Matrix n n ℝ)) * F_minus) =
+      fiberEmbed ((u : Matrix n n ℝ) * finiteSymmetrizedDilation x p *
+        ((1 / 2 : ℝ) • antisymComm x p) * (↑u⁻¹ : Matrix n n ℝ)) * P_plus := by
+  have h1 : (u : Matrix n n ℝ) * (↑u⁻¹ : Matrix n n ℝ) = 1 := Units.mul_inv u
+  refine ⟨?_, ?_, ?_⟩
+  · apply ext_fin2 <;> simp [mellinFocus, fiberEmbed, F_plus]
+  · apply ext_fin2 <;> simp [mellinFocus, fiberEmbed, F_minus]
+  · apply ext_fin2 <;> simp [fiberEmbed, F_plus, F_minus, P_plus]
+    have h1' : (u : Matrix n n ℝ) * (u : Matrix n n ℝ)⁻¹ = 1 := by
+      rw [← Matrix.coe_units_inv u]
+      exact h1
+    calc (u : Matrix n n ℝ) * finiteSymmetrizedDilation x p * (u : Matrix n n ℝ) *
+          ((u : Matrix n n ℝ)⁻¹ * antisymComm x p * (u : Matrix n n ℝ)⁻¹)
+      _ = (u : Matrix n n ℝ) * finiteSymmetrizedDilation x p *
+          ((u : Matrix n n ℝ) * (u : Matrix n n ℝ)⁻¹) *
+          antisymComm x p * (u : Matrix n n ℝ)⁻¹ := by noncomm_ring
+      _ = (u : Matrix n n ℝ) * finiteSymmetrizedDilation x p *
+          antisymComm x p * (u : Matrix n n ℝ)⁻¹ := by
+          rw [h1']; noncomm_ring
+
+end MatrixBridge
+
+end DifferentialAndMatrixTetraktysSplit
 
 end InfoGeometry.Canonical.BerryKeating

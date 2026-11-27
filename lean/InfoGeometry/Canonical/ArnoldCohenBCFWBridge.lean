@@ -4,7 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Projective.AmplituhedronBostConnesSynthesis
+import Mathlib.Tactic.Abel
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Finset.Basic
@@ -70,12 +71,15 @@ theorem wedge_smul_right (r : R) (a b : M) : alg.wedge a (r • b) = r • alg.w
   exact (alg.wedge a).map_smul r b
 
 /-- Abstract coefficient-weighted difference `cᵢⱼ (dzᵢ - dzⱼ)`. The fields
-`skew` and `partial_fraction` are algebraic hypotheses; analytic
+`skew` and `partial_fraction` are algebraic hypotheses. The coefficient
+relation is required only at pairwise distinct indices: imposing it on
+repeated indices would force every coefficient to have square zero. Analytic
 configuration-space logarithmic forms require a separate instantiation. -/
 structure LogarithmicOneFormData (dz : ℕ → M) where
   c : ℕ → ℕ → R
   skew : ∀ i j, c j i = - c i j
-  partial_fraction : ∀ i j k, c i j * c j k + c j k * c k i + c k i * c i j = 0
+  partial_fraction : ∀ i j k, i ≠ j → j ≠ k → k ≠ i →
+    c i j * c j k + c j k * c k i + c k i * c i j = 0
 
 def LogarithmicOneFormData.form (dz : ℕ → M) (data : LogarithmicOneFormData (R := R) dz) (i j : ℕ) : M :=
   data.c i j • (dz i - dz j)
@@ -122,7 +126,20 @@ theorem arnold_cohen_three_term_relation
   rw [t, u, v]
   let Δ := alg.wedge (dz i) (dz j) - alg.wedge (dz i) (dz k) + alg.wedge (dz j) (dz k)
   change (data.c i j * data.c j k) • Δ + (data.c j k * data.c k i) • Δ + (data.c k i * data.c i j) • Δ = 0
-  rw [← add_smul, ← add_smul, data.partial_fraction i j k, zero_smul]
+  by_cases hij : i = j
+  · subst j
+    simp [Δ, alg.wedge_alternating]
+  by_cases hjk : j = k
+  · subst k
+    simp [Δ, alg.wedge_alternating]
+  by_cases hki : k = i
+  · subst k
+    have hΔ : Δ = 0 := by
+      dsimp [Δ]
+      rw [alg.wedge_alternating, sub_zero, alg.wedge_anticomm (dz j) (dz i)]
+      exact add_neg_cancel _
+    simp [hΔ]
+  rw [← add_smul, ← add_smul, data.partial_fraction i j k hij hjk hki, zero_smul]
 
 /-- Subtracting two instances of the three-term identity gives zero. This is
 an algebraic consequence of the coefficient relation, not a BCFW or scattering
@@ -167,5 +184,116 @@ theorem bcfw_four_point_decoupling
   have h1 := arnold_cohen_three_term_relation alg dz data i j k
   have h2 := arnold_cohen_three_term_relation alg dz data j k l
   rw [h1, h2, sub_self]
+
+/-! ## Degree-one forms in the native exterior algebra -/
+
+/-- Embed the coefficient-weighted difference as a degree-one exterior element.
+The product of two such elements is the actual exterior-algebra product. -/
+def LogarithmicOneFormData.exteriorForm (dz : ℕ → M)
+    (data : LogarithmicOneFormData (R := R) dz) (i j : ℕ) : ExteriorAlgebra R M :=
+  ExteriorAlgebra.ι R (data.form dz i j)
+
+/-- The corrected coefficient contract implies Arnold's relation in the native
+exterior algebra. Repeated-index cases are proved using degree-one alternation. -/
+theorem native_arnold_three_term_relation (dz : ℕ → M)
+    (data : LogarithmicOneFormData (R := R) dz) (i j k : ℕ) :
+    data.exteriorForm dz i j * data.exteriorForm dz j k +
+      data.exteriorForm dz j k * data.exteriorForm dz k i +
+      data.exteriorForm dz k i * data.exteriorForm dz i j = 0 := by
+  have hanti (a b : M) :
+      ExteriorAlgebra.ι R a * ExteriorAlgebra.ι R b =
+        -(ExteriorAlgebra.ι R b * ExteriorAlgebra.ι R a) :=
+    eq_neg_of_add_eq_zero_left (ExteriorAlgebra.ι_add_mul_swap a b)
+  have t : ExteriorAlgebra.ι R (dz i - dz j) * ExteriorAlgebra.ι R (dz j - dz k) =
+      ExteriorAlgebra.ι R (dz i) * ExteriorAlgebra.ι R (dz j) -
+        ExteriorAlgebra.ι R (dz i) * ExteriorAlgebra.ι R (dz k) +
+        ExteriorAlgebra.ι R (dz j) * ExteriorAlgebra.ι R (dz k) := by
+    simp only [map_sub, mul_sub, sub_mul, ExteriorAlgebra.ι_sq_zero]
+    abel
+  have u : ExteriorAlgebra.ι R (dz j - dz k) * ExteriorAlgebra.ι R (dz k - dz i) =
+      ExteriorAlgebra.ι R (dz i) * ExteriorAlgebra.ι R (dz j) -
+        ExteriorAlgebra.ι R (dz i) * ExteriorAlgebra.ι R (dz k) +
+        ExteriorAlgebra.ι R (dz j) * ExteriorAlgebra.ι R (dz k) := by
+    simp only [map_sub, mul_sub, sub_mul, ExteriorAlgebra.ι_sq_zero]
+    rw [hanti (dz j) (dz i), hanti (dz k) (dz i)]
+    abel
+  have v : ExteriorAlgebra.ι R (dz k - dz i) * ExteriorAlgebra.ι R (dz i - dz j) =
+      ExteriorAlgebra.ι R (dz i) * ExteriorAlgebra.ι R (dz j) -
+        ExteriorAlgebra.ι R (dz i) * ExteriorAlgebra.ι R (dz k) +
+        ExteriorAlgebra.ι R (dz j) * ExteriorAlgebra.ι R (dz k) := by
+    simp only [map_sub, mul_sub, sub_mul, ExteriorAlgebra.ι_sq_zero]
+    rw [hanti (dz k) (dz i), hanti (dz k) (dz j)]
+    abel
+  simp only [LogarithmicOneFormData.exteriorForm, LogarithmicOneFormData.form,
+    map_smul, smul_mul_assoc, mul_smul_comm, smul_smul]
+  rw [t, u, v]
+  rw [mul_comm (data.c j k) (data.c i j),
+    mul_comm (data.c k i) (data.c j k), mul_comm (data.c i j) (data.c k i)]
+  let Δ : ExteriorAlgebra R M :=
+    ExteriorAlgebra.ι R (dz i) * ExteriorAlgebra.ι R (dz j) -
+      ExteriorAlgebra.ι R (dz i) * ExteriorAlgebra.ι R (dz k) +
+      ExteriorAlgebra.ι R (dz j) * ExteriorAlgebra.ι R (dz k)
+  change (data.c i j * data.c j k) • Δ + (data.c j k * data.c k i) • Δ +
+    (data.c k i * data.c i j) • Δ = 0
+  by_cases hij : i = j
+  · subst j
+    simp [Δ]
+  by_cases hjk : j = k
+  · subst k
+    simp [Δ]
+  by_cases hki : k = i
+  · subst k
+    have hΔ : Δ = 0 := by
+      dsimp [Δ]
+      rw [ExteriorAlgebra.ι_sq_zero, sub_zero, ExteriorAlgebra.ι_add_mul_swap]
+    simp [hΔ]
+  rw [← add_smul, ← add_smul, data.partial_fraction i j k hij hjk hki, zero_smul]
+
+section ReciprocalDifference
+
+variable {K V : Type*} [Field K] [AddCommGroup V] [Module K V]
+
+/-- Reciprocal differences on a family of distinct punctures construct the
+corrected data. Injectivity excludes poles whenever the indices are distinct;
+the diagonal coefficient is totalized to zero by the field convention. -/
+def LogarithmicOneFormData.reciprocalDifference
+    (dz : ℕ → V) (z : ℕ → K) (hz : Function.Injective z) :
+    LogarithmicOneFormData (R := K) dz where
+  c i j := 1 / (z i - z j)
+  skew i j := by
+    simp only [one_div, ← neg_sub (z i) (z j), inv_neg]
+  partial_fraction i j k hij hjk hki := by
+    simpa only [InfoGeometry.Projective.AmplituhedronBostConnesSynthesis.arnoldRational]
+      using InfoGeometry.Projective.AmplituhedronBostConnesSynthesis.arnold_rational_field_syzygy
+        (z i) (z j) (z k)
+        (fun h => hij (hz h)) (fun h => hjk (hz h)) (fun h => hki (hz h))
+
+omit [AddCommGroup V] [Module K V] in
+/-- The constructed off-diagonal coefficients are nonzero. -/
+theorem reciprocalDifference_coeff_ne_zero
+    (dz : ℕ → V) (z : ℕ → K) (hz : Function.Injective z)
+    (i j : ℕ) (hij : i ≠ j) :
+    (LogarithmicOneFormData.reciprocalDifference dz z hz).c i j ≠ 0 := by
+  exact div_ne_zero one_ne_zero (sub_ne_zero.mpr (fun h => hij (hz h)))
+
+/-- The native form is precisely the degree-one logarithmic difference. -/
+@[simp] theorem reciprocalDifference_exteriorForm
+    (dz : ℕ → V) (z : ℕ → K) (hz : Function.Injective z) (i j : ℕ) :
+    (LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz i j =
+      ExteriorAlgebra.ι K ((1 / (z i - z j)) • (dz i - dz j)) := rfl
+
+/-- Arnold's exterior relation for constructed reciprocal-difference forms. -/
+theorem reciprocalDifference_exterior_arnold
+    (dz : ℕ → V) (z : ℕ → K) (hz : Function.Injective z) (i j k : ℕ) :
+    (LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz i j *
+      (LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz j k +
+      (LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz j k *
+        (LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz k i +
+      (LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz k i *
+        (LogarithmicOneFormData.reciprocalDifference dz z hz).exteriorForm dz i j = 0 :=
+  native_arnold_three_term_relation dz
+    (LogarithmicOneFormData.reciprocalDifference dz z hz) i j k
+
+end ReciprocalDifference
 
 end InfoGeometry.Canonical.ArnoldCohenBCFWBridge

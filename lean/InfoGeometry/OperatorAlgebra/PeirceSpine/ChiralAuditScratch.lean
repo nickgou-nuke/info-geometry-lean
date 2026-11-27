@@ -1,0 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateModularShiftGeometry
+
+#print axioms NonCommutativeTwoStateAndModularShift.Mat2.archetype_C0_chiral_modular_shift_bimetric_spin_identity
+#print axioms NonCommutativeTwoStateAndModularShift.Mat2.archetype_C1_cheshire_cat_chiral_intertwiner_genesis
+#print axioms NonCommutativeTwoStateAndModularShift.Mat2.archetype_C2_bohm_curvature_transduces_mass_and_spin_dipoles
+#print axioms NonCommutativeTwoStateAndModularShift.Mat2.archetype_C3_cheshire_cat_chiral_modular_valve
+#print axioms NonCommutativeTwoStateAndModularShift.Mat2.archetype_C4_cheshire_cat_sheet_exchange_swaps_cat_and_grin

@@ -28,7 +28,7 @@ generate the entire reduced structure group `h3zornReducedStructureGroup` (`Strâ
 
 noncomputable section
 
-namespace InfoGeometry.Algebra
+namespace InfoGeometry.Algebra.H3ZornE6GroupGeneration
 
 open H3Zorn
 open InfoGeometry.Canonical.H3ZornBasis
@@ -5754,4 +5754,4 @@ private theorem f4_reduce_j23_one_fixing_diags_j12 (A : H3ZornJordanAut)
 
 end PartBF4AndFullGeneration
 
-end InfoGeometry.Algebra
+end InfoGeometry.Algebra.H3ZornE6GroupGeneration

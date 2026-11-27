@@ -8577,4 +8577,111 @@ theorem zorn_connes_vacuum_idempotent_derivation_curvature_and_supertrace
     · fin_cases k <;> simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.cross]
     · simp [zornInnerDer, E_plus, zornGradeZero, InfoGeometry.Algebra.zvm_mul_def, InfoGeometry.Algebra.zvm_add_def, InfoGeometry.Algebra.zvm_neg_def, mul, add, neg, ZornVec3.dot]
 
+/-! ### 83. `zornSinglet` Schur / Thouless Riccati Decoupling Theorem -/
+
+/-- **Upper-Unipotent `zornSinglet` Schur / Thouless Riccati Decoupling Theorem**:
+    Over any commutative ring `R`, conjugating `S = zornSinglet a c d b` by the
+    upper-unipotent singlet `U_+(q) = zornSinglet 1 q 0 1` (with inverse `U_+(-q) = zornSinglet 1 (-q) 0 1`):
+    1. `U_+(-q) * U_+(q) = 1` and `U_+(q) * U_+(-q) = 1`;
+    2. `(U_+(-q) * S) * U_+(q) = zornSinglet (a - 3 * d * q) (-(3 * d * q ^ 2) + (a - b) * q + c) d (b + 3 * d * q)`;
+    3. Its upper-right vector component is identically `zornRiccatiMap (S * zornGradeZero 1 (-1)) (zornDiagVec q)`;
+    4. Exact Schur/Thouless Riccati decoupling equivalence:
+       `(U_+(-q) * S) * U_+(q) = zornSinglet (a - 3 * d * q) 0 d (b + 3 * d * q)` if and only if
+       `zornRiccatiMap (S * zornGradeZero 1 (-1)) (zornDiagVec q) = 0`, which holds if and only if
+       `3 * d * q ^ 2 - (a - b) * q - c = 0`;
+    5. Trace invariance `(a - 3 * d * q) + (b + 3 * d * q) = a + b` and determinant factorization
+       `(a - 3 * d * q) * (b + 3 * d * q) - (a * b - 3 * c * d) = 3 * d * (-(3 * d * q ^ 2) + (a - b) * q + c)`. -/
+theorem zornSinglet_schur_riccati_decoupling
+    {R : Type*} [CommRing R] (a c d b q : R) :
+    let S := zornSinglet a c d b
+    let U_plus := zornSinglet (1 : R) q 0 1
+    let U_minus := zornSinglet (1 : R) (-q) 0 1
+    let J := zornGradeZero (1 : R) (-1 : R)
+    U_minus * U_plus = (one : ZornVectorMatrix R) ∧
+    U_plus * U_minus = (one : ZornVectorMatrix R) ∧
+    (U_minus * S) * U_plus =
+      zornSinglet (a - 3 * d * q) (-(3 * d * q ^ 2) + (a - b) * q + c) d (b + 3 * d * q) ∧
+    ((U_minus * S) * U_plus).v = zornRiccatiMap (S * J) (zornDiagVec q) ∧
+    (((U_minus * S) * U_plus = zornSinglet (a - 3 * d * q) 0 d (b + 3 * d * q)) ↔
+      zornRiccatiMap (S * J) (zornDiagVec q) = 0) ∧
+    (zornRiccatiMap (S * J) (zornDiagVec q) = 0 ↔
+      3 * d * q ^ 2 - (a - b) * q - c = 0) ∧
+    (a - 3 * d * q) + (b + 3 * d * q) = a + b ∧
+    (a - 3 * d * q) * (b + 3 * d * q) - (a * b - 3 * c * d) =
+      3 * d * (-(3 * d * q ^ 2) + (a - b) * q + c) := by
+  intro S U_plus U_minus J
+  have h_sim :
+      (U_minus * S) * U_plus =
+        zornSinglet (a - 3 * d * q) (-(3 * d * q ^ 2) + (a - b) * q + c) d (b + 3 * d * q) := by
+    ext k
+    · simp [S, U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+        mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+    · fin_cases k <;>
+      · simp [S, U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+          mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; ring
+    · fin_cases k <;>
+      · simp [S, U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+          mul, ZornVec3.dot, ZornVec3.cross, Fin.sum_univ_three]; try ring
+    · simp [S, U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+        mul, ZornVec3.dot, Fin.sum_univ_three]; ring
+  have h_riccati : ((U_minus * S) * U_plus).v = zornRiccatiMap (S * J) (zornDiagVec q) := by
+    rw [h_sim]
+    ext k
+    fin_cases k <;>
+    · simp [S, J, zornSinglet, zornDiagVec, zornRiccatiMap, zornGradeZero,
+        InfoGeometry.Algebra.zvm_mul_def, mul, ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  have h_riccati_iff :
+      zornRiccatiMap (S * J) (zornDiagVec q) = 0 ↔ 3 * d * q ^ 2 - (a - b) * q - c = 0 := by
+    rw [← h_riccati, h_sim]
+    constructor
+    · intro h
+      have h0 : -(3 * d * q ^ 2) + (a - b) * q + c = 0 := by
+        simpa [zornSinglet, zornDiagVec] using congrFun h 0
+      linear_combination -h0
+    · intro h
+      ext k
+      fin_cases k <;>
+      · change -(3 * d * q ^ 2) + (a - b) * q + c = 0
+        linear_combination -h
+  refine ⟨?_, ?_, h_sim, ?_, ?_, h_riccati_iff, by ring, by ring⟩
+  · change U_minus * U_plus = ⟨1, 0, 0, 1⟩
+    ext k
+    · simp [U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+        mul, ZornVec3.dot, Fin.sum_univ_three]
+    · fin_cases k <;>
+      · simp [U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+          mul, ZornVec3.cross]
+    · fin_cases k <;>
+      · simp [U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+          mul, ZornVec3.cross]
+    · simp [U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+        mul, ZornVec3.dot, Fin.sum_univ_three]
+  · change U_plus * U_minus = ⟨1, 0, 0, 1⟩
+    ext k
+    · simp [U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+        mul, ZornVec3.dot, Fin.sum_univ_three]
+    · fin_cases k <;>
+      · simp [U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+          mul, ZornVec3.cross]
+    · fin_cases k <;>
+      · simp [U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+          mul, ZornVec3.cross]
+    · simp [U_minus, U_plus, zornSinglet, zornDiagVec, InfoGeometry.Algebra.zvm_mul_def,
+        mul, ZornVec3.dot, Fin.sum_univ_three]
+  · exact h_riccati
+  · constructor
+    · intro h
+      rw [h_sim] at h
+      have hv := congrArg ZornVectorMatrix.v h
+      have h0 : -(3 * d * q ^ 2) + (a - b) * q + c = 0 := by
+        simpa [zornSinglet, zornDiagVec] using congrFun hv 0
+      rw [← h_riccati, h_sim, h0]
+      ext k; fin_cases k <;> rfl
+    · intro h
+      rw [← h_riccati, h_sim] at h
+      have h0 : -(3 * d * q ^ 2) + (a - b) * q + c = 0 := by
+        simpa [zornSinglet, zornDiagVec] using congrFun h 0
+      rw [h_sim, h0]
+
 end InfoGeometry.Algebra.ZornVectorMatrix

@@ -13,6 +13,7 @@ import Mathlib.Algebra.Ring.Defs
 import Mathlib.Algebra.Star.Basic
 import Mathlib.Tactic
 import InfoGeometry.Algebra.MatrixNoncommutativity
+import InfoGeometry.Algebra.NoncommutativeTetraktysFlows
 
 /-!
 # Noncommutative Metriplectic Dynamics & The Quotient ★-Algebra Cl_∞(A)
@@ -49,10 +50,10 @@ section Matrix2Simp
 
 variable {A : Type*} [Ring A]
 
-@[simp] lemma mat2_00 (a b c d : A) : (mat2 a b c d) 0 0 = a := rfl
-@[simp] lemma mat2_01 (a b c d : A) : (mat2 a b c d) 0 1 = b := rfl
-@[simp] lemma mat2_10 (a b c d : A) : (mat2 a b c d) 1 0 = c := rfl
-@[simp] lemma mat2_11 (a b c d : A) : (mat2 a b c d) 1 1 = d := rfl
+omit [Ring A] in @[simp] lemma mat2_00 (a b c d : A) : (mat2 a b c d) 0 0 = a := rfl
+omit [Ring A] in @[simp] lemma mat2_01 (a b c d : A) : (mat2 a b c d) 0 1 = b := rfl
+omit [Ring A] in @[simp] lemma mat2_10 (a b c d : A) : (mat2 a b c d) 1 0 = c := rfl
+omit [Ring A] in @[simp] lemma mat2_11 (a b c d : A) : (mat2 a b c d) 1 1 = d := rfl
 
 @[simp] lemma mul2_00 (M N : Matrix (Fin 2) (Fin 2) A) :
     (M * N) 0 0 = M 0 0 * N 0 0 + M 0 1 * N 1 0 := by rw [Matrix.mul_apply, Fin.sum_univ_two]
@@ -68,10 +69,10 @@ variable {A : Type*} [Ring A]
 @[simp] lemma one2_10 : (1 : Matrix (Fin 2) (Fin 2) A) 1 0 = 0 := rfl
 @[simp] lemma one2_11 : (1 : Matrix (Fin 2) (Fin 2) A) 1 1 = 1 := rfl
 
-@[simp] lemma star2_00 [Star A] (M : Matrix (Fin 2) (Fin 2) A) : (star M) 0 0 = star (M 0 0) := rfl
-@[simp] lemma star2_01 [Star A] (M : Matrix (Fin 2) (Fin 2) A) : (star M) 0 1 = star (M 1 0) := rfl
-@[simp] lemma star2_10 [Star A] (M : Matrix (Fin 2) (Fin 2) A) : (star M) 1 0 = star (M 0 1) := rfl
-@[simp] lemma star2_11 [Star A] (M : Matrix (Fin 2) (Fin 2) A) : (star M) 1 1 = star (M 1 1) := rfl
+omit [Ring A] in @[simp] lemma star2_00 [Star A] (M : Matrix (Fin 2) (Fin 2) A) : (star M) 0 0 = star (M 0 0) := rfl
+omit [Ring A] in @[simp] lemma star2_01 [Star A] (M : Matrix (Fin 2) (Fin 2) A) : (star M) 0 1 = star (M 1 0) := rfl
+omit [Ring A] in @[simp] lemma star2_10 [Star A] (M : Matrix (Fin 2) (Fin 2) A) : (star M) 1 0 = star (M 0 1) := rfl
+omit [Ring A] in @[simp] lemma star2_11 [Star A] (M : Matrix (Fin 2) (Fin 2) A) : (star M) 1 1 = star (M 1 1) := rfl
 
 end Matrix2Simp
 
@@ -556,5 +557,116 @@ theorem clInf_star_algebra_and_binary_alignment_properties [StarRing A]
     exact eqRec_heq (Nat.add_comm v.1 u.1) (bottEmbedIter u.1 v.2)
 
 end ArchetypeMA3_MA4_ColimitQuotientStarAlgebra
+
+/-!
+## Archetype MA₅: `xp` Dilaton–Commutator Metriplectic Coupling & All-Scales Tower Stability
+-/
+
+section ArchetypeMA5_XPDilatonMetriplecticCoupling
+
+open InfoGeometry.Algebra.NoncommutativeTetraktysFlows
+
+/-- Exact division-free decomposition of the `xp` Hamiltonian commutator flow into its
+symmetric dilaton channel `symDilaton2 x p` and antisymmetric commutator channel `antisymComm x p`. -/
+theorem metriplectic_xp_split_decomposition {R : Type*} [Ring R] (x p ρ : R) :
+    2 • hamFlow (x * p) ρ =
+      hamFlow (symDilaton2 x p) ρ + hamFlow (antisymComm x p) ρ := by
+  dsimp [hamFlow, symDilaton2, antisymComm]
+  simp only [Ring.lie_def, two_nsmul]
+  noncomm_ring
+
+/-- Exact division-free decomposition of the reversed `px` Hamiltonian commutator flow. -/
+theorem metriplectic_px_split_decomposition {R : Type*} [Ring R] (x p ρ : R) :
+    2 • hamFlow (p * x) ρ =
+      hamFlow (symDilaton2 x p) ρ - hamFlow (antisymComm x p) ρ := by
+  dsimp [hamFlow, symDilaton2, antisymComm]
+  simp only [Ring.lie_def, two_nsmul]
+  noncomm_ring
+
+/-- Coupling the antisymmetric reversible generator `H = antisymComm x p` and the symmetric
+self-adjoint Lindblad generator `L = symDilaton2 x p` yields reversible quadratic conservation,
+positive-cone entropy production, and Casimir stationarity for any observable commuting with
+`x` and `p`. -/
+theorem xp_metriplectic_conservation_and_entropy_production
+    {R : Type*} [Ring R] [StarRing R]
+    (x p ρ C : R) (hx : star x = x) (hp : star p = p) (hρ : star ρ = ρ)
+    (hxC : ⁅x, C⁆ = 0) (hpC : ⁅p, C⁆ = 0) :
+    ρ * hamFlow (antisymComm x p) ρ + hamFlow (antisymComm x p) ρ * ρ =
+      ⁅antisymComm x p, ρ * ρ⁆ ∧
+    -(ρ * lindbladFlow (symDilaton2 x p) ρ) =
+      star ⁅symDilaton2 x p, ρ⁆ * ⁅symDilaton2 x p, ρ⁆ +
+        ⁅symDilaton2 x p, ρ * ⁅symDilaton2 x p, ρ⁆⁆ ∧
+    metriplecticFlow (antisymComm x p) (symDilaton2 x p) C = 0 := by
+  have hxC' : x * C = C * x := sub_eq_zero.mp (by simpa [Ring.lie_def] using hxC)
+  have hpC' : p * C = C * p := sub_eq_zero.mp (by simpa [Ring.lie_def] using hpC)
+  have hHC : ⁅antisymComm x p, C⁆ = 0 := by
+    dsimp [antisymComm]
+    rw [Ring.lie_def]
+    calc (x * p - p * x) * C - C * (x * p - p * x)
+      _ = x * (p * C) - p * (x * C) - (C * x) * p + (C * p) * x := by noncomm_ring
+      _ = x * (C * p) - p * (C * x) - (x * C) * p + (p * C) * x := by rw [hpC', hxC']
+      _ = (x * C) * p - (p * C) * x - (x * C) * p + (p * C) * x := by noncomm_ring
+      _ = (C * x) * p - (C * p) * x - (C * x) * p + (C * p) * x := by rw [hxC', hpC']
+      _ = 0 := by noncomm_ring
+  have hLC : ⁅symDilaton2 x p, C⁆ = 0 := by
+    dsimp [symDilaton2]
+    rw [Ring.lie_def]
+    calc (x * p + p * x) * C - C * (x * p + p * x)
+      _ = x * (p * C) + p * (x * C) - (C * x) * p - (C * p) * x := by noncomm_ring
+      _ = x * (C * p) + p * (C * x) - (x * C) * p - (p * C) * x := by rw [hpC', hxC']
+      _ = (x * C) * p + (p * C) * x - (x * C) * p - (p * C) * x := by noncomm_ring
+      _ = (C * x) * p + (C * p) * x - (C * x) * p - (C * p) * x := by rw [hxC', hpC']
+      _ = 0 := by noncomm_ring
+  exact universal_metriplectic_conservation_and_entropy_production
+    (antisymComm x p) (symDilaton2 x p) ρ C
+    (symDilaton2_star x p hx hp) hρ hHC hLC
+
+/-- Coupling `(antisymComm x p, symDilaton2 x p)` into the inductive tower `ClTower A n`:
+exact vacuum Casimir stationarity, eigenmode rate `antisymComm x p - (symDilaton2 x p)^2`,
+and `bottEmbed` colimit stability across scales. -/
+theorem xp_all_scales_metriplectic_eigenmode_and_colimit_stability
+    {A : Type u} [Ring A] (x p : A) (n : ℕ) (X : ClTower A n) :
+    let H_n   := massGapOp (antisymComm x p) n
+    let L_n   := massGapOp (symDilaton2 x p) n
+    let H_n1  := massGapOp (antisymComm x p) (n + 1)
+    let L_n1  := massGapOp (symDilaton2 x p) (n + 1)
+    let Ψ_coh := coherenceMode n X
+    metriplecticFlow H_n L_n (cantorProj n) = 0 ∧
+    metriplecticFlow H_n L_n Ψ_coh =
+      towerScalar n (antisymComm x p - symDilaton2 x p * symDilaton2 x p) * Ψ_coh ∧
+    metriplecticFlow H_n1 L_n1 (bottEmbed Ψ_coh) =
+      bottEmbed (metriplecticFlow H_n L_n Ψ_coh) := by
+  exact all_scales_metriplectic_eigenmode_and_colimit_stability
+    (antisymComm x p) (symDilaton2 x p) n X
+
+/-- Concrete inline noncommutativity witness on `Matrix (Fin 2) (Fin 2) ℝ`: the generators
+`x = mat2 1 1 0 0` and `p = mat2 0 1 1 0` do not commute, nor do their symmetric dilaton
+`symDilaton2 x p` and antisymmetric commutator `antisymComm x p`, yielding a nontrivial
+reversible Hamiltonian flow `hamFlow (antisymComm x p) (symDilaton2 x p) ≠ 0`. -/
+theorem xp_metriplectic_noncommutativity_witness :
+    let x : Matrix (Fin 2) (Fin 2) ℝ :=
+      InfoGeometry.Algebra.NoncommutativeMetriplecticAndColimitAlgebraSynthesis.mat2 1 1 0 0
+    let p : Matrix (Fin 2) (Fin 2) ℝ :=
+      InfoGeometry.Algebra.NoncommutativeMetriplecticAndColimitAlgebraSynthesis.mat2 0 1 1 0
+    x * p ≠ p * x ∧
+    symDilaton2 x p * antisymComm x p ≠ antisymComm x p * symDilaton2 x p ∧
+    hamFlow (antisymComm x p) (symDilaton2 x p) ≠ 0 := by
+  dsimp
+  refine ⟨?_, ?_, ?_⟩
+  · intro h
+    have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+    simp [InfoGeometry.Algebra.NoncommutativeMetriplecticAndColimitAlgebraSynthesis.mat2,
+      Matrix.mul_apply, Fin.sum_univ_two] at h00
+  · intro h
+    have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+    simp [symDilaton2, antisymComm,
+      InfoGeometry.Algebra.NoncommutativeMetriplecticAndColimitAlgebraSynthesis.mat2,
+      Matrix.mul_apply, Fin.sum_univ_two] at h00
+    norm_num at h00
+  · intro h
+    have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 0) h
+    simp [hamFlow, Ring.lie_def, symDilaton2, antisymComm] at h00
+
+end ArchetypeMA5_XPDilatonMetriplecticCoupling
 
 end InfoGeometry.Algebra.NoncommutativeMetriplecticAndColimitAlgebraSynthesis

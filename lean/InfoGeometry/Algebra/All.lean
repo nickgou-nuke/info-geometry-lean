@@ -247,6 +247,12 @@ import InfoGeometry.Algebra.H3ZornFreudenthalE7Group
 import InfoGeometry.Algebra.MagicSquareTitsBracket
 import InfoGeometry.Algebra.SplitE8RootSystem
 import InfoGeometry.Algebra.SplitE8Simplicity
+import InfoGeometry.Algebra.H3ZornE7SerreHom
+import InfoGeometry.Algebra.SplitE8SerreHom
+import InfoGeometry.Algebra.CompactOctonionG2Derivations
+import InfoGeometry.Algebra.CompactE8MagicSquare
+import InfoGeometry.Algebra.H3ZornFreudenthalTKK5E8
+import InfoGeometry.Algebra.ElementaryShearRoundtrip
 /-!
 # InfoGeometry.Algebra.All
 

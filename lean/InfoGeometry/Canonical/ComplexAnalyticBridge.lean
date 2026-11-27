@@ -1,9 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Analysis.Complex.CauchyIntegral
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Analysis.Complex.Conformal
 import Mathlib.Analysis.Complex.HasPrimitives
 import Mathlib.Analysis.Complex.Harmonic.Analytic
 import Mathlib.Analysis.Complex.Basic
+import Mathlib.Analysis.Meromorphic.Order
+import Mathlib.Analysis.Meromorphic.NormalForm
 import Mathlib.Topology.Basic
 import InfoGeometry.Geometry.BilingualAnalyticity
 import InfoGeometry.Canonical.HestenesAnalyticity
@@ -387,5 +394,131 @@ def conformalHolomorphicToCauchyAnalyticAt
     (hf : DifferentiableAt ℂ f z) (_hconf : ConformalAt f z) :
     CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
   differentiableAtToCauchyAnalyticAt hf
+
+/-! ## Meromorphic continuation off poles to Cauchy-analyticity -/
+
+/-- A function meromorphic and continuous at a point is analytic there. -/
+theorem meromorphicAtToAnalyticAt
+    {f : ℂ → ℂ} {z : ℂ}
+    (hf : MeromorphicAt f z) (hcont : ContinuousAt f z) :
+    AnalyticAt ℂ f z :=
+  hf.analyticAt hcont
+
+/-- A function meromorphic and continuous at `z` satisfies the repo Cauchy-analytic condition. -/
+def meromorphicAt_to_cauchyAnalyticAt
+    {f : ℂ → ℂ} {z : ℂ}
+    (hf : MeromorphicAt f z) (hcont : ContinuousAt f z) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
+  analyticAtToCauchyAnalyticAt (meromorphicAtToAnalyticAt hf hcont)
+
+/--
+Transport a meromorphic function continuous at `z` to the doubled/clock-axis
+Cauchy-analytic structure.
+-/
+noncomputable def meromorphicAt_liftedToDoubled_cauchyAnalyticAt
+    {f : ℂ → ℂ} {z : ℂ}
+    (hf : MeromorphicAt f z) (hcont : ContinuousAt f z) :
+    CauchyAnalyticAt doubledPhaseStructure doubledPhaseStructure
+      (lifted f) (complexToDoubled z) :=
+  analyticAt_liftedToDoubled_cauchyAnalyticAt (meromorphicAtToAnalyticAt hf hcont)
+
+/-- A meromorphic function at `z` is Cauchy-analytic at every point in a punctured neighborhood. -/
+theorem meromorphicAt_eventually_cauchyAnalyticAt
+    {f : ℂ → ℂ} {z : ℂ} (hf : MeromorphicAt f z) :
+    ∀ᶠ w in 𝓝[≠] z,
+      Nonempty (CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f w) := by
+  filter_upwards [hf.eventually_analyticAt] with w hw
+  exact ⟨analyticAtToCauchyAnalyticAt hw⟩
+
+/-- A meromorphic function on `U` that is continuous on the open complement `U \ P` is analytic on `U \ P`. -/
+theorem meromorphicOn_off_poles_analyticOnNhd
+    {U P : Set ℂ} {f : ℂ → ℂ}
+    (hf : MeromorphicOn f U)
+    (hUP : IsOpen (U \ P))
+    (hcont : ContinuousOn f (U \ P)) :
+    AnalyticOnNhd ℂ f (U \ P) := by
+  intro z hz
+  exact (hf z hz.1).analyticAt (hcont.continuousAt (hUP.mem_nhds hz))
+
+/-- A meromorphic function on `U` continuous on the open complement `U \ P` is Cauchy-analytic on `U \ P`. -/
+def meromorphicOn_off_poles_cauchyAnalyticAt
+    {U P : Set ℂ} {f : ℂ → ℂ}
+    (hf : MeromorphicOn f U)
+    (hUP : IsOpen (U \ P))
+    (hcont : ContinuousOn f (U \ P))
+    {z : ℂ} (hz : z ∈ U \ P) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
+  analyticAtToCauchyAnalyticAt
+    (meromorphicOn_off_poles_analyticOnNhd hf hUP hcont z hz)
+
+/--
+Transport off-pole Cauchy-analyticity for a meromorphic function on `U` to the
+doubled/clock-axis carrier.
+-/
+noncomputable def meromorphicOn_off_poles_liftedToDoubled_cauchyAnalyticAt
+    {U P : Set ℂ} {f : ℂ → ℂ}
+    (hf : MeromorphicOn f U)
+    (hUP : IsOpen (U \ P))
+    (hcont : ContinuousOn f (U \ P))
+    {z : ℂ} (hz : z ∈ U \ P) :
+    CauchyAnalyticAt doubledPhaseStructure doubledPhaseStructure
+      (lifted f) (complexToDoubled z) :=
+  analyticAt_liftedToDoubled_cauchyAnalyticAt
+    (meromorphicOn_off_poles_analyticOnNhd hf hUP hcont z hz)
+
+/-- Prop-valued off-pole Cauchy-analyticity on `U \ P` for a meromorphic function on `U`. -/
+theorem meromorphicOn_off_poles_nonempty_cauchyAnalyticAt
+    {U P : Set ℂ} {f : ℂ → ℂ}
+    (hf : MeromorphicOn f U)
+    (hUP : IsOpen (U \ P))
+    (hcont : ContinuousOn f (U \ P)) :
+    ∀ z ∈ U \ P,
+      Nonempty (CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z) :=
+  fun _ hz => ⟨meromorphicOn_off_poles_cauchyAnalyticAt hf hUP hcont hz⟩
+
+/-- Convenience specialization for an open domain `U` and a closed pole set `P`. -/
+def meromorphicOn_off_closed_poles_cauchyAnalyticAt
+    {U P : Set ℂ} {f : ℂ → ℂ}
+    (hf : MeromorphicOn f U)
+    (hU : IsOpen U) (hP : IsClosed P)
+    (hcont : ContinuousOn f (U \ P))
+    {z : ℂ} (hz : z ∈ U \ P) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
+  meromorphicOn_off_poles_cauchyAnalyticAt hf (hU.sdiff hP) hcont hz
+
+/-- Convenience specialization for an open domain `U` and a finite pole set `P`. -/
+def meromorphicOn_off_finite_poles_cauchyAnalyticAt
+    {U P : Set ℂ} {f : ℂ → ℂ}
+    (hf : MeromorphicOn f U)
+    (hU : IsOpen U) (hP : P.Finite)
+    (hcont : ContinuousOn f (U \ P))
+    {z : ℂ} (hz : z ∈ U \ P) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
+  meromorphicOn_off_poles_cauchyAnalyticAt hf (hU.sdiff hP.isClosed) hcont hz
+
+/-- A meromorphic function on `U` is Cauchy-analytic on a codiscrete subset within `U`. -/
+theorem meromorphicOn_codiscrete_cauchyAnalyticAt
+    {U : Set ℂ} {f : ℂ → ℂ} (hf : MeromorphicOn f U) :
+    ∀ᶠ z in Filter.codiscreteWithin U,
+      Nonempty (CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z) := by
+  filter_upwards [hf.analyticAt_mem_codiscreteWithin] with z hz
+  exact ⟨analyticAtToCauchyAnalyticAt hz⟩
+
+/-- A meromorphic function in normal form with nonnegative order at `z` is Cauchy-analytic at `z`. -/
+def meromorphicNFAt_nonnegOrder_to_cauchyAnalyticAt
+    {f : ℂ → ℂ} {z : ℂ}
+    (hf : MeromorphicNFAt f z) (hord : 0 ≤ meromorphicOrderAt f z) :
+    CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z :=
+  analyticAtToCauchyAnalyticAt (hf.meromorphicOrderAt_nonneg_iff_analyticAt.mp hord)
+
+/-- A meromorphic function in normal form on `U` with nonnegative order on `U \ P` is Cauchy-analytic on `U \ P`. -/
+theorem meromorphicNFOn_off_poles_nonempty_cauchyAnalyticAt
+    {U P : Set ℂ} {f : ℂ → ℂ}
+    (hf : MeromorphicNFOn f U)
+    (hord : ∀ z ∈ U \ P, 0 ≤ meromorphicOrderAt f z) :
+    ∀ z ∈ U \ P,
+      Nonempty (CauchyAnalyticAt complexPhaseStructure complexPhaseStructure f z) :=
+  fun z hz =>
+    ⟨meromorphicNFAt_nonnegOrder_to_cauchyAnalyticAt (hf hz.1) (hord z hz)⟩
 
 end InfoGeometry.Canonical.ComplexAnalyticBridge

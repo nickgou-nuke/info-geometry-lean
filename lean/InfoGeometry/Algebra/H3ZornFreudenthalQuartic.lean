@@ -147,7 +147,7 @@ theorem quarticInvariant_electricCharge (α : ℝ) (X : H3Zorn ℝ) :
   have hz : H3Zorn.traceBilin (H3Zorn.adjointQuad X) (0 : H3Zorn ℝ) = 0 :=
     H3Zorn.traceBilin_zero_right _
   rw [hz0, hq, hz]
-  simp [H3Zorn.normCubic_zero]
+  simp
 
 /-- On a pure magnetic charge, the quartic is `-4 β N(Y)`. -/
 theorem quarticInvariant_magneticCharge (β : ℝ) (Y : H3Zorn ℝ) :
@@ -165,7 +165,7 @@ theorem quarticInvariant_magneticCharge (β : ℝ) (Y : H3Zorn ℝ) :
     H3Zorn.traceBilin_zero_left _
   rw [hz0, hq]
   rw [hz]
-  simp [H3Zorn.normCubic_zero]
+  simp
 
 /-- The cubic Jordan norm is recovered exactly from the unit electric slice. -/
 theorem cubicNorm_from_quartic (X : H3Zorn ℝ) :

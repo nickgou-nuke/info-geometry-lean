@@ -19,7 +19,7 @@ namespace InfoGeometry.Physics.Octonion.ChiralZornMatrix
 
 variable {A : Type*} [Ring A]
 
-@[ext] theorem ext {X Y : ChiralZornMatrix A}
+private theorem chiralZorn_ext {X Y : ChiralZornMatrix A}
     (hnp : X.n_plus = Y.n_plus) (hnm : X.n_minus = Y.n_minus)
     (hsp : X.sigma_plus = Y.sigma_plus)
     (hsm : X.sigma_minus = Y.sigma_minus) : X = Y := by
@@ -103,7 +103,7 @@ private theorem reciprocalScale_mul_of_cube
       _ = q ^ 3 * q := by noncomm_ring
       _ = q := by rw [hcube]; simp
   have hq2 : q * q = qi := by simpa [pow_two] using hq2qi
-  apply ChiralZornMatrix.ext
+  apply chiralZorn_ext
   · change X.n_plus * Y.n_plus + colorDot X.sigma_plus Y.sigma_minus =
       X.n_plus * Y.n_plus + colorDot (fun i => q * X.sigma_plus i)
         (fun i => qi * Y.sigma_minus i)

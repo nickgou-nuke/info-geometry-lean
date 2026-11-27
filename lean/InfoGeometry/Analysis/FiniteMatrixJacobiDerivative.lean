@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 
@@ -46,7 +51,7 @@ theorem hasDerivAt_det_leibniz
           (∑ i : n,
             (∏ j ∈ Finset.univ.erase i, X t (σ j) j) * X' (σ i) i) t := by
       simpa [detLeibnizDerivative, smul_eq_mul] using
-        (HasDerivAt.fun_finset_prod (u := Finset.univ)
+        (HasDerivAt.fun_finsetProd (u := Finset.univ)
           (f := fun i z => X z (σ i) i)
           (f' := fun i => X' (σ i) i)
           (x := t)

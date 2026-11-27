@@ -126,7 +126,9 @@ class TestAutoOntologyLiveEndpoints(unittest.TestCase):
 
     BASE_URL = os.environ.get("AUTO_ONTOLOGY_REST_URL", "http://127.0.0.1:3001")
     MCP_URL = os.environ.get("AUTO_ONTOLOGY_MCP_BASE_URL", "http://127.0.0.1:3003")
-    SENTINEL_QUERY = "drazin_epistemic_solve_et_coagula_master_synthesis"
+    # Stable owner present in the current generation-pinned Lean projection.
+    # The former Drazin sentinel is retained only in historical generations.
+    SENTINEL_QUERY = "OperatorZornPeirceTetraktysBridge"
 
     def _get_json(self, url: str) -> tuple[int, dict]:
         with urllib.request.urlopen(url, timeout=15) as resp:
@@ -192,7 +194,7 @@ class TestAutoOntologyLiveEndpoints(unittest.TestCase):
         status, gs = self._post_json(
             f"{self.BASE_URL}/api/search/global-search",
             {
-                "search_term": "DrazinEpistemicSolveEtCoagula",
+                "search_term": "OperatorZornPeirceTetraktysBridge",
                 "filters": {"description": True, "synonyms": True},
             },
         )

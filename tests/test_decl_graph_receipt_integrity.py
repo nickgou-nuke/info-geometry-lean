@@ -45,19 +45,40 @@ class ReceiptValidationTests(unittest.TestCase):
                     resolve_decl_graph_generation(db, value)
                 db.aql.execute.assert_not_called()
                 with patch.object(refresh.subprocess, 'run') as run:
-                    self.assertNotEqual(refresh.stream_to_arango(
-                        Path('/unused'), 'InfoGeometry.All', 'InfoGeometry',
-                        'unused', 'run', value, 'a' * 64), 0)
+                    with self.assertRaises(ValueError):
+                        refresh.stream_to_arango(
+                            Path('/unused'), 'InfoGeometry.All', 'InfoGeometry',
+                            'unused', 'run', value, 'a' * 64)
                 run.assert_not_called()
 
     def test_cli_rejects_empty_hyphen_and_unicode_ids(self):
         for value in ('', 'a-b', 'é'):
             args = Namespace(stream=True, replace_live=False, generation_id=value,
-                             build_fingerprint='a' * 64)
+                             build_fingerprint='a' * 64, import_root='InfoGeometry.All',
+                             namespace='InfoGeometry')
             with self.subTest(value=value), patch.object(refresh, 'stream_to_arango') as stream:
                 with self.assertRaises(SystemExit):
                     refresh._run_refresh(args, Path('/unused'), Mock())
                 stream.assert_not_called()
+
+    def test_cli_rejects_non_sha256_build_fingerprints_before_streaming(self):
+        for value in ('', 'opaque', 'A' * 64, 'a' * 63, None):
+            args = Namespace(stream=True, replace_live=False, generation_id='valid_gen',
+                             build_fingerprint=value, import_root='InfoGeometry.All',
+                             namespace='InfoGeometry')
+            with self.subTest(value=value), patch.object(refresh, 'stream_to_arango') as stream:
+                with self.assertRaises(SystemExit):
+                    refresh._run_refresh(args, Path('/unused'), Mock())
+                stream.assert_not_called()
+
+    def test_direct_stream_rejects_generation_metadata_before_environment_or_database(self):
+        with patch.object(refresh, 'load_repo_arango_env') as load_env:
+            with self.assertRaises(ValueError):
+                refresh.stream_to_arango(
+                    Path('/unused'), 'InfoGeometry.All', 'InfoGeometry', 'unused', 'run',
+                    'valid_gen', 'not-a-sha256',
+                )
+            load_env.assert_not_called()
 
     def test_ascii_and_boundary_ids_are_allowed(self):
         for value in ('a', '_', 'A0_b', 'x' * 32, 'decl_' + 'a' * 24):

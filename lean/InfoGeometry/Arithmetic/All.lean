@@ -47,6 +47,9 @@ import InfoGeometry.Arithmetic.LSeriesCoefficientwiseUniformConvergence
 import InfoGeometry.Arithmetic.NumberFieldCompletionFinitePlace
 import InfoGeometry.Arithmetic.NumberFieldDedekindZetaEulerProduct
 import InfoGeometry.Arithmetic.NumberFieldHeckeLFunction
+import InfoGeometry.Arithmetic.WeightedMangoldtSmoothing
+import InfoGeometry.Arithmetic.RealDoubledCenteredXiReadout
+import InfoGeometry.Arithmetic.RealDoubledDirichletReadout
 
 namespace InfoGeometry.Arithmetic.All
 

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Physics.SolovievPhononCorrections
 import InfoGeometry.Physics.NuclearTwoModeCARFiveGrade
 
@@ -37,6 +42,51 @@ def twoModeCAR : QuasiparticleCAR (Fin 2) Op where
 theorem phononCreation_eq_pair_components (forward backward : ℂ) :
     phononCreation twoModeCAR 0 1 forward backward =
       forward • pairCreation - backward • pairAnnihilation := rfl
+
+theorem phononAnnihilation_eq_pair_components (forward backward : ℂ) :
+    phononAnnihilation twoModeCAR 0 1 forward backward =
+      starRingEnd ℂ forward • pairAnnihilation -
+        starRingEnd ℂ backward • pairCreation := rfl
+
+/-- The Tamm–Dancoff forward phonon lies in the grade `+2` pair-creation
+sector of the concrete two-mode CAR grading. -/
+theorem tda_phonon_creation_grade (forward : ℂ) :
+    HasGrade 2 (phononCreation twoModeCAR 0 1 forward 0) := by
+  rw [phononCreation_eq_pair_components]
+  simp only [zero_smul, sub_zero]
+  change commutator gradeCartan (forward • pairCreation) =
+    (2 : ℂ) • (forward • pairCreation)
+  have hlinear : commutator gradeCartan (forward • pairCreation) =
+      forward • commutator gradeCartan pairCreation := by
+    simp [NuclearTwoModeCARFiveGrade.commutator,
+      smul_mul_assoc, mul_smul_comm, smul_sub]
+  rw [hlinear]
+  have hgrade : commutator gradeCartan pairCreation =
+      (2 : ℂ) • pairCreation := by
+    exact grade_pairCreation
+  rw [hgrade]
+  module
+
+/-- The reverse Tamm–Dancoff phonon lies in the grade `-2`
+pair-annihilation sector; the two orientations retain their opposite grades. -/
+theorem tda_phonon_annihilation_grade (forward : ℂ) :
+    HasGrade (-2) (phononAnnihilation twoModeCAR 0 1 forward 0) := by
+  rw [phononAnnihilation_eq_pair_components]
+  simp only [map_zero, zero_smul, sub_zero]
+  unfold HasGrade
+  have hlinear : commutator gradeCartan
+      ((starRingEnd ℂ forward) • pairAnnihilation) =
+      (starRingEnd ℂ forward) •
+        commutator gradeCartan pairAnnihilation := by
+    simp [NuclearTwoModeCARFiveGrade.commutator,
+      smul_mul_assoc, mul_smul_comm, smul_sub]
+  rw [hlinear]
+  have hgrade : commutator gradeCartan pairAnnihilation =
+      (-2 : ℂ) • pairAnnihilation := by
+    simpa [HasGrade] using (grade_pairAnnihilation :
+      HasGrade (-2) NuclearTwoModeCARFiveGrade.pairAnnihilation)
+  rw [hgrade]
+  simp [smul_smul, mul_comm]
 
 theorem phonon_commutator_eq_cartan (forward backward : ℂ) :
     comm (phononAnnihilation twoModeCAR 0 1 forward backward)

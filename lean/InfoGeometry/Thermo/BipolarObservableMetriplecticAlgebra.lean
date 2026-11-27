@@ -413,4 +413,36 @@ theorem bipolar_observable_metriplectic_packet
     metriplectic_second_law D H S hS hH,
     metriplectic_second_law_nonneg D ev H S hS hH⟩
 
+variable {A : Type*} [CommRing A] [Algebra ℝ A]
+
+/-- Exchanging the two observables flips the Lie (Poisson) part and preserves
+the metric part.  The sign separation is the algebraic obstruction that makes
+the reversible flow skew and the irreversible flow symmetric. -/
+theorem metriplecticBracket_swap (D : DerivationFrame A) (F G : A) :
+    metriplecticBracket D G F =
+      -poissonBracket D F G + metricBracket D F G := by
+  unfold metriplecticBracket
+  rw [poissonBracket_skew D G F, metricBracket_symm D G F]
+
+/-- The antisymmetric defect of the metriplectic bracket is exactly twice the
+Poisson bracket: the Lie flow is the noncommutative obstruction, not an
+additional assumption. -/
+theorem metriplecticBracket_antisymmetric_defect (D : DerivationFrame A) (F G : A) :
+    metriplecticBracket D F G - metriplecticBracket D G F =
+      (2 : ℕ) • poissonBracket D F G := by
+  rw [metriplecticBracket_swap]
+  unfold metriplecticBracket
+  rw [poissonBracket_skew D G F]
+  ring
+
+/-- The symmetric part is exactly twice the metric bracket: the information
+geometry of the flow is the commutative companion of the Lie obstruction. -/
+theorem metriplecticBracket_symmetric_part (D : DerivationFrame A) (F G : A) :
+    metriplecticBracket D F G + metriplecticBracket D G F =
+      (2 : ℕ) • metricBracket D F G := by
+  rw [metriplecticBracket_swap]
+  unfold metriplecticBracket
+  rw [metricBracket_symm D G F]
+  ring
+
 end InfoGeometry.Thermo.BipolarObservableMetriplecticAlgebra

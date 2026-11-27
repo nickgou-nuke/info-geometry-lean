@@ -4,6 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Quantum.RealificationTensor
+import InfoGeometry.Quantum.RealificationPhaseGrading
 
 /-!
 # Positive compression on the full doubled tensor carrier
@@ -26,12 +27,6 @@ open scoped Kronecker
 namespace InfoGeometry.Quantum.Realification
 
 variable {n m : Type*} [DecidableEq n] [DecidableEq m]
-
-/-- The real phase axis is skew-symmetric. -/
-theorem internalJ_transpose :
-    (internalJ (n := n)).transpose = -internalJ := by
-  ext i j
-  cases i <;> cases j <;> simp [internalJ, Matrix.one_apply, eq_comm]
 
 /-- The two local phase axes define an involution on the full real product. -/
 def phaseInvolution :

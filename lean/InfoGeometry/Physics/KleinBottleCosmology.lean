@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Topology.Q8MonodromySpinorCover
@@ -134,6 +139,98 @@ theorem klein_bottle_cosmology_packet
   · exact brillouin_boundary_word p
   · exact pin55_glide_square_eq_translation x
   · exact sewn_boundary_chiral_index_vanishes s hSew
+
+section BoyleTurokTwoSheetedFRWBounce
+
+/-- Minisuperspace FLRW Hamiltonian constraint with curvature `k`, cosmological constant `Λ`,
+radiation density `M_rad`, scale factor `a`, and conjugate momentum `p_a`:
+`H_WDW = -p_a² - k a² + (Λ / 3) a⁴ + M_rad`. -/
+def frwBounceConstraint (k Λ M_rad a p_a : ℝ) : ℝ :=
+  -(p_a ^ 2) - k * a ^ 2 + (Λ / 3) * a ^ 4 + M_rad
+
+/-- Two-sheeted CPT mirror involution `(a, p_a) ↦ (-a, -p_a)` across the `a = 0` bounce seam. -/
+def cptMirrorFRW (z : ℝ × ℝ) : ℝ × ℝ :=
+  (-z.1, -z.2)
+
+@[simp] theorem cptMirrorFRW_involutive (z : ℝ × ℝ) :
+    cptMirrorFRW (cptMirrorFRW z) = z := by
+  ext <;> simp [cptMirrorFRW]
+
+theorem cptMirrorFRW_fixed_iff (z : ℝ × ℝ) :
+    cptMirrorFRW z = z ↔ z = (0, 0) := by
+  constructor
+  · intro h
+    ext
+    · have h1 := congrArg Prod.fst h
+      dsimp [cptMirrorFRW] at h1
+      linarith
+    · have h2 := congrArg Prod.snd h
+      dsimp [cptMirrorFRW] at h2
+      linarith
+  · rintro rfl
+    ext <;> simp [cptMirrorFRW]
+
+/-- The FLRW Hamiltonian constraint is strictly invariant under the CPT mirror `(a, p_a) ↦ (-a, -p_a)`. -/
+theorem frwBounceConstraint_cpt_invariant (k Λ M_rad a p_a : ℝ) :
+    frwBounceConstraint k Λ M_rad (-a) (-p_a) =
+      frwBounceConstraint k Λ M_rad a p_a := by
+  unfold frwBounceConstraint
+  ring
+
+/-- At the `a = 0` bounce seam, the constraint holds iff `p_a² = M_rad`. -/
+theorem frw_bounce_seam_turning_point (k Λ M_rad p_a : ℝ) :
+    frwBounceConstraint k Λ M_rad 0 p_a = 0 ↔ p_a ^ 2 = M_rad := by
+  unfold frwBounceConstraint
+  constructor <;> intro h <;> linarith
+
+/-- Negative radiation density forbids a real bounce solution at `a = 0`. -/
+theorem frw_no_real_bounce_of_neg_radiation (k Λ M_rad p_a : ℝ) (hM : M_rad < 0) :
+    frwBounceConstraint k Λ M_rad 0 p_a ≠ 0 := by
+  intro h
+  rw [frw_bounce_seam_turning_point] at h
+  rw [← h] at hM
+  linarith [sq_nonneg p_a, hM]
+
+/-- For `M_rad ≥ 0`, the contracting/expanding seam momenta `±√M_rad` both solve the `a = 0`
+bounce constraint and are swapped by `cptMirrorFRW`. -/
+theorem frw_radiation_bounce_pair_cpt_mirror (k Λ M_rad : ℝ) (hM : 0 ≤ M_rad) :
+    let pPlus := Real.sqrt M_rad
+    let pMinus := -Real.sqrt M_rad
+    frwBounceConstraint k Λ M_rad 0 pPlus = 0 ∧
+    frwBounceConstraint k Λ M_rad 0 pMinus = 0 ∧
+    cptMirrorFRW (0, pPlus) = (0, pMinus) := by
+  intro pPlus pMinus
+  refine ⟨?_, ?_, ?_⟩
+  · rw [frw_bounce_seam_turning_point]
+    exact Real.sq_sqrt hM
+  · rw [frw_bounce_seam_turning_point]
+    dsimp [pMinus]
+    rw [neg_sq]
+    exact Real.sq_sqrt hM
+  · ext <;> simp [cptMirrorFRW, pPlus, pMinus]
+
+/-- Even CPT-symmetric projector on two-sheeted Wheeler–DeWitt wavefunctions `ψ : ℝ → ℝ`. -/
+def wdwEvenProj (ψ : ℝ → ℝ) (a : ℝ) : ℝ :=
+  (ψ a + ψ (-a)) / 2
+
+/-- Odd CPT-antisymmetric projector on two-sheeted Wheeler–DeWitt wavefunctions `ψ : ℝ → ℝ`. -/
+def wdwOddProj (ψ : ℝ → ℝ) (a : ℝ) : ℝ :=
+  (ψ a - ψ (-a)) / 2
+
+/-- Idempotence, orthogonality, completeness, and DeWitt Dirichlet seam vanishing of the
+even/odd CPT bounce parity projectors. -/
+theorem wdw_bounce_parity_decomposition (ψ : ℝ → ℝ) (a : ℝ) :
+    wdwEvenProj (wdwEvenProj ψ) a = wdwEvenProj ψ a ∧
+    wdwOddProj (wdwOddProj ψ) a = wdwOddProj ψ a ∧
+    wdwEvenProj (wdwOddProj ψ) a = 0 ∧
+    wdwOddProj (wdwEvenProj ψ) a = 0 ∧
+    wdwEvenProj ψ a + wdwOddProj ψ a = ψ a ∧
+    wdwOddProj ψ 0 = 0 ∧
+    wdwEvenProj ψ 0 = ψ 0 := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+    simp [wdwEvenProj, wdwOddProj] <;> ring
+
+end BoyleTurokTwoSheetedFRWBounce
 
 end
 end InfoGeometry.Physics.KleinBottleCosmology

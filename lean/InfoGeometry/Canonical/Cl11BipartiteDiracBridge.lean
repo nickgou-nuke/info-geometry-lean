@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 
 import InfoGeometry.Canonical.Cl11LeftRightDoubleBridge
@@ -204,5 +209,13 @@ theorem tensorSwap_compositeDirac (DL : StageOne) (betaR DR : Atom) :
   rw [tensorSwap_kronecker, tensorSwap_kronecker]
   rw [map_one]
   rfl
+
+/-- The supertrace of the squared off-diagonal Dirac block vanishes. This is the
+finite matrix shadow of the transcript's claim that the vacuum supertrace does
+not generate a net bare cosmological energy. -/
+theorem offDiagonalDirac_sq_supertrace_balance {n : ℕ} (K : Matrix (Fin n) (Fin n) ℝ) :
+    Matrix.trace (Kᵀ * K) - Matrix.trace (K * Kᵀ) = 0 := by
+  rw [Matrix.trace_mul_comm Kᵀ K]
+  exact sub_self _
 
 end InfoGeometry.Canonical.Cl11BipartiteDiracBridge

@@ -5,6 +5,9 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import Mathlib
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys
+import InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge
+import InfoGeometry.Canonical.ChiralSuperderivationColimit
 
 /-!
 # Noncommutative Tetraktys Flows, Clifford–Cayley Transform, and CPT Triad
@@ -26,6 +29,9 @@ Formalizes over an arbitrary noncommutative ring `[Ring A]` and star-ring
 open Matrix
 
 namespace InfoGeometry.Algebra.NoncommutativeTetraktysFlows
+
+set_option linter.unnecessarySeqFocus false
+set_option linter.unreachableTactic false
 
 /-!
 ## Foundational Infrastructure: 2 × 2 Noncommutative Operator Matrices & Cl(1,1) Atom
@@ -214,6 +220,58 @@ theorem noncommutative_charpoly_casimir_and_lie_obstruction (cGamma cSigma cOmeg
   simp only [Ring.lie_def]
   apply ext_fin2 <;> simp [flowGen, fiberEmbed, gamma1Op, sigmaOp, omegaOp] <;> noncomm_ring
 
+/-- In an additive `2`-torsion-free coefficient ring, the noncommutative
+Tetraktys square is its scalar Casimir channel exactly when all three
+coefficient commutators vanish. The torsion hypothesis is needed for the
+converse: in characteristic two the `Σ` and `Ω` matrix directions coincide,
+so their two off-diagonal obstruction coefficients cannot be separated. -/
+theorem flowGen_square_eq_casimir_iff_commutators_zero
+    [NoZeroSMulDivisors ℤ A] (cGamma cSigma cOmega : A) :
+    flowGen cGamma cSigma cOmega * flowGen cGamma cSigma cOmega =
+        fiberEmbed (cGamma * cGamma + cSigma * cSigma - cOmega * cOmega) * 1 ↔
+      ⁅cSigma, cOmega⁆ = 0 ∧ ⁅cOmega, cGamma⁆ = 0 ∧ ⁅cGamma, cSigma⁆ = 0 := by
+  constructor
+  · intro h
+    rw [noncommutative_charpoly_casimir_and_lie_obstruction] at h
+    have h00 := congrArg (fun M : Matrix (Fin 2) (Fin 2) A => M 0 0) h
+    have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) A => M 0 1) h
+    have h10 := congrArg (fun M : Matrix (Fin 2) (Fin 2) A => M 1 0) h
+    simp [fiberEmbed, gamma1Op, sigmaOp, omegaOp, mat2, Matrix.mul_apply,
+      Fin.sum_univ_two, Ring.lie_def] at h00 h01 h10
+    have hSigmaOmega : cSigma * cOmega - cOmega * cSigma = 0 := h00
+    have hOmegaGammaPlus :
+        (cOmega * cGamma - cGamma * cOmega) +
+          (cGamma * cSigma - cSigma * cGamma) = 0 := by
+      simpa [sub_eq_add_neg, add_assoc] using h01
+    have hOmegaGammaMinus :
+        (cOmega * cGamma - cGamma * cOmega) -
+          (cGamma * cSigma - cSigma * cGamma) = 0 := by
+      simpa [sub_eq_add_neg, add_assoc] using h10
+    have hTwiceOmegaGamma :
+        (2 : ℤ) • (cOmega * cGamma - cGamma * cOmega) = 0 := by
+      rw [two_smul]
+      calc (cOmega * cGamma - cGamma * cOmega) +
+            (cOmega * cGamma - cGamma * cOmega) =
+            ((cOmega * cGamma - cGamma * cOmega) +
+              (cGamma * cSigma - cSigma * cGamma)) +
+            ((cOmega * cGamma - cGamma * cOmega) -
+              (cGamma * cSigma - cSigma * cGamma)) := by noncomm_ring
+        _ = 0 := by rw [hOmegaGammaPlus, hOmegaGammaMinus]; simp
+    have hOmegaGamma : cOmega * cGamma - cGamma * cOmega = 0 :=
+      (smul_eq_zero.mp hTwiceOmegaGamma).resolve_left (by decide)
+    have hGammaSigma : cGamma * cSigma - cSigma * cGamma = 0 := by
+      rw [hOmegaGamma, zero_add] at hOmegaGammaPlus
+      exact hOmegaGammaPlus
+    exact ⟨hSigmaOmega, hOmegaGamma, hGammaSigma⟩
+  · rintro ⟨hSigmaOmega, hOmegaGamma, hGammaSigma⟩
+    rw [noncommutative_charpoly_casimir_and_lie_obstruction]
+    simp only [Ring.lie_def]
+    simp only [Ring.lie_def] at hSigmaOmega hOmegaGamma hGammaSigma
+    rw [hSigmaOmega, hOmegaGamma, hGammaSigma]
+    apply ext_fin2 <;>
+      simp [fiberEmbed, gamma1Op, sigmaOp, omegaOp, mat2, Matrix.mul_apply,
+        Fin.sum_univ_two]
+
 /-- **Classification of the Four Canonical Geometric Operator Flows (T₄ᵦ)**. -/
 theorem four_geometric_flows_classification (c_I a b : A) (hab : ⁅a, b⁆ = 0) :
     flowGen a 0 0 * flowGen a 0 0 = fiberEmbed (a * a) ∧
@@ -396,5 +454,264 @@ private theorem matrix2_noncomm_witness {A : Type*} [Ring A] [Nontrivial A] :
   intro h
   have h00 := congr_fun (congr_fun h 0) 0
   simp [Matrix.mul_apply, Fin.sum_univ_two] at h00
+
+variable {A : Type*} [CommRing A]
+
+/-- Anti-multiplicative sheet swap `τ(M) = Σ Mᵀ Σ` over a commutative coefficient
+ring, where matrix transpose is genuinely anti-multiplicative.  Unlike the multiplicative
+sheet-swap adjoint, double reversal cancels projector swapping on the odd
+Peirce corners, so those corners are preserved rather than exchanged. -/
+def antiSheetSwap (M : Matrix (Fin 2) (Fin 2) A) : Matrix (Fin 2) (Fin 2) A :=
+  sigmaOp * M.transpose * sigmaOp
+
+private theorem sigmaOp_sq : sigmaOp * sigmaOp = (1 : Matrix (Fin 2) (Fin 2) A) := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [sigmaOp, mat2, Matrix.mul_apply, Fin.sum_univ_two]
+
+theorem antiSheetSwap_mul (M N : Matrix (Fin 2) (Fin 2) A) :
+    antiSheetSwap (M * N) = antiSheetSwap N * antiSheetSwap M := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [antiSheetSwap, sigmaOp, mat2, Matrix.mul_apply, Matrix.transpose_apply,
+      Fin.sum_univ_two] <;> ring
+
+theorem antiSheetSwap_P_plus : antiSheetSwap (P_plus (A := A)) = P_minus (A := A) := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [antiSheetSwap, sigmaOp, P_plus, P_minus, mat2, Matrix.mul_apply,
+      Matrix.transpose_apply, Fin.sum_univ_two]
+
+theorem antiSheetSwap_P_minus : antiSheetSwap (P_minus (A := A)) = P_plus (A := A) := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [antiSheetSwap, sigmaOp, P_plus, P_minus, mat2, Matrix.mul_apply,
+      Matrix.transpose_apply, Fin.sum_univ_two]
+
+/-- Row 4 of the Peirce involution table: product reversal and projector swap
+cancel on the upper odd corner. -/
+theorem antiSheetSwap_upper_corner (M : Matrix (Fin 2) (Fin 2) A) :
+    antiSheetSwap (P_plus * M * P_minus) =
+      P_plus * antiSheetSwap M * P_minus := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [antiSheetSwap, sigmaOp, P_plus, P_minus, mat2, Matrix.mul_apply,
+      Matrix.transpose_apply, Fin.sum_univ_two]
+
+/-- The lower odd corner is preserved as well. -/
+theorem antiSheetSwap_lower_corner (M : Matrix (Fin 2) (Fin 2) A) :
+    antiSheetSwap (P_minus * M * P_plus) =
+      P_minus * antiSheetSwap M * P_plus := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [antiSheetSwap, sigmaOp, P_plus, P_minus, mat2, Matrix.mul_apply,
+      Matrix.transpose_apply, Fin.sum_univ_two]
+
+/-- Nonzero fixed states exist in the odd corners, unlike rows 1--3. -/
+theorem antiSheetSwap_F_plus_fixed : antiSheetSwap (F_plus (A := A)) = F_plus (A := A) := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [antiSheetSwap, sigmaOp, F_plus, mat2, Matrix.mul_apply,
+      Matrix.transpose_apply, Fin.sum_univ_two]
+
+theorem antiSheetSwap_F_minus_fixed : antiSheetSwap (F_minus (A := A)) = F_minus (A := A) := by
+  ext i j <;> fin_cases i <;> fin_cases j <;>
+    simp [antiSheetSwap, sigmaOp, F_minus, mat2, Matrix.mul_apply,
+      Matrix.transpose_apply, Fin.sum_univ_two]
+
+/-!
+## Archetype T₇: Noncommutative Symmetric/Antisymmetric `xp` Dilaton Split & Peirce Spine Coupling
+-/
+
+section ArchetypeT7_XPDilatonAndPeirceSpine
+
+variable {A : Type*} [Ring A]
+
+/-- Division-free symmetric `xp` dilaton channel `symDilaton2 x p = x * p + p * x`. -/
+def symDilaton2 (x p : A) : A := x * p + p * x
+
+/-- Antisymmetric Heisenberg/symplectic commutator channel `antisymComm x p = x * p - p * x`. -/
+def antisymComm (x p : A) : A := x * p - p * x
+
+theorem symDilaton2_swap (x p : A) : symDilaton2 x p = symDilaton2 p x := by
+  dsimp [symDilaton2]
+  exact add_comm (x * p) (p * x)
+
+theorem antisymComm_swap (x p : A) : antisymComm x p = -antisymComm p x := by
+  dsimp [antisymComm]
+  noncomm_ring
+
+theorem antisymComm_eq_lie (x p : A) : antisymComm x p = ⁅x, p⁆ := by
+  dsimp [antisymComm]
+  rw [Ring.lie_def]
+
+/-- Exact division-free decomposition `2 * (x * p) = {x, p} + [x, p]`. -/
+theorem two_mul_xp_eq_symDilaton2_add_antisymComm (x p : A) :
+    2 * (x * p) = symDilaton2 x p + antisymComm x p := by
+  dsimp [symDilaton2, antisymComm]
+  noncomm_ring
+
+/-- Exact division-free decomposition `2 * (p * x) = {x, p} - [x, p]`. -/
+theorem two_mul_px_eq_symDilaton2_sub_antisymComm (x p : A) :
+    2 * (p * x) = symDilaton2 x p - antisymComm x p := by
+  dsimp [symDilaton2, antisymComm]
+  noncomm_ring
+
+theorem symDilaton2_star [StarRing A] (x p : A) (hx : star x = x) (hp : star p = p) :
+    star (symDilaton2 x p) = symDilaton2 x p := by
+  dsimp [symDilaton2]
+  rw [star_add, star_mul, star_mul, hx, hp, add_comm]
+
+theorem antisymComm_star [StarRing A] (x p : A) (hx : star x = x) (hp : star p = p) :
+    star (antisymComm x p) = -antisymComm x p := by
+  dsimp [antisymComm]
+  rw [star_sub, star_mul, star_mul, hx, hp]
+  noncomm_ring
+
+/-- Exact commutator between the symmetric dilaton `{x, p}` and the antisymmetric `[x, p]`:
+their noncommutativity obstruction equals `2 * ⁅p * x, x * p⁆`. -/
+theorem lie_symDilaton2_antisymComm (x p : A) :
+    ⁅symDilaton2 x p, antisymComm x p⁆ = 2 * ⁅p * x, x * p⁆ := by
+  dsimp [symDilaton2, antisymComm]
+  simp only [Ring.lie_def]
+  noncomm_ring
+
+/-- Embedding `(symDilaton2 x p, antisymComm x p, cOmega)` into `flowGen` produces the exact
+Casimir scalar channel plus the three Lie curvature obstructions. -/
+theorem flowGen_xp_dilaton_square (x p cOmega : A) :
+    flowGen (symDilaton2 x p) (antisymComm x p) cOmega *
+      flowGen (symDilaton2 x p) (antisymComm x p) cOmega =
+      fiberEmbed (symDilaton2 x p * symDilaton2 x p +
+        antisymComm x p * antisymComm x p - cOmega * cOmega) * 1 +
+      fiberEmbed ⁅antisymComm x p, cOmega⁆ * gamma1Op +
+      fiberEmbed ⁅cOmega, symDilaton2 x p⁆ * sigmaOp -
+      fiberEmbed (2 * ⁅p * x, x * p⁆) * omegaOp := by
+  rw [noncommutative_charpoly_casimir_and_lie_obstruction, lie_symDilaton2_antisymComm]
+
+/-- Conjugation by `mellinFocus u` acts hyperbolically on the `symDilaton2` source channel
+and `antisymComm` sink channel, and contracts them into the `P_plus` channel. -/
+theorem xp_dilaton_commutator_mellinFocus (u : Aˣ) (x p : A) :
+    mellinFocus u * (fiberEmbed (symDilaton2 x p) * F_plus) * mellinFocus u⁻¹ =
+      fiberEmbed ((u : A) * symDilaton2 x p * (u : A)) * F_plus ∧
+    mellinFocus u * (fiberEmbed (antisymComm x p) * F_minus) * mellinFocus u⁻¹ =
+      fiberEmbed ((↑u⁻¹ : A) * antisymComm x p * (↑u⁻¹ : A)) * F_minus ∧
+    (fiberEmbed ((u : A) * symDilaton2 x p * (u : A)) * F_plus) *
+      (fiberEmbed ((↑u⁻¹ : A) * antisymComm x p * (↑u⁻¹ : A)) * F_minus) =
+      fiberEmbed ((u : A) * symDilaton2 x p * antisymComm x p * (↑u⁻¹ : A)) * P_plus := by
+  have h1 : (u : A) * (↑u⁻¹ : A) = 1 := Units.mul_inv u
+  refine ⟨?_, ?_, ?_⟩
+  · apply ext_fin2 <;> simp [mellinFocus, fiberEmbed, F_plus]
+  · apply ext_fin2 <;> simp [mellinFocus, fiberEmbed, F_minus]
+  · apply ext_fin2 <;> simp [fiberEmbed, F_plus, F_minus, P_plus]
+    calc (u : A) * symDilaton2 x p * (u : A) * ((↑u⁻¹ : A) * antisymComm x p * (↑u⁻¹ : A))
+      _ = (u : A) * symDilaton2 x p * ((u : A) * (↑u⁻¹ : A)) *
+          antisymComm x p * (↑u⁻¹ : A) := by noncomm_ring
+      _ = (u : A) * symDilaton2 x p * antisymComm x p * (↑u⁻¹ : A) := by
+          rw [h1]; noncomm_ring
+
+/-- `P_plus` is an idempotent in `Matrix (Fin 2) (Fin 2) A`, activating the PeirceSpine
+Tetraktys superoperators and chiral superderivations directly on `M₂(A)`. -/
+theorem P_plus_idempotent :
+    (P_plus : Matrix (Fin 2) (Fin 2) A) * P_plus = P_plus := by
+  apply ext_fin2 <;> simp [P_plus]
+
+theorem one_sub_P_plus_eq_P_minus :
+    (1 : Matrix (Fin 2) (Fin 2) A) - P_plus = P_minus := by
+  apply ext_fin2 <;> simp [P_plus, P_minus]
+
+theorem invS_P_plus_eq_gamma1Op :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.invS (P_plus : Matrix (Fin 2) (Fin 2) A) =
+      gamma1Op := by
+  apply ext_fin2 <;> simp [InfoGeometry.OperatorAlgebra.PeirceSpine.invS, P_plus, gamma1Op]
+
+theorem conePlus_P_plus_symDilaton2 (x p : A) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus
+        (P_plus : Matrix (Fin 2) (Fin 2) A) (mat2 0 (symDilaton2 x p) 0 0) =
+      fiberEmbed (symDilaton2 x p) * F_plus := by
+  apply ext_fin2 <;> simp [InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus,
+    P_plus, fiberEmbed, F_plus]
+
+theorem coneMinus_P_plus_antisymComm (x p : A) :
+    InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus
+        (P_plus : Matrix (Fin 2) (Fin 2) A) (mat2 0 0 (antisymComm x p) 0) =
+      fiberEmbed (antisymComm x p) * F_minus := by
+  apply ext_fin2 <;> simp [InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus,
+    P_plus, fiberEmbed, F_minus]
+
+/-- Explicit realization of the PeirceSpine Tetraktys operators `(V, Σ, Φ, J)`, Casimir
+derivation, graded superderivations, and `ChiralSuperderivationColimit.oddSuperAnticommutator`
+on the `(symDilaton2 x p, antisymComm x p)` channels in `Matrix (Fin 2) (Fin 2) A`. -/
+theorem peirce_xp_tetraktys_and_supercharge (x p : A)
+    (X : Matrix (Fin 2) (Fin 2) A) (b : Bool) :
+    let P : Matrix (Fin 2) (Fin 2) A := P_plus
+    let A_op : Matrix (Fin 2) (Fin 2) A := fiberEmbed (symDilaton2 x p) * F_plus
+    let C_op : Matrix (Fin 2) (Fin 2) A := fiberEmbed (antisymComm x p) * F_minus
+    InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A_op = A_op ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P C_op = C_op ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A_op C_op =
+      mat2 (symDilaton2 x p * antisymComm x p) 0 0 (antisymComm x p * symDilaton2 x p) ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A_op C_op =
+      mat2 (symDilaton2 x p * antisymComm x p) 0 0 (-(antisymComm x p * symDilaton2 x p)) ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A_op C_op =
+      mat2 0 (symDilaton2 x p) (antisymComm x p) 0 ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.genJ P A_op C_op =
+      mat2 0 (symDilaton2 x p) (-antisymComm x p) 0 ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.derivCasimir P A_op C_op
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A_op C_op) = 0 ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.derivCasimir P A_op C_op
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A_op C_op) =
+      -((8 : ℤ) • (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A_op C_op *
+        InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A_op C_op)) ∧
+    InfoGeometry.OperatorAlgebra.PeirceSpine.superDerivPlus P A_op
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.superDerivMinus P C_op X) +
+    InfoGeometry.OperatorAlgebra.PeirceSpine.superDerivMinus P C_op
+      (InfoGeometry.OperatorAlgebra.PeirceSpine.superDerivPlus P A_op X) =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A_op C_op) X ∧
+    InfoGeometry.Canonical.ChiralSuperderivationColimit.oddSuperAnticommutator
+      A_op C_op X b =
+      InfoGeometry.Canonical.ChiralSuperderivationColimit.innerDerivation
+        (InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A_op C_op) X := by
+  intro P A_op C_op
+  have hP : P * P = P := P_plus_idempotent
+  have hPlus : InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus P A_op = A_op := by
+    apply ext_fin2 <;> simp [InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus,
+      P, A_op, P_plus, fiberEmbed, F_plus]
+  have hMinus : InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus P C_op = C_op := by
+    apply ext_fin2 <;> simp [InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus,
+      P, C_op, P_plus, fiberEmbed, F_minus]
+  have hV : InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A_op C_op =
+      mat2 (symDilaton2 x p * antisymComm x p) 0 0 (antisymComm x p * symDilaton2 x p) := by
+    apply ext_fin2 <;> simp [InfoGeometry.OperatorAlgebra.PeirceSpine.genV,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus,
+      P, A_op, C_op, P_plus, fiberEmbed, F_plus, F_minus]
+  have hSig : InfoGeometry.OperatorAlgebra.PeirceSpine.genSig P A_op C_op =
+      mat2 (symDilaton2 x p * antisymComm x p) 0 0 (-(antisymComm x p * symDilaton2 x p)) := by
+    apply ext_fin2 <;> simp [InfoGeometry.OperatorAlgebra.PeirceSpine.genSig,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.comm,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus,
+      P, A_op, C_op, P_plus, fiberEmbed, F_plus, F_minus]
+  have hPhi : InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi P A_op C_op =
+      mat2 0 (symDilaton2 x p) (antisymComm x p) 0 := by
+    apply ext_fin2 <;> simp [InfoGeometry.OperatorAlgebra.PeirceSpine.genPhi,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus,
+      P, A_op, C_op, P_plus, fiberEmbed, F_plus, F_minus]
+  have hJ : InfoGeometry.OperatorAlgebra.PeirceSpine.genJ P A_op C_op =
+      mat2 0 (symDilaton2 x p) (-antisymComm x p) 0 := by
+    apply ext_fin2 <;> simp [InfoGeometry.OperatorAlgebra.PeirceSpine.genJ,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.conePlus,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.coneMinus,
+      P, A_op, C_op, P_plus, fiberEmbed, F_plus, F_minus]
+  have hCas := InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A10_casimir_and_superoperator_commutators
+    hP A_op C_op
+  have hSuper := InfoGeometry.OperatorAlgebra.PeirceSpine.archetype_A28_graded_derivations
+    hP A_op C_op X X
+  have hOdd := InfoGeometry.Canonical.ChiralSuperderivationColimit.oddSuperAnticommutator_eq_innerDerivation
+    A_op C_op X b
+  have hSum : A_op * C_op + C_op * A_op =
+      InfoGeometry.OperatorAlgebra.PeirceSpine.genV P A_op C_op := by
+    simp only [InfoGeometry.OperatorAlgebra.PeirceSpine.genV,
+      InfoGeometry.OperatorAlgebra.PeirceSpine.anticomm, hPlus, hMinus]
+  refine ⟨hPlus, hMinus, hV, hSig, hPhi, hJ, hCas.1, hCas.2.1, hSuper.2.2.2.2.2.2.1, ?_⟩
+  rw [hOdd, hSum]
+
+end ArchetypeT7_XPDilatonAndPeirceSpine
 
 end InfoGeometry.Algebra.NoncommutativeTetraktysFlows

@@ -1,8 +1,17 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Tactic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge
+import InfoGeometry.Quantum.AZTenFoldFullPeriodicTable
+import InfoGeometry.Quantum.AZDeclaredOneDimensionalTable
 
 open InfoGeometry.Quantum.AltlandZirnbauerKTheoryBridge
+open InfoGeometry.Quantum.AZTenFoldFullPeriodicTable
+open InfoGeometry.Quantum.AZDeclaredOneDimensionalTable
 
 namespace InfoGeometry.Quantum.AZDeclaredPeriodicTable
 
@@ -23,19 +32,28 @@ theorem bottClockResidue_add_eight (d : ℕ) :
   unfold bottClockResidue
   omega
 
-/-- Declared periodic-table data; this is not a stable-phase classification. -/
+/-- Convert the canonical full-table labels to the compact display labels. -/
+def ofTopologicalGroup : TopologicalGroup → PeriodicTableEntry
+  | .Zero => .zero
+  | .Z2 => .zModTwo
+  | .Z => .integers
+
+/-- Display view of the canonical Bott-index table. This definition shares the
+same classifier as the finite-matrix/operator lanes. -/
 def declaredPeriodicTableEntry (c : AZClass) (d : ℕ) : PeriodicTableEntry :=
-  match c, bottClockResidue d with
-  | AZClass.A, 0 | AZClass.A, 2 | AZClass.A, 4 | AZClass.A, 6 => .integers
-  | AZClass.AIII, 1 | AZClass.AIII, 3 | AZClass.AIII, 5 | AZClass.AIII, 7 => .integers
-  | AZClass.D, 0 | AZClass.D, 1 => .zModTwo
-  | AZClass.D, 2 => .integers
-  | AZClass.BDI, 0 => .integers
-  | AZClass.BDI, 1 | AZClass.BDI, 2 => .zModTwo
-  | AZClass.BDI, 3 => .integers
-  | AZClass.DIII, 1 | AZClass.DIII, 2 => .zModTwo
-  | AZClass.DIII, 3 => .integers
-  | _, _ => .zero
+  ofTopologicalGroup (azFullTable c d)
+
+/-- The dimension-one display agrees with the existing one-dimensional AZ owner. -/
+theorem declaredOneDimensionalEntry_agrees (c : AZClass) :
+    declaredPeriodicTableEntry c 1 =
+      match declaredOneDimensionalEntry c with
+      | .zero => .zero
+      | .zModTwo => .zModTwo
+      | .integers => .integers := by
+  cases c <;>
+    simp [declaredPeriodicTableEntry, ofTopologicalGroup, azFullTable,
+      azBottIndex, complexKSpaceLabel, realKSpaceLabel,
+      declaredOneDimensionalEntry]
 
 /-- The declared class-D, dimension-one entry is `zModTwo`. -/
 theorem classD_dimensionOne_declared_entry :
@@ -48,8 +66,7 @@ theorem classD_dimensionTwo_declared_entry :
 /-- The declared lookup table depends only on the dimension modulo eight. -/
 theorem declaredPeriodicTableEntry_add_eight (c : AZClass) (d : ℕ) :
     declaredPeriodicTableEntry c (d + 8) = declaredPeriodicTableEntry c d := by
-  unfold declaredPeriodicTableEntry
-  rw [bottClockResidue_add_eight]
+  simp [declaredPeriodicTableEntry, az_full_table_8fold_periodicity]
 
 /-- Shifting an exponent by eight multiplies the corresponding power of two by 256. -/
 theorem powerOfTwo_dimensionShiftEight (p q : ℕ) :

@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.GrandCanonical.Core
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.MixtureOfExperts
@@ -365,7 +370,14 @@ lemma kahlerPotentialRN_eq_neg_logJacobian
     kahlerPotentialRN n M
       = -(rowRadonNikodymGenerator n M + colRadonNikodymGenerator n M) := by
   unfold kahlerPotentialRN rowBarrierPotential colBarrierPotential
-  ring
+  exact (neg_add _ _).symm
+
+/-- This marginal barrier vanishes identically on the normalized locus. -/
+theorem kahlerPotentialRN_eq_zero_of_normalized (M : SinkhornMatrix n)
+    (hrow : ∀ i, rowSum n M i = 1) (hcol : ∀ j, colSum n M j = 1) :
+    kahlerPotentialRN n M = 0 := by
+  simp [kahlerPotentialRN, rowBarrierPotential, colBarrierPotential,
+    rowRadonNikodymGenerator, colRadonNikodymGenerator, hrow, hcol]
 
 /--
 Relative-volume change induced by the RN Kahler potential.

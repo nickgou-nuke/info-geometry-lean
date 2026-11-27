@@ -1,13 +1,13 @@
 # Codebase Status
 
-> Status: `verified active surface`
-> Audited: 2026-08-28
-> Note: Maintained against the live code surface.
+> Status: `generated/historical report`
+> Audited: 2026-08-28 (historical snapshot; `8,130+` Lake jobs)
+> Note: Dated snapshot from 2026-08-28 (`8,130+` Lake jobs). Superseded by the maintained routing and latest scoped verification record in [docs/README.md](README.md) (`2026-11-25`, 5 umbrella targets / `31,041` Lake jobs).
 > See: [README.md](../README.md), [docs/README.md](README.md), [docs/REPOSITORY_BOUNDARY_POLICY.md](REPOSITORY_BOUNDARY_POLICY.md)
 
-This file is the maintained prose status snapshot for the repository.
+This file is a dated historical prose status snapshot from 2026-08-28; consult [docs/README.md](README.md) for current authority and newer scoped verification records.
 
-Last refreshed: 2026-08-28 (Europe/Sofia)
+Snapshot date: 2026-08-28 (Europe/Sofia)
 
 ## Verified Scope Of This Refresh
 
@@ -85,7 +85,7 @@ Lean:
 
 Current authority order:
 
-1. `lean/` and `lakefile.lean` (The absolute truth layer, fully compiled as of 2026-07-09)
+1. `lean/` and `lakefile.lean` (The absolute truth layer; `2026-07-09` was a historical build-cleanup milestone — check live compilation via `run_locked_lean.py` / `run_locked_lake_build.py` and the latest scoped verification record in [docs/README.md](README.md))
 2. `src/igf/` and maintained scripts under `tools/`
 3. this file
 4. maintained entry docs listed in [README.md](../README.md) and [docs/README.md](README.md)

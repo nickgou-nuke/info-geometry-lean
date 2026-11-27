@@ -641,6 +641,41 @@ theorem degenerateSignature_grade_dimension_table (p q r : ℕ) :
     rw [fixedGradeCarrier_finrank_eq_choose]
     simp
 
+/-- Every homogeneous grade above the dimension of the signature carrier
+vanishes, uniformly in the positive, negative, and radical dimensions. This
+turns the all-signature grade-rank formula into a reusable carrier identity
+for the degenerate group reductions. -/
+theorem degenerateSignature_fixedGradeCarrier_eq_bot_of_gt_dimension
+    (p q r k : ℕ) (hk : p + q + r < k) :
+    fixedGradeCarrier (degenerateSignatureForm p q r) k = ⊥ := by
+  rw [fixedGradeCarrier]
+  have hproj :
+      InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj
+          (degenerateSignatureForm p q r) k = 0 := by
+    apply InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj_eq_zero_of_gt_finrank
+    simpa using hk
+  change LinearMap.range
+      (InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj
+        (degenerateSignatureForm p q r) k) = ⊥
+  rw [hproj]
+  exact LinearMap.range_zero
+
+/-- Homogeneous grades above the vector-space dimension vanish for every
+finite-dimensional real quadratic form, without requiring a diagonal
+signature presentation. -/
+theorem fixedGradeCarrier_eq_bot_of_gt_finrank [FiniteDimensional ℝ M]
+    (k : ℕ) (hk : Module.finrank ℝ M < k) :
+    fixedGradeCarrier Q k = ⊥ := by
+  rw [fixedGradeCarrier]
+  have hproj :
+      InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj Q k = 0 := by
+    apply InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj_eq_zero_of_gt_finrank
+    exact hk
+  change LinearMap.range
+      (InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj Q k) = ⊥
+  rw [hproj]
+  exact LinearMap.range_zero
+
 /-- Sum of homogeneous grade carriers `Cl^k ⊕ Cl^l`. This is distinct from
 `jointPairSubmodule`, whose indices refer to involution eigenspaces. -/
 noncomputable def homogeneousGradePairCarrier (k l : ℕ) : Submodule ℝ (GA Q) :=
@@ -1076,6 +1111,17 @@ def JointTypeB03NormCarrier : Set (GA Q)ˣ :=
 grade-three subspace. -/
 def PaperB03 : Set (GA Q)ˣ :=
   {g | cliffordNorm Q g ∈ fixedGradeCentralizer Q 3}
+
+/-- The paper's homogeneous-grade norm carrier `B^{03}` is the full unit group
+whenever the underlying finite-dimensional vector space has dimension below
+three: its grade-three test space is zero. This is a carrier classification;
+it makes no claim about the separate joint-type stabilizer. -/
+theorem PaperB03_eq_univ_of_finrank_lt_three [FiniteDimensional ℝ M]
+    (hM : Module.finrank ℝ M < 3) : PaperB03 Q = Set.univ := by
+  have hgrade : fixedGradeCarrier Q 3 = ⊥ :=
+    fixedGradeCarrier_eq_bot_of_gt_finrank Q 3 hM
+  ext g
+  simp [PaperB03, fixedGradeCentralizer, centralizerSet, hgrade]
 
 /-- A norm centralizing the full joint-type `2⊕3` carrier centralizes its
 homogeneous-grade-two and grade-three subspaces. The reverse inclusion is the
@@ -2758,17 +2804,7 @@ theorem radicalPlane_signature_grade_dimension_table :
 /-- Grade three vanishes in the two-dimensional radical Clifford algebra. -/
 theorem radicalPlane_fixedGradeCarrier3_eq_bot :
     fixedGradeCarrier (degenerateSignatureForm 0 0 2) 3 = ⊥ := by
-  rw [fixedGradeCarrier]
-  have hproj :
-      InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj
-          (degenerateSignatureForm 0 0 2) 3 = 0 := by
-    apply InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj_eq_zero_of_gt_finrank
-    simp
-  change LinearMap.range
-      (InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj
-        (degenerateSignatureForm 0 0 2) 3) = ⊥
-  rw [hproj]
-  exact LinearMap.range_zero
+  exact degenerateSignature_fixedGradeCarrier_eq_bot_of_gt_dimension 0 0 2 3 (by decide)
 
 /-- In `Cl_{0,0,2}`, the checked `Ǎ^{03}` condition reduces to evenness of
 the reversion norm: its grade-three centralizer condition is vacuous because
@@ -2852,5 +2888,120 @@ theorem radicalPlane_oddUnit_not_PaperACheck03 :
         nth_rewrite 1 [← hcancel']
         exact neg_add_cancel _
   exact he0 ((smul_eq_zero.mp hfour).resolve_left (by norm_num))
+
+/-- The checked `Ǎ^{03}` carrier is a strict subgroup carrier of the full
+unit group in `Cl_{0,0,2}`. The exhibited odd unit is the explicit witness
+that the carrier is not universal. -/
+theorem radicalPlane_PaperACheck03_ne_univ :
+    PaperACheck03 (degenerateSignatureForm 0 0 2) ≠ Set.univ := by
+  intro h
+  have hmem : radicalPlaneOddUnit ∈ PaperACheck03 (degenerateSignatureForm 0 0 2) := by
+    rw [h]
+    simp
+  exact radicalPlane_oddUnit_not_PaperACheck03 hmem
+
+/-- In `Cl_{0,0,2}`, the homogeneous grade-three carrier is zero, so the
+paper's ordinary-adjoint norm carrier `B^{03}` is the full unit group. This
+is a carrier classification; identifying the joint-type stabilizer with it
+still requires a separate action-level proof. -/
+theorem radicalPlane_PaperB03_eq_univ :
+    PaperB03 (degenerateSignatureForm 0 0 2) = Set.univ := by
+  ext g
+  simp [PaperB03, fixedGradeCentralizer, centralizerSet,
+    radicalPlane_fixedGradeCarrier3_eq_bot]
+
+/-- In the two-generator radical Clifford algebra, Clifford-star-fixed
+elements are scalars. The grade projections of degrees one and two vanish by
+their negative star sign; the finite grade resolution stops at degree two. -/
+theorem radicalPlane_starFixed_eq_scalarRange :
+    {x : RadicalPlaneClifford | star x = x} =
+      Set.range (algebraMap ℝ RadicalPlaneClifford) := by
+  ext x
+  constructor
+  · intro hx
+    let P : ℕ → RadicalPlaneClifford →ₗ[ℝ] RadicalPlaneClifford :=
+      InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj
+        (degenerateSignatureForm 0 0 2)
+    have hproj1 := congrArg (P 1) hx
+    rw [InfoGeometry.Clifford.LipschitzWittRieszPrimary.cliffordGradeProj_star_input,
+      show (-1 : ℝ) ^ (1 * (1 + 1) / 2) = -1 by norm_num] at hproj1
+    have hneg1 : -(P 1 x) = P 1 x := by simpa using hproj1
+    have hproj1zero : P 1 x = 0 := by
+      have htwo : (2 : ℝ) • P 1 x = 0 := by
+        calc
+          (2 : ℝ) • P 1 x = P 1 x + P 1 x := by module
+          _ = 0 := by
+            calc
+              P 1 x + P 1 x = P 1 x + -(P 1 x) :=
+                congrArg (fun z => P 1 x + z) hneg1.symm
+              _ = 0 := add_neg_cancel _
+      exact (smul_eq_zero.mp htwo).resolve_left (by norm_num)
+    have hproj2 := congrArg (P 2) hx
+    rw [InfoGeometry.Clifford.LipschitzWittRieszPrimary.cliffordGradeProj_star_input,
+      show (-1 : ℝ) ^ (2 * (2 + 1) / 2) = -1 by norm_num] at hproj2
+    have hneg2 : -(P 2 x) = P 2 x := by simpa using hproj2
+    have hproj2zero : P 2 x = 0 := by
+      have htwo : (2 : ℝ) • P 2 x = 0 := by
+        calc
+          (2 : ℝ) • P 2 x = P 2 x + P 2 x := by module
+          _ = 0 := by
+            calc
+              P 2 x + P 2 x = P 2 x + -(P 2 x) :=
+                congrArg (fun z => P 2 x + z) hneg2.symm
+              _ = 0 := add_neg_cancel _
+      exact (smul_eq_zero.mp htwo).resolve_left (by norm_num)
+    have hdim : Module.finrank ℝ (Fin (0 + 0 + 2) → ℝ) = 2 := by simp
+    have hsum :=
+      InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj_sum_range_apply
+        (degenerateSignatureForm 0 0 2) x
+    change (∑ k ∈ Finset.range (Module.finrank ℝ (Fin 2 → ℝ) + 1), P k x) = x at hsum
+    rw [hdim] at hsum
+    simp only [Finset.sum_range_succ] at hsum
+    simp [hproj1zero, hproj2zero] at hsum
+    have hmem0 : P 0 x ∈
+        fixedGradeCarrier (degenerateSignatureForm 0 0 2) 0 := by
+      rw [fixedGradeCarrier,
+        InfoGeometry.Clifford.GradedGraceContraction.mem_cliffordGradeSubmodule_iff]
+      exact InfoGeometry.Clifford.GradedGraceContraction.cliffordGradeProj_idem
+        (degenerateSignatureForm 0 0 2) 0 x
+    have hmem0' : P 0 x ∈
+        (Set.range (algebraMap ℝ RadicalPlaneClifford) : Set RadicalPlaneClifford) := by
+      rw [← fixedGradeCarrier_zero_eq_scalarRange]
+      exact hmem0
+    rcases hmem0' with ⟨c, hc⟩
+    refine ⟨c, ?_⟩
+    rw [← hsum, hc]
+  · rintro ⟨c, rfl⟩
+    simp
+
+/-- The ordinary-adjoint stabilizer of joint types `0⊕3` in `Cl_{0,0,2}` is
+the full unit group: the star-fixed sector is scalar, hence every Clifford norm
+centralizes it. This closes the action-level `B^{03}` row for this signature. -/
+theorem radicalPlane_adjointPairStabilizer_03_eq_univ :
+    adjointPairStabilizer (degenerateSignatureForm 0 0 2) 0 3 = Set.univ := by
+  rw [adjointPairStabilizer_03_eq_StarFixedNormCarrier]
+  unfold StarFixedNormCarrier
+  rw [radicalPlane_starFixed_eq_scalarRange]
+  ext g
+  constructor
+  · intro _
+    simp
+  · intro _
+    intro x hx
+    rcases hx with ⟨c, rfl⟩
+    change cliffordNorm (degenerateSignatureForm 0 0 2) g *
+        (algebraMap ℝ RadicalPlaneClifford c) =
+      (algebraMap ℝ RadicalPlaneClifford c) *
+        cliffordNorm (degenerateSignatureForm 0 0 2) g
+    exact (Algebra.commutes c _).symm
+
+/-- In `Cl_{0,0,2}`, the paper's ordinary-adjoint `B^{03}` classification is
+an equality of the geometric stabilizer and its homogeneous-grade norm
+carrier; both are the full unit group in this degenerate example. -/
+theorem radicalPlane_adjointPairStabilizer_03_eq_PaperB03 :
+    adjointPairStabilizer (degenerateSignatureForm 0 0 2) 0 3 =
+      PaperB03 (degenerateSignatureForm 0 0 2) := by
+  rw [radicalPlane_adjointPairStabilizer_03_eq_univ,
+    radicalPlane_PaperB03_eq_univ]
 
 end InfoGeometry.Clifford.GeneralizedDegenerateLipschitzArchetypes

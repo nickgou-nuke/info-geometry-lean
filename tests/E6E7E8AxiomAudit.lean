@@ -44,15 +44,16 @@ import «E6ClosureTests»
 import «E7TKKFreudenthalTests»
 import «E8MagicSquareTests»
 import «E6E7E8CrossFeatureTests»
+import «E6E7E8Tier5AdversarialTests»
 import Lean.Util.CollectAxioms
 import Lean.Elab.Command
 
 /-!
 Axiom audit for the E2E test suites (`E6ClosureTests`, `E7TKKFreudenthalTests`,
-`E8MagicSquareTests`, `E6E7E8CrossFeatureTests`) and all 37 `E₆` Serre/Chevalley/Bruhat/
-Complexification/`F₄`/`Str₀`/`TKK`/`E₇`/`Freudenthal`/`E₇(7)`/`Tits E₈`/`G₂`/
-`Magic Square E₈(8)` owner and direct-import modules not audited separately in
-`JordanE6CompleteAxiomAudit` (41 modules total).
+`E8MagicSquareTests`, `E6E7E8CrossFeatureTests`, `E6E7E8Tier5AdversarialTests`)
+and all 37 `E₆` Serre/Chevalley/Bruhat/Complexification/`F₄`/`Str₀`/`TKK`/`E₇`/
+`Freudenthal`/`E₇(7)`/`Tits E₈`/`G₂`/`Magic Square E₈(8)` owner and direct-import
+modules not audited separately in `JordanE6CompleteAxiomAudit` (42 modules total).
 Verifies that every declaration depends only on `[propext, Classical.choice, Quot.sound]`
 with no unsafe or partial definitions.
 -/
@@ -102,7 +103,8 @@ run_cmd do
     `«E6ClosureTests»,
     `«E7TKKFreudenthalTests»,
     `«E8MagicSquareTests»,
-    `«E6E7E8CrossFeatureTests»]
+    `«E6E7E8CrossFeatureTests»,
+    `«E6E7E8Tier5AdversarialTests»]
   let commandOnly : Array Name := #[]
   for target in targets do
     unless env.header.moduleNames.contains target do

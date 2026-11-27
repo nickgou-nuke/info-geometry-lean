@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.KantorPeirceFiveGrading
@@ -39,8 +44,7 @@ theorem gradingOperator_isTripotent :
   rw [gradingOperator_eq_diagonal]
   ext i j
   fin_cases i <;> fin_cases j <;>
-    simp [Matrix.mul_apply, Fin.sum_univ_four, Matrix.diagonal,
-      Matrix.one_apply]
+    simp [Matrix.mul_apply, Fin.sum_univ_four]
 
 /-- The two commutator definitions agree exactly. -/
 theorem commutatorAction_gradingOperator (X : M4R) :
@@ -91,6 +95,6 @@ theorem named_kantor_component_packet :
   · convert (hasGrade_iff_isCommutatorComponent 1 a1Dag).1 a1Dag_grade using 1 <;>
       norm_num
   · convert (hasGrade_iff_isCommutatorComponent 2 pairCreation).1
-      pairCreation_grade using 1 <;> norm_num
+      pairCreation_grade using 1
 
 end InfoGeometry.Physics.NuclearFiveGradeKantorComponentBridge

@@ -28,6 +28,7 @@ import InfoGeometry.Clifford.RealMod8Classification
 import InfoGeometry.Canonical.AtiyahBottShapiroBridge
 import InfoGeometry.OperatorAlgebra.GradedMatrixMorita
 import InfoGeometry.Algebra.Grothendieck
+import InfoGeometry.Clifford.ABSZeroStepArithmetic
 
 /-!
 # Primary-Source Kähler, Hestenes–Darboux, Jordan–Wigner, and Atiyah–Bott–Shapiro Foundations (`S2-15`..`S2-18`)
@@ -884,6 +885,8 @@ end JordanWignerPrimary
 
 section AtiyahBottShapiroPrimary
 
+open InfoGeometry.Clifford.KahlerHestenesJWABSPrimary.AtiyahBottShapiroPrimary
+
 section ABSConventionsAndSuspension
 
 open scoped TensorProduct
@@ -913,27 +916,6 @@ theorem abs_neg_vs_pos_generator_sq (k : ℕ) (i : Fin k) :
   · have hq : absPosForm k (Pi.single i 1) = 1 := by
       simp [absPosForm, QuadraticMap.weightedSumSquares_apply, Pi.single_apply]
     rw [CliffordAlgebra.ι_sq_scalar, hq, map_one]
-
-/-- `S2-18` (ABS 1964 §5 p. 11; Freed `positiveForm`): Coordinate-free canonical inclusion
-`i : CliffordAlgebra Q →ₐ[R] CliffordAlgebra (positiveForm Q)` where
-`positiveForm Q = Q.prod (-QuadraticMap.sq)` extends `Q` by a negative-square vector (`R3.2`). -/
-def absInclusion {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
-    (Q : QuadraticForm R M) :
-    CliffordAlgebra Q →ₐ[R] CliffordAlgebra (positiveForm Q) :=
-  CliffordAlgebra.map (QuadraticMap.Isometry.inl Q (-QuadraticMap.sq (R := R)))
-
-/-- `S2-18` (ABS 1964 §5): `absInclusion Q` commutes with the `ℤ/2`-grade involution
-`CliffordAlgebra.involute`, making `absInclusion Q` a graded algebra homomorphism. -/
-theorem absInclusion_involute_comm {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
-    (Q : QuadraticForm R M) (x : CliffordAlgebra Q) :
-    absInclusion Q (CliffordAlgebra.involute x) =
-      CliffordAlgebra.involute (absInclusion Q x) := by
-  induction x using CliffordAlgebra.induction with
-  | algebraMap r => simp [AlgHom.commutes]
-  | ι m =>
-    simp [absInclusion, CliffordAlgebra.map_apply_ι, CliffordAlgebra.involute_ι]
-  | mul a b ha hb => simp only [map_mul, ha, hb]
-  | add a b ha hb => simp only [map_add, ha, hb]
 
 /-- `S2-18` (ABS 1964 §1 Prop. (1.6), p. 5; `R3.3`): Koszul `ℤ/2`-graded tensor splitting
 of the step suspension `Cl(Q ⊕ ⟨-1⟩) ≃ₐ[R] Cl(Q) ᵍ⊗[R] Cl(-sq)`. -/
@@ -978,23 +960,6 @@ section ABSCategoricalRestrictionAndMorita
 
 open CategoryTheory
 
-/-- `S2-18` (ABS 1964 §5): Category `M(Cl(Q))` of `ℤ/2`-graded `CliffordAlgebra Q`-modules
-(built directly over `GradedModuleCat` from `GradedMatrixMorita.lean`). -/
-abbrev absModuleCat {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
-    (Q : QuadraticForm R M) :=
-  GradedModuleCat (CliffordAlgebra.involuteEquiv (Q := Q)).toRingEquiv
-
-/-- `S2-18` (ABS 1964 §5 p. 11): Categorical graded-module restriction functor
-`i* : M(Cl(Q ⊕ ⟨-1⟩)) ⥤ M(Cl(Q))` induced by `absInclusion Q`. -/
-def absRestrictionFunctor {R M : Type*} [CommRing R] [AddCommGroup M] [Module R M]
-    (Q : QuadraticForm R M) :
-    absModuleCat (positiveForm Q) ⥤ absModuleCat Q :=
-  InfoGeometry.OperatorAlgebra.GradedMatrixMorita.restrict
-    (CliffordAlgebra.involuteEquiv (Q := Q)).toRingEquiv
-    (CliffordAlgebra.involuteEquiv (Q := positiveForm Q)).toRingEquiv
-    (absInclusion Q).toRingHom
-    (fun x => absInclusion_involute_comm Q x)
-
 /-- `S2-18` (ABS 1964 §4–5; Bott Morita Periodicity): Canonical graded Morita equivalence
 `M(Cl(1,1)) ≌ M(ℝ)` (`cl11GradedEquivalence`). -/
 def absCl11MoritaEquiv :
@@ -1017,81 +982,6 @@ end ABSCategoricalRestrictionAndMorita
 section ABSGrothendieckCokernelAndMod8
 
 open scoped TensorProduct
-
-/-- `S2-18` (ABS 1964 §5 Table 2, p. 12): `Type 0` finite-dimensional `ℤ/2`-graded
-`C₁ = Cl(0,1) ≅ ℂ`-module restriction monoid homomorphism `k ↦ (k, k)` from `ℕ`
-(dimension of `V₀ ≅ V₁`) into `ℕ × ℕ` (super-dimensions `(dim V₀, dim V₁)` of `M(C₀)`). -/
-def absZeroStepRestrictMonoid : ℕ →+ ℕ × ℕ where
-  toFun k := (k, k)
-  map_zero' := rfl
-  map_add' _ _ := rfl
-
-/-- `S2-18` (ABS 1964 §5): Induced Grothendieck-group restriction homomorphism
-`i* : Grothendieck ℕ →+ Grothendieck (ℕ × ℕ)` via `Algebra/Grothendieck.lean`. -/
-def absZeroStepRestrictK0 : Grothendieck ℕ →+ Grothendieck (ℕ × ℕ) :=
-  grothendieckFunctor absZeroStepRestrictMonoid
-
-/-- `S2-18` (ABS 1964 §5): Super-dimension homomorphism `Grothendieck (ℕ × ℕ) →+ ℤ`
-sending `[(a₀, a₁), (b₀, b₁)] ↦ (a₀ - a₁) - (b₀ - b₁)`. -/
-def absSuperDimHom : Grothendieck (ℕ × ℕ) →+ ℤ :=
-  grothendieckLift
-    { toFun := fun p : ℕ × ℕ => (p.1 : ℤ) - (p.2 : ℤ)
-      map_zero' := by simp
-      map_add' := fun p q => by
-        simp only [Prod.fst_add, Prod.snd_add, Nat.cast_add]
-        ring }
-
-/-- `S2-18` (ABS 1964 §5): `absSuperDimHom` is surjective onto `ℤ`. -/
-theorem absSuperDimHom_surjective : Function.Surjective absSuperDimHom := by
-  intro z
-  refine ⟨grothendieckMap (ℕ × ℕ) (z.toNat, (-z).toNat), ?_⟩
-  dsimp [absSuperDimHom]
-  rw [grothendieckLift_comp]
-  change (z.toNat : ℤ) - ((-z).toNat : ℤ) = z
-  omega
-
-/-- `S2-18` (ABS 1964 §5 Table 2): The kernel of `absSuperDimHom` equals the image of the
-graded-module restriction `absZeroStepRestrictK0 : K₀(M(C₁)) →+ K₀(M(C₀))`. -/
-theorem absSuperDimHom_ker_eq_range :
-    absSuperDimHom.ker = absZeroStepRestrictK0.range := by
-  apply le_antisymm
-  · intro x hx
-    rw [AddMonoidHom.mem_ker] at hx
-    rcases grothendieck_eq_sub x with ⟨a, b, rfl⟩
-    have hdiff : ((a.1 : ℤ) - (a.2 : ℤ)) - ((b.1 : ℤ) - (b.2 : ℤ)) = 0 := by
-      simpa [absSuperDimHom, grothendieckLift_comp] using hx
-    have hnat : a.1 + b.2 = a.2 + b.1 := by omega
-    refine ⟨grothendieckMap ℕ a.1 - grothendieckMap ℕ b.1, ?_⟩
-    rw [map_sub, absZeroStepRestrictK0, grothendieckFunctor_map, grothendieckFunctor_map]
-    rw [grothendieck_sub_mk, grothendieck_sub_mk]
-    apply Quotient.sound
-    refine ⟨(0, a.2 + b.1), ?_⟩
-    ext <;> simp [absZeroStepRestrictMonoid] <;> omega
-  · rintro _ ⟨y, rfl⟩
-    rw [AddMonoidHom.mem_ker]
-    rcases grothendieck_eq_sub y with ⟨m, n, rfl⟩
-    rw [map_sub, absZeroStepRestrictK0, grothendieckFunctor_map, grothendieckFunctor_map]
-    simp [absSuperDimHom, grothendieckLift_comp, absZeroStepRestrictMonoid]
-
-/-- `S2-18` (ABS 1964 §5 Table 2, p. 12): Exact Grothendieck cokernel isomorphism
-`A₀ := M(C₀) / i* M(C₁) ≃+ ℤ` (`A₀ ≅ A₈ ≅ ℤ`), compatible with `grothendieckEquivInt`. -/
-def absCokernelZeroEquivInt :
-    (Grothendieck (ℕ × ℕ) ⧸ absZeroStepRestrictK0.range) ≃+ ℤ :=
-  (QuotientAddGroup.quotientAddEquivOfEq absSuperDimHom_ker_eq_range.symm).trans
-    (QuotientAddGroup.quotientKerEquivOfSurjective absSuperDimHom absSuperDimHom_surjective)
-
-/-- `S2-18` (ABS 1964 §5): Compatibility of the cokernel isomorphism `absCokernelZeroEquivInt`
-with `Algebra/Grothendieck.grothendieckEquivInt` on `ℕ`-generators. -/
-theorem absCokernelZero_compatible_with_grothendieckEquivInt (k : ℕ) :
-    absCokernelZeroEquivInt
-        (QuotientAddGroup.mk (grothendieckMap (ℕ × ℕ) (k, 0))) =
-      grothendieckEquivInt (grothendieckMap ℕ k) := by
-  change absSuperDimHom (grothendieckMap (ℕ × ℕ) (k, 0)) =
-    grothendieckToInt (grothendieckMap ℕ k)
-  dsimp [absSuperDimHom]
-  rw [grothendieckLift_comp]
-  change (k : ℤ) - (0 : ℤ) = to_int_raw (k, 0)
-  simp [to_int_raw]
 
 /-- `S2-18` (Compatibility with `AtiyahBottShapiroBridge` & `RealMod8Classification`):
 Bundles the `Cl(1,1)` Bott analytical-index invariance from `AtiyahBottShapiroBridge` with

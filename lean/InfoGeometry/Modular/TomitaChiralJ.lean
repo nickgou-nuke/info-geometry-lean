@@ -528,6 +528,78 @@ theorem mat2Row4_nondegenerate_witness :
     have h10 := congrFun (congrFun h 1) 0
     simp [mat2VMinus] at h10
 
+/-- The concrete map `A ↦ X Aᵀ X` is the generic Row 4 self-adjoint unit
+conjugation from `PeirceSpine.StarGrading`.  The generic corner theorem therefore
+applies to this same map: it reverses products, is involutive, swaps the two
+diagonal corners, and preserves each off-diagonal corner.  The final conjunct
+records the concrete fixed nonzero corner elements, so the abstract corner law
+is connected to the nontrivial `M₂(ℝ)` realization. -/
+theorem mat2Row4Tau_is_generic_Peirce_row4 :
+    (∀ A : Matrix (Fin 2) (Fin 2) ℝ,
+      mat2Row4Tau A = mat2X * star A * mat2X) ∧
+    (∀ A : Matrix (Fin 2) (Fin 2) ℝ,
+      mat2Row4Tau (mat2Row4Tau A) = A) ∧
+    (∀ A C : Matrix (Fin 2) (Fin 2) ℝ,
+      mat2Row4Tau (A * C) = mat2Row4Tau C * mat2Row4Tau A) ∧
+    mat2Row4Tau mat2PPlus = 1 - mat2PPlus ∧
+    mat2Row4Tau (1 - mat2PPlus) = mat2PPlus ∧
+    (∀ A : Matrix (Fin 2) (Fin 2) ℝ,
+      mat2Row4Tau (conePlus mat2PPlus A) =
+        conePlus mat2PPlus (mat2Row4Tau A)) ∧
+    (∀ A : Matrix (Fin 2) (Fin 2) ℝ,
+      mat2Row4Tau (coneMinus mat2PPlus A) =
+        coneMinus mat2PPlus (mat2Row4Tau A)) ∧
+    mat2Row4Tau mat2UPlus = mat2UPlus ∧
+    mat2Row4Tau mat2VMinus = mat2VMinus ∧
+    mat2UPlus ≠ 0 ∧ mat2VMinus ≠ 0 := by
+  have hPstar : star mat2PPlus = mat2PPlus := by
+    rw [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [mat2PPlus]
+  have hX2 : mat2X * mat2X = 1 := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [mat2X, Matrix.mul_apply, Fin.sum_univ_two]
+  have hXstar : star mat2X = mat2X := by
+    rw [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial]
+    ext i j
+    fin_cases i <;> fin_cases j <;> simp [mat2X]
+  have hXP : mat2X * mat2PPlus * mat2X = 1 - mat2PPlus := by
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [mat2X, mat2PPlus, Matrix.mul_apply, Fin.sum_univ_two]
+  have hRow := unitStarConjugation_is_row4_antiMultSheetSwap
+    hPstar mat2X hX2 hXstar hXP
+  rcases hRow with ⟨hInvolutive, hAntiMultiplicative, hRowP, hRowQ,
+    hRowPlus, hRowMinus⟩
+  rcases mat2Row4_nondegenerate_witness with
+    ⟨_, _, _, _, _, hUFixed, hVFixed, hUNe, hVNe, _⟩
+  have hTau (A : Matrix (Fin 2) (Fin 2) ℝ) :
+      mat2Row4Tau A = mat2X * star A * mat2X := by
+    simp [mat2Row4Tau, Matrix.star_eq_conjTranspose,
+      Matrix.conjTranspose_eq_transpose_of_trivial]
+  refine ⟨hTau, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
+  · intro A
+    rw [hTau A, hTau (mat2X * star A * mat2X)]
+    exact hInvolutive A
+  · intro A C
+    rw [hTau (A * C), hTau A, hTau C]
+    exact hAntiMultiplicative A C
+  · rw [hTau mat2PPlus]
+    exact hRowP
+  · rw [hTau (1 - mat2PPlus)]
+    exact hRowQ
+  · intro A
+    rw [hTau (conePlus mat2PPlus A), hTau A]
+    exact hRowPlus A
+  · intro A
+    rw [hTau (coneMinus mat2PPlus A), hTau A]
+    exact hRowMinus A
+  · exact hUFixed
+  · exact hVFixed
+  · exact hUNe
+  · exact hVNe
+
 end Row4MatrixWitness
 
 end InfoGeometry.Modular.TomitaChiralJ

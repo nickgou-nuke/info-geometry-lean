@@ -8,6 +8,8 @@ import Mathlib.LinearAlgebra.Matrix.Determinant.Basic
 import Mathlib.LinearAlgebra.Matrix.Trace
 import InfoGeometry.Canonical.ArnoldParaKahlerBCFW
 import InfoGeometry.Algebra.ZornAlternativeLaws
+import InfoGeometry.Algebra.ZornGaugeEmergence
+import InfoGeometry.Physics.Cl55SpinorCartanFock
 import InfoGeometry.Synthesis.ParaKahlerSouriauMassieuMajoranaSynthesis
 import InfoGeometry.Synthesis.RealPeirceG2ColorActionBridge
 import InfoGeometry.Synthesis.WavefrontKMSKleinDualityBridge
@@ -145,6 +147,16 @@ theorem z2z2_color_supersymmetry_sign_laws (g₁ g₂ : Z2Z2ColorGrade) :
 /-- Rank-1 quark–antiquark outer-product matrix $(u \otimes v^T)_{ij} = u_i v_j$ in $M_3(\mathbb{R})$. -/
 def quarkAntiquarkOuter (u v : Fin 3 → ℝ) : Matrix (Fin 3) (Fin 3) ℝ :=
   fun i j => u i * v j
+
+/-- Explicit matrix non-commutativity witness on `Matrix (Fin 3) (Fin 3) ℝ` via rank-1 quark outer products. -/
+theorem quarkAntiquarkOuter_noncommutative :
+    quarkAntiquarkOuter ![1, 0, 0] ![0, 1, 0] *
+        quarkAntiquarkOuter ![0, 1, 0] ![0, 0, 1] ≠
+      quarkAntiquarkOuter ![0, 1, 0] ![0, 0, 1] *
+        quarkAntiquarkOuter ![1, 0, 0] ![0, 1, 0] := by
+  intro h
+  have h02 := congr_fun (congr_fun h 0) 2
+  norm_num [quarkAntiquarkOuter, Matrix.mul_apply, Fin.sum_univ_three] at h02
 
 /-- Trace-free $\mathfrak{sl}_3(\mathbb{R})$ color generator extracted from the quark–antiquark
 superbracket:
@@ -746,6 +758,1121 @@ theorem opZorn_supergrassmannian_color_and_supertrace_intertwining
       InfoGeometry.Canonical.AlbertCayleyDickson.SplitQuaternion.OpVec3.dot,
       Fin.sum_univ_two, Fin.sum_univ_three]
 
+/-!
+## Section 6: Full `(2|3)` Block Supermatrix Berezinian, Grassmann Superalgebra Multiplicativity, White Singlets vs Color Triplets, & 5-Graded Super-Jacobi Closure
+-/
+
+/-- Full `(2|3)` block matrix `M = [[A, B], [C, D]]` over a ring `K`. -/
+@[ext]
+structure SuperBlock23 (K : Type*) where
+  A : Matrix (Fin 2) (Fin 2) K
+  B : Matrix (Fin 2) (Fin 3) K
+  C : Matrix (Fin 3) (Fin 2) K
+  D : Matrix (Fin 3) (Fin 3) K
+
+namespace SuperBlock23
+
+def mul {K : Type*} [CommRing K] (M₁ M₂ : SuperBlock23 K) : SuperBlock23 K where
+  A := M₁.A * M₂.A + M₁.B * M₂.C
+  B := M₁.A * M₂.B + M₁.B * M₂.D
+  C := M₁.C * M₂.A + M₁.D * M₂.C
+  D := M₁.C * M₂.B + M₁.D * M₂.D
+
+def one (K : Type*) [CommRing K] : SuperBlock23 K where
+  A := 1
+  B := 0
+  C := 0
+  D := 1
+
+instance {K : Type*} [CommRing K] : Mul (SuperBlock23 K) := ⟨mul⟩
+instance {K : Type*} [CommRing K] : One (SuperBlock23 K) := ⟨one K⟩
+
+def upperBlock {K : Type*} [CommRing K] (B : Matrix (Fin 2) (Fin 3) K) : SuperBlock23 K :=
+  ⟨1, B, 0, 1⟩
+
+def lowerBlock {K : Type*} [CommRing K] (C : Matrix (Fin 3) (Fin 2) K) : SuperBlock23 K :=
+  ⟨1, 0, C, 1⟩
+
+def diagBlock {K : Type*} [CommRing K] (A : Matrix (Fin 2) (Fin 2) K)
+    (D : Matrix (Fin 3) (Fin 3) K) : SuperBlock23 K :=
+  ⟨A, 0, 0, D⟩
+
+/-- Full `(2|3)` Schur-complement Berezinian `det(A - B D⁻¹ C) / det(D)` over `ℝ`. -/
+def fullBerezinian23 (M : SuperBlock23 ℝ) : ℝ :=
+  (M.A - M.B * M.D⁻¹ * M.C).det / M.D.det
+
+/-- `fullBerezinian23` extends `superBerezinian23` on block-diagonal, upper-triangular, and
+    lower-triangular `(2|3)` supermatrices. -/
+theorem fullBerezinian23_extends (A : Matrix (Fin 2) (Fin 2) ℝ) (B : Matrix (Fin 2) (Fin 3) ℝ)
+    (C : Matrix (Fin 3) (Fin 2) ℝ) (D : Matrix (Fin 3) (Fin 3) ℝ) :
+    fullBerezinian23 (diagBlock A D) = superBerezinian23 A D ∧
+    fullBerezinian23 ⟨A, B, 0, D⟩ = superBerezinian23 A D ∧
+    fullBerezinian23 ⟨A, 0, C, D⟩ = superBerezinian23 A D ∧
+    fullBerezinian23 (upperBlock B) = 1 ∧
+    fullBerezinian23 (lowerBlock C) = 1 := by
+  simp [fullBerezinian23, superBerezinian23, diagBlock, upperBlock, lowerBlock]
+
+/-- Exact UDL block factorization and UDL/LDU Berezinian multiplicativity on `SuperBlock23 ℝ`. -/
+theorem fullBerezinian23_udl_factorization_and_multiplicativity
+    (M : SuperBlock23 ℝ) (hD : M.D.det ≠ 0)
+    (B₁ : Matrix (Fin 2) (Fin 3) ℝ) (C₂ : Matrix (Fin 3) (Fin 2) ℝ)
+    (A₁ A₂ : Matrix (Fin 2) (Fin 2) ℝ) (D₁ D₂ : Matrix (Fin 3) (Fin 3) ℝ)
+    (hD₁ : D₁.det ≠ 0) (hD₂ : D₂.det ≠ 0) :
+    M = upperBlock (M.B * M.D⁻¹) *
+        diagBlock (M.A - M.B * M.D⁻¹ * M.C) M.D *
+        lowerBlock (M.D⁻¹ * M.C) ∧
+    fullBerezinian23 (upperBlock B₁ * M) =
+      fullBerezinian23 (upperBlock B₁) * fullBerezinian23 M ∧
+    fullBerezinian23 (M * lowerBlock C₂) =
+      fullBerezinian23 M * fullBerezinian23 (lowerBlock C₂) ∧
+    fullBerezinian23 (diagBlock A₁ D₁ * M) =
+      fullBerezinian23 (diagBlock A₁ D₁) * fullBerezinian23 M ∧
+    fullBerezinian23 (M * diagBlock A₂ D₂) =
+      fullBerezinian23 M * fullBerezinian23 (diagBlock A₂ D₂) := by
+  have hD_inv : M.D * M.D⁻¹ = 1 := Matrix.mul_nonsing_inv M.D (isUnit_iff_ne_zero.mpr hD)
+  have hD_inv_l : M.D⁻¹ * M.D = 1 := Matrix.nonsing_inv_mul M.D (isUnit_iff_ne_zero.mpr hD)
+  have hD₁_inv : D₁ * D₁⁻¹ = 1 := Matrix.mul_nonsing_inv D₁ (isUnit_iff_ne_zero.mpr hD₁)
+  have hD₂_inv : D₂ * D₂⁻¹ = 1 := Matrix.mul_nonsing_inv D₂ (isUnit_iff_ne_zero.mpr hD₂)
+  have hmul_sb : ∀ P Q : SuperBlock23 ℝ, P * Q = SuperBlock23.mul P Q := fun _ _ => rfl
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · rw [hmul_sb, hmul_sb]
+    apply SuperBlock23.ext <;>
+      simp only [SuperBlock23.mul, upperBlock, diagBlock, lowerBlock,
+        Matrix.one_mul, Matrix.mul_one, Matrix.zero_mul, Matrix.mul_zero, add_zero, zero_add,
+        Matrix.mul_assoc]
+    · rw [← Matrix.mul_assoc M.D⁻¹ M.D (M.D⁻¹ * M.C), hD_inv_l, Matrix.one_mul, sub_add_cancel]
+    · rw [hD_inv_l, Matrix.mul_one]
+    · rw [← Matrix.mul_assoc M.D M.D⁻¹ M.C, hD_inv, Matrix.one_mul]
+  · have hUB : upperBlock B₁ * M = ⟨M.A + B₁ * M.C, M.B + B₁ * M.D, M.C, M.D⟩ := by
+      rw [hmul_sb]
+      apply SuperBlock23.ext <;>
+        simp [SuperBlock23.mul, upperBlock, add_comm]
+    rw [hUB]
+    simp only [fullBerezinian23, upperBlock, Matrix.mul_zero, sub_zero,
+      Matrix.det_one, div_one, one_mul, Matrix.add_mul]
+    congr 2
+    calc
+      M.A + B₁ * M.C - (M.B * M.D⁻¹ * M.C + B₁ * M.D * M.D⁻¹ * M.C) =
+          M.A + B₁ * M.C - (M.B * M.D⁻¹ * M.C + B₁ * M.C) := by
+        rw [Matrix.mul_assoc B₁ M.D M.D⁻¹, hD_inv, Matrix.mul_one]
+      _ = M.A - M.B * M.D⁻¹ * M.C := by abel
+  · have hML : M * lowerBlock C₂ = ⟨M.A + M.B * C₂, M.B, M.C + M.D * C₂, M.D⟩ := by
+      rw [hmul_sb]
+      apply SuperBlock23.ext <;>
+        simp [SuperBlock23.mul, lowerBlock]
+    rw [hML]
+    simp only [fullBerezinian23, lowerBlock, Matrix.zero_mul,
+      sub_zero, Matrix.det_one, div_one, mul_one, Matrix.mul_add]
+    congr 2
+    calc
+      M.A + M.B * C₂ - (M.B * M.D⁻¹ * M.C + M.B * M.D⁻¹ * (M.D * C₂)) =
+          M.A + M.B * C₂ - (M.B * M.D⁻¹ * M.C + M.B * C₂) := by
+        rw [← Matrix.mul_assoc (M.B * M.D⁻¹) M.D C₂, Matrix.mul_assoc M.B M.D⁻¹ M.D,
+          hD_inv_l, Matrix.mul_one]
+      _ = M.A - M.B * M.D⁻¹ * M.C := by abel
+  · have hDM : diagBlock A₁ D₁ * M = ⟨A₁ * M.A, A₁ * M.B, D₁ * M.C, D₁ * M.D⟩ := by
+      rw [hmul_sb]
+      apply SuperBlock23.ext <;> simp [SuperBlock23.mul, diagBlock]
+    rw [hDM]
+    simp only [fullBerezinian23, diagBlock, Matrix.mul_zero, Matrix.zero_mul, sub_zero,
+      Matrix.det_mul, Matrix.mul_inv_rev]
+    have hnum :
+        A₁ * M.A - A₁ * M.B * (M.D⁻¹ * D₁⁻¹) * (D₁ * M.C) =
+          A₁ * (M.A - M.B * M.D⁻¹ * M.C) := by
+      calc
+        A₁ * M.A - A₁ * M.B * (M.D⁻¹ * D₁⁻¹) * (D₁ * M.C) =
+            A₁ * M.A - A₁ * M.B * M.D⁻¹ * (D₁⁻¹ * D₁) * M.C := by
+          simp only [Matrix.mul_assoc]
+        _ = A₁ * M.A - A₁ * M.B * M.D⁻¹ * M.C := by
+          rw [Matrix.nonsing_inv_mul D₁ (isUnit_iff_ne_zero.mpr hD₁), Matrix.mul_one]
+        _ = A₁ * (M.A - M.B * M.D⁻¹ * M.C) := by
+          simp only [Matrix.mul_sub, Matrix.mul_assoc]
+    rw [hnum, Matrix.det_mul]
+    ring
+  · have hMD : M * diagBlock A₂ D₂ = ⟨M.A * A₂, M.B * D₂, M.C * A₂, M.D * D₂⟩ := by
+      rw [hmul_sb]
+      apply SuperBlock23.ext <;> simp [SuperBlock23.mul, diagBlock]
+    rw [hMD]
+    simp only [fullBerezinian23, diagBlock, Matrix.mul_zero, Matrix.zero_mul, sub_zero,
+      Matrix.det_mul, Matrix.mul_inv_rev]
+    have hnum :
+        M.A * A₂ - M.B * D₂ * (D₂⁻¹ * M.D⁻¹) * (M.C * A₂) =
+          (M.A - M.B * M.D⁻¹ * M.C) * A₂ := by
+      calc
+        M.A * A₂ - M.B * D₂ * (D₂⁻¹ * M.D⁻¹) * (M.C * A₂) =
+            M.A * A₂ - M.B * (D₂ * D₂⁻¹) * M.D⁻¹ * M.C * A₂ := by
+          simp only [Matrix.mul_assoc]
+        _ = M.A * A₂ - M.B * M.D⁻¹ * M.C * A₂ := by rw [hD₂_inv, Matrix.mul_one]
+        _ = (M.A - M.B * M.D⁻¹ * M.C) * A₂ := by
+          simp only [Matrix.sub_mul, Matrix.mul_assoc]
+    rw [hnum, Matrix.det_mul]
+    ring
+
+end SuperBlock23
+
+/-- Commutative Grassmann-even subalgebra `Grassmann2Even K ≅ K[ε]/(ε²)` (`c₀ + c₁₂ θ₁∧θ₂`). -/
+@[ext]
+structure Grassmann2Even (K : Type*) where
+  c0 : K
+  c12 : K
+
+/-- Grassmann-odd vector space `Grassmann2Odd K = K θ₁ ⊕ K θ₂`. -/
+@[ext]
+structure Grassmann2Odd (K : Type*) where
+  c1 : K
+  c2 : K
+
+namespace Grassmann2Odd
+
+variable {K : Type*} [CommRing K]
+
+instance : Zero (Grassmann2Odd K) := ⟨⟨0, 0⟩⟩
+instance : Add (Grassmann2Odd K) := ⟨fun x y => ⟨x.c1 + y.c1, x.c2 + y.c2⟩⟩
+instance : Neg (Grassmann2Odd K) := ⟨fun x => ⟨-x.c1, -x.c2⟩⟩
+instance : Sub (Grassmann2Odd K) := ⟨fun x y => ⟨x.c1 - y.c1, x.c2 - y.c2⟩⟩
+
+@[simp] lemma zero_c1 : (0 : Grassmann2Odd K).c1 = 0 := rfl
+@[simp] lemma zero_c2 : (0 : Grassmann2Odd K).c2 = 0 := rfl
+@[simp] lemma add_c1 (x y : Grassmann2Odd K) : (x + y).c1 = x.c1 + y.c1 := rfl
+@[simp] lemma add_c2 (x y : Grassmann2Odd K) : (x + y).c2 = x.c2 + y.c2 := rfl
+
+end Grassmann2Odd
+
+namespace Grassmann2Even
+
+variable {K : Type*} [CommRing K]
+
+instance : Zero (Grassmann2Even K) := ⟨⟨0, 0⟩⟩
+instance : One (Grassmann2Even K) := ⟨⟨1, 0⟩⟩
+instance : Add (Grassmann2Even K) := ⟨fun x y => ⟨x.c0 + y.c0, x.c12 + y.c12⟩⟩
+instance : Neg (Grassmann2Even K) := ⟨fun x => ⟨-x.c0, -x.c12⟩⟩
+instance : Sub (Grassmann2Even K) := ⟨fun x y => ⟨x.c0 - y.c0, x.c12 - y.c12⟩⟩
+instance : Mul (Grassmann2Even K) :=
+  ⟨fun x y => ⟨x.c0 * y.c0, x.c0 * y.c12 + x.c12 * y.c0⟩⟩
+
+@[simp] lemma zero_c0 : (0 : Grassmann2Even K).c0 = 0 := rfl
+@[simp] lemma zero_c12 : (0 : Grassmann2Even K).c12 = 0 := rfl
+@[simp] lemma one_c0 : (1 : Grassmann2Even K).c0 = 1 := rfl
+@[simp] lemma one_c12 : (1 : Grassmann2Even K).c12 = 0 := rfl
+@[simp] lemma add_c0 (x y : Grassmann2Even K) : (x + y).c0 = x.c0 + y.c0 := rfl
+@[simp] lemma add_c12 (x y : Grassmann2Even K) : (x + y).c12 = x.c12 + y.c12 := rfl
+@[simp] lemma neg_c0 (x : Grassmann2Even K) : (-x).c0 = -x.c0 := rfl
+@[simp] lemma neg_c12 (x : Grassmann2Even K) : (-x).c12 = -x.c12 := rfl
+@[simp] lemma sub_c0 (x y : Grassmann2Even K) : (x - y).c0 = x.c0 - y.c0 := rfl
+@[simp] lemma sub_c12 (x y : Grassmann2Even K) : (x - y).c12 = x.c12 - y.c12 := rfl
+@[simp] lemma mul_c0 (x y : Grassmann2Even K) : (x * y).c0 = x.c0 * y.c0 := rfl
+@[simp] lemma mul_c12 (x y : Grassmann2Even K) :
+    (x * y).c12 = x.c0 * y.c12 + x.c12 * y.c0 := rfl
+
+instance : CommRing (Grassmann2Even K) where
+  add_assoc := fun a b c => by ext <;> simp [add_assoc]
+  zero_add := fun a => by ext <;> simp
+  add_zero := fun a => by ext <;> simp
+  nsmul := nsmulRec
+  zsmul := zsmulRec
+  neg_add_cancel := fun a => by ext <;> simp
+  add_comm := fun a b => by ext <;> simp [add_comm]
+  mul_assoc := fun a b c => by ext <;> simp <;> ring
+  one_mul := fun a => by ext <;> simp
+  mul_one := fun a => by ext <;> simp
+  zero_mul := fun a => by ext <;> simp
+  mul_zero := fun a => by ext <;> simp
+  left_distrib := fun a b c => by ext <;> simp <;> ring
+  right_distrib := fun a b c => by ext <;> simp <;> ring
+  mul_comm := fun a b => by ext <;> simp <;> ring
+  sub_eq_add_neg := fun a b => by ext <;> simp [sub_eq_add_neg]
+
+@[simp] lemma sum_c0 {ι : Type*} (s : Finset ι) (f : ι → Grassmann2Even K) :
+    (∑ i ∈ s, f i).c0 = ∑ i ∈ s, (f i).c0 :=
+  map_sum (AddMonoidHom.mk ⟨fun x : Grassmann2Even K => x.c0, zero_c0⟩ add_c0) f s
+
+@[simp] lemma sum_c12 {ι : Type*} (s : Finset ι) (f : ι → Grassmann2Even K) :
+    (∑ i ∈ s, f i).c12 = ∑ i ∈ s, (f i).c12 :=
+  map_sum (AddMonoidHom.mk ⟨fun x : Grassmann2Even K => x.c12, zero_c12⟩ add_c12) f s
+
+end Grassmann2Even
+
+/-- Grassmann odd wedge product `θ₁ ∧ θ₂`: `(u₁ θ₁ + u₂ θ₂) * (v₁ θ₁ + v₂ θ₂) = (u₁ v₂ - u₂ v₁) θ₁₂`. -/
+def grassmannOddMul {K : Type*} [CommRing K] (u v : Grassmann2Odd K) : Grassmann2Even K :=
+  ⟨0, u.c1 * v.c2 - u.c2 * v.c1⟩
+
+/-- Grassmann even-times-odd module action `(a₀ + a₁₂ θ₁₂) • (v₁ θ₁ + v₂ θ₂) = a₀ v₁ θ₁ + a₀ v₂ θ₂`. -/
+def grassmannEvenOddMul {K : Type*} [CommRing K]
+    (a : Grassmann2Even K) (v : Grassmann2Odd K) : Grassmann2Odd K :=
+  ⟨a.c0 * v.c1, a.c0 * v.c2⟩
+
+/-- Anticommutativity of Grassmann-odd elements: `u * v = -(v * u)`. -/
+theorem grassmannOddMul_anticomm {K : Type*} [CommRing K] (u v : Grassmann2Odd K) :
+    grassmannOddMul u v = -grassmannOddMul v u := by
+  ext <;> simp [grassmannOddMul] <;> ring
+
+/-- Over a field `K`, any `x : Grassmann2Even K` with `x.c0 ≠ 0` has an exact multiplicative inverse. -/
+def grassmannEvenInv {K : Type*} [Field K] (x : Grassmann2Even K) : Grassmann2Even K :=
+  ⟨x.c0⁻¹, -x.c0⁻¹ * x.c12 * x.c0⁻¹⟩
+
+theorem grassmannEven_mul_inv {K : Type*} [Field K] (x : Grassmann2Even K) (hx : x.c0 ≠ 0) :
+    x * grassmannEvenInv x = 1 := by
+  ext <;> simp [grassmannEvenInv, hx] <;> field_simp [hx] <;> ring
+
+/-- Full `(2|3)` Grassmann supermatrix `(A, B, C, D)` with even diagonal blocks
+    `A ∈ M₂(Grassmann2Even K)`, `D ∈ M₃(Grassmann2Even K)` and odd off-diagonal blocks
+    `B ∈ M₂ₓ₃(Grassmann2Odd K)`, `C ∈ M₃ₓ₂(Grassmann2Odd K)`. -/
+@[ext]
+structure GrassmannSuper23 (K : Type*) where
+  A : Matrix (Fin 2) (Fin 2) (Grassmann2Even K)
+  B : Matrix (Fin 2) (Fin 3) (Grassmann2Odd K)
+  C : Matrix (Fin 3) (Fin 2) (Grassmann2Odd K)
+  D : Matrix (Fin 3) (Fin 3) (Grassmann2Even K)
+
+namespace GrassmannSuper23
+
+variable {K : Type*} [Field K]
+
+/-- Odd matrix product `B * C` with entries in `Grassmann2Even K`. -/
+def oddMul {m k n : ℕ} (P : Matrix (Fin m) (Fin k) (Grassmann2Odd K))
+    (Q : Matrix (Fin k) (Fin n) (Grassmann2Odd K)) : Matrix (Fin m) (Fin n) (Grassmann2Even K) :=
+  fun i j => ∑ r : Fin k, grassmannOddMul (P i r) (Q r j)
+
+/-- Even-by-odd matrix product `A * B` with entries in `Grassmann2Odd K`. -/
+def evenOddMul {m k n : ℕ} (P : Matrix (Fin m) (Fin k) (Grassmann2Even K))
+    (Q : Matrix (Fin k) (Fin n) (Grassmann2Odd K)) : Matrix (Fin m) (Fin n) (Grassmann2Odd K) :=
+  fun i j => ⟨∑ r : Fin k, (P i r).c0 * (Q r j).c1, ∑ r : Fin k, (P i r).c0 * (Q r j).c2⟩
+
+/-- Odd-by-even matrix product `B * D` with entries in `Grassmann2Odd K`. -/
+def oddEvenMul {m k n : ℕ} (P : Matrix (Fin m) (Fin k) (Grassmann2Odd K))
+    (Q : Matrix (Fin k) (Fin n) (Grassmann2Even K)) : Matrix (Fin m) (Fin n) (Grassmann2Odd K) :=
+  fun i j => ⟨∑ r : Fin k, (P i r).c1 * (Q r j).c0, ∑ r : Fin k, (P i r).c2 * (Q r j).c0⟩
+
+/-- Supermatrix product on `GrassmannSuper23 K`. -/
+def mul (M₁ M₂ : GrassmannSuper23 K) : GrassmannSuper23 K where
+  A := M₁.A * M₂.A + oddMul M₁.B M₂.C
+  B := evenOddMul M₁.A M₂.B + oddEvenMul M₁.B M₂.D
+  C := oddEvenMul M₁.C M₂.A + evenOddMul M₁.D M₂.C
+  D := oddMul M₁.C M₂.B + M₁.D * M₂.D
+
+instance : Mul (GrassmannSuper23 K) := ⟨mul⟩
+
+/-- Scalar-part inversion for an invertible matrix over `Grassmann2Even K`:
+    `E⁻¹ = E₀⁻¹ - E₀⁻¹ * (E - E₀) * E₀⁻¹` where `E₀` is the body (`c0`) matrix. -/
+def bodyMatrix {n : ℕ} (E : Matrix (Fin n) (Fin n) (Grassmann2Even K)) : Matrix (Fin n) (Fin n) K :=
+  fun i j => (E i j).c0
+
+def nilpMatrix {n : ℕ} (E : Matrix (Fin n) (Fin n) (Grassmann2Even K)) : Matrix (Fin n) (Fin n) K :=
+  fun i j => (E i j).c12
+
+def embedBody {n : ℕ} (E₀ : Matrix (Fin n) (Fin n) K) : Matrix (Fin n) (Fin n) (Grassmann2Even K) :=
+  fun i j => ⟨E₀ i j, 0⟩
+
+def embedNilp {n : ℕ} (E₁ : Matrix (Fin n) (Fin n) K) : Matrix (Fin n) (Fin n) (Grassmann2Even K) :=
+  fun i j => ⟨0, E₁ i j⟩
+
+lemma eq_embedBody_add_embedNilp {n : ℕ} (E : Matrix (Fin n) (Fin n) (Grassmann2Even K)) :
+    E = embedBody (bodyMatrix E) + embedNilp (nilpMatrix E) := by
+  ext i j <;> simp [embedBody, embedNilp, bodyMatrix, nilpMatrix]
+
+lemma embedBody_mul_embedBody {n : ℕ} (A B : Matrix (Fin n) (Fin n) K) :
+    embedBody A * embedBody B = embedBody (A * B) := by
+  ext i j <;> simp [embedBody, Matrix.mul_apply]
+
+lemma embedBody_mul_embedNilp {n : ℕ} (A B : Matrix (Fin n) (Fin n) K) :
+    embedBody A * embedNilp B = embedNilp (A * B) := by
+  ext i j <;> simp [embedBody, embedNilp, Matrix.mul_apply]
+
+lemma embedNilp_mul_embedBody {n : ℕ} (A B : Matrix (Fin n) (Fin n) K) :
+    embedNilp A * embedBody B = embedNilp (A * B) := by
+  ext i j <;> simp [embedBody, embedNilp, Matrix.mul_apply]
+
+lemma embedNilp_mul_embedNilp {n : ℕ} (A B : Matrix (Fin n) (Fin n) K) :
+    embedNilp A * embedNilp B = 0 := by
+  ext i j <;> simp [embedNilp, Matrix.mul_apply]
+
+lemma embedBody_one {n : ℕ} :
+    embedBody (1 : Matrix (Fin n) (Fin n) K) = 1 := by
+  ext i j <;> by_cases h : i = j <;> simp [embedBody, Matrix.one_apply, h]
+
+def evenMatInv {n : ℕ} (E : Matrix (Fin n) (Fin n) (Grassmann2Even K)) :
+    Matrix (Fin n) (Fin n) (Grassmann2Even K) :=
+  let E₀inv := (bodyMatrix E)⁻¹
+  embedBody E₀inv - embedNilp (E₀inv * nilpMatrix E * E₀inv)
+
+lemma evenMatInv_mul {n : ℕ} (E : Matrix (Fin n) (Fin n) (Grassmann2Even K))
+    (hE : (bodyMatrix E).det ≠ 0) :
+    E * evenMatInv E = 1 ∧ evenMatInv E * E = 1 := by
+  have h0r : bodyMatrix E * (bodyMatrix E)⁻¹ = 1 :=
+    Matrix.mul_nonsing_inv (bodyMatrix E) (isUnit_iff_ne_zero.mpr hE)
+  have h0l : (bodyMatrix E)⁻¹ * bodyMatrix E = 1 :=
+    Matrix.nonsing_inv_mul (bodyMatrix E) (isUnit_iff_ne_zero.mpr hE)
+  have hEeq := eq_embedBody_add_embedNilp E
+  dsimp [evenMatInv]
+  refine ⟨?_, ?_⟩
+  · calc
+      E * (embedBody (bodyMatrix E)⁻¹ -
+          embedNilp ((bodyMatrix E)⁻¹ * nilpMatrix E * (bodyMatrix E)⁻¹)) =
+        (embedBody (bodyMatrix E) + embedNilp (nilpMatrix E)) *
+          (embedBody (bodyMatrix E)⁻¹ -
+            embedNilp ((bodyMatrix E)⁻¹ * nilpMatrix E * (bodyMatrix E)⁻¹)) := by rw [← hEeq]
+      _ = embedBody (bodyMatrix E * (bodyMatrix E)⁻¹) -
+            embedNilp (bodyMatrix E * ((bodyMatrix E)⁻¹ * nilpMatrix E * (bodyMatrix E)⁻¹)) +
+            (embedNilp (nilpMatrix E * (bodyMatrix E)⁻¹) - 0) := by
+        rw [add_mul, mul_sub, mul_sub, embedBody_mul_embedBody, embedBody_mul_embedNilp,
+          embedNilp_mul_embedBody, embedNilp_mul_embedNilp]
+      _ = embedBody 1 := by
+        rw [sub_zero, h0r, ← Matrix.mul_assoc (bodyMatrix E), ← Matrix.mul_assoc (bodyMatrix E), h0r,
+          Matrix.one_mul, sub_add_cancel]
+      _ = 1 := embedBody_one
+  · calc
+      (embedBody (bodyMatrix E)⁻¹ -
+          embedNilp ((bodyMatrix E)⁻¹ * nilpMatrix E * (bodyMatrix E)⁻¹)) * E =
+        (embedBody (bodyMatrix E)⁻¹ -
+            embedNilp ((bodyMatrix E)⁻¹ * nilpMatrix E * (bodyMatrix E)⁻¹)) *
+          (embedBody (bodyMatrix E) + embedNilp (nilpMatrix E)) := by rw [← hEeq]
+      _ = embedBody ((bodyMatrix E)⁻¹ * bodyMatrix E) +
+            embedNilp ((bodyMatrix E)⁻¹ * nilpMatrix E) -
+            (embedNilp (((bodyMatrix E)⁻¹ * nilpMatrix E * (bodyMatrix E)⁻¹) * bodyMatrix E) + 0) := by
+        rw [sub_mul, mul_add, mul_add, embedBody_mul_embedBody, embedBody_mul_embedNilp,
+          embedNilp_mul_embedBody, embedNilp_mul_embedNilp]
+      _ = embedBody 1 := by
+        rw [add_zero, h0l, Matrix.mul_assoc _ (bodyMatrix E)⁻¹ (bodyMatrix E), h0l, Matrix.mul_one,
+          add_sub_cancel_right]
+      _ = 1 := embedBody_one
+
+lemma bodyMatrix_evenMatInv {n : ℕ} (E : Matrix (Fin n) (Fin n) (Grassmann2Even K)) :
+    bodyMatrix (evenMatInv E) = (bodyMatrix E)⁻¹ := by
+  ext i j; simp [evenMatInv, bodyMatrix, embedBody, embedNilp]
+
+lemma det_embedBody_add_embedNilp_two
+    (E₀ E₁ : Matrix (Fin 2) (Fin 2) K) (hE₀ : E₀.det ≠ 0) :
+    (embedBody E₀ + embedNilp E₁).det =
+      ⟨E₀.det, 0⟩ * ⟨1, Matrix.trace (E₀⁻¹ * E₁)⟩ := by
+  have hadj : E₀⁻¹ = E₀.det⁻¹ • Matrix.adjugate E₀ := by
+    rw [Matrix.inv_def, Ring.inverse_eq_inv]
+  rw [Matrix.det_fin_two] at hE₀
+  rw [Matrix.det_fin_two, hadj]
+  ext
+  · simp [embedBody, embedNilp, Matrix.det_fin_two]
+  · simp [embedBody, embedNilp, Matrix.det_fin_two, Matrix.trace, Matrix.diag,
+      Matrix.adjugate_fin_two, Matrix.mul_apply, Fin.sum_univ_two]
+    field_simp [hE₀]
+    ring
+
+lemma det_embedBody_add_embedNilp_three
+    (E₀ E₁ : Matrix (Fin 3) (Fin 3) K) (hE₀ : E₀.det ≠ 0) :
+    (embedBody E₀ + embedNilp E₁).det =
+      ⟨E₀.det, 0⟩ * ⟨1, Matrix.trace (E₀⁻¹ * E₁)⟩ := by
+  have hadj : E₀⁻¹ = E₀.det⁻¹ • Matrix.adjugate E₀ := by
+    rw [Matrix.inv_def, Ring.inverse_eq_inv]
+  have htr :
+      E₀.det * Matrix.trace (E₀⁻¹ * E₁) = Matrix.trace (Matrix.adjugate E₀ * E₁) := by
+    rw [hadj, Matrix.smul_mul, Matrix.trace_smul, smul_eq_mul, ← mul_assoc,
+      mul_inv_cancel₀ hE₀, one_mul]
+  have hdet0 : ((embedBody E₀ + embedNilp E₁).det).c0 = E₀.det := by
+    simp [Matrix.det_fin_three, embedBody, embedNilp]
+  have hdet12 :
+      ((embedBody E₀ + embedNilp E₁).det).c12 = Matrix.trace (Matrix.adjugate E₀ * E₁) := by
+    simp only [Matrix.det_fin_three, embedBody, embedNilp, Matrix.add_apply,
+      Grassmann2Even.add_c0, Grassmann2Even.add_c12, Grassmann2Even.mul_c0,
+      Grassmann2Even.mul_c12, Grassmann2Even.sub_c12,
+      Matrix.trace, Matrix.diag, Matrix.mul_apply, Matrix.adjugate_apply,
+      Fin.sum_univ_three]
+    simp [Matrix.updateRow_apply]
+    ring
+  ext
+  · simp [hdet0]
+  · simp only [Grassmann2Even.mul_c12, mul_zero, zero_mul, add_zero]
+    rw [hdet12, ← htr]
+
+/-- Exact Grassmann UDL Berezinian `det(A - B D⁻¹ C) * inv(det D)` in `Grassmann2Even K`. -/
+def grassmannBerUDL (M : GrassmannSuper23 K) : Grassmann2Even K :=
+  (M.A - oddMul M.B (evenOddMul (evenMatInv M.D) M.C)).det *
+    grassmannEvenInv M.D.det
+
+/-- Exact Grassmann LDU Berezinian `det(A) * inv(det(D - C A⁻¹ B))` in `Grassmann2Even K`. -/
+def grassmannBerLDU (M : GrassmannSuper23 K) : Grassmann2Even K :=
+  M.A.det * grassmannEvenInv (M.D - oddMul M.C (evenOddMul (evenMatInv M.A) M.B)).det
+
+private def oddTrPair {m n : ℕ}
+    (P : Matrix (Fin m) (Fin n) (Grassmann2Odd K))
+    (Q : Matrix (Fin n) (Fin m) (Grassmann2Odd K)) : K :=
+  ∑ i : Fin m, ∑ r : Fin n, (grassmannOddMul (P i r) (Q r i)).c12
+
+private lemma scalar_pair_anticomm {K : Type*} [CommRing K] (a₁ a₂ b₁ b₂ : K) :
+    a₁ * b₂ - a₂ * b₁ = -(b₁ * a₂ - b₂ * a₁) := by
+  ring
+
+private lemma scalar_sub_add_split {K : Type*} [CommRing K] (a₁ a₂ b₁ b₂ : K) :
+    (a₁ + a₂) - (b₁ + b₂) = (a₁ - b₁) + (a₂ - b₂) := by
+  ring
+
+private lemma scalar_mul3_cycle_right {K : Type*} [CommRing K] (a b c : K) :
+    a * b * c = a * (b * c) := by
+  ring
+
+private lemma oddTrPair_anticomm {m n : ℕ}
+    (P : Matrix (Fin m) (Fin n) (Grassmann2Odd K))
+    (Q : Matrix (Fin n) (Fin m) (Grassmann2Odd K)) :
+    oddTrPair Q P = -oddTrPair P Q := by
+  dsimp [oddTrPair, grassmannOddMul]
+  rw [Finset.sum_comm, ← Finset.sum_neg_distrib]
+  refine Finset.sum_congr rfl ?_
+  intro i _
+  rw [← Finset.sum_neg_distrib]
+  refine Finset.sum_congr rfl ?_
+  intro r _
+  exact scalar_pair_anticomm (Q r i).c1 (Q r i).c2 (P i r).c1 (P i r).c2
+
+private lemma oddTrPair_add_left {m n : ℕ}
+    (P₁ P₂ : Matrix (Fin m) (Fin n) (Grassmann2Odd K))
+    (Q : Matrix (Fin n) (Fin m) (Grassmann2Odd K)) :
+    oddTrPair (P₁ + P₂) Q = oddTrPair P₁ Q + oddTrPair P₂ Q := by
+  dsimp [oddTrPair, grassmannOddMul]
+  have hsplit : ∀ a₁ a₂ b₁ b₂ : K, (a₁ + a₂) - (b₁ + b₂) = (a₁ - b₁) + (a₂ - b₂) :=
+    scalar_sub_add_split
+  simp only [Matrix.add_apply, Grassmann2Odd.add_c1, Grassmann2Odd.add_c2,
+    add_mul, hsplit, Finset.sum_add_distrib]
+
+private lemma oddTrPair_add_right {m n : ℕ}
+    (P : Matrix (Fin m) (Fin n) (Grassmann2Odd K))
+    (Q₁ Q₂ : Matrix (Fin n) (Fin m) (Grassmann2Odd K)) :
+    oddTrPair P (Q₁ + Q₂) = oddTrPair P Q₁ + oddTrPair P Q₂ := by
+  dsimp [oddTrPair, grassmannOddMul]
+  have hsplit : ∀ a₁ a₂ b₁ b₂ : K, (a₁ + a₂) - (b₁ + b₂) = (a₁ - b₁) + (a₂ - b₂) :=
+    scalar_sub_add_split
+  simp only [Matrix.add_apply, Grassmann2Odd.add_c1, Grassmann2Odd.add_c2,
+    mul_add, hsplit, Finset.sum_add_distrib]
+
+private lemma evenOddMul_embedBody_assoc {m n : ℕ}
+    (X Y : Matrix (Fin m) (Fin m) K) (P : Matrix (Fin m) (Fin n) (Grassmann2Odd K)) :
+    evenOddMul (embedBody X) (evenOddMul (embedBody Y) P) = evenOddMul (embedBody (X * Y)) P := by
+  ext i j <;>
+  · simp [evenOddMul, embedBody, Matrix.mul_apply, Finset.sum_mul, Finset.mul_sum]
+    rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl ?_
+    intro r _
+    refine Finset.sum_congr rfl ?_
+    intro s _
+    ring
+
+private lemma oddEvenMul_embedBody_assoc {m n : ℕ}
+    (P : Matrix (Fin m) (Fin n) (Grassmann2Odd K)) (X Y : Matrix (Fin n) (Fin n) K) :
+    oddEvenMul (oddEvenMul P (embedBody X)) (embedBody Y) = oddEvenMul P (embedBody (X * Y)) := by
+  ext i j <;>
+  · simp [oddEvenMul, embedBody, Matrix.mul_apply, Finset.sum_mul, Finset.mul_sum]
+    rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl ?_
+    intro r _
+    refine Finset.sum_congr rfl ?_
+    intro s _
+    ring
+
+private lemma evenOddMul_oddEvenMul {m k : ℕ}
+    (X : Matrix (Fin m) (Fin m) K) (P : Matrix (Fin m) (Fin k) (Grassmann2Odd K))
+    (Y : Matrix (Fin k) (Fin k) K) :
+    evenOddMul (embedBody X) (oddEvenMul P (embedBody Y)) =
+      oddEvenMul (evenOddMul (embedBody X) P) (embedBody Y) := by
+  ext i j <;>
+  · simp [evenOddMul, oddEvenMul, embedBody, Finset.sum_mul, Finset.mul_sum]
+    rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl ?_
+    intro r _
+    refine Finset.sum_congr rfl ?_
+    intro s _
+    ring
+
+private lemma oddTrPair_evenOdd_oddEven_cycle {m n : ℕ}
+    (X : Matrix (Fin m) (Fin m) K) (P : Matrix (Fin m) (Fin n) (Grassmann2Odd K))
+    (Q : Matrix (Fin n) (Fin m) (Grassmann2Odd K)) :
+    oddTrPair (evenOddMul (embedBody X) P) Q =
+      oddTrPair P (oddEvenMul Q (embedBody X)) := by
+  dsimp [oddTrPair, evenOddMul, oddEvenMul, embedBody, grassmannOddMul]
+  simp only [Finset.sum_mul, Finset.mul_sum, Finset.sum_sub_distrib]
+  congr 1 <;>
+  · rw [Finset.sum_comm]
+    conv_lhs =>
+      arg 2; ext s
+      rw [Finset.sum_comm]
+    rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl ?_
+    intro r _
+    refine Finset.sum_congr rfl ?_
+    intro s _
+    refine Finset.sum_congr rfl ?_
+    intro i _
+    ring
+
+private lemma oddTrPair_oddEven_evenOdd_cycle {m n : ℕ}
+    (P : Matrix (Fin m) (Fin n) (Grassmann2Odd K)) (Y : Matrix (Fin n) (Fin n) K)
+    (Q : Matrix (Fin n) (Fin m) (Grassmann2Odd K)) :
+    oddTrPair (oddEvenMul P (embedBody Y)) Q =
+      oddTrPair P (evenOddMul (embedBody Y) Q) := by
+  dsimp [oddTrPair, evenOddMul, oddEvenMul, embedBody, grassmannOddMul]
+  simp only [Finset.sum_mul, Finset.mul_sum, Finset.sum_sub_distrib]
+  congr 1 <;>
+  · refine Finset.sum_congr rfl ?_
+    intro i _
+    rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl ?_
+    intro s _
+    refine Finset.sum_congr rfl ?_
+    intro r _
+    exact scalar_mul3_cycle_right _ _ _
+
+private lemma trace_oddMul_mul {m k : ℕ}
+    (X₀ : Matrix (Fin m) (Fin m) K)
+    (P : Matrix (Fin m) (Fin k) (Grassmann2Odd K))
+    (R : Matrix (Fin k) (Fin m) (Grassmann2Odd K)) :
+    Matrix.trace (X₀ * nilpMatrix (oddMul P R)) =
+      oddTrPair (evenOddMul (embedBody X₀) P) R := by
+  simp only [Matrix.trace, Matrix.diag, Matrix.mul_apply, nilpMatrix, oddMul, evenOddMul,
+    embedBody, oddTrPair, grassmannOddMul, Grassmann2Even.sum_c12,
+    mul_sub, Finset.mul_sum, Finset.sum_mul, Finset.sum_sub_distrib]
+  congr 1 <;>
+  · refine Finset.sum_congr rfl ?_
+    intro i _
+    rw [Finset.sum_comm]
+    refine Finset.sum_congr rfl ?_
+    intro r _
+    refine Finset.sum_congr rfl ?_
+    intro k _
+    ring
+
+private lemma grassmannBerUDL_formula (M : GrassmannSuper23 K)
+    (hA : (bodyMatrix M.A).det ≠ 0) (hD : (bodyMatrix M.D).det ≠ 0) :
+    grassmannBerUDL M =
+      ⟨(bodyMatrix M.A).det / (bodyMatrix M.D).det, 0⟩ *
+        ⟨1, Matrix.trace ((bodyMatrix M.A)⁻¹ * nilpMatrix M.A) -
+            Matrix.trace ((bodyMatrix M.D)⁻¹ * nilpMatrix M.D) -
+            oddTrPair (evenOddMul (embedBody (bodyMatrix M.A)⁻¹) M.B)
+                      (evenOddMul (embedBody (bodyMatrix M.D)⁻¹) M.C)⟩ := by
+  let S := M.A - oddMul M.B (evenOddMul (evenMatInv M.D) M.C)
+  have hS_body : bodyMatrix S = bodyMatrix M.A := by
+    ext i j; simp [S, bodyMatrix, oddMul, grassmannOddMul]
+  have hS_nilp : nilpMatrix S =
+      nilpMatrix M.A - nilpMatrix (oddMul M.B (evenOddMul (embedBody (bodyMatrix M.D)⁻¹) M.C)) := by
+    ext i j
+    simp [S, nilpMatrix, oddMul, evenOddMul, evenMatInv, embedBody, embedNilp, grassmannOddMul]
+  have hS_eq : S = embedBody (bodyMatrix M.A) + embedNilp (nilpMatrix S) := by
+    rw [← hS_body]; exact eq_embedBody_add_embedNilp S
+  have hD_eq : M.D = embedBody (bodyMatrix M.D) + embedNilp (nilpMatrix M.D) :=
+    eq_embedBody_add_embedNilp M.D
+  have hS_det : S.det = ⟨(bodyMatrix M.A).det, 0⟩ * ⟨1, Matrix.trace ((bodyMatrix M.A)⁻¹ * nilpMatrix S)⟩ := by
+    nth_rw 1 [hS_eq]; exact det_embedBody_add_embedNilp_two (bodyMatrix M.A) (nilpMatrix S) hA
+  have hD_det : M.D.det = ⟨(bodyMatrix M.D).det, 0⟩ * ⟨1, Matrix.trace ((bodyMatrix M.D)⁻¹ * nilpMatrix M.D)⟩ := by
+    nth_rw 1 [hD_eq]; exact det_embedBody_add_embedNilp_three (bodyMatrix M.D) (nilpMatrix M.D) hD
+  have hinv_D : grassmannEvenInv M.D.det =
+      ⟨(bodyMatrix M.D).det⁻¹, 0⟩ * ⟨1, -Matrix.trace ((bodyMatrix M.D)⁻¹ * nilpMatrix M.D)⟩ := by
+    rw [hD_det]
+    ext
+    · simp [grassmannEvenInv]
+    · simp [grassmannEvenInv]
+      rw [← mul_assoc (bodyMatrix M.D).det⁻¹, inv_mul_cancel₀ hD, one_mul]
+      ring
+  dsimp [grassmannBerUDL]
+  change S.det * grassmannEvenInv M.D.det = _
+  rw [hS_det, hinv_D, hS_nilp, Matrix.mul_sub, Matrix.trace_sub,
+    trace_oddMul_mul (bodyMatrix M.A)⁻¹ M.B (evenOddMul (embedBody (bodyMatrix M.D)⁻¹) M.C)]
+  ext
+  · simp [div_eq_mul_inv]
+  · simp [div_eq_mul_inv]; ring
+
+private lemma grassmannBerLDU_formula (M : GrassmannSuper23 K)
+    (hA : (bodyMatrix M.A).det ≠ 0) (hD : (bodyMatrix M.D).det ≠ 0) :
+    grassmannBerLDU M =
+      ⟨(bodyMatrix M.A).det / (bodyMatrix M.D).det, 0⟩ *
+        ⟨1, Matrix.trace ((bodyMatrix M.A)⁻¹ * nilpMatrix M.A) -
+            Matrix.trace ((bodyMatrix M.D)⁻¹ * nilpMatrix M.D) +
+            oddTrPair (evenOddMul (embedBody (bodyMatrix M.D)⁻¹) M.C)
+                      (evenOddMul (embedBody (bodyMatrix M.A)⁻¹) M.B)⟩ := by
+  let S := M.D - oddMul M.C (evenOddMul (evenMatInv M.A) M.B)
+  have hS_body : bodyMatrix S = bodyMatrix M.D := by
+    ext i j; simp [S, bodyMatrix, oddMul, grassmannOddMul]
+  have hS_nilp : nilpMatrix S =
+      nilpMatrix M.D - nilpMatrix (oddMul M.C (evenOddMul (embedBody (bodyMatrix M.A)⁻¹) M.B)) := by
+    ext i j
+    simp [S, nilpMatrix, oddMul, evenOddMul, evenMatInv, embedBody, embedNilp, grassmannOddMul]
+  have hS_eq : S = embedBody (bodyMatrix M.D) + embedNilp (nilpMatrix S) := by
+    rw [← hS_body]; exact eq_embedBody_add_embedNilp S
+  have hA_eq : M.A = embedBody (bodyMatrix M.A) + embedNilp (nilpMatrix M.A) :=
+    eq_embedBody_add_embedNilp M.A
+  have hA_det : M.A.det = ⟨(bodyMatrix M.A).det, 0⟩ * ⟨1, Matrix.trace ((bodyMatrix M.A)⁻¹ * nilpMatrix M.A)⟩ := by
+    nth_rw 1 [hA_eq]; exact det_embedBody_add_embedNilp_two (bodyMatrix M.A) (nilpMatrix M.A) hA
+  have hS_det : S.det = ⟨(bodyMatrix M.D).det, 0⟩ * ⟨1, Matrix.trace ((bodyMatrix M.D)⁻¹ * nilpMatrix S)⟩ := by
+    nth_rw 1 [hS_eq]; exact det_embedBody_add_embedNilp_three (bodyMatrix M.D) (nilpMatrix S) hD
+  have hinv_S : grassmannEvenInv S.det =
+      ⟨(bodyMatrix M.D).det⁻¹, 0⟩ * ⟨1, -Matrix.trace ((bodyMatrix M.D)⁻¹ * nilpMatrix S)⟩ := by
+    rw [hS_det]
+    ext
+    · simp [grassmannEvenInv]
+    · simp [grassmannEvenInv]
+      rw [← mul_assoc (bodyMatrix M.D).det⁻¹, inv_mul_cancel₀ hD, one_mul]
+      ring
+  dsimp [grassmannBerLDU]
+  change M.A.det * grassmannEvenInv S.det = _
+  rw [hA_det, hinv_S, hS_nilp, Matrix.mul_sub, Matrix.trace_sub,
+    trace_oddMul_mul (bodyMatrix M.D)⁻¹ M.C (evenOddMul (embedBody (bodyMatrix M.A)⁻¹) M.B)]
+  ext
+  · simp [div_eq_mul_inv]
+  · simp [div_eq_mul_inv]; ring
+
+/-- **Exact Full `(2|3)` Grassmann Super-Berezinian UDL = LDU Duality & Multiplicativity Theorem**:
+    Over the concrete Grassmann superalgebra `Grassmann2Even K ⊕ Grassmann2Odd K`, for ALL
+    invertible `(2|3)` supermatrices `M, M₁, M₂`:
+    1. **Exact UDL ↔ LDU Berezinian Duality**: `grassmannBerUDL M = grassmannBerLDU M`.
+    2. **Full `(2|3)` Super-Berezinian Multiplicativity**:
+       `grassmannBerUDL (M₁ * M₂) = grassmannBerUDL M₁ * grassmannBerUDL M₂`! -/
+theorem grassmann_super_berezinian23_duality_and_multiplicativity
+    (M M₁ M₂ : GrassmannSuper23 K)
+    (hA : (bodyMatrix M.A).det ≠ 0) (hD : (bodyMatrix M.D).det ≠ 0)
+    (hA₁ : (bodyMatrix M₁.A).det ≠ 0) (hD₁ : (bodyMatrix M₁.D).det ≠ 0)
+    (hA₂ : (bodyMatrix M₂.A).det ≠ 0) (hD₂ : (bodyMatrix M₂.D).det ≠ 0) :
+    grassmannBerUDL M = grassmannBerLDU M ∧
+    grassmannBerUDL (M₁ * M₂) = grassmannBerUDL M₁ * grassmannBerUDL M₂ := by
+  refine ⟨?_, ?_⟩
+  · rw [grassmannBerUDL_formula M hA hD, grassmannBerLDU_formula M hA hD, oddTrPair_anticomm]
+    ext <;> simp <;> ring
+  · have hmul_gs : ∀ P Q : GrassmannSuper23 K, P * Q = GrassmannSuper23.mul P Q := fun _ _ => rfl
+    have hM_A_body : bodyMatrix (M₁ * M₂).A = bodyMatrix M₁.A * bodyMatrix M₂.A := by
+      rw [hmul_gs]
+      ext i j
+      simp [GrassmannSuper23.mul, bodyMatrix, oddMul, grassmannOddMul, Matrix.mul_apply]
+    have hM_D_body : bodyMatrix (M₁ * M₂).D = bodyMatrix M₁.D * bodyMatrix M₂.D := by
+      rw [hmul_gs]
+      ext i j
+      simp [GrassmannSuper23.mul, bodyMatrix, oddMul, grassmannOddMul, Matrix.mul_apply]
+    have hA12 : (bodyMatrix (M₁ * M₂).A).det ≠ 0 := by
+      rw [hM_A_body, Matrix.det_mul]; exact mul_ne_zero hA₁ hA₂
+    have hD12 : (bodyMatrix (M₁ * M₂).D).det ≠ 0 := by
+      rw [hM_D_body, Matrix.det_mul]; exact mul_ne_zero hD₁ hD₂
+    rw [grassmannBerUDL_formula (M₁ * M₂) hA12 hD12,
+      grassmannBerUDL_formula M₁ hA₁ hD₁, grassmannBerUDL_formula M₂ hA₂ hD₂]
+    have hA_nilp : nilpMatrix (M₁ * M₂).A =
+        bodyMatrix M₁.A * nilpMatrix M₂.A + nilpMatrix M₁.A * bodyMatrix M₂.A +
+        nilpMatrix (oddMul M₁.B M₂.C) := by
+      rw [hmul_gs]
+      ext i j
+      simp [GrassmannSuper23.mul, bodyMatrix, nilpMatrix, Matrix.mul_apply, Fin.sum_univ_two]
+      ring
+    have hD_nilp : nilpMatrix (M₁ * M₂).D =
+        bodyMatrix M₁.D * nilpMatrix M₂.D + nilpMatrix M₁.D * bodyMatrix M₂.D +
+        nilpMatrix (oddMul M₁.C M₂.B) := by
+      rw [hmul_gs]
+      ext i j
+      simp [GrassmannSuper23.mul, bodyMatrix, nilpMatrix, Matrix.mul_apply, Fin.sum_univ_three]
+      ring
+    have hA_inv : (bodyMatrix (M₁ * M₂).A)⁻¹ = (bodyMatrix M₂.A)⁻¹ * (bodyMatrix M₁.A)⁻¹ := by
+      rw [hM_A_body, Matrix.mul_inv_rev]
+    have hD_inv : (bodyMatrix (M₁ * M₂).D)⁻¹ = (bodyMatrix M₂.D)⁻¹ * (bodyMatrix M₁.D)⁻¹ := by
+      rw [hM_D_body, Matrix.mul_inv_rev]
+    have hA₁_inv_r : bodyMatrix M₁.A * (bodyMatrix M₁.A)⁻¹ = 1 :=
+      Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hA₁)
+    have hA₂_inv_r : bodyMatrix M₂.A * (bodyMatrix M₂.A)⁻¹ = 1 :=
+      Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hA₂)
+    have hA₁_inv_l : (bodyMatrix M₁.A)⁻¹ * bodyMatrix M₁.A = 1 :=
+      Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.mpr hA₁)
+    have hA₂_inv_l : (bodyMatrix M₂.A)⁻¹ * bodyMatrix M₂.A = 1 :=
+      Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.mpr hA₂)
+    have hD₁_inv_r : bodyMatrix M₁.D * (bodyMatrix M₁.D)⁻¹ = 1 :=
+      Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hD₁)
+    have hD₂_inv_r : bodyMatrix M₂.D * (bodyMatrix M₂.D)⁻¹ = 1 :=
+      Matrix.mul_nonsing_inv _ (isUnit_iff_ne_zero.mpr hD₂)
+    have hD₁_inv_l : (bodyMatrix M₁.D)⁻¹ * bodyMatrix M₁.D = 1 :=
+      Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.mpr hD₁)
+    have hD₂_inv_l : (bodyMatrix M₂.D)⁻¹ * bodyMatrix M₂.D = 1 :=
+      Matrix.nonsing_inv_mul _ (isUnit_iff_ne_zero.mpr hD₂)
+    have htrA :
+        Matrix.trace ((bodyMatrix (M₁ * M₂).A)⁻¹ * nilpMatrix (M₁ * M₂).A) =
+          Matrix.trace ((bodyMatrix M₁.A)⁻¹ * nilpMatrix M₁.A) +
+          Matrix.trace ((bodyMatrix M₂.A)⁻¹ * nilpMatrix M₂.A) +
+          oddTrPair (evenOddMul (embedBody (bodyMatrix M₁.A)⁻¹) M₁.B)
+                    (oddEvenMul M₂.C (embedBody (bodyMatrix M₂.A)⁻¹)) := by
+      rw [hA_inv, hA_nilp, Matrix.mul_add, Matrix.mul_add, Matrix.trace_add, Matrix.trace_add]
+      have ht1 :
+          Matrix.trace (((bodyMatrix M₂.A)⁻¹ * (bodyMatrix M₁.A)⁻¹) *
+              (bodyMatrix M₁.A * nilpMatrix M₂.A)) =
+            Matrix.trace ((bodyMatrix M₂.A)⁻¹ * nilpMatrix M₂.A) := by
+        rw [Matrix.mul_assoc (bodyMatrix M₂.A)⁻¹, ← Matrix.mul_assoc (bodyMatrix M₁.A)⁻¹,
+          hA₁_inv_l, Matrix.one_mul]
+      have ht2 :
+          Matrix.trace (((bodyMatrix M₂.A)⁻¹ * (bodyMatrix M₁.A)⁻¹) *
+              (nilpMatrix M₁.A * bodyMatrix M₂.A)) =
+            Matrix.trace ((bodyMatrix M₁.A)⁻¹ * nilpMatrix M₁.A) := by
+        rw [Matrix.trace_mul_comm ((bodyMatrix M₂.A)⁻¹ * (bodyMatrix M₁.A)⁻¹),
+          ← Matrix.mul_assoc, Matrix.mul_assoc (nilpMatrix M₁.A), hA₂_inv_r, Matrix.mul_one,
+          Matrix.trace_mul_comm]
+      have ht3 :
+          Matrix.trace (((bodyMatrix M₂.A)⁻¹ * (bodyMatrix M₁.A)⁻¹) *
+              nilpMatrix (oddMul M₁.B M₂.C)) =
+            oddTrPair (evenOddMul (embedBody (bodyMatrix M₁.A)⁻¹) M₁.B)
+                      (oddEvenMul M₂.C (embedBody (bodyMatrix M₂.A)⁻¹)) := by
+        rw [trace_oddMul_mul ((bodyMatrix M₂.A)⁻¹ * (bodyMatrix M₁.A)⁻¹) M₁.B M₂.C,
+          ← evenOddMul_embedBody_assoc, oddTrPair_evenOdd_oddEven_cycle]
+      rw [ht1, ht2, ht3]; ring
+    have htrD :
+        Matrix.trace ((bodyMatrix (M₁ * M₂).D)⁻¹ * nilpMatrix (M₁ * M₂).D) =
+          Matrix.trace ((bodyMatrix M₁.D)⁻¹ * nilpMatrix M₁.D) +
+          Matrix.trace ((bodyMatrix M₂.D)⁻¹ * nilpMatrix M₂.D) +
+          oddTrPair (evenOddMul (embedBody (bodyMatrix M₁.D)⁻¹) M₁.C)
+                    (oddEvenMul M₂.B (embedBody (bodyMatrix M₂.D)⁻¹)) := by
+      rw [hD_inv, hD_nilp, Matrix.mul_add, Matrix.mul_add, Matrix.trace_add, Matrix.trace_add]
+      have ht1 :
+          Matrix.trace (((bodyMatrix M₂.D)⁻¹ * (bodyMatrix M₁.D)⁻¹) *
+              (bodyMatrix M₁.D * nilpMatrix M₂.D)) =
+            Matrix.trace ((bodyMatrix M₂.D)⁻¹ * nilpMatrix M₂.D) := by
+        rw [Matrix.mul_assoc (bodyMatrix M₂.D)⁻¹, ← Matrix.mul_assoc (bodyMatrix M₁.D)⁻¹,
+          hD₁_inv_l, Matrix.one_mul]
+      have ht2 :
+          Matrix.trace (((bodyMatrix M₂.D)⁻¹ * (bodyMatrix M₁.D)⁻¹) *
+              (nilpMatrix M₁.D * bodyMatrix M₂.D)) =
+            Matrix.trace ((bodyMatrix M₁.D)⁻¹ * nilpMatrix M₁.D) := by
+        rw [Matrix.trace_mul_comm ((bodyMatrix M₂.D)⁻¹ * (bodyMatrix M₁.D)⁻¹),
+          ← Matrix.mul_assoc, Matrix.mul_assoc (nilpMatrix M₁.D), hD₂_inv_r, Matrix.mul_one,
+          Matrix.trace_mul_comm]
+      have ht3 :
+          Matrix.trace (((bodyMatrix M₂.D)⁻¹ * (bodyMatrix M₁.D)⁻¹) *
+              nilpMatrix (oddMul M₁.C M₂.B)) =
+            oddTrPair (evenOddMul (embedBody (bodyMatrix M₁.D)⁻¹) M₁.C)
+                      (oddEvenMul M₂.B (embedBody (bodyMatrix M₂.D)⁻¹)) := by
+        rw [trace_oddMul_mul ((bodyMatrix M₂.D)⁻¹ * (bodyMatrix M₁.D)⁻¹) M₁.C M₂.B,
+          ← evenOddMul_embedBody_assoc, oddTrPair_evenOdd_oddEven_cycle]
+      rw [ht1, ht2, ht3]; ring
+    have evenOddMul_add : ∀ {m k n : ℕ} (X : Matrix (Fin m) (Fin k) (Grassmann2Even K))
+        (P Q : Matrix (Fin k) (Fin n) (Grassmann2Odd K)),
+        evenOddMul X (P + Q) = evenOddMul X P + evenOddMul X Q := by
+      intro m k n X P Q
+      ext i j <;> simp [evenOddMul, mul_add, Finset.sum_add_distrib]
+    have evenOddMul_one : ∀ {m n : ℕ} (P : Matrix (Fin m) (Fin n) (Grassmann2Odd K)),
+        evenOddMul (embedBody (1 : Matrix (Fin m) (Fin m) K)) P = P := by
+      intro m n P
+      ext i j <;> simp [evenOddMul, embedBody, Matrix.one_apply]
+    have oddEvenMul_one : ∀ {m n : ℕ} (P : Matrix (Fin m) (Fin n) (Grassmann2Odd K)),
+        oddEvenMul P (embedBody (1 : Matrix (Fin n) (Fin n) K)) = P := by
+      intro m n P
+      ext i j <;> simp [oddEvenMul, embedBody, Matrix.one_apply]
+    have h_B12 :
+        evenOddMul (embedBody (bodyMatrix (M₁ * M₂).A)⁻¹) (M₁ * M₂).B =
+          evenOddMul (embedBody (bodyMatrix M₂.A)⁻¹) M₂.B +
+          evenOddMul (embedBody (bodyMatrix M₂.A)⁻¹)
+            (oddEvenMul (evenOddMul (embedBody (bodyMatrix M₁.A)⁻¹) M₁.B)
+              (embedBody (bodyMatrix M₂.D))) := by
+      have hB : (M₁ * M₂).B =
+          evenOddMul (embedBody (bodyMatrix M₁.A)) M₂.B +
+          oddEvenMul M₁.B (embedBody (bodyMatrix M₂.D)) := rfl
+      rw [hA_inv, hB, evenOddMul_add, ← evenOddMul_embedBody_assoc,
+        evenOddMul_embedBody_assoc (bodyMatrix M₁.A)⁻¹ (bodyMatrix M₁.A), hA₁_inv_l,
+        evenOddMul_one, ← evenOddMul_embedBody_assoc (bodyMatrix M₂.A)⁻¹ (bodyMatrix M₁.A)⁻¹,
+        evenOddMul_oddEvenMul (bodyMatrix M₁.A)⁻¹ M₁.B (bodyMatrix M₂.D)]
+    have h_C12 :
+        evenOddMul (embedBody (bodyMatrix (M₁ * M₂).D)⁻¹) (M₁ * M₂).C =
+          evenOddMul (embedBody (bodyMatrix M₂.D)⁻¹)
+            (oddEvenMul (evenOddMul (embedBody (bodyMatrix M₁.D)⁻¹) M₁.C)
+              (embedBody (bodyMatrix M₂.A))) +
+          evenOddMul (embedBody (bodyMatrix M₂.D)⁻¹) M₂.C := by
+      have hC : (M₁ * M₂).C =
+          oddEvenMul M₁.C (embedBody (bodyMatrix M₂.A)) +
+          evenOddMul (embedBody (bodyMatrix M₁.D)) M₂.C := rfl
+      rw [hD_inv, hC, evenOddMul_add,
+        ← evenOddMul_embedBody_assoc (bodyMatrix M₂.D)⁻¹ (bodyMatrix M₁.D)⁻¹,
+        evenOddMul_oddEvenMul (bodyMatrix M₁.D)⁻¹ M₁.C (bodyMatrix M₂.A),
+        ← evenOddMul_embedBody_assoc (bodyMatrix M₂.D)⁻¹ (bodyMatrix M₁.D)⁻¹,
+        evenOddMul_embedBody_assoc (bodyMatrix M₁.D)⁻¹ (bodyMatrix M₁.D), hD₁_inv_l,
+        evenOddMul_one]
+    have h_pair12 :
+        oddTrPair (evenOddMul (embedBody (bodyMatrix (M₁ * M₂).A)⁻¹) (M₁ * M₂).B)
+                  (evenOddMul (embedBody (bodyMatrix (M₁ * M₂).D)⁻¹) (M₁ * M₂).C) =
+          oddTrPair (evenOddMul (embedBody (bodyMatrix M₁.A)⁻¹) M₁.B)
+                    (evenOddMul (embedBody (bodyMatrix M₁.D)⁻¹) M₁.C) +
+          oddTrPair (evenOddMul (embedBody (bodyMatrix M₂.A)⁻¹) M₂.B)
+                    (evenOddMul (embedBody (bodyMatrix M₂.D)⁻¹) M₂.C) +
+          oddTrPair (evenOddMul (embedBody (bodyMatrix M₁.A)⁻¹) M₁.B)
+                    (oddEvenMul M₂.C (embedBody (bodyMatrix M₂.A)⁻¹)) -
+          oddTrPair (evenOddMul (embedBody (bodyMatrix M₁.D)⁻¹) M₁.C)
+                    (oddEvenMul M₂.B (embedBody (bodyMatrix M₂.D)⁻¹)) := by
+      rw [h_B12, h_C12, oddTrPair_add_left, oddTrPair_add_right, oddTrPair_add_right]
+      -- Simplify each of the 4 cross terms
+      have t21 :
+          oddTrPair (evenOddMul (embedBody (bodyMatrix M₂.A)⁻¹) M₂.B)
+            (evenOddMul (embedBody (bodyMatrix M₂.D)⁻¹)
+              (oddEvenMul (evenOddMul (embedBody (bodyMatrix M₁.D)⁻¹) M₁.C)
+                (embedBody (bodyMatrix M₂.A)))) =
+            -oddTrPair (evenOddMul (embedBody (bodyMatrix M₁.D)⁻¹) M₁.C)
+              (oddEvenMul M₂.B (embedBody (bodyMatrix M₂.D)⁻¹)) := by
+        rw [oddTrPair_evenOdd_oddEven_cycle, evenOddMul_oddEvenMul, oddEvenMul_embedBody_assoc,
+          hA₂_inv_r, oddEvenMul_one, oddTrPair_anticomm, oddTrPair_evenOdd_oddEven_cycle]
+      have t12 :
+          oddTrPair
+            (evenOddMul (embedBody (bodyMatrix M₂.A)⁻¹)
+              (oddEvenMul (evenOddMul (embedBody (bodyMatrix M₁.A)⁻¹) M₁.B)
+                (embedBody (bodyMatrix M₂.D))))
+            (evenOddMul (embedBody (bodyMatrix M₂.D)⁻¹) M₂.C) =
+            oddTrPair (evenOddMul (embedBody (bodyMatrix M₁.A)⁻¹) M₁.B)
+              (oddEvenMul M₂.C (embedBody (bodyMatrix M₂.A)⁻¹)) := by
+        rw [oddTrPair_evenOdd_oddEven_cycle, oddTrPair_oddEven_evenOdd_cycle,
+          ← evenOddMul_oddEvenMul, evenOddMul_embedBody_assoc, hD₂_inv_r, evenOddMul_one]
+      have t11 :
+          oddTrPair
+            (evenOddMul (embedBody (bodyMatrix M₂.A)⁻¹)
+              (oddEvenMul (evenOddMul (embedBody (bodyMatrix M₁.A)⁻¹) M₁.B)
+                (embedBody (bodyMatrix M₂.D))))
+            (evenOddMul (embedBody (bodyMatrix M₂.D)⁻¹)
+              (oddEvenMul (evenOddMul (embedBody (bodyMatrix M₁.D)⁻¹) M₁.C)
+                (embedBody (bodyMatrix M₂.A)))) =
+            oddTrPair (evenOddMul (embedBody (bodyMatrix M₁.A)⁻¹) M₁.B)
+              (evenOddMul (embedBody (bodyMatrix M₁.D)⁻¹) M₁.C) := by
+        rw [oddTrPair_evenOdd_oddEven_cycle, evenOddMul_oddEvenMul, oddEvenMul_embedBody_assoc,
+          hA₂_inv_r, oddEvenMul_one, oddTrPair_oddEven_evenOdd_cycle,
+          evenOddMul_embedBody_assoc, hD₂_inv_r, evenOddMul_one]
+      rw [t21, t12, t11]
+      ring
+    rw [htrA, htrD, h_pair12, hM_A_body, hM_D_body]
+    simp only [Matrix.det_mul]
+    ext
+    · simp [div_mul_div_comm]
+    · simp; try (field_simp [hD₁, hD₂]; ring)
+
+end GrassmannSuper23
+
+/-! ### White Vacuum Singlets vs Color Triplets/Antitriplets across `Cl55`, `NCZorn`, `ZornVectorMatrix`, `ZornSplitOctonion`, and 5-Graded Super-Jacobi Closure -/
+
+/-- Canonical multiplicative & additive equivalence `NCZorn R ≃ ZornVectorMatrix R`. -/
+def ncZornVectorMatrixEquiv (R : Type*) :
+    InfoGeometry.Physics.NoncommutativeZornBdGDerivations.NCZorn R ≃
+      InfoGeometry.Algebra.ZornVectorMatrix R where
+  toFun X := ⟨X.a, X.u, X.v, X.b⟩
+  invFun Y := ⟨Y.a, Y.v, Y.w, Y.b⟩
+  left_inv X := by cases X; rfl
+  right_inv Y := by cases Y; rfl
+
+/-- Canonical 8D chain equivalence `NCZorn R ≃ ZornSplitOctonion R` via `ZornVectorMatrix R`. -/
+def ncZornSplitOctonionEquiv (R : Type*) :
+    InfoGeometry.Physics.NoncommutativeZornBdGDerivations.NCZorn R ≃ ZornSplitOctonion R :=
+  (ncZornVectorMatrixEquiv R).trans (zornVectorMatrixSplitOctonionEquiv R)
+
+/-- $\mathbb{Z}_2 \times \mathbb{Z}_2$-graded super-Lie bracket `[X, Y]_s = X * Y - ε(g₁, g₂) (Y * X)`
+    in any associative `ℝ`-algebra. -/
+def z2z2SuperBracket {A : Type*} [Ring A] [Algebra ℝ A]
+    (g₁ g₂ : Z2Z2ColorGrade) (X Y : A) : A :=
+  X * Y - z2z2KoszulSign g₁ g₂ • (Y * X)
+
+/-- Addition of `Z2Z2ColorGrade` in `Fin 2 × Fin 2`. -/
+def addZ2Z2Grade (g₁ g₂ : Z2Z2ColorGrade) : Z2Z2ColorGrade :=
+  (g₁.1 + g₂.1, g₁.2 + g₂.2)
+
+private lemma z2z2KoszulSign_add_right (g₁ g₂ g₃ : Z2Z2ColorGrade) :
+    z2z2KoszulSign g₁ (addZ2Z2Grade g₂ g₃) =
+      z2z2KoszulSign g₁ g₂ * z2z2KoszulSign g₁ g₃ := by
+  rcases g₁ with ⟨a₁, b₁⟩
+  rcases g₂ with ⟨a₂, b₂⟩
+  rcases g₃ with ⟨a₃, b₃⟩
+  dsimp [z2z2KoszulSign, z2z2Pairing, addZ2Z2Grade]
+  fin_cases a₁ <;> fin_cases b₁ <;> fin_cases a₂ <;> fin_cases b₂ <;>
+    fin_cases a₃ <;> fin_cases b₃ <;> norm_num
+
+/-- **Exact $\mathbb{Z}_2 \times \mathbb{Z}_2$ Colored Super-Jacobi Identity & Super-Skewsymmetry**:
+    For all homogeneous operators `(X, g₁), (Y, g₂), (Z, g₃)` in any associative `ℝ`-algebra:
+    1. `[X, Y]_s = -ε(g₁, g₂) • [Y, X]_s`.
+    2. `ε(g₁, g₃) • [X, [Y, Z]_s]_s + ε(g₂, g₁) • [Y, [Z, X]_s]_s + ε(g₃, g₂) • [Z, [X, Y]_s]_s = 0`! -/
+theorem z2z2_colored_super_jacobi {A : Type*} [Ring A] [Algebra ℝ A]
+    (g₁ g₂ g₃ : Z2Z2ColorGrade) (X Y Z : A) :
+    z2z2SuperBracket g₁ g₂ X Y =
+      -(z2z2KoszulSign g₁ g₂ • z2z2SuperBracket g₂ g₁ Y X) ∧
+    z2z2KoszulSign g₁ g₃ •
+        z2z2SuperBracket g₁ (addZ2Z2Grade g₂ g₃) X (z2z2SuperBracket g₂ g₃ Y Z) +
+      z2z2KoszulSign g₂ g₁ •
+        z2z2SuperBracket g₂ (addZ2Z2Grade g₃ g₁) Y (z2z2SuperBracket g₃ g₁ Z X) +
+      z2z2KoszulSign g₃ g₂ •
+        z2z2SuperBracket g₃ (addZ2Z2Grade g₁ g₂) Z (z2z2SuperBracket g₁ g₂ X Y) = 0 := by
+  have h12 := (z2z2_color_supersymmetry_sign_laws g₁ g₂).2.1
+  have h13 := (z2z2_color_supersymmetry_sign_laws g₁ g₃).2.1
+  have h21 := (z2z2_color_supersymmetry_sign_laws g₂ g₁).2.1
+  have h23 := (z2z2_color_supersymmetry_sign_laws g₂ g₃).2.1
+  have h31 := (z2z2_color_supersymmetry_sign_laws g₃ g₁).2.1
+  have h32 := (z2z2_color_supersymmetry_sign_laws g₃ g₂).2.1
+  have hs12 : z2z2KoszulSign g₁ g₂ = z2z2KoszulSign g₂ g₁ :=
+    (z2z2_color_supersymmetry_sign_laws g₁ g₂).1
+  have hs13 : z2z2KoszulSign g₁ g₃ = z2z2KoszulSign g₃ g₁ :=
+    (z2z2_color_supersymmetry_sign_laws g₁ g₃).1
+  have hs23 : z2z2KoszulSign g₂ g₃ = z2z2KoszulSign g₃ g₂ :=
+    (z2z2_color_supersymmetry_sign_laws g₂ g₃).1
+  refine ⟨?_, ?_⟩
+  · dsimp [z2z2SuperBracket]
+    rw [smul_sub, smul_smul, ← hs12, h12, one_smul]
+    abel
+  · dsimp [z2z2SuperBracket]
+    rw [z2z2KoszulSign_add_right g₁ g₂ g₃,
+      z2z2KoszulSign_add_right g₂ g₃ g₁,
+      z2z2KoszulSign_add_right g₃ g₁ g₂]
+    simp only [mul_sub, sub_mul, smul_sub, smul_mul_assoc, mul_smul_comm, smul_smul]
+    have ha : (z2z2KoszulSign g₁ g₃ * (z2z2KoszulSign g₁ g₂ * z2z2KoszulSign g₁ g₃)) =
+        z2z2KoszulSign g₁ g₂ := by
+      calc z2z2KoszulSign g₁ g₃ * (z2z2KoszulSign g₁ g₂ * z2z2KoszulSign g₁ g₃)
+          = (z2z2KoszulSign g₁ g₃ * z2z2KoszulSign g₁ g₃) * z2z2KoszulSign g₁ g₂ := by ring
+      _ = z2z2KoszulSign g₁ g₂ := by rw [h13, one_mul]
+    have hb : (z2z2KoszulSign g₂ g₁ * (z2z2KoszulSign g₂ g₃ * z2z2KoszulSign g₂ g₁)) =
+        z2z2KoszulSign g₂ g₃ := by
+      calc z2z2KoszulSign g₂ g₁ * (z2z2KoszulSign g₂ g₃ * z2z2KoszulSign g₂ g₁)
+          = (z2z2KoszulSign g₂ g₁ * z2z2KoszulSign g₂ g₁) * z2z2KoszulSign g₂ g₃ := by ring
+      _ = z2z2KoszulSign g₂ g₃ := by rw [h21, one_mul]
+    have hc : (z2z2KoszulSign g₃ g₂ * (z2z2KoszulSign g₃ g₁ * z2z2KoszulSign g₃ g₂)) =
+        z2z2KoszulSign g₃ g₁ := by
+      calc z2z2KoszulSign g₃ g₂ * (z2z2KoszulSign g₃ g₁ * z2z2KoszulSign g₃ g₂)
+          = (z2z2KoszulSign g₃ g₂ * z2z2KoszulSign g₃ g₂) * z2z2KoszulSign g₃ g₁ := by ring
+      _ = z2z2KoszulSign g₃ g₁ := by rw [h32, one_mul]
+    have hab : (z2z2KoszulSign g₁ g₃ * (z2z2KoszulSign g₁ g₂ * z2z2KoszulSign g₁ g₃ * z2z2KoszulSign g₂ g₃)) =
+        z2z2KoszulSign g₁ g₂ * z2z2KoszulSign g₂ g₃ := by
+      calc _ = (z2z2KoszulSign g₁ g₃ * z2z2KoszulSign g₁ g₃) *
+              (z2z2KoszulSign g₁ g₂ * z2z2KoszulSign g₂ g₃) := by ring
+      _ = _ := by rw [h13, one_mul]
+    have hbc : (z2z2KoszulSign g₂ g₁ * (z2z2KoszulSign g₂ g₃ * z2z2KoszulSign g₂ g₁ * z2z2KoszulSign g₃ g₁)) =
+        z2z2KoszulSign g₂ g₃ * z2z2KoszulSign g₃ g₁ := by
+      calc _ = (z2z2KoszulSign g₂ g₁ * z2z2KoszulSign g₂ g₁) *
+              (z2z2KoszulSign g₂ g₃ * z2z2KoszulSign g₃ g₁) := by ring
+      _ = _ := by rw [h21, one_mul]
+    have hca : (z2z2KoszulSign g₃ g₂ * (z2z2KoszulSign g₃ g₁ * z2z2KoszulSign g₃ g₂ * z2z2KoszulSign g₁ g₂)) =
+        z2z2KoszulSign g₃ g₁ * z2z2KoszulSign g₁ g₂ := by
+      calc _ = (z2z2KoszulSign g₃ g₂ * z2z2KoszulSign g₃ g₂) *
+              (z2z2KoszulSign g₃ g₁ * z2z2KoszulSign g₁ g₂) := by ring
+      _ = _ := by rw [h32, one_mul]
+    rw [ha, hb, hc, hab, hbc, hca, ← hs13, ← hs12, ← hs23]
+    simp only [mul_assoc]
+    rw [mul_comm (z2z2KoszulSign g₂ g₃) (z2z2KoszulSign g₁ g₃),
+      mul_comm (z2z2KoszulSign g₂ g₃) (z2z2KoszulSign g₁ g₂),
+      mul_comm (z2z2KoszulSign g₁ g₃) (z2z2KoszulSign g₁ g₂)]
+    try simp only [neg_one_zsmul, neg_smul, one_smul]
+    abel
+
+/-- **Cross-Module Unification of White Vacuum Singlets vs Color Triplets/Antitriplets across
+    `Cl55SpinorCartanFock`, `ZornGaugeEmergence`, and `SuperGrassmannianFiveGradedColorSupersymmetrySynthesis`**. -/
+theorem white_singlets_vs_color_triplets_unification
+    (X_sl3 : Matrix (Fin 3) (Fin 3) ℝ) (hTr : Matrix.trace X_sl3 = 0)
+    (X Y : InfoGeometry.Physics.NoncommutativeZornBdGDerivations.NCZorn ℝ)
+    (a b : ℝ) (u v : Fin 3 → ℝ) :
+    (ncZornVectorMatrixEquiv ℝ (X * Y) =
+      ncZornVectorMatrixEquiv ℝ X * ncZornVectorMatrixEquiv ℝ Y) ∧
+    (ncZornSplitOctonionEquiv ℝ (X * Y) =
+      zornMul (ncZornSplitOctonionEquiv ℝ X) (ncZornSplitOctonionEquiv ℝ Y)) ∧
+    (ncZornVectorMatrixEquiv ℝ InfoGeometry.Algebra.ZornGaugeEmergence.vacuumP1 =
+      InfoGeometry.Algebra.ZornVectorMatrix.zornGradeZero 1 0) ∧
+    (ncZornVectorMatrixEquiv ℝ (InfoGeometry.Algebra.ZornGaugeEmergence.embedTriplet u) =
+      ⟨0, u, 0, 0⟩) ∧
+    (ncZornSplitOctonionEquiv ℝ (InfoGeometry.Algebra.ZornGaugeEmergence.embedTriplet u) =
+      embedPureQuarkZorn u) ∧
+    (ncZornSplitOctonionEquiv ℝ (InfoGeometry.Algebra.ZornGaugeEmergence.embedAntitriplet v) =
+      embedPureAntiQuarkZorn v) ∧
+    InfoGeometry.Algebra.ZornGaugeEmergence.StabilizesVacuum
+      (InfoGeometry.Algebra.ZornGaugeEmergence.sl3Derivation X_sl3 hTr) ∧
+    (InfoGeometry.Algebra.ZornGaugeEmergence.sl3Derivation X_sl3 hTr).toFun
+      (InfoGeometry.Algebra.ZornGaugeEmergence.embedTriplet u) =
+      InfoGeometry.Algebra.ZornGaugeEmergence.embedTriplet (X_sl3.mulVec u) ∧
+    (InfoGeometry.Algebra.ZornGaugeEmergence.sl3Derivation X_sl3 hTr).toFun
+      (InfoGeometry.Algebra.ZornGaugeEmergence.embedAntitriplet v) =
+      InfoGeometry.Algebra.ZornGaugeEmergence.embedAntitriplet (-(X_sl3.transpose.mulVec v)) ∧
+    (InfoGeometry.Physics.Cl55SpinorCartanFock.colorGluonT3 *
+        (InfoGeometry.Physics.Cl55SpinorCartanFock.colorBaryonSingletProj +
+          InfoGeometry.Physics.Cl55SpinorCartanFock.colorVacuumSingletProj) = 0 ∧
+     InfoGeometry.Physics.Cl55SpinorCartanFock.colorGluon3Y *
+        (InfoGeometry.Physics.Cl55SpinorCartanFock.colorBaryonSingletProj +
+          InfoGeometry.Physics.Cl55SpinorCartanFock.colorVacuumSingletProj) = 0) ∧
+    (InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading
+        (InfoGeometry.Algebra.ZornVectorMatrix.zornGradeZero a b) = 0 ∧
+     InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading (⟨0, u, 0, 0⟩ :
+        InfoGeometry.Algebra.ZornVectorMatrix ℝ) = ⟨0, ![-(2 * u 0), u 1, u 2], 0, 0⟩ ∧
+     InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading (⟨0, 0, v, 0⟩ :
+        InfoGeometry.Algebra.ZornVectorMatrix ℝ) = ⟨0, 0, ![2 * v 0, -v 1, -v 2], 0⟩) := by
+  have hmul_zvm :
+      ncZornVectorMatrixEquiv ℝ (X * Y) =
+        ncZornVectorMatrixEquiv ℝ X * ncZornVectorMatrixEquiv ℝ Y := by
+    have hmul_nc : X * Y = InfoGeometry.Physics.NoncommutativeZornBdGDerivations.ncZornMul X Y := rfl
+    have hmul_v :
+        ∀ P Q : InfoGeometry.Algebra.ZornVectorMatrix ℝ,
+          P * Q = InfoGeometry.Algebra.ZornVectorMatrix.mul P Q := fun _ _ => rfl
+    rw [hmul_nc, hmul_v]
+    ext k
+    · simp [ncZornVectorMatrixEquiv,
+        InfoGeometry.Physics.NoncommutativeZornBdGDerivations.ncZornMul,
+        InfoGeometry.Physics.NoncommutativeZornBdGDerivations.dotNC,
+        InfoGeometry.Algebra.ZornVectorMatrix.mul,
+        InfoGeometry.Algebra.ZornVec3.dot, Fin.sum_univ_three]
+    · fin_cases k <;>
+        (simp [ncZornVectorMatrixEquiv,
+          InfoGeometry.Physics.NoncommutativeZornBdGDerivations.ncZornMul,
+          InfoGeometry.Physics.NoncommutativeZornBdGDerivations.crossNC,
+          InfoGeometry.Algebra.ZornVectorMatrix.mul,
+          InfoGeometry.Algebra.ZornVec3.cross]; ring)
+    · fin_cases k <;>
+        (simp [ncZornVectorMatrixEquiv,
+          InfoGeometry.Physics.NoncommutativeZornBdGDerivations.ncZornMul,
+          InfoGeometry.Physics.NoncommutativeZornBdGDerivations.crossNC,
+          InfoGeometry.Algebra.ZornVectorMatrix.mul,
+          InfoGeometry.Algebra.ZornVec3.cross]; ring)
+    · simp [ncZornVectorMatrixEquiv,
+        InfoGeometry.Physics.NoncommutativeZornBdGDerivations.ncZornMul,
+        InfoGeometry.Physics.NoncommutativeZornBdGDerivations.dotNC,
+        InfoGeometry.Algebra.ZornVectorMatrix.mul,
+        InfoGeometry.Algebra.ZornVec3.dot, Fin.sum_univ_three]; ring
+  have hmul_so :
+      ncZornSplitOctonionEquiv ℝ (X * Y) =
+        zornMul (ncZornSplitOctonionEquiv ℝ X) (ncZornSplitOctonionEquiv ℝ Y) := by
+    dsimp [ncZornSplitOctonionEquiv]
+    rw [hmul_zvm]
+    exact (zornVectorMatrixSplitOctonionEquiv_mul_norm_and_kkt
+      (ncZornVectorMatrixEquiv ℝ X) (ncZornVectorMatrixEquiv ℝ Y)).1
+  have hrep := InfoGeometry.Algebra.ZornGaugeEmergence.sl3Derivation_representation
+    X_sl3 X_sl3 hTr hTr X u v
+  refine ⟨hmul_zvm, hmul_so, ?_, ?_, ?_, ?_, hrep.1, hrep.2.2.1, hrep.2.2.2.1,
+    InfoGeometry.Physics.Cl55SpinorCartanFock.colorGluon_cartan_white_singlets_neutrality,
+    ?_, ?_, ?_⟩
+  · ext k <;> rfl
+  · ext k <;> rfl
+  · ext k <;> simp [ncZornSplitOctonionEquiv, ncZornVectorMatrixEquiv,
+      zornVectorMatrixSplitOctonionEquiv, InfoGeometry.Algebra.ZornGaugeEmergence.embedTriplet,
+      embedPureQuarkZorn]
+    fin_cases k <;> rfl
+  · ext k <;> simp [ncZornSplitOctonionEquiv, ncZornVectorMatrixEquiv,
+      zornVectorMatrixSplitOctonionEquiv, InfoGeometry.Algebra.ZornGaugeEmergence.embedAntitriplet,
+      embedPureAntiQuarkZorn]
+    fin_cases k <;> rfl
+  · ext k
+    · rfl
+    · simp [InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading,
+        InfoGeometry.Algebra.ZornVectorMatrix.zornGradeZero]
+      fin_cases k <;> rfl
+    · simp [InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading,
+        InfoGeometry.Algebra.ZornVectorMatrix.zornGradeZero]
+      fin_cases k <;> rfl
+    · rfl
+  · ext k
+    · rfl
+    · simp [InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading]
+    · simp [InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading]
+      fin_cases k <;> rfl
+    · rfl
+  · ext k
+    · rfl
+    · simp [InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading]
+      fin_cases k <;> rfl
+    · simp [InfoGeometry.Algebra.ZornVectorMatrix.zornEulerFiveGrading]
+    · rfl
+
 end
+
+/-- Closed `2 × 2` matrix non-commutativity witness over arbitrary nontrivial commutative ring `K`. -/
+theorem superGrassmannian_mat2K_noncomm {K : Type*} [CommRing K] [Nontrivial K] :
+    ∃ A B : Matrix (Fin 2) (Fin 2) K, A * B ≠ B * A := by
+  refine ⟨!![1, 0; 0, 0], !![0, 1; 0, 0], fun h => ?_⟩
+  have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) K => M 0 1) h
+  simp [Matrix.mul_apply, Fin.sum_univ_two] at h01
+
+/-- Closed `3 × 3` matrix non-commutativity witness over arbitrary nontrivial commutative ring `K`. -/
+theorem superGrassmannian_mat3K_noncomm {K : Type*} [CommRing K] [Nontrivial K] :
+    ∃ A B : Matrix (Fin 3) (Fin 3) K, A * B ≠ B * A := by
+  refine ⟨Matrix.single 0 1 1, Matrix.single 1 0 1, fun h => ?_⟩
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) K => M 0 0) h
+  simp [Matrix.single_mul_single_same, Matrix.single_mul_single_of_ne] at h00
+
+/-- Closed `3 × 3` real matrix non-commutativity witness. -/
+theorem superGrassmannian_mat3R_noncomm :
+    ∃ A B : Matrix (Fin 3) (Fin 3) ℝ, A * B ≠ B * A := by
+  refine ⟨Matrix.single 0 1 1, Matrix.single 1 0 1, fun h => ?_⟩
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) ℝ => M 0 0) h
+  simp [Matrix.single_mul_single_same, Matrix.single_mul_single_of_ne] at h00
 
 end InfoGeometry.Synthesis.SuperGrassmannianFiveGradedColorSupersymmetrySynthesis

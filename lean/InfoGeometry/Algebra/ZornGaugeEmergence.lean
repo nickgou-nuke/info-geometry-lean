@@ -5,9 +5,13 @@ Authors: InfoGeometry Engine Contributors
 -/
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Data.Matrix.Basic
+import Mathlib.LinearAlgebra.Matrix.Trace
 import Mathlib.Tactic
 import Mathlib.Tactic.FinCases
 import InfoGeometry.Physics.NoncommutativeZornBdGDerivations
+import InfoGeometry.Physics.Cl55SpinorCartanFock
+import InfoGeometry.Algebra.ZornVectorMatrix
+import InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge
 
 /-!
 # Noncommutative Zorn Peirce Idempotents and Color/Grading Carrier Subspaces
@@ -619,5 +623,572 @@ theorem zorn_gauge_emergence_synthesis : ZornGaugeEmergenceCertificate A where
   grading_p2_zero := tripotentGrading_annihilates_P2
 
 end Synthesis
+
+/-! ### 6. Explicit $\mathfrak{sl}_3(R)$ Derivation Representation on `NCZorn R` -/
+
+section SL3DerivationRepresentation
+
+variable {R : Type*} [CommRing R]
+
+/-- Underlying linear action of a `3 × 3` matrix `X` on `NCZorn R`:
+    acts on the quark triplet `u` in the fundamental `3` (`X · u`) and on the
+    antiquark antitriplet `v` in the dual `3̄` (`-Xᵀ · v`), while annihilating the
+    diagonal Cartan/vacuum sector. -/
+def sl3Action (X : Matrix (Fin 3) (Fin 3) R) (Z : NCZorn R) : NCZorn R where
+  a := 0
+  u := X.mulVec Z.u
+  v := -(X.transpose.mulVec Z.v)
+  b := 0
+
+/-- Trace-zero identity for `X · (a × b) + (Xᵀ · a) × b + a × (Xᵀ · b) = 0`. -/
+private theorem mulVec_crossNC_of_trace_zero (X : Matrix (Fin 3) (Fin 3) R)
+    (hTr : Matrix.trace X = 0) (a b : Fin 3 → R) :
+    -(X.mulVec (crossNC a b)) =
+      crossNC (X.transpose.mulVec a) b + crossNC a (X.transpose.mulVec b) := by
+  have htr : X 0 0 + X 1 1 + X 2 2 = 0 := by
+    simpa [Matrix.trace, Matrix.diag, Fin.sum_univ_three] using hTr
+  ext i
+  fin_cases i
+  · simp [Matrix.mulVec, dotProduct, crossNC, Fin.sum_univ_three]
+    linear_combination -(a 1 * b 2 - a 2 * b 1) * htr
+  · simp [Matrix.mulVec, dotProduct, crossNC, Fin.sum_univ_three]
+    linear_combination -(a 2 * b 0 - a 0 * b 2) * htr
+  · simp [Matrix.mulVec, dotProduct, crossNC, Fin.sum_univ_three]
+    linear_combination -(a 0 * b 1 - a 1 * b 0) * htr
+
+/-- Dual trace-zero identity for `-(Xᵀ · (a × b)) = (X · a) × b + a × (X · b)`. -/
+private theorem transpose_mulVec_crossNC_of_trace_zero (X : Matrix (Fin 3) (Fin 3) R)
+    (hTr : Matrix.trace X = 0) (a b : Fin 3 → R) :
+    -(X.transpose.mulVec (crossNC a b)) =
+      crossNC (X.mulVec a) b + crossNC a (X.mulVec b) := by
+  have hTrT : Matrix.trace X.transpose = 0 := by simpa [Matrix.trace_transpose] using hTr
+  simpa [Matrix.transpose_transpose] using mulVec_crossNC_of_trace_zero X.transpose hTrT a b
+
+/-- Every traceless `3 × 3` matrix `X` (`Matrix.trace X = 0`) induces a genuine global
+    `ZornDerivation R` on `NCZorn R`. -/
+def sl3Derivation (X : Matrix (Fin 3) (Fin 3) R) (hTr : Matrix.trace X = 0) :
+    ZornDerivation R where
+  toFun := sl3Action X
+  map_add := fun Y Z => by
+    apply NCZorn.ext
+    · simp [sl3Action, ncZornAdd]
+    · ext i
+      change (X.mulVec (Y.u + Z.u)) i = (X.mulVec Y.u) i + (X.mulVec Z.u) i
+      rw [Matrix.mulVec_add]; rfl
+    · ext i
+      change (-(X.transpose.mulVec (Y.v + Z.v))) i =
+        (-(X.transpose.mulVec Y.v)) i + (-(X.transpose.mulVec Z.v)) i
+      rw [Matrix.mulVec_add, neg_add]; rfl
+    · simp [sl3Action, ncZornAdd]
+  leibniz := fun Y Z => by
+    apply NCZorn.ext
+    · simp only [sl3Action, ncZornAdd, ncZorn_mul_a, dotNC, Matrix.mulVec, dotProduct,
+        Matrix.transpose_apply, Pi.neg_apply, Fin.sum_univ_three]
+      ring
+    · have hcross := mulVec_crossNC_of_trace_zero X hTr Y.v Z.v
+      have h0 := congrFun hcross 0
+      have h1 := congrFun hcross 1
+      have h2 := congrFun hcross 2
+      ext i
+      change (X.mulVec (ncZornMul Y Z).u) i =
+        (ncZornMul (sl3Action X Y) Z).u i + (ncZornMul Y (sl3Action X Z)).u i
+      fin_cases i <;>
+      · simp [sl3Action, ncZornMul, Matrix.mulVec, dotProduct, crossNC,
+          Fin.sum_univ_three] at h0 h1 h2 ⊢
+        first | linear_combination h0 | linear_combination h1 | linear_combination h2
+    · have hcross := transpose_mulVec_crossNC_of_trace_zero X hTr Y.u Z.u
+      have h0 := congrFun hcross 0
+      have h1 := congrFun hcross 1
+      have h2 := congrFun hcross 2
+      ext i
+      change (-(X.transpose.mulVec (ncZornMul Y Z).v)) i =
+        (ncZornMul (sl3Action X Y) Z).v i + (ncZornMul Y (sl3Action X Z)).v i
+      fin_cases i <;>
+      · simp [sl3Action, ncZornMul, Matrix.mulVec, dotProduct, crossNC,
+          Fin.sum_univ_three] at h0 h1 h2 ⊢
+        first | linear_combination h0 | linear_combination h1 | linear_combination h2
+    · simp only [sl3Action, ncZornAdd, ncZorn_mul_b, dotNC, Matrix.mulVec, dotProduct,
+        Matrix.transpose_apply, Pi.neg_apply, Fin.sum_univ_three]
+      ring
+
+/-- **Master $\mathfrak{sl}_3(R) \to \mathrm{Der}_{\mathrm{vac}}(\mathrm{NCZorn}(R))$ Theorem**:
+    For every traceless `3 × 3` matrices `X, Y` (`Matrix.trace X = 0`, `Matrix.trace Y = 0`),
+    every `Z : NCZorn R`, and all color vectors `u, v : Fin 3 → R`:
+    1. `sl3Derivation X hTr` stabilizes both Peirce vacuum projectors (`StabilizesVacuum`);
+    2. It transforms the quark color triplet in the fundamental `3`:
+       `sl3Derivation X hTr (embedTriplet u) = embedTriplet (X.mulVec u)`;
+    3. It transforms the antiquark color antitriplet in the contragredient dual `3̄`:
+       `sl3Derivation X hTr (embedAntitriplet v) = embedAntitriplet (-(X.transpose.mulVec v))`;
+    4. Exact Lie algebra homomorphism preserving the commutator bracket:
+       `D_X(D_Y(Z)) - D_Y(D_X(Z)) = D_{[X, Y]}(Z)` (with `Matrix.trace (X * Y - Y * X) = 0`)! -/
+theorem sl3Derivation_representation
+    (X Y : Matrix (Fin 3) (Fin 3) R) (hX : Matrix.trace X = 0) (hY : Matrix.trace Y = 0)
+    (Z : NCZorn R) (u v : Fin 3 → R) :
+    let DX := sl3Derivation X hX
+    let DY := sl3Derivation Y hY
+    let hXY : Matrix.trace (X * Y - Y * X) = 0 := by
+      rw [Matrix.trace_sub, Matrix.trace_mul_comm, sub_self]
+    let DXY := sl3Derivation (X * Y - Y * X) hXY
+    StabilizesVacuum DX ∧
+    DX.toFun vacuumP2 = ncZornZero ∧
+    DX.toFun (embedTriplet u) = embedTriplet (X.mulVec u) ∧
+    DX.toFun (embedAntitriplet v) = embedAntitriplet (-(X.transpose.mulVec v)) ∧
+    ncZornAdd (DX.toFun (DY.toFun Z)) (ncZornNeg (DY.toFun (DX.toFun Z))) = DXY.toFun Z := by
+  intro DX DY hXY DXY
+  refine ⟨?_, ?_, ?_, ?_, ?_⟩
+  · apply NCZorn.ext
+    · rfl
+    · ext i; change (X.mulVec 0) i = 0; simp
+    · ext i; change (-(X.transpose.mulVec 0)) i = 0; simp
+    · rfl
+  · apply NCZorn.ext
+    · rfl
+    · ext i; change (X.mulVec 0) i = 0; simp
+    · ext i; change (-(X.transpose.mulVec 0)) i = 0; simp
+    · rfl
+  · apply NCZorn.ext
+    · rfl
+    · rfl
+    · change -(X.transpose.mulVec 0) = 0; simp
+    · rfl
+  · apply NCZorn.ext
+    · rfl
+    · change X.mulVec 0 = 0; simp
+    · rfl
+    · rfl
+  · apply NCZorn.ext
+    · simp [DX, DY, DXY, sl3Derivation, sl3Action, ncZornAdd, ncZornNeg]
+    · ext i
+      change (X.mulVec (Y.mulVec Z.u)) i + -((Y.mulVec (X.mulVec Z.u)) i) =
+        ((X * Y - Y * X).mulVec Z.u) i
+      rw [Matrix.sub_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec]
+      simp [sub_eq_add_neg]
+    · ext i
+      change (-(X.transpose.mulVec (-(Y.transpose.mulVec Z.v)))) i +
+          -((-(Y.transpose.mulVec (-(X.transpose.mulVec Z.v)))) i) =
+        (-((X * Y - Y * X).transpose.mulVec Z.v)) i
+      rw [Matrix.mulVec_neg, neg_neg, Matrix.mulVec_neg, neg_neg,
+        Matrix.transpose_sub, Matrix.transpose_mul, Matrix.transpose_mul,
+        Matrix.sub_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec]
+      simp [sub_eq_add_neg]
+    · simp [DX, DY, DXY, sl3Derivation, sl3Action, ncZornAdd, ncZornNeg]
+
+end SL3DerivationRepresentation
+
+/-! ### 7. Generalized `[Ring A]` Baryon Triple-Product & Peirce Sector Closure -/
+
+section GeneralizedBaryonAndPeirceClosure
+
+variable {A : Type*} [Ring A]
+
+/-- Product of two antiquark color antitriplets lands strictly in the quark color triplet
+sector via the negative cross product:
+`embedAntitriplet v₁ * embedAntitriplet v₂ = embedTriplet (-(v₁ × v₂))`. -/
+theorem antitriplet_mul_antitriplet (v₁ v₂ : Fin 3 → A) :
+    embedAntitriplet v₁ * embedAntitriplet v₂ = embedTriplet (fun i => -crossNC v₁ v₂ i) := by
+  apply NCZorn.ext
+  · change 0 * 0 + dotNC (fun _ => 0) v₂ = 0
+    simp [dotNC]
+  · ext i
+    show (0 : A) * 0 + 0 * 0 - crossNC v₁ v₂ i = -crossNC v₁ v₂ i
+    simp
+  · ext i
+    show v₁ i * 0 + (0 : A) * v₂ i + crossNC (fun _ => 0) (fun _ => 0) i = 0
+    simp
+  · change 0 * 0 + dotNC v₁ (fun _ => 0) = 0
+    simp [dotNC]
+
+/-- Pairing an antitriplet on the left with a triplet on the right lands strictly in the
+second Peirce diagonal vacuum sector `P₂`:
+`embedAntitriplet v * embedTriplet u = diag(0, v · u)`. -/
+theorem antitriplet_mul_triplet (v u : Fin 3 → A) :
+    embedAntitriplet v * embedTriplet u = ⟨0, fun _ => 0, fun _ => 0, dotNC v u⟩ := by
+  apply NCZorn.ext
+  · change 0 * 0 + dotNC (fun _ => 0) (fun _ => 0) = 0
+    simp [dotNC]
+  · ext i
+    show (0 : A) * u i + 0 * 0 - crossNC v (fun _ => 0) i = 0
+    simp [crossNC_zero_right]
+  · ext i
+    show v i * 0 + (0 : A) * 0 + crossNC (fun _ => 0) u i = 0
+    simp [crossNC_zero_left]
+  · change 0 * 0 + dotNC v u = dotNC v u
+    simp
+
+/-- **Noncommutative Color Baryon Triple Product (`[Ring A]`)**:
+Combining three color triplets lands exclusively on the diagonal Peirce vacuum sectors `P₂` and `P₁`
+via the noncommutative scalar triple product `(u₁ × u₂) · u₃` and `u₃ · (u₁ × u₂)`. -/
+theorem baryon_triplet_triple_product (u₁ u₂ u₃ : Fin 3 → A) :
+    ((embedTriplet u₁ * embedTriplet u₂) * embedTriplet u₃ =
+      ⟨0, fun _ => 0, fun _ => 0, dotNC (crossNC u₁ u₂) u₃⟩) ∧
+    (embedTriplet u₃ * (embedTriplet u₁ * embedTriplet u₂) =
+      ⟨dotNC u₃ (crossNC u₁ u₂), fun _ => 0, fun _ => 0, 0⟩) := by
+  rw [triplet_mul_triplet u₁ u₂]
+  exact ⟨antitriplet_mul_triplet (crossNC u₁ u₂) u₃, triplet_mul_antitriplet u₃ (crossNC u₁ u₂)⟩
+
+/-- **Noncommutative Antibaryon Triple Product (`[Ring A]`)**:
+Combining three antiquark antitriplets lands in the first Peirce diagonal vacuum sector `P₁`. -/
+theorem baryon_antitriplet_triple_product (v₁ v₂ v₃ : Fin 3 → A) :
+    (embedAntitriplet v₁ * embedAntitriplet v₂) * embedAntitriplet v₃ =
+      ⟨dotNC (fun i => -crossNC v₁ v₂ i) v₃, fun _ => 0, fun _ => 0, 0⟩ := by
+  rw [antitriplet_mul_antitriplet v₁ v₂]
+  exact triplet_mul_antitriplet (fun i => -crossNC v₁ v₂ i) v₃
+
+/-- **Peirce Orthogonality & Bimodule Selection Rules over `[Ring A]`**:
+`P₁` (`vacuumP1`) and `P₂` (`vacuumP2`) act as left/right Peirce unit idempotents for `3` (`embedTriplet`)
+and `3̄` (`embedAntitriplet`). -/
+theorem peirce_sector_orthogonal_closure (u v : Fin 3 → A) :
+    (vacuumP1 * embedTriplet u = embedTriplet u) ∧
+    (embedTriplet u * vacuumP2 = embedTriplet u) ∧
+    (vacuumP2 * embedTriplet u = 0) ∧
+    (embedTriplet u * vacuumP1 = 0) ∧
+    (vacuumP2 * embedAntitriplet v = embedAntitriplet v) ∧
+    (embedAntitriplet v * vacuumP1 = embedAntitriplet v) ∧
+    (vacuumP1 * embedAntitriplet v = 0) ∧
+    (embedAntitriplet v * vacuumP2 = 0) := by
+  have hmul_nc : ∀ U V : NCZorn A, U * V = ncZornMul U V := fun _ _ => rfl
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_, ?_⟩ <;>
+  · rw [hmul_nc]
+    apply NCZorn.ext
+    · simp [ncZornMul, vacuumP1, vacuumP2, embedTriplet, embedAntitriplet, dotNC]
+      try rfl
+    · ext i
+      fin_cases i <;>
+        (simp [ncZornMul, vacuumP1, vacuumP2, embedTriplet, embedAntitriplet,
+          crossNC_zero_left, crossNC_zero_right]; try rfl)
+    · ext i
+      fin_cases i <;>
+        (simp [ncZornMul, vacuumP1, vacuumP2, embedTriplet, embedAntitriplet,
+          crossNC_zero_left, crossNC_zero_right]; try rfl)
+    · simp [ncZornMul, vacuumP1, vacuumP2, embedTriplet, embedAntitriplet, dotNC]
+      try rfl
+
+/-- Over any commutative ring `R`, the baryon triple product is cyclic and alternating. -/
+theorem baryon_triple_product_alternating {R : Type*} [CommRing R] (u₁ u₂ u₃ : Fin 3 → R) :
+    dotNC (crossNC u₁ u₂) u₃ = dotNC u₃ (crossNC u₁ u₂) ∧
+    dotNC (crossNC u₁ u₂) u₃ = dotNC u₁ (crossNC u₂ u₃) ∧
+    dotNC (crossNC u₁ u₂) u₁ = 0 ∧
+    dotNC (crossNC u₁ u₂) u₂ = 0 := by
+  refine ⟨?_, ?_, ?_, ?_⟩ <;>
+  · simp [dotNC, crossNC]
+    ring
+
+end GeneralizedBaryonAndPeirceClosure
+
+/-! ### 8. Generalized `[CommRing R]` Split-Octonion & Vector-Matrix Algebra Isomorphisms -/
+
+section GeneralizedZornEquivalences
+
+/-- Noncommutative split-signature Zorn norm `N(X) = a b - u · v` over any ring `A`. -/
+def ncZornNorm {A : Type*} [Ring A] (X : NCZorn A) : A :=
+  X.a * X.b - dotNC X.u X.v
+
+/-- Canonical equivalence `NCZorn R ≃ ZornSplitOctonion R` over any commutative ring `R`. -/
+def ncZornSplitOctonionEquivR (R : Type*) :
+    NCZorn R ≃ InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.ZornSplitOctonion R where
+  toFun X := ⟨X.a, X.u, X.v, X.b⟩
+  invFun Z := ⟨Z.a, Z.u, Z.v, Z.b⟩
+  left_inv X := by cases X; rfl
+  right_inv Z := by cases Z; rfl
+
+/-- Over any commutative ring `R`, `ncZornSplitOctonionEquivR R` preserves multiplication and the
+multiplicative split-octonion norm `N(X * Y) = N(X) * N(Y)`. -/
+theorem ncZornSplitOctonionEquivR_laws {R : Type*} [CommRing R] (X Y : NCZorn R) :
+    (ncZornSplitOctonionEquivR R (X * Y) =
+      InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornMul
+        (ncZornSplitOctonionEquivR R X) (ncZornSplitOctonionEquivR R Y)) ∧
+    (InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornNorm
+        (ncZornSplitOctonionEquivR R X) = ncZornNorm X) ∧
+    (ncZornNorm (X * Y) = ncZornNorm X * ncZornNorm Y) := by
+  have hmul :
+      ncZornSplitOctonionEquivR R (X * Y) =
+        InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornMul
+          (ncZornSplitOctonionEquivR R X) (ncZornSplitOctonionEquivR R Y) := by
+    have hmul_nc : X * Y = ncZornMul X Y := rfl
+    rw [hmul_nc]
+    ext k
+    · simp [ncZornSplitOctonionEquivR, ncZornMul, dotNC,
+        InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornMul,
+        InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.vec3Dot]
+    · fin_cases k <;>
+        (simp [ncZornSplitOctonionEquivR, ncZornMul, crossNC,
+          InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornMul,
+          InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.vec3Cross]; ring)
+    · fin_cases k <;>
+        (simp [ncZornSplitOctonionEquivR, ncZornMul, crossNC,
+          InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornMul,
+          InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.vec3Cross]; ring)
+    · simp [ncZornSplitOctonionEquivR, ncZornMul, dotNC,
+        InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornMul,
+        InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.vec3Dot]
+  have hnorm : InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornNorm
+      (ncZornSplitOctonionEquivR R X) = ncZornNorm X := by
+    simp [ncZornSplitOctonionEquivR, ncZornNorm, dotNC,
+      InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornNorm,
+      InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.vec3Dot]
+  have hcomp : ncZornNorm (X * Y) = ncZornNorm X * ncZornNorm Y := by
+    have hz := InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornNorm_mul
+      (ncZornSplitOctonionEquivR R X) (ncZornSplitOctonionEquivR R Y)
+    rw [← hmul] at hz
+    simpa [hnorm, ncZornSplitOctonionEquivR, ncZornNorm, dotNC,
+      InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.zornNorm,
+      InfoGeometry.Canonical.ZornSplitOctonionFin8Bridge.vec3Dot] using hz
+  exact ⟨hmul, hnorm, hcomp⟩
+
+/-- Canonical equivalence `NCZorn R ≃ ZornVectorMatrix R`. -/
+def ncZornVectorMatrixEquivR (R : Type*) :
+    NCZorn R ≃ InfoGeometry.Algebra.ZornVectorMatrix R where
+  toFun X := ⟨X.a, X.u, X.v, X.b⟩
+  invFun Z := ⟨Z.a, Z.v, Z.w, Z.b⟩
+  left_inv X := by cases X; rfl
+  right_inv Z := by cases Z; rfl
+
+/-- Over any commutative ring `R`, `ncZornVectorMatrixEquivR R` intertwines Zorn multiplication,
+quadratic norm, and the four Peirce sectors `P₁, P₂, 3, 3̄`. -/
+theorem ncZornVectorMatrixEquivR_laws {R : Type*} [CommRing R]
+    (X Y : NCZorn R) (u v : Fin 3 → R) :
+    (ncZornVectorMatrixEquivR R (X * Y) =
+      InfoGeometry.Algebra.ZornVectorMatrix.mul
+        (ncZornVectorMatrixEquivR R X) (ncZornVectorMatrixEquivR R Y)) ∧
+    (InfoGeometry.Algebra.ZornVectorMatrix.norm (ncZornVectorMatrixEquivR R X) = ncZornNorm X) ∧
+    (ncZornVectorMatrixEquivR R vacuumP1 = InfoGeometry.Algebra.ZornVectorMatrix.E11) ∧
+    (ncZornVectorMatrixEquivR R vacuumP2 = InfoGeometry.Algebra.ZornVectorMatrix.E22) ∧
+    (ncZornVectorMatrixEquivR R (embedTriplet u) = ⟨0, u, fun _ => 0, 0⟩) ∧
+    (ncZornVectorMatrixEquivR R (embedAntitriplet v) = ⟨0, fun _ => 0, v, 0⟩) := by
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · have hmul_nc : X * Y = ncZornMul X Y := rfl
+    rw [hmul_nc]
+    ext k
+    · simp [ncZornVectorMatrixEquivR, ncZornMul, dotNC,
+        InfoGeometry.Algebra.ZornVectorMatrix.mul,
+        InfoGeometry.Algebra.ZornVec3.dot, Fin.sum_univ_three]
+    · fin_cases k <;>
+        (simp [ncZornVectorMatrixEquivR, ncZornMul, crossNC,
+          InfoGeometry.Algebra.ZornVectorMatrix.mul,
+          InfoGeometry.Algebra.ZornVec3.cross]; ring)
+    · fin_cases k <;>
+        (simp [ncZornVectorMatrixEquivR, ncZornMul, crossNC,
+          InfoGeometry.Algebra.ZornVectorMatrix.mul,
+          InfoGeometry.Algebra.ZornVec3.cross]; ring)
+    · simp [ncZornVectorMatrixEquivR, ncZornMul, dotNC,
+        InfoGeometry.Algebra.ZornVectorMatrix.mul,
+        InfoGeometry.Algebra.ZornVec3.dot, Fin.sum_univ_three]
+      ring
+  · simp [ncZornVectorMatrixEquivR, ncZornNorm, dotNC,
+      InfoGeometry.Algebra.ZornVectorMatrix.norm,
+      InfoGeometry.Algebra.ZornVec3.dot, Fin.sum_univ_three]
+  · rfl
+  · rfl
+  · rfl
+  · rfl
+
+end GeneralizedZornEquivalences
+
+/-! ### 9. Generalized `[CommRing R]` Rank-1 Outer Product & `sl₃ ⊕ gl₁` Decomposition -/
+
+section GeneralizedSL3GL1Decomposition
+
+variable {R : Type*} [CommRing R]
+
+/-- Rank-1 quark–antiquark outer product `(u ⊗ vᵀ)_{ij} = u_i v_j` over any commutative ring `R`. -/
+def quarkAntiquarkOuterR (u v : Fin 3 → R) : Matrix (Fin 3) (Fin 3) R :=
+  Matrix.of fun i j => u i * v j
+
+/-- Cleared-denominator trace-zero `sl₃(R)` part `3 (u ⊗ vᵀ) - (u · v) I₃` over any commutative ring `R`. -/
+def quarkAntiquarkTraceless3R (u v : Fin 3 → R) : Matrix (Fin 3) (Fin 3) R :=
+  (3 : R) • quarkAntiquarkOuterR u v - dotNC u v • (1 : Matrix (Fin 3) (Fin 3) R)
+
+/-- **Cleared-Denominator `sl₃(R) ⊕ gl₁(R)` Superbracket Decomposition Theorem**:
+Over **any** commutative ring `R` (without requiring `3` invertible),
+1. `tr(u ⊗ vᵀ) = u · v`,
+2. `tr(quarkAntiquarkTraceless3R u v) = 0`,
+3. `3 • (u ⊗ vᵀ) = quarkAntiquarkTraceless3R u v + (u · v) • I₃`,
+4. `sl3Derivation (quarkAntiquarkTraceless3R u v)` acts on `3` (`embedTriplet w`) by
+   `3 (v · w) u - (u · v) w` and on `3̄` (`embedAntitriplet w`) by
+   `-(3 (u · w) v - (u · v) w)`. -/
+theorem quarkAntiquark_sl3_gl1_split (u v w : Fin 3 → R) :
+    (Matrix.trace (quarkAntiquarkOuterR u v) = dotNC u v) ∧
+    (Matrix.trace (quarkAntiquarkTraceless3R u v) = 0) ∧
+    ((3 : R) • quarkAntiquarkOuterR u v =
+      quarkAntiquarkTraceless3R u v + dotNC u v • (1 : Matrix (Fin 3) (Fin 3) R)) ∧
+    ((sl3Derivation (quarkAntiquarkTraceless3R u v) (by
+        simp [quarkAntiquarkTraceless3R, quarkAntiquarkOuterR, dotNC,
+          Matrix.trace, Matrix.diag, Fin.sum_univ_three])).toFun (embedTriplet w) =
+      embedTriplet (fun i => (3 : R) * dotNC v w * u i - dotNC u v * w i)) ∧
+    ((sl3Derivation (quarkAntiquarkTraceless3R u v) (by
+        simp [quarkAntiquarkTraceless3R, quarkAntiquarkOuterR, dotNC,
+          Matrix.trace, Matrix.diag, Fin.sum_univ_three])).toFun (embedAntitriplet w) =
+      embedAntitriplet (fun i => -((3 : R) * dotNC u w * v i - dotNC u v * w i))) := by
+  have htr_outer : Matrix.trace (quarkAntiquarkOuterR u v) = dotNC u v := by
+    simp [quarkAntiquarkOuterR, dotNC, Matrix.trace, Matrix.diag, Fin.sum_univ_three]
+  have htr_sl3 : Matrix.trace (quarkAntiquarkTraceless3R u v) = 0 := by
+    simp [quarkAntiquarkTraceless3R, quarkAntiquarkOuterR, dotNC,
+      Matrix.trace, Matrix.diag, Fin.sum_univ_three]
+  have hsplit : (3 : R) • quarkAntiquarkOuterR u v =
+      quarkAntiquarkTraceless3R u v + dotNC u v • (1 : Matrix (Fin 3) (Fin 3) R) := by
+    dsimp [quarkAntiquarkTraceless3R]
+    abel
+  refine ⟨htr_outer, htr_sl3, hsplit, ?_, ?_⟩
+  · rw [(sl3Derivation_representation (quarkAntiquarkTraceless3R u v)
+        (quarkAntiquarkTraceless3R u v) htr_sl3 htr_sl3 0 w 0).2.2.1]
+    congr 1
+    ext i
+    fin_cases i <;>
+      (simp [quarkAntiquarkTraceless3R, quarkAntiquarkOuterR, dotNC,
+        Matrix.mulVec, dotProduct, Fin.sum_univ_three]; ring)
+  · rw [(sl3Derivation_representation (quarkAntiquarkTraceless3R u v)
+        (quarkAntiquarkTraceless3R u v) htr_sl3 htr_sl3 0 0 w).2.2.2.1]
+    congr 1
+    ext i
+    fin_cases i <;>
+      (simp [quarkAntiquarkTraceless3R, quarkAntiquarkOuterR, dotNC,
+        Matrix.mulVec, dotProduct, Fin.sum_univ_three]; ring)
+
+/-- Exact `sl₃ ⊕ gl₁` projection recovery whenever `3` is invertible in `R` (e.g. `R = ℝ` or `ℚ`):
+`⅟3 • quarkAntiquarkTraceless3R u v + (⅟3 * dotNC u v) • I₃ = quarkAntiquarkOuterR u v`. -/
+theorem quarkAntiquark_sl3_gl1_proj_invertible [Invertible (3 : R)] (u v : Fin 3 → R) :
+    (⅟(3 : R)) • quarkAntiquarkTraceless3R u v +
+        (⅟(3 : R) * dotNC u v) • (1 : Matrix (Fin 3) (Fin 3) R) =
+      quarkAntiquarkOuterR u v := by
+  have hsplit := (quarkAntiquark_sl3_gl1_split u v 0).2.2.1
+  calc
+    (⅟(3 : R)) • quarkAntiquarkTraceless3R u v +
+        (⅟(3 : R) * dotNC u v) • (1 : Matrix (Fin 3) (Fin 3) R)
+      = (⅟(3 : R)) • (quarkAntiquarkTraceless3R u v +
+          dotNC u v • (1 : Matrix (Fin 3) (Fin 3) R)) := by
+          rw [smul_add, smul_smul]
+    _ = (⅟(3 : R)) • ((3 : R) • quarkAntiquarkOuterR u v) := by rw [← hsplit]
+    _ = quarkAntiquarkOuterR u v := by
+          rw [smul_smul, invOf_mul_self, one_smul]
+
+end GeneralizedSL3GL1Decomposition
+
+/-! ### 10. $\mathbb{Z}_2 \times \mathbb{Z}_2$ Bi-Grading, Günaydin–Gürsey Superbrackets & `Cl(5,5)` Unification -/
+
+section Z2Z2PeirceColorUnification
+
+/-- The four Peirce color/vacuum sectors of `NCZorn`. -/
+inductive ZornPeirceSector
+  | vacP1
+  | vacP2
+  | quark3
+  | antiquark3Bar
+  deriving DecidableEq, Repr
+
+/-- Exact $\mathbb{Z}_2 \times \mathbb{Z}_2$ bi-degree $(\deg_e, \deg_c)$ of each Peirce sector:
+- `vacP1, vacP2 ↦ (0, 0)` (even gauge/vacuum sector),
+- `quark3, antiquark3Bar ↦ (1, 1)` (quark / antiquark color-triplet sector). -/
+def zornSectorBiGrade : ZornPeirceSector → Fin 2 × Fin 2
+  | .vacP1 => (0, 0)
+  | .vacP2 => (0, 0)
+  | .quark3 => (1, 1)
+  | .antiquark3Bar => (1, 1)
+
+/-- $\mathbb{Z}_2 \times \mathbb{Z}_2$ bi-degree of the leptonic color-singlet sector `(1, 0)`. -/
+def zornLeptonBiGrade : Fin 2 × Fin 2 := (1, 0)
+
+/-- $\mathbb{Z}_2 \times \mathbb{Z}_2$ bi-degree of the pure color-odd bosonic sector `(0, 1)`. -/
+def zornColorBosonBiGrade : Fin 2 × Fin 2 := (0, 1)
+
+/-- Integral $\mathbb{Z}_2 \times \mathbb{Z}_2$ color-supersymmetry Koszul sign
+`(-1)^(g₁.1 * g₂.1 + g₁.2 * g₂.2)`. -/
+def zornBiGradeKoszulSign (g₁ g₂ : Fin 2 × Fin 2) : ℤ :=
+  (-1 : ℤ) ^ (g₁.1.val * g₂.1.val + g₁.2.val * g₂.2.val)
+
+/-- **Fundamental $\mathbb{Z}_2 \times \mathbb{Z}_2$ Koszul Sign Theorem on Zorn Color Bi-Degrees**:
+Symmetric, involutive (`sign^2 = 1`), gauge-boson transparent (`+1` on `(0,0)`),
+lepton–quark anticommuting (`-1`), lepton–lepton fermionic (`-1`), and quark–quark bi-odd (`+1`). -/
+theorem zornBiGrade_koszul_sign_laws (g₁ g₂ : Fin 2 × Fin 2) :
+    (zornBiGradeKoszulSign g₁ g₂ = zornBiGradeKoszulSign g₂ g₁) ∧
+    (zornBiGradeKoszulSign g₁ g₂ * zornBiGradeKoszulSign g₁ g₂ = 1) ∧
+    (zornBiGradeKoszulSign (zornSectorBiGrade .vacP1) g₁ = 1) ∧
+    (zornBiGradeKoszulSign (zornSectorBiGrade .quark3) zornLeptonBiGrade = -1) ∧
+    (zornBiGradeKoszulSign zornLeptonBiGrade zornLeptonBiGrade = -1) ∧
+    (zornBiGradeKoszulSign (zornSectorBiGrade .quark3) (zornSectorBiGrade .antiquark3Bar) = 1) := by
+  have hsymm : g₁.1.val * g₂.1.val + g₁.2.val * g₂.2.val =
+      g₂.1.val * g₁.1.val + g₂.2.val * g₁.2.val := by
+    rw [mul_comm g₁.1.val g₂.1.val, mul_comm g₁.2.val g₂.2.val]
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · simp [zornBiGradeKoszulSign, hsymm]
+  · simp only [zornBiGradeKoszulSign, ← pow_add, ← two_mul, pow_mul]
+    norm_num
+  · simp [zornBiGradeKoszulSign, zornSectorBiGrade]
+  · decide
+  · decide
+  · decide
+
+/-- **Cross-Lane Unification Theorem (`ZornGaugeEmergence` ↔ `ZornSplitOctonion` ↔ `Cl55SpinorCartanFock`)**:
+Over any commutative ring `R`, simultaneously packages:
+1. Vacuum-stabilizing `sl₃(R)` derivations acting as `3 ⊕ 3̄` on `NCZorn R`,
+2. Cleared-denominator `sl₃ ⊕ gl₁` quark–antiquark outer-product closure,
+3. Split-octonion norm composition `ncZornNorm (X * Y) = ncZornNorm X * ncZornNorm Y` via `ZornSplitOctonionFin8Bridge`,
+4. Concrete `Cl(5,5)` 5-mode Fock realization (`MatStage 5`): Cartan gluon neutrality on white singlets,
+   exact `32 = 4 + 12 + 12 + 4` color-sector traces, `16 = 2 + 6 + 2 + 6` chiral half-spinor traces,
+   and Catto `1₀ ↔ 3 ↔ 3̄ ↔ 1₃` CAR transitions! -/
+theorem zorn_cl55_color_weak_unification {R : Type*} [CommRing R]
+    (X_sl3 : Matrix (Fin 3) (Fin 3) R) (hTr : Matrix.trace X_sl3 = 0)
+    (X Y : NCZorn R) (u v w : Fin 3 → R) :
+    StabilizesVacuum (sl3Derivation X_sl3 hTr) ∧
+    ((sl3Derivation X_sl3 hTr).toFun (embedTriplet u) = embedTriplet (X_sl3.mulVec u)) ∧
+    ((sl3Derivation X_sl3 hTr).toFun (embedAntitriplet v) =
+      embedAntitriplet (-(X_sl3.transpose.mulVec v))) ∧
+    (Matrix.trace (quarkAntiquarkTraceless3R u v) = 0 ∧
+     (3 : R) • quarkAntiquarkOuterR u v =
+       quarkAntiquarkTraceless3R u v + dotNC u v • (1 : Matrix (Fin 3) (Fin 3) R)) ∧
+    (ncZornNorm (X * Y) = ncZornNorm X * ncZornNorm Y) ∧
+    (InfoGeometry.Physics.Cl55SpinorCartanFock.colorGluonT3 *
+        (InfoGeometry.Physics.Cl55SpinorCartanFock.colorBaryonSingletProj +
+          InfoGeometry.Physics.Cl55SpinorCartanFock.colorVacuumSingletProj) = 0 ∧
+     InfoGeometry.Physics.Cl55SpinorCartanFock.colorGluon3Y *
+        (InfoGeometry.Physics.Cl55SpinorCartanFock.colorBaryonSingletProj +
+          InfoGeometry.Physics.Cl55SpinorCartanFock.colorVacuumSingletProj) = 0) ∧
+    (Matrix.trace InfoGeometry.Physics.Cl55SpinorCartanFock.colorVacuumSingletProj = 4 ∧
+     Matrix.trace InfoGeometry.Physics.Cl55SpinorCartanFock.colorQuarkTripletProj = 12 ∧
+     Matrix.trace InfoGeometry.Physics.Cl55SpinorCartanFock.colorDiquarkAntitripletProj = 12 ∧
+     Matrix.trace InfoGeometry.Physics.Cl55SpinorCartanFock.colorBaryonSingletProj = 4) ∧
+    (Matrix.trace (InfoGeometry.Physics.Cl55SpinorCartanFock.colorBaryonSingletProj *
+        InfoGeometry.Physics.Cl55SpinorCartanFock.isospinCarrier 3 4) = 2 ∧
+     Matrix.trace (InfoGeometry.Physics.Cl55SpinorCartanFock.colorQuarkTripletProj *
+        InfoGeometry.Physics.Cl55SpinorCartanFock.isospinCarrier 3 4) = 6 ∧
+     Matrix.trace (InfoGeometry.Physics.Cl55SpinorCartanFock.colorVacuumSingletProj *
+        InfoGeometry.Physics.Cl55SpinorCartanFock.pairingCarrier 3 4) = 2 ∧
+     Matrix.trace (InfoGeometry.Physics.Cl55SpinorCartanFock.colorDiquarkAntitripletProj *
+        InfoGeometry.Physics.Cl55SpinorCartanFock.pairingCarrier 3 4) = 6) ∧
+    (∀ c : Fin 3,
+      InfoGeometry.Physics.Cl55SpinorCartanFock.colorQuarkTripletProj *
+          (InfoGeometry.Physics.Cl55SpinorCartanFock.e (c.castLE (by omega)) *
+            InfoGeometry.Physics.Cl55SpinorCartanFock.colorVacuumSingletProj) =
+        InfoGeometry.Physics.Cl55SpinorCartanFock.e (c.castLE (by omega)) *
+          InfoGeometry.Physics.Cl55SpinorCartanFock.colorVacuumSingletProj) := by
+  have hrep := sl3Derivation_representation X_sl3 X_sl3 hTr hTr X u v
+  have hsplit := quarkAntiquark_sl3_gl1_split u v w
+  have hnorm := (ncZornSplitOctonionEquivR_laws X Y).2.2
+  have htr4 := InfoGeometry.Physics.Cl55SpinorCartanFock.trace_colorFourSectors_cl55
+  have htr16 := InfoGeometry.Physics.Cl55SpinorCartanFock.trace_chiralHalfSpinorMinus16_multiplets_cl55
+  have hcatto := InfoGeometry.Physics.Cl55SpinorCartanFock.catto_car_color_transitions_cl55
+  refine ⟨hrep.1, hrep.2.2.1, hrep.2.2.2.1, ⟨hsplit.2.1, hsplit.2.2.1⟩, hnorm,
+    InfoGeometry.Physics.Cl55SpinorCartanFock.colorGluon_cartan_white_singlets_neutrality,
+    htr4, ⟨htr16.1, htr16.2.1, htr16.2.2.1, htr16.2.2.2.1⟩, fun c => (hcatto.1 c).1⟩
+
+/-- Noncommutativity witness for `3 × 3` color gauge matrices over any nontrivial ring `R`. -/
+theorem sl3_matrix_noncomm_witness {R : Type*} [Ring R] [Nontrivial R] :
+    (!![(0 : R), 1, 0; 0, 0, 0; 0, 0, 0] : Matrix (Fin 3) (Fin 3) R) *
+        !![0, 0, 0; 1, 0, 0; 0, 0, 0] ≠
+      !![(0 : R), 0, 0; 1, 0, 0; 0, 0, 0] *
+        !![0, 1, 0; 0, 0, 0; 0, 0, 0] := by
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 0) h
+  simp [Matrix.mul_apply, Fin.sum_univ_three] at h00
+
+/-- Existential noncommutativity witness for `3 × 3` color gauge matrices over any nontrivial
+ring `R`. -/
+theorem sl3_matrix_exists_noncomm_witness {R : Type*} [Ring R] [Nontrivial R] :
+    ∃ A B : Matrix (Fin 3) (Fin 3) R, A * B ≠ B * A := by
+  refine ⟨!![0, 1, 0; 0, 0, 0; 0, 0, 0], !![0, 0, 0; 1, 0, 0; 0, 0, 0], ?_⟩
+  intro h
+  have h00 := congrArg (fun M : Matrix (Fin 3) (Fin 3) R => M 0 0) h
+  simp [Matrix.mul_apply, Fin.sum_univ_three] at h00
+
+end Z2Z2PeirceColorUnification
 
 end InfoGeometry.Algebra.ZornGaugeEmergence

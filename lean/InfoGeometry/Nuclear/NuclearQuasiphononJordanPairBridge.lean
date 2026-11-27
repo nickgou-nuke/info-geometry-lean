@@ -1,7 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.SuperGrassmannian.SuperconformalOSpJordanPair
 import InfoGeometry.Physics.NuclearFiveGradeSolovievCommonCompression
 import InfoGeometry.Physics.NuclearBdGSolovievAffineBridge
+import InfoGeometry.Canonical.Erlangen20OperatorGeometryDatum
+import InfoGeometry.Canonical.Erlangen20Unification
 
 /-!
 # Section 87: the OSp even corner in the finite Soloviev QPNM compression
@@ -111,5 +118,250 @@ theorem compressedAction_eq_center_add_ospCorner
         ![C, D] := by
   rw [compressedAction_eq_qpnm_mulVec,
     qpnmMatrix_eq_center_add_ospCorner]
+
+section ErlangenD1b
+
+local instance : LieRing M₃ := LieRing.ofAssociativeRing
+local instance : LieAlgebra ℝ M₃ := LieAlgebra.ofAssociativeAlgebra
+
+/-- The `3`-dimensional even `sl(2, ℝ)` subalgebra inside `M₃(ℝ)` spanned by
+`H_gen ℝ, E_gen ℝ, F_gen ℝ`. -/
+def ospEvenLieSubalgebra : LieSubalgebra ℝ M₃ where
+  toSubmodule := MatrixSpans.evenSpan
+  lie_mem' := fun hx hy => MatrixSpans.even_even_span_closed hx hy
+
+/-- Every canonical OSp pairing element `ospPairingElement ε Δ` lies in `ospEvenLieSubalgebra`. -/
+theorem ospPairingElement_mem_ospEvenLieSubalgebra (ε Δ : ℝ) :
+    ospPairingElement ε Δ ∈ ospEvenLieSubalgebra := by
+  dsimp [ospEvenLieSubalgebra, ospPairingElement]
+  exact Submodule.add_mem _
+    (Submodule.smul_mem _ ε MatrixSpans.even_H_mem)
+    (Submodule.smul_mem _ Δ (Submodule.add_mem _ MatrixSpans.even_E_mem MatrixSpans.even_F_mem))
+
+/-- Embed `(0,2 | 1)` block-diagonal `GL(2, ℝ) × GL(1, ℝ)` into `GL(3, ℝ)`, placing `A : M₂`
+on indices `0, 2` and `c : ℝ` on index `1`. -/
+def embed21Matrix (A : M₂) (c : ℝ) : M₃ :=
+  Matrix.of fun i j =>
+    match i, j with
+    | 0, 0 => A 0 0
+    | 0, 2 => A 0 1
+    | 1, 1 => c
+    | 2, 0 => A 1 0
+    | 2, 2 => A 1 1
+    | _, _ => 0
+
+@[simp] theorem embed21Matrix_one : embed21Matrix (1 : M₂) 1 = (1 : M₃) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;> simp [embed21Matrix]
+
+theorem embed21Matrix_mul (A₁ A₂ : M₂) (c₁ c₂ : ℝ) :
+    embed21Matrix A₁ c₁ * embed21Matrix A₂ c₂ = embed21Matrix (A₁ * A₂) (c₁ * c₂) := by
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [embed21Matrix, Matrix.mul_apply, Fin.sum_univ_three, Fin.sum_univ_two]
+
+/-- Embed `(g, c) : GL(2, ℝ) × ℝˣ` into `GL(3, ℝ)` preserving the `2|1` `(0,2 | 1)` grading. -/
+def ospEvenBlockGL (g : Matrix.GeneralLinearGroup (Fin 2) ℝ) (c : ℝˣ) :
+    Matrix.GeneralLinearGroup (Fin 3) ℝ where
+  val := embed21Matrix g.1 c.1
+  inv := embed21Matrix g⁻¹.1 c⁻¹.1
+  val_inv := by
+    rw [embed21Matrix_mul]
+    have hg : g.1 * g⁻¹.1 = 1 := by simp
+    have hc : c.1 * c⁻¹.1 = 1 := by simp
+    rw [hg, hc, embed21Matrix_one]
+  inv_val := by
+    rw [embed21Matrix_mul]
+    have hg : g⁻¹.1 * g.1 = 1 := by simp
+    have hc : c⁻¹.1 * c.1 = 1 := by simp
+    rw [hg, hc, embed21Matrix_one]
+
+/-- Group homomorphism `GL(2, ℝ) × ℝˣ →* GL(3, ℝ)` for the `2|1` block stabilizer. -/
+def ospEvenBlockGLHom :
+    (Matrix.GeneralLinearGroup (Fin 2) ℝ × ℝˣ) →* Matrix.GeneralLinearGroup (Fin 3) ℝ where
+  toFun gc := ospEvenBlockGL gc.1 gc.2
+  map_one' := by
+    ext i j
+    simp [ospEvenBlockGL]
+  map_mul' gc₁ gc₂ := by
+    ext i j
+    simp [ospEvenBlockGL, embed21Matrix_mul]
+
+/-- Conjugation symmetry action of `GL(2, ℝ) × ℝˣ` on `M₃(ℝ)` via `ospEvenBlockGL`. -/
+def ospEvenBlockAction :
+    InfoGeometry.OperatorAlgebra.SymmetryAction
+      (Matrix.GeneralLinearGroup (Fin 2) ℝ × ℝˣ) M₃ where
+  act gc :=
+    { toFun := fun X => (ospEvenBlockGL gc.1 gc.2).1 * X * (ospEvenBlockGL gc.1 gc.2)⁻¹.1
+      invFun := fun X => (ospEvenBlockGL gc.1 gc.2)⁻¹.1 * X * (ospEvenBlockGL gc.1 gc.2).1
+      left_inv := fun X => by
+        calc
+          (ospEvenBlockGL gc.1 gc.2)⁻¹.1 *
+              ((ospEvenBlockGL gc.1 gc.2).1 * X * (ospEvenBlockGL gc.1 gc.2)⁻¹.1) *
+              (ospEvenBlockGL gc.1 gc.2).1
+              = ((ospEvenBlockGL gc.1 gc.2)⁻¹ * ospEvenBlockGL gc.1 gc.2).1 * X *
+                  ((ospEvenBlockGL gc.1 gc.2)⁻¹ * ospEvenBlockGL gc.1 gc.2).1 := by
+                    simp [mul_assoc]
+          _ = X := by simp
+      right_inv := fun X => by
+        calc
+          (ospEvenBlockGL gc.1 gc.2).1 *
+              ((ospEvenBlockGL gc.1 gc.2)⁻¹.1 * X * (ospEvenBlockGL gc.1 gc.2).1) *
+              (ospEvenBlockGL gc.1 gc.2)⁻¹.1
+              = (ospEvenBlockGL gc.1 gc.2 * (ospEvenBlockGL gc.1 gc.2)⁻¹).1 * X *
+                  (ospEvenBlockGL gc.1 gc.2 * (ospEvenBlockGL gc.1 gc.2)⁻¹).1 := by
+                    simp [mul_assoc]
+          _ = X := by simp
+      map_mul' := fun X Y => by
+        calc
+          (ospEvenBlockGL gc.1 gc.2).1 * (X * Y) * (ospEvenBlockGL gc.1 gc.2)⁻¹.1
+              = (ospEvenBlockGL gc.1 gc.2).1 * X *
+                  ((ospEvenBlockGL gc.1 gc.2)⁻¹ * ospEvenBlockGL gc.1 gc.2).1 * Y *
+                  (ospEvenBlockGL gc.1 gc.2)⁻¹.1 := by simp [mul_assoc]
+          _ = ((ospEvenBlockGL gc.1 gc.2).1 * X * (ospEvenBlockGL gc.1 gc.2)⁻¹.1) *
+                ((ospEvenBlockGL gc.1 gc.2).1 * Y * (ospEvenBlockGL gc.1 gc.2)⁻¹.1) := by
+                  simp [mul_assoc]
+      map_add' := fun X Y => by rw [mul_add, add_mul] }
+  act_one X := by
+    change (ospEvenBlockGL 1 1).1 * X * (ospEvenBlockGL 1 1)⁻¹.1 = X
+    have h1 : ospEvenBlockGL 1 1 = 1 := ospEvenBlockGLHom.map_one
+    rw [h1, inv_one]
+    simp
+  act_mul gc₁ gc₂ X := by
+    change (ospEvenBlockGL (gc₁.1 * gc₂.1) (gc₁.2 * gc₂.2)).1 * X *
+        (ospEvenBlockGL (gc₁.1 * gc₂.1) (gc₁.2 * gc₂.2))⁻¹.1 =
+      (ospEvenBlockGL gc₁.1 gc₁.2).1 *
+        ((ospEvenBlockGL gc₂.1 gc₂.2).1 * X * (ospEvenBlockGL gc₂.1 gc₂.2)⁻¹.1) *
+        (ospEvenBlockGL gc₁.1 gc₁.2)⁻¹.1
+    have hm : ospEvenBlockGL (gc₁.1 * gc₂.1) (gc₁.2 * gc₂.2) =
+        ospEvenBlockGL gc₁.1 gc₁.2 * ospEvenBlockGL gc₂.1 gc₂.2 :=
+      ospEvenBlockGLHom.map_mul gc₁ gc₂
+    rw [hm, _root_.mul_inv_rev]
+    simp [mul_assoc]
+
+/-- The `2|1` block stabilizer `GL(2, ℝ) × ℝˣ` preserves the OSp supertrace
+`supertrace X = X 0 0 - X 1 1 + X 2 2`. -/
+theorem supertrace_ospEvenBlock_invariant
+    (gc : Matrix.GeneralLinearGroup (Fin 2) ℝ × ℝˣ) (X : M₃) :
+    supertrace (ospEvenBlockAction.act gc X) = supertrace X := by
+  have h11 : (ospEvenBlockAction.act gc X) 1 1 = X 1 1 := by
+    change ((ospEvenBlockGL gc.1 gc.2).1 * X * (ospEvenBlockGL gc.1 gc.2)⁻¹.1) 1 1 = X 1 1
+    have hinv : (ospEvenBlockGL gc.1 gc.2)⁻¹.1 = embed21Matrix gc.1⁻¹.1 gc.2⁻¹.1 := rfl
+    have hval : (ospEvenBlockGL gc.1 gc.2).1 = embed21Matrix gc.1.1 gc.2.1 := rfl
+    rw [hval, hinv]
+    simp only [embed21Matrix, Matrix.mul_apply, Fin.sum_univ_three, Matrix.of_apply]
+    simp only [mul_zero, zero_mul, add_zero, zero_add]
+    rw [mul_right_comm, ← Units.val_mul, mul_inv_cancel, Units.val_one, one_mul]
+  have htr : Matrix.trace (ospEvenBlockAction.act gc X) = Matrix.trace X := by
+    change Matrix.trace ((ospEvenBlockGL gc.1 gc.2).1 * X * (ospEvenBlockGL gc.1 gc.2)⁻¹.1) =
+      Matrix.trace X
+    rw [Matrix.trace_mul_comm, ← mul_assoc]
+    have hinv : (ospEvenBlockGL gc.1 gc.2)⁻¹.1 * (ospEvenBlockGL gc.1 gc.2).1 = 1 := by
+      rw [← Units.val_mul, inv_mul_cancel, Units.val_one]
+    rw [hinv, one_mul]
+  have htr_expand : ∀ Y : M₃, Matrix.trace Y = Y 0 0 + Y 1 1 + Y 2 2 := by
+    intro Y
+    simp [Matrix.trace, Fin.sum_univ_three]
+  have hsum : (ospEvenBlockAction.act gc X) 0 0 + (ospEvenBlockAction.act gc X) 1 1 +
+      (ospEvenBlockAction.act gc X) 2 2 = X 0 0 + X 1 1 + X 2 2 := by
+    rw [← htr_expand, ← htr_expand, htr]
+  have h02 : (ospEvenBlockAction.act gc X) 0 0 + (ospEvenBlockAction.act gc X) 2 2 =
+      X 0 0 + X 2 2 := by
+    rw [add_right_comm, add_right_comm (X 0 0), h11] at hsum
+    exact add_right_cancel hsum
+  unfold supertrace
+  rw [sub_add_eq_add_sub, sub_add_eq_add_sub, h02, h11]
+
+/-- `evenCorner` intertwines the `GL(2, ℝ) × ℝˣ` action on `M₃(ℝ)` with `GL(2, ℝ)`
+conjugation on `M₂(ℝ)`. -/
+theorem evenCorner_ospEvenBlock_equivariant
+    (g : Matrix.GeneralLinearGroup (Fin 2) ℝ) (c : ℝˣ) (X : M₃) :
+    evenCorner (ospEvenBlockAction.act (g, c) X) = g.1 * evenCorner X * g⁻¹.1 := by
+  change evenCorner ((ospEvenBlockGL g c).1 * X * (ospEvenBlockGL g c)⁻¹.1) =
+    g.1 * evenCorner X * g⁻¹.1
+  have hinv : (ospEvenBlockGL g c)⁻¹.1 = embed21Matrix g⁻¹.1 c⁻¹.1 := rfl
+  have hval : (ospEvenBlockGL g c).1 = embed21Matrix g.1 c.1 := rfl
+  rw [hval, hinv]
+  ext i j
+  fin_cases i <;> fin_cases j <;>
+    simp [evenCorner, evenIndex, embed21Matrix, Matrix.mul_apply,
+      Fin.sum_univ_three, Fin.sum_univ_two]
+
+/-- Erlangen 2.0 datum for the nuclear `M₃(ℝ)` OSp carrier with `ospEvenLieSubalgebra`
+symmetry and `GL(2, ℝ) × ℝˣ` `2|1`-block stabilizer action. -/
+noncomputable def ospErlangen20Datum :
+    InfoGeometry.Canonical.Erlangen20OperatorGeometryDatum.Erlangen20Datum
+      ℝ (Fin 3 → ℝ) ospEvenLieSubalgebra
+      (InfoGeometry.OperatorAlgebra.SymmetryAction
+        (Matrix.GeneralLinearGroup (Fin 2) ℝ × ℝˣ) M₃)
+      (Subring M₃) :=
+  InfoGeometry.Canonical.Erlangen20Unification.erlangen20DatumOfSymmetryActionOnModule
+    ospEvenBlockAction Matrix.toLinAlgEquiv'.toAlgHom ospEvenLieSubalgebra.incl.toLinearMap
+    (fun _ _ => rfl)
+
+/-- The `2`-dimensional even subspace `{v : Fin 3 → ℝ | v 1 = 0}` inside `Fin 3 → ℝ`. -/
+def evenSubspace : Submodule ℝ (Fin 3 → ℝ) where
+  carrier := {v | v 1 = 0}
+  zero_mem' := rfl
+  add_mem' := fun {a b} ha hb => by
+    simp only [Set.mem_ofPred_eq] at ha hb ⊢
+    simp [ha, hb]
+  smul_mem' := fun c {a} ha => by
+    simp only [Set.mem_ofPred_eq] at ha ⊢
+    simp [ha]
+
+/-- Canonical linear equivalence `(Fin 2 → ℝ) ≃ₗ[ℝ] evenSubspace`. -/
+def evenSubspaceEquiv : (Fin 2 → ℝ) ≃ₗ[ℝ] evenSubspace where
+  toFun v := ⟨![v 0, 0, v 1], rfl⟩
+  invFun w := ![w.1 0, w.1 2]
+  left_inv v := by ext i; fin_cases i <;> rfl
+  right_inv w := by
+    ext i
+    fin_cases i
+    · rfl
+    · exact w.2.symm
+    · rfl
+  map_add' u v := by apply Subtype.ext; ext i; fin_cases i <;> simp
+  map_smul' c v := by apply Subtype.ext; ext i; fin_cases i <;> simp
+
+/-- Restriction of `Matrix.toLin' (ospPairingElement ε Δ)` to the invariant `evenSubspace`. -/
+noncomputable def ospPairingOnEvenSubspace (ε Δ : ℝ) : Module.End ℝ evenSubspace where
+  toFun w :=
+    ⟨Matrix.toLin' (ospPairingElement ε Δ) w.1, by
+      change (Matrix.toLin' (ospPairingElement ε Δ) w.1) 1 = 0
+      simp [Matrix.toLin'_apply, Matrix.mulVec,
+        ospPairingElement, H_gen, E_gen, F_gen, E]⟩
+  map_add' u v := by
+    ext i
+    simp [map_add]
+  map_smul' c w := by
+    ext i
+    simp [map_smul]
+
+/-- Explicit `OperatorIntertwiner` between the 2-level BdG operator `bdgBlock ε Δ` on
+`Fin 2 → ℝ` and `ospPairingOnEvenSubspace ε Δ` on `evenSubspace ⊆ Fin 3 → ℝ`. -/
+noncomputable def evenCorner_operatorIntertwiner (ε Δ : ℝ) :
+    InfoGeometry.Canonical.Erlangen20OperatorGeometryDatum.OperatorIntertwiner
+      ℝ (Fin 2 → ℝ) evenSubspace where
+  carrierEquiv := evenSubspaceEquiv
+  source := Matrix.toLin' (InfoGeometry.Physics.NuclearBdGTwoLevelExact.bdgBlock ε Δ)
+  target := ospPairingOnEvenSubspace ε Δ
+  intertwines v := by
+    ext i
+    fin_cases i
+    · simp [evenSubspaceEquiv, ospPairingOnEvenSubspace, Matrix.toLin'_apply,
+        ospPairingElement, H_gen, E_gen, F_gen, E,
+        InfoGeometry.Physics.NuclearBdGTwoLevelExact.bdgBlock,
+        Matrix.vecHead, Matrix.vecTail]
+      ring
+    · simp [evenSubspaceEquiv, ospPairingOnEvenSubspace, Matrix.toLin'_apply,
+        ospPairingElement, H_gen, E_gen, F_gen, E]
+    · simp [evenSubspaceEquiv, ospPairingOnEvenSubspace, Matrix.toLin'_apply,
+        ospPairingElement, H_gen, E_gen, F_gen, E,
+        InfoGeometry.Physics.NuclearBdGTwoLevelExact.bdgBlock,
+        Matrix.vecHead, Matrix.vecTail]
+      ring
+
+end ErlangenD1b
 
 end InfoGeometry.Nuclear.NuclearQuasiphononJordanPairBridge

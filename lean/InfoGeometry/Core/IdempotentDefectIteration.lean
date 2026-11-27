@@ -54,6 +54,17 @@ theorem newtonPeirceStep_eq_self_of_idempotent {x : B}
   unfold newtonPeirceStep
   noncomm_ring [hx]
 
+/-- A commuting square-zero perturbation is removed in one polynomial step.
+This is exact finite termination in the original associative ring, without
+division or an analytic limiting process. -/
+theorem newtonPeirceStep_add_commuting_square_zero {p n : B}
+    (hp : p * p = p) (hn : n * n = 0) (hpn : Commute p n) :
+    newtonPeirceStep (p + n) = p := by
+  have hpp (x : B) : p * (p * x) = p * x := by rw [← mul_assoc, hp]
+  have hnn (x : B) : n * (n * x) = 0 := by rw [← mul_assoc, hn, zero_mul]
+  unfold newtonPeirceStep
+  noncomm_ring [hp, hn, hpn.eq, hpp, hnn]
+
 /-- On two-sided orthogonal inputs, the Newton–Peirce polynomial is additive:
 every mixed quadratic and cubic monomial vanishes. -/
 theorem newtonPeirceStep_add_of_orthogonal {x y : B}

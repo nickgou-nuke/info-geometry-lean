@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import InfoGeometry.Canonical.Cl55WittFiveGradeDecomposition
 import InfoGeometry.Canonical.Cl55WittLieSubalgebra
+import InfoGeometry.Algebra.FiveGradedIwasawaNilpotency
 import Mathlib.Algebra.Lie.Subalgebra
 import Mathlib.Algebra.Lie.OfAssociative
 
@@ -273,6 +279,341 @@ theorem cl55_witt_full_lie_closure_packet :
   exact ⟨fun hX hY => wittFiveGradeSpan_bracket_mem hX hY,
     wittFiveGradeLieSubalgebra_eq_generatorLieSpan,
     fun hX hY => lane_bracket_mem_span hX hY⟩
+
+section FiveGradedIwasawaBridge
+
+open InfoGeometry.Algebra.FiveGradedIwasawa
+
+private theorem ad_sub_smul_comm {L : Type*} [LieRing L] [LieAlgebra ℝ L]
+    (D : Module.End ℝ L) (a b : ℝ) :
+    Commute (D - a • (1 : Module.End ℝ L)) (D - b • (1 : Module.End ℝ L)) := by
+  change (D - a • (1 : Module.End ℝ L)) * (D - b • (1 : Module.End ℝ L)) =
+    (D - b • (1 : Module.End ℝ L)) * (D - a • (1 : Module.End ℝ L))
+  ext x
+  simp only [Module.End.mul_apply, LinearMap.sub_apply, LinearMap.smul_apply,
+    Module.End.one_apply, map_sub, map_smul]
+  module
+
+private theorem ad_linear_factor_on_eig {L : Type*} [LieRing L] [LieAlgebra ℝ L]
+    {D : Module.End ℝ L} {j c : ℝ} {x : L} (hx : D x = j • x) :
+    (D - c • (1 : Module.End ℝ L)) x = (j - c) • x := by
+  simp only [LinearMap.sub_apply, LinearMap.smul_apply, Module.End.one_apply, hx, sub_smul]
+
+/-- Generalized 5-factor polynomial annihilator on any real Lie algebra:
+if `(S : Submodule ℝ L)` lies inside the supremum of five weight submodules for `ad h`
+of weights `-2, -1, 0, 1, 2`, then `(D+2)(D+1)D(D-1)(D-2)` annihilates every element of
+the supremum and hence `S` satisfies `FiveGradedIwasawa.IsFiveGraded ⟨h, hhS⟩`. -/
+theorem ad_fiveFactor_eq_zero_of_mem_sup {L : Type*} [LieRing L] [LieAlgebra ℝ L]
+    {h : L} {V_neg2 V_neg1 V_0 V_1 V_2 : Submodule ℝ L}
+    (h_neg2 : ∀ x ∈ V_neg2, ⁅h, x⁆ = (-2 : ℝ) • x)
+    (h_neg1 : ∀ x ∈ V_neg1, ⁅h, x⁆ = (-1 : ℝ) • x)
+    (h_0 : ∀ x ∈ V_0, ⁅h, x⁆ = (0 : ℝ) • x)
+    (h_1 : ∀ x ∈ V_1, ⁅h, x⁆ = (1 : ℝ) • x)
+    (h_2 : ∀ x ∈ V_2, ⁅h, x⁆ = (2 : ℝ) • x)
+    {x : L} (hx : x ∈ (V_neg2 ⊔ V_neg1) ⊔ V_0 ⊔ V_1 ⊔ V_2) :
+    let D := LieAlgebra.ad ℝ L h
+    ((D - (-2 : ℝ) • 1) * (D - (-1 : ℝ) • 1) * (D - (0 : ℝ) • 1) *
+      (D - (1 : ℝ) • 1) * (D - (2 : ℝ) • 1)) x = 0 := by
+  intro D
+  set F_neg2 := D - (-2 : ℝ) • (1 : Module.End ℝ L)
+  set F_neg1 := D - (-1 : ℝ) • (1 : Module.End ℝ L)
+  set F_0 := D - (0 : ℝ) • (1 : Module.End ℝ L)
+  set F_1 := D - (1 : ℝ) • (1 : Module.End ℝ L)
+  set F_2 := D - (2 : ℝ) • (1 : Module.End ℝ L)
+  set P := F_neg2 * F_neg1 * F_0 * F_1 * F_2
+  have hP_neg2 : ∀ y ∈ V_neg2, P y = 0 := by
+    intro y hy
+    have hkill : F_neg2 y = 0 := by
+      have hy' : D y = (-2 : ℝ) • y := h_neg2 y hy
+      rw [ad_linear_factor_on_eig hy', sub_self, zero_smul]
+    have hP : P = F_neg1 * F_0 * F_1 * F_2 * F_neg2 := by
+      dsimp [P]
+      calc
+        F_neg2 * F_neg1 * F_0 * F_1 * F_2 =
+            (F_neg2 * F_neg1) * F_0 * F_1 * F_2 := rfl
+        _ = (F_neg1 * F_neg2) * F_0 * F_1 * F_2 := by
+            rw [(ad_sub_smul_comm D (-2) (-1)).eq]
+        _ = F_neg1 * (F_neg2 * F_0) * F_1 * F_2 := by simp only [mul_assoc]
+        _ = F_neg1 * (F_0 * F_neg2) * F_1 * F_2 := by
+            rw [(ad_sub_smul_comm D (-2) 0).eq]
+        _ = F_neg1 * F_0 * (F_neg2 * F_1) * F_2 := by
+              simp only [mul_assoc]
+        _ = F_neg1 * F_0 * (F_1 * F_neg2) * F_2 := by
+              rw [(ad_sub_smul_comm D (-2) 1).eq]
+        _ = F_neg1 * F_0 * F_1 * (F_neg2 * F_2) := by
+              simp only [mul_assoc]
+        _ = F_neg1 * F_0 * F_1 * (F_2 * F_neg2) := by
+              rw [(ad_sub_smul_comm D (-2) 2).eq]
+        _ = F_neg1 * F_0 * F_1 * F_2 * F_neg2 := by
+              simp only [mul_assoc]
+    rw [hP, Module.End.mul_apply, hkill, map_zero]
+  have hP_neg1 : ∀ y ∈ V_neg1, P y = 0 := by
+    intro y hy
+    have hkill : F_neg1 y = 0 := by
+      have hy' : D y = (-1 : ℝ) • y := h_neg1 y hy
+      rw [ad_linear_factor_on_eig hy', sub_self, zero_smul]
+    have hP : P = F_neg2 * F_0 * F_1 * F_2 * F_neg1 := by
+      dsimp [P]
+      calc
+        F_neg2 * F_neg1 * F_0 * F_1 * F_2 =
+            F_neg2 * (F_neg1 * F_0) * F_1 * F_2 := by simp only [mul_assoc]
+        _ = F_neg2 * (F_0 * F_neg1) * F_1 * F_2 := by
+            rw [(ad_sub_smul_comm D (-1) 0).eq]
+        _ = F_neg2 * F_0 * (F_neg1 * F_1) * F_2 := by simp only [mul_assoc]
+        _ = F_neg2 * F_0 * (F_1 * F_neg1) * F_2 := by
+            rw [(ad_sub_smul_comm D (-1) 1).eq]
+        _ = F_neg2 * F_0 * F_1 * (F_neg1 * F_2) := by simp only [mul_assoc]
+        _ = F_neg2 * F_0 * F_1 * (F_2 * F_neg1) := by
+            rw [(ad_sub_smul_comm D (-1) 2).eq]
+        _ = F_neg2 * F_0 * F_1 * F_2 * F_neg1 := by simp only [mul_assoc]
+    rw [hP, Module.End.mul_apply, hkill, map_zero]
+  have hP_0 : ∀ y ∈ V_0, P y = 0 := by
+    intro y hy
+    have hkill : F_0 y = 0 := by
+      have hy' : D y = (0 : ℝ) • y := h_0 y hy
+      rw [ad_linear_factor_on_eig hy', sub_self, zero_smul]
+    have hP : P = F_neg2 * F_neg1 * F_1 * F_2 * F_0 := by
+      dsimp [P]
+      calc
+        F_neg2 * F_neg1 * F_0 * F_1 * F_2 =
+            F_neg2 * F_neg1 * (F_0 * F_1) * F_2 := by simp only [mul_assoc]
+        _ = F_neg2 * F_neg1 * (F_1 * F_0) * F_2 := by
+            rw [(ad_sub_smul_comm D 0 1).eq]
+        _ = F_neg2 * F_neg1 * F_1 * (F_0 * F_2) := by simp only [mul_assoc]
+        _ = F_neg2 * F_neg1 * F_1 * (F_2 * F_0) := by
+            rw [(ad_sub_smul_comm D 0 2).eq]
+        _ = F_neg2 * F_neg1 * F_1 * F_2 * F_0 := by simp only [mul_assoc]
+    rw [hP, Module.End.mul_apply, hkill, map_zero]
+  have hP_1 : ∀ y ∈ V_1, P y = 0 := by
+    intro y hy
+    have hkill : F_1 y = 0 := by
+      have hy' : D y = (1 : ℝ) • y := h_1 y hy
+      rw [ad_linear_factor_on_eig hy', sub_self, zero_smul]
+    have hP : P = F_neg2 * F_neg1 * F_0 * F_2 * F_1 := by
+      dsimp [P]
+      calc
+        F_neg2 * F_neg1 * F_0 * F_1 * F_2 =
+            F_neg2 * F_neg1 * F_0 * (F_1 * F_2) := by simp only [mul_assoc]
+        _ = F_neg2 * F_neg1 * F_0 * (F_2 * F_1) := by
+            rw [(ad_sub_smul_comm D 1 2).eq]
+        _ = F_neg2 * F_neg1 * F_0 * F_2 * F_1 := by simp only [mul_assoc]
+    rw [hP, Module.End.mul_apply, hkill, map_zero]
+  have hP_2 : ∀ y ∈ V_2, P y = 0 := by
+    intro y hy
+    have hkill : F_2 y = 0 := by
+      have hy' : D y = (2 : ℝ) • y := h_2 y hy
+      rw [ad_linear_factor_on_eig hy', sub_self, zero_smul]
+    change (F_neg2 * F_neg1 * F_0 * F_1 * F_2) y = 0
+    rw [Module.End.mul_apply, hkill, map_zero]
+  have hker : (V_neg2 ⊔ V_neg1) ⊔ V_0 ⊔ V_1 ⊔ V_2 ≤ LinearMap.ker P := by
+    refine sup_le (sup_le (sup_le (sup_le ?_ ?_) ?_) ?_) ?_
+    · exact fun y hy => LinearMap.mem_ker.mpr (hP_neg2 y hy)
+    · exact fun y hy => LinearMap.mem_ker.mpr (hP_neg1 y hy)
+    · exact fun y hy => LinearMap.mem_ker.mpr (hP_0 y hy)
+    · exact fun y hy => LinearMap.mem_ker.mpr (hP_1 y hy)
+    · exact fun y hy => LinearMap.mem_ker.mpr (hP_2 y hy)
+  exact LinearMap.mem_ker.mp (hker hx)
+
+/-- Generalized theorem: any Lie subalgebra `S` covered by five weight spaces of
+weights `-2, -1, 0, 1, 2` under `⁅h, ·⁆` satisfies `FiveGradedIwasawa.IsFiveGraded ⟨h, hhS⟩`. -/
+theorem isFiveGraded_of_fiveWeightSubmodules {L : Type*} [LieRing L] [LieAlgebra ℝ L]
+    (S : LieSubalgebra ℝ L) {h : L} (hhS : h ∈ S)
+    {V_neg2 V_neg1 V_0 V_1 V_2 : Submodule ℝ L}
+    (hcov : (S : Submodule ℝ L) ≤ (V_neg2 ⊔ V_neg1) ⊔ V_0 ⊔ V_1 ⊔ V_2)
+    (h_neg2 : ∀ x ∈ V_neg2, ⁅h, x⁆ = (-2 : ℝ) • x)
+    (h_neg1 : ∀ x ∈ V_neg1, ⁅h, x⁆ = (-1 : ℝ) • x)
+    (h_0 : ∀ x ∈ V_0, ⁅h, x⁆ = (0 : ℝ) • x)
+    (h_1 : ∀ x ∈ V_1, ⁅h, x⁆ = (1 : ℝ) • x)
+    (h_2 : ∀ x ∈ V_2, ⁅h, x⁆ = (2 : ℝ) • x) :
+    IsFiveGraded (⟨h, hhS⟩ : S) where
+  grade_bound j x hjx hnot := by
+    have hD : LieAlgebra.ad ℝ L h (x : L) = j • (x : L) := by
+      have := congrArg (fun u : S => (u : L)) hjx
+      exact this
+    have hP : (((LieAlgebra.ad ℝ L h - (-2 : ℝ) • 1) *
+        (LieAlgebra.ad ℝ L h - (-1 : ℝ) • 1) *
+        (LieAlgebra.ad ℝ L h - (0 : ℝ) • 1) *
+        (LieAlgebra.ad ℝ L h - (1 : ℝ) • 1) *
+        (LieAlgebra.ad ℝ L h - (2 : ℝ) • 1)) (x : L)) = 0 :=
+      ad_fiveFactor_eq_zero_of_mem_sup h_neg2 h_neg1 h_0 h_1 h_2 (hcov x.2)
+    have hP_eval :
+        (((LieAlgebra.ad ℝ L h - (-2 : ℝ) • 1) *
+          (LieAlgebra.ad ℝ L h - (-1 : ℝ) • 1) *
+          (LieAlgebra.ad ℝ L h - (0 : ℝ) • 1) *
+          (LieAlgebra.ad ℝ L h - (1 : ℝ) • 1) *
+          (LieAlgebra.ad ℝ L h - (2 : ℝ) • 1)) (x : L)) =
+          ((j - (-2 : ℝ)) * (j - (-1 : ℝ)) * (j - 0) * (j - 1) * (j - 2)) • (x : L) := by
+      simp only [Module.End.mul_apply, ad_linear_factor_on_eig hD, map_smul, smul_smul]
+      ring_nf
+    rw [hP_eval] at hP
+    have hpoly_ne : (j - (-2 : ℝ)) * (j - (-1 : ℝ)) * (j - 0) * (j - 1) * (j - 2) ≠ 0 := by
+      rcases hnot with ⟨hn2, hn1, h0, hp1, hp2⟩
+      intro hzero
+      simp only [mul_eq_zero] at hzero
+      rcases hzero with (((hm2 | hm1) | h0') | hp1') | hp2'
+      · exact hn2 (sub_eq_zero.mp hm2)
+      · exact hn1 (sub_eq_zero.mp hm1)
+      · exact h0 (sub_eq_zero.mp h0')
+      · exact hp1 (sub_eq_zero.mp hp1')
+      · exact hp2 (sub_eq_zero.mp hp2')
+    have hcancel := congrArg
+      (((j - (-2 : ℝ)) * (j - (-1 : ℝ)) * (j - 0) * (j - 1) * (j - 2))⁻¹ • ·) hP
+    rw [smul_smul, inv_mul_cancel₀ hpoly_ne, one_smul, smul_zero] at hcancel
+    exact Subtype.ext hcancel
+
+theorem numberOperator_bracket_laneSpace (lane : WittLane) {X : MatStage 5}
+    (hX : X ∈ laneSpace lane) :
+    bracket numberOperator X = (lane.degree : ℝ) • X := by
+  cases lane with
+  | negTwo =>
+      refine Submodule.span_induction ?_ ?_ ?_ ?_ hX
+      · rintro _ ⟨⟨i, j⟩, rfl⟩
+        change numberAdjoint (annihilation i * annihilation j) =
+          ((-2 : ℤ) : ℝ) • (annihilation i * annihilation j)
+        rw [adNumber_annihilation_quadratic i j]
+        norm_num
+      · simp [bracket]
+      · intro a b _ _ ha hb
+        rw [bracket_add_right, ha, hb, smul_add]
+      · intro r a _ ha
+        rw [bracket_smul_right, ha, smul_comm]
+  | negOne =>
+      refine Submodule.span_induction ?_ ?_ ?_ ?_ hX
+      · rintro _ ⟨i, rfl⟩
+        change numberAdjoint (annihilation i) = ((-1 : ℤ) : ℝ) • annihilation i
+        rw [adNumber_annihilation i]
+        norm_num
+      · simp [bracket]
+      · intro a b _ _ ha hb
+        rw [bracket_add_right, ha, hb, smul_add]
+      · intro r a _ ha
+        rw [bracket_smul_right, ha, smul_comm]
+  | zero =>
+      refine Submodule.span_induction ?_ ?_ ?_ ?_ hX
+      · rintro _ ⟨⟨i, j⟩, rfl⟩
+        change numberAdjoint (E i j) = ((0 : ℤ) : ℝ) • E i j
+        rw [adNumber_E i j]
+        norm_num
+      · simp [bracket]
+      · intro a b _ _ ha hb
+        rw [bracket_add_right, ha, hb, smul_add]
+      · intro r a _ ha
+        rw [bracket_smul_right, ha, smul_comm]
+  | posOne =>
+      refine Submodule.span_induction ?_ ?_ ?_ ?_ hX
+      · rintro _ ⟨i, rfl⟩
+        change numberAdjoint (creation i) = ((1 : ℤ) : ℝ) • creation i
+        rw [adNumber_creation i]
+        norm_num
+      · simp [bracket]
+      · intro a b _ _ ha hb
+        rw [bracket_add_right, ha, hb, smul_add]
+      · intro r a _ ha
+        rw [bracket_smul_right, ha, smul_comm]
+  | posTwo =>
+      refine Submodule.span_induction ?_ ?_ ?_ ?_ hX
+      · rintro _ ⟨⟨i, j⟩, rfl⟩
+        change numberAdjoint (creation i * creation j) =
+          ((2 : ℤ) : ℝ) • (creation i * creation j)
+        rw [adNumber_creation_quadratic i j]
+        norm_num
+      · simp [bracket]
+      · intro a b _ _ ha hb
+        rw [bracket_add_right, ha, hb, smul_add]
+      · intro r a _ ha
+        rw [bracket_smul_right, ha, smul_comm]
+
+theorem numberOperator_mem_wittFiveGradeLieSubalgebra :
+    numberOperator ∈ wittFiveGradeLieSubalgebra := by
+  have hzero : numberOperator ∈ wittZero := by
+    unfold numberOperator
+    refine Submodule.sum_mem _ ?_
+    intro i _
+    exact Submodule.subset_span ⟨(i, i), rfl⟩
+  have hmem : numberOperator ∈ (wittFiveGradeLieSubalgebra : Submodule ℝ (MatStage 5)) := by
+    rw [wittFiveGradeLieSubalgebra_toSubmodule]
+    unfold wittFiveGrade
+    exact le_sup_left (a := (wittNegTwo ⊔ wittNegOne) ⊔ wittZero ⊔ wittPosOne)
+      (le_sup_left (a := (wittNegTwo ⊔ wittNegOne) ⊔ wittZero)
+        (le_sup_right (a := wittNegTwo ⊔ wittNegOne) hzero))
+  exact hmem
+
+/-- The Cartan number operator packaged as an element of `wittFiveGradeLieSubalgebra`. -/
+def wittGradingElement : wittFiveGradeLieSubalgebra :=
+  ⟨numberOperator, numberOperator_mem_wittFiveGradeLieSubalgebra⟩
+
+/-- Every element of `laneSpace lane` belongs to `wittFiveGradeLieSubalgebra` and sits in
+`FiveGradedIwasawa.InGrade wittGradingElement (lane.degree : ℝ)`. -/
+theorem laneSpace_mem_wittFiveGradeLieSubalgebra (lane : WittLane) {X : MatStage 5}
+    (hX : X ∈ laneSpace lane) : X ∈ wittFiveGradeLieSubalgebra := by
+  apply laneSpace_le_span lane
+  exact hX
+
+theorem laneSpace_inGrade (lane : WittLane) {X : MatStage 5} (hX : X ∈ laneSpace lane) :
+    InGrade wittGradingElement (lane.degree : ℝ)
+      ⟨X, laneSpace_mem_wittFiveGradeLieSubalgebra lane hX⟩ := by
+  apply Subtype.ext
+  exact numberOperator_bracket_laneSpace lane hX
+
+/-- Concrete `FiveGradedIwasawa.IsFiveGraded` instance for `wittFiveGradeLieSubalgebra`
+graded by `wittGradingElement` (derived from the five-factor polynomial annihilator). -/
+instance instIsFiveGradedWittGradingElement : IsFiveGraded wittGradingElement :=
+  isFiveGraded_of_fiveWeightSubmodules wittFiveGradeLieSubalgebra
+    numberOperator_mem_wittFiveGradeLieSubalgebra
+    (by rw [wittFiveGradeLieSubalgebra_toSubmodule]; exact le_rfl)
+    (fun x hx => by
+      change bracket numberOperator x = (-2 : ℝ) • x
+      simpa [WittLane.degree] using numberOperator_bracket_laneSpace .negTwo hx)
+    (fun x hx => by
+      change bracket numberOperator x = (-1 : ℝ) • x
+      simpa [WittLane.degree] using numberOperator_bracket_laneSpace .negOne hx)
+    (fun x hx => by
+      change bracket numberOperator x = (0 : ℝ) • x
+      simpa [WittLane.degree] using numberOperator_bracket_laneSpace .zero hx)
+    (fun x hx => by
+      change bracket numberOperator x = (1 : ℝ) • x
+      simpa [WittLane.degree] using numberOperator_bracket_laneSpace .posOne hx)
+    (fun x hx => by
+      change bracket numberOperator x = (2 : ℝ) • x
+      simpa [WittLane.degree] using numberOperator_bracket_laneSpace .posTwo hx)
+
+/-- Application of `FiveGradedIwasawa.iwasawa_n_sector_nilpotent`: the positive Witt
+N-sector `wittPosOne ⊕ wittPosTwo` inside `wittFiveGradeLieSubalgebra` is 2-step nilpotent. -/
+theorem witt_iwasawa_n_sector_nilpotent
+    {x₁ y₁ z₁ x₂ y₂ z₂ : MatStage 5}
+    (hx₁ : x₁ ∈ wittPosOne) (hx₂ : x₂ ∈ wittPosTwo)
+    (hy₁ : y₁ ∈ wittPosOne) (hy₂ : y₂ ∈ wittPosTwo)
+    (hz₁ : z₁ ∈ wittPosOne) (hz₂ : z₂ ∈ wittPosTwo) :
+    bracket (bracket (x₁ + x₂) (y₁ + y₂)) (z₁ + z₂) = 0 := by
+  have hx1' : InGrade wittGradingElement 1
+      ⟨x₁, laneSpace_mem_wittFiveGradeLieSubalgebra .posOne hx₁⟩ := by
+    simpa [WittLane.degree] using laneSpace_inGrade .posOne hx₁
+  have hy1' : InGrade wittGradingElement 1
+      ⟨y₁, laneSpace_mem_wittFiveGradeLieSubalgebra .posOne hy₁⟩ := by
+    simpa [WittLane.degree] using laneSpace_inGrade .posOne hy₁
+  have hz1' : InGrade wittGradingElement 1
+      ⟨z₁, laneSpace_mem_wittFiveGradeLieSubalgebra .posOne hz₁⟩ := by
+    simpa [WittLane.degree] using laneSpace_inGrade .posOne hz₁
+  have hx2' : InGrade wittGradingElement 2
+      ⟨x₂, laneSpace_mem_wittFiveGradeLieSubalgebra .posTwo hx₂⟩ := by
+    simpa [WittLane.degree] using laneSpace_inGrade .posTwo hx₂
+  have hy2' : InGrade wittGradingElement 2
+      ⟨y₂, laneSpace_mem_wittFiveGradeLieSubalgebra .posTwo hy₂⟩ := by
+    simpa [WittLane.degree] using laneSpace_inGrade .posTwo hy₂
+  have hz2' : InGrade wittGradingElement 2
+      ⟨z₂, laneSpace_mem_wittFiveGradeLieSubalgebra .posTwo hz₂⟩ := by
+    simpa [WittLane.degree] using laneSpace_inGrade .posTwo hz₂
+  have hnil := iwasawa_n_sector_nilpotent wittGradingElement
+    ⟨x₁, laneSpace_mem_wittFiveGradeLieSubalgebra .posOne hx₁⟩
+    ⟨x₂, laneSpace_mem_wittFiveGradeLieSubalgebra .posTwo hx₂⟩
+    ⟨y₁, laneSpace_mem_wittFiveGradeLieSubalgebra .posOne hy₁⟩
+    ⟨y₂, laneSpace_mem_wittFiveGradeLieSubalgebra .posTwo hy₂⟩
+    ⟨z₁, laneSpace_mem_wittFiveGradeLieSubalgebra .posOne hz₁⟩
+    ⟨z₂, laneSpace_mem_wittFiveGradeLieSubalgebra .posTwo hz₂⟩
+    hx1' hx2' hy1' hy2' hz1' hz2'
+  exact congrArg (fun u : wittFiveGradeLieSubalgebra => (u : MatStage 5)) hnil
+
+end FiveGradedIwasawaBridge
 
 end InfoGeometry.Canonical.Cl55WittFullLieClosure
 

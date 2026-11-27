@@ -1,0 +1,29 @@
+{
+  "math_expression_count": 4969,
+  "source_name": "17mkfYPgWT_U6Rl0cCXlaKvDHqF7tlTaG__Yang-Baxter Proof Lean Formalization",
+  "source_path": "/home/goutev/repos/info-geometry-lean/cached/drive_batch_20261127/17mkfYPgWT_U6Rl0cCXlaKvDHqF7tlTaG__Yang-Baxter Proof Lean Formalization",
+  "source_bytes": 4866875,
+  "source_sha256": "bdd705173d42d5f0d9f59db1bd1b60f235c09d23e1929219280f404f434ccc27",
+  "turn_count": 508,
+  "role_counts": {
+    "user": 176,
+    "model": 332
+  },
+  "transcript_characters": 1534891,
+  "fence_count": 119,
+  "fence_languages": {
+    "lean": 57,
+    "(unlabelled)": 46,
+    "bash": 3,
+    "text": 7,
+    "python": 2,
+    "latex": 2,
+    "markdown": 2
+  },
+  "tagged_lean_fences": 57,
+  "unterminated_fences": 1,
+  "unlabelled_lean_candidates": 0,
+  "first_timestamp": "2026-06-06T16:09:33.845Z",
+  "last_timestamp": "2026-11-26T18:05:25.867Z",
+  "authority": "transcript extraction only; no theorem or proof is promoted"
+}

@@ -1,0 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Algebra.NoncommutativeColimitExtensionMechanisms
+
+#print axioms InfoGeometry.Algebra.NoncommutativeColimitExtensionMechanisms.bott_trace_and_supertrace_cancellation
+#print axioms InfoGeometry.Algebra.NoncommutativeColimitExtensionMechanisms.finite_stage_observable_state_pairing
+#print axioms InfoGeometry.Algebra.NoncommutativeColimitExtensionMechanisms.bott_iter_preserves_ring_and_hodge_relations
+#print axioms InfoGeometry.Algebra.NoncommutativeColimitExtensionMechanisms.mass_gap_bott_iter_stability

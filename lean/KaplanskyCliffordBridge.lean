@@ -50,7 +50,10 @@ def peirceFromSplitInvolution {R : Type*} [Field R] [CharZero R]
   have h_square_pow : ε ^ 2 = 1 := by
     simpa [pow_two] using hε
   refine ⟨(1 + ε) / (2 : R), (1 - ε) / (2 : R), ε,
-    hε, rfl, rfl, ?_, ?_, ?_, ?_⟩
+    hε,
+    (by rw [invOf_eq_inv, Rat.smul_def, Rat.cast_inv, Rat.cast_ofNat]; ring),
+    (by rw [invOf_eq_inv, Rat.smul_def, Rat.cast_inv, Rat.cast_ofNat]; ring),
+    ?_, ?_, ?_, ?_⟩
   · field_simp [h₂_inv]
     ring_nf
     rw [h_square_pow]
@@ -106,7 +109,7 @@ theorem chevalleyIdempotentNonTrivial {R : Type*} [Ring R] (n p : R)
 /-- Characteristic 2 collapse: split involution becomes nilpotent. -/
 theorem charTwoSplitInvolutionNilpotent (R : Type*) [Ring R] (h₂ : (2 : R) = 0) (ε : R)
     (hε : ε * ε = 1) : (ε + 1) * (ε + 1) = 0 := by
-  have htwo : (2 : R) = 0 := CharP.cast_eq_zero R 2
+  have htwo : (2 : R) = 0 := h₂
   have hone : (1 : R) + 1 = 0 := by
     calc
       (1 : R) + 1 = (2 : ℕ) • (1 : R) := by rw [two_smul]

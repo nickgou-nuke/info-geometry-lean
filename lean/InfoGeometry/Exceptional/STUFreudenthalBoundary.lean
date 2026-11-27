@@ -155,7 +155,7 @@ theorem stuFreudenthalBoundary_iff_coordinates
   · rintro ⟨hq, hn⟩
     refine ⟨hq, ?_⟩
     by_contra hnot
-    push_neg at hnot
+    push Not at hnot
     exact hn ((HeisenbergElement.zeroCharge_eq_iff Q).2
       ⟨hnot.1, hnot.2.1, hnot.2.2.1, hnot.2.2.2⟩)
   · rintro ⟨hq, hn⟩

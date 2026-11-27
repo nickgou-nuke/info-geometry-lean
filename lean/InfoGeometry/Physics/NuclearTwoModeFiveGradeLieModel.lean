@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Canonical.SplitCliffordTwoModeCAR
@@ -240,5 +245,43 @@ theorem concrete_nuclear_five_grade_packet (X Y Z : M4R) :
     mixed_a1_a1Dag_grade_zero,
     a1_grade, a2_grade, pairAnnihilation_grade,
     pair_extreme_bracket⟩
+
+/-- The grade `+2` monopole pair is the obstruction to commuting the two
+grade `+1` creation operators: CAR anticommutativity makes their commutator
+exactly twice the pair creation. -/
+theorem pairCreation_from_noncommutativity :
+    comm a1Dag a2Dag = (2 : ℝ) • pairCreation := by
+  unfold comm pairCreation
+  have hrev : a2Dag * a1Dag = -(a1Dag * a2Dag) := by
+    rw [← add_eq_zero_iff_eq_neg]
+    simpa [add_comm] using cross_creation_anticommute
+  rw [hrev, sub_neg_eq_add, two_smul]
+
+/-- The dual grade `-2` pair annihilation emerges from the same obstruction
+on the annihilation operators. -/
+theorem pairAnnihilation_from_noncommutativity :
+    comm a2 a1 = (2 : ℝ) • pairAnnihilation := by
+  unfold comm pairAnnihilation
+  have hrev : a1 * a2 = -(a2 * a1) := by
+    rw [← add_eq_zero_iff_eq_neg]
+    exact cross_annihilate_anticommute
+  rw [hrev, sub_neg_eq_add, two_smul]
+
+/-- The grade `+2` label is inherited by the commutator itself, not only by
+the pair operator: noncommutativity produces the next grade. -/
+theorem grade_two_commutator_from_grade_one :
+    HasGrade 2 (comm a1Dag a2Dag) := by
+  rw [pairCreation_from_noncommutativity]
+  unfold HasGrade at *
+  rw [comm_smul_right, pairCreation_grade]
+  simp
+
+/-- The grade `-2` label is inherited by the dual obstruction. -/
+theorem grade_neg_two_commutator_from_grade_neg_one :
+    HasGrade (-2) (comm a2 a1) := by
+  rw [pairAnnihilation_from_noncommutativity]
+  unfold HasGrade at *
+  rw [comm_smul_right, pairAnnihilation_grade]
+  simp
 
 end InfoGeometry.Physics.NuclearTwoModeFiveGradeLieModel

@@ -1,0 +1,16 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Canonical.PlueckerLineGeometryDynamePoset
+import InfoGeometry.Canonical.DahmProjectiveLineQuadrics
+
+#print axioms InfoGeometry.Canonical.PlueckerLineGeometryDynamePoset.canonicalKleinQ_toCanonicalPlucker6
+#print axioms InfoGeometry.Canonical.PlueckerLineGeometryDynamePoset.rayFromPoints_toCanonicalPlucker6
+#print axioms InfoGeometry.Canonical.PlueckerLineGeometryDynamePoset.noncommutative_peirce_realization_of_pluecker_line_geometry
+#print axioms InfoGeometry.Canonical.DahmProjectiveLineQuadrics.kleinQ_senaryCoordinates
+#print axioms InfoGeometry.Canonical.DahmProjectiveLineQuadrics.kleinQ_senary_compact
+#print axioms InfoGeometry.Canonical.DahmProjectiveLineQuadrics.kleinQ_senary_split
+#print axioms InfoGeometry.Canonical.DahmProjectiveLineQuadrics.kleinQ_lorentzBoost
+#print axioms InfoGeometry.Canonical.DahmProjectiveLineQuadrics.lineSpacetimeForm_lorentzBoost

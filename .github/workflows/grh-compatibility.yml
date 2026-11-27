@@ -1,0 +1,174 @@
+name: Pinned GRH compatibility
+
+on:
+  pull_request:
+    paths:
+      - 'lean/**/*.lean'
+      - 'integrations/grh/**'
+      - 'lean-toolchain'
+      - 'lakefile.lean'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'scripts/quality/post_build_gate.sh'
+      - '.githooks/pre-push'
+      - '.github/workflows/grh-compatibility.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'lean/**/*.lean'
+      - 'integrations/grh/**'
+      - 'lean-toolchain'
+      - 'lakefile.lean'
+      - 'lake-manifest.json'
+      - 'tools/build_lock.py'
+      - 'scripts/quality/post_build_gate.sh'
+      - '.githooks/pre-push'
+      - '.github/workflows/grh-compatibility.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: grh-compatibility-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  native:
+    name: Native owners — Lean 4.34.1
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      LEAN_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source scope and fixed pins
+        run: python3 integrations/grh/verify_sources.py --lane native
+      - name: Test the fail-closed audit parser
+        run: python3 -m unittest discover -s integrations/grh -p test_audit_axioms.py
+      - name: Restore native dependency artifacts
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            integrations/grh/native/.lake/packages
+          key: grh-native-deps-${{ runner.os }}-${{ hashFiles('integrations/grh/native/lean-toolchain', 'integrations/grh/native/lake-manifest.json') }}-v1
+      - name: Restore native source artifacts
+        id: source
+        uses: actions/cache/restore@v4
+        with:
+          path: integrations/grh/native/.lake/build
+          key: grh-native-source-${{ runner.os }}-${{ hashFiles('integrations/grh/native/lean-toolchain', 'integrations/grh/native/lake-manifest.json') }}-${{ hashFiles('lean/**/*.lean', 'integrations/grh/native/*.lean', 'integrations/grh/native/lakefile.toml') }}-v1
+          restore-keys: |
+            grh-native-source-${{ runner.os }}-${{ hashFiles('integrations/grh/native/lean-toolchain', 'integrations/grh/native/lake-manifest.json') }}-
+      - name: Install pinned native Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.34.1
+      - name: Build and audit canonical native owners
+        shell: bash
+        run: |
+          set -euo pipefail
+          ulimit -s unlimited
+          python3 integrations/grh/validate.py --lane native --cache --threads 2
+      - name: Save trusted native dependencies
+        if: success() && steps.dependencies.outputs.cache-hit != 'true' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            integrations/grh/native/.lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
+      - name: Save trusted native source artifacts
+        if: success() && steps.source.outputs.cache-hit != 'true' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+        uses: actions/cache/save@v4
+        with:
+          path: integrations/grh/native/.lake/build
+          key: ${{ steps.source.outputs.cache-primary-key }}
+      - name: Preserve native evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: grh-native-lean4341-evidence
+          path: integrations/grh/artifacts/native
+          if-no-files-found: warn
+
+  external:
+    name: Readable GRH adapters — Lean 4.35.0
+    needs: native
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    env:
+      LEAN_NUM_THREADS: '2'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Verify source scope and fixed pins
+        run: python3 integrations/grh/verify_sources.py --lane external
+      - name: Restore external dependency artifacts
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            ~/.elan
+            integrations/grh/.lake/packages
+          key: grh-external-deps-${{ runner.os }}-${{ hashFiles('integrations/grh/lean-toolchain', 'integrations/grh/lake-manifest.json') }}-v1
+      - name: Restore external adapter artifacts
+        id: source
+        uses: actions/cache/restore@v4
+        with:
+          path: integrations/grh/.lake/build
+          key: grh-external-source-${{ runner.os }}-${{ hashFiles('integrations/grh/lean-toolchain', 'integrations/grh/lake-manifest.json') }}-${{ hashFiles('lean/**/*.lean', 'integrations/grh/InfoGeometryGRH*.lean', 'integrations/grh/InfoGeometryGRH/**/*.lean', 'integrations/grh/lakefile.toml') }}-v1
+          restore-keys: |
+            grh-external-source-${{ runner.os }}-${{ hashFiles('integrations/grh/lean-toolchain', 'integrations/grh/lake-manifest.json') }}-
+      - name: Install pinned external Lean
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -x "$HOME/.elan/bin/elan" ]; then
+            curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y --default-toolchain none
+          fi
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.35.0
+      - name: Build pinned GRH dependency, adapters, and fresh trust audit
+        shell: bash
+        run: |
+          set -euo pipefail
+          ulimit -s unlimited
+          python3 integrations/grh/validate.py --lane external --cache --threads 2
+      - name: Save trusted external dependencies
+        if: success() && steps.dependencies.outputs.cache-hit != 'true' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            ~/.elan
+            integrations/grh/.lake/packages
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
+      - name: Save trusted adapter artifacts
+        if: success() && steps.source.outputs.cache-hit != 'true' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))
+        uses: actions/cache/save@v4
+        with:
+          path: integrations/grh/.lake/build
+          key: ${{ steps.source.outputs.cache-primary-key }}
+      - name: Preserve external evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: grh-readable-lean4350-evidence
+          path: integrations/grh/artifacts/external
+          if-no-files-found: warn

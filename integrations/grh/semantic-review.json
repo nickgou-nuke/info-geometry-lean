@@ -1,0 +1,469 @@
+{
+  "schema": "infogeometry-grh-semantic-review-v1",
+  "recorded_at_utc": "2026-11-27T16:32:57.764917+00:00",
+  "reviewer": "/root/our_spectral",
+  "role": "source reviewer of arithmetic and external integration owners; author relationships are recorded explicitly",
+  "status": "SOURCE_REVIEW_PASS",
+  "compiled_by_reviewer": false,
+  "axiom_audit_run_by_reviewer": false,
+  "base_commit": "fe24e350b08fdea04f74c0748ef9fd9417c47529",
+  "reviewed_files": [
+    {
+      "path": "lean/InfoGeometry/Arithmetic/WeightedMangoldtSmoothing.lean",
+      "sha256": "fd7bd62a40924fedaa597fc4ba7f5e4f3068e4006a5bdc8c5f5a033131a97883",
+      "bytes": 19443
+    },
+    {
+      "path": "integrations/grh/InfoGeometryGRH/VerifiedGRH.lean",
+      "sha256": "1687ec1e34a3efcd1ea09521bf5d446465dda421f0a45ef0cb32456206789963",
+      "bytes": 2322
+    },
+    {
+      "path": "integrations/grh/InfoGeometryGRH/PrimeRemainderBridge.lean",
+      "sha256": "c1c4fa9179d48dbda0ea3d72435768b4ca91897fe8f6858f7eb88856f31701a6",
+      "bytes": 11240
+    },
+    {
+      "path": "integrations/grh/InfoGeometryGRH/RealDoubledGRH.lean",
+      "sha256": "2caab01ef8d2ac066b128fbdff9b493c034e83a58c43acb1435e20e6143b0b46",
+      "bytes": 4218,
+      "reviewer_relationship": "The reviewer authored the original RealDoubledGRH adapter. This update checks the parent-applied repair against the pinned API; it does not claim independent non-author acceptance of the entire owner."
+    }
+  ],
+  "native_context": [
+    {
+      "path": "lean/InfoGeometry/Arithmetic/RiemannHypothesisHalfPlaneReduction.lean",
+      "sha256": "9615191aa9a52bd554c2a201fab76bb7b6439f113ac31edcfc0301ca7ceef99d",
+      "bytes": 5624
+    },
+    {
+      "path": "lean/InfoGeometry/Analysis/CenteredLogInterpolation.lean",
+      "sha256": "47edcd38c5924176dfa2c2862f4aa628def3ec476776ffb342bfe93243254288",
+      "bytes": 5539
+    },
+    {
+      "path": "lean/InfoGeometry/Arithmetic/SmoothedMangoldtGrowth.lean",
+      "sha256": "3b600b6980f9f89252a1f4bc5b6070bc39cbb32231b42476203ec136f7792f84",
+      "bytes": 7260
+    }
+  ],
+  "external_context": {
+    "repository": "https://github.com/lsernau/grh-lean",
+    "commit": "72fead102f663d5c7a407964a13dc0cf9d977207",
+    "files": [
+      {
+        "path": "grh/src/New/Main.lean",
+        "sha256": "0a0108d5beb6d534c71d710c2dcd7c6756705bdac2335492da2657be756428ca",
+        "bytes": 3254
+      },
+      {
+        "path": "grh/src/New/Reduction/Zeros/PrimeError.lean",
+        "sha256": "4166476903b23fd0cdd099edc8f9b561e02952f21a9ad91fe930605ddf086f1a",
+        "bytes": 27403
+      },
+      {
+        "path": "grh/src/New/Reduction/OneSidedBound.lean",
+        "sha256": "125f8fca0ff5e6e10da9a61c4ce0ad00b8ab42d7ebbafb9853ab4e6c22ba1004",
+        "bytes": 16528
+      }
+    ]
+  },
+  "claims": [
+    {
+      "owner": "WeightedMangoldtSmoothing",
+      "verdict": "PASS",
+      "claim": "For arbitrary real arithmetic coefficients, finite real-cutoff smoothing interpolates affinely, centering adds the exact scaled logarithmic chord error, and division by the positive cutoff shifts the power exponent by one.",
+      "hypotheses_preserved": [
+        "Coefficient signs are unrestricted.",
+        "Nonnegative logarithmic coefficient is required by the interpolation inequality.",
+        "Cutoff positivity is retained for normalization of inequalities.",
+        "The sign is fixed before quantification over epsilon.",
+        "Growth bounds are explicit hypotheses in this native owner."
+      ],
+      "not_established": [
+        "Arithmetic cancellation estimate",
+        "Independent zero exclusion",
+        "Full GRH"
+      ]
+    },
+    {
+      "owner": "VerifiedGRH",
+      "verdict": "PASS",
+      "claim": "The pinned concrete New.grh discharges the existing native actual Dirichlet L-function half-plane predicate; the existing native reduction gives Mathlib RiemannHypothesis.",
+      "hypotheses_preserved": [
+        "Positive modulus through NeZero N.",
+        "Principal-character pole exception χ ≠ 1 or s ≠ 1.",
+        "Critical-strip hypotheses in dirichletL_zeros_on_line."
+      ],
+      "not_established": [
+        "Independent proof separate from the external theorem",
+        "Hilbert-Polya construction",
+        "GRH for arbitrary automorphic L-functions"
+      ]
+    },
+    {
+      "owner": "PrimeRemainderBridge",
+      "verdict": "PASS",
+      "claim": "The exact native coefficients lambdaKResidueClass, density inverse totient, and offset negative real logDerivMean at one identify the centered smoothing divided by x with New.primeRemainder. The proved external upper estimate and actual Mellin/polar identities are transported through this equality.",
+      "hypotheses_preserved": [
+        "q is nonzero and d is prime.",
+        "Normalization identities retain x ≠ 0; bound transport uses positive x.",
+        "Upper estimate requires 18480 dividing q and d congruent to q/2-1 modulo q.",
+        "Mellin identity requires d ≠ 2, q.Coprime d, and Re s > 2.",
+        "Polar statement requires d mod 8 = 7 and q.Coprime d.",
+        "The arithmetic integrability theorem is separate from the totalized integral equality."
+      ],
+      "normalization": {
+        "coefficients": "lambdaKResidueClass d q",
+        "kappa": "(Nat.totient q : R)^(-1)",
+        "beta": "-(New.logDerivMean d q 1).re",
+        "identity": "G(x)/x = R_q(x)",
+        "mellin_kernel": "G(x) * x^(-s-1)",
+        "laplace_kernel": "R_q(exp v) * exp((1-s)*v)"
+      },
+      "not_established": [
+        "Two-sided remainder estimate",
+        "Untwisted coefficients in place of the actual residue-class quadratic-twist coefficients",
+        "Fresh complete mathematical audit of the external 300000-line proof"
+      ]
+    },
+    {
+      "owner": "RealDoubledGRH",
+      "verdict": "SOURCE_REVIEW_PASS",
+      "claim": "The adapter transports actual Dirichlet and zeta zero-location theorems through the faithful real doubled readouts, and transports strip zeros of the actual centered Xi to offset zero.",
+      "reviewer_relationship": "Original adapter author; parent-applied repair reviewed against the exact pinned Mathlib declaration.",
+      "hypotheses_preserved": [
+        "The real seed remains nontrivial for faithful zero detection.",
+        "The L-function and zeta zero-location consequences retain 0 < sigma < 1.",
+        "The right-half-plane nonvanishing theorem retains the principal-character pole exception.",
+        "Centered Xi consequences retain -1/2 < offset < 1/2."
+      ],
+      "not_established": [
+        "A Hilbert-Polya spectral construction",
+        "An unrestricted entire-Xi zero theorem",
+        "Full external compilation or external declaration-audit acceptance by this source review"
+      ]
+    }
+  ],
+  "findings": [],
+  "pending_acceptance": [
+    "Compile the selected native owner closure at the root Lean/Mathlib pins.",
+    "Compile the optional integration against the exact external revision and Lean 4.35 pins.",
+    "Run both fresh native and integration declaration audits and reject nonstandard transitive axioms.",
+    "Run the independent fail-closed audit-parser regression tests.",
+    "Recheck source hashes after compiler-driven edits; this review applies to the recorded snapshots."
+  ],
+  "compiler_repair_source_review": {
+    "owner": "WeightedMangoldtSmoothing",
+    "verdict": "PASS",
+    "changes": [
+      "Removed trailing ring calls after field_simp had already closed normalization goals.",
+      "Used mul_le_mul_iff_left₀ for the displayed common positive left factor."
+    ],
+    "semantic_effect": "No goal, hypothesis, sign, coefficient, or growth-quantifier changes."
+  },
+  "authored_owner_validation": {
+    "role": "author validation; this block is not independent semantic approval",
+    "recorded_at_utc": "2026-11-27T15:59:44.676105+00:00",
+    "environment": {
+      "lean_version_observed": "Lean (version 4.35.0, x86_64-unknown-linux-gnu, commit eb6cafb7290e8bd5f2937522d8d804f58f02bafc, Release)",
+      "mathlib_commit": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+      "package": "integrations/grh",
+      "scope": "native owners checked for compatibility at the optional Lean 4.35 pins",
+      "native_lean_4_34_1_certificate": false,
+      "external_grh_compiled_by_validator": false
+    },
+    "source_snapshots": [
+      {
+        "path": "lean/InfoGeometry/Arithmetic/RealDoubledDirichletReadout.lean",
+        "sha256": "e5fff0c6f76d220c39ab588d3f9ae43a99bc38b15b4fae4c1ffcf957dd982039",
+        "bytes": 4229
+      },
+      {
+        "path": "lean/InfoGeometry/Arithmetic/RealDoubledCenteredXiReadout.lean",
+        "sha256": "3dbce2a48a86d5fbd3a1a1b24180d476f7ad0c68424cab707cad35f82669e099",
+        "bytes": 3500
+      },
+      {
+        "path": "lean/InfoGeometry/Krein/Clifford.lean",
+        "sha256": "1867821484136927f05230b1b10dd9fe7973c1692dfde093bd8effc7f5710550",
+        "bytes": 31614
+      }
+    ],
+    "status": "BUILD_AND_NATIVE_OWNER_AXIOM_AUDIT_PASS_AT_LEAN_4_35",
+    "fresh_warning_as_error_checks": [
+      "RealDoubledDirichletReadout",
+      "RealDoubledCenteredXiReadout"
+    ],
+    "axiom_audit_scope": "all declarations in eleven selected native owners, including private and generated declarations",
+    "declarations": 328,
+    "theorems": 257,
+    "used_axioms": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "mathematical_changes": [
+      "Removed an unnecessary CompleteSpace assumption from real readout declarations; conclusions and Nontrivial requirements are unchanged.",
+      "Used continuous-linear-map extensionality in the zero scalar case.",
+      "Used exact real/imaginary projections and the existing Schwarz theorem instead of broad simplification.",
+      "Parent-integrated Clifford conversion uses AlgEquiv.ofClass on the same continuous algebra equivalence; the maps and hypotheses are unchanged."
+    ],
+    "independent_acceptance": "Reserved for parent and sibling reviews; not asserted by this block."
+  },
+  "source_review_history": [
+    {
+      "recorded_at_utc": "2026-11-27T15:50:00.919004+00:00",
+      "status": "SOURCE_REVIEW_PASS",
+      "reviewed_files": [
+        {
+          "path": "lean/InfoGeometry/Arithmetic/WeightedMangoldtSmoothing.lean",
+          "sha256": "fd7bd62a40924fedaa597fc4ba7f5e4f3068e4006a5bdc8c5f5a033131a97883",
+          "bytes": 19443
+        },
+        {
+          "path": "integrations/grh/InfoGeometryGRH/VerifiedGRH.lean",
+          "sha256": "1687ec1e34a3efcd1ea09521bf5d446465dda421f0a45ef0cb32456206789963",
+          "bytes": 2322
+        },
+        {
+          "path": "integrations/grh/InfoGeometryGRH/PrimeRemainderBridge.lean",
+          "sha256": "19a4c5f2ba487d7c506dbea7e66aafe381441045748281f1a537d8c68345e9d6",
+          "bytes": 11233
+        }
+      ],
+      "note": "Historical source-review snapshot, preserved when refreshing the parent-applied external repairs."
+    },
+    {
+      "recorded_at_utc": "2026-11-27T16:27:09.553800+00:00",
+      "status": "SOURCE_REVIEW_PASS",
+      "reviewed_files": [
+        {
+          "path": "lean/InfoGeometry/Arithmetic/WeightedMangoldtSmoothing.lean",
+          "sha256": "fd7bd62a40924fedaa597fc4ba7f5e4f3068e4006a5bdc8c5f5a033131a97883",
+          "bytes": 19443
+        },
+        {
+          "path": "integrations/grh/InfoGeometryGRH/VerifiedGRH.lean",
+          "sha256": "1687ec1e34a3efcd1ea09521bf5d446465dda421f0a45ef0cb32456206789963",
+          "bytes": 2322
+        },
+        {
+          "path": "integrations/grh/InfoGeometryGRH/PrimeRemainderBridge.lean",
+          "sha256": "af2d6cc682370e4b2e63205e8e373046623d2b209f9723069b6dcd1341996dea",
+          "bytes": 11249
+        },
+        {
+          "path": "integrations/grh/InfoGeometryGRH/RealDoubledGRH.lean",
+          "sha256": "2caab01ef8d2ac066b128fbdff9b493c034e83a58c43acb1435e20e6143b0b46",
+          "bytes": 4218,
+          "reviewer_relationship": "The reviewer authored the original RealDoubledGRH adapter. This update checks the parent-applied repair against the pinned API; it does not claim independent non-author acceptance of the entire owner."
+        }
+      ],
+      "external_repair_source_review": {
+        "recorded_at_utc": "2026-11-27T16:27:09.553800+00:00",
+        "reviewed_parent_applied_changes": [
+          {
+            "owner": "RealDoubledGRH",
+            "declaration": "realZetaReadout_zero_re",
+            "before": "nlinarith [Nat.cast_nonneg (R := ℝ) n]",
+            "after": "nlinarith [Nat.cast_nonneg (α := ℝ) n]",
+            "pinned_api": "Nat.cast_nonneg {α} [Semiring α] [PartialOrder α] [IsOrderedRing α] (n : ℕ) : 0 ≤ (n : α)",
+            "verdict": "SOURCE_REVIEW_PASS",
+            "semantic_effect": "Uses the actual named type parameter; no proposition, hypothesis, or proof strategy changes."
+          },
+          {
+            "owner": "PrimeRemainderBridge",
+            "declaration": "eventually_centeredSmoothing_le_rpow",
+            "before": "rw [Real.rpow_add hx, Real.rpow_one]",
+            "after": "rw [Real.rpow_add hx 1 (-1 / 2 + ε), Real.rpow_one]",
+            "pinned_api": "Real.rpow_add (hx : 0 < x) (y z : ℝ) : x ^ (y + z) = x ^ y * x ^ z",
+            "verdict": "SOURCE_REVIEW_PASS",
+            "semantic_effect": "Selects the intended right-hand power instead of the left-hand exponent sum; the exponent identity and all hypotheses are unchanged."
+          }
+        ],
+        "mathlib_context": {
+          "repository": "https://github.com/leanprover-community/mathlib4",
+          "commit": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+          "files": [
+            {
+              "path": "Mathlib/Data/Nat/Cast/Order/Ring.lean",
+              "sha256": "005f95e3c0d18bc11034eff9c7f726e719d61cac7d8fafa1e739096d6d4da255",
+              "bytes": 3513
+            },
+            {
+              "path": "Mathlib/Analysis/SpecialFunctions/Pow/Real.lean",
+              "sha256": "f8a26d662fb7966fa5b45aef95c8d7cf0383c9921fa3e9ee1cd2c41561e9fbfd",
+              "bytes": 50402
+            }
+          ]
+        },
+        "remaining_prime_remainder_body_review": {
+          "scope": "All twelve PrimeRemainderBridge theorem bodies, including the private complex-power helper.",
+          "verdict": "NO_ADDITIONAL_CONCRETE_SOURCE_ISSUE_FOUND",
+          "checked": [
+            "Finite-sum normalization and denominator hypotheses.",
+            "Growth predicate witnesses, sign, threshold, and iff direction.",
+            "Specialized complex-power rewrites, real-to-complex coercions, and logarithm branch conditions.",
+            "Mellin change-of-variables and integrability equivalence directions.",
+            "Definitional reduction of the local G in funext and congrArg steps.",
+            "Exact arithmetic transform and polar endpoint expressions."
+          ]
+        },
+        "validation_boundary": {
+          "external_adapters_compiled_by_reviewer": false,
+          "complete_grh_closure_compiled_by_reviewer": false,
+          "fresh_external_axiom_audit_run_by_reviewer": false,
+          "isolated_generic_compiler_results_asserted_here": false,
+          "external_acceptance": "PENDING: compile the complete pinned external proof and adapters, then run the fresh fourteen-owner axiom audit and fail-closed parser on the recorded snapshots."
+        }
+      },
+      "note": "Historical snapshot before the parent removed the compiler-confirmed redundant ring continuation in the generic Mellin helper."
+    }
+  ],
+  "source_review_scope_note": "SOURCE_REVIEW_PASS records source, API, and tactic-body review. It does not assert that the external adapters or the complete pinned GRH dependency closure have compiled or passed a fresh external axiom audit. The historical authored_owner_validation block records only its stated native-owner Lean 4.35 checks and is preserved unchanged.",
+  "reviewed_worktree_head": "4a411a7cd2373b0c99e8c87d97a4d346d7930e74",
+  "worktree_snapshot_note": "The PrimeRemainderBridge rpow specialization and redundant-ring removal were parent-applied in the worktree after the recorded HEAD. Source hashes identify the reviewed snapshots.",
+  "external_repair_source_review": {
+    "recorded_at_utc": "2026-11-27T16:32:57.764917+00:00",
+    "reviewed_parent_applied_changes": [
+      {
+        "owner": "RealDoubledGRH",
+        "declaration": "realZetaReadout_zero_re",
+        "before": "nlinarith [Nat.cast_nonneg (R := ℝ) n]",
+        "after": "nlinarith [Nat.cast_nonneg (α := ℝ) n]",
+        "pinned_api": "Nat.cast_nonneg {α} [Semiring α] [PartialOrder α] [IsOrderedRing α] (n : ℕ) : 0 ≤ (n : α)",
+        "verdict": "SOURCE_REVIEW_PASS",
+        "semantic_effect": "Uses the actual named type parameter; no proposition, hypothesis, or proof strategy changes."
+      },
+      {
+        "owner": "PrimeRemainderBridge",
+        "declaration": "eventually_centeredSmoothing_le_rpow",
+        "before": "rw [Real.rpow_add hx, Real.rpow_one]",
+        "after": "rw [Real.rpow_add hx 1 (-1 / 2 + ε), Real.rpow_one]",
+        "pinned_api": "Real.rpow_add (hx : 0 < x) (y z : ℝ) : x ^ (y + z) = x ^ y * x ^ z",
+        "verdict": "SOURCE_REVIEW_PASS",
+        "semantic_effect": "Selects the intended right-hand power instead of the left-hand exponent sum; the exponent identity and all hypotheses are unchanged.",
+        "isolated_compiler_confirmation": "The original generic calc step failed with the predicted left-hand rewrite; the specialized calc step passed a fresh Lean 4.35 warningAsError check. The complete arithmetic theorem was not compiled in that isolated unit."
+      },
+      {
+        "owner": "PrimeRemainderBridge",
+        "declaration": "exp_smul_mellin_kernel",
+        "before": "field_simp [hx] <;> ring",
+        "after": "field_simp [hx]",
+        "verdict": "SOURCE_REVIEW_AND_ISOLATED_STRICT_CHECK_PASS",
+        "reason": "The original isolated check confirmed that field_simp already closes the goal; the unused continuation was rejected only because warnings were treated as errors.",
+        "semantic_effect": "No proposition, hypothesis, normalization, or kernel formula changes.",
+        "scope": "Only this helper continuation was removed; the separate normalization proof was not changed."
+      }
+    ],
+    "mathlib_context": {
+      "repository": "https://github.com/leanprover-community/mathlib4",
+      "commit": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+      "files": [
+        {
+          "path": "Mathlib/Data/Nat/Cast/Order/Ring.lean",
+          "sha256": "005f95e3c0d18bc11034eff9c7f726e719d61cac7d8fafa1e739096d6d4da255",
+          "bytes": 3513
+        },
+        {
+          "path": "Mathlib/Analysis/SpecialFunctions/Pow/Real.lean",
+          "sha256": "f8a26d662fb7966fa5b45aef95c8d7cf0383c9921fa3e9ee1cd2c41561e9fbfd",
+          "bytes": 50402
+        }
+      ]
+    },
+    "remaining_prime_remainder_body_review": {
+      "scope": "All twelve PrimeRemainderBridge theorem bodies, including the private complex-power helper.",
+      "verdict": "NO_ADDITIONAL_CONCRETE_SOURCE_ISSUE_FOUND",
+      "checked": [
+        "Finite-sum normalization and denominator hypotheses.",
+        "Growth predicate witnesses, sign, threshold, and iff direction.",
+        "Specialized complex-power rewrites, real-to-complex coercions, and logarithm branch conditions.",
+        "Mellin change-of-variables and integrability equivalence directions.",
+        "Definitional reduction of the local G in funext and congrArg steps.",
+        "Exact arithmetic transform and polar endpoint expressions."
+      ]
+    },
+    "validation_boundary": {
+      "external_adapters_compiled_by_reviewer": false,
+      "complete_grh_closure_compiled_by_reviewer": false,
+      "fresh_external_axiom_audit_run_by_reviewer": false,
+      "isolated_generic_compiler_results_asserted_here": true,
+      "external_acceptance": "PENDING: compile the complete pinned external proof and adapters, then run the fresh fourteen-owner axiom audit and fail-closed parser on the recorded snapshots.",
+      "isolated_generic_compiler_scope": "Two exact generic declaration bodies and one real-power calc identity, checked by /root/our_arithmetic in a scratch unit with cached Mathlib imports. No full external adapter, arithmetic specialization, or pinned GRH dependency closure was compiled by that check."
+    },
+    "isolated_generic_compiler_validation": {
+      "validator": "/root/our_arithmetic",
+      "evidence_reviewed_by": "/root/our_spectral",
+      "recorded_at_utc": "2026-11-27T16:31:21.831779+00:00",
+      "status": "PASS_CORRECTED_ISOLATED_GENERIC_BODIES",
+      "scope": "Two actual generic proof bodies from PrimeRemainderBridge plus its real-power calc identity, with exactly the reported minimal proof corrections; not full external integration acceptance.",
+      "validation_report": {
+        "path": "/workspace/scratch/4049f904f6d1/candidates/arithmetic/isolated-mellin/validation-result.json",
+        "sha256": "63e12aaa3f02d58f713f5a92dc1272aab1d9d5cf6467346bfc9f3f18eb85e6f3",
+        "bytes": 3657
+      },
+      "canonical_source_sha256": "c1c4fa9179d48dbda0ea3d72435768b4ca91897fe8f6858f7eb88856f31701a6",
+      "generic_declaration_block_identical": true,
+      "generic_declaration_block_sha256": "fec01304d97beab8b25dce01ab33d73fc283aad3743adef6e34a6b1e19a78ea1",
+      "import_modules": [
+        "Mathlib.Analysis.SpecialFunctions.Pow.Complex",
+        "Mathlib.MeasureTheory.Integral.IntegralEqImproper",
+        "Mathlib.Tactic.Ring",
+        "Mathlib.Tactic.FieldSimp",
+        "Mathlib.Tactic.NormNum",
+        "Mathlib.Tactic.CongrExclamation"
+      ],
+      "environment": {
+        "PATH_prefix": "/tmp/grh-compatibility-runtime/lean-4.35.0-linux/bin",
+        "LEAN_NUM_THREADS": "2",
+        "cwd": "/workspace/scratch/4049f904f6d1/info-geometry-lean",
+        "shared_lock": "/tmp/info-geometry-build.lock"
+      },
+      "mathlib_commit": "56a005855ea17e0b0958f73ec801ae140b0a1679",
+      "original_command": [
+        "python3",
+        "integrations/grh/run_locked.py",
+        "--",
+        "/tmp/grh-compatibility-runtime/lean-4.35.0-linux/bin/lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "/workspace/scratch/4049f904f6d1/candidates/arithmetic/isolated-mellin/ActualGenericBodies.lean"
+      ],
+      "original_exit_code": 1,
+      "original_diagnostics": [
+        "exp_smul_mellin_kernel: unused <;> and ring does nothing after field_simp [hx].",
+        "Original unspecialized Real.rpow_add rewrite expands x^(-1/2+ε) on the left, then Real.rpow_one fails to match."
+      ],
+      "corrected_command": [
+        "python3",
+        "integrations/grh/run_locked.py",
+        "--",
+        "/tmp/grh-compatibility-runtime/lean-4.35.0-linux/bin/lake",
+        "env",
+        "lean",
+        "-DwarningAsError=true",
+        "/workspace/scratch/4049f904f6d1/candidates/arithmetic/isolated-mellin/CorrectedGenericBodies.lean"
+      ],
+      "corrected_exit_code": 0,
+      "corrected_source_sha256": "9d9de57e666ae9f7651a5beeb471e0536ec2369ecb76498d713db575f2cb42ad",
+      "warnings": [],
+      "errors": [],
+      "axioms_of_generic_mellin_theorem": [
+        "propext",
+        "Classical.choice",
+        "Quot.sound"
+      ],
+      "not_tested": [
+        "Full PrimeRemainderBridge module",
+        "External GRH proof or endpoints",
+        "Arithmetic integrability or arithmetic specialization theorems",
+        "Separate normalization theorem field_simp continuation"
+      ],
+      "no_fetch_or_dependency_build": true,
+      "no_external_GRH_endpoint_or_stub_in_isolated_unit": true
+    }
+  }
+}

@@ -186,6 +186,12 @@ if [ "$MODE" = "incremental" ]; then
     # This selected package reuses canonical owners and has its own shared-lock
     # audit entry point. Route only its exact configuration and wrapper paths.
     CLIFFORD_PEIRCE_WALSH_FILES=$(grep -E '^verification/clifford-peirce-walsh/(lakefile\.lean|lake-manifest\.json|lean-toolchain|check\.py)$' <<<"$CHANGED_FILES" || true)
+    # The isolated GRH package verifies its exact source closure and pinned
+    # native/external lanes through a dedicated shared-lock validation route.
+    if ! GRH_COMPATIBILITY_FILES=$(python3 integrations/grh/verify_sources.py --affected-files <<<"$CHANGED_FILES"); then
+        echo "  ❌ Cannot determine the GRH compatibility source scope; refusing to skip its route." >&2
+        exit 2
+    fi
     # Lean umbrella modules are still ordinary Lake targets. Including one in
     # an incremental diff must build that changed module target, not promote
     # the whole root package to `InfoGeometry.All`.
@@ -202,7 +208,7 @@ if [ "$MODE" = "incremental" ]; then
         fi
     fi
     UNSUPPORTED_PACKAGE_CONFIGS=$(grep -E '^(lean/lakefile\.lean|lean/lake-manifest\.json|lean/lean-toolchain|lean_sandbox/lakefile\.lean|lean_sandbox/lake-manifest\.json|lean_sandbox/lean-toolchain|proofs/lakefile\.(toml|lean)|proofs/lake-manifest\.json|proofs/lean-toolchain|verification/spinorial-core/lakefile\.lean|verification/spinorial-core/lake-manifest\.json|verification/spinorial-core/lean-toolchain)$' <<<"$CHANGED_FILES" || true)
-    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.(src\.)?lean|lean-toolchain|lean/(Agent|AuditNative|AuditNativeRun|AuditStrict|B3PresentedGroup|CheckBasis|CheckTemp|DAG|Docs|Experimental|GrandPartitionAll|GrandPartitionEuler|GrandPartitionOnline|GrandPartitionPolynomial|GrandPartitionProbability|GrandPartitionRational|GrandPartitionRobustPoisson|GrandPartitionTransform|GrandUnifiedNoncommutativeOperatorSynthesis|InfoGeometry|KaplanskyCliffordBridge|NonIsoConf3OrlikSolomon|NoncommutativeGaugeAndBraidedHolonomy|Omega|PrimitiveSetsAboveX|SelfReference|Socratic|SplitOctonionBraidSU3|Test|TestFin|VirasoroProject|YangBaxterQSwap|YangBaxterZornBridge|ZornScalingFlow|ast_export_test|temp_test|test_fixes2|test_reflection|test_rpow|test_selfconcordance)\.lean|src/(Agent|AuditNative|AuditNativeRun|AuditStrict|B3PresentedGroup|CheckBasis|CheckTemp|DAG|Docs|Experimental|GrandPartitionAll|GrandPartitionEuler|GrandPartitionOnline|GrandPartitionPolynomial|GrandPartitionProbability|GrandPartitionRational|GrandPartitionRobustPoisson|GrandPartitionTransform|InfoGeometry|KaplanskyCliffordBridge|NonIsoConf3OrlikSolomon|Omega|PrimitiveSetsAboveX|SelfReference|Socratic|SplitOctonionBraidSU3|Test|TestFin|VirasoroProject|YangBaxterQSwap|YangBaxterZornBridge|ZornScalingFlow|ast_export_test|temp_test|test_fixes2|test_reflection|test_rpow|test_selfconcordance)\.lean|verification/clifford-peirce-walsh/lakefile\.lean|verification/attention-query/AttentionDeclarationAudit\.lean|verification/courant-dirac/CapstoneDeclarationAudit\.lean|verification/contract-gap-regressions/GapRegression\.lean|verification/(klein-operator-hierarchy|supplied-zorn-counterexample|witt-born-null-exactness|zorn-primal-dual)/Audit\.lean|tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit|ArnoldKohnoJordanDeclarationAudit|ReductiveShearDeclarationAudit)\.lean|tools/infra/axiom_index\.lean)$|^lean/(InfoGeometry|DAG|GRR|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox|lean)/.*\.lean$|^src/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^contributions/(wilson|wilson-gaussian)/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
+    UNROUTED_LEAN_FILES=$(grep -Ev '^(lakefile\.(src\.)?lean|lean-toolchain|lean/(Agent|AuditNative|AuditNativeRun|AuditStrict|B3PresentedGroup|CheckBasis|CheckTemp|DAG|Docs|Experimental|GrandPartitionAll|GrandPartitionEuler|GrandPartitionOnline|GrandPartitionPolynomial|GrandPartitionProbability|GrandPartitionRational|GrandPartitionRobustPoisson|GrandPartitionTransform|GrandUnifiedNoncommutativeOperatorSynthesis|InfoGeometry|KaplanskyCliffordBridge|NonIsoConf3OrlikSolomon|NoncommutativeGaugeAndBraidedHolonomy|Omega|PrimitiveSetsAboveX|SelfReference|Socratic|SplitOctonionBraidSU3|Test|TestFin|VirasoroProject|YangBaxterQSwap|YangBaxterZornBridge|ZornScalingFlow|ast_export_test|temp_test|test_fixes2|test_reflection|test_rpow|test_selfconcordance)\.lean|src/(Agent|AuditNative|AuditNativeRun|AuditStrict|B3PresentedGroup|CheckBasis|CheckTemp|DAG|Docs|Experimental|GrandPartitionAll|GrandPartitionEuler|GrandPartitionOnline|GrandPartitionPolynomial|GrandPartitionProbability|GrandPartitionRational|GrandPartitionRobustPoisson|GrandPartitionTransform|InfoGeometry|KaplanskyCliffordBridge|NonIsoConf3OrlikSolomon|Omega|PrimitiveSetsAboveX|SelfReference|Socratic|SplitOctonionBraidSU3|Test|TestFin|VirasoroProject|YangBaxterQSwap|YangBaxterZornBridge|ZornScalingFlow|ast_export_test|temp_test|test_fixes2|test_reflection|test_rpow|test_selfconcordance)\.lean|verification/clifford-peirce-walsh/lakefile\.lean|verification/attention-query/AttentionDeclarationAudit\.lean|verification/courant-dirac/CapstoneDeclarationAudit\.lean|verification/contract-gap-regressions/GapRegression\.lean|verification/(klein-operator-hierarchy|supplied-zorn-counterexample|witt-born-null-exactness|zorn-primal-dual)/Audit\.lean|tools/quality/(OperatorGeometryDeclarationAudit|TwoBoundaryDeclarationAudit|ArnoldKohnoJordanDeclarationAudit|ReductiveShearDeclarationAudit)\.lean|tools/infra/axiom_index\.lean)$|^lean/(InfoGeometry|DAG|GRR|Agent|Docs|Socratic|Omega|VirasoroProject|PrimitiveSetsAboveX|SelfReference|scripts|Experimental|sandbox|lean)/.*\.lean$|^src/(InfoGeometry|DAG|Agent|Docs|Socratic|Omega|VirasoroProject|SelfReference|scripts|Experimental|sandbox)/.*\.lean$|^proofs/.*\.lean$|^lib/InfoGeometryCore/.*\.lean$|^contributions/(wilson|wilson-gaussian)/.*\.lean$|^scratch/.*\.lean$|^tests/.*\.lean$|^integrations/grh/(InfoGeometryGRH(\.lean|/(VerifiedGRH|PrimeRemainderBridge|RealDoubledGRH|AxiomAudit)\.lean)|native/NativeAxiomAudit\.lean)$' <<<"$ALL_CHANGED_LEAN_FILES" || true)
 
     if [ -n "$UNSUPPORTED_PACKAGE_CONFIGS" ]; then
         echo "  ❌ Nested Lake project configuration changed, but this root gate has no package-specific locked build route:" >&2
@@ -408,6 +414,11 @@ if [ "$MODE" = "incremental" ]; then
             python3 verification/clifford-peirce-walsh/check.py
     fi
 
+    if [ -n "$GRH_COMPATIBILITY_FILES" ]; then
+        run_check "Locked native and external GRH compatibility/axiom audits" \
+            python3 integrations/grh/validate.py --lane all --cache
+    fi
+
     # External-Stacks-dependent GRR port modules (full StacksFrontier build
     # targets external_refs/Stacks v4.34.0-rc2/v4.35.0 per lean/GRR/README.md).
     if [ -n "$GRR_STACKS_LEAN_FILES" ]; then
@@ -485,6 +496,9 @@ else
     run_check "Locked Lake build" \
         python3 tools/infra/run_locked_lake_build.py \
           --wait-for-build-lock InfoGeometry.All
+
+    run_check "Locked native and external GRH compatibility/axiom audits" \
+        python3 integrations/grh/validate.py --lane all --cache
 
     # 2. Every tracked Lean root is scanned; active source scope is strict.
     run_check "Tracked Lean Scope Audit" \

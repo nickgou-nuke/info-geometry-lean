@@ -1,4 +1,10 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
+import Mathlib.Topology.Basic
 import Mathlib.Tactic.Ring
 import Mathlib.Tactic.NoncommRing
 import InfoGeometry.Physics.AlgebraicTomitaTakesakiBridge
@@ -131,6 +137,17 @@ theorem cylinderGlide_sq (Delta : ℝ) (J : AntiAutomorphism M) (x : ℝ × M) :
   · ring
   · exact J.inv x.2
 
+/-- The CPT glide is continuous whenever its Tomita component is continuous.
+This is the topological statement on the product cylinder; it makes no claim
+that the quotient Klein topology is itself an operator-algebra topology. -/
+theorem continuous_cylinderGlide [TopologicalSpace M]
+    (Delta : ℝ) (J : AntiAutomorphism M)
+    (hJ : Continuous J.toFun) :
+    Continuous (cylinderGlide Delta J : ℝ × M → ℝ × M) := by
+  unfold cylinderGlide
+  exact (continuous_fst.add continuous_const).prodMk
+    (hJ.comp continuous_snd)
+
 /-! ### 3. Chiral Ideal Swap on General Rings -/
 
 /-- $J$ maps left ideal elements $A \cdot P_L$ to right ideal elements $P_R \cdot J(A)$. -/
@@ -161,72 +178,5 @@ theorem chiral_swap_right_projector_right_ideal
     J.toFun (P_R * A) = J.toFun A * P_L := by
   rw [J.map_mul, h_swap]
 
-/-! ### 4. Operatorial Spin-Statistics Theorem (Graded Spin Flip) -/
-
-/-- For an involutive grading operator $\Gamma$ ($\Gamma^2 = 1$), odd elements $x$ (fermionic states)
-    undergo a sign flip under conjugation by $\Gamma$:
-    $$\Gamma x \Gamma = -x$$
-    while double application satisfies $\Gamma (\Gamma x) = x$. -/
-theorem fermion_spin_flip_graded
-    (Gamma : M) (hGamma_sq : Gamma * Gamma = 1)
-    (x : M) (h_odd : Gamma * x = -x * Gamma) :
-    Gamma * (Gamma * x) = x ∧ (Gamma * x) * Gamma = -x := by
-  constructor
-  · calc
-      Gamma * (Gamma * x) = (Gamma * Gamma) * x := by noncomm_ring
-      _ = 1 * x := by rw [hGamma_sq]
-      _ = x := by noncomm_ring
-  · calc
-      (Gamma * x) * Gamma = (-x * Gamma) * Gamma := by rw [h_odd]
-      _ = -x * (Gamma * Gamma) := by noncomm_ring
-      _ = -x * 1 := by rw [hGamma_sq]
-      _ = -x := by noncomm_ring
-
-/-- For an involutive grading operator $\Gamma$ ($\Gamma^2 = 1$), even elements $y$ (bosonic states)
-    are invariant under conjugation by $\Gamma$:
-    $$\Gamma y \Gamma = y$$ -/
-theorem boson_spin_graded
-    (Gamma : M) (hGamma_sq : Gamma * Gamma = 1)
-    (y : M) (h_even : Gamma * y = y * Gamma) :
-    (Gamma * y) * Gamma = y := by
-  calc
-    (Gamma * y) * Gamma = (y * Gamma) * Gamma := by rw [h_even]
-    _ = y * (Gamma * Gamma) := by noncomm_ring
-    _ = y * 1 := by rw [hGamma_sq]
-    _ = y := by noncomm_ring
-
-/-! ### 5. Connection and Curvature Negation (Geometric CPT) -/
-
-/-- Direct operatorial transport theorem:
-    Under modular anti-automorphism transport, the curvature form of an operator-valued connection
-    is negated:
-    $$\Omega_{C^J} = - J(\Omega_C)$$ -/
-theorem operator_curvature_cpt_negation
-    {Point Tangent : Type*}
-    (J : AntiAutomorphism M)
-    (C : Connection (Point := Point) (Tangent := Tangent) (Value := M))
-    (p : Point) (X Y : Tangent) :
-    curvature (InfoGeometry.Clifford.CommutantSpinConnectionCPT.commutantConnection J C) p X Y =
-      -J.toFun (curvature C p X Y) :=
-  InfoGeometry.Clifford.CommutantSpinConnectionCPT.commutantConnection_curvature J C p X Y
-
-/-! ### 6. Master Synthesis Certificate -/
-
-/-- Master synthesis certificate for Frontier 99 (Full Operatorial Klein Tomita CPT Bridge). -/
-theorem compile_operator_klein_tomita_cpt_bridge
-    (J : AntiAutomorphism M) (F : ModularFlowData M)
-    (h_mod : IsTomitaKleinModular J F)
-    (P_L P_R : M) (h_swap_L : J.toFun P_L = P_R) (h_swap_R : J.toFun P_R = P_L)
-    (Gamma : M) (hGamma_sq : Gamma * Gamma = 1) :
-    (∀ t x, operatorGlide J (F.sigma t) (operatorGlide J (F.sigma t) x) = x) ∧
-    (∀ Delta (x : ℝ × M), cylinderGlide Delta J (cylinderGlide Delta J x) = (x.1 + 2 * Delta, x.2)) ∧
-    (∀ A, J.toFun (A * P_L) = P_R * J.toFun A) ∧
-    (∀ A, J.toFun (A * P_R) = P_L * J.toFun A) ∧
-    (∀ x, Gamma * x = -x * Gamma → (Gamma * x) * Gamma = -x) := by
-  refine ⟨operatorGlide_sq J F h_mod,
-          fun Delta x => cylinderGlide_sq Delta J x,
-          chiral_swap_left_ideal J P_L P_R h_swap_L,
-          chiral_swap_right_projector_left_ideal J P_L P_R h_swap_R,
-          fun x hx => (fermion_spin_flip_graded Gamma hGamma_sq x hx).2⟩
 
 end InfoGeometry.Clifford.OperatorKleinTomitaCPT

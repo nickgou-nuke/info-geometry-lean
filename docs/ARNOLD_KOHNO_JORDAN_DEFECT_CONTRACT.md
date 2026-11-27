@@ -438,7 +438,7 @@ build once its dependencies are restored. Likewise, mathematical source
 review of preserved legacy declaration signatures is distinct from a
 compiler check of every legacy consumer.
 
-### Committed source binding and publication status
+### Committed source binding before publication
 
 The mathematical implementation is committed as
 `1c07ea22c155cb624d6708ed14d445d8bfa8483b` on
@@ -455,7 +455,38 @@ it refuses concurrent compilation. The queued waiting invocation was stopped
 before it acquired that lock. Thus no successful root compilation or complete
 post-build/pre-push gate is claimed.
 
-No GitHub push, pull-request update, or merge is performed for this extension.
-Publication remains subject to the repository's pre-push verification rules.
-Restoring the recorded path-dependency sources and completing the normal root
-gate are still required; a scoped proof certificate does not waive that gate.
+At this prepublication checkpoint no GitHub branch update, pull-request
+creation, or merge had been performed for this extension. The subsequent
+draft publication is recorded below. Restoring the recorded path-dependency
+sources and completing the normal root gate remain outstanding; the scoped
+proof certificates do not certify that gate.
+
+### Upstream draft publication — 2026-11-27
+
+[Draft PR #476](https://github.com/nickgou-nuke/info-geometry-lean/pull/476)
+publishes this extension in `nickgou-nuke/info-geometry-lean` from
+`codex/arnold-kz-jordan-defect-20261127`. It is stacked on
+[PR #474](https://github.com/nickgou-nuke/info-geometry-lean/pull/474), targeting
+`codex/arnold-beltrami-cotangent-flow-20261127` at
+`722d33728a967fddec3187bdac1d17a8df758748`. The initial review diff contains
+the extension's twenty-two changed files.
+
+The initial published commit is
+`7912464ec7142ef4347bd6b281eecae024b57546`. Its Git tree
+`1c49f48a6ee26cdbe14e5bffb3df218ff61849a3` exactly matches local verification-bound
+snapshot `ad1ddc3fdc3095733c69c5f315d530404f6ecebb`. The GitHub-created commit
+has different commit metadata; its source tree is identical. This receipt
+is a subsequent documentation-only change, with all checked Lean source
+hashes preserved.
+
+The draft publication follows the user's explicit request after the scoped
+verification results and root integration limits were reported. During
+publication the actual `.githooks/pre-push` invocation against the verified
+local snapshot reached the locked incremental root build and waited for the
+shared compiler lock. It was stopped before acquiring that lock. A fresh
+root path preflight again returned exit 1 for the same three unavailable
+dependency configurations listed above.
+
+The PR is published for review as a draft. No merge, successful root build,
+or completed post-build/pre-push gate is claimed. The missing dependency
+sources and full root validation remain integration requirements.

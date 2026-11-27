@@ -259,6 +259,38 @@ theorem body_soul_orthogonal (X : A) :
               ac_rfl
       _ = 0 := by rw [hLR11, hLR00, hRL11, hRL00]; simp
 
+/-- The DeWitt body and soul maps are additive projections. -/
+theorem body_add (X Y : A) : body (X + Y) = body X + body Y := by
+  dsimp [body]
+  simp only [mul_add, add_mul]
+  abel
+
+theorem soul_add (X Y : A) : soul (X + Y) = soul X + soul Y := by
+  unfold soul
+  rw [soul_LR_add, soul_RL_add]
+  abel
+
+/-- Uniqueness of the DeWitt decomposition in the original noncommutative ring.
+If `X = B + F`, with `B` fixed by the body projection and `F` fixed by the
+soul projection, then these components must be the canonical projections of
+`X`.  No scalar or commutative surrogate is used. -/
+theorem dewitt_split_unique (X B F : A) (hX : X = B + F)
+    (hB : body B = B) (hF : soul F = F) :
+    B = body X ∧ F = soul X := by
+  have hBodyF : body F = 0 := by
+    calc body F = body (soul F) := by rw [hF]
+      _ = 0 := (body_soul_orthogonal F).1
+  have hSoulB : soul B = 0 := by
+    calc soul B = soul (body B) := by rw [hB]
+      _ = 0 := (body_soul_orthogonal B).2
+  constructor
+  · calc B = body B := hB.symm
+      _ = body (B + F) := by rw [body_add, hB, hBodyF, add_zero]
+      _ = body X := by rw [hX]
+  · calc F = soul F := hF.symm
+      _ = soul (B + F) := by rw [soul_add, hSoulB, hF, zero_add]
+      _ = soul X := by rw [hX]
+
 /-- Master Theorem 5: The Superalgebra Closure ({Soul, Soul} ⊆ Body).
     The square of the DeWitt Soul is strictly invariant under Body projection:
     Body(Soul(X)²) = Soul(X)².

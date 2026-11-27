@@ -1,0 +1,14 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+import InfoGeometry.Probability.DetectorReceivingArea
+
+#print axioms InfoGeometry.Probability.DetectorCrossSectionDuality.ReceivingArea.receiving_area_of_normalized_transfer
+#print axioms InfoGeometry.Probability.DetectorCrossSectionDuality.ReceivingArea.inverse_sqrt_eq_iff_inverse_square
+#print axioms InfoGeometry.Probability.DetectorCrossSectionDuality.ReceivingArea.receiving_area_of_affine_efficiency_linearizer
+#print axioms InfoGeometry.Probability.DetectorCrossSectionDuality.ReceivingArea.receiving_area_of_normalized_affine_transfer
+#print axioms InfoGeometry.Probability.DetectorCrossSectionDuality.ReceivingArea.receiving_area_of_count_rate_linearizer
+#print axioms InfoGeometry.Probability.DetectorCrossSectionDuality.ReceivingArea.inferred_loss_area_from_receiving_area
+#print axioms InfoGeometry.Probability.DetectorCrossSectionDuality.ReceivingArea.two_area_efficiency_factorization

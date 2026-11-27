@@ -1,0 +1,547 @@
+{
+  "status": "PASS_SUPPLEMENTAL",
+  "toolchain": "leanprover/lean4:v4.34.1",
+  "mathlib": "d13f23b723b8a846827a245b89c10fc7d3f11612",
+  "mathlib_package_pins": {
+    "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
+    "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
+    "importGraph": "e928b72544873815af278d38681b31c0293588e3",
+    "proofwidgets": "106ff4fafc74ef4ac99d81dbf3ab399118f497a5",
+    "aesop": "355695d523e41d0554926416cba2a2b3544fbbc9",
+    "Qq": "6a489d9af5d0c47e5b259e2e8bcdfc1811b5a259",
+    "batteries": "f2effa3d803fda822b1f97b806c47cf2adfbcbc2",
+    "Cli": "e92c9f15fdfacc8536f31cfb3b7ad26c3c8cd204"
+  },
+  "pin_file_sha256": {
+    "/workspace/scratch/882633407e39/info-geometry-lean/lean-toolchain": "d5edba4e4b8faad9c1baeadb265716d20d03be4d1a2647dc5e35b0c0325bea7b",
+    "/workspace/scratch/882633407e39/info-geometry-lean/lake-manifest.json": "ceb11ec7ca6c59a1d7787a9bb90a46c8fed69f1b751ee1834ea6a446c92cec98",
+    "/workspace/scratch/73cf601a9798/vpd-runtime/mathlib/lake-manifest.json": "8f67b2cf24143ac091cdb425e886c2164b2fc2d6fbccd6db9454b697f9541a67"
+  },
+  "repository": "/workspace/scratch/882633407e39/info-geometry-lean",
+  "repository_head": "722d33728a967fddec3187bdac1d17a8df758748",
+  "mathlib_path": "/workspace/scratch/73cf601a9798/vpd-runtime/mathlib",
+  "lean_binary": "/workspace/scratch/73cf601a9798/vpd-runtime/lean-4.34.1-linux/bin/lean",
+  "lean_binary_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+  "source_lane": "lean",
+  "target": "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry",
+  "sources": {
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry": "13a494afe6fb01c854cfc5184e782f5ef879006945b6034c7d81185131b7355e",
+    "InfoGeometry.OperatorAlgebra.PeirceDefectBridge": "6e60256a8612623be80ee8a45fb6bd2c6e75c9f63f4539290ab20a44abdfd1a6",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity": "b8ba3e0cc33c52e6b6d97c65918d1eb9e90f3c882d50cd4c5879aed5624c0661",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect": "ccecfc65f72f05a1baba0be15ceabb8ba473beb6876f7aa2a34deeaa287ae632",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian": "e12a3b1c976623da3c7b1a3fd54ab376e66edb61788c82a4264ded3b074e212a",
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder": "73b3aaa4f2d48bbc511236ce687e8f9ee9b3da82f0af05ee8fd1d85e38716248",
+    "InfoGeometry.Core.IdempotentTangent": "ade44f681a822491eb2a10a13cddc8264030e44387484255dc2a4cbce4559c5e",
+    "InfoGeometry.Core.IdempotentCartan": "460c5eafe4d6496a2276f7788a2fccfb8aa5c9bbd4839cf45f5571abfb66c16f",
+    "InfoGeometry.Core.PeirceDecomposition": "b2426391a1841cbdb35bdef72138b5ab1553508c82c22ea930aa23f164de9bd9",
+    "InfoGeometry.Core.IdempotencyDefect": "2d7b8fa580abe148fc70a39f8e1831b5505fb7f6a3920f3a79a0ba35bfee5590",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "9007f5e058a9662df00bce7cc59df337754013c271ec26ac446e139442de1567",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": "75b924dc4f5b96b7f65492cee82cafabd433409fa34b70d0f0e733066227a767",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "6657ac06e9dfde8930808192b874c3c7d7738ad89a22d18c06c207d47a949327",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman": "a6b63ba781993fbbd384f64d46512cb6495976a47415bd56ec0010957183054a",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent": "3ab943fe3d1a0bb9c399559c43924bd5ed3195c8fa98762828661a84dbac2478",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized": "1abad94188df38d1ef5bcaf7fc10a061b36180d61c74a6207468cfa7a5a646fa",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityProducts": "457d046b9415a339fea2bf681960b5791017a612b10c95e64b4e9b1c0016ae06",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": "708761b07efd0e3382eae5c93909ee380796ff2b8855b0256dbb6ee4265255a6",
+    "InfoGeometry.Core.PeirceCompressionDefect": "f2e657ca40ff91a996b503c141c2b1f79b2173204a04aadf7afc8c2013bf7c8d",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateSandwich": "c9d5ac9df9d5c6ac5453d2c80d199ef8a5262e39d15363b6ff173b881cb6c866",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraiding": "b48bcac4bfa1517ae8555c7d06b4bc312d34f5823138ac32094bd659b8773569",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower": "97887958e07ce2f3ae3cef83300a4f0b384c0ccbd965c7a82dc786ed27d4c687",
+    "InfoGeometry.Core.IdempotentDefectIteration": "d0cfa24254beecf79c9ce0ff918f1a0fd1c359a1e7e4d0c34d700d61c8c085d9",
+    "InfoGeometry.Core.NewtonIdempotentCorrection": "54b190c2b0d75c7577497738c9e9ad1006f7b9cd5eb05db1179595bc1063d9ee",
+    "InfoGeometry.Meta.ArchetypePipeline": "efa831fc9e59c239b3ecb0fde2c0792d69b38c517752e1b3e9f45fd6fd0e0a0a",
+    "InfoGeometry.Meta.EpistemicCompilerChain": "14e6f94ec573acf8cea7d9d848dca9013c39f56137d15a6a12a0f955a313951b",
+    "InfoGeometry.Meta.MetaEpistemicCompiler": "c071d56e60f965c03d9d251aca7cbb1735be1160c8f1bdae0ce2dd50ba725d17",
+    "InfoGeometry.Causal.CertifiedDependencyCompiler": "1d44c258abf92aa54545fd07bc5ba6992b136044950fe5df12d9acfcb774853f",
+    "InfoGeometry.Causal.FiniteDependencyCompiler": "e6c3318f628469f9ca05f2be80a10d867a3f41b813c1ce8cf59ec5a0b2c4cebb",
+    "InfoGeometry.Causal.FiniteDependencySchedule": "99f53bb0b3799116bb1e20e96787a561bb33f32d8c695eda0434945e32e25908",
+    "InfoGeometry.Causal.DependencyScheduleComposition": "52442910db5ad87b64db917ae7e2923c0ed2481b8047b9b54e43e994bc8f57d3",
+    "InfoGeometry.Causal.ProofCarryingSchedule": "437ebb28df5f21c9322cd16e7d87db8ee2fc20b2a18631434cec85c271708892",
+    "InfoGeometry.Causal.VerifiedDevelopmentState": "ed18cce2c227ebd97ee8ad409754b1be87d73d20efec77ae80471cace10bc6ee",
+    "InfoGeometry.Causal.ProofDAGRepresentation": "dcec543d298415e4b248aa92490119cc336fdf47044370da1d87101727c45474",
+    "InfoGeometry.Causal.CausalAlgebra": "a07f6252bdb072c7d85dbe6b2db3295fed4627f41d49ea072cf22fdea007642f",
+    "InfoGeometry.Canonical.PenrosePosetCategoryFoundation": "4defe2629ca82057e42b91ceb71a6f3e1b636904ecc598f2bf1b364441c00587",
+    "InfoGeometry.Categorical.InductivePosetColimit": "596e2753be281853ab5176f93b657b0ecba9e752da21f3ab7176f753e65df683",
+    "InfoGeometry.Canonical.ProofDAGRepresentationBridge": "23c5547a700057e0e4e2375a2d9afb3e58f83dc862efa6e40138cab3c4df2fe6",
+    "InfoGeometry.Canonical.CausalFunctor": "6c52e57a1f08bdcc43a62f3d4f78d691ede0263f3f30e0470c5e971a978dc986",
+    "InfoGeometry.Projective.Twistor.Incidence": "2aac7b2f597446662018edcc6142a0834e583ddd9d1a4cce83e3a733563341f4",
+    "InfoGeometry.Twistor.PenroseTwistor": "7d6a607aabbe56030ebce662f4bd3d96444c130f59e3f62d7bfab1ae6ac586c2",
+    "InfoGeometry.Twistor.NullProjective": "2f706ac6e568051885eae7da812f6acebcf09b3c0971363f92821cde6583670b",
+    "InfoGeometry.Convex.ProjectiveRays": "954c88a31177f673221773066efb2224ed68e6bf2a456d7d0d25931d6fef17fd",
+    "InfoGeometry.Krein.DoubledSpace": "99e1b7cb89c06dce8b6fc1364ccbd3d8d89cb7ffc847fffac2fbb0d5b670be01",
+    "InfoGeometry.Krein.KreinSpace": "dd9c9cb6a0574dab35a99fc6f5e48dfc0584bd616f84f0d8242f8b5afec8afd9",
+    "InfoGeometry.GrandUnification.ArchetypeDictionary": "bb89d0138a3842e20e9b05eab752745aa338c8e86bec0d0253fc2c244756a261",
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier": "71a2dcad64a19921e86d5297a7039ad64af7aa1b7cf762f950861a26fa1fecd6",
+    "InfoGeometry.Cartan.Involution": "d407100337b0684f5dac751bc5372155fb1a86315395a05347419f26d855729c",
+    "InfoGeometry.Meta.DeclaredResearchDependencies": "4f850eb0d361c6692111a1b09457ca5be1cf8e1eed2325d3b004b8c9f376063d"
+  },
+  "source_paths": {
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceBruhatAporiaTowerAndMatrixGeometry.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceDefectBridge": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceDefectBridge.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectParity.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TransferDefect.lean",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Core/IdempotentGraphGrassmannian.lean",
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Core/IdempotentGraphReflectionOrder.lean",
+    "InfoGeometry.Core.IdempotentTangent": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Core/IdempotentTangent.lean",
+    "InfoGeometry.Core.IdempotentCartan": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Core/IdempotentCartan.lean",
+    "InfoGeometry.Core.PeirceDecomposition": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Core/PeirceDecomposition.lean",
+    "InfoGeometry.Core.IdempotencyDefect": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Core/IdempotencyDefect.lean",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Algebra/FiniteSpinAlgebra.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Tetraktys.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Basic.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Bergman.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Unipotent.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Homogenized.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityProducts": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ParityProducts.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/Supercharge.lean",
+    "InfoGeometry.Core.PeirceCompressionDefect": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Core/PeirceCompressionDefect.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateSandwich": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/TwoStateSandwich.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraiding": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/ConeSheetBraiding.lean",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/OperatorAlgebra/PeirceSpine/DefectTower.lean",
+    "InfoGeometry.Core.IdempotentDefectIteration": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Core/IdempotentDefectIteration.lean",
+    "InfoGeometry.Core.NewtonIdempotentCorrection": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Core/NewtonIdempotentCorrection.lean",
+    "InfoGeometry.Meta.ArchetypePipeline": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Meta/ArchetypePipeline.lean",
+    "InfoGeometry.Meta.EpistemicCompilerChain": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Meta/EpistemicCompilerChain.lean",
+    "InfoGeometry.Meta.MetaEpistemicCompiler": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Meta/MetaEpistemicCompiler.lean",
+    "InfoGeometry.Causal.CertifiedDependencyCompiler": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Causal/CertifiedDependencyCompiler.lean",
+    "InfoGeometry.Causal.FiniteDependencyCompiler": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Causal/FiniteDependencyCompiler.lean",
+    "InfoGeometry.Causal.FiniteDependencySchedule": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Causal/FiniteDependencySchedule.lean",
+    "InfoGeometry.Causal.DependencyScheduleComposition": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Causal/DependencyScheduleComposition.lean",
+    "InfoGeometry.Causal.ProofCarryingSchedule": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Causal/ProofCarryingSchedule.lean",
+    "InfoGeometry.Causal.VerifiedDevelopmentState": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Causal/VerifiedDevelopmentState.lean",
+    "InfoGeometry.Causal.ProofDAGRepresentation": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Causal/ProofDAGRepresentation.lean",
+    "InfoGeometry.Causal.CausalAlgebra": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Causal/CausalAlgebra.lean",
+    "InfoGeometry.Canonical.PenrosePosetCategoryFoundation": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Canonical/PenrosePosetCategoryFoundation.lean",
+    "InfoGeometry.Categorical.InductivePosetColimit": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Categorical/InductivePosetColimit.lean",
+    "InfoGeometry.Canonical.ProofDAGRepresentationBridge": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Canonical/ProofDAGRepresentationBridge.lean",
+    "InfoGeometry.Canonical.CausalFunctor": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Canonical/CausalFunctor.lean",
+    "InfoGeometry.Projective.Twistor.Incidence": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Projective/Twistor/Incidence.lean",
+    "InfoGeometry.Twistor.PenroseTwistor": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Twistor/PenroseTwistor.lean",
+    "InfoGeometry.Twistor.NullProjective": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Twistor/NullProjective.lean",
+    "InfoGeometry.Convex.ProjectiveRays": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Convex/ProjectiveRays.lean",
+    "InfoGeometry.Krein.DoubledSpace": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Krein/DoubledSpace.lean",
+    "InfoGeometry.Krein.KreinSpace": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Krein/KreinSpace.lean",
+    "InfoGeometry.GrandUnification.ArchetypeDictionary": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/GrandUnification/ArchetypeDictionary.lean",
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Krein/InvolutiveSelfDualCarrier.lean",
+    "InfoGeometry.Cartan.Involution": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Cartan/Involution.lean",
+    "InfoGeometry.Meta.DeclaredResearchDependencies": "/workspace/scratch/882633407e39/info-geometry-lean/lean/InfoGeometry/Meta/DeclaredResearchDependencies.lean"
+  },
+  "imports": {
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry": [
+      "InfoGeometry.OperatorAlgebra.PeirceDefectBridge",
+      "InfoGeometry.Core.NewtonIdempotentCorrection",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Meta.ArchetypePipeline",
+      "InfoGeometry.Meta.EpistemicCompilerChain",
+      "InfoGeometry.Meta.MetaEpistemicCompiler",
+      "Mathlib.LinearAlgebra.Matrix.Notation",
+      "Mathlib.Algebra.Ring.Equiv",
+      "Mathlib.Algebra.Group.Commute.Basic",
+      "Mathlib.Tactic.FinCases"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceDefectBridge": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateSandwich",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityProducts",
+      "InfoGeometry.Core.PeirceCompressionDefect"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect": [
+      "Mathlib.Tactic",
+      "InfoGeometry.Core.IdempotentGraphGrassmannian",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman"
+    ],
+    "InfoGeometry.Core.IdempotentGraphGrassmannian": [
+      "InfoGeometry.Core.IdempotentGraphReflectionOrder",
+      "InfoGeometry.Core.IdempotentTangent"
+    ],
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder": [
+      "Mathlib.Algebra.Ring.Idempotent",
+      "Mathlib.Data.Matrix.Basis",
+      "Mathlib.Tactic.FinCases",
+      "Mathlib.Tactic.NoncommRing",
+      "Mathlib.Tactic.NormNum"
+    ],
+    "InfoGeometry.Core.IdempotentTangent": [
+      "Mathlib.Algebra.Star.Basic",
+      "Mathlib.Algebra.Algebra.Basic",
+      "InfoGeometry.Core.IdempotentCartan",
+      "Mathlib.Tactic.NoncommRing"
+    ],
+    "InfoGeometry.Core.IdempotentCartan": [
+      "InfoGeometry.Core.PeirceDecomposition",
+      "Mathlib.Algebra.Star.Basic"
+    ],
+    "InfoGeometry.Core.PeirceDecomposition": [
+      "Mathlib.Algebra.Ring.Basic",
+      "InfoGeometry.Core.IdempotencyDefect",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "Mathlib.Data.Set.Basic",
+      "Mathlib.Tactic"
+    ],
+    "InfoGeometry.Core.IdempotencyDefect": [
+      "Mathlib.Algebra.Ring.Idempotent",
+      "Mathlib.Algebra.Ring.Hom.Defs",
+      "Mathlib.Tactic.NoncommRing"
+    ],
+    "InfoGeometry.Algebra.FiniteSpinAlgebra": [
+      "Mathlib.Tactic"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic": [
+      "Mathlib.Algebra.Ring.Idempotent",
+      "Mathlib.Tactic.Abel",
+      "Mathlib.Tactic.NoncommRing",
+      "Mathlib.Algebra.Module.Defs"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized",
+      "InfoGeometry.Core.IdempotentGraphGrassmannian"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys",
+      "Mathlib.Data.Fin.Basic",
+      "Mathlib.Tactic.IntervalCases",
+      "Mathlib.Tactic.NoncommRing"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityProducts": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+      "Mathlib.Algebra.Ring.Equiv"
+    ],
+    "InfoGeometry.Core.PeirceCompressionDefect": [
+      "Mathlib.Algebra.Star.Basic",
+      "Mathlib.Algebra.BigOperators.Ring.Finset",
+      "Mathlib.Tactic.NoncommRing",
+      "InfoGeometry.Core.IdempotencyDefect",
+      "InfoGeometry.Core.PeirceDecomposition"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateSandwich": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraiding",
+      "Mathlib.Algebra.Star.Basic"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraiding": [
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower": [
+      "InfoGeometry.Core.IdempotentDefectIteration",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge"
+    ],
+    "InfoGeometry.Core.IdempotentDefectIteration": [
+      "InfoGeometry.Core.IdempotentGraphGrassmannian",
+      "Mathlib.Logic.Function.Iterate"
+    ],
+    "InfoGeometry.Core.NewtonIdempotentCorrection": [
+      "InfoGeometry.Core.IdempotentDefectIteration",
+      "Mathlib.Algebra.Group.Commute.Basic",
+      "Mathlib.Algebra.Ring.Subring.Basic",
+      "Mathlib.Logic.Function.Iterate",
+      "Mathlib.RingTheory.Nilpotent.Defs"
+    ],
+    "InfoGeometry.Meta.ArchetypePipeline": [
+      "Lean",
+      "Lean.Util.CollectAxioms"
+    ],
+    "InfoGeometry.Meta.EpistemicCompilerChain": [
+      "Mathlib.Data.Finset.Basic",
+      "Mathlib.Data.Fintype.Basic",
+      "Mathlib.Data.List.Basic",
+      "InfoGeometry.Meta.ArchetypePipeline"
+    ],
+    "InfoGeometry.Meta.MetaEpistemicCompiler": [
+      "InfoGeometry.Causal.CertifiedDependencyCompiler",
+      "InfoGeometry.Causal.VerifiedDevelopmentState",
+      "InfoGeometry.Meta.DeclaredResearchDependencies",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys"
+    ],
+    "InfoGeometry.Causal.CertifiedDependencyCompiler": [
+      "InfoGeometry.Causal.FiniteDependencyCompiler",
+      "InfoGeometry.Causal.DependencyScheduleComposition"
+    ],
+    "InfoGeometry.Causal.FiniteDependencyCompiler": [
+      "InfoGeometry.Causal.FiniteDependencySchedule"
+    ],
+    "InfoGeometry.Causal.FiniteDependencySchedule": [
+      "Mathlib.Data.Finset.Card",
+      "Mathlib.Data.Finset.Union",
+      "Mathlib.Data.Finset.Basic",
+      "Mathlib.Order.Preorder.Finite",
+      "Mathlib.Order.UpperLower.Basic",
+      "Mathlib.Tactic"
+    ],
+    "InfoGeometry.Causal.DependencyScheduleComposition": [
+      "InfoGeometry.Causal.ProofCarryingSchedule"
+    ],
+    "InfoGeometry.Causal.ProofCarryingSchedule": [
+      "InfoGeometry.Causal.FiniteDependencySchedule"
+    ],
+    "InfoGeometry.Causal.VerifiedDevelopmentState": [
+      "Mathlib.Order.Basic",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "Mathlib.Order.Bounds.Basic",
+      "Mathlib.Order.UpperLower.Basic",
+      "Mathlib.Data.Set.Basic",
+      "Mathlib.CategoryTheory.Category.Basic",
+      "Mathlib.CategoryTheory.Category.Preorder",
+      "InfoGeometry.Causal.ProofDAGRepresentation",
+      "InfoGeometry.Canonical.PenrosePosetCategoryFoundation"
+    ],
+    "InfoGeometry.Causal.ProofDAGRepresentation": [
+      "Mathlib.Tactic",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Causal.CausalAlgebra"
+    ],
+    "InfoGeometry.Causal.CausalAlgebra": [
+      "Mathlib.Tactic",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Canonical.PenrosePosetCategoryFoundation": [
+      "InfoGeometry.Categorical.InductivePosetColimit",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Canonical.ProofDAGRepresentationBridge",
+      "InfoGeometry.Canonical.CausalFunctor",
+      "InfoGeometry.Projective.Twistor.Incidence"
+    ],
+    "InfoGeometry.Categorical.InductivePosetColimit": [
+      "Mathlib.CategoryTheory.Limits.Preorder",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "Mathlib.Order.Zorn"
+    ],
+    "InfoGeometry.Canonical.ProofDAGRepresentationBridge": [
+      "InfoGeometry.Causal.ProofDAGRepresentation",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra"
+    ],
+    "InfoGeometry.Canonical.CausalFunctor": [
+      "Mathlib.CategoryTheory.Category.Preorder",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "Mathlib.CategoryTheory.Limits.Shapes.Terminal",
+      "Mathlib.CategoryTheory.Limits.HasLimits",
+      "Mathlib.Algebra.Category.Ring.Basic"
+    ],
+    "InfoGeometry.Projective.Twistor.Incidence": [
+      "Mathlib.Algebra.Group.Units.Basic",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "Mathlib.Algebra.Module.Basic",
+      "InfoGeometry.Twistor.PenroseTwistor"
+    ],
+    "InfoGeometry.Twistor.PenroseTwistor": [
+      "Mathlib.Algebra.Module.LinearMap.Star",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "Mathlib.Data.Complex.Basic",
+      "Mathlib.LinearAlgebra.FiniteDimensional.Basic",
+      "Mathlib.LinearAlgebra.Projectivization.Basic",
+      "Mathlib.LinearAlgebra.QuadraticForm.Basic",
+      "Mathlib.LinearAlgebra.SesquilinearForm.Basic",
+      "Mathlib.Tactic",
+      "InfoGeometry.Twistor.NullProjective"
+    ],
+    "InfoGeometry.Twistor.NullProjective": [
+      "InfoGeometry.Convex.ProjectiveRays",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Krein.DoubledSpace",
+      "Mathlib.LinearAlgebra.Projectivization.Basic",
+      "Mathlib.LinearAlgebra.QuadraticForm.Basic"
+    ],
+    "InfoGeometry.Convex.ProjectiveRays": [
+      "InfoGeometry.Krein.DoubledSpace",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "Mathlib.LinearAlgebra.Projectivization.Basic"
+    ],
+    "InfoGeometry.Krein.DoubledSpace": [
+      "InfoGeometry.Krein.KreinSpace",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+      "InfoGeometry.Cartan.Involution",
+      "Mathlib.Analysis.InnerProductSpace.Adjoint",
+      "Mathlib.Analysis.InnerProductSpace.ProdL2",
+      "Mathlib.Analysis.Normed.Lp.ProdLp",
+      "Mathlib.Algebra.Lie.OfAssociative"
+    ],
+    "InfoGeometry.Krein.KreinSpace": [
+      "Mathlib.Analysis.InnerProductSpace.Adjoint",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "Mathlib.Analysis.InnerProductSpace.ProdL2",
+      "Mathlib.Tactic.Linarith",
+      "Mathlib.Algebra.Star.Basic",
+      "Mathlib.LinearAlgebra.BilinearForm.Basic",
+      "Mathlib.LinearAlgebra.QuadraticForm.Basic",
+      "Mathlib.Algebra.Lie.OfAssociative",
+      "Mathlib.Algebra.Lie.Basic",
+      "Mathlib.Topology.Algebra.Module.Spaces.ContinuousLinearMap",
+      "Mathlib.Topology.Algebra.Module.Spaces.CompactConvergenceCLM",
+      "Mathlib.Tactic.Abel",
+      "InfoGeometry.GrandUnification.ArchetypeDictionary"
+    ],
+    "InfoGeometry.GrandUnification.ArchetypeDictionary": [
+      "Mathlib.Tactic.NoncommRing",
+      "Mathlib.Tactic.Ring",
+      "Mathlib.Algebra.Algebra.Basic"
+    ],
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier": [
+      "Mathlib.Analysis.InnerProductSpace.Basic",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "Mathlib.LinearAlgebra.Dual.Defs",
+      "InfoGeometry.Cartan.Involution"
+    ],
+    "InfoGeometry.Cartan.Involution": [
+      "Mathlib.Algebra.Module.LinearMap.End",
+      "InfoGeometry.Algebra.FiniteSpinAlgebra",
+      "Mathlib.Algebra.Field.Basic",
+      "Mathlib.Algebra.GroupWithZero.Invertible",
+      "Mathlib.Tactic.Abel"
+    ],
+    "InfoGeometry.Meta.DeclaredResearchDependencies": [
+      "InfoGeometry.Causal.CertifiedDependencyCompiler",
+      "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys"
+    ]
+  },
+  "compile_order": [
+    "InfoGeometry.Core.IdempotentGraphReflectionOrder",
+    "InfoGeometry.Core.IdempotencyDefect",
+    "InfoGeometry.Algebra.FiniteSpinAlgebra",
+    "InfoGeometry.Core.PeirceDecomposition",
+    "InfoGeometry.Core.IdempotentCartan",
+    "InfoGeometry.Core.IdempotentTangent",
+    "InfoGeometry.Core.IdempotentGraphGrassmannian",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Basic",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Tetraktys",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Homogenized",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Unipotent",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Bergman",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TransferDefect",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.Supercharge",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.ParityProducts",
+    "InfoGeometry.Core.PeirceCompressionDefect",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectParity",
+    "InfoGeometry.Core.IdempotentDefectIteration",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.DefectTower",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.ConeSheetBraiding",
+    "InfoGeometry.OperatorAlgebra.PeirceSpine.TwoStateSandwich",
+    "InfoGeometry.OperatorAlgebra.PeirceDefectBridge",
+    "InfoGeometry.Core.NewtonIdempotentCorrection",
+    "InfoGeometry.Meta.ArchetypePipeline",
+    "InfoGeometry.Meta.EpistemicCompilerChain",
+    "InfoGeometry.Causal.FiniteDependencySchedule",
+    "InfoGeometry.Causal.FiniteDependencyCompiler",
+    "InfoGeometry.Causal.ProofCarryingSchedule",
+    "InfoGeometry.Causal.DependencyScheduleComposition",
+    "InfoGeometry.Causal.CertifiedDependencyCompiler",
+    "InfoGeometry.Causal.CausalAlgebra",
+    "InfoGeometry.Causal.ProofDAGRepresentation",
+    "InfoGeometry.Categorical.InductivePosetColimit",
+    "InfoGeometry.Canonical.ProofDAGRepresentationBridge",
+    "InfoGeometry.Canonical.CausalFunctor",
+    "InfoGeometry.GrandUnification.ArchetypeDictionary",
+    "InfoGeometry.Krein.KreinSpace",
+    "InfoGeometry.Cartan.Involution",
+    "InfoGeometry.Krein.InvolutiveSelfDualCarrier",
+    "InfoGeometry.Krein.DoubledSpace",
+    "InfoGeometry.Convex.ProjectiveRays",
+    "InfoGeometry.Twistor.NullProjective",
+    "InfoGeometry.Twistor.PenroseTwistor",
+    "InfoGeometry.Projective.Twistor.Incidence",
+    "InfoGeometry.Canonical.PenrosePosetCategoryFoundation",
+    "InfoGeometry.Causal.VerifiedDevelopmentState",
+    "InfoGeometry.Meta.DeclaredResearchDependencies",
+    "InfoGeometry.Meta.MetaEpistemicCompiler",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry"
+  ],
+  "alias_names": [
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_mul_eq_zero",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_mul_eq_zero",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_add_of_orthogonal",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_intertwines",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_intertwines",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_left_support",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_right_support",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_left_annihilated",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_right_annihilated",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.map_newtonPeirceStep",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.map_newtonPeirceStep_iterates",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.idempotencyDefect_newtonPeirceStep_iterate_factor",
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterate_idempotent_of_defect_pow_two_pow_zero"
+  ],
+  "alias_audit_sha256": "dfb9c489e7436fcabb2ae11032dd04261fafab3a576f948e013218db0b463330",
+  "verification_tool_sha256": {
+    "/workspace/scratch/882633407e39/supplemental_peirce_check.py": "b7b827dd62329905fab56281647a6a74573550c81ad9be0cf83a4cad172ba5d8",
+    "/workspace/scratch/882633407e39/info-geometry-lean/tools/build_lock.py": "276bd21076a0300aaff235c6e01731b2a7318ada9094e754ec81f9dc7de04c45",
+    "/workspace/scratch/882633407e39/info-geometry-lean/tools/quality/check_operator_geometry.py": "e2156c16426f88b492ad78b8b5e21d33013c04a23232a5cb6034251dd4bd2bbe"
+  },
+  "scope": "Supplemental 49-module Peirce closure and 13 compatibility aliases; not a maintained gate or a whole-repository build",
+  "maintained_gate": "Unmodified; its prior comment-parser failure is not superseded",
+  "target_warnings_as_errors": true,
+  "prepared_at_utc": "2026-11-27 16:25:01 UTC",
+  "compiler_version": "Lean (version 4.34.1, x86_64-unknown-linux-gnu, commit 5045d0056413266e57c625dcd7c365b10e377c52, Release)",
+  "checked_modules": 49,
+  "alias_axioms": {
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_mul_eq_zero": [
+      "propext",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_mul_eq_zero": [
+      "propext",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_add_of_orthogonal": [
+      "propext",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_intertwines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_intertwines": [
+      "propext",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_left_support": [
+      "propext",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_right_support": [
+      "propext",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_left_annihilated": [
+      "propext",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_right_annihilated": [
+      "propext",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.map_newtonPeirceStep": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.map_newtonPeirceStep_iterates": [
+      "propext",
+      "Classical.choice",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.idempotencyDefect_newtonPeirceStep_iterate_factor": [
+      "propext",
+      "Quot.sound"
+    ],
+    "InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterate_idempotent_of_defect_pow_two_pow_zero": [
+      "propext",
+      "Quot.sound"
+    ]
+  },
+  "completed_at_utc": "2026-11-27 17:22:12 UTC"
+}

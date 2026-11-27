@@ -4,7 +4,7 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.OperatorAlgebra.PeirceDefectBridge
-import InfoGeometry.Core.IdempotentDefectIteration
+import InfoGeometry.Core.NewtonIdempotentCorrection
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import InfoGeometry.Meta.ArchetypePipeline
 import InfoGeometry.Meta.EpistemicCompilerChain
@@ -459,211 +459,47 @@ end Stage3_TranscendentBruhat
 
 section Stage4_AporiaDefectTower
 
-variable {B C : Type*} [Ring B] [Ring C]
+/- The ring-level proofs live in the focused core owner. These aliases preserve
+all public theorem names and their exact types for existing consumers. -/
 
-private theorem newtonPeirceStep_factor_left (x : B) :
-    newtonPeirceStep x = x * (3 * x - 2 * x * x) := by
-  unfold newtonPeirceStep
-  noncomm_ring
+alias newtonPeirceStep_mul_eq_zero :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep_mul_eq_zero
 
-private theorem newtonPeirceStep_factor_right (x : B) :
-    newtonPeirceStep x = (3 * x - 2 * x * x) * x := by
-  unfold newtonPeirceStep
-  noncomm_ring
+alias newtonPeirceStep_iterates_mul_eq_zero :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep_iterates_mul_eq_zero
 
-/-- One-sided annihilation `x * y = 0` persists under `newtonPeirceStep`. -/
-theorem newtonPeirceStep_mul_eq_zero {x y : B} (hxy : x * y = 0) :
-    newtonPeirceStep x * newtonPeirceStep y = 0 := by
-  rw [newtonPeirceStep_factor_right x, newtonPeirceStep_factor_left y]
-  calc
-    (3 * x - 2 * x * x) * x * (y * (3 * y - 2 * y * y))
-        = (3 * x - 2 * x * x) * (x * y) * (3 * y - 2 * y * y) := by
-          simp only [mul_assoc]
-    _ = 0 := by rw [hxy, mul_zero, zero_mul]
+alias newtonPeirceStep_iterates_add_of_orthogonal :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep_iterates_add_of_orthogonal
 
-/-- One-sided annihilation persists across every finite iterate `newtonPeirceStep^[k]`. -/
-theorem newtonPeirceStep_iterates_mul_eq_zero {x y : B} (hxy : x * y = 0) (k : ℕ) :
-    newtonPeirceStep^[k] x * newtonPeirceStep^[k] y = 0 := by
-  induction k with
-  | zero => exact hxy
-  | succ k ih =>
-    simp only [Function.iterate_succ_apply']
-    exact newtonPeirceStep_mul_eq_zero ih
+alias newtonPeirceStep_intertwines :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep_intertwines
 
-/-- Two-sided orthogonal inputs split additively at every Newton–Peirce depth `k`. -/
-theorem newtonPeirceStep_iterates_add_of_orthogonal
-    {x y : B} (hxy : x * y = 0) (hyx : y * x = 0) (k : ℕ) :
-    newtonPeirceStep^[k] (x + y) =
-      newtonPeirceStep^[k] x + newtonPeirceStep^[k] y := by
-  induction k with
-  | zero => simp only [Function.iterate_zero_apply]
-  | succ k ih =>
-    simp only [Function.iterate_succ_apply', ih]
-    exact newtonPeirceStep_add_of_orthogonal
-      (newtonPeirceStep_iterates_mul_eq_zero hxy k)
-      (newtonPeirceStep_iterates_mul_eq_zero hyx k)
+alias newtonPeirceStep_iterates_intertwines :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep_iterates_intertwines
 
-/-- Every associative-ring intertwiner `x * y = y * z` transports across `newtonPeirceStep`. -/
-theorem newtonPeirceStep_intertwines {x y z : B} (h : x * y = y * z) :
-    newtonPeirceStep x * y = y * newtonPeirceStep z := by
-  have h2 : (x * x) * y = y * (z * z) := by
-    calc
-      (x * x) * y = x * (x * y) := mul_assoc x x y
-      _ = x * (y * z) := by rw [h]
-      _ = (x * y) * z := (mul_assoc x y z).symm
-      _ = (y * z) * z := by rw [h]
-      _ = y * (z * z) := mul_assoc y z z
-  have h3 : (x * x * x) * y = y * (z * z * z) := by
-    calc
-      (x * x * x) * y = (x * x) * (x * y) := mul_assoc (x * x) x y
-      _ = (x * x) * (y * z) := by rw [h]
-      _ = ((x * x) * y) * z := (mul_assoc (x * x) y z).symm
-      _ = (y * (z * z)) * z := by rw [h2]
-      _ = y * (z * z * z) := by simp only [mul_assoc]
-  unfold newtonPeirceStep
-  calc
-    (3 * x * x - 2 * x * x * x) * y
-        = 3 * ((x * x) * y) - 2 * ((x * x * x) * y) := by noncomm_ring
-    _ = 3 * (y * (z * z)) - 2 * (y * (z * z * z)) := by rw [h2, h3]
-    _ = y * (3 * z * z - 2 * z * z * z) := by noncomm_ring
+alias newtonPeirceStep_iterates_left_support :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep_iterates_left_support
 
-/-- Every associative-ring intertwiner `x * y = y * z` persists at every Newton–Peirce depth `k`. -/
-theorem newtonPeirceStep_iterates_intertwines {x y z : B} (h : x * y = y * z) (k : ℕ) :
-    newtonPeirceStep^[k] x * y = y * newtonPeirceStep^[k] z := by
-  induction k with
-  | zero => exact h
-  | succ k ih =>
-    simp only [Function.iterate_succ_apply']
-    exact newtonPeirceStep_intertwines ih
+alias newtonPeirceStep_iterates_right_support :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep_iterates_right_support
 
-/-- Left support `p * x = x` survives every finite iterate of `newtonPeirceStep`. -/
-theorem newtonPeirceStep_iterates_left_support {p x : B} (h : p * x = x) (k : ℕ) :
-    p * newtonPeirceStep^[k] x = newtonPeirceStep^[k] x := by
-  induction k with
-  | zero => exact h
-  | succ k ih =>
-    simp only [Function.iterate_succ_apply']
-    rw [newtonPeirceStep_factor_left, ← mul_assoc, ih]
+alias newtonPeirceStep_iterates_left_annihilated :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep_iterates_left_annihilated
 
-/-- Right support `x * p = x` survives every finite iterate of `newtonPeirceStep`. -/
-theorem newtonPeirceStep_iterates_right_support {p x : B} (h : x * p = x) (k : ℕ) :
-    newtonPeirceStep^[k] x * p = newtonPeirceStep^[k] x := by
-  induction k with
-  | zero => exact h
-  | succ k ih =>
-    simp only [Function.iterate_succ_apply']
-    rw [newtonPeirceStep_factor_right, mul_assoc, ih]
+alias newtonPeirceStep_iterates_right_annihilated :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep_iterates_right_annihilated
 
-/-- Left annihilation `a * x = 0` survives every finite iterate of `newtonPeirceStep`. -/
-theorem newtonPeirceStep_iterates_left_annihilated {a x : B} (h : a * x = 0) (k : ℕ) :
-    a * newtonPeirceStep^[k] x = 0 := by
-  induction k with
-  | zero => exact h
-  | succ k ih =>
-    simp only [Function.iterate_succ_apply']
-    rw [newtonPeirceStep_factor_left, ← mul_assoc, ih, zero_mul]
+alias map_newtonPeirceStep :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.map_newtonPeirceStep
 
-/-- Right annihilation `x * a = 0` survives every finite iterate of `newtonPeirceStep`. -/
-theorem newtonPeirceStep_iterates_right_annihilated {a x : B} (h : x * a = 0) (k : ℕ) :
-    newtonPeirceStep^[k] x * a = 0 := by
-  induction k with
-  | zero => exact h
-  | succ k ih =>
-    simp only [Function.iterate_succ_apply']
-    rw [newtonPeirceStep_factor_right, mul_assoc, ih, mul_zero]
+alias map_newtonPeirceStep_iterates :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.map_newtonPeirceStep_iterates
 
-/-- Ring homomorphisms commute with `newtonPeirceStep`. -/
-theorem map_newtonPeirceStep (f : B →+* C) (x : B) :
-    f (newtonPeirceStep x) = newtonPeirceStep (f x) := by
-  unfold newtonPeirceStep
-  simp only [map_sub, map_mul, map_ofNat]
+alias idempotencyDefect_newtonPeirceStep_iterate_factor :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect_newtonPeirceStep_iterate_factor
 
-/-- Ring homomorphisms commute with every finite iterate `newtonPeirceStep^[k]`. -/
-theorem map_newtonPeirceStep_iterates (f : B →+* C) (x : B) (k : ℕ) :
-    f (newtonPeirceStep^[k] x) = newtonPeirceStep^[k] (f x) := by
-  induction k with
-  | zero => simp only [Function.iterate_zero_apply]
-  | succ k ih =>
-    simp only [Function.iterate_succ_apply', map_newtonPeirceStep, ih]
-
-private theorem comm_pow_left_eq {a b : B} (h : a * b = b * a) (m : ℕ) :
-    a ^ m * b = b * a ^ m := by
-  induction m with
-  | zero => simp
-  | succ m ih =>
-    rw [pow_succ, mul_assoc, h, ← mul_assoc, ih, mul_assoc]
-
-/-- **All-`k` Noncommutative Quadratic Super-Convergence of Newton–Peirce**:
-Over an arbitrary associative ring `B`, the idempotency defect after `k` steps of
-`newtonPeirceStep` factors as `(idempotencyDefect x) ^ (2 ^ k) * Rk` for an element
-`Rk : B` commuting with `idempotencyDefect x`. -/
-theorem idempotencyDefect_newtonPeirceStep_iterate_factor (x : B) (k : ℕ) :
-    ∃ Rk : B, Commute (idempotencyDefect x) Rk ∧
-      idempotencyDefect (newtonPeirceStep^[k] x) = (idempotencyDefect x) ^ (2 ^ k) * Rk := by
-  induction k with
-  | zero =>
-    refine ⟨1, Commute.one_right _, ?_⟩
-    simp
-  | succ k ih =>
-    rcases ih with ⟨Rk, hComm, hEq⟩
-    let δ : B := idempotencyDefect x
-    let R_next : B := Rk * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3)
-    have hδ_pow : δ * δ ^ (2 ^ k) = δ ^ (2 ^ k) * δ :=
-      (comm_pow_left_eq (rfl : δ * δ = δ * δ) (2 ^ k)).symm
-    have hComm_Rk : δ * Rk = Rk * δ := hComm.eq
-    have hComm_next : Commute δ R_next := by
-      change δ * (Rk * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3)) =
-        (Rk * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3)) * δ
-      have hTail : δ * (4 * (δ ^ (2 ^ k) * Rk) - 3) =
-          (4 * (δ ^ (2 ^ k) * Rk) - 3) * δ := by
-        calc
-          δ * (4 * (δ ^ (2 ^ k) * Rk) - 3)
-              = 4 * ((δ * δ ^ (2 ^ k)) * Rk) - 3 * δ := by noncomm_ring
-          _ = 4 * ((δ ^ (2 ^ k) * δ) * Rk) - 3 * δ := by rw [hδ_pow]
-          _ = 4 * (δ ^ (2 ^ k) * (δ * Rk)) - 3 * δ := by simp only [mul_assoc]
-          _ = 4 * (δ ^ (2 ^ k) * (Rk * δ)) - 3 * δ := by rw [hComm_Rk]
-          _ = (4 * (δ ^ (2 ^ k) * Rk) - 3) * δ := by noncomm_ring
-      calc
-        δ * (Rk * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3))
-            = (δ * Rk) * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3) := by
-              simp only [mul_assoc]
-        _ = (Rk * δ) * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3) := by rw [hComm_Rk]
-        _ = Rk * (δ * Rk) * (4 * (δ ^ (2 ^ k) * Rk) - 3) := by
-              simp only [mul_assoc]
-        _ = Rk * (Rk * δ) * (4 * (δ ^ (2 ^ k) * Rk) - 3) := by rw [hComm_Rk]
-        _ = (Rk * Rk) * (δ * (4 * (δ ^ (2 ^ k) * Rk) - 3)) := by
-              simp only [mul_assoc]
-        _ = (Rk * Rk) * ((4 * (δ ^ (2 ^ k) * Rk) - 3) * δ) := by rw [hTail]
-        _ = (Rk * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3)) * δ := by
-              simp only [mul_assoc]
-    have hRk_pow : Rk * δ ^ (2 ^ k) = δ ^ (2 ^ k) * Rk :=
-      (comm_pow_left_eq hComm_Rk (2 ^ k)).symm
-    have hPow2 : δ ^ (2 ^ (k + 1)) = δ ^ (2 ^ k) * δ ^ (2 ^ k) := by
-      rw [pow_succ, mul_two, pow_add]
-    refine ⟨R_next, hComm_next, ?_⟩
-    simp only [Function.iterate_succ_apply']
-    rw [idempotencyDefect_newtonPeirceStep, hEq]
-    change (δ ^ (2 ^ k) * Rk) * (δ ^ (2 ^ k) * Rk) * (4 * (δ ^ (2 ^ k) * Rk) - 3) =
-      δ ^ (2 ^ (k + 1)) * (Rk * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3))
-    calc
-      (δ ^ (2 ^ k) * Rk) * (δ ^ (2 ^ k) * Rk) * (4 * (δ ^ (2 ^ k) * Rk) - 3)
-          = δ ^ (2 ^ k) * (Rk * δ ^ (2 ^ k)) * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3) := by
-            simp only [mul_assoc]
-      _ = δ ^ (2 ^ k) * (δ ^ (2 ^ k) * Rk) * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3) := by
-            rw [hRk_pow]
-      _ = (δ ^ (2 ^ k) * δ ^ (2 ^ k)) * (Rk * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3)) := by
-            simp only [mul_assoc]
-      _ = δ ^ (2 ^ (k + 1)) * (Rk * Rk * (4 * (δ ^ (2 ^ k) * Rk) - 3)) := by
-            rw [← hPow2]
-
-/-- If `(idempotencyDefect x) ^ (2 ^ k) = 0`, then `newtonPeirceStep^[k] x` is an exact
-idempotent in any associative ring `B`. -/
-theorem newtonPeirceStep_iterate_idempotent_of_defect_pow_two_pow_zero
-    {x : B} {k : ℕ} (h : (idempotencyDefect x) ^ (2 ^ k) = 0) :
-    newtonPeirceStep^[k] x * newtonPeirceStep^[k] x = newtonPeirceStep^[k] x := by
-  obtain ⟨Rk, _, hFac⟩ := idempotencyDefect_newtonPeirceStep_iterate_factor x k
-  apply idempotencyDefect_eq_zero_iff.mp
-  rw [hFac, h, zero_mul]
+alias newtonPeirceStep_iterate_idempotent_of_defect_pow_two_pow_zero :=
+  InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep_iterate_idempotent_of_defect_pow_two_pow_zero
 
 end Stage4_AporiaDefectTower
 

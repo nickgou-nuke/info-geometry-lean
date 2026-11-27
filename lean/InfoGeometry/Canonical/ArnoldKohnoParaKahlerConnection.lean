@@ -5,26 +5,22 @@ Authors: InfoGeometry Engine Contributors
 -/
 
 import Mathlib.Algebra.Lie.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.LinearAlgebra.TensorProduct.Basic
-import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
-import InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
+import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
+import Mathlib.Tactic.Abel
 
 /-!
-# Arnold--Kohno / para-Kähler connection interface
+# Arnold--Kohno coefficient and tensor cancellation
 
-This owner is deliberately an interface between the repository's native
-Arnold--Cohen relations and its finite para-Kähler datum.  It does not
-identify an arbitrary KZ connection with a metric, nor does it assert a
-general configuration-space theorem without an indexed residue carrier.
+This owner proves commutator identities and tensor-valued three-channel
+cancellation from explicit Arnold and Kohno relations. The historical module
+name is retained for compatibility. No para-Kähler datum, connection metric,
+or analytic configuration-space flatness theorem is constructed here.
 -/
 
 noncomputable section
 
 namespace InfoGeometry.Canonical.ArnoldKohnoParaKahlerConnection
-
-open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
-open InfoGeometry.Canonical.ParaKahlerMaurerCartanQGT
 
 /-- A finite commutator connection is flat when its coefficient values
 commute.  The exterior/formal differential part is kept separate from this

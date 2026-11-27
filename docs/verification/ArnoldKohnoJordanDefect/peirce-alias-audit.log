@@ -1,0 +1,99 @@
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_mul_eq_zero : ∀ {B : Type u_1}
+  [inst : Ring B] {x y : B},
+  x * y = 0 →
+    InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep x *
+        InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep y =
+      0
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_mul_eq_zero' depends on axioms: [propext,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_mul_eq_zero : ∀
+  {B : Type u_1} [inst : Ring B] {x y : B},
+  x * y = 0 →
+    ∀ (k : ℕ),
+      InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x *
+          InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] y =
+        0
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_mul_eq_zero' depends on axioms: [propext,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_add_of_orthogonal : ∀
+  {B : Type u_1} [inst : Ring B] {x y : B},
+  x * y = 0 →
+    y * x = 0 →
+      ∀ (k : ℕ),
+        InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] (x + y) =
+          InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x +
+            InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] y
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_add_of_orthogonal' depends on axioms: [propext,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_intertwines : ∀ {B : Type u_1}
+  [inst : Ring B] {x y z : B},
+  x * y = y * z →
+    InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep x * y =
+      y * InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep z
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_intertwines' depends on axioms: [propext,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_intertwines : ∀
+  {B : Type u_1} [inst : Ring B] {x y z : B},
+  x * y = y * z →
+    ∀ (k : ℕ),
+      InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x * y =
+        y * InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] z
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_intertwines' depends on axioms: [propext,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_left_support : ∀
+  {B : Type u_1} [inst : Ring B] {p x : B},
+  p * x = x →
+    ∀ (k : ℕ),
+      p * InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x =
+        InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_left_support' depends on axioms: [propext,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_right_support : ∀
+  {B : Type u_1} [inst : Ring B] {p x : B},
+  x * p = x →
+    ∀ (k : ℕ),
+      InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x * p =
+        InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_right_support' depends on axioms: [propext,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_left_annihilated : ∀
+  {B : Type u_1} [inst : Ring B] {a x : B},
+  a * x = 0 → ∀ (k : ℕ), a * InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x = 0
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_left_annihilated' depends on axioms: [propext,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_right_annihilated : ∀
+  {B : Type u_1} [inst : Ring B] {a x : B},
+  x * a = 0 → ∀ (k : ℕ), InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x * a = 0
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterates_right_annihilated' depends on axioms: [propext,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.map_newtonPeirceStep : ∀ {B : Type u_1}
+  {C : Type u_2} [inst : Ring B] [inst_1 : Ring C] (f : B →+* C) (x : B),
+  f (InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep x) =
+    InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep (f x)
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.map_newtonPeirceStep' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.map_newtonPeirceStep_iterates : ∀ {B : Type u_1}
+  {C : Type u_2} [inst : Ring B] [inst_1 : Ring C] (f : B →+* C) (x : B) (k : ℕ),
+  f (InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x) =
+    InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] (f x)
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.map_newtonPeirceStep_iterates' depends on axioms: [propext,
+ Classical.choice,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.idempotencyDefect_newtonPeirceStep_iterate_factor : ∀
+  {B : Type u_1} [inst : Ring B] (x : B) (k : ℕ),
+  ∃ Rk,
+    Commute (InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect x) Rk ∧
+      InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect
+          (InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x) =
+        InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect x ^ 2 ^ k * Rk
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.idempotencyDefect_newtonPeirceStep_iterate_factor' depends on axioms: [propext,
+ Quot.sound]
+@InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterate_idempotent_of_defect_pow_two_pow_zero : ∀
+  {B : Type u_1} [inst : Ring B] {x : B} {k : ℕ},
+  InfoGeometry.Core.IdempotentGraphGrassmannian.idempotencyDefect x ^ 2 ^ k = 0 →
+    InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x *
+        InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x =
+      InfoGeometry.Core.IdempotentGraphGrassmannian.newtonPeirceStep^[k] x
+'InfoGeometry.OperatorAlgebra.PeirceBruhatAporiaTowerAndMatrixGeometry.newtonPeirceStep_iterate_idempotent_of_defect_pow_two_pow_zero' depends on axioms: [propext,
+ Quot.sound]

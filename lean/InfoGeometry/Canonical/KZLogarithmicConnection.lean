@@ -1,5 +1,11 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.Tactic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import InfoGeometry.Canonical.KZResidueBracket
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
 import InfoGeometry.Projective.Conf3ConcreteDLog
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
@@ -13,38 +19,38 @@ open InfoGeometry.Projective.Conf3ConcreteDLog
 open InfoGeometry.Canonical.ArnoldCohenBCFWBridge
 
 /-!
-# Knizhnik-Zamolodchikov (KZ) Logarithmic Connection and Flatness
+# Three-point logarithmic coefficient and commutator identities
 
-This module proves the exact, unconditional flatness of the Knizhnik-Zamolodchikov
-logarithmic connection on the 3-point configuration space $\operatorname{Conf}_3(K)$:
+This module proves algebraic consequences of the three-point Arnold relation.
+The scalar points are pairwise distinct, and the form carrier has the explicitly
+assumed alternating bilinear operation `ExteriorFormAlgebra.wedge`.
 
-$$\theta = \omega_{01} \otimes t_{01} + \omega_{12} \otimes t_{12} + \omega_{20} \otimes t_{20}$$
+`kz_connection_flatness` retains its historical name but proves only the
+form-level Arnold cancellation; its exchange datum does not occur in the
+conclusion. `kz_curvature_vanishes_of_cybe` proves that the three right-weighted
+commutator contributions sum to zero when their cyclic commutators agree.
+The historical name `CYBEExchangeData` denotes those explicit equalities; it
+neither constructs Casimir residues nor supplies a Yang--Baxter representation.
 
-where:
-1. $\omega_{ij}(z) = \frac{dz_i - dz_j}{z_i - z_j}$ are the concrete logarithmic 1-forms on $\operatorname{Conf}_3(K)$.
-2. $t_{ij}$ are Lie algebra / associative algebra Casimir operators satisfying the
-   Classical Yang-Baxter Equation (CYBE) $[t_{01}, t_{12}] = [t_{12}, t_{20}] = [t_{20}, t_{01}]$.
-3. The curvature 2-form $\theta \wedge \theta$ vanishes identically as a consequence of the
-   3-term Arnold-Cohen relation $\omega_{01} \wedge \omega_{12} + \omega_{12} \wedge \omega_{20} + \omega_{20} \wedge \omega_{01} = 0$.
-
-All proofs are complete in native Mathlib 4 with zero `sorry`s and zero custom axioms.
+No exterior derivative, complete connection curvature, flat bundle, parallel
+transport, or monodromy is constructed here. The independent native Lie and
+exterior factors are treated in `ArnoldKohnoParaKahlerConnection` and
+`IndexedArnoldKohnoExterior`.
 -/
 
 section CYBE
 
 variable {K : Type*} [Ring K]
 
-/-! ## 1. Classical Yang-Baxter and Lie Casimir Data -/
+/-! ## 1. Equal cyclic commutator data -/
 
-/-- The commutator bracket $[X, Y] = X Y - Y X$ in an associative algebra. -/
-def bracket {A : Type*} [Ring A] (X Y : A) : A := X * Y - Y * X
-
-/-- An associative Lie algebra or matrix algebra with 3-body Casimir exchange operators. -/
+/-- Three associative-algebra residues with equal cyclic commutators. The
+name is retained for compatibility; the equalities are explicit hypotheses. -/
 structure CYBEExchangeData (A : Type*) [Ring A] [Module K A] where
   t01 : A
   t12 : A
   t20 : A
-  -- Classical Yang-Baxter Equation: equal cyclic commutators
+  -- Assumed equal cyclic commutators.
   cybe_01_12 : bracket t01 t12 = bracket t12 t20
   cybe_12_20 : bracket t12 t20 = bracket t20 t01
 
@@ -64,7 +70,7 @@ theorem bracket_01_12_eq_20_01 :
     bracket C.t01 C.t12 = bracket C.t20 C.t01 :=
   C.cybe_01_12.trans C.cybe_12_20
 
-/-- **Theorem**: 3-Body Yang-Baxter Sum Invariance.
+/-- The sum of the three equal cyclic commutators.
     $[t_{01}, t_{12}] + [t_{12}, t_{20}] + [t_{20}, t_{01}] = 3 [t_{01}, t_{12}]$. -/
 theorem cybe_sum_eq_three :
     bracket C.t01 C.t12 + bracket C.t12 C.t20 + bracket C.t20 C.t01 =
@@ -86,13 +92,8 @@ not by itself establish curvature vanishing, since the exchange elements do
 not occur in its conclusion.  The curvature-level statement is provided by
 `kz_curvature_vanishes_of_cybe` below. -/
 
-/-- 
-**Form-level Arnold cancellation used by the KZ curvature calculation**
-
-Proves that for any configuration `z ∈ Conf_3(K)` and any classical $r$-matrix exchange
-data satisfying CYBE, the wedge-commutator of the KZ connection vanishes identically:
-$$(\omega_{01} \wedge \omega_{12}) [t_{01}, t_{12}] + (\omega_{12} \wedge \omega_{20}) [t_{12}, t_{20}] + (\omega_{20} \wedge \omega_{01}) [t_{20}, t_{01}] = 0.$$
--/
+/-- Form-level Arnold cancellation. The exchange datum is unused; this
+statement does not contain the operator-valued curvature contribution. -/
 theorem kz_connection_flatness
     {M : Type*} [AddCommGroup M] [Module K M]
     (alg : ExteriorFormAlgebra (R := K) M)
@@ -108,9 +109,9 @@ theorem kz_connection_flatness
   intro w01 w12 w20
   exact conf3_concrete_arnold_relation alg dz z h01 h12 h20
 
-/- A curvature-level formulation in the common coefficient algebra.  Here the
-   exchange elements are multiplied on the right of the exterior coefficients;
-   unlike the historical theorem above, the CYBE hypotheses are used. -/
+/-- Cancellation of the three commutator-weighted terms in a common
+coefficient algebra. The exchange elements multiply the alternating-form
+values on the right, and the cyclic commutator hypotheses are used. -/
 theorem kz_curvature_vanishes_of_cybe
     {A : Type*} [Ring A] [Algebra K A]
     (alg : ExteriorFormAlgebra (R := K) A)
@@ -150,16 +151,11 @@ theorem four_point_cross_ratio_dlog_identity
   field_simp [d02, d13, d03, d12]
   ring
 
-/-! ## 4. The Grand KZ-Moduli Synthesis -/
+/-! ## 4. Combined algebraic identities -/
 
-/-- 
-🏆 **GRAND SYNTHESIS THEOREM: Knizhnik-Zamolodchikov Flatness & Moduli Cross-Ratio**
-
-Unifies:
-1. Exact zero-curvature / flatness of the 3-point KZ connection.
-2. Classical Yang-Baxter commutator cyclic equality $[t_{01}, t_{12}] = [t_{12}, t_{20}] = [t_{20}, t_{01}]$.
-3. 4-point moduli space cross-ratio logarithmic differential decomposition.
--/
+/-- Conjunction of the form-level Arnold identity, the assumed cyclic
+commutator equalities, and a four-point rational identity. Its historical
+name does not assert an analytic flatness or moduli-space construction. -/
 theorem grand_kz_moduli_synthesis
     {M : Type*} [AddCommGroup M] [Module K M]
     (alg : ExteriorFormAlgebra (R := K) M)
@@ -169,14 +165,14 @@ theorem grand_kz_moduli_synthesis
     (C : CYBEExchangeData (K := K) A)
     (w₀ w₁ w₂ w₃ : K)
     (hw02 : w₀ ≠ w₂) (hw13 : w₁ ≠ w₃) (hw03 : w₀ ≠ w₃) (hw12 : w₁ ≠ w₂) :
-    -- (1) KZ Connection Flatness via Arnold-Cohen
+    -- (1) Form-level Arnold cancellation
     (alg.wedge (conf3ConcreteForm dz z 0 1) (conf3ConcreteForm dz z 1 2) +
      alg.wedge (conf3ConcreteForm dz z 1 2) (conf3ConcreteForm dz z 2 0) +
      alg.wedge (conf3ConcreteForm dz z 2 0) (conf3ConcreteForm dz z 0 1) = 0) ∧
-    -- (2) CYBE Commutator Agreement
+    -- (2) Assumed cyclic commutator agreement
     (bracket C.t01 C.t12 = bracket C.t12 C.t20 ∧
      bracket C.t12 C.t20 = bracket C.t20 C.t01) ∧
-    -- (3) 4-Point Cross-Ratio Logarithmic Form Decomposition
+    -- (3) Four-point rational identity
     ((1 / (w₀ - w₂)) + (1 / (w₁ - w₃)) - (1 / (w₀ - w₃)) - (1 / (w₁ - w₂)) =
       - (((w₀ - w₁) * (w₂ - w₃) * (w₀ + w₁ - w₂ - w₃)) /
          ((w₀ - w₂) * (w₁ - w₃) * (w₀ - w₃) * (w₁ - w₂)))) := by

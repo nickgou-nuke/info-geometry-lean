@@ -5,6 +5,7 @@ Authors: InfoGeometry Engine Contributors
 -/
 import InfoGeometry.Canonical.CliffordPeirceWalshAudit
 import InfoGeometry.Canonical.ArnoldInformationGeometry
+import InfoGeometry.Canonical.ArnoldKohnoJordanDefect
 import InfoGeometry.OperatorAlgebra.IsometryCornerLocalization
 import InfoGeometry.Clifford.WeylFrameMasks
 import InfoGeometry.Analysis.MetricPorosity

@@ -1,4 +1,8 @@
-/- SPDX-License-Identifier: Apache-2.0 -/
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 
 /-
 # Indexed algebraic Arnold--KZ complex
@@ -12,8 +16,8 @@ are used.
 -/
 
 import InfoGeometry.Canonical.ArnoldCohenBCFWBridge
-import InfoGeometry.Algebra.FiniteSpinAlgebra
-import InfoGeometry.Canonical.KZLogarithmicConnection
+import Mathlib.Tactic.FieldSimp
+import InfoGeometry.Canonical.KZResidueBracket
 
 noncomputable section
 
@@ -202,7 +206,7 @@ def totalTripleCurvature
     (z : Conf n K) (dz : Fin n → K)
     (R : InfinitesimalBraidResidues n K) : K :=
   ∑ i : Fin n, ∑ j : Fin n, ∑ k : Fin n,
-    if h : i ≠ j ∧ j ≠ k ∧ i ≠ k then
+    if _h : i ≠ j ∧ j ≠ k ∧ i ≠ k then
       tripleCurvature alg z dz R i j k
     else 0
 

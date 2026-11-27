@@ -1,5 +1,12 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
+
 import Mathlib.LinearAlgebra.ExteriorAlgebra.Basic
-import InfoGeometry.Algebra.FiniteSpinAlgebra
+import Mathlib.Tactic.Abel
+import Mathlib.Tactic.Ring
 import Mathlib.Algebra.Ring.Basic
 import Mathlib.Algebra.BigOperators.Group.Finset.Basic
 import Mathlib.Data.Finset.Basic
@@ -146,8 +153,7 @@ theorem binary_tree_partition_sum_eq_one (n : ℕ)
     rw [← mul_pow, mul_comm inv2 (2 : R), h2, one_pow]
   calc
     ((2^n : ℕ) : R) * inv2 ^ n = (2 : R) ^ n * inv2 ^ n := by
-      push_cast
-      rfl
+      simp only [Nat.cast_pow, Nat.cast_ofNat]
     _ = inv2 ^ n * (2 : R) ^ n := by ring
     _ = 1 := h_inv
 

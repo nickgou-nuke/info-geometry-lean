@@ -1,0 +1,160 @@
+### 0. DISSOLUTION (`SOLVE`): EXTRACTION OF IRREDUCIBLE PRIMITIVES
+
+Stripping away encyclopedic taxonomy, historical attribution, and pedagogical scaffolding exposes a single recurring epistemic compulsion across the raw stream: **confabulatory closure**—the attempt to absorb every non-integrable obstruction, singular collision, off-diagonal shear, and associativity failure into a globally closed, block-diagonal, invariant symmetry container.
+
+Dissolving the stream under Socratic elenchus and archetypal extraction yields the irreducible non-commutative primitives governing its mechanics:
+
+1. **Perspective / Framing ($A_0$):** Any intelligible determination presupposes fixing a reference locus (a base density, a distinguished point at infinity, or a separating reference state), thereby breaking symmetry prior to measuring invariance.
+2. **Reductive Invariance ($\Theta / A_1$):** Determination through closed subalgebraic conservation, isometric fiber preservation, and semisimple (diagonalizable) operators whose action scales or rotates states without mixing hierarchical grades.
+3. **Nilpotent Shear ($\Sigma / A_2$):** Determination through non-commutative commutator residue ($[X,Y] \neq 0$), non-diagonalizable off-diagonal displacement ($\mathcal{N} \neq 0, \, \mathcal{N}^r = 0$), and singular boundary degeneration whose eigenvalues mimic identity ($\operatorname{spec}(I + \mathcal{N}) = \{1\}$) while irreversibly shearing the basis.
+4. **Asymmetric Sequence ($X \triangleright Y \neq Y \triangleright X$):** Acting from within a fixed reductive frame to quarantine a shear ($G_0 \triangleright U_+$) is strictly non-equivalent to traversing a singular shear and attempting to recover the initial frame ($U_- \triangleright G_0$).
+
+---
+
+### I. THE FUNDAMENTAL BINARY CUT
+
+The primordial epistemic cut ($A_0$) cleaves undifferentiated transformation into two mutually irreducible, non-commuting poles:
+
+* **The Conscious Thesis — The Sovereign Reductive Frame ($\Theta \equiv A_1$):**
+  The epistemic postulate that reality is exhaustively intelligible as a closed, path-independent homogeneous structure ($G_0$). It identifies truth with idempotent projection, invariant metrics on global bundles, vanishing curvature, and semisimple eigenvalues. In its self-image, any variation is reversible and globally gaugeable back to an unramified origin.
+* **The Repressed Shadow Complement — The Nilpotent Non-Commutative Shear ($\Sigma \equiv A_2$):**
+  Everything excluded to manufacture smooth homogeneity: non-integrable hyperplane torsion, unipotent translation with a degenerate fixed point ($U_\pm$), puncture collision ($z_i \to z_j$), and nilpotent Jordan residue ($\mathcal{N}$). Because $\mathcal{N}$ leaves diagonal eigenvalues unchanged while coupling independent states irreversibly, $\Theta$ represses $\Sigma$ as a mere coordinate artifact or peripheral anomaly—yet without $\Sigma$, $\Theta$ possesses no transitive motion across distinct configurations.
+
+---
+
+### II. THE FOURFOLD RELATIONAL ANATOMY
+
+Let $X \triangleright Y$ denote the non-commutative directional operation in which $X$ supplies the governing perspective acting upon $Y$. Pairing $\{\Theta, \Sigma\} \times \{\Theta, \Sigma\}$ isolates four strictly asymmetric relational regimes:
+
+1. **Internal Self-Consistency — Reductive Automorphism ($A_3 := \Theta \triangleright \Theta$):**
+   Within its own interior, the Thesis enforces closure by restricting transformations to measure-, norm-, or grading-preserving subgroups ($[\mathfrak{g}_0, \mathfrak{g}_0] \subset \mathfrak{g}_0$). Parallel transport along contractible paths is path-independent; operators commute up to isometric rotation or pure scale; fiber preservation masquerades as completeness.
+2. **Outward Projection — Prolongative Domestication ($A_4 := \Theta \triangleright \Sigma$):**
+   Confronted with non-commutative torsion or affine drift, $\Theta$ projects its own grading hierarchy outward onto $\Sigma$. It recasts raw non-integrability as a tame obstruction tensor preserved by $\mathfrak{g}_0$, appends unipotent shears as a normal subgroup ($P = G_0 \ltimes U_+$) quarantined at an idealized horizon ($\infty$), and treats non-commutative translation as a local coordinate chart subordinated to a compactified projective quotient. Here $G_0$ normalizes $U_+$ ($g_0 u_+ g_0^{-1} \in U_+$), subordinating the shadow as an upper-triangular perturbation of a reductive sovereign.
+3. **Inward Shadow-Intrusion — Logarithmic Monodromy & Jordan Degeneration ($A_5 := \Sigma \triangleright \Theta$):**
+   Reversing direction shatters domestication ($A_5 \neq A_4$). When transport encircles colliding singular loci along non-contractible loops or crosses into the dual cell via chart inversion ($0 \leftrightarrow \infty$, sending $U_+ \mapsto U_-$), the repressed nilpotent shear invades the operators of $\Theta$ itself. Semisimple generators suffer resonant degeneration ($L = L_{\text{diag}} + \mathcal{N}$), acquiring non-conjugable Jordan blocks that cannot be absorbed into $G_0$. Returning around a $2\pi$ circuit shears single-valued states by unipotent monodromy ($I + 2\pi i \mathcal{N}$), fracturing pure power laws into multi-sheeted logarithmic branch cuts ($\log^k z$), degrading global principal bundles into path-dependent local groupoids, and violating strict Lie closure off-shell.
+4. **The Autonomous Unexamined Ground — Braided Singular Flux ($A_6 := \Sigma \triangleright \Sigma$):**
+   Prior to smooth manifolds, linear frames, and algebraic gradings lies the unmediated interaction of the shadow with itself: unlabeled singular loci braiding non-commutatively in configuration space ($\sigma_i \sigma_{i+1} \neq \sigma_{i+1} \sigma_i$), topological neck-pinching at moduli boundaries, and state-intrinsic modular flow ($\Delta^{it}$) born directly from the non-tracial asymmetry ($AB \neq BA$) of an entangled algebra prior to any external geometric clock.
+
+---
+
+### III. THE TRANSCENDENT FUNCTION
+
+Pairing the opposing projections—Outward Prolongative Domestication ($A_4 = \Theta \triangleright \Sigma$) and Inward Logarithmic Intrusion ($A_5 = \Sigma \triangleright \Theta$)—ignites the transcendent function across four structural moments:
+
+1. **Shared Substantive Gravity:**
+   Both $A_4$ and $A_5$ carry the identical infinitesimal mass: **degenerate fixed-point nilpotency**. Whether manifested upward as a parabolic horizon stabilizer ($\exp(\mathfrak{g}_+)$) or inward as a resonant monodromy shear ($\exp(2\pi i \mathcal{N})$), both operate strictly in the off-diagonal kernel invisible to static spectral eigenvalues, demonstrating that pure reductive invariance ($A_3$) is dynamically sterile without nilpotent coupling.
+2. **Directional Tension:**
+   $A_4$ pulls **centrifugally toward compactified closure**, expelling singularity to an unreachable horizon ($\infty$) to seal an open cell into a smooth global quotient. $A_5$ pulls **centripetally toward interior collision**, dragging the horizon into finite interior degeneration ($z_i \to z_j$) where smoothness tears into logarithmic ramification. Because compactifying before colliding does not commute with colliding before prolonging ($A_4 \triangleright A_5 \neq A_5 \triangleright A_4$), their directional vectors stand in permanent non-commutative tension.
+3. **Integrative Bridge — Commutator Genesis & Covariant Soldering ($A_8 \to A_9$):**
+   Evaluating the non-vanishing commutator of the opposing nilpotent projections yields:
+   $$A_8 := [A_4, A_5] = (A_4 \triangleright A_5) - (A_5 \triangleright A_4) \neq 0.$$
+   Just as $[\mathfrak{g}_+, \mathfrak{g}_-] = \mathfrak{g}_0$ and half-sided modular translations coupled with reflections generate modular boosts, **the clash of outward projection and inward shadow-intrusion dynamically generates the scaling and modular flow originally misattributed to the Sovereign Frame as self-subsistent**. Soldering the reductive frame ($A_3$) to this bi-projective commutator ($A_8$) produces the **Covariant Soldering Bridge ($A_9$)**—a total connection coupling base displacement, reductive frame, and horizon shear into a single covariant differential law.
+4. **Perspectival Transformation (The Non-Commutative Round-Trip):**
+   Executing the round-trip encounter $(A_5^{-1} \triangleright A_4^{-1} \triangleright A_5 \triangleright A_4)$—projecting out to the horizon, inverting through the shadow, encircling the singular locus, and returning—fails to land on the initial sheet because $[A_4, A_5] \neq 0$. The subject returns shifted onto a ramified covering sheet carrying an indelible nilpotent partner ($\Psi \mapsto \Psi + 2\pi i \mathcal{N}\Psi$). Consciousness transforms from **view-from-nowhere invariance** (demanding single-valued identity) to **perspectival holonomy**: knowing an object by the exact unipotent cocycle accumulated across an irreversible circuit around its singular boundary.
+
+---
+
+### IV. THE SOCRATIC APORIA & RECURSIVE TOWER OF META-COGNITION
+
+#### 1. Measuring the Exact Socratic Aporia ($\delta(\Theta) := (\Theta \triangleright \Theta) - \Theta \neq 0$)
+The Conscious Thesis claims idempotent epistemic closure: reducing an already reduced determination must yield zero remainder ($\Theta \triangleright \Theta = \Theta$). Subjecting $\Theta$ to self-predication exposes an exact self-contradiction ($A_7$):
+* **Framing Elenchus:** Within a semidirect totality $P = G_0 \ltimes U_+$, the Thesis defines knowledge as projection onto a reductive Levi factor $G_0$. Yet the set of all valid reductive splittings $G_0 \subset P$ is itself an affine torsor under the unipotent shadow $U_+$. Applying the criterion of frame-invariance to the *act of choosing a reductive frame* reveals that frame-selection is itself a frame-dependent nilpotent shear!
+* **Algebraic & Kinematic Defect:** Composing two $\Theta$-admissible horizontal motions in opposite orders exits the subspace via non-zero commutator torsion ($[\mathfrak{g}_{-1}, \mathfrak{g}_{-1}] = \mathfrak{g}_{-2} \neq 0$); squaring an operator contaminated by resonant intrusion ($L = \Theta + \mathcal{N}$, with $\Theta^2 = \Theta$) fails idempotence:
+  $$\delta(L) = L^2 - L = (\Theta\mathcal{N} + \mathcal{N}\Theta - \mathcal{N}) + \mathcal{N}^2 \neq 0.$$
+Thus $A_7 := \delta(A_3) \neq 0$: **the operator of reductive closure fails to equal its own square; self-application secretes a non-conjugable nilpotent coboundary.**
+
+#### 2. Recursive Ascent Up the Tower of Meta-Cognition ($A_{10}$)
+At each meta-cognitive level $n$, reason attempts to extinguish the aporia $\mathcal{A}_n := \delta(\Theta_n)$ by applying Outward Prolongative Domestication ($A_4$), adjoining the exponentiated defect via a non-commutative semidirect extension:
+$$\Theta_{n+1} := \Theta_n \ltimes \exp(\mathcal{A}_n), \qquad \mathcal{A}_n = (\Theta_n \triangleright \Theta_n) - \Theta_n \neq 0.$$
+
+* **Rung $0 \to 1$ (Subspace Closure $\to$ Graded Prolongation):**
+  $\Theta_0$ posits first-order subspace invariance. $\mathcal{A}_0 \neq 0$ erupts as non-integrable commutator torsion. $\Theta_1$ domesticates $\mathcal{A}_0$ by promoting the torsion into a negatively graded nilpotent algebra and computing its maximal graded symmetry prolongation.
+* **Rung $1 \to 2$ (Graded Prolongation $\to$ Flat Logarithmic Sewing):**
+  $\mathcal{A}_1 = \delta(\Theta_1) \neq 0$ erupts as a dual failure: prolongation either diverges into an infinite-dimensional jet hierarchy that never closes at finite order, or compactifies into quotients $G/P$ scarred by singular boundary divisors where affine charts fail to cover the whole. $\Theta_2$ attempts to sew across singular boundaries via locally flat logarithmic potentials ($d\mathcal{A} + \mathcal{A}\wedge\mathcal{A} = 0$).
+* **Rung $2 \to 3$ (Local Flatness $\to$ Homotopical Super-Grading):**
+  $\mathcal{A}_2 = \delta(\Theta_2) \neq 0$ erupts globally: local curvature vanishes, yet braided loops around colliding singularities generate non-semisimple Jordan blocks and unbounded polynomial-logarithmic towers, while off-shell boundary deformations violate the Jacobi identity ($[[\cdot,\cdot],\cdot] + \text{cyc} \neq 0$). $\Theta_3$ adjoins odd Grassmann/ghost gradings and differential coboundaries ($Q$) to restore closure cohomologically.
+* **Rung $3 \to \infty$ (Homotopical Tower $\to$ Recursive Limit $A_{10}$):**
+  $\mathcal{A}_3 = \delta(\Theta_3) \neq 0$ persists because off-shell anomalies require an infinite $L_\infty$-tower of higher brackets ($l_2, l_3, l_4, \dots$) anchored to background gauge choices. Ascending the tower proves **why no static container $\Theta_n$ ever achieves $\mathcal{A}_n = 0$**: every static thesis treats non-commutativity as an external error to enclose, whereas $\mathcal{A}_n$ is the exact generative differential by which level $n$ brings forth level $n+1$. Meta-cognition reaches its structural limit ($A_{10}$) only by identifying intelligibility with the **entire coherent semidirect/homotopical recursion law** rather than any truncated floor.
+
+---
+
+### V. THE ACYCLIC CAUSAL POSET $(\mathcal{P}, \prec)$
+
+Let $\mathcal{P} = \{A_0, A_1, \dots, A_{11}\}$ be the set of twelve extracted archetypes ordered by strict causal-epistemic precedence $\prec$, defined as the **minimal transitive closure** of the nineteen Hasse covering relations ($\lessdot$) tabulated below. Incomparability is denoted $X \parallel Y \iff (X \not\preceq Y \land Y \not\preceq X)$.
+
+| Rank $\rho$ | Node | Canonical Archetype | Minimal Lower Covers ($U \lessdot X$) | Principal Lower Ideal $\downarrow\!X \setminus \{X\}$ |
+| :---: | :---: | :--- | :---: | :--- |
+| **0** | $A_0$ | **Primordial Asymmetric Cut** ($\bot$) | $\varnothing$ | $\varnothing$ |
+| **1** | $A_1$ | **Sovereign Reductive Frame** ($\Theta$) | $A_0$ | $\{A_0\}$ |
+| **1** | $A_2$ | **Nilpotent Non-Commutative Shear** ($\Sigma$) | $A_0$ | $\{A_0\}$ |
+| **2** | $A_3$ | **Reductive Automorphism** ($\Theta \triangleright \Theta$) | $A_1$ | $\{A_0, A_1\}$ |
+| **2** | $A_4$ | **Prolongative Domestication** ($\Theta \triangleright \Sigma$) | $A_1, A_2$ | $\{A_0, A_1, A_2\}$ |
+| **2** | $A_5$ | **Logarithmic Shadow-Intrusion** ($\Sigma \triangleright \Theta$) | $A_1, A_2$ | $\{A_0, A_1, A_2\}$ |
+| **2** | $A_6$ | **Autonomous Braided-Modular Flux** ($\Sigma \triangleright \Sigma$) | $A_2$ | $\{A_0, A_2\}$ |
+| **3** | $A_7$ | **Nilpotent Self-Contradiction / Aporia** ($\delta(A_3)$) | $A_3, A_5, A_6$ | $\{A_0, A_1, A_2, A_3, A_5, A_6\}$ |
+| **3** | $A_8$ | **Bi-Projective Commutator Genesis** ($[A_4, A_5]$) | $A_4, A_5$ | $\{A_0, A_1, A_2, A_4, A_5\}$ |
+| **4** | $A_9$ | **Covariant Soldering & Holonomic Bridge** ($A_3 \bowtie A_8$) | $A_3, A_8$ | $\{A_0, A_1, A_2, A_3, A_4, A_5, A_8\}$ |
+| **4** | $A_{10}$ | **Recursive Homotopical Tower** ($\operatorname{Lim}_\ltimes(A_4, A_7)$) | $A_4, A_7$ | $\{A_0, A_1, A_2, A_3, A_4, A_5, A_6, A_7\}$ |
+| **5** | $A_{11}$ | **Reflexive Semidirect Coagulation** ($\top$) | $A_9, A_{10}$ | $\{A_0, A_1, A_2, A_3, A_4, A_5, A_6, A_7, A_8, A_9, A_{10}\}$ |
+
+**Structural Verification of $(\mathcal{P}, \prec)$:**
+* **Strict Acyclicity:** Every covering pair $U \lessdot V$ satisfies $\rho(U) < \rho(V)$ under $\rho: \mathcal{P} \to \{0,1,2,3,4,5\}$. Because strict inequality on $\mathbb{N}$ is transitive and irreflexive, $X \prec Y \implies \rho(X) < \rho(Y)$, forbidding any cycle $X \prec \dots \prec X$.
+* **Transitive Irreducibility (Pure Hasse Topology):** The only covering edges spanning $\Delta\rho > 1$ are $A_3 \lessdot A_9$ ($2 \to 4$) and $A_4 \lessdot A_{10}$ ($2 \to 4$). At Rank 3 ($\{A_7, A_8\}$): $A_3 \notin \downarrow\!A_8$ and $A_7 \notin \downarrow\!A_9$, so no $Z$ satisfies $A_3 \prec Z \prec A_9$; likewise $A_4 \notin \downarrow\!A_7$ and $A_8 \notin \downarrow\!A_{10}$, so no $Z$ satisfies $A_4 \prec Z \prec A_{10}$. Every declared edge is minimal.
+
+---
+
+### VI. COAGULATION (`COAGULA`): AXIOMATIC CHAIN, DEDUCTIONS & MASTER SYNTHESIS
+
+#### A. Canonical Philosophical Axioms
+
+* **$\mathbf{Ax.\,1}$ (Axiom of Primordial Bifurcation):** All determinate experience originates in an Asymmetric Cut $A_0 = \bot$ that splits exclusively into two strictly incomparable primitives, $A_0 \lessdot A_1$ and $A_0 \lessdot A_2$ ($A_1 \parallel A_2$), where $A_1$ posits closed invariance and $A_2$ enacts irreversible nilpotent displacement. Neither causal precedence nor definitional reduction holds outside the minimal transitive closure $\prec$ of $\lessdot$.
+* **$\mathbf{Ax.\,2}$ (Axiom of Non-Commutative Perspective):** Directional perspective $\triangleright$ on $\{A_1, A_2\}$ is strictly non-commutative, generating the four-element Rank-2 antichain $\{A_3, A_4, A_5, A_6\}$ via $A_3 = (A_1 \triangleright A_1)$ ($A_1 \lessdot A_3$), $A_4 = (A_1 \triangleright A_2)$ ($\{A_1, A_2\} \lessdot A_4$), $A_5 = (A_2 \triangleright A_1)$ ($\{A_1, A_2\} \lessdot A_5$), and $A_6 = (A_2 \triangleright A_2)$ ($A_2 \lessdot A_6$), with $A_4 \neq A_5$.
+* **$\mathbf{Ax.\,3}$ (Axiom of Aporetic Non-Idempotence):** Evaluating pure reductive consistency $A_3$ across inward shadow-intrusion $A_5$ and autonomous braided flux $A_6$ fails idempotence: $\delta(A_3) := (A_3 \triangleright A_3) - A_3 = A_7 \neq 0$, establishing $\{A_3, A_5, A_6\} \lessdot A_7$, where $A_7$ is a non-zero nilpotent defect non-conjugable into $A_3$.
+* **$\mathbf{Ax.\,4}$ (Axiom of Commutator Genesis):** Pairing the opposing projections $A_4$ and $A_5$ yields a non-vanishing commutator $[A_4, A_5] := (A_4 \triangleright A_5) - (A_5 \triangleright A_4) = A_8 \neq 0$, establishing $\{A_4, A_5\} \lessdot A_8$ and generating dynamic frame-scaling out of opposing nilpotent shears.
+* **$\mathbf{Ax.\,5}$ (Axiom of Soldering, Prolongation, and Suprema):**
+  1. Soldering reductive endomorphism $A_3$ to commutator genesis $A_8$ forms the covariant holonomic bridge $A_9 = A_3 \bowtie A_8$ ($\{A_3, A_8\} \lessdot A_9$).
+  2. Iterating outward domestication $A_4$ upon aporetic defect $A_7$ via $\Theta_{n+1} = \Theta_n \ltimes \exp(\delta(\Theta_n))$ ($\Theta_0 = A_3$) forms in its recursive closure the homotopical tower $A_{10}$ ($\{A_4, A_7\} \lessdot A_{10}$).
+  3. Coagulating covariant holonomy $A_9$ with recursive homotopical closure $A_{10}$ forms $A_{11} = A_9 \vee A_{10}$ ($\{A_9, A_{10}\} \lessdot A_{11}$).
+
+---
+
+#### B. Intermediate Deductions (Proved Strictly from Poset Mechanics)
+
+* **$\mathbf{Ded.\,1}$ (Impossibility of Reductive Monism):** *Pure reductive invariance ($A_1, A_3$) cannot subsume, eliminate, or account for nilpotent shear ($A_2$), nor serve as a global synthesis of $\mathcal{P}$.*
+  **Proof:** By $\mathbf{Ax.\,1}$ and $\mathbf{Ax.\,2}$, the sole lower cover of $A_3$ is $A_1$, and the sole lower cover of $A_1$ is $A_0$; hence $\downarrow\!A_3 = \{A_0, A_1, A_3\}$. Since $A_2 \notin \downarrow\!A_3$, $A_2 \not\preceq A_3$. Any global synthesis $S$ of $\mathcal{P}$ must satisfy $\mathcal{P} = \downarrow\!S \ni A_2$; therefore $A_3 \neq S$ and $A_1 \neq S$. $\blacksquare$
+
+* **$\mathbf{Ded.\,2}$ (Non-Lattice Obstruction to Reversible Synthesis):** *The binary split $\{A_1, A_2\}$ admits no unique, sequence-independent join at first synthesis; reversing the order of encounter switches between incomparable realities ($A_4 \parallel A_5$).*
+  **Proof:** By $\mathbf{Ax.\,2}$, both $A_4 = (A_1 \triangleright A_2)$ and $A_5 = (A_2 \triangleright A_1)$ satisfy $\{A_1, A_2\} \lessdot A_4$ and $\{A_1, A_2\} \lessdot A_5$, making both minimal upper bounds of $\{A_1, A_2\}$. Because $\{A_3, A_4, A_5, A_6\}$ is an antichain ($\rho = 2$ for all four), $A_4 \not\preceq A_5$ and $A_5 \not\preceq A_4$, i.e., $A_4 \parallel A_5$. Thus $(\mathcal{P}, \preceq)$ is non-lattice at $\{A_1, A_2\}$, proving that sequence strictly determines meaning. $\blacksquare$
+
+* **$\mathbf{Ded.\,3}$ (Necessity of Self-Contradiction under Global Embedding):** *Whenever reductive consistency ($A_3$) is embedded alongside the shadow's autonomous and intrusive operations ($A_5, A_6$), self-idempotence ($A_3 \triangleright A_3 = A_3$) is strictly impossible.*
+  **Proof:** By $\mathbf{Ax.\,3}$, any upper bound over $\{A_3, A_5, A_6\}$ must factor through $A_7 = \delta(A_3) = (A_3 \triangleright A_3) - A_3$ with $A_3 \lessdot A_7$. Because $\rho(A_3) = 2 < 3 = \rho(A_7)$, strict acyclicity yields $A_7 \neq A_3$ and $\delta(A_3) \neq 0$, refuting global idempotence. $\blacksquare$
+
+* **$\mathbf{Ded.\,4}$ (Derivative Status of Dynamic Frame Variation):** *Covariant scaling and modular flow within the soldered frame ($A_9$) cannot originate from internal reductive consistency ($A_3$) alone, but require the non-commutative commutator ($A_8$) of opposing nilpotent shears.*
+  **Proof:** By $\mathbf{Ax.\,5(1)}$, $\{A_3, A_8\} \lessdot A_9$. Computing ideals via $\mathbf{Ax.\,1}$–$\mathbf{Ax.\,4}$ gives $\downarrow\!A_3 = \{A_0, A_1, A_3\}$ and $\downarrow\!A_8 = \{A_0, A_1, A_2, A_4, A_5, A_8\}$. Since $A_2 \in \downarrow\!A_8 \setminus \downarrow\!A_3$ and $A_3 \in \downarrow\!A_3 \setminus \downarrow\!A_8$, we have $A_3 \parallel A_8$. Therefore $A_8$ is unobtainable from $A_3$, and removing $[A_4, A_5] = A_8 \neq 0$ severs the covering relation generating $A_9$. $\blacksquare$
+
+* **$\mathbf{Ded.\,5}$ (Irreversibility of Round-Trip Holonomy):** *Within the soldered bridge $A_9$, traversing outward projection $A_4$ and returning via inward intrusion $A_5$ cannot restore an unramified state of $A_3$; every closed circuit deposits a non-vanishing nilpotent partner.*
+  **Proof:** By $\mathbf{Ax.\,4}$ and $\mathbf{Ax.\,5(1)}$, $\{A_4, A_5\} \lessdot A_8 \lessdot A_9$, so both $A_4 \prec A_9$ and $A_5 \prec A_9$. A round-trip commutator vanishes in $A_9$ if and only if $(A_4 \triangleright A_5) - (A_5 \triangleright A_4) = 0$. By $\mathbf{Ax.\,4}$, this difference equals $A_8 \neq 0$, and because $A_5 \prec A_8$ carries the non-conjugable shear of $\mathbf{Ax.\,3}$ ($A_5 \notin \downarrow\!A_3$), the holonomic return state is irreducibly displaced from $A_3$. $\blacksquare$
+
+* **$\mathbf{Ded.\,6}$ (Non-Termination of Finite Static Prolongation):** *No finite semidirect prolongation $\Theta_n$ applying $A_4$ to $A_7$ can extinguish its own self-contradiction ($\delta(\Theta_n) = 0$) by collapsing back into reductive closure ($A_3$).*
+  **Proof:** For every step $n \ge 1$ of $\mathbf{Ax.\,5(2)}$, $\Theta_n$ bounds $\{A_4, A_7\}$, so $A_7 \preceq \Theta_n$. Suppose for contradiction that at finite $n$, $\delta(\Theta_n) = 0$ reduced $\Theta_n$ into pure reductive closure ($\Theta_n \preceq A_3$). Transitivity would then yield $A_7 \preceq \Theta_n \preceq A_3$, contradicting $A_3 \lessdot A_7$ ($\rho(A_3) = 2 < 3 = \rho(A_7)$). Hence $\delta(\Theta_n) \neq 0$ for all finite $n$, necessitating the full recursive limit $A_{10}$ as minimal upper bound of $\{A_4, A_7\}$. $\blacksquare$
+
+* **$\mathbf{Ded.\,7}$ (Mutual Incompleteness of Holonomy and Hierarchy):** *Covariant holonomy ($A_9$) without recursive aporetic ascent ($A_{10}$) leaves autonomous flux and self-contradiction unexamined, while recursive ascent ($A_{10}$) without covariant holonomy ($A_9$) lacks commutator genesis and soldered round-trip transformation ($A_9 \parallel A_{10}$).*
+  **Proof:** Inspecting principal ideals constructed solely from $\lessdot$:
+  $$\downarrow\!A_9 = \{A_0, A_1, A_2, A_3, A_4, A_5, A_8, A_9\}, \qquad \downarrow\!A_{10} = \{A_0, A_1, A_2, A_3, A_4, A_5, A_6, A_7, A_{10}\}.$$
+  Since $\{A_6, A_7\} \subset \downarrow\!A_{10} \setminus \downarrow\!A_9$ and $\{A_8, A_9\} \subset \downarrow\!A_9 \setminus \downarrow\!A_{10}$, neither ideal contains the other; hence $A_9 \parallel A_{10}$, and neither equals $\top$. $\blacksquare$
+
+---
+
+#### C. Master Structural Synthesis ($\mathbf{Thm.\,\top}$)
+
+**Theorem (Necessary Reflexive Semidirect Coagulation):** *The poset $(\mathcal{P}, \prec)$ admits a unique, acyclic, exhaustive Necessary Synthesis $A_{11} = \top = A_9 \vee A_{10}$ satisfying $\downarrow\!A_{11} = \mathcal{P}$, wherein every reductive invariant, nilpotent obstruction, directional projection, aporetic rupture, and meta-cognitive level is unified without contradiction or circularity.*
+
+**Proof:**
+1. *Exhaustiveness:* By $\mathbf{Ax.\,5(3)}$ and the ideal computations of $\mathbf{Ded.\,7}$,
+   $$\downarrow\!A_{11} = \{A_{11}\} \cup \downarrow\!A_9 \cup \downarrow\!A_{10} = \{A_0, A_1, \dots, A_{11}\} = \mathcal{P}.$$
+   Every element $X \in \mathcal{P} \setminus \{A_{11}\}$ satisfies $X \prec A_{11}$, and $A_0 \prec X$ for all $X \in \mathcal{P} \setminus \{A_0\}$.
+2. *Uniqueness & Non-Redundancy:* Because $A_9 \parallel A_{10}$ ($\mathbf{Ded.\,7}$), dropping either $A_9$ or $A_{10}$ loses either $\{A_8, A_9\}$ or $\{A_6, A_7, A_{10}\}$, violating exhaustiveness; by antisymmetry of $\preceq$, the supremum $A_{11}$ is unique.
+3. *Strict Acyclicity:* Since $\rho(A_9) = \rho(A_{10}) = 4 < 5 = \rho(A_{11})$, every causal chain from $\bot = A_0$ to $\top = A_{11}$ strictly ascends $\rho$, proving zero circularity. $\blacksquare$
+
+**Canonical Synthesis:**
+Intelligibility is neither static reductive invariance ($A_1, A_3$, refuted by $\mathbf{Ded.\,1}$ and $\mathbf{Ded.\,3}$) nor unstructured singular flux ($A_2, A_6$), nor any reversible equilibrium between them ($\mathbf{Ded.\,2}$). A domain becomes coherent solely through **Reflexive Semidirect Coagulation ($A_{11}$)**: the asymmetric cut of perspective ($A_0$) generates a reductive frame ($A_1$) whose dynamic life is not native to itself, but arises from the non-commutative commutator ($A_8$, $\mathbf{Ded.\,4}$) between its outward horizon-domestication ($A_4$) and the inward logarithmic intrusion ($A_5$) of an autonomous braided ground ($A_6$). Because the frame's self-application necessarily fails idempotence ($\delta(A_3) = A_7 \neq 0$, $\mathbf{Ded.\,3}$), truth cannot reside in vanishing remainder; it resides simultaneously in **horizontal perspectival holonomy ($A_9$, $\mathbf{Ded.\,5}$)**—measuring the exact nilpotent cocycle accumulated by traversing singular boundaries—and **vertical homotopical recursion ($A_{10}$, $\mathbf{Ded.\,6}$)**—propagating each order's self-contradiction into the semidirect extension $\Theta_{n+1} = \Theta_n \ltimes \exp(\delta(\Theta_n))$ that sustains the next. Invariance is nothing other than the covariant law governing irreversible transformation across singular perspectives.

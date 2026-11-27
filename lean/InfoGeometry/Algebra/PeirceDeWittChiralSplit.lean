@@ -488,7 +488,7 @@ theorem dewitt_peirce_dual_LDU (hp : IsIdempotent p) (a c m : A) :
     dsimp [peirce10, peirce01, compIdempotent]
     noncomm_ring [hp]
   have h00q : peirce00 (compIdempotent p) m = peirce11 p m := by
-    dsimp [peirce00, peirce11, compIdempotent] <;> noncomm_ring [hp]
+    dsimp [peirce00, peirce11, compIdempotent]; noncomm_ring [hp]
   have h := dewitt_peirce_LDU (compIdempotent p) hq c a m
   simp only [dewittLower, dewittUpper, dewittSchur00,
     h10q, h01q, h00q] at h

@@ -11,6 +11,7 @@ import Mathlib.Algebra.Star.Basic
 import Mathlib.Topology.Basic
 import Mathlib.Topology.Algebra.Ring.Basic
 import Mathlib.Tactic
+import InfoGeometry.Physics.AlgebraicTomitaTakesakiBridge
 import InfoGeometry.Algebra.DeWittPeirceChiralBridge
 import InfoGeometry.OperatorAlgebra.PeirceSpine.StarGrading
 
@@ -42,17 +43,15 @@ open InfoGeometry.Algebra.DeWittPeirceChiralBridge
 open InfoGeometry.OperatorAlgebra.PeirceSpine
 
 variable {M : Type*} [Ring M] [StarRing M]
+open InfoGeometry.Physics
 
 /-- Crosscap Datum comprising the modular conjugation J and the glide reflection Ω -/
 structure CrosscapDatum (M : Type*) [Ring M] [StarRing M] where
-  /-- Modular Tomita conjugation map J -/
-  J : M → M
-  /-- J is an involution: J² = id -/
-  J_involutive : ∀ x : M, J (J x) = x
-  /-- J is antilinear/anti-multiplicative -/
-  J_mul : ∀ x y : M, J (x * y) = J y * J x
+  /-- The repository's ring-level anti-automorphism, distinct from
+  vector-level antilinear modular conjugation. -/
+  J : AntiAutomorphism M
   /-- J preserves the star operation -/
-  J_star : ∀ x : M, J (star x) = star (J x)
+  J_star : ∀ x : M, J.toFun (star x) = star (J.toFun x)
   /-- Glide reflection automorphism Ω -/
   glide : RingAut M
   /-- Glide reflection is involutive on the double cover: Ω² = id -/
@@ -60,7 +59,22 @@ structure CrosscapDatum (M : Type*) [Ring M] [StarRing M] where
 
 /-- The Tomita conjugation followed by the star involution is the multiplicative
 CPT map used by the crosscap condition. -/
-def tomitaCPT (D : CrosscapDatum M) (A : M) : M := D.J (star A)
+def tomitaCPT (D : CrosscapDatum M) (A : M) : M := D.J.toFun (star A)
+
+/-- The involutive anti-multiplicative Tomita map preserves zero; zero
+preservation follows from the ring laws and does not need a separate field. -/
+theorem crosscapTomitaJ_zero (D : CrosscapDatum M) : D.J.toFun 0 = 0 := by
+  calc
+    D.J.toFun 0 = D.J.toFun (0 * D.J.toFun 0) := by rw [zero_mul]
+    _ = D.J.toFun (D.J.toFun 0) * D.J.toFun 0 := D.J.map_mul 0 (D.J.toFun 0)
+    _ = 0 * D.J.toFun 0 := by rw [D.J.inv]
+    _ = 0 := zero_mul _
+
+/-- The multiplicative CPT composite used in the crosscap equation preserves
+zero, derived from the ring star law and the Tomita involution. -/
+@[simp] theorem tomitaCPT_zero (D : CrosscapDatum M) :
+    tomitaCPT D 0 = 0 := by
+  simp [tomitaCPT, crosscapTomitaJ_zero]
 
 /-- Crosscap fixed-locus equation, expressed through the multiplicative CPT
 map induced by the Tomita anti-automorphism and the star operation. -/
@@ -71,19 +85,24 @@ def InCrosscapSubalgebra (D : CrosscapDatum M) (A : M) : Prop :=
 multiplicative operation. -/
 theorem tomitaCPT_mul (D : CrosscapDatum M) (A B : M) :
     tomitaCPT D (A * B) = tomitaCPT D A * tomitaCPT D B := by
-  simp only [tomitaCPT, star_mul, D.J_mul]
+  simp only [tomitaCPT, star_mul, D.J.map_mul]
+
+/-- The Tomita/star composite is additive on the operator ring. -/
+theorem tomitaCPT_add (D : CrosscapDatum M) (A B : M) :
+    tomitaCPT D (A + B) = tomitaCPT D A + tomitaCPT D B := by
+  simp only [tomitaCPT, star_add, D.J.map_add]
 
 /-- The Tomita/star composite is involutive on the crosscap carrier. -/
 theorem tomitaCPT_involutive (D : CrosscapDatum M) (A : M) :
     tomitaCPT D (tomitaCPT D A) = A := by
-  simp [tomitaCPT, D.J_star, D.J_involutive]
+  simp [tomitaCPT, D.J_star, D.J.inv]
 
 /-- Under sheet-stable star and sheet-swapping Tomita conjugation, CPT carries
 the left-to-right DeWitt soul corner to the opposite Peirce corner. -/
 theorem tomitaCPT_soul_LR_eq_soul_RL
     (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL) (X : M) :
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL) (X : M) :
     tomitaCPT D (soul_LR X) = soul_RL (tomitaCPT D X) := by
   have hComplement : S.PR = 1 - S.PL := right_is_complement
   have hPL : tomitaCPT D S.PL = 1 - S.PL := by
@@ -101,8 +120,8 @@ star-reflected left-to-right soul corner sends it to the opposite corner of
 theorem tomitaJ_star_soul_LR_eq_soul_RL
     (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL) (X : M) :
-    D.J (star (soul_LR X)) = soul_RL (star (D.J X)) := by
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL) (X : M) :
+    D.J.toFun (star (soul_LR X)) = soul_RL (star (D.J.toFun X)) := by
   rw [← D.J_star X]
   exact tomitaCPT_soul_LR_eq_soul_RL D hstarPL hstarPR hJPL hJPR X
 
@@ -110,7 +129,7 @@ theorem tomitaJ_star_soul_LR_eq_soul_RL
 theorem tomitaCPT_soul_RL_eq_soul_LR
     (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL) (X : M) :
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL) (X : M) :
     tomitaCPT D (soul_RL X) = soul_LR (tomitaCPT D X) := by
   have hComplement : S.PR = 1 - S.PL := right_is_complement
   have hPL : tomitaCPT D S.PL = 1 - S.PL := by
@@ -126,10 +145,9 @@ theorem tomitaCPT_soul_RL_eq_soul_LR
 theorem tomitaCPT_body_eq_body
     (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJ_add : ∀ A B : M, D.J (A + B) = D.J A + D.J B)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL) (X : M) :
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL) (X : M) :
     tomitaCPT D (body X) = body (tomitaCPT D X) := by
-  simp only [tomitaCPT, body, star_add, star_mul, hJ_add, D.J_mul,
+  simp only [tomitaCPT, body, star_add, star_mul, D.J.map_add, D.J.map_mul,
     hstarPL, hstarPR, hJPL, hJPR]
   abel
 
@@ -137,55 +155,50 @@ theorem tomitaCPT_body_eq_body
 theorem tomitaCPT_soul_eq_soul
     (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJ_add : ∀ A B : M, D.J (A + B) = D.J A + D.J B)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL) (X : M) :
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL) (X : M) :
     tomitaCPT D (soul X) = soul (tomitaCPT D X) := by
   dsimp [soul]
   rw [tomitaCPT]
-  rw [star_add, hJ_add]
+  rw [star_add, D.J.map_add]
   change tomitaCPT D (soul_LR X) + tomitaCPT D (soul_RL X) =
     soul_LR (tomitaCPT D X) + soul_RL (tomitaCPT D X)
   rw [tomitaCPT_soul_LR_eq_soul_RL D hstarPL hstarPR hJPL hJPR X,
       tomitaCPT_soul_RL_eq_soul_LR D hstarPL hstarPR hJPL hJPR X]
   exact add_comm _ _
 
-/-- Under sheet-stable star and sheet-swapping `D.J`, `tomitaCPT` negates the DeWitt chiral grading `G = P_L - P_R`. -/
+/-- Under sheet-stable star and sheet-swapping `D.J.toFun`, `tomitaCPT` negates the DeWitt chiral grading `G = P_L - P_R`. -/
 theorem tomitaCPT_chiralGrading
     (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
-    (hJ_zero : D.J 0 = 0)
-    (hJ_add : ∀ A B : M, D.J (A + B) = D.J A + D.J B)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL) :
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL) :
     tomitaCPT D (G (A := M)) = -(G (A := M)) := by
-  have hneg : ∀ z : M, D.J (-z) = -D.J z := fun z =>
-    eq_neg_of_add_eq_zero_left (by rw [← hJ_add, neg_add_cancel, hJ_zero])
-  have hsub : ∀ a b : M, D.J (a - b) = D.J a - D.J b := fun a b => by
-    rw [sub_eq_add_neg, hJ_add, hneg, ← sub_eq_add_neg]
-  change D.J (star (S.PL - S.PR)) = -(S.PL - S.PR)
+  have hneg : ∀ z : M, D.J.toFun (-z) = -D.J.toFun z := fun z =>
+    eq_neg_of_add_eq_zero_left (by rw [← D.J.map_add, neg_add_cancel, (crosscapTomitaJ_zero D)])
+  have hsub : ∀ a b : M, D.J.toFun (a - b) = D.J.toFun a - D.J.toFun b := fun a b => by
+    rw [sub_eq_add_neg, D.J.map_add, hneg, ← sub_eq_add_neg]
+  change D.J.toFun (star (S.PL - S.PR)) = -(S.PL - S.PR)
   rw [star_sub, hsub, hstarPL, hstarPR, hJPL, hJPR, neg_sub]
 
 /-- The DeWitt chiral grading `G = P_L - P_R` belongs to the crosscap real fixed subalgebra
 whenever the glide reflection and `tomitaCPT` both exchange `P_L ↔ P_R`. -/
 theorem chiralGrading_mem_crosscap
     (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
-    (hJ_zero : D.J 0 = 0)
-    (hJ_add : ∀ A B : M, D.J (A + B) = D.J A + D.J B)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL) :
     InCrosscapSubalgebra D (G (A := M)) := by
   dsimp [InCrosscapSubalgebra]
   have hLHS : D.glide (G (A := M)) = -(G (A := M)) := by
     change D.glide (S.PL - S.PR) = -(S.PL - S.PR)
     rw [map_sub, hΩPL, hΩPR, neg_sub]
-  rw [hLHS, tomitaCPT_chiralGrading D hJ_zero hJ_add hstarPL hstarPR hJPL hJPR]
+  rw [hLHS, tomitaCPT_chiralGrading D hstarPL hstarPR hJPL hJPR]
 
 /-- Every element of the crosscap subalgebra splits corner-by-corner inside the crosscap subalgebra:
-`D.glide` and `tomitaCPT = D.J ∘ star` match on every Peirce–DeWitt block. -/
+`D.glide` and `tomitaCPT = D.J.toFun ∘ star` match on every Peirce–DeWitt block. -/
 theorem crosscap_splits_peirce_corners
     (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL)
     (A : M) (hA : InCrosscapSubalgebra D A) :
     InCrosscapSubalgebra D (S.PL * A * S.PL) ∧
@@ -241,36 +254,36 @@ theorem crosscap_splits_peirce_corners
   · change D.glide (soul_RL A) = tomitaCPT D (soul_RL A)
     rw [hGlideRL, hA, hCPTRL]
 
-/-- If `D.J` is made multiplicative while the glide and the two projectors
+/-- If `D.J.toFun` is made multiplicative while the glide and the two projectors
 exchange sheets, a crosscap-fixed single DeWitt soul corner must vanish.
 The proof separates the glide's corner reversal from the anti-multiplicative
-`D.J ∘ star` corner preservation. Since `D.J` is already anti-multiplicative
+`D.J.toFun ∘ star` corner preservation. Since `D.J.toFun` is already anti-multiplicative
 in `CrosscapDatum`, imposing multiplicativity also forces the coefficient
 ring to be commutative; this is therefore an obstruction theorem, not a
 noncommutative Tomita model. -/
 theorem tomita_anti_and_multiplicative_forces_commutative
     (D : CrosscapDatum M)
-    (hJ_mul : ∀ x y : M, D.J (x * y) = D.J x * D.J y) :
+    (hJ_mul : ∀ x y : M, D.J.toFun (x * y) = D.J.toFun x * D.J.toFun y) :
     ∀ x y : M, x * y = y * x := by
-  have hJ_inj : Function.Injective D.J := fun x y hxy => by
-    calc x = D.J (D.J x) := (D.J_involutive x).symm
-      _ = D.J (D.J y) := by rw [hxy]
-      _ = y := D.J_involutive y
+  have hJ_inj : Function.Injective D.J.toFun := fun x y hxy => by
+    calc x = D.J.toFun (D.J.toFun x) := (D.J.inv x).symm
+      _ = D.J.toFun (D.J.toFun y) := by rw [hxy]
+      _ = y := D.J.inv y
   intro x y
   apply hJ_inj
-  have hxy : D.J x * D.J y = D.J y * D.J x := by
-    calc D.J x * D.J y = D.J (x * y) := (hJ_mul x y).symm
-      _ = D.J y * D.J x := D.J_mul x y
-  calc D.J (x * y) = D.J x * D.J y := hJ_mul x y
-    _ = D.J y * D.J x := hxy
-    _ = D.J x * D.J y := hxy.symm
-    _ = D.J (y * x) := (D.J_mul y x).symm
+  have hxy : D.J.toFun x * D.J.toFun y = D.J.toFun y * D.J.toFun x := by
+    calc D.J.toFun x * D.J.toFun y = D.J.toFun (x * y) := (hJ_mul x y).symm
+      _ = D.J.toFun y * D.J.toFun x := D.J.map_mul x y
+  calc D.J.toFun (x * y) = D.J.toFun x * D.J.toFun y := hJ_mul x y
+    _ = D.J.toFun y * D.J.toFun x := hxy
+    _ = D.J.toFun x * D.J.toFun y := hxy.symm
+    _ = D.J.toFun (y * x) := (D.J.map_mul y x).symm
 
 theorem crosscap_multiplicative_J_soul_vanishing
     (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
-    (hJ_mul : ∀ x y : M, D.J (x * y) = D.J x * D.J y)
+    (hJ_mul : ∀ x y : M, D.J.toFun (x * y) = D.J.toFun x * D.J.toFun y)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL)
     (X : M) :
     (InCrosscapSubalgebra D (soul_LR X) → soul_LR X = 0) ∧
@@ -370,32 +383,67 @@ theorem anti_multiplicative_fixed_fermion_product_eq_zero
     _ = 0 := add_neg_cancel _
 
 /-- 🏆 THEOREM 1: Zero is in the Crosscap Subalgebra -/
-theorem zero_mem_crosscap (D : CrosscapDatum M) (hJ_zero : D.J 0 = 0) :
+theorem zero_mem_crosscap (D : CrosscapDatum M) :
     InCrosscapSubalgebra D (0 : M) := by
-  dsimp [InCrosscapSubalgebra, tomitaCPT]
-  rw [star_zero, hJ_zero, map_zero]
+  dsimp [InCrosscapSubalgebra]
+  rw [map_zero, tomitaCPT_zero]
 
 /-- 🏆 THEOREM 2: Addition is preserved in Crosscap Subalgebra -/
 theorem add_mem_crosscap (D : CrosscapDatum M)
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y)
     (A B : M) (hA : InCrosscapSubalgebra D A) (hB : InCrosscapSubalgebra D B) :
     InCrosscapSubalgebra D (A + B) := by
-  dsimp [InCrosscapSubalgebra, tomitaCPT] at *
-  rw [map_add, star_add, hJ_add, hA, hB]
+  dsimp [InCrosscapSubalgebra] at *
+  rw [map_add, tomitaCPT_add, hA, hB]
 
 /-- Any element in the crosscap subalgebra has both its DeWitt `body` and `soul` in the crosscap subalgebra. -/
 theorem crosscap_splits_body_and_soul
     (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL)
     (A : M) (hA : InCrosscapSubalgebra D A) :
     InCrosscapSubalgebra D (body A) ∧ InCrosscapSubalgebra D (soul A) := by
   obtain ⟨hLL, hRR, hLR, hRL⟩ :=
     crosscap_splits_peirce_corners D hstarPL hstarPR hJPL hJPR hΩPL hΩPR A hA
-  exact ⟨add_mem_crosscap D hJ_add _ _ hLL hRR,
-         add_mem_crosscap D hJ_add _ _ hLR hRL⟩
+  exact ⟨add_mem_crosscap D _ _ hLL hRR,
+         add_mem_crosscap D _ _ hLR hRL⟩
+
+/-- A self-adjoint crosscap-fixed element decomposes within the crosscap real
+fixed locus into a self-adjoint Peirce body and a self-adjoint paired
+Majorana soul.  The soul is explicitly the sum of one chiral corner and its
+star-reflected corner; a single self-adjoint chiral corner is not asserted to
+survive.  This is an operator-ring statement under the stated sheet actions,
+not a claim about vector-level antilinear Tomita conjugation. -/
+theorem crosscap_selfAdjoint_body_majorana_decomposition
+    (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
+    (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
+    (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL)
+    (A : M) (hA : InCrosscapSubalgebra D A) (hSA : star A = A) :
+    InCrosscapSubalgebra D (body A) ∧ star (body A) = body A ∧
+    InCrosscapSubalgebra D (soul A) ∧ star (soul A) = soul A ∧
+    soul A = soul_LR A + star (soul_LR A) ∧
+    A = body A + (soul_LR A + star (soul_LR A)) := by
+  have hCrosscapSplit := crosscap_splits_body_and_soul D
+    hstarPL hstarPR hJPL hJPR hΩPL hΩPR A hA
+  have hBodyStar : star (body A) = body A := by
+    dsimp [body]
+    simp only [star_add, star_mul, hstarPL, hstarPR, hSA]
+    noncomm_ring
+  have hSoulStar : star (soul A) = soul A := by
+    have hstarRL : star (soul_RL A) = soul_LR A := by
+      dsimp [soul_RL, soul_LR]
+      rw [star_mul, star_mul, hstarPL, hstarPR, hSA]
+      noncomm_ring
+    change star (soul_LR A + soul_RL A) = soul_LR A + soul_RL A
+    rw [star_add, star_soul_LR_eq_soul_RL hstarPL hstarPR A, hSA, hstarRL]
+    exact add_comm (soul_RL A) (soul_LR A)
+  have hPaired := selfAdjoint_soul_is_paired_chiral_corners
+    hstarPL hstarPR A hSA
+  have hDecomp := selfAdjoint_dewitt_split_into_body_and_paired_soul
+    hstarPL hstarPR A hSA
+  exact ⟨hCrosscapSplit.1, hBodyStar, hCrosscapSplit.2, hSoulStar,
+    hPaired, hDecomp⟩
 
 /-- Multiplication is preserved in the crosscap fixed locus.
 
@@ -431,7 +479,7 @@ induces continuity of the multiplicative CPT composite used in the crosscap
 equalizer. -/
 theorem continuous_tomitaCPT [TopologicalSpace M]
     (D : CrosscapDatum M)
-    (hJ : Continuous D.J)
+    (hJ : Continuous D.J.toFun)
     (hstar : Continuous (star : M → M)) :
     Continuous (tomitaCPT D) := by
   exact hJ.comp hstar
@@ -480,25 +528,23 @@ theorem continuous_soul [TopologicalSpace M] [IsTopologicalRing M]
 range proof is the algebraic body/soul compatibility theorem above. -/
 def crosscapBodyMap [S : ChiralPeirceSystem M]
     (D : CrosscapDatum M)
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL) :
     {A : M // InCrosscapSubalgebra D A} → {A : M // InCrosscapSubalgebra D A} :=
   fun A => ⟨body A.1,
-    (crosscap_splits_body_and_soul D hJ_add hstarPL hstarPR hJPL hJPR
+    (crosscap_splits_body_and_soul D hstarPL hstarPR hJPL hJPR
       hΩPL hΩPR A.1 A.2).1⟩
 
 /-- The DeWitt soul projection restricted to the crosscap fixed locus. -/
 def crosscapSoulMap [S : ChiralPeirceSystem M]
     (D : CrosscapDatum M)
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL) :
     {A : M // InCrosscapSubalgebra D A} → {A : M // InCrosscapSubalgebra D A} :=
   fun A => ⟨soul A.1,
-    (crosscap_splits_body_and_soul D hJ_add hstarPL hstarPR hJPL hJPR
+    (crosscap_splits_body_and_soul D hstarPL hstarPR hJPL hJPR
       hΩPL hΩPR A.1 A.2).2⟩
 
 /-- On the crosscap fixed locus, the restricted body and soul maps remain
@@ -506,19 +552,18 @@ complementary projections.  This records the decomposition in the actual
 fixed-locus carrier rather than only in the ambient ring. -/
 theorem crosscap_body_soul_projection_laws [S : ChiralPeirceSystem M]
     (D : CrosscapDatum M)
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL)
     (x : {A : M // InCrosscapSubalgebra D A}) :
-    crosscapBodyMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR
-        (crosscapBodyMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR x) =
-      crosscapBodyMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR x ∧
-    crosscapSoulMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR
-        (crosscapSoulMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR x) =
-      crosscapSoulMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR x ∧
-    x.1 = (crosscapBodyMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR x).1 +
-      (crosscapSoulMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR x).1 := by
+    crosscapBodyMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR
+        (crosscapBodyMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR x) =
+      crosscapBodyMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR x ∧
+    crosscapSoulMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR
+        (crosscapSoulMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR x) =
+      crosscapSoulMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR x ∧
+    x.1 = (crosscapBodyMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR x).1 +
+      (crosscapSoulMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR x).1 := by
   constructor
   · apply Subtype.ext
     exact body_is_idempotent x.1
@@ -531,34 +576,31 @@ theorem crosscap_body_soul_projection_laws [S : ChiralPeirceSystem M]
 crosscap carrier: applying one after the other gives the zero operator. -/
 theorem crosscap_body_soul_compositions_zero [S : ChiralPeirceSystem M]
     (D : CrosscapDatum M)
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL)
     (x : {A : M // InCrosscapSubalgebra D A}) :
-    (crosscapBodyMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR
-      (crosscapSoulMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR x)).1 = 0 ∧
-    (crosscapSoulMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR
-      (crosscapBodyMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR x)).1 = 0 := by
+    (crosscapBodyMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR
+      (crosscapSoulMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR x)).1 = 0 ∧
+    (crosscapSoulMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR
+      (crosscapBodyMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR x)).1 = 0 := by
   exact body_soul_orthogonal x.1
 
 theorem continuous_crosscapBodyMap [TopologicalSpace M] [IsTopologicalRing M]
     [S : ChiralPeirceSystem M] (D : CrosscapDatum M)
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL) :
-    Continuous (crosscapBodyMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR) := by
+    Continuous (crosscapBodyMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR) := by
   apply Continuous.subtype_mk
   exact continuous_body.comp continuous_subtype_val
 
 theorem continuous_crosscapSoulMap [TopologicalSpace M] [IsTopologicalRing M]
     [S : ChiralPeirceSystem M] (D : CrosscapDatum M)
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL) :
-    Continuous (crosscapSoulMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR) := by
+    Continuous (crosscapSoulMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR) := by
   apply Continuous.subtype_mk
   exact continuous_soul.comp continuous_subtype_val
 
@@ -566,18 +608,17 @@ theorem continuous_crosscapSoulMap [TopologicalSpace M] [IsTopologicalRing M]
 idempotent projection its image is exactly its fixed-point set. -/
 theorem isClosed_range_crosscapBodyMap [TopologicalSpace M] [T2Space M]
     [IsTopologicalRing M] [S : ChiralPeirceSystem M] (D : CrosscapDatum M)
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL) :
     IsClosed (Set.range
-      (crosscapBodyMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR)) := by
-  let f := crosscapBodyMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR
+      (crosscapBodyMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR)) := by
+  let f := crosscapBodyMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR
   have hf : Continuous f :=
-    continuous_crosscapBodyMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR
+    continuous_crosscapBodyMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR
   have hproj : ∀ x, f (f x) = f x := by
     intro x
-    exact (crosscap_body_soul_projection_laws D hJ_add hstarPL hstarPR
+    exact (crosscap_body_soul_projection_laws D hstarPL hstarPR
       hJPL hJPR hΩPL hΩPR x).1
   have hrange : Set.range f = {x | f x = x} := by
     ext x
@@ -593,18 +634,17 @@ theorem isClosed_range_crosscapBodyMap [TopologicalSpace M] [T2Space M]
 fixed-point characterization of the idempotent soul projection. -/
 theorem isClosed_range_crosscapSoulMap [TopologicalSpace M] [T2Space M]
     [IsTopologicalRing M] [S : ChiralPeirceSystem M] (D : CrosscapDatum M)
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y)
     (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
-    (hJPL : D.J S.PL = S.PR) (hJPR : D.J S.PR = S.PL)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
     (hΩPL : D.glide S.PL = S.PR) (hΩPR : D.glide S.PR = S.PL) :
     IsClosed (Set.range
-      (crosscapSoulMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR)) := by
-  let f := crosscapSoulMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR
+      (crosscapSoulMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR)) := by
+  let f := crosscapSoulMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR
   have hf : Continuous f :=
-    continuous_crosscapSoulMap D hJ_add hstarPL hstarPR hJPL hJPR hΩPL hΩPR
+    continuous_crosscapSoulMap D hstarPL hstarPR hJPL hJPR hΩPL hΩPR
   have hproj : ∀ x, f (f x) = f x := by
     intro x
-    exact (crosscap_body_soul_projection_laws D hJ_add hstarPL hstarPR
+    exact (crosscap_body_soul_projection_laws D hstarPL hstarPR
       hJPL hJPR hΩPL hΩPR x).2.1
   have hrange : Set.range f = {x | f x = x} := by
     ext x
@@ -669,20 +709,393 @@ theorem transverse_spatial_commuting :
   rfl
 
 /-- 🏆 THEOREM 8: Grand Klein Bottle Crosscap & Frobenius-Schur Synthesis -/
-theorem klein_bottle_crosscap_synthesis (D : CrosscapDatum M)
-    (hJ_zero : D.J 0 = 0)
-    (hJ_add : ∀ x y : M, D.J (x + y) = D.J x + D.J y) :
+theorem klein_bottle_crosscap_synthesis (D : CrosscapDatum M) :
     (InCrosscapSubalgebra D (0 : M)) ∧
     (∀ (A B : M), InCrosscapSubalgebra D A → InCrosscapSubalgebra D B → InCrosscapSubalgebra D (A + B)) ∧
     (HasVanishingCrosscapAmplitude FrobeniusSchurType.ComplexChiral) ∧
     (frobeniusSchurValue FrobeniusSchurType.Real = 1) ∧
     (cayleyHestenesCommutatorSign PeirceParity.Even = -1) ∧
     (cayleyHestenesCommutatorSign PeirceParity.Odd = 1) :=
-  ⟨zero_mem_crosscap D hJ_zero,
-   add_mem_crosscap D hJ_add,
+  ⟨zero_mem_crosscap D,
+   add_mem_crosscap D,
    complex_chiral_crosscap_vanishes,
    real_majorana_crosscap_survives,
    longitudinal_cpt_anticommuting,
    transverse_spatial_commuting⟩
+
+/-! ### Sheet-Preserving Glide Obstruction & 4-Row Peirce Involution Classification -/
+
+section SheetPreservingGlideAndFourRowTable
+
+/-- **Sheet-Preserving Glide vs. Sheet-Swapping Tomita CPT Obstruction**:
+When the glide `Ω` preserves the chiral sheets (`Ω P_L = P_L`, `Ω P_R = P_R`) while
+`tomitaCPT = D.J.toFun ∘ star` swaps them (`D.J.toFun P_L = P_R`, `D.J.toFun P_R = P_L`, `star P_L = P_L`,
+`star P_R = P_R`), any single pure chiral soul corner (`soul_LR X` or `soul_RL X`) or
+single diagonal corner (`P_L X P_L` or `P_R X P_R`) in `InCrosscapSubalgebra D` must
+vanish identically by projector orthogonality `P_L * P_R = 0`. -/
+theorem crosscap_sheetPreserving_glide_kills_chiral_corners
+    (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
+    (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
+    (hΩPL : D.glide S.PL = S.PL) (hΩPR : D.glide S.PR = S.PR)
+    (X : M) :
+    (InCrosscapSubalgebra D (soul_LR X) → soul_LR X = 0) ∧
+    (InCrosscapSubalgebra D (soul_RL X) → soul_RL X = 0) ∧
+    (InCrosscapSubalgebra D (S.PL * X * S.PL) → S.PL * X * S.PL = 0) ∧
+    (InCrosscapSubalgebra D (S.PR * X * S.PR) → S.PR * X * S.PR = 0) := by
+  have hPRPL := PR_PL_ortho (A := M)
+  have hGlideInj : Function.Injective D.glide := fun a b hab => by
+    calc a = D.glide (D.glide a) := (D.glide_involutive a).symm
+      _ = D.glide (D.glide b) := by rw [hab]
+      _ = b := D.glide_involutive b
+  refine ⟨?_, ?_, ?_, ?_⟩
+  · intro hLR
+    dsimp [InCrosscapSubalgebra] at hLR
+    have hG : D.glide (soul_LR X) = S.PL * D.glide X * S.PR := by
+      dsimp [soul_LR]; rw [map_mul, map_mul, hΩPL, hΩPR]
+    have hC := tomitaCPT_soul_LR_eq_soul_RL D hstarPL hstarPR hJPL hJPR X
+    have hEq : S.PL * D.glide X * S.PR = S.PR * tomitaCPT D X * S.PL := by
+      rw [← hG, hLR, hC]; rfl
+    have hZero : S.PL * D.glide X * S.PR = 0 := by
+      calc S.PL * D.glide X * S.PR
+        _ = S.PL * (S.PL * D.glide X * S.PR) := by
+            rw [← mul_assoc, ← mul_assoc, S.h_PL_sq]
+        _ = S.PL * (S.PR * tomitaCPT D X * S.PL) := by rw [hEq]
+        _ = (S.PL * S.PR) * tomitaCPT D X * S.PL := by simp only [mul_assoc]
+        _ = 0 := by rw [S.h_PL_PR, zero_mul, zero_mul]
+    rw [← hG] at hZero
+    exact hGlideInj (hZero.trans (map_zero D.glide).symm)
+  · intro hRL
+    dsimp [InCrosscapSubalgebra] at hRL
+    have hG : D.glide (soul_RL X) = S.PR * D.glide X * S.PL := by
+      dsimp [soul_RL]; rw [map_mul, map_mul, hΩPR, hΩPL]
+    have hC := tomitaCPT_soul_RL_eq_soul_LR D hstarPL hstarPR hJPL hJPR X
+    have hEq : S.PR * D.glide X * S.PL = S.PL * tomitaCPT D X * S.PR := by
+      rw [← hG, hRL, hC]; rfl
+    have hZero : S.PR * D.glide X * S.PL = 0 := by
+      calc S.PR * D.glide X * S.PL
+        _ = S.PR * (S.PR * D.glide X * S.PL) := by
+            rw [← mul_assoc, ← mul_assoc, S.h_PR_sq]
+        _ = S.PR * (S.PL * tomitaCPT D X * S.PR) := by rw [hEq]
+        _ = (S.PR * S.PL) * tomitaCPT D X * S.PR := by simp only [mul_assoc]
+        _ = 0 := by rw [hPRPL, zero_mul, zero_mul]
+    rw [← hG] at hZero
+    exact hGlideInj (hZero.trans (map_zero D.glide).symm)
+  · intro hLL
+    dsimp [InCrosscapSubalgebra] at hLL
+    have hG : D.glide (S.PL * X * S.PL) = S.PL * D.glide X * S.PL := by
+      rw [map_mul, map_mul, hΩPL]
+    have hC : tomitaCPT D (S.PL * X * S.PL) = S.PR * tomitaCPT D X * S.PR := by
+      rw [tomitaCPT_mul, tomitaCPT_mul]
+      simp [tomitaCPT, hstarPL, hJPL]
+    have hEq : S.PL * D.glide X * S.PL = S.PR * tomitaCPT D X * S.PR := by
+      rw [← hG, hLL, hC]
+    have hZero : S.PL * D.glide X * S.PL = 0 := by
+      calc S.PL * D.glide X * S.PL
+        _ = S.PL * (S.PL * D.glide X * S.PL) := by
+            rw [← mul_assoc, ← mul_assoc, S.h_PL_sq]
+        _ = S.PL * (S.PR * tomitaCPT D X * S.PR) := by rw [hEq]
+        _ = (S.PL * S.PR) * tomitaCPT D X * S.PR := by simp only [mul_assoc]
+        _ = 0 := by rw [S.h_PL_PR, zero_mul, zero_mul]
+    rw [← hG] at hZero
+    exact hGlideInj (hZero.trans (map_zero D.glide).symm)
+  · intro hRR
+    dsimp [InCrosscapSubalgebra] at hRR
+    have hG : D.glide (S.PR * X * S.PR) = S.PR * D.glide X * S.PR := by
+      rw [map_mul, map_mul, hΩPR]
+    have hC : tomitaCPT D (S.PR * X * S.PR) = S.PL * tomitaCPT D X * S.PL := by
+      rw [tomitaCPT_mul, tomitaCPT_mul]
+      simp [tomitaCPT, hstarPR, hJPR]
+    have hEq : S.PR * D.glide X * S.PR = S.PL * tomitaCPT D X * S.PL := by
+      rw [← hG, hRR, hC]
+    have hZero : S.PR * D.glide X * S.PR = 0 := by
+      calc S.PR * D.glide X * S.PR
+        _ = S.PR * (S.PR * D.glide X * S.PR) := by
+            rw [← mul_assoc, ← mul_assoc, S.h_PR_sq]
+        _ = S.PR * (S.PL * tomitaCPT D X * S.PL) := by rw [hEq]
+        _ = (S.PR * S.PL) * tomitaCPT D X * S.PL := by simp only [mul_assoc]
+        _ = 0 := by rw [hPRPL, zero_mul, zero_mul]
+    rw [← hG] at hZero
+    exact hGlideInj (hZero.trans (map_zero D.glide).symm)
+
+/-- Under a sheet-preserving glide `Ω` and sheet-swapping `tomitaCPT`, `InCrosscapSubalgebra D`
+exchanges `P_L A P_L ↔ P_R A P_R` and `soul_LR A ↔ soul_RL A`, so `InCrosscapSubalgebra D`
+remains strictly closed under both `body` and total `soul` projections (paired Majorana states
+survive while pure single-sheet corners vanish). -/
+theorem crosscap_sheetPreserving_glide_preserves_body_and_soul
+    (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
+    (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL)
+    (hΩPL : D.glide S.PL = S.PL) (hΩPR : D.glide S.PR = S.PR)
+    (A : M) (hA : InCrosscapSubalgebra D A) :
+    D.glide (S.PL * A * S.PL) = tomitaCPT D (S.PR * A * S.PR) ∧
+    D.glide (S.PR * A * S.PR) = tomitaCPT D (S.PL * A * S.PL) ∧
+    D.glide (soul_LR A) = tomitaCPT D (soul_RL A) ∧
+    D.glide (soul_RL A) = tomitaCPT D (soul_LR A) ∧
+    InCrosscapSubalgebra D (body A) ∧
+    InCrosscapSubalgebra D (soul A) := by
+  dsimp [InCrosscapSubalgebra] at hA
+  have hLL : D.glide (S.PL * A * S.PL) = tomitaCPT D (S.PR * A * S.PR) := by
+    rw [map_mul, map_mul, hΩPL, hA, tomitaCPT_mul, tomitaCPT_mul]
+    simp [tomitaCPT, hstarPR, hJPR]
+  have hRR : D.glide (S.PR * A * S.PR) = tomitaCPT D (S.PL * A * S.PL) := by
+    rw [map_mul, map_mul, hΩPR, hA, tomitaCPT_mul, tomitaCPT_mul]
+    simp [tomitaCPT, hstarPL, hJPL]
+  have hLR : D.glide (soul_LR A) = tomitaCPT D (soul_RL A) := by
+    dsimp [soul_LR]
+    rw [map_mul, map_mul, hΩPL, hΩPR, hA, tomitaCPT_soul_RL_eq_soul_LR D hstarPL hstarPR hJPL hJPR A]
+    rfl
+  have hRL : D.glide (soul_RL A) = tomitaCPT D (soul_LR A) := by
+    dsimp [soul_RL]
+    rw [map_mul, map_mul, hΩPR, hΩPL, hA, tomitaCPT_soul_LR_eq_soul_RL D hstarPL hstarPR hJPL hJPR A]
+    rfl
+  refine ⟨hLL, hRR, hLR, hRL, ?_, ?_⟩
+  · dsimp [InCrosscapSubalgebra, tomitaCPT, body]
+    rw [map_add, star_add, D.J.map_add]
+    change D.glide (S.PL * A * S.PL) + D.glide (S.PR * A * S.PR) =
+      tomitaCPT D (S.PL * A * S.PL) + tomitaCPT D (S.PR * A * S.PR)
+    rw [hLL, hRR, add_comm]
+  · dsimp [InCrosscapSubalgebra, tomitaCPT, soul]
+    rw [map_add, star_add, D.J.map_add]
+    change D.glide (soul_LR A) + D.glide (soul_RL A) =
+      tomitaCPT D (soul_LR A) + tomitaCPT D (soul_RL A)
+    rw [hLR, hRL, add_comm]
+
+/-- **4-Row Peirce-Corner Classification on `CrosscapDatum` & `ChiralPeirceSystem`**:
+Links `CrosscapDatum` directly to `StarGrading`'s four involution rows, keeping `Ad_G` (Row 1),
+`tomitaCPT = D.J.toFun ∘ star` (Row 2), `star` (Row 3), and anti-multiplicative `D.J.toFun` (Row 4) strictly
+distinct:
+- Row 1 (`Ad_{invS S.PL}`): fixes diagonal sheets, negates `soul_LR` and `soul_RL`;
+- Row 2 (`tomitaCPT D = D.J.toFun ∘ star`, multiplicative): swaps diagonal sheets and swaps `soul_LR ↔ soul_RL`;
+- Row 3 (`star`, anti-multiplicative): fixes diagonal sheets and swaps `soul_LR ↔ soul_RL`;
+- Row 4 (`D.J.toFun`, anti-multiplicative): swaps diagonal sheets yet **preserves** `soul_LR` and `soul_RL`
+  individually via double-reversal cancellation. -/
+theorem crosscap_fourRow_peirce_classification
+    (D : CrosscapDatum M) [S : ChiralPeirceSystem M]
+    (hstarPL : star S.PL = S.PL) (hstarPR : star S.PR = S.PR)
+    (hJPL : D.J.toFun S.PL = S.PR) (hJPR : D.J.toFun S.PR = S.PL) (X : M) :
+    (invS S.PL * soul_LR X * invS S.PL = -soul_LR X ∧
+     invS S.PL * soul_RL X * invS S.PL = -soul_RL X) ∧
+    (tomitaCPT D (soul_LR X) = soul_RL (tomitaCPT D X) ∧
+     tomitaCPT D (soul_RL X) = soul_LR (tomitaCPT D X)) ∧
+    (star (soul_LR X) = soul_RL (star X) ∧
+     star (soul_RL X) = soul_LR (star X)) ∧
+    (D.J.toFun (soul_LR X) = soul_LR (D.J.toFun X) ∧
+     D.J.toFun (soul_RL X) = soul_RL (D.J.toFun X)) := by
+  have hComplement : S.PR = 1 - S.PL := right_is_complement
+  have hRow1 := chiralGrading_ad_corners S.h_PL_sq X
+  have hRow4 := antiMultSheetSwap_corners D.J.toFun D.J.map_mul
+    (by simpa [hComplement] using hJPL)
+    (by rw [← hComplement]; exact hJPR) X
+  refine ⟨⟨?_, ?_⟩,
+    ⟨tomitaCPT_soul_LR_eq_soul_RL D hstarPL hstarPR hJPL hJPR X,
+     tomitaCPT_soul_RL_eq_soul_LR D hstarPL hstarPR hJPL hJPR X⟩,
+    ⟨star_soul_LR_eq_soul_RL hstarPL hstarPR X, ?_⟩,
+    ⟨?_, ?_⟩⟩
+  · simpa [soul_LR, conePlus, hComplement] using hRow1.2.2.1
+  · simpa [soul_RL, coneMinus, hComplement] using hRow1.2.2.2
+  · dsimp [soul_RL, soul_LR]
+    rw [star_mul, star_mul, hstarPL, hstarPR, mul_assoc]
+  · simpa [soul_LR, conePlus, hComplement] using hRow4.2.2.1
+  · simpa [soul_RL, coneMinus, hComplement] using hRow4.2.2.2
+
+/-- Concrete non-degenerate inhabitant of `CrosscapDatum` on `Matrix (Fin 2) (Fin 2) ℝ` with
+sheet-preserving glide `Ω(M) = diag(1,-1) M diag(1,-1)` and Row-4 anti-multiplicative Tomita
+conjugation `J(M) = !![0,1;1,0] Mᵀ !![0,1;1,0]`. -/
+noncomputable def mat2SheetPreservingCrosscapDatum :
+    CrosscapDatum (Matrix (Fin 2) (Fin 2) ℝ) :=
+  let σ : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 1, 0]
+  let g : Matrix (Fin 2) (Fin 2) ℝ := !![1, 0; 0, -1]
+  have hσ : σ * σ = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      norm_num [σ, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+  have hσT : σ.transpose = σ := by
+    ext i j; fin_cases i <;> fin_cases j <;> simp [σ]
+  have hg : g * g = 1 := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      norm_num [g, Matrix.mul_apply, Fin.sum_univ_two, Matrix.one_apply]
+  { J :=
+      { toFun := fun M => σ * M.transpose * σ
+        map_add := fun X Y => by
+          rw [Matrix.transpose_add]
+          noncomm_ring
+        inv := fun M => by
+          calc σ * (σ * M.transpose * σ).transpose * σ
+            _ = σ * (σ.transpose * M.transpose.transpose * σ.transpose) * σ := by
+                simp only [Matrix.transpose_mul, mul_assoc]
+            _ = (σ * σ) * M * (σ * σ) := by
+                rw [hσT, Matrix.transpose_transpose]; simp only [mul_assoc]
+            _ = M := by rw [hσ, one_mul, mul_one]
+        map_mul := fun X Y => by
+          calc σ * (X * Y).transpose * σ
+            _ = σ * (Y.transpose * X.transpose) * σ := by rw [Matrix.transpose_mul]
+            _ = σ * Y.transpose * (σ * σ) * X.transpose * σ := by
+                rw [hσ]; simp only [mul_assoc, mul_one]
+            _ = (σ * Y.transpose * σ) * (σ * X.transpose * σ) := by
+                simp only [mul_assoc]
+      }
+    J_star := fun M => by
+      simp only [Matrix.star_eq_conjTranspose, Matrix.conjTranspose_eq_transpose_of_trivial,
+        Matrix.transpose_mul, Matrix.transpose_transpose, hσT, mul_assoc]
+    glide :=
+      { toFun := fun M => g * M * g
+        invFun := fun M => g * M * g
+        left_inv := fun M => by
+          calc g * (g * M * g) * g = (g * g) * M * (g * g) := by simp only [mul_assoc]
+            _ = M := by rw [hg, one_mul, mul_one]
+        right_inv := fun M => by
+          calc g * (g * M * g) * g = (g * g) * M * (g * g) := by simp only [mul_assoc]
+            _ = M := by rw [hg, one_mul, mul_one]
+        map_mul' := fun X Y => by
+          calc g * (X * Y) * g
+            _ = g * X * (g * g) * Y * g := by rw [hg]; simp only [mul_assoc, mul_one]
+            _ = (g * X * g) * (g * Y * g) := by simp only [mul_assoc]
+        map_add' := fun X Y => by simp only [mul_add, add_mul] }
+    glide_involutive := fun M => by
+      change g * (g * M * g) * g = M
+      calc
+        _ = (g * g) * M * (g * g) := by noncomm_ring
+        _ = M := by rw [hg, one_mul, mul_one] }
+
+/-- The concrete matrix model distinguishes the operator anti-automorphism `J` from
+the multiplicative Tomita/star composite `tomitaCPT = J ∘ star` on the two Peirce
+soul generators.  `J` fixes each corner generator (Row 4), whereas `tomitaCPT`
+exchanges them (Row 2); consequently a single nonzero soul corner is not fixed by
+the multiplicative composite.  This statement concerns maps on the operator ring,
+not the antilinear Tomita conjugation on Hilbert-space vectors. -/
+theorem mat2_crosscap_J_and_CPT_corner_actions :
+    let U : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+    let V : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+    mat2SheetPreservingCrosscapDatum.J.toFun U = U ∧
+    mat2SheetPreservingCrosscapDatum.J.toFun V = V ∧
+    tomitaCPT mat2SheetPreservingCrosscapDatum U = V ∧
+    tomitaCPT mat2SheetPreservingCrosscapDatum V = U ∧
+    U ≠ 0 ∧
+    tomitaCPT mat2SheetPreservingCrosscapDatum U ≠ U := by
+  dsimp
+  refine ⟨?_, ?_, ?_, ?_, ?_, ?_⟩
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [mat2SheetPreservingCrosscapDatum, Matrix.mul_apply, Matrix.vecMul,
+        dotProduct, Fin.sum_univ_two, Matrix.transpose_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [mat2SheetPreservingCrosscapDatum, Matrix.mul_apply, Matrix.vecMul,
+        dotProduct, Fin.sum_univ_two, Matrix.transpose_apply]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [tomitaCPT, mat2SheetPreservingCrosscapDatum, Matrix.star_eq_conjTranspose,
+        Matrix.conjTranspose_eq_transpose_of_trivial]
+  · ext i j; fin_cases i <;> fin_cases j <;>
+      simp [tomitaCPT, mat2SheetPreservingCrosscapDatum, Matrix.star_eq_conjTranspose,
+        Matrix.conjTranspose_eq_transpose_of_trivial]
+  · intro h
+    have h01 := congrFun (congrFun h 0) 1
+    simp at h01
+  · intro h
+    have h01 := congrFun (congrFun h 0) 1
+    simp [tomitaCPT, mat2SheetPreservingCrosscapDatum, Matrix.star_eq_conjTranspose,
+      Matrix.conjTranspose_eq_transpose_of_trivial] at h01
+
+/-- In the concrete sheet-preserving `M₂(ℝ)` crosscap, the fixed locus rejects each
+pure Peirce soul corner but contains their coupled difference.  The coupling is
+anti-self-adjoint for matrix transpose; this is the exact fixed vector for this
+glide/CPT convention and is not an assertion that the self-adjoint Majorana sum is
+fixed. -/
+theorem mat2_crosscap_paired_soul_fixed_locus :
+    let U : Matrix (Fin 2) (Fin 2) ℝ := !![0, 1; 0, 0]
+    let V : Matrix (Fin 2) (Fin 2) ℝ := !![0, 0; 1, 0]
+    ¬ InCrosscapSubalgebra mat2SheetPreservingCrosscapDatum U ∧
+    ¬ InCrosscapSubalgebra mat2SheetPreservingCrosscapDatum V ∧
+    InCrosscapSubalgebra mat2SheetPreservingCrosscapDatum (U - V) := by
+  dsimp
+  obtain ⟨_, _, hCPTU, hCPTV, _, _⟩ := mat2_crosscap_J_and_CPT_corner_actions
+  have hGlideU : mat2SheetPreservingCrosscapDatum.glide
+      (!![0, 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ) = -!![0, 1; 0, 0] := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [mat2SheetPreservingCrosscapDatum]
+  have hGlideV : mat2SheetPreservingCrosscapDatum.glide
+      (!![0, 0; 1, 0] : Matrix (Fin 2) (Fin 2) ℝ) = -!![0, 0; 1, 0] := by
+    ext i j; fin_cases i <;> fin_cases j <;>
+      simp [mat2SheetPreservingCrosscapDatum]
+  refine ⟨?_, ?_, ?_⟩
+  · intro h
+    change mat2SheetPreservingCrosscapDatum.glide
+      (!![0, 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ) =
+      tomitaCPT mat2SheetPreservingCrosscapDatum
+        (!![0, 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ) at h
+    rw [hGlideU, hCPTU] at h
+    have h01 := congrFun (congrFun h 0) 1
+    norm_num at h01
+  · intro h
+    change mat2SheetPreservingCrosscapDatum.glide
+      (!![0, 0; 1, 0] : Matrix (Fin 2) (Fin 2) ℝ) =
+      tomitaCPT mat2SheetPreservingCrosscapDatum
+        (!![0, 0; 1, 0] : Matrix (Fin 2) (Fin 2) ℝ) at h
+    rw [hGlideV, hCPTV] at h
+    have h10 := congrFun (congrFun h 1) 0
+    norm_num at h10
+  · change mat2SheetPreservingCrosscapDatum.glide
+      ((!![0, 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ) -
+       !![0, 0; 1, 0]) =
+      tomitaCPT mat2SheetPreservingCrosscapDatum
+       ((!![0, 1; 0, 0] : Matrix (Fin 2) (Fin 2) ℝ) -
+        !![0, 0; 1, 0])
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [tomitaCPT, mat2SheetPreservingCrosscapDatum, Matrix.star_eq_conjTranspose,
+        Matrix.conjTranspose_eq_transpose_of_trivial]
+
+/-- Complete coordinate classification of the crosscap fixed locus for the concrete
+`M₂(ℝ)` sheet-preserving glide: the diagonal entries agree and the off-diagonal
+entries are negatives of one another. -/
+theorem mat2_crosscap_fixed_locus_characterization
+    (A : Matrix (Fin 2) (Fin 2) ℝ) :
+    InCrosscapSubalgebra mat2SheetPreservingCrosscapDatum A ↔
+      A 0 0 = A 1 1 ∧ A 1 0 = -A 0 1 := by
+  have hGlide (X : Matrix (Fin 2) (Fin 2) ℝ) :
+      mat2SheetPreservingCrosscapDatum.glide X =
+        (!![1, 0; 0, -1] : Matrix (Fin 2) (Fin 2) ℝ) * X * !![1, 0; 0, -1] := rfl
+  have hCPT (X : Matrix (Fin 2) (Fin 2) ℝ) :
+      tomitaCPT mat2SheetPreservingCrosscapDatum X =
+        (!![0, 1; 1, 0] : Matrix (Fin 2) (Fin 2) ℝ) * X * !![0, 1; 1, 0] := by
+    simp [tomitaCPT, mat2SheetPreservingCrosscapDatum, Matrix.star_eq_conjTranspose,
+      Matrix.conjTranspose_eq_transpose_of_trivial]
+  constructor
+  · intro hA
+    change mat2SheetPreservingCrosscapDatum.glide A =
+      tomitaCPT mat2SheetPreservingCrosscapDatum A at hA
+    rw [hGlide, hCPT] at hA
+    have h00 := congrArg (fun X : Matrix (Fin 2) (Fin 2) ℝ => X 0 0) hA
+    have h10 := congrArg (fun X : Matrix (Fin 2) (Fin 2) ℝ => X 1 0) hA
+    simp [Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two] at h00 h10
+    constructor <;> linarith
+  · rintro ⟨h00, h10⟩
+    change mat2SheetPreservingCrosscapDatum.glide A =
+      tomitaCPT mat2SheetPreservingCrosscapDatum A
+    rw [hGlide, hCPT]
+    ext i j
+    fin_cases i <;> fin_cases j <;>
+      simp [Matrix.mul_apply, Matrix.vecMul, dotProduct, Fin.sum_univ_two] <;> linarith
+
+private theorem mat2_crosscap_noncomm_witness :
+    ∃ X Y : Matrix (Fin 2) (Fin 2) ℝ, X * Y ≠ Y * X := by
+  refine ⟨!![0, 1; 1, 0], !![1, 0; 0, -1], ?_⟩
+  intro h
+  have h01 := congrArg (fun M : Matrix (Fin 2) (Fin 2) ℝ => M 0 1) h
+  simp [Matrix.mul_apply, Fin.sum_univ_two] at h01
+  norm_num at h01
+
+/-- The concrete `M₂(ℝ)` Row 4 Tomita map cannot also be multiplicative.
+Together with `mat2SheetPreservingCrosscapDatum`, this instantiates the
+ring-general anti/multiplicative obstruction on a noncommutative carrier. -/
+theorem mat2SheetPreservingCrosscapDatum_J_not_multiplicative :
+    ¬ ∀ X Y : Matrix (Fin 2) (Fin 2) ℝ,
+      mat2SheetPreservingCrosscapDatum.J.toFun (X * Y) =
+        mat2SheetPreservingCrosscapDatum.J.toFun X * mat2SheetPreservingCrosscapDatum.J.toFun Y := by
+  intro hJ_mul
+  obtain ⟨X, Y, hXY⟩ := mat2_crosscap_noncomm_witness
+  have hComm := tomita_anti_and_multiplicative_forces_commutative
+    mat2SheetPreservingCrosscapDatum hJ_mul
+  exact hXY (hComm X Y)
+
+end SheetPreservingGlideAndFourRowTable
 
 end InfoGeometry.Canonical.KleinBottleTomitaCrosscap

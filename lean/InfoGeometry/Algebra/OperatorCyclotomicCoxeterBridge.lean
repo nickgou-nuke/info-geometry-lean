@@ -35,16 +35,17 @@ def blockRotation (g : Bˣ) : Equiv.Perm (B × B) where
   left_inv := by
     intro p
     rcases p with ⟨x, y⟩
-    apply Prod.ext <;> simp [mul_assoc]
+    apply Prod.ext <;> simp
   right_inv := by
     intro p
     rcases p with ⟨x, y⟩
-    apply Prod.ext <;> simp [mul_assoc]
+    apply Prod.ext <;> simp
 
 /-- The second reflection is the block rotation followed by the swap. -/
 def blockTwistedReflection (g : Bˣ) : Equiv.Perm (B × B) :=
   blockRotation g * blockSwap
 
+omit [Ring B] in
 @[simp] theorem blockSwap_apply (p : B × B) :
     blockSwap p = (p.2, p.1) := rfl
 
@@ -83,6 +84,7 @@ theorem blockRotation_pow_six (g : Bˣ) (hg : g ^ 6 = 1) :
   have hinvval : (↑(g⁻¹) : B) ^ 6 = 1 := congrArg Units.val hinv
   simp [hval, hinvval]
 
+omit [Ring B] in
 private theorem blockSwap_sq : blockSwap (B := B) ^ 2 = 1 := by
   apply Equiv.ext
   intro p
@@ -96,16 +98,14 @@ private theorem blockTwistedReflection_sq (g : Bˣ) :
   rcases p with ⟨x, y⟩
   change blockTwistedReflection g (blockTwistedReflection g (x, y)) = (x, y)
   simp only [blockTwistedReflection_apply]
-  apply Prod.ext <;> simp [mul_assoc]
+  apply Prod.ext <;> simp
 
 private theorem blockReflection_products (g : Bˣ) :
     blockSwap (B := B) * blockTwistedReflection g = blockRotation g⁻¹ ∧
     blockTwistedReflection g * blockSwap (B := B) = blockRotation g := by
   constructor <;> apply Equiv.ext <;> intro p <;> rcases p with ⟨x, y⟩
-  · simp [blockTwistedReflection, blockSwap, blockRotation, Equiv.Perm.mul_apply,
-      mul_assoc]
-  · simp [blockTwistedReflection, blockSwap, blockRotation, Equiv.Perm.mul_apply,
-      mul_assoc]
+  · simp [blockTwistedReflection, blockSwap, blockRotation, Equiv.Perm.mul_apply]
+  · simp [blockTwistedReflection, blockSwap, blockRotation, Equiv.Perm.mul_apply]
 
 private theorem blockReflection_products_pow_six (g : Bˣ) (hg : g ^ 6 = 1) :
     (blockSwap (B := B) * blockTwistedReflection g) ^ 6 = 1 ∧

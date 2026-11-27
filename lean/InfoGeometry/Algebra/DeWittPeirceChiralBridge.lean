@@ -347,6 +347,145 @@ theorem pin_minus_periodic_obstruction {Base : Type*} (g : Base → Base) (R : A
       _ = 0 := add_neg_cancel _
   exact hTwo (u x) hSum
 
+/-- The DeWitt chiral grading `G = P_L - P_R` squares to `1`. -/
+theorem G_sq : (G (A := A)) * G = 1 := by
+  dsimp [G]
+  have hPRPL := PR_PL_ortho (A := A)
+  calc (S.PL - S.PR) * (S.PL - S.PR)
+    _ = S.PL * S.PL - S.PL * S.PR - S.PR * S.PL + S.PR * S.PR := by noncomm_ring
+    _ = S.PL + S.PR := by rw [S.h_PL_sq, S.h_PL_PR, hPRPL, S.h_PR_sq]; abel
+    _ = 1 := S.h_sum
+
+/-- A sheet-swapping lift `R` anticommutes with the DeWitt chiral grading `G = P_L - P_R`. -/
+theorem sheetSwap_chirality_anticomm (R Rinv : A) (hRL : R * Rinv = 1) (hLR : Rinv * R = 1)
+    (hSwapL : R * S.PL * Rinv = S.PR) :
+    R * G (A := A) = -(G (A := A) * R) := by
+  have hAd := sheetSwap_chiralGrading R Rinv hRL hSwapL
+  dsimp [sheetSwapAd] at hAd
+  calc R * G (A := A) = (R * G (A := A)) * (Rinv * R) := by rw [hLR, mul_one]
+    _ = (R * G (A := A) * Rinv) * R := by simp only [mul_assoc]
+    _ = (-(G (A := A))) * R := by rw [hAd]
+    _ = -(G (A := A) * R) := by rw [neg_mul]
+
+/-- Dressing any sheet-swap lift `R` by the DeWitt chiral grading `G = P_L - P_R` flips the
+double-glide holonomy sign `(G * R)² = -(R²)`: a `Pin⁺` sheet swap (`R² = +1`) dressed by `G`
+is automatically `Pin⁻` (`(G * R)² = -1`), and conversely `Pin⁻` dressed by `G` is `Pin⁺`. -/
+theorem sheetSwap_pin_lift_chirality_sign (R Rinv : A) (hRL : R * Rinv = 1) (hLR : Rinv * R = 1)
+    (hSwapL : R * S.PL * Rinv = S.PR) :
+    (G (A := A) * R) * (G (A := A) * R) = -(R * R) := by
+  have hAnti := sheetSwap_chirality_anticomm R Rinv hRL hLR hSwapL
+  calc (G (A := A) * R) * (G (A := A) * R)
+    _ = G (A := A) * (R * G (A := A)) * R := by simp only [mul_assoc]
+    _ = G (A := A) * (-(G (A := A) * R)) * R := by rw [hAnti]
+    _ = -((G (A := A) * G (A := A)) * (R * R)) := by noncomm_ring
+    _ = -(R * R) := by rw [G_sq, one_mul]
+
+/-- Chirality-dressed sheet-swap adjoint `Ad_{G * R}` leaves the even `body` sign unchanged (`+1`)
+while inverting the sign of the odd `soul` bimodule and both chiral corners (`-1`). -/
+theorem chiralityDressedSheetSwap_body_vs_soul (R Rinv : A) (hRL : R * Rinv = 1)
+    (hLR : Rinv * R = 1) (hSwapL : R * S.PL * Rinv = S.PR) (X : A) :
+    (G (A := A) * R) * (Rinv * G (A := A)) = 1 ∧
+    (Rinv * G (A := A)) * (G (A := A) * R) = 1 ∧
+    sheetSwapAd (G (A := A) * R) (Rinv * G (A := A)) (body X) = sheetSwapAd R Rinv (body X) ∧
+    sheetSwapAd (G (A := A) * R) (Rinv * G (A := A)) (soul X) = -(sheetSwapAd R Rinv (soul X)) ∧
+    sheetSwapAd (G (A := A) * R) (Rinv * G (A := A)) (soul_LR X) =
+      -(sheetSwapAd R Rinv (soul_LR X)) ∧
+    sheetSwapAd (G (A := A) * R) (Rinv * G (A := A)) (soul_RL X) =
+      -(sheetSwapAd R Rinv (soul_RL X)) := by
+  have hBodySwap := sheetSwap_body R Rinv hRL hLR hSwapL X
+  have hSoulSwap := sheetSwap_soul R Rinv hRL hLR hSwapL X
+  have hCorners := sheetSwap_soul_corners R Rinv hRL hLR hSwapL X
+  dsimp [sheetSwapAd] at hBodySwap hSoulSwap hCorners
+  have hGR : (G (A := A) * R) * (Rinv * G (A := A)) = 1 := by
+    calc (G (A := A) * R) * (Rinv * G (A := A))
+      _ = G (A := A) * (R * Rinv) * G (A := A) := by simp only [mul_assoc]
+      _ = G (A := A) * G (A := A) := by rw [hRL, mul_one]
+      _ = 1 := G_sq
+  have hRG : (Rinv * G (A := A)) * (G (A := A) * R) = 1 := by
+    calc (Rinv * G (A := A)) * (G (A := A) * R)
+      _ = Rinv * (G (A := A) * G (A := A)) * R := by simp only [mul_assoc]
+      _ = Rinv * R := by rw [G_sq, mul_one]
+      _ = 1 := hLR
+  refine ⟨hGR, hRG, ?_, ?_, ?_, ?_⟩
+  · dsimp [sheetSwapAd]
+    calc (G (A := A) * R) * body X * (Rinv * G (A := A))
+      _ = G (A := A) * (R * body X * Rinv) * G (A := A) := by simp only [mul_assoc]
+      _ = G (A := A) * body (R * X * Rinv) * G (A := A) := by rw [← hBodySwap]
+      _ = body (R * X * Rinv) := G_body_parity_even _
+      _ = R * body X * Rinv := by rw [← hBodySwap]
+  · dsimp [sheetSwapAd]
+    calc (G (A := A) * R) * soul X * (Rinv * G (A := A))
+      _ = G (A := A) * (R * soul X * Rinv) * G (A := A) := by simp only [mul_assoc]
+      _ = G (A := A) * soul (R * X * Rinv) * G (A := A) := by rw [← hSoulSwap]
+      _ = -soul (R * X * Rinv) := G_soul_parity_odd _
+      _ = -(R * soul X * Rinv) := by rw [← hSoulSwap]
+  · dsimp [sheetSwapAd]
+    calc (G (A := A) * R) * soul_LR X * (Rinv * G (A := A))
+      _ = G (A := A) * (R * soul_LR X * Rinv) * G (A := A) := by simp only [mul_assoc]
+      _ = G (A := A) * soul_RL (R * X * Rinv) * G (A := A) := by rw [← hCorners.1]
+      _ = -soul_RL (R * X * Rinv) := by
+          dsimp [soul_RL]
+          calc G (A := A) * (S.PR * (R * X * Rinv) * S.PL) * G (A := A)
+            _ = (G (A := A) * S.PR) * (R * X * Rinv) * (S.PL * G (A := A)) := by
+                simp only [mul_assoc]
+            _ = (-S.PR) * (R * X * Rinv) * S.PL := by rw [G_mul_PR, PL_mul_G]
+            _ = -(S.PR * (R * X * Rinv) * S.PL) := by rw [neg_mul, neg_mul]
+      _ = -(R * soul_LR X * Rinv) := by rw [← hCorners.1]
+  · dsimp [sheetSwapAd]
+    calc (G (A := A) * R) * soul_RL X * (Rinv * G (A := A))
+      _ = G (A := A) * (R * soul_RL X * Rinv) * G (A := A) := by simp only [mul_assoc]
+      _ = G (A := A) * soul_LR (R * X * Rinv) * G (A := A) := by rw [← hCorners.2]
+      _ = -soul_LR (R * X * Rinv) := G_soul_LR_parity_odd _
+      _ = -(R * soul_RL X * Rinv) := by rw [← hCorners.2]
+
+/-- On a `ChiralPeirceSystem A`, a `Pin⁻` (`R² = -1`) sheet-swapping equivariant spinor
+transforms sheets `P_L → P_R` with `-1` double-glide holonomy, while its bilinear `body`
+is strictly `+1` periodic and the chirality-dressed adjoint flips `soul` relative to `body`. -/
+theorem pin_minus_chiral_body_periodic_soul_antiperiodic
+    {Base : Type*} (g : Base → Base) (R Rinv : A)
+    (hRL : R * Rinv = 1) (hLR : Rinv * R = 1)
+    (hSwapL : R * S.PL * Rinv = S.PR) (hSq : R * R = -1)
+    (ψ ψbar : Base → A) (hψ : ∀ p, ψ (g p) = R * ψ p)
+    (hψbar : ∀ p, ψbar (g p) = ψbar p * Rinv) (p : Base) :
+    (S.PL * ψ p = ψ p → S.PR * ψ (g p) = ψ (g p)) ∧
+    (ψ (g (g p)) = -ψ p) ∧
+    (body (ψ (g p) * ψbar (g p)) = sheetSwapAd R Rinv (body (ψ p * ψbar p))) ∧
+    (body (ψ (g (g p)) * ψbar (g (g p))) = body (ψ p * ψbar p)) ∧
+    (sheetSwapAd (G (A := A) * R) (Rinv * G (A := A)) (soul (ψ p * ψbar p)) =
+      -(soul (ψ (g p) * ψbar (g p)))) := by
+  have hPin := pin_minus_left_antiperiodic_and_bilinear_body_periodic
+    g R Rinv hLR hSq ψ ψbar hψ hψbar p
+  have hBodySwap := sheetSwap_body R Rinv hRL hLR hSwapL (ψ p * ψbar p)
+  have hSoulSwap := sheetSwap_soul R Rinv hRL hLR hSwapL (ψ p * ψbar p)
+  have hDress := (chiralityDressedSheetSwap_body_vs_soul R Rinv hRL hLR hSwapL (ψ p * ψbar p)).2.2.2.1
+  have hL1 := sheetSwap_intertwines_left R Rinv hLR hSwapL
+  refine ⟨?_, hPin.1, ?_, ?_, ?_⟩
+  · intro hL
+    calc S.PR * ψ (g p) = S.PR * (R * ψ p) := by rw [hψ p]
+      _ = (S.PR * R) * ψ p := by rw [mul_assoc]
+      _ = (R * S.PL) * ψ p := by rw [hL1]
+      _ = R * (S.PL * ψ p) := by rw [mul_assoc]
+      _ = R * ψ p := by rw [hL]
+      _ = ψ (g p) := (hψ p).symm
+  · rw [hPin.2.2.1, hBodySwap]
+  · rw [hPin.2.2.2]
+  · rw [hDress, hSoulSwap, ← hPin.2.2.1]
+
+/-- A periodic `Pin⁻` equivariant field in a 2-torsion-free `ChiralPeirceSystem A`
+vanishes on every Peirce–DeWitt sector (`body`, `soul_LR`, `soul_RL`). -/
+theorem pin_minus_periodic_vanishes_on_peirce_sectors
+    {Base : Type*} (g : Base → Base) (R : A)
+    (hSq : R * R = -1) (hTwo : ∀ a : A, a + a = 0 → a = 0)
+    (ψ : Base → A) (hψ : ∀ p, ψ (g p) = R * ψ p)
+    (hper : ∀ p, ψ (g (g p)) = ψ p) (p : Base) :
+    body (ψ p) = 0 ∧ soul_LR (ψ p) = 0 ∧ soul_RL (ψ p) = 0 := by
+  have hZero : ψ = 0 := pin_minus_periodic_obstruction g R hSq hTwo ψ hψ hper
+  have hp : ψ p = 0 := congrFun hZero p
+  refine ⟨?_, ?_, ?_⟩
+  · simp [body, hp]
+  · simp [soul_LR, hp]
+  · simp [soul_RL, hp]
+
 end PinSheetSwapHolonomy
 
 end InfoGeometry.Algebra.DeWittPeirceChiralBridge

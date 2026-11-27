@@ -1,3 +1,8 @@
+/-
+Copyright (c) 2026 InfoGeometry Authors. All rights reserved.
+Released under Apache 2.0 license as described in the file LICENSE.
+Authors: InfoGeometry Engine Contributors
+-/
 import Mathlib.Algebra.Ring.Basic
 import InfoGeometry.Algebra.FiniteSpinAlgebra
 import Mathlib.Algebra.Ring.Aut
@@ -32,11 +37,11 @@ variable {M : Type*} [Ring M] [StarRing M]
 
 /-- Crosscap Datum comprising the modular conjugation J and the glide reflection Ω -/
 structure CrosscapDatum (M : Type*) [Ring M] [StarRing M] where
-  /-- Modular Tomita conjugation map J -/
+  /-- Operator-ring Tomita anti-automorphism `J`; this is a map on ring elements. -/
   J : M → M
   /-- J is an involution: J² = id -/
   J_involutive : ∀ x : M, J (J x) = x
-  /-- J is antilinear/anti-multiplicative -/
+  /-- `J` reverses products; vector-level antilinearity is not asserted here. -/
   J_mul : ∀ x y : M, J (x * y) = J y * J x
   /-- J preserves the star operation -/
   J_star : ∀ x : M, J (star x) = star (J x)

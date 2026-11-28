@@ -757,6 +757,7 @@ import InfoGeometry.Geometry.CourantDrinfeldDiracCapstone
 import InfoGeometry.Canonical.KerrUnruhFermionicHorizonBridge
 import InfoGeometry.Geometry.PlabicDiracCourantUnification
 import InfoGeometry.Canonical.ArnoldInformationGeometry
+import InfoGeometry.Canonical.ArnoldSDiffFlowErlangenClosure
 import InfoGeometry.Canonical.ArnoldKohnoJordanDefect
 import InfoGeometry.Algebra.ElementaryShearRoundtrip
 import InfoGeometry.Canonical.ReductiveShearCausalPoset

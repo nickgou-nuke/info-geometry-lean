@@ -107,6 +107,8 @@ structure BlockDegree where
   source : Weight3
   deriving DecidableEq, Repr
 
+instance : Inhabited BlockDegree := ⟨⟨Weight3.zero, Weight3.zero⟩⟩
+
 instance : Fintype BlockDegree :=
   Fintype.ofEquiv (Weight3 × Weight3) {
     toFun := fun p => ⟨p.1, p.2⟩
@@ -303,6 +305,8 @@ structure MultiDegree where
 
 def canonicalMultiDegree (k : ℤ) : MultiDegree :=
   ⟨k, (k : ZMod 2), rfl⟩
+
+instance : Inhabited MultiDegree := ⟨canonicalMultiDegree 0⟩
 
 def MultiDegree.add (d e : MultiDegree) : MultiDegree where
   contact := d.contact + e.contact

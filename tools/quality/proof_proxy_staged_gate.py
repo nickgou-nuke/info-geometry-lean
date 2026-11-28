@@ -164,22 +164,26 @@ class ActiveIndexCache:
     def _query_stage_map(self, paths: Sequence[str]) -> dict[str, bytes] | None:
         if not paths:
             return {}
-        result = subprocess.run(
-            ["git", "ls-files", "--stage", "-z", "--", *paths],
-            cwd=self.repo_root,
-            capture_output=True,
-            check=False,
-        )
-        if result.returncode != 0:
-            return None
         stage_map: dict[str, bytes] = {p: b"" for p in paths}
-        for entry in result.stdout.split(b"\0"):
-            if not entry or b"\t" not in entry:
-                continue
-            _meta, raw_path = entry.split(b"\t", 1)
-            rel = raw_path.decode("utf-8", errors="replace")
-            if rel in stage_map:
-                stage_map[rel] = stage_map[rel] + entry + b"\0"
+        # Import closures can include tens of thousands of files. Keep each
+        # subprocess argument vector comfortably below the platform ARG_MAX.
+        for start in range(0, len(paths), 256):
+            batch = paths[start:start + 256]
+            result = subprocess.run(
+                ["git", "ls-files", "--stage", "-z", "--", *batch],
+                cwd=self.repo_root,
+                capture_output=True,
+                check=False,
+            )
+            if result.returncode != 0:
+                return None
+            for entry in result.stdout.split(b"\0"):
+                if not entry or b"\t" not in entry:
+                    continue
+                _meta, raw_path = entry.split(b"\t", 1)
+                rel = raw_path.decode("utf-8", errors="replace")
+                if rel in stage_map:
+                    stage_map[rel] = stage_map[rel] + entry + b"\0"
         return stage_map
 
     def observe_paths(self, rel_paths: Sequence[str]) -> None:
@@ -204,18 +208,25 @@ class ActiveIndexCache:
             if is_tracked and p not in self._matches:
                 tracked_now.append(p)
         if tracked_now:
-            diff_res = subprocess.run(
-                ["git", "diff", "--name-only", "-z", "--", *tracked_now],
-                cwd=self.repo_root,
-                capture_output=True,
-                check=False,
-            )
-            if diff_res.returncode == 0:
-                dirty = {
+            dirty: set[str] = set()
+            diff_ok = True
+            for start in range(0, len(tracked_now), 256):
+                batch = tracked_now[start:start + 256]
+                diff_res = subprocess.run(
+                    ["git", "diff", "--name-only", "-z", "--", *batch],
+                    cwd=self.repo_root,
+                    capture_output=True,
+                    check=False,
+                )
+                if diff_res.returncode != 0:
+                    diff_ok = False
+                    break
+                dirty.update(
                     item.decode("utf-8", errors="replace")
                     for item in diff_res.stdout.split(b"\0")
                     if item
-                }
+                )
+            if diff_ok:
                 for p in tracked_now:
                     disk = self.repo_root / p
                     self._matches[p] = (p not in dirty) and disk.exists() and not disk.is_symlink()

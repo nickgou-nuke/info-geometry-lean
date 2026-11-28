@@ -1,4 +1,4 @@
-name: Real Krein Peirce sections on the Klein cover
+name: Real Krein Peirce sections and differential on the Klein cover
 
 on:
   pull_request:
@@ -31,6 +31,11 @@ on:
       - 'lean/InfoGeometry/OperatorAlgebra/RealDoubledChiralKreinReal.lean'
       - 'lean/InfoGeometry/OperatorAlgebra/RealDoubledChiralKreinNative.lean'
       - 'lean/InfoGeometry/Topology/KleinRealKreinPeirceSections.lean'
+      - 'lean/InfoGeometry/Core/IdempotentCartan.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/LieJordanEndomorphisms.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/LieJordanBoundaryComposition.lean'
+      - 'lean/InfoGeometry/OperatorAlgebra/PeirceTwistedComplex.lean'
+      - 'lean/InfoGeometry/Topology/KleinPeirceDifferential.lean'
       - 'tools/quality/check_clifford_dirac.py'
       - 'tools/quality/check_reviewed_prs.py'
       - 'tools/quality/reviewed_audit_source.py'
@@ -58,6 +63,7 @@ jobs:
         InfoGeometry.Core.PeirceSheetExchange
         InfoGeometry.Topology.ContinuousPeirceSections
         InfoGeometry.Topology.KleinRealKreinPeirceSections
+        InfoGeometry.Topology.KleinPeirceDifferential
     steps:
       - name: Fetch exact public source without traversing external submodules
         shell: bash
@@ -149,7 +155,8 @@ jobs:
           python3 tools/quality/semantic_vacuity_gate.py \
             lean/InfoGeometry/Core/PeirceSheetExchange.lean \
             lean/InfoGeometry/Topology/ContinuousPeirceSections.lean \
-            lean/InfoGeometry/Topology/KleinRealKreinPeirceSections.lean --fail-on error
+            lean/InfoGeometry/Topology/KleinRealKreinPeirceSections.lean \
+            lean/InfoGeometry/Topology/KleinPeirceDifferential.lean --fail-on error
       - uses: actions/upload-artifact@v4
         if: always()
         with:

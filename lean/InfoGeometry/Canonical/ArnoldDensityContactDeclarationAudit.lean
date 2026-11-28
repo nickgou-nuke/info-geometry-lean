@@ -34,7 +34,7 @@ private def owners : Array Name := #[
   `InfoGeometry.Canonical.ArnoldBeltramiVolumeCharacters,
   `InfoGeometry.Projective.FisherRaoRadialShape,
   `InfoGeometry.Geometry.RealMatrixFisherRadial,
-  `InfoGeometry.Canonical.ArnoldInformationGeometry
+  `InfoGeometry.Canonical.ArnoldBeltramiSmoothFlow
 ]
 
 private def ownerOf (env : Environment) (n : Name) : Name :=

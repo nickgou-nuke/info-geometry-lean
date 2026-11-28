@@ -83,6 +83,10 @@ class SourceRouteTests(unittest.TestCase):
         calls = self.run_route("tools/quality/TwoBoundaryDeclarationAudit.lean")
         self.assertIn("tools/infra/run_locked_lean.py --wait-for-build-lock tools/quality/TwoBoundaryDeclarationAudit.lean", calls)
 
+    def test_arnold_klein_audit_routes_to_locked_lean(self):
+        calls = self.run_route("tools/quality/ArnoldKleinOperatorDeclarationAudit.lean")
+        self.assertIn("tools/infra/run_locked_lean.py --wait-for-build-lock tools/quality/ArnoldKleinOperatorDeclarationAudit.lean", calls)
+
 
 if __name__ == "__main__":
     unittest.main()

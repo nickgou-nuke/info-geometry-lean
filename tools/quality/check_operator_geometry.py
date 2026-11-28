@@ -166,6 +166,7 @@ def main() -> None:
         data = source.read_bytes()
         if args.base_ref and module not in OWNERS:
             expected = subprocess.check_output(["git", "rev-parse", f"{args.base_ref}:{source_relative}"],
+                                               cwd=root, text=True).strip()
             actual_blob = subprocess.check_output(["git", "hash-object", "--stdin"],
                                                   cwd=root, input=data).decode().strip()
             if actual_blob != expected:

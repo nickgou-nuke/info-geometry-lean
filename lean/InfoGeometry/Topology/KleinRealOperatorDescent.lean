@@ -678,6 +678,16 @@ private theorem mat2CrosscapFlowSlice_continuous (t : ℝ) :
     crosscapRotation2 t * A * (crosscapRotation2 t)ᵀ)
   exact (continuous_const.mul continuous_id).mul continuous_const
 
+/-- The finite-dimensional crosscap rotation is jointly continuous in time
+and operator. This upgrades the fixed-time continuity needed for descent to
+the real-parameter continuity contract used by the repository's continuous
+flow owners. -/
+theorem continuous_mat2CrosscapFlowSlice_joint :
+    Continuous (fun p : ℝ × Matrix (Fin 2) (Fin 2) ℝ =>
+      mat2CrosscapFlowSlice p.1 p.2) := by
+  unfold mat2CrosscapFlowSlice crosscapRotation2
+  fun_prop
+
 private theorem mat2CrosscapFlowSlice_star (t : ℝ)
     (A : Matrix (Fin 2) (Fin 2) ℝ) :
     star (mat2CrosscapFlowSlice t A) = mat2CrosscapFlowSlice t (star A) := by
@@ -788,6 +798,23 @@ private def mat2CrosscapQuotientFlow :
     mat2CrosscapFlow_glide_intertwines
     mat2CrosscapFlowSlice_star
     mat2CrosscapFlow_tomitaKlein
+
+/-- For each continuous operator field on the Klein quotient, its modular
+orbit is jointly continuous in time and quotient point. This is the orbit
+topology actually used by the descended action; it does not assume a topology
+on the space of all fields beyond the existing `ContinuousMap` topology. -/
+theorem continuous_mat2CrosscapQuotientFlow_orbit
+    (field : crosscapQuotientContinuousSubring
+      InfoGeometry.Canonical.KleinBottleTomitaCrosscap.mat2SheetPreservingCrosscapDatum) :
+    Continuous (fun p : ℝ × KleinBrillouinQuotient =>
+      (mat2CrosscapQuotientFlow.sigma p.1 field).1 p.2) := by
+  have hField : Continuous (fun q : KleinBrillouinQuotient => field.1 q) :=
+    field.1.continuous
+  have hOrbit : Continuous (fun p : ℝ × KleinBrillouinQuotient =>
+      mat2CrosscapFlowSlice p.1 (field.1 p.2)) := by
+    unfold mat2CrosscapFlowSlice crosscapRotation2
+    fun_prop
+  exact hOrbit.congr (fun _ => rfl)
 
 /-- The existing paired-soul element `U - V` in the sheet-preserving
 `M₂(ℝ)` crosscap is fixed by the concrete rotation modular flow.  This

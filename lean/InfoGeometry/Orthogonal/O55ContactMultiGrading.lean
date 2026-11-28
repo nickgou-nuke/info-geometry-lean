@@ -27,6 +27,9 @@ def opposite : Weight3 → Weight3
   | minus => plus | zero => zero | plus => minus
 @[simp] theorem opposite_opposite (w : Weight3) : w.opposite.opposite = w := by cases w <;> rfl
 @[simp] theorem value_opposite (w : Weight3) : w.opposite.value = -w.value := by cases w <;> rfl
+@[simp] theorem valueR_opposite (w : Weight3) :
+    w.opposite.valueR = -w.valueR := by
+  cases w <;> simp [valueR, value, opposite] <;> norm_num
 end Weight3
 
 def weightOfIndex : Fin 10 → Weight3 :=
@@ -40,6 +43,10 @@ def weightOfIndex : Fin 10 → Weight3 :=
 @[simp] theorem contactWeight_eq_weightValue (i : Fin 10) :
     contactWeight i = (weightOfIndex i).value := by
   fin_cases i <;> rfl
+
+@[simp] theorem contactWeightR_eq_weightValueR (i : Fin 10) :
+    contactWeightR i = (weightOfIndex i).valueR := by
+  simp [contactWeightR, Weight3.valueR]
 
 def weightProjector (w : Weight3) : End55 where
   toFun x i := if weightOfIndex i = w then x i else 0
@@ -119,6 +126,26 @@ def adjointPartner (d : BlockDegree) : BlockDegree :=
     d.opposite.contact = -d.contact := by
   rcases d with ⟨target, source⟩
   cases target <;> cases source <;> rfl
+@[simp] theorem opposite_opposite (d : BlockDegree) :
+    d.opposite.opposite = d := by
+  cases d
+  simp [opposite]
+@[simp] theorem parity_opposite (d : BlockDegree) :
+    d.opposite.parity = d.parity := by
+  simp only [parity, contact_opposite, Int.cast_neg]
+  have htwo : (2 : ZMod 2) = 0 := rfl
+  calc
+    -(d.contact : ZMod 2) = (d.contact : ZMod 2) - (2 : ZMod 2) * (d.contact : ZMod 2) := by ring
+    _ = (d.contact : ZMod 2) := by rw [htwo]; ring
+@[simp] theorem adjointPartner_adjointPartner (d : BlockDegree) :
+    d.adjointPartner.adjointPartner = d := by
+  cases d
+  simp [adjointPartner]
+@[simp] theorem contact_adjointPartner (d : BlockDegree) :
+    d.adjointPartner.contact = d.contact := by
+  cases d
+  simp [adjointPartner, contact]
+  ring
 end BlockDegree
 
 def blockComponent (d : BlockDegree) (A : End55) : End55 :=
@@ -192,6 +219,81 @@ theorem matching_block_degree_add (target middle source : Weight3) :
       (BlockDegree.mk target source).contact := by
   simp [BlockDegree.contact]
 
+theorem blockComponent_mul_of_mismatch
+    (d e : BlockDegree) (A B : End55)
+    (h : d.source ≠ e.target) :
+    blockComponent d A * blockComponent e B = 0 := by
+  unfold blockComponent
+  calc
+    (weightProjector d.target * A * weightProjector d.source) *
+        (weightProjector e.target * B * weightProjector e.source) =
+      weightProjector d.target * A *
+        (weightProjector d.source * weightProjector e.target) * B *
+          weightProjector e.source := by noncomm_ring
+    _ = 0 := by rw [weightProjector_mul_of_ne h]; simp
+
+theorem matching_block_parity_add
+    (target middle source : Weight3) :
+    (BlockDegree.mk target middle).parity +
+        (BlockDegree.mk middle source).parity =
+      (BlockDegree.mk target source).parity := by
+  unfold BlockDegree.parity
+  rw [← Int.cast_add, matching_block_degree_add]
+
+theorem full_block_decomposition (A : End55) :
+    A =
+      blockComponent ⟨Weight3.minus, Weight3.minus⟩ A +
+      blockComponent ⟨Weight3.minus, Weight3.zero⟩ A +
+      blockComponent ⟨Weight3.minus, Weight3.plus⟩ A +
+      blockComponent ⟨Weight3.zero, Weight3.minus⟩ A +
+      blockComponent ⟨Weight3.zero, Weight3.zero⟩ A +
+      blockComponent ⟨Weight3.zero, Weight3.plus⟩ A +
+      blockComponent ⟨Weight3.plus, Weight3.minus⟩ A +
+      blockComponent ⟨Weight3.plus, Weight3.zero⟩ A +
+      blockComponent ⟨Weight3.plus, Weight3.plus⟩ A := by
+  have hres := weightProjector_resolution
+  calc
+    A = (1 : End55) * A * 1 := by simp
+    _ = (weightProjector Weight3.minus +
+          weightProjector Weight3.zero + weightProjector Weight3.plus) * A *
+        (weightProjector Weight3.minus +
+          weightProjector Weight3.zero + weightProjector Weight3.plus) := by
+          rw [hres]
+    _ = _ := by
+      unfold blockComponent
+      noncomm_ring
+
+theorem crosscap_weightProjector (w : Weight3) :
+    crosscapEnd * weightProjector w * crosscapEnd =
+      weightProjector w.opposite := by
+  apply LinearMap.ext
+  intro x
+  funext i
+  by_cases hi : weightOfIndex i = w.opposite
+  · have hopp : (weightOfIndex i).opposite = w := by
+      rw [hi, Weight3.opposite_opposite]
+    simp [Module.End.mul_apply, weightProjector_apply, hi, hopp]
+  · have hopp : (weightOfIndex i).opposite ≠ w := by
+      intro h
+      apply hi
+      rw [← Weight3.opposite_opposite (weightOfIndex i), h]
+    simp [Module.End.mul_apply, weightProjector_apply, hi, hopp]
+
+theorem crosscap_blockComponent (d : BlockDegree) (A : End55) :
+    crosscapEnd * blockComponent d A * crosscapEnd =
+      blockComponent d.opposite
+        (crosscapEnd * A * crosscapEnd) := by
+  unfold blockComponent BlockDegree.opposite
+  rw [← crosscap_weightProjector, ← crosscap_weightProjector]
+  calc
+    crosscapEnd * (weightProjector d.target * A * weightProjector d.source) * crosscapEnd =
+      crosscapEnd * (weightProjector d.target * (1 * A * 1) * weightProjector d.source) * crosscapEnd := by
+        simp
+    _ = crosscapEnd * (weightProjector d.target * ((crosscapEnd * crosscapEnd) * A * (crosscapEnd * crosscapEnd)) * weightProjector d.source) * crosscapEnd := by
+        rw [crosscapEnd_sq]
+    _ = (crosscapEnd * weightProjector d.target * crosscapEnd) * (crosscapEnd * A * crosscapEnd) * (crosscapEnd * weightProjector d.source * crosscapEnd) := by
+        noncomm_ring
+
 
 /-- The combined contact-degree and parity label. -/
 structure MultiDegree where
@@ -233,5 +335,13 @@ theorem multigraded_bracket
       canonicalMultiDegree (k + l) =
         (canonicalMultiDegree k).add (canonicalMultiDegree l) := by
   exact ⟨contactGrade_bracket hA hB, by simp⟩
+
+theorem multigraded_crosscap
+    {k : ℤ} {A : O55Lie}
+    (hA : A ∈ realContactGradeSpace k) :
+    crosscapConjugation A ∈ realContactGradeSpace (-k) ∧
+      canonicalMultiDegree (-k) =
+        (canonicalMultiDegree k).opposite := by
+  exact ⟨crosscap_reverses_grade hA, by simp⟩
 
 end InfoGeometry.Orthogonal.O55Contact

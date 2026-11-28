@@ -59,6 +59,13 @@ noncomputable def completedCurrentColimitReadout
     (heisenbergFiniteModeColimit (𝕜 := 𝕜) : Type _) :=
   heisenbergColimitMode (𝕜 := 𝕜) (completedCurrentModeEquiv.symm X)
 
+@[simp] theorem completedCurrentColimitReadout_point
+    {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
+    (n : ℤ) :
+    completedCurrentColimitReadout (𝕜 := 𝕜) (completedCurrentPoint n) =
+      heisenbergColimitMode (𝕜 := 𝕜) n := by
+  simp [completedCurrentColimitReadout]
+
 theorem completedCurrent_colimit_eq_heisenberg
     {𝕜 : Type*} [Field 𝕜] [CharZero 𝕜]
     (X : CompletedCurrentModeCarrier) :

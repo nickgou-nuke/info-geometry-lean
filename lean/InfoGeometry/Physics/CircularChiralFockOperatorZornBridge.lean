@@ -234,6 +234,16 @@ theorem circular_scalar_source_readout :
     operatorFrame 4 = InfoGeometry.Algebra.ZornVectorMatrix.E22 := by
   constructor <;> simp [operatorFrame]
 
+@[simp] theorem operatorFrame_positiveRail (i : Fin 3) :
+    operatorFrame (positiveFrameIndex i) =
+      InfoGeometry.Algebra.ZornVectorMatrix.U i := by
+  fin_cases i <;> simp [operatorFrame, positiveFrameIndex]
+
+@[simp] theorem operatorFrame_negativeRail (i : Fin 3) :
+    operatorFrame (negativeFrameIndex i) =
+      InfoGeometry.Algebra.ZornVectorMatrix.V i := by
+  fin_cases i <;> simp [operatorFrame, negativeFrameIndex]
+
 /-- Möbius/five-grade inversion swaps the two Fock pole projectors. -/
 theorem fockPoleProjector_conformalSwap (i : Fin 2) :
     fockPoleProjector (conformalPoleSwap2 i) =

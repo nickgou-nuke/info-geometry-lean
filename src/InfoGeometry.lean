@@ -6493,13 +6493,6 @@ import InfoGeometry.External.Auto.rigorous_proofs
 import InfoGeometry.External.Auto.temp
 import InfoGeometry.External.Auto.test3
 import InfoGeometry.External.Auto.test4
-import InfoGeometry.External.Auto.test_braid
-import InfoGeometry.External.Auto.test_noncomm
-import InfoGeometry.External.Auto.test_ring
-import InfoGeometry.External.Auto.test_simp
-import InfoGeometry.External.Auto.test_smul
-import InfoGeometry.External.Auto.test_smul2
-import InfoGeometry.External.Auto.test_wrapper
 import InfoGeometry.External.Auto.thermo_gauge_flow
 import InfoGeometry.External.Auto.uhf_cantor_boundary
 import InfoGeometry.External.Auto.uhf_ladder

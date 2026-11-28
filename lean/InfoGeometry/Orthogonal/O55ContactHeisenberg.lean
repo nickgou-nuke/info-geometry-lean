@@ -116,8 +116,14 @@ def embedOuterPlus (a : Outer2) : Vector55 :=
 @[simp] theorem pairing_outerMinus_middle (a : Outer2) (w : Middle6) :
     splitPairing (embedOuterMinus a) (embedMiddle w) = 0 := by
   simp [splitPairing, embedOuterMinus, embedMiddle]
+@[simp] theorem pairing_middle_outerMinus (w : Middle6) (a : Outer2) :
+    splitPairing (embedMiddle w) (embedOuterMinus a) = 0 := by
+  simp [splitPairing, embedOuterMinus, embedMiddle]
 @[simp] theorem pairing_outerPlus_middle (a : Outer2) (w : Middle6) :
     splitPairing (embedOuterPlus a) (embedMiddle w) = 0 := by
+  simp [splitPairing, embedOuterPlus, embedMiddle]
+@[simp] theorem pairing_middle_outerPlus (w : Middle6) (a : Outer2) :
+    splitPairing (embedMiddle w) (embedOuterPlus a) = 0 := by
   simp [splitPairing, embedOuterPlus, embedMiddle]
 
 theorem embedded_weight_packet :
@@ -237,5 +243,29 @@ theorem positiveOne_bracket_scalar
       (-(middlePairing w z * outerArea a b)) • gradePlusTwoH := by
   rw [positiveOne_bracket, positiveTwo_eq_area_smul]
   simp [smul_smul]
+
+theorem negativeTwo_bracket_negativeTwo
+    (a b c d : Outer2) :
+    ⁅negativeTwoGeneratorH a b, negativeTwoGeneratorH c d⁆ = 0 := by
+  unfold negativeTwoGeneratorH
+  rw [splitRankTwo_bracket]
+  simp
+
+theorem positiveTwo_bracket_positiveTwo
+    (a b c d : Outer2) :
+    ⁅positiveTwoGeneratorH a b, positiveTwoGeneratorH c d⁆ = 0 := by
+  unfold positiveTwoGeneratorH
+  rw [splitRankTwo_bracket]
+  simp
+
+theorem mixed_one_bracket_grade_zero
+    (a b : Outer2) (w z : Middle6) :
+    ⁅negativeOneGeneratorH a w, positiveOneGeneratorH b z⁆ ∈
+      realContactGradeSpace 0 := by
+  rcases embedded_weight_packet with ⟨hm, h0, hp⟩
+  exact contactGrade_bracket
+    (by simpa [negativeOneGeneratorH] using splitRankTwo_grade (hm a) (h0 w))
+    (by simpa [positiveOneGeneratorH, add_comm] using
+      splitRankTwo_grade (hp b) (h0 z))
 
 end InfoGeometry.Orthogonal.O55Contact

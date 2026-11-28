@@ -71,6 +71,21 @@ def cartanSouriauDuallyFlatAmariSystem :
     DuallyFlatAmariSystem Parameter Parameter where
   logBridge := cartanSouriauLogPartitionBridge D
 
+@[simp] theorem cartanSouriau_potential_eq_massieu (β : Parameter) :
+    (cartanSouriauDuallyFlatAmariSystem D).potential β =
+      souriauMassieu D β := by
+  rfl
+
+@[simp] theorem cartanSouriau_partition_eq_gibbsPartition (β : Parameter) :
+    (cartanSouriauLogPartitionBridge D).Q β =
+      realGibbsPartition D β := by
+  rfl
+
+@[simp] theorem cartanSouriau_dualCoord_apply (β : Parameter) (i : Fin 2) :
+    (cartanSouriauDuallyFlat D).dualCoord β i =
+      -souriauChargeMean D β i := by
+  rfl
+
 theorem cartanSouriau_potential_eq_log_gibbsPartition (β : Parameter) :
     (cartanSouriauDuallyFlatAmariSystem D).potential β =
       Real.log (realGibbsPartition D β) := by

@@ -601,3 +601,8 @@ import InfoGeometry.Canonical.ArnoldParaKahlerBCFW
 import InfoGeometry.Algebra.ZornAlternativeLaws
 import InfoGeometry.OperatorAlgebra.PeirceTwistedComplex
 import InfoGeometry.Quantum.KrausBoundaryDuality
+import InfoGeometry.Algebra.HodgeParabolicTower
+import InfoGeometry.Algebra.NoncommutativeWeilPicardLefschetz
+import InfoGeometry.Meta.RepositoryEvolutionArchetypesTests
+import InfoGeometry.OperatorAlgebra.IndefiniteReciprocalTotalityPoset
+import InfoGeometry.OperatorAlgebra.ParabolicJordanTrichotomyAndMannheimVMetric

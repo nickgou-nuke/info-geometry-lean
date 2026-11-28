@@ -1474,3 +1474,11 @@ import InfoGeometry.Twistor.RealMajoranaLorentzRepresentation
 import InfoGeometry.Twistor.RealPauliIncidence
 import InfoGeometry.Twistor.TwoQubitPluckerBridge
 import InfoGeometry.Verification.SuppliedTableCounterexample
+import InfoGeometry.Canonical.DoubledMinkowskiSheetSoldering
+import InfoGeometry.Canonical.FrameBlockScratch
+import InfoGeometry.Canonical.LieFlowDilatonSymFactorization
+import InfoGeometry.Canonical.SouriauMatrixTransposeParity
+import InfoGeometry.External.Auto.BraidInductiveColimitCategory
+import InfoGeometry.External.Auto.BraidInductiveColimitComplement
+import InfoGeometry.Physics.BdGColimitGapTransport
+import InfoGeometry.Sandbox.scratch_colim_test

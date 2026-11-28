@@ -60,7 +60,7 @@ theorem sectorMetric_self_pos {x v : H}
   dsimp [sectorMetric]
   have hxpos := KreinSpace.kreinInner_pos_on_posSubspace hx hx0
   have hvpos := KreinSpace.kreinInner_pos_on_posSubspace hv hv0
-  positivity
+  exact div_pos hvpos hxpos
 
 /-- The metric is unchanged by rescaling the positive-sector base vector. -/
 theorem sectorMetric_scale_invariant (c : ℝ) (hc : c ≠ 0) (x v w : H) :

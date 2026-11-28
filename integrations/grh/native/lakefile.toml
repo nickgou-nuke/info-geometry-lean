@@ -15,11 +15,6 @@ name = "mathlib"
 git = "https://github.com/leanprover-community/mathlib4"
 rev = "d13f23b723b8a846827a245b89c10fc7d3f11612"
 
-[[require]]
-name = "LeanArchitect"
-git = "https://github.com/hanwenzhu/LeanArchitect"
-rev = "54d3fb249685db8e5a564e0b3f331cff77991607"
-
 [[lean_lib]]
 name = "InfoGeometry"
 srcDir = "../../../lean"

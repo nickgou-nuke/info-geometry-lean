@@ -36,7 +36,6 @@ NATIVE_TARGETS = (
 PINNED_REVS = {
     "native": {
         "mathlib": MATHLIB_REVS["native"],
-        "LeanArchitect": "54d3fb249685db8e5a564e0b3f331cff77991607",
         "plausible": "118aa17ee84656b8bd727fef7c458ee8c833385c",
         "LeanSearchClient": "ddf04cf3949fa556442341e87d47f9f6e6074707",
         "importGraph": "e928b72544873815af278d38681b31c0293588e3",
@@ -62,7 +61,6 @@ PINNED_REVS = {
 URLS = {
     "GRH": "https://github.com/lsernau/grh-lean",
     "mathlib": "https://github.com/leanprover-community/mathlib4",
-    "LeanArchitect": "https://github.com/hanwenzhu/LeanArchitect",
     "plausible": "https://github.com/leanprover-community/plausible",
     "LeanSearchClient": "https://github.com/leanprover-community/LeanSearchClient",
     "importGraph": "https://github.com/leanprover-community/import-graph",
@@ -152,15 +150,15 @@ def native_closure() -> tuple[dict[str, Path], set[str]]:
         module = pending.pop()
         if module in sources:
             continue
-        path = ROOT / "lean" / (module.replace(".", "/") + ".lean")
-        if path.is_file():
-            require(not path.is_symlink(), f"Linked canonical source: {path}")
-            sources[module] = path
-            pending.extend(imports(path))
+        if not module.startswith("InfoGeometry."):
+            require(module.split(".")[0] in {"Mathlib", "Lean", "Init"},
+                    f"Native scope acquired an unsupported dependency: {module}")
+            external.add(module)
             continue
-        require(module.split(".")[0] in {"Mathlib", "Lean", "Init", "Std", "Architect"},
-                f"Native scope acquired an unsupported dependency: {module}")
-        external.add(module)
+        path = ROOT / "lean" / (module.replace(".", "/") + ".lean")
+        require(path.is_file() and not path.is_symlink(), f"Missing or linked canonical source: {path}")
+        sources[module] = path
+        pending.extend(imports(path))
     require(set(NATIVE_OWNERS) <= sources.keys(), "Native build targets do not cover every audited owner")
     return sources, external
 
@@ -197,14 +195,11 @@ def verify(lane: str, *, checkouts: bool = False) -> dict:
     require((directory / "lean-toolchain").read_text().strip() == TOOLCHAINS[lane],
             f"Wrong {lane} Lean toolchain")
     config = tomllib.loads((directory / "lakefile.toml").read_text())
-    direct_dependencies = ("mathlib", "LeanArchitect") if lane == "native" else ("GRH",)
-    expected_requirements = []
-    for dep in direct_dependencies:
-        expected_requirement = {"name": dep, "git": URLS[dep], "rev": PINNED_REVS[lane][dep]}
-        if dep == "GRH":
-            expected_requirement["subDir"] = "grh"
-        expected_requirements.append(expected_requirement)
-    require(config.get("require") == expected_requirements, f"Wrong direct {lane} dependencies")
+    dep = "mathlib" if lane == "native" else "GRH"
+    expected_requirement = {"name": dep, "git": URLS[dep], "rev": PINNED_REVS[lane][dep]}
+    if lane == "external":
+        expected_requirement["subDir"] = "grh"
+    require(config.get("require") == [expected_requirement], f"Wrong direct {lane} dependency")
     libraries = config.get("lean_lib", [])
     expected_libraries = [
         {"name": "InfoGeometry", "srcDir": "../../../lean" if lane == "native" else "../../lean"},

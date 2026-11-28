@@ -4,7 +4,6 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: InfoGeometry Engine Contributors
 -/
 import Lean
-import DAG.Basic
 
 open Lean Elab Command
 
@@ -247,12 +246,21 @@ def isRepDepthCoverageTarget (env : Environment) (declName : Name) (info : Const
     !(env.isProjectionFn declName) &&
     !(env.isConstructor declName)
 
+/-- Immediate constant dependencies extracted from a declaration's type and value. -/
+private def usedConstantsFromConstantInfo (ci : ConstantInfo) : Array Name :=
+  let typeNames := ci.type.getUsedConstants.qsort Name.quickLt
+  let valNames :=
+    match ci.value? (allowOpaque := true) with
+    | none => #[]
+    | some v => v.getUsedConstants.qsort Name.quickLt
+  typeNames ++ valNames
+
 /-- Transitive closure of constants used by a declaration body or proof term. -/
 def transitivelyUsedConstants (env : Environment) (root : Name) : NameSet := Id.run do
   let mut used : NameSet := {}
   let mut frontier : NameSet := {}
   if let some info := env.find? root then
-    for (dep, _) in DAG.edgesFromConstantInfo info do
+    for dep in usedConstantsFromConstantInfo info do
       frontier := frontier.insert dep
   while !frontier.isEmpty do
     let current := frontier.min!
@@ -261,7 +269,7 @@ def transitivelyUsedConstants (env : Environment) (root : Name) : NameSet := Id.
       continue
     used := used.insert current
     if let some info := env.find? current then
-      for (dep, _) in DAG.edgesFromConstantInfo info do
+      for dep in usedConstantsFromConstantInfo info do
         if !used.contains dep then
           frontier := frontier.insert dep
   return used
@@ -270,7 +278,7 @@ def transitivelyUsedConstants (env : Environment) (root : Name) : NameSet := Id.
 def directlyUsedConstants (env : Environment) (root : Name) : NameSet := Id.run do
   let mut used : NameSet := {}
   if let some info := env.find? root then
-    for (dep, _) in DAG.edgesFromConstantInfo info do
+    for dep in usedConstantsFromConstantInfo info do
       used := used.insert dep
   return used
 
@@ -278,9 +286,7 @@ def directlyUsedConstants (env : Environment) (root : Name) : NameSet := Id.run 
 def directDependencyMap (env : Environment) : Std.HashMap Name (Array Name) := Id.run do
   let mut out : Std.HashMap Name (Array Name) := {}
   for (declName, info) in env.constants do
-    let mut deps : Array Name := #[]
-    for (dep, _) in DAG.edgesFromConstantInfo info do
-      deps := deps.push dep
+    let deps := usedConstantsFromConstantInfo info
     out := out.insert declName deps
   return out
 
@@ -290,7 +296,7 @@ def nearestTaggedDescendants (env : Environment) (root : Name) : NameSet := Id.r
   let mut visited : NameSet := {}
   let mut queue : Array Name := #[]
   if let some info := env.find? root then
-    for (dep, _) in DAG.edgesFromConstantInfo info do
+    for dep in usedConstantsFromConstantInfo info do
       queue := queue.push dep
   let mut i := 0
   while i < queue.size do
@@ -302,7 +308,7 @@ def nearestTaggedDescendants (env : Environment) (root : Name) : NameSet := Id.r
       nearest := nearest.insert curr
     else
       if let some info := env.find? curr then
-        for (dep, _) in DAG.edgesFromConstantInfo info do
+        for dep in usedConstantsFromConstantInfo info do
           queue := queue.push dep
   return nearest
 

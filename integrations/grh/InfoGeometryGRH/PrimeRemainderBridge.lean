@@ -202,6 +202,7 @@ theorem integral_centeredSmoothing_mellin (d : ℕ) [Fact d.Prime]
         Complex.exp ((1 - s) * (v : ℂ)) := by
       apply setIntegral_congr_fun measurableSet_Ioi
       intro v _hv
+      dsimp only
       rw [centeredSmoothing_div_eq_primeRemainder d q (Real.exp v) (Real.exp_ne_zero v)]
     _ = _ := New.integral_primeRemainder hd hcop hs
 

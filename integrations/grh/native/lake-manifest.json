@@ -109,18 +109,6 @@
       "inputRev": "v4.34.0",
       "inherited": true,
       "configFile": "lakefile.toml"
-    },
-    {
-      "url": "https://github.com/hanwenzhu/LeanArchitect.git",
-      "type": "git",
-      "subDir": null,
-      "scope": "",
-      "rev": "54d3fb249685db8e5a564e0b3f331cff77991607",
-      "name": "LeanArchitect",
-      "manifestFile": "lake-manifest.json",
-      "inputRev": "54d3fb249685db8e5a564e0b3f331cff77991607",
-      "inherited": false,
-      "configFile": "lakefile.lean"
     }
   ],
   "name": "infogeometry_grh_native",
